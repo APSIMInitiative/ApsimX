@@ -1619,17 +1619,43 @@
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
-                  "End": "EndCanopyDevelopment",
+                  "End": "StartGrainFilling",
                   "Name": "Vegetative",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Rate",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "ShadeSenescenceRate",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            1.0,
+                            5.0,
+                            8.0
+                          ],
+                          "Y": [
+                            0.0,
+                            0.0,
+                            0.02
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].LAI",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1639,15 +1665,24 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "EndCanopyDevelopment",
+                  "Start": "StartGrainFilling",
                   "End": "Maturity",
                   "Name": "Reproductive",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.\n\nThere is no data on detachment rates and so a simple value was chosen to ensure that leaves were not retained in the canopy. In the future, with more data available a thermal time basis leaf detachment rate will be explored. ",
+                      "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
                       "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "There is no data on detachment rates and so a simple value was chosen to ensure that leaves were not retained in the canopy. In the future, with more data available a thermal time basis leaf detachment rate will be explored. ",
+                      "Name": "Memo1",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -1669,29 +1704,67 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "Rate",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
-                              "Name": "TT",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "TodayFractionTotalTT",
                               "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyGrainFilling.Target + [Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
+                                      "Name": "TTRequired",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyGrainFilling.ProgressThroughPhase + [Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                      "Name": "TTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "TTRemaining",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "FractionTTComplete",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
                                   "Units": null,
-                                  "Expression": "[Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
-                                  "Name": "TTRequired",
+                                  "Expression": "[Phenology].EarlyGrainFilling.ProgressThroughPhase + [Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                  "Name": "TTComplete",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -1700,8 +1773,8 @@
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
                                   "Units": null,
-                                  "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
-                                  "Name": "TTComplete",
+                                  "Expression": "[Phenology].EarlyGrainFilling.Target + [Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
+                                  "Name": "TTRequired",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
