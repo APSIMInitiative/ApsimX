@@ -9,6 +9,7 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.Json.Nodes;
 
 namespace APSIM.Core;
 
@@ -7443,7 +7444,7 @@ internal class Converter
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion212(JObject root, string _)
-    {        
+    {
         //child for Generic BBCH
         JObject bbchCalculation = new JObject()
         {
@@ -7462,7 +7463,7 @@ internal class Converter
 
         //Add child to BBCH
         List<JObject> bbchs = JsonUtilities.ChildrenRecursively(root, "BBCH");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             JObject plant = JsonUtilities.Ancestor(bbch, "IPlant");
             if (plant != null && plant["Name"].ToString() == "Canola")
@@ -7473,10 +7474,77 @@ internal class Converter
 
         //do the same for all BBCHCanola
         bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
             (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+        }
+    }
+
+    /// <summary>
+    /// Fix some things in STRUM
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion213(JObject root, string _)
+    {
+        // Find all StrumTreeInstance models in the JSON and update values
+        foreach (var model in root
+            .SelectTokens("$..[?(@.$type && @.$type =~ /StrumTreeInstance/i)]")
+            .OfType<JObject>())
+        {
+            // 1) Targeted fix: only the explicit property used to store the tree type.
+            var treeType = model["TreeType"] as JValue;
+            if (treeType != null &&
+                treeType.Type == JTokenType.String &&
+                string.Equals((string)treeType, "Ever green", StringComparison.OrdinalIgnoreCase))
+            {
+                model["TreeType"] = "Evergreen";
+            }
+        }
+
+        // 1) Define your replacements: substring -> replacement (partial matches allowed)
+        //    Examples (replace with your real renames):
+        var map = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "Height.CanopyBaseHeight", "Height.PrunedCanopyBaseHeight" },
+            { "STRUM.Height.SeasonalGrowth", "STRUM.Height.SeasonalDepthGrowth" },
+            { "STRUM.CanopyBaseHeight", "STRUM.BaseHeight" },
+            { ".Trunk.", ".Wood." }
+        };
+
+        // 2) REPORT models (Models.Report.VariableNames, Models)
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, key, map[key], caseSensitive: false);
+            }
+        }
+
+        // 3) GRAPH SERIES models (Models.Graph.Series, Models)
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, key, map[key]);
+            }
+        }
+
+        // 4) rename trunk to wook in biomass removal events
+        foreach (var remove in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+            if (remove["NameOfPlantToRemoveFrom"].ToString() == "STRUM")
+            {
+                JArray organs = remove["BiomassRemovalFractions"] as JArray;
+
+                foreach (JToken organ in organs)
+                {
+                    if (organ["OrganName"].ToString() == "Trunk")
+                    {
+                        organ["OrganName"] = "Wood";
+                    }
+                }
+            }
         }
     }
 }
