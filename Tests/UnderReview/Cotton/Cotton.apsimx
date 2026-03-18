@@ -5811,7 +5811,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
+                          "Start": "Cutout",
                           "End": "Maturity",
                           "Name": "PostCutOut",
                           "ResourceName": null,
@@ -7630,179 +7630,30 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "StressModifiers",
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureFactor",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                          "MaximumTemperatureWeighting": 0.5,
-                          "Name": "TemperatureFactor",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                12.0,
-                                30.0,
-                                35.0,
-                                42.0
-                              ],
-                              "Y": [
-                                0.0,
-                                1.0,
-                                1.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Soni, M., Sheshukov, A. Y., & Aguilar, J. (2025). The critical role of temperature in determining optimal planting schedule for cotton: A review. Agricultural and Forest Meteorology, 373. https://doi.org/10.1016/j.agrformet.2025.110741",
-                              "Name": "Memo",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            10.0,
+                            20.0,
+                            30.0,
+                            40.0,
+                            45.0
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "AFPSFactor",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.03,
-                                1.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].AirFilledPoreSpace",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "Y": [
+                            0.0,
+                            0.6,
+                            1.0,
+                            0.4,
+                            0.0
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "SWARatio",
+                          "Name": "XYPairs",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "",
-                              "Name": "Sorghum",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.25
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].SWAvailabilityRatio",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "SWScaler",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "",
-                              "Name": "Barley",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SoilWaterScale, Models",
-                              "LLModel": 1,
-                              "Name": "SoilWaterScale",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.25,
-                                1.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[SoilWaterScale]",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -8099,88 +7950,12 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "PartitionFractionOLD",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "From:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA:\n\n*\"Emerging seedlings partitioned nearly 50% of their dry weight into roots, whereas mature cotton plants had only 5 to 10% of their dry weight in roots.\"*\n\nAssuming:\n\nStartSquaring = 20DAE = 40%\nStartFlowering = 50DAE = 30%\nCutout = 80DAE = 20%\n\n**PHENOLOGY**\n\nThe following crop phases are distinguished:\n\nPhase number | Stage\n-------------|------------\n1 |Sowing\n2 |Germination\n3 |Emergence\n4 |StartSquaring\n5 |StartFlowering \n6 |Cutout\n7 |StartBollFilling\n8 |StartOpenBolls\n9 |Maturity\n10|HarvestRipe\n",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    3.0,
-                                    8.0
-                                  ],
-                                  "Y": [
-                                    0.5,
-                                    0.05
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Stage",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.2,
+                              "Units": null,
                               "Name": "PartitionFraction",
                               "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "From:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA:\n\n*\"Emerging seedlings partitioned nearly 50% of their dry weight into roots, whereas mature cotton plants had only 5 to 10% of their dry weight in roots.\"*\n\nAssuming:\n\nStartSquaring = 20DAE = 40%\nStartFlowering = 50DAE = 30%\nCutout = 80DAE = 20%\n\n**PHENOLOGY**\n\nThe following crop phases are distinguished:\n\nPhase number | Stage\n-------------|------------\n1 |Sowing\n2 |Germination\n3 |Emergence\n4 |StartSquaring\n5 |StartFlowering \n6 |Cutout\n7 |StartBollFilling\n8 |StartOpenBolls\n9 |Maturity\n10|HarvestRipe\n",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    3.0,
-                                    8.0
-                                  ],
-                                  "Y": [
-                                    0.2,
-                                    0.2
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Stage",
-                                  "Name": "XValue",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
