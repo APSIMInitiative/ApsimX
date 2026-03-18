@@ -18,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 213; } }
+    public static int LatestVersion { get { return 212; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7499,8 +7499,17 @@ internal class Converter
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cob.");
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.EarLive.", "Maize.Ear.");
         }
+        // change biomass removal objects that mention Rachis
+        foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalOfPlantOrganType"))
+        {
+            if (OrganType["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
+                if (OrganType["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
+                          OrganType["OrganName"] = "Cob";
+
+            }
+
+
+        }
+
 
     }
-
-
-}
