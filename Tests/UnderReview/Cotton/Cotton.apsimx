@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 212,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -125,7 +125,9 @@
             "[Weather].VPD",
             "[Weather].CO2",
             "",
-            "[Cotton].Leaf.WaterStressFunction.RootWaterTension",
+            "[Cotton].AvRadn",
+            "",
+            "//[Cotton].Leaf.WaterStressFunction.RootWaterTension",
             "[Boll].LintFraction + [Boll].SeedFraction + [Boll].BurFraction as SumOfBollFractions",
             "[Boll].PotentialHarvestIndex",
             "",
@@ -369,7 +371,7 @@
             "",
             "",
             "",
-            "[Cotton].Leaf.Plastochron",
+            "//[Cotton].Leaf.Plastochron",
             "([Cotton].Leaf.FinalLeafNumber*[Cotton].SowingData.Population) as LeafNumber",
             "",
             "[Cotton].Leaf.FirstFruitingBranch",
@@ -396,7 +398,16 @@
             "",
             "[Cotton].Phenology.EarlyFlowering.Progression",
             "[Cotton].Phenology.EarlyFlowering.ProgressThroughPhase",
-            "[Cotton].Phenology.EarlyFlowering.Target"
+            "[Cotton].Phenology.EarlyFlowering.Target",
+            "",
+            "[Root].AirFilledPoreSpace",
+            "//[Root].SWAvailabilityRatio",
+            "",
+            "[Phenology].EarlyFlowering.Progression.BollModifier.AddFunction.MultiplyFunction.BollRatioSensitivity.BollRatio as BollRatio",
+            "",
+            "[Cotton].Leaf.DMDemands.Structural.DeltaLAIPotential.ReproductiveStage.Delta.SympodialLeaves.EmergingLeaves as EmergingLeaves",
+            "",
+            "[Cotton].AccumulateRadnDef"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -1132,31 +1143,11 @@
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                                          "NumeratorErrVal": 0.0,
-                                          "DenominatorErrVal": 1.0,
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Boll].BollRatio",
                                           "Name": "BollRatio",
                                           "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Boll].PotentialGrowthRate",
-                                              "Name": "PotentialBollGrowthRate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[AboveGround].GrowthRate",
-                                              "Name": "AboveGroundGrowthRate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -1260,7 +1251,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 200.0,
+                      "FixedValue": 300.0,
                       "Units": null,
                       "Name": "Target",
                       "ResourceName": null,
@@ -1731,101 +1722,6 @@
               "Name": "Leaf",
               "ResourceName": null,
               "Children": [
-                {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "WaterStressFunction",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FW",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "06/02/2024:\n\n[#Leaf].FW\n\nor \n\n[#Root].SMI\n\n???\n\n===========================================================================================\n\n21/12/2023\n\nHeight as a function of nodes. See H/N ratio Rose data.\n\n\nSpreadsheet \"Observed_Data.xlsx\" in\n\n\nC:\\Users\\rhe005\\OneDrive - CSIRO\\Work Files\\00. APSIM NEXTGEN\\Toowoomba 27 Feb to 3 Mar\\Validation Data Sets\\Rose Roche PhD data\n\n===========================================================================================\n\n\n**THIS NEEDS TO BE REVISED**\n\n===========================================================================================\n\nIn APSIM-OZCOT, height is based off stem weight if have XY pairs on observed data (see also chickpea example).\n\nIn *Zhang, L. et al., 2021. Development and validation of SUCROS-Cotton: a potential crop growth simulation model for cotton. NJAS: Wageningen Journal of Life Sciences, 56(1-2): 59-83.*\n\n--> Plant height is modelled as a linear function of (T) until growth is terminated by removal of the top bud ('cut-out')\n\n--> Final plant height is also a function of the extension of main stem nodes\n\nI used XY pairs from *CottonObserved 20230124.xlsx*\n\n===========================================================================================\n\nOn 08/05/2023:\n\nXY values taken from NAR0607Ir80 data\n\n\n\nBefore 08/05/2023 (from DDRF-RS trial):\n\nX|Y\n-|-\n0|10\n50|540\n100|750\n150|950\n200|1165\n250|1380\n300|1580",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].FW",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "RootWaterTension",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "06/02/2024:\n\n[#Leaf].FW\n\nor \n\n[#Root].SMI\n\n???\n\n===========================================================================================\n\n21/12/2023\n\nHeight as a function of nodes. See H/N ratio Rose data.\n\n\nSpreadsheet \"Observed_Data.xlsx\" in\n\n\nC:\\Users\\rhe005\\OneDrive - CSIRO\\Work Files\\00. APSIM NEXTGEN\\Toowoomba 27 Feb to 3 Mar\\Validation Data Sets\\Rose Roche PhD data\n\n===========================================================================================\n\n\n**THIS NEEDS TO BE REVISED**\n\n===========================================================================================\n\nIn APSIM-OZCOT, height is based off stem weight if have XY pairs on observed data (see also chickpea example).\n\nIn *Zhang, L. et al., 2021. Development and validation of SUCROS-Cotton: a potential crop growth simulation model for cotton. NJAS: Wageningen Journal of Life Sciences, 56(1-2): 59-83.*\n\n--> Plant height is modelled as a linear function of (T) until growth is terminated by removal of the top bud ('cut-out')\n\n--> Final plant height is also a function of the extension of main stem nodes\n\nI used XY pairs from *CottonObserved 20230124.xlsx*\n\n===========================================================================================\n\nOn 08/05/2023:\n\nXY values taken from NAR0607Ir80 data\n\n\n\nBefore 08/05/2023 (from DDRF-RS trial):\n\nX|Y\n-|-\n0|10\n50|540\n100|750\n150|950\n200|1165\n250|1380\n300|1580",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.8,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cotton].Root.WaterTensionFactor",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
                   "Name": "Photosynthesis",
@@ -2461,45 +2357,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                              "MaximumTemperatureWeighting": 0.5,
-                              "Name": "TemperatureEffectOLD",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "X|Y\n-|-\n8|0\n25|1\n35|1\n45|0\n\nChange to:\n\nX|Y\n-|-\n10|0\n23.5|1\n32|1\n45|0\n\n============================\n\nSEE PHD CONATY\n\n============================\n\nBase temp of 10 oC from:\n\nSnider, J.L. et al., 2022. Net photosynthesis acclimates to low growth temperature in cotton seedlings by shifting temperature thresholds for photosynthetic component processes and respiration. Environ. Exp. Bot., 196.\n\nCombing data from:\n\n**FIG. 2**\n\n* *Conaty, W.C., Burke, J.J., Mahan, J.R., Neilsen, J.E. and Sutton, B.G., 2012. Determining the Optimum Plant Temperature of Cotton Physiology and Yield to Improve Plant-Based* Irrigation Scheduling. Crop Sci., 52(4): 1828-1836.\n\n**FIG. 22.4**\n\n* *Snider, J., Bange, M. and Heitholt, J., 2021. Chapter 22. Cotton. In: V.O. Sadras and D.F. Calderini (Editors), Crop Physiology. Case Histories for Major Crops, pp. 715-746.*\n\nUsing a base temp of 10 oC\n\nOZCOT uses base temperature of 8 oC for assimilate production\n\nFrom:\n\n* *Constable, G.A. and Bange, M.P., 2015. The yield potential of cotton (Gossypium hirsutum L.). Field Crops Res., 182: 98-106.*\n\n--> With a base temperature for development of 11.4–15 ◦C (Moraghan et al., 1968; Constable, 1976; Kerby et al., 1987), thermal kinetic window of 23.5–32.0 ◦C (Burke et al., 1988), and physiological optimum of 28 ◦C (Conaty et al., 2012).",
-                                  "Name": "Memo",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    19.0,
-                                    23.0,
-                                    26.0,
-                                    36.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    1.0,
-                                    1.0,
-                                    0.0
-                                  ],
-                                  "Name": "XYPairs",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
                               "Name": "VPDEffect",
                               "ResourceName": null,
@@ -2545,14 +2402,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubDailyInterpolation, Models",
-                              "agregationMethod": 0,
+                              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                              "MaximumTemperatureWeighting": 0.5,
                               "Name": "TemperatureEffect",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
+                                  "Text": "X|Y\n-|-\n8|0\n25|1\n35|1\n45|0\n\nChange to:\n\nX|Y\n-|-\n10|0\n23.5|1\n32|1\n45|0\n\n============================\n\nSEE PHD CONATY\n\n============================\n\nBase temp of 10 oC from:\n\nSnider, J.L. et al., 2022. Net photosynthesis acclimates to low growth temperature in cotton seedlings by shifting temperature thresholds for photosynthetic component processes and respiration. Environ. Exp. Bot., 196.\n\nCombing data from:\n\n**FIG. 2**\n\n* *Conaty, W.C., Burke, J.J., Mahan, J.R., Neilsen, J.E. and Sutton, B.G., 2012. Determining the Optimum Plant Temperature of Cotton Physiology and Yield to Improve Plant-Based* Irrigation Scheduling. Crop Sci., 52(4): 1828-1836.\n\n**FIG. 22.4**\n\n* *Snider, J., Bange, M. and Heitholt, J., 2021. Chapter 22. Cotton. In: V.O. Sadras and D.F. Calderini (Editors), Crop Physiology. Case Histories for Major Crops, pp. 715-746.*\n\nUsing a base temp of 10 oC\n\nOZCOT uses base temperature of 8 oC for assimilate production\n\nFrom:\n\n* *Constable, G.A. and Bange, M.P., 2015. The yield potential of cotton (Gossypium hirsutum L.). Field Crops Res., 182: 98-106.*\n\n--> With a base temperature for development of 11.4–15 ◦C (Moraghan et al., 1968; Constable, 1976; Kerby et al., 1987), thermal kinetic window of 23.5–32.0 ◦C (Burke et al., 1988), and physiological optimum of 28 ◦C (Conaty et al., 2012).",
                                   "Name": "Memo",
                                   "ResourceName": null,
                                   "Children": [],
@@ -2562,42 +2419,24 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    6.0,
-                                    16.0,
-                                    36.0,
-                                    40.0
+                                    19.0,
+                                    23.0,
+                                    26.0,
+                                    36.0
                                   ],
                                   "Y": [
+                                    0.0,
                                     1.0,
                                     1.0,
-                                    1.0,
-                                    1.0
+                                    0.0
                                   ],
-                                  "Name": "Response",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.ThreeHourAirTemperature, Models",
-                                  "TempRangeFactors": null,
-                                  "Name": "InterpolationMethod",
+                                  "Name": "XYPairs",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "",
-                              "Name": "Add WaterStressEffect",
-                              "ResourceName": null,
-                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -2618,12 +2457,10 @@
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    0.0,
                                     0.9,
                                     1.0
                                   ],
                                   "Y": [
-                                    0.0,
                                     0.0,
                                     1.0
                                   ],
@@ -2655,6 +2492,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 28.0,
+                  "Units": null,
+                  "Name": "Phyllochron",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2725,72 +2572,19 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "Phyllochron",
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "NodeNumber",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 28.0,
-                      "Units": null,
-                      "Name": "Constant",
+                      "$type": "Models.Memo, Models",
+                      "Text": "Regrowth only if the BollRatio drops below 0.5 after cutout? See Burdekin example. But don't know because the BollRatio is not adequately performing because Boll weight is underpredicted!",
+                      "Name": "RegrowthFunction",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "BollLoad",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "1. Need to develop ThermalTime for Phyllochron in [#Cotton].Phenology\n2. Use 42 DD\n\n====================================================================\n\nFrom PhD Warren Conaty:\n\nThe morphogenic relationship with temperature is described by the accumulation of degree days over a **base temperature of 12 °C**, where a new node is produced every **40 degree days** provided other factors are not limiting (Hearn and Constable, 1984)\n\n**NOTE**\n\nChanged phyllochron to 35 (for better fit) and removed 100 at cutout because nitrogen is mobilized at this point. N stress very high and ceases node production\n\n42 DD from:\n\n* *Northern Australia Broadacre Cropping Manual. 2022. NT Farmers*\n\n41 DD from:\n\n* *Constable, G.A., 1986. Growth and light receipt by mainstem cotton leaves in relation to plant density in the field. Agric. For. Meteorol., 37: 279-292.*\n\n43 DD60 from:\n\n* *Stewart, J.M., Oosterhuis, D., Heitholt, J.J. and Mauney, J. (Editors), 2010. Physiology of Cotton, 563 pp.* (page 306).\n\n\"Early-season node development is highly linearly related (R2 = 0.95) to DD60 accumulation (Kerby et al., 1997). From emergence until about the 15th node, a new node is produced on average every 43 DD60.\"",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            2.5
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Boll].BollLoad",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "NodeNumber",
-                  "ResourceName": null,
-                  "Children": [
                     {
                       "$type": "Models.Memo, Models",
                       "Text": "The mainstem was therefore a simple parameter for the effect of age, temperature and water on the development of plant structure. \n\nThe relationship was explained by a model in which fruiting branches compete with one another. The structure of the crop plants, as measured by the types and number of nodes, developed along a course in time determined by variety and spacing at a rate dependent on temperature. \n\nThe rate decreased with age, but was **independent of the quantity of water available**, **until a critical amount had been used, when development stopped abruptly.**\n\n**--> USE ASPF FACTOR to stop node production?!?!?**\n\nFrom PhD Warren Conaty:\n\nThe relationship between morphogenesis and water supply in cotton is that once the cropgerminates, **morphogenesis is unaffected by water supply until approximately two-thirds of available water has been depleted**. At this point, the production of squares ceases, and if water supply is not replenished crop growth terminates and the set fruit is matured (Hearn and Constable, 1984).\n\n\n\n========================\n\n* Use separate thermal time in phenology for phyllochron?\n* fruitload slows down node-development and halts at cutout\n\n========================\n\nFROM: *Hearn, A.B., 1994. The principles of cotton water relations and their application in management. In: G.A. Constable and N.W. Forrester (Editors), Challenging the Future: Proceedings of the World Cotton Research Conference. CSIRO, Brisbane, Australia, pp. 66–92.*\n\nThe plants with different amounts of stored water\ndevelop at the same rate unaffected by the amount of water,\nuntil approximately three quarters is exhausted, whereupon\nmorphological development and vegetative growth stop\nabruptly. Consequently, the final size and shape of the plants\ngrown with different amounts of stored water look like\nsuccessive stages of one crop, which in effect is what they are.\nThis pattern of development is well adapted for survival in\narid' and semi-arid environments where the water supply\nfrom rainfall or floods is erratic and variable. It allows the\nplant to make full use of supplies which can va1y greatly from\none event or season to the next. When the supply is large,\ndevelopment continues for longer to give a larger plant and\nheavier yield, when the supply is !imaU the reverse occurs.\nThe key is that the plant somehow recognises that the water\nsupply is running out (the dry 'signal' in Fig. 2), and in\nresponse stops further morphological development and\nconcentrates on maturing the fruit already set.\n",
@@ -2822,7 +2616,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "Emergence",
-                      "EndStageName": "Cutout",
+                      "EndStageName": "Maturity",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 1.0,
                       "FractionRemovedOnHarvest": 1.0,
@@ -2957,7 +2751,7 @@
                                                 1.2
                                               ],
                                               "Y": [
-                                                0.0,
+                                                1.0,
                                                 1.0
                                               ],
                                               "Name": "XYPairs",
@@ -3024,17 +2818,41 @@
                                 {
                                   "$type": "Models.Functions.PhaseLookupValue, Models",
                                   "Start": "StartFlowering",
-                                  "End": "Cutout",
-                                  "Name": "FloweringToCutout",
+                                  "End": "Maturity",
+                                  "Name": "FloweringToMaturity",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 1.0,
-                                      "Units": null,
-                                      "Name": "Constant",
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "BollLoad",
                                       "ResourceName": null,
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            0.0,
+                                            1.0
+                                          ],
+                                          "Y": [
+                                            1.0,
+                                            0.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Boll].BollRatio",
+                                          "Name": "XValue",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -3216,7 +3034,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "Do we need to separate out the max leaf area on the VB compared with the fruiting branches?\n\nDM Supply/demand ratio on VB appearance?\n\nOr change to shading effect?\n\n==================================================\n\nFROM:\n\nHigh plant density inhibits vegetative branching in cotton by altering hormone contents and photosynthetic productionT. Li, Y. Zhang, J. Dai, H. Dong and X. KongField Crops Research 2019 Vol. 230 Pages 121-131DOI: 10.1016/j.fcr.2018.10.016\n\n5. Conclusion\nHigh plant density significantly inhibited VB growth and develop-\nment through a set of physiological changes and associated gene ex-\npression. **The decreased photosynthesis** resulting from reduced RuBP\ncarboxylase activity and chlorophyll content in VB leaves was one of\nthe main reasons for the poor VB growth. High plant density promoted\nthe apical dominance which increased the expression of GhYUC5 gene\nand IAA content in the main-stem tips and induced the expression of\nGhPIN1 to promote IAA transport from the apical part to the root. The\nincreased IAA content and expression of GhPIN1 increased the SLs\ncontent by increasing the expression of GhD14 and reducing the content\nof CKs by decreasing the expression of GhIPT3 in the VB tips. Moreover,\nhigh plant density led to shade avoidance syndrome, which decreased\nthe IAA content and auxin polar transport by down-regulating GhYUC5,\nGhPIN1 and GhPIN5 genes. It also decreased the CKs content by down-\nregulating the GhIPT3 gene, and the GA and BR contents in the VB tips,\nbut increased the content of SLs in the VB tips by up-regulating GhD14.\nThe decreased IAA, CKs, GA and BR contents along with the increased\nSLs content in the VB tips was another important reason for the in-\nhibited growth and development of VB",
+                              "Text": "VB production is a function of soil temperature!\n\nOn vegetative branching: I did a quick Google search on the bus yesterday and found that vegetative branching can be (partly) explained by higher root activity affecting the plant’s hormonal balance. In the tropics, warm soil temperatures increase root metabolic activity, which is probably why we see more vegetative branches in the NT and at Forest Hill compared with the Narrabri region. This also fits with Paul Grundy’s comment that vegetative branching is “soil related”.\n\n=================================================\n\n\nDo we need to separate out the max leaf area on the VB compared with the fruiting branches?\n\nDM Supply/demand ratio on VB appearance?\n\nOr change to shading effect?\n\n==================================================\n\nFROM:\n\nHigh plant density inhibits vegetative branching in cotton by altering hormone contents and photosynthetic productionT. Li, Y. Zhang, J. Dai, H. Dong and X. KongField Crops Research 2019 Vol. 230 Pages 121-131DOI: 10.1016/j.fcr.2018.10.016\n\n5. Conclusion\nHigh plant density significantly inhibited VB growth and develop-\nment through a set of physiological changes and associated gene ex-\npression. **The decreased photosynthesis** resulting from reduced RuBP\ncarboxylase activity and chlorophyll content in VB leaves was one of\nthe main reasons for the poor VB growth. High plant density promoted\nthe apical dominance which increased the expression of GhYUC5 gene\nand IAA content in the main-stem tips and induced the expression of\nGhPIN1 to promote IAA transport from the apical part to the root. The\nincreased IAA content and expression of GhPIN1 increased the SLs\ncontent by increasing the expression of GhD14 and reducing the content\nof CKs by decreasing the expression of GhIPT3 in the VB tips. Moreover,\nhigh plant density led to shade avoidance syndrome, which decreased\nthe IAA content and auxin polar transport by down-regulating GhYUC5,\nGhPIN1 and GhPIN5 genes. It also decreased the CKs content by down-\nregulating the GhIPT3 gene, and the GA and BR contents in the VB tips,\nbut increased the content of SLs in the VB tips by up-regulating GhD14.\nThe decreased IAA, CKs, GA and BR contents along with the increased\nSLs content in the VB tips was another important reason for the in-\nhibited growth and development of VB",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -3446,6 +3264,15 @@
                   "Name": "TotalNumber",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Revisit LAR",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].NodeNumber",
@@ -4016,29 +3843,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
                                       "Name": "LAR",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].ThermalTime",
-                                          "Name": "TT",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].Phyllochron",
-                                          "Name": "Phyllochron",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -4104,15 +3913,6 @@
                                       ],
                                       "Enabled": true,
                                       "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Cotton].Leaf.WaterStressFunction",
-                                      "Name": "WaterStressFunction",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": true,
@@ -4125,7 +3925,7 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "StartSquaring",
-                              "End": "Cutout",
+                              "End": "Maturity",
                               "Name": "ReproductiveStage",
                               "ResourceName": null,
                               "Children": [
@@ -4149,29 +3949,11 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
                                           "Name": "LAR",
                                           "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].ThermalTime",
-                                              "Name": "TT",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].Phyllochron",
-                                              "Name": "Phyllochron",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -4235,15 +4017,6 @@
                                           ],
                                           "Enabled": true,
                                           "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Cotton].Leaf.WaterStressFunction",
-                                          "Name": "WaterStressFunction",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
                                         }
                                       ],
                                       "Enabled": true,
@@ -4264,29 +4037,11 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
                                           "Name": "LAR",
                                           "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Phenology].ThermalTime",
-                                              "Name": "TT",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].Phyllochron",
-                                              "Name": "Phyllochron",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -4430,15 +4185,6 @@
                                               "ReadOnly": false
                                             }
                                           ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Cotton].Leaf.WaterStressFunction",
-                                          "Name": "WaterStressFunction",
-                                          "ResourceName": null,
-                                          "Children": [],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         }
@@ -4673,49 +4419,6 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "QStoragePriority",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "FrostFraction",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "X|Y\n-|-\n0|0\n30|1\n38|1\n40|0.8",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        -4.0,
-                        4.0
-                      ],
-                      "Y": [
-                        1.0,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].MinT",
-                      "Name": "XValue",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -7630,30 +7333,179 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                      "MaximumTemperatureWeighting": 0.5,
-                      "Name": "TemperatureFactor",
+                      "$type": "Models.Functions.MinimumFunction, Models",
+                      "Name": "StressModifiers",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            10.0,
-                            20.0,
-                            30.0,
-                            40.0,
-                            45.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.6,
-                            1.0,
-                            0.4,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
+                          "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                          "MaximumTemperatureWeighting": 0.5,
+                          "Name": "TemperatureFactor",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                12.0,
+                                30.0,
+                                35.0,
+                                42.0
+                              ],
+                              "Y": [
+                                0.0,
+                                1.0,
+                                1.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "Soni, M., Sheshukov, A. Y., & Aguilar, J. (2025). The critical role of temperature in determining optimal planting schedule for cotton: A review. Agricultural and Forest Meteorology, 373. https://doi.org/10.1016/j.agrformet.2025.110741",
+                              "Name": "Memo",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "AFPSFactor",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.03,
+                                1.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].AirFilledPoreSpace",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "SWARatio",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "",
+                              "Name": "Sorghum",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.25
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].SWAvailabilityRatio",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "SWScaler",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "",
+                              "Name": "Barley",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SoilWaterScale, Models",
+                              "LLModel": 1,
+                              "Name": "SoilWaterScale",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.25,
+                                1.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[SoilWaterScale]",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -8711,44 +8563,27 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "BollLoad",
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 0.0,
+                  "DenominatorErrVal": 1.0,
+                  "Name": "BollRatio",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Boll].PotentialGrowthRate",
+                      "Name": "PotentialBollGrowthRate",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "Calculation",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[AboveGround].GrowthRate",
+                      "Name": "AboveGroundGrowthRate",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Boll].PotentialGrowthRate",
-                          "Name": "PotentialBollGrowthRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Cotton].AboveGround.GrowthRate",
-                          "Name": "AboveGroundGrowthRate",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -9020,6 +8855,115 @@
                     ""
                   ],
                   "Name": "Sicala V-3RRi",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MovingAverageFunction, Models",
+              "NumberOfDays": 7,
+              "StageToStartMovingAverage": "Emergence",
+              "Name": "AvRadn",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Weather].Radn",
+                  "Name": "DailyRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.LessThanFunction, Models",
+              "Name": "RadnDeficit",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Weather].Radn",
+                  "Name": "DailyRadiation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 24.2,
+                  "Units": null,
+                  "Name": "RadiationThreshold",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "SubtractFunction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Cotton].RadnDeficit.RadiationThreshold",
+                      "Name": "VariableReference",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].Radn",
+                      "Name": "VariableReference1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.AccumulateFunction, Models",
+              "StartStageName": "StartFlowering",
+              "EndStageName": "HarvestRipe",
+              "ResetStageName": null,
+              "FractionRemovedOnCut": 0.0,
+              "FractionRemovedOnHarvest": 0.0,
+              "FractionRemovedOnGraze": 0.0,
+              "FractionRemovedOnPrune": 0.0,
+              "Name": "AccumulateRadnDef",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Cotton].RadnDeficit",
+                  "Name": "VariableReference",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Grundy, P. R., Yeates, S. J., & Bell, K. L. (2020). Cotton production during the tropical monsoon season. I – The influence of variable radiation on boll loss, compensation and yield. Field Crops Research, 254, 107790. https://doi.org/10.1016/j.fcr.2020.107790",
+                  "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
