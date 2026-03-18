@@ -2731,7 +2731,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 28.0,
                       "Units": null,
                       "Name": "Constant",
                       "ResourceName": null,
@@ -2741,7 +2741,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Potential",
+                      "Name": "BollLoad",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -2756,16 +2756,12 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            3.0,
-                            4.0,
-                            5.0,
-                            6.0
+                            0.0,
+                            1.0
                           ],
                           "Y": [
-                            32.0,
-                            32.0,
-                            32.0,
-                            32.0
+                            1.0,
+                            2.5
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -2775,7 +2771,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
+                          "VariableName": "[Boll].BollLoad",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -2924,37 +2920,100 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MinimumFunction, Models",
-                              "Name": "MinimumFunction",
+                              "$type": "Models.Functions.PhaseLookup, Models",
+                              "Name": "StressModifiers",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "FruitLoad",
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "Emergence",
+                                  "End": "StartFlowering",
+                                  "Name": "EmergenceToFlowering",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        1.0
-                                      ],
-                                      "Y": [
-                                        1.0,
-                                        0.5
-                                      ],
-                                      "Name": "XYPairs",
+                                      "$type": "Models.Functions.MinimumFunction, Models",
+                                      "Name": "MinimumFunction",
                                       "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].EarlyFlowering.BollRatio",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "WaterStressNodeNumber",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Memo, Models",
+                                              "Text": "\n14/03/2025:\n\nX | Y\n--|--\n0.6 | 0\n1.2 | 1",
+                                              "Name": "Memo",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                0.6,
+                                                1.2
+                                              ],
+                                              "Y": [
+                                                0.0,
+                                                1.0
+                                              ],
+                                              "Name": "XYPairs",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Arbitrator].SDRatioBound",
+                                              "Name": "XValue",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                          "Name": "NitrogenStress",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.XYPairs, Models",
+                                              "X": [
+                                                0.0,
+                                                1.0
+                                              ],
+                                              "Y": [
+                                                0.5,
+                                                1.0
+                                              ],
+                                              "Name": "XYPairs",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "VariableName": "[Leaf].Fn",
+                                              "Name": "XValue",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -2963,73 +3022,17 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "WaterStressNodeNumber",
+                                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                                  "Start": "StartFlowering",
+                                  "End": "Cutout",
+                                  "Name": "FloweringToCutout",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.6,
-                                        1.2
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        1.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Arbitrator].SDRatioBound",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "\n14/03/2025:\n\nX | Y\n--|--\n0.6 | 0\n1.2 | 1",
-                                      "Name": "Memo",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "NitrogenStress",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        0.0,
-                                        1.0
-                                      ],
-                                      "Y": [
-                                        0.5,
-                                        1.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].Fn",
-                                      "Name": "XValue",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 1.0,
+                                      "Units": null,
+                                      "Name": "Constant",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -4028,7 +4031,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].Phyllochron.Potential",
+                                          "VariableName": "[Leaf].Phyllochron",
                                           "Name": "Phyllochron",
                                           "ResourceName": null,
                                           "Children": [],
@@ -4161,7 +4164,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].Phyllochron.Potential",
+                                              "VariableName": "[Leaf].Phyllochron",
                                               "Name": "Phyllochron",
                                               "ResourceName": null,
                                               "Children": [],
@@ -4740,21 +4743,15 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.005,
-                        0.01,
-                        0.011,
                         0.012,
                         0.02,
-                        0.025,
                         0.03
                       ],
                       "Y": [
                         0.006,
                         0.006,
-                        0.006,
-                        0.006,
-                        0.025,
-                        0.025,
-                        0.025
+                        0.035,
+                        0.035
                       ],
                       "Name": "XYPairs",
                       "ResourceName": null,
@@ -5990,66 +5987,22 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.MinimumFunction, Models",
-                                      "Name": "HIIncrease",
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "HarvestIndexIncrease",
                                       "ResourceName": null,
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.MultiplyFunction, Models",
-                                          "Name": "DailyRate",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Boll].DailyHIIncrease",
-                                              "Name": "HIIncrease",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Boll].DailyPartitioning.BurFraction",
-                                              "Name": "BollBurFraction",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
                                           "$type": "Models.Functions.MaximumFunction, Models",
-                                          "Name": "HIRemaining",
+                                          "Name": "OutstandingHarvestIndexIncrease",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.SubtractFunction, Models",
-                                              "Name": "Calculation",
+                                              "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
+                                              "Expression": "[Bur].PotentialHarvestIndex - [Bur].HarvestIndex",
+                                              "Name": "Increase",
                                               "ResourceName": null,
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Bur].PotentialHarvestIndex",
-                                                  "Name": "PotentialHI",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                },
-                                                {
-                                                  "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Bur].HarvestIndex",
-                                                  "Name": "CurrentHI",
-                                                  "ResourceName": null,
-                                                  "Children": [],
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
@@ -6066,8 +6019,46 @@
                                           ],
                                           "Enabled": true,
                                           "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "Name": "TTRemaining",
+                                          "ResourceName": null,
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
+                                              "Expression": "[Phenology].EarlyFlowering.Target",
+                                              "Name": "BurGrowthTT",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "Units": null,
+                                              "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase",
+                                              "Name": "BurGrowthTTComplete",
+                                              "ResourceName": null,
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
+                                          "Enabled": true,
+                                          "ReadOnly": false
                                         }
                                       ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Phenology].ThermalTime",
+                                      "Name": "ThermalTime",
+                                      "ResourceName": null,
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -6632,66 +6623,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MinimumFunction, Models",
-                              "Name": "HIIncrease",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "HarvestIndexIncrease",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "DailyRate",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].DailyHIIncrease",
-                                      "Name": "HIIncrease",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].DailyPartitioning.SeedFraction",
-                                      "Name": "BollSeedFraction",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "HIRemaining",
+                                  "Name": "OutstandingHarvestIndexIncrease",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "Calculation",
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Seed].PotentialHarvestIndex - [Seed].HarvestIndex",
+                                      "Name": "Increase",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Seed].PotentialHarvestIndex",
-                                          "Name": "PotentialHI",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Seed].HarvestIndex",
-                                          "Name": "CurrentHI",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -6708,8 +6655,46 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].Maturing.Target",
+                                      "Name": "SeedGrowthTT",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                      "Name": "SeedGrowthTTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "ThermalTime",
+                              "ResourceName": null,
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -6718,26 +6703,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
-                  "Units": null,
-                  "Name": "MaximumNConcOLD",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "10/07/2023: Values from: Using seed nitrogen concentration to estimate crop N use-efficiency in\nhigh-yielding irrigated cotton - Ian J. Rochester \n\nValues from:\n\nSadras, V.O. and Wilson, L.J., 1997. Nitrogen accumulation and partitioning in shoots of cotton plants infested with two-spotted spider mites. Aust. J. Agric. Res., 48: 525-533.\n\nMin: 0.040\n\nMax: 0.055\n\n--> **Boquet, D.J. and Breitenbeck, G.A., 2000. Nitrogen Rate Effect on Partitioning of Nitrogen and Dry Matter by Cotton. Crop Sci., 40: 1685-1693.**\n\nMin: 0.033\n\nMax: 0.043\n\nSnider, J., et al. (2021). Chapter 22. Cotton. Crop Physiology. Case Histories for Major Crops. V. O. Sadras and D. F. Calderini: 715-746.\n\n39-55%",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7127,66 +7092,22 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MinimumFunction, Models",
-                              "Name": "HIIncrease",
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "HarvestIndexIncrease",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "DailyRate",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].DailyHIIncrease",
-                                      "Name": "HIIncrease",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].DailyPartitioning.LintFraction",
-                                      "Name": "BollLintFraction",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Functions.MaximumFunction, Models",
-                                  "Name": "HIRemaining",
+                                  "Name": "OutstandingHarvestIndexIncrease",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "Calculation",
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Lint].PotentialHarvestIndex - [Lint].HarvestIndex",
+                                      "Name": "Increase",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Lint].PotentialHarvestIndex",
-                                          "Name": "PotentialHI",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Lint].HarvestIndex",
-                                          "Name": "CurrentHI",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -7203,8 +7124,46 @@
                                   ],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "TTRemaining",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].Maturing.Target",
+                                      "Name": "LintGrowthTT",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "Units": null,
+                                      "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                      "Name": "LintGrowthTTComplete",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTime",
+                              "Name": "ThermalTime",
+                              "ResourceName": null,
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -8758,110 +8717,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "DailyHIIncrease",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Boll].DailyHIIncreaseMin",
-                      "Name": "DailyHIIncreaseMin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "MinimumFunction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "DailyRate",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Boll].DailyHIIncreaseMax",
-                              "Name": "DailyHIIncreaseMax",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                              "NumeratorErrVal": 0.0,
-                              "DenominatorErrVal": 0.0,
-                              "Name": "WtScaler",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Boll].Wt",
-                                  "Name": "BollWt",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 200.0,
-                                  "Units": null,
-                                  "Name": "WtHIScaler",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Boll].DailyHIIncreaseMax",
-                          "Name": "DailyHIIncreaseMax",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": null,
-                  "Name": "DailyHIIncreaseMin",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.04,
-                  "Units": null,
-                  "Name": "DailyHIIncreaseMax",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
                   "Name": "DailyPartitioning",
@@ -8876,11 +8731,11 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             5.0,
-                            8.0
+                            7.0
                           ],
                           "Y": [
-                            1.0,
-                            0.0
+                            0.7,
+                            0.22
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -8910,11 +8765,13 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             5.0,
-                            8.0
+                            6.0,
+                            7.0
                           ],
                           "Y": [
                             0.0,
-                            0.46
+                            0.36,
+                            0.36
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -8936,36 +8793,12 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
+                      "Expression": "1 - [Boll].DailyPartitioning.BurFraction - [Boll].DailyPartitioning.LintFraction",
                       "Name": "SeedFraction",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            5.0,
-                            8.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.54
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].Stage",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -9095,6 +8928,52 @@
                       "Name": "DailyRate",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "BollLoad",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "One",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "Calculation",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Boll].PotentialGrowthRate",
+                          "Name": "PotentialBollGrowthRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Cotton].AboveGround.GrowthRate",
+                          "Name": "AboveGroundGrowthRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
