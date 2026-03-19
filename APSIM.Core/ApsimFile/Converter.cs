@@ -7480,11 +7480,43 @@ internal class Converter
     }
 
     /// <summary>
+    /// Rename Maize Organ "Rachis" to "Cobb"
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion213(JObject root, string fileName)
+    {
+        // Change reporting variables for Rachis
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Rachis.", "[Maize].Cob.");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].EarLive.", "[Maize].Ear.");
+        }
+        // Change graph variables for Rachis
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cob.");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.EarLive.", "Maize.Ear.");
+        }
+        // change biomass removal objects that mention Rachis
+        foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+
+            foreach (var fraction in OrganType["BiomassRemovalFractions"])
+            {
+                if (fraction["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
+                    if (fraction["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
+                        fraction["OrganName"] = "Cob";
+            }
+        }
+    }
+
+    /// <summary>
     /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
-    private static void UpgradeToVersion213(JObject root, string name)
+    private static void UpgradeToVersion214(JObject root, string name)
     {
         List<(string, string)> maizeUpadtes =
         [
