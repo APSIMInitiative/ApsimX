@@ -862,11 +862,16 @@
             {
               "$type": "Models.PMF.Phen.BBCH, Models",
               "Name": "BBCH",
+              "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].BBCH.BBCHCalculation",
                   "Name": "BBCHCalculationFunction",
-                  "VariableName": "[Phenology].BBCH.BBCHCalculation"
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -908,6 +913,107 @@
               "Name": "ThermalTime",
               "ResourceName": null,
               "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "Phyllochron",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "BasePhyllochron",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "FlagLeaf",
+                      "Name": "Phyllochron",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "Phyllochron",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                1.0,
+                                3.4,
+                                4.0
+                              ],
+                              "Y": [
+                                30.0,
+                                30.0,
+                                42.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Structure].LeafTipsAppeared",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FOXphyllo",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        5.0,
+                        10.0
+                      ],
+                      "Y": [
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[CumulativeExcessWaterStress]",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1215,107 +1321,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "Phyllochron",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "BasePhyllochron",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "FlagLeaf",
-                      "Name": "Phyllochron",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "Phyllochron",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                1.0,
-                                3.4,
-                                4.0
-                              ],
-                              "Y": [
-                                30.0,
-                                30.0,
-                                42.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].LeafTipsAppeared",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "FOXphyllo",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        5.0,
-                        10.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[CumulativeExcessWaterStress]",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
