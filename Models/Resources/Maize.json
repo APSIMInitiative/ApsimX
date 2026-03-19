@@ -2023,7 +2023,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Cob].CobNumber * [Maize].Population",
+                  "VariableName": "[Cob].CobNumber",
                   "Name": "CobNumber",
                   "ResourceName": null,
                   "Children": [],
