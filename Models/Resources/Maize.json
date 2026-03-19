@@ -3110,7 +3110,7 @@
                     },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "LargestLeafPosition",
+                      "Name": "X0",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -3124,7 +3124,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.67,
+                          "FixedValue": 0.64,
                           "Units": null,
                           "Name": "RelativePositionOfLargestLeaf",
                           "ResourceName": null,
@@ -3137,92 +3137,30 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "AreaMax",
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "",
+                      "Expression": "92900*EXP(-1.17+0.047*[Structure].FinalLeafNumber)",
+                      "Name": "aMax",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            2.0,
-                            7.0,
-                            12.0,
-                            17.0,
-                            22.0
-                          ],
-                          "Y": [
-                            32530.0,
-                            39259.0,
-                            49659.0,
-                            60000.0,
-                            75000.0,
-                            90000.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].FinalLeafNumber",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "Breadth",
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "",
+                      "Expression": "0.0006-EXP(-0.43*[Structure].FinalLeafNumber)",
+                      "Name": "b",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            5.0,
-                            10.0,
-                            15.0,
-                            20.0,
-                            25.0
-                          ],
-                          "Y": [
-                            -0.377,
-                            -0.144,
-                            -0.059,
-                            -0.027,
-                            -0.016
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].FinalLeafNumber",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.00025,
-                      "Units": null,
-                      "Name": "Skewness",
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "",
+                      "Expression": "-0.009-EXP(-0.2*[Structure].FinalLeafNumber)",
+                      "Name": "a",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4469,33 +4407,6 @@
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].LeafTipsAppeared",
-              "Name": "Tips",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Leaf].ExpandedCohortNo",
-              "Name": "Ligules",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Structure].FinalLeafNumber",
-              "Name": "FinalLeafNumber",
-              "ResourceName": null,
-              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -6846,33 +6757,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\nThe Ear composite biomass object includes all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
-              "Name": "memo",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.CompositeBiomass, Models",
-          "OrganNames": [
-            "Leaf",
-            "Stem",
-            "Husk",
-            "Cob"
-          ],
-          "IncludeLive": true,
-          "IncludeDead": true,
-          "Name": "Stover",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "\nThe Stover composite biomass object includes all above ground organs with the exception of grain,including total structural, non-structural and metabolic pools.\n",
+              "Text": "\nThe EarLive composite biomass object includes all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
               "Name": "memo",
               "ResourceName": null,
               "Children": [],
