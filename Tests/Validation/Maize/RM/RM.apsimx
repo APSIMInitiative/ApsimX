@@ -160,6 +160,9 @@
             "[Maize].Leaf.LAI",
             "[Maize].Leaf.MostRecentlyExpandedPosition",
             "[Maize].Leaf.MostRecentlyExpandedSize",
+            "[Maize].Leaf.Tips",
+            "[Maize].Leaf.Ligules",
+            "[Maize].Leaf.GreenCohortNo",
             "",
             "sum of [Fertiliser].NitrogenApplied from [Clock].EndOfYear to [Plant].Harvesting as Nrate"
           ],
@@ -4055,6 +4058,86 @@
                       "TableName": "PredictedObservedDaily",
                       "XFieldName": "Observed.Maize.Leaf.ExpandedCohortNo",
                       "YFieldName": "Predicted.Maize.Leaf.ExpandedCohortNo",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": false,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Green Cohort No",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "PredictedObservedDaily",
+                      "XFieldName": "Observed.Maize.Leaf.GreenCohortNo",
+                      "YFieldName": "Predicted.Maize.Leaf.GreenCohortNo",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": false,
