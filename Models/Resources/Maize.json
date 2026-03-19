@@ -1979,6 +1979,87 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "HarvestIndex",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grain].Wt",
+                  "Name": "GrainWt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[AboveGround].Wt",
+                  "Name": "AboveGroundWt",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "NumberPerEar",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grain].NumberFunction",
+                  "Name": "GrainNumber",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Cob].CobNumber * [Maize].Population",
+                  "Name": "CobNumber",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "NitrogenHarvestIndex",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Grain].N",
+                  "Name": "GrainN",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[AboveGround].N",
+                  "Name": "AboveGroundN",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -2842,6 +2923,9 @@
           "TipsAtEmergence": 0,
           "CohortsAtInitialisation": 0,
           "FractionDied": 0.0,
+          "MostRecentlyExpandedPosition": 0,
+          "MostRecentlyExpandedSize": 0.0,
+          "MostRecentlyExpandedPotentialSize": 0.0,
           "Name": "Leaf",
           "ResourceName": null,
           "Children": [
@@ -4385,6 +4469,33 @@
                   "ReadOnly": false
                 }
               ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].LeafTipsAppeared",
+              "Name": "Tips",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].ExpandedCohortNo",
+              "Name": "Ligules",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Structure].FinalLeafNumber",
+              "Name": "FinalLeafNumber",
+              "ResourceName": null,
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -6735,7 +6846,33 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\nThe EarLive composite biomass object includes all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
+              "Text": "\nThe Ear composite biomass object includes all organs within the Ear to allow output for total dry matter and Nutrient contents, including total structural, non-structural and metabolic pools.\n",
+              "Name": "memo",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.CompositeBiomass, Models",
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Husk",
+            "Cob"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true,
+          "Name": "Stover",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "\nThe Stover composite biomass object includes all above ground organs with the exception of grain,including total structural, non-structural and metabolic pools.\n",
               "Name": "memo",
               "ResourceName": null,
               "Children": [],
@@ -8206,6 +8343,415 @@
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025"
                   ],
                   "Name": "DeKalb_62_97VT3_Lizaso",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "555",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 260",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 560",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 640",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.31",
+                    "[Grain].MinimumNConc.FixedValue = 0.00955 //0.0125",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "1197AMXT",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 260",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 560",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.20",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 690",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.31",
+                    "[Grain].MinimumNConc.FixedValue = 0.00875 //0.0125",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "DKC60",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 285 //270",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 650 //690",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.0 //2.1",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 550",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 700 //650",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.30",
+                    "[Grain].MinimumNConc.FixedValue = 0.0115",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "DKC63",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 690",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.2 //2.1",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 550",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 640 //600",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.31 //0.305",
+                    "[Grain].MinimumNConc.FixedValue = 0.0125",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "NK0748",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270 //270",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 660 //690",
+                    "[Phenology].Maturing.Target.FixedValue = 50",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 50",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.0 //2.1",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 950",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 650 //670",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.3",
+                    "[Grain].MinimumNConc.FixedValue = 0.0115",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 22",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "P1108Q",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "RM_Hybrid",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 200",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 150",
+                    "[Phenology].GrainFilling.Target.FixedValue = 500",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 550",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.275",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "P7211AM",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 220",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 550",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 550",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "DKC31-85RIB",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 240",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 600",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 650",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "G90S99-DV-EZ1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 260",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 740",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 625",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "G03B19-AA-EZ1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 265",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 750",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 750",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "DKC105-35RIB",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 770",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 750",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "P0924Q",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 280",
+                    "[Phenology].Photosensitive.Target.XYPairs.Y = 0, 0 ,0",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 800",
+                    "[Phenology].Maturing.Target.FixedValue = 10",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.25",
+                    "[Stem].DMDemands.Structural.DMDemandFunction.PartitionFraction.XYPairs.Y = 0.1, 1, 1, 1,0",
+                    "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
+                    "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue = 675",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Root.SpecificRootLength.FixedValue = 135",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
+                    "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.X = 0, 0.05, 1",
+                    "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1"
+                  ],
+                  "Name": "P2089AML",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "EarMan",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 270",
+                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 1",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 650",
+                    "[Phenology].Maturing.Target.FixedValue= 1",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 2.65",
+                    "[Phenology].MaturityToHarvestRipe.Target.FixedValue= 250",
+                    "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue=25",
+                    "[Maize].Grain.MaximumGrainsPerCob.FixedValue=550",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3"
+                  ],
+                  "Name": "AG7800",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Juvenile.Target.FixedValue = 220",
+                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 170",
+                    "[Phenology].GrainFilling.Target.FixedValue = 500",
+                    "[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10",
+                    "[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.7,1,1",
+                    "[Grain].MaximumGrainsPerCob.FixedValue = 500",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.6"
+                  ],
+                  "Name": "P39G12",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
