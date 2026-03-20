@@ -7,9 +7,6 @@ namespace Models.Soils;
 
 /// <summary>
 /// 
-/// *note: This model has no effect. 
-/// Model only used for documentation purposes.* 
-/// 
 /// # APSIM Waterlogging Functions Documentation
 ///
 /// Sotirios Archontoulis, Isaiah Huber, Ke Liu, Matthew Harrison
