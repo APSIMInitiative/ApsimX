@@ -5226,7 +5226,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Rachis].CobNumber",
+                          "VariableName": "[Cob].CobNumber",
                           "Name": "OrganPopulation",
                           "ResourceName": null,
                           "Children": [],
@@ -5789,7 +5789,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Rachis].Live.Wt",
+                  "VariableName": "[Cob].Live.Wt",
                   "Name": "CobMass",
                   "ResourceName": null,
                   "Children": [],
@@ -5798,7 +5798,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Rachis].CobNumber",
+                  "VariableName": "[Cob].CobNumber",
                   "Name": "CobNumber",
                   "ResourceName": null,
                   "Children": [],
@@ -5967,7 +5967,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Rachis].MinimumNConc",
+              "VariableName": "[Cob].MinimumNConc",
               "Name": "CriticalNConc",
               "ResourceName": null,
               "Children": [],
@@ -6061,7 +6061,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Rachis].CobNumber",
+                          "VariableName": "[Cob].CobNumber",
                           "Name": "OrganPopulation",
                           "ResourceName": null,
                           "Children": [],
@@ -6235,7 +6235,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Rachis].DMDemands.Structural.StructuralFraction",
+                          "VariableName": "[Cob].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "ResourceName": null,
                           "Children": [],
@@ -6296,7 +6296,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Rachis].minimumNconc",
+                      "VariableName": "[Cob].minimumNconc",
                       "Name": "MinNconc",
                       "ResourceName": null,
                       "Children": [],
@@ -6305,7 +6305,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Rachis].potentialDMAllocation.Structural",
+                      "VariableName": "[Cob].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "ResourceName": null,
                       "Children": [],
@@ -6328,7 +6328,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Rachis].criticalNConc",
+                          "VariableName": "[Cob].criticalNConc",
                           "Name": "CritNconc",
                           "ResourceName": null,
                           "Children": [],
@@ -6337,7 +6337,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Rachis].minimumNconc",
+                          "VariableName": "[Cob].minimumNconc",
                           "Name": "MinNconc",
                           "ResourceName": null,
                           "Children": [],
@@ -6350,7 +6350,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Rachis].potentialDMAllocation.Structural",
+                      "VariableName": "[Cob].potentialDMAllocation.Structural",
                       "Name": "PotentialDMAllocation",
                       "ResourceName": null,
                       "Children": [],
@@ -6368,7 +6368,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Rachis].nitrogenDemandSwitch",
+                      "VariableName": "[Cob].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "ResourceName": null,
                       "Children": [],
@@ -6377,7 +6377,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Rachis].maximumNconc",
+                      "VariableName": "[Cob].maximumNconc",
                       "Name": "MaxNconc",
                       "ResourceName": null,
                       "Children": [],
@@ -6481,7 +6481,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Rachis].MinimumNConc",
+              "VariableName": "[Cob].MinimumNConc",
               "Name": "initialNConcFunction",
               "ResourceName": null,
               "Children": [],
@@ -7198,7 +7198,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis"
+            "Cob"
           ],
           "IncludeLive": true,
           "IncludeDead": true,
@@ -7248,7 +7248,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis",
+            "Cob",
             "Root"
           ],
           "IncludeLive": true,
@@ -7276,7 +7276,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis",
+            "Cob",
             "Root"
           ],
           "IncludeLive": true,
@@ -7304,7 +7304,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis",
+            "Cob",
             "Root"
           ],
           "IncludeLive": false,
@@ -7383,7 +7383,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis"
+            "Cob"
           ],
           "IncludeLive": true,
           "IncludeDead": false,
@@ -7410,7 +7410,7 @@
             "Stem",
             "Husk",
             "Grain",
-            "Rachis"
+            "Cob"
           ],
           "IncludeLive": false,
           "IncludeDead": true,
@@ -9302,7 +9302,7 @@
           "$type": "Models.PMF.CompositeBiomass, Models",
           "OrganNames": [
             "Husk",
-            "Rachis"
+            "Cob"
           ],
           "IncludeLive": true,
           "IncludeDead": false,
