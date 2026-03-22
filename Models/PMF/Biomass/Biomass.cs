@@ -189,6 +189,27 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>Total weight</summary>
+        [Units("g/m2")]
+        public double TotalWt
+        {
+            get
+            {
+                    return StructuralWt + MetabolicWt + StorageWt;
+            }
+        }
+
+        /// <summary>Total N</summary>
+        [Units("g/m2")]
+        public double TotalN
+        {
+            get
+            {
+                return StructuralN + MetabolicN + StorageN;
+            }
+        }
+
+
         /// <summary>Initializes a new instance of the <see cref="Biomass"/> class.</summary>
         public Biomass() { }
 
