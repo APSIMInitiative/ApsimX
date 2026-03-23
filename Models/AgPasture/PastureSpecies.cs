@@ -993,6 +993,14 @@ namespace Models.AgPasture
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });
 
+
+        /// <summary>Tolerance for the mass balance check after scenesence etc. (kgDM/ha).</summary>
+        [Description("Tolerance for the mass balance check after scenesence etc.")]
+        [Units("kgDM/ha")]
+        public double MassBalanceTolerance { get; set; } = 0.00001;  //VOS - this is the value originally used and here set as a default
+
+
+
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Private variables  -----------------------------------------------------------------------------------------
@@ -3281,10 +3289,10 @@ namespace Models.AgPasture
             //    Examples\Tutorials\Sensitivity_SobolMethod.apsimx
 
             // Check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(previousDM + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
+            if (!MathUtilities.FloatsAreEqual(previousDM + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, MassBalanceTolerance))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
+            if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, MassBalanceTolerance))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
