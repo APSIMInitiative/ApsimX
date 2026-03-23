@@ -77,7 +77,6 @@ namespace UserInterface.Presenters
             {
                 Water water = null;
                 Physical physical = null;
-                SoilCrop crop = null;
                 if (model is Water)
                 {
                     water = model as Water;
@@ -90,9 +89,8 @@ namespace UserInterface.Presenters
                 }
                 else if (model is SoilCrop)
                 {
-                    crop = model as SoilCrop;
-                    physical = model.Node.FindSibling<Physical>();
-                    water = model.Node.FindSibling<Water>();
+                    physical = model.Parent as Physical;
+                    water = physical.Node.FindSibling<Water>();
                 }
 
                 if (water != null)
@@ -104,12 +102,12 @@ namespace UserInterface.Presenters
 
                     if (model is SoilCrop soilCrop)
                     {
-                        llsoilName = (model as SoilCrop).Name;
+                        llsoilName = soilCrop.Name;
                         string cropName = llsoilName.Substring(0, llsoilName.IndexOf("Soil"));
                         llsoilName = cropName + " LL";
-                        llsoil = (model as SoilCrop).LL;
+                        llsoil = soilCrop.LL;
                         cllName = llsoilName;
-                        relativeLL = (model as SoilCrop).LL;
+                        relativeLL = soilCrop.LL;
                     }
                     //Since we can view the soil relative to water, lets not have the water node graphing options effect this graph.
                     if (physical.Thickness != null)
