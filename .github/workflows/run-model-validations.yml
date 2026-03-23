@@ -60,6 +60,7 @@ jobs:
           SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}
           CORNSOY_PASSWORD: ${{ secrets.CORNSOY_PASSWORD }}
           SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
+          MAIZE_PASSWORD: ${{ secrets.MAIZE_PASSWORD }}
         run: ./.github/workflows/scripts/extract-protected-datasets.sh
 
       - name: Build Models and APSIM.Workflow projects

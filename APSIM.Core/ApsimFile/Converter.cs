@@ -18,7 +18,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 212; } }
+    public static int LatestVersion { get { return 213; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7479,4 +7479,42 @@ internal class Converter
             (bbch["Children"] as JArray).Add(bbchCalculationCanola);
         }
     }
-}
+
+    /// <summary>
+    /// Rename Maize Organ "Rachis" to "Cobb"
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion213(JObject root, string fileName)
+    {
+        // Change reporting variables for Rachis
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Rachis.", "[Maize].Cob.");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].EarLive.", "[Maize].Ear.");
+        }
+        // Change graph variables for Rachis
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cob.");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.EarLive.", "Maize.Ear.");
+        }
+        // change biomass removal objects that mention Rachis
+        foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+
+            foreach (var fraction in OrganType["BiomassRemovalFractions"])
+            {
+                if (fraction["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
+                    if (fraction["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
+                        fraction["OrganName"] = "Cob";
+            }
+
+
+        }
+
+
+        }
+
+
+    }
