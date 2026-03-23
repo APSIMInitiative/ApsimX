@@ -95,11 +95,11 @@ namespace APSIM.Shared.Utilities
     /// 
     /// - Each day is recorded as the difference between that day and the last. 
     ///   So if the max temperature is 25.6 on the first day and 23.5 on the 
-    ///   2nd day, a value of -21 is stored reflecting a change of minus 2.1 
-    ///   degrees. The first day is the difference between the value and 0
+    ///   2nd day, a value of -2.1 is stored. The first day is the difference 
+    ///   between the value and 0.
     /// 
-    /// - If the difference between the last day and the next is 0, then only a 
-    ///   value of 0 is stored.
+    /// - If the difference between the last day and the next is 0, then a 0 
+    ///   length value is stored, representing no change.
     /// 
     /// - If a column contains text data, the entire column will be stored as 
     ///   text values instead of numbers. However the text value is still 
@@ -122,18 +122,18 @@ namespace APSIM.Shared.Utilities
     /// 
     /// WORD (Start Date)
     ///
-    /// 8-bit unsigned int (Number of constants)
+    /// 8-bit int (Number of constants)
     /// WORD x constants (Name)
     /// WORD x constants (Value)
     /// WORD x constants (Comment)
     /// 
-    /// 8-bit unsigned int (Number of columns)
+    /// 8-bit int (Number of columns)
     /// WORD x columns (Name)
     /// WORD x columns (Units)
     /// 4-bit int x columns (Type)
     /// 4-bit int x columns (Decimal Places)
     /// 
-    /// 32-bit unsigned int (Number of data rows)
+    /// 32-bit int (Number of data rows)
     /// NUMBER x columns x rows (difference values, stored column first)
     /// 
     /// ---------------
@@ -158,18 +158,6 @@ namespace APSIM.Shared.Utilities
     /// </summary>
     public class MetFile
     {
-        /// <summary>
-        /// Symbol dictionary for converting from a 4-bit hex to data number 
-        /// character
-        /// </summary>
-        private static string[] SYMBOLS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-", "/", "nan", "E", ","];
-
-        /// <summary>
-        /// Symbol dictionary for converting from a 4-bit hex to data number 
-        /// character</summary>
-        private static Dictionary<char, char> SYMBOLS_DICT = new Dictionary<char, char>() { {'0', '0'}, {'1', '1'}, {'2', '2'}, {'3', '3'}, {'4', '4'}, {'5', '5'}, {'6', '6'}, {'7', '7'}, 
-                                                                                            {'8', '8'}, {'9', '9'}, {'.', 'a'}, {'-', 'b'}, {'/', 'c'}, {'n', 'd'}, {'E', 'e'}, {',', 'f'} };
-
         /// <summary>
         /// Minimum spacing for a column of data. Values that are less than 
         /// this in a column will be padded with whitespace
@@ -280,6 +268,65 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Allows loading of a metfile from a series of arrays instead of from 
+        /// file. Used for situations where metfile data is being created from 
+        /// another type of data source.
+        /// </summary>
+        /// <param name="constants">
+        /// Array of constant strings. Provided in the format of:
+        /// Name = Value
+        /// </param>
+        /// <param name="columns">An array of column names</param>
+        /// <param name="units">An array of unit names</param>
+        /// <param name="values">
+        /// An array of values. This is a 2x2 array stored 1 dimensionally, 
+        /// where each row has a width equal to the number of columns. Date is 
+        /// not stored on each row.
+        /// </param>
+        /// <param name="startDate">
+        /// The starting date in string format yyy-MM-dd
+        /// </param>
+        public void Load(string[] constants, string[] columns, string[] units, double[] values, string startDate)
+        {
+            data = new MetData();
+            foreach(string line in constants)
+            {
+                if (!line.Contains('='))
+                    throw new Exception($"{line} is supposed to be a constant but does not contain an equals '=' sign");
+                string[] parts = line.Split('=');
+                MetConstant constant = new MetConstant(parts[0].Trim(), parts[1].Trim());
+                data.Contants.Add(constant);
+            }
+
+            if (columns.Length != units.Length)
+                throw new Exception($"Columns array and Units array have different sizes. {columns.Length} != {units.Length}");
+
+            int numColumns = columns.Length;
+            for(int i = 0; i < numColumns; i++)
+            {
+                MetColumn column = new MetColumn(columns[i], units[i]);
+                data.Columns.Add(column);
+            }
+
+            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
+
+            for(int i = 0; i < values.Length; i += numColumns)
+            {
+                MetRow row = new MetRow();
+                row.Date = date;
+                date = date.AddDays(1);
+
+                for(int j = 0; j < numColumns; j++)
+                {
+                    row.Inputs.Add(values[i].ToString());
+                    row.Values.Add(values[i]);
+                }
+                data.Rows.Add(row);
+            }
+        }
+
+        /// <summary>
         /// Save the content of the metfile to the given filepath.
         /// Optional format flag, defaults to .met text file.
         /// </summary>
@@ -308,17 +355,14 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public double[] GetDay(DateTime date)
         {
-            int numberOfDays = (int)(date.Date - StartDate.Date).TotalDays;
-            MetRow day = data.Rows[numberOfDays];
-            if (day.Date == date)
-            {
-                return day.Values.ToArray();
-            }
-            else // fallback in case something has gone wrong, we just search the list
+            int days = (date - data.StartDate).Days;
+            if (date == data.Rows[days].Date)
+                return data.Rows[days].Values.ToArray();
+            else
             {
                 foreach(MetRow row in data.Rows)
-                    if (date == row.Date)
-                        return row.Values.ToArray();
+                if (date == row.Date)
+                    return row.Values.ToArray();
             }
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
         }
@@ -326,10 +370,24 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Returns the met file as a text memory stream.
         /// </summary>
-        public Stream GetStream()
+        /// <param name="format">Met Format to create the stream from</param>
+        /// <returns>A MemoryStream of bytes for the MetFile</returns>
+        public Stream GetStream(MetFileFormat format)
         {
-            string output = WriteMet(data);
-            return new MemoryStream(Encoding.UTF8.GetBytes(output));
+            if (format == MetFileFormat.Text)
+            {
+                string output = WriteMet(data);
+                return new MemoryStream(Encoding.UTF8.GetBytes(output));
+            }
+            else if (format == MetFileFormat.Binary)
+            {
+                HexData output = WriteBinaryV2(data);
+                return new MemoryStream(Convert.FromHexString(output.Hex));
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -531,7 +589,7 @@ namespace APSIM.Shared.Utilities
                     string text = Convert.ToHexString(bytes);
                     HexData data = new HexData(text, 0);
                     if (ReadBinaryVersion(data) == 1)
-                        return ReadBinaryV1(data);
+                        return ReadBinaryV1Fast(data);
                     else
                         return ReadBinaryV2(data);
                 }
@@ -816,6 +874,7 @@ namespace APSIM.Shared.Utilities
                 {
                     firstRow = false;
                     prevDay = row.Date;
+                    metData.StartDate = row.Date;
                 }
                 else
                 {
@@ -947,7 +1006,7 @@ namespace APSIM.Shared.Utilities
             
             //-- Constants --
             //Number of Constants / Comments
-            output.Append(UIntToHex((uint)datelessMetData.Contants.Count, 2));
+            output.Append(UIntToHex(datelessMetData.Contants.Count, 2));
             //Names
             foreach(MetConstant constant in datelessMetData.Contants)
                 output.Append(StringToHex(constant.Name));
@@ -961,7 +1020,7 @@ namespace APSIM.Shared.Utilities
             //-- Columns --
             //Number of columns
             int columnsLength = datelessMetData.Columns.Count;
-            output.Append(UIntToHex((uint)columnsLength, 2));
+            output.Append(UIntToHex(columnsLength, 2));
             //Names
             foreach(MetColumn column in datelessMetData.Columns)
                 output.Append(StringToHex(column.Name));
@@ -973,11 +1032,11 @@ namespace APSIM.Shared.Utilities
                 output.Append(TypeToHex(column.DataType));
             //Decimal Places
             foreach(MetColumn column in datelessMetData.Columns)
-                output.Append(UIntToHex((uint)column.DecimalPlaces, 1));
+                output.Append(UIntToHex(column.DecimalPlaces));
 
             //-- Data --
             //Number of rows
-            output.Append(UIntToHex((uint)datelessMetData.Rows.Count, 8));
+            output.Append(UIntToHex(datelessMetData.Rows.Count, 8));
             for(int i = 0; i < columnsLength; i++)
             {
                 double previousValue = 0;
@@ -991,11 +1050,11 @@ namespace APSIM.Shared.Utilities
                         string input = row.Inputs[i];
                         if (input == previousString)
                         {
-                            output.Append(UIntToHex(0, 1));
+                            output.Append(UIntToHex(0));
                         }
                         else
                         {
-                            output.Append(UIntToHex(1, 1));
+                            output.Append(UIntToHex(1));
                             output.Append(StringToHex(input));
                             previousString = input;
                         }
@@ -1005,7 +1064,7 @@ namespace APSIM.Shared.Utilities
                         double difference = Math.Round(previousValue - row.Values[i], decimalPlaces);
                         string differenceString = difference.ToString();
                         if (differenceString == "0")
-                            output.Append(UIntToHex(0, 1));
+                            output.Append(UIntToHex(0));
                         else
                             output.Append(EncodeNumber(differenceString));
                         previousValue = row.Values[i];
@@ -1041,9 +1100,10 @@ namespace APSIM.Shared.Utilities
             string startDateString = HexToString(data);
             if (!DateTime.TryParseExact(startDateString, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime startDate))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
+            metData.StartDate = startDate;
 
             //read constants
-            int constantsLength = (int)HexToUInt(data, 2);
+            int constantsLength = HexToUInt(data, 2);
             for (int i = 0; i < constantsLength; i++)
                 metData.Contants.Add(new MetConstant());
 
@@ -1057,7 +1117,7 @@ namespace APSIM.Shared.Utilities
                 constant.Comment = HexToString(data);
 
             //headers
-            int columnsLength = (int)HexToUInt(data, 2);
+            int columnsLength = HexToUInt(data, 2);
             for (int i = 0; i < columnsLength; i++)
                 metData.Columns.Add(new MetColumn());
 
@@ -1071,14 +1131,14 @@ namespace APSIM.Shared.Utilities
                 column.DataType = HexToType(data);
 
             foreach(MetColumn column in metData.Columns)
-                column.DecimalPlaces = (int)HexToUInt(data, 1);
+                column.DecimalPlaces = HexToUInt(data, 1);
 
             //Add date column back in at front
             columnsLength += 1;
             metData.Columns.Insert(0, new MetColumn("date", ""));
 
             //create rows and add date column to them
-            int rowsLength = (int)HexToUInt(data, 8);
+            int rowsLength = HexToUInt(data, 8);
             DateTime date = startDate;
             for (int i = 0; i < rowsLength; i++)
             {
@@ -1105,7 +1165,7 @@ namespace APSIM.Shared.Utilities
                 {
                     if (dataType == typeof(string))
                     {
-                        int difference = (int)HexToUInt(data, 1);
+                        int difference = HexToUInt(data, 1);
                         row.Values.Add(double.NaN);
                         if (difference == 1) //string is not the same as previous
                             previousString = HexToString(data);
@@ -1146,190 +1206,6 @@ namespace APSIM.Shared.Utilities
             }
 
             return metData;
-        }
-        
-        /// <summary>
-        /// Converts a single hex digit to one of the data types that can be 
-        /// stored
-        /// </summary>
-        /// <param name="data">Hex memory object</param>
-        /// <returns>
-        /// A system type matching the provided hex value
-        /// </returns>
-        private static Type HexToType(HexData data)
-        {
-            int value = (int)HexToUInt(data, 1);
-            if (value == 1)
-                return typeof(DateTime);
-            else if (value == 2)
-                return typeof(string);
-            else if (value == 3)
-                return typeof(double);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Converts a varaible size hex string to an unsigned int. Will 
-        /// update the hex memory position after reading.
-        /// </summary>
-        /// <param name="data">Hex memory object</param>
-        /// <param name="size">How many hex symbols to read. 1 hex = 4 bits</param>
-        /// <returns>
-        /// Unsigned Integer value that was read.
-        /// </returns>
-        private static uint HexToUInt(HexData data, int size)
-        {
-            string substring = data.Hex.Substring(data.Position, size);
-            uint value = Convert.ToUInt32(substring, 16);
-            data.Position += size;
-            return value;
-        }
-
-        /// <summary>
-        /// Converts a varaible size hex string to an ASSCI string. Will update 
-        /// the hex memory position after reading.
-        /// 
-        /// Strings are stored with a integer at the start marking how many 
-        /// characters are in the string, followed by the text stored in hex 
-        /// symbols.
-        /// </summary>
-        /// <param name="data">Hex memory object</param>
-        /// <returns>
-        /// The string value that was stored in the given hex memory.
-        /// </returns>
-        private static string HexToString(HexData data)
-        {
-            int length = (int)HexToUInt(data, 2);
-            int count = length * 2;
-
-            string substring = data.Hex.Substring(data.Position, count);
-            byte[] output = Convert.FromHexString(substring);
-
-            data.Position += count;
-
-            return Encoding.UTF8.GetString(output);
-        }
-
-        /// <summary>
-        /// Converts a hex string to a metfile number string. Will update 
-        /// the hex memory position after reading.
-        /// 
-        /// Uses a symbol lookup table to store characters of a number as a 
-        /// string in a small size.
-        /// 
-        /// The first hex symbol defines the number of characters that make up 
-        /// the number, then it is followed by a hex symbol for each character.
-        /// </summary>
-        /// <param name="data">Hex memory object</param>
-        /// <returns>
-        /// A string representing a number value
-        /// </returns>
-        private static string DecodeNumber(HexData data)
-        {
-            int length = (int)HexToUInt(data, 1);
-
-            string output = "";
-            for (int i = 0; i < length; i++)
-            {
-                int index = (int)HexToUInt(data, 1);
-                output += SYMBOLS[index];
-            }
-
-            return output;
-        }
-
-        /// <summary>
-        /// Converts a system Type to a hex character
-        /// Types allowed:
-        ///   - string
-        ///   - double
-        ///   - DateTime
-        /// </summary>
-        /// <param name="type">System Type</param>
-        /// <returns>
-        /// A hex string of length 1 with the symbol for that type
-        /// </returns>
-        private static string TypeToHex(Type type)
-        {
-            if (type == typeof(DateTime))
-                return "1";
-            else if (type == typeof(string))
-                return "2";
-            else if (type == typeof(double))
-                return "3";
-            else 
-                return "0";
-        }
-
-        /// <summary>
-        /// Converts an unsigned int to a hex string representation.
-        /// </summary>
-        /// <param name="value">The value to be converted</param>
-        /// <param name="size">The number of hex symbols to use</param>
-        /// <returns>
-        /// A hex string of the unsigned integer number
-        /// </returns>
-        private static string UIntToHex(uint value, int size)
-        {
-            string output = value.ToString("x");
-            while(output.Length < size)
-                output = "0" + output;
-            return output;
-        }
-
-        /// <summary>
-        /// Converts an ASSCI string to a hex string. Each ASSCI character 
-        /// takes up two hex symbols.
-        /// </summary>
-        /// <param name="data">String to convert</param>
-        /// <returns>A hex string representation of the ASSCI string</returns>
-        private static string StringToHex(string data)
-        {
-            string length = UIntToHex((uint)data.Length, 2);
-
-            string text = "";
-            foreach(char c in data)
-                text += UIntToHex(c, 2);
-
-            return length + text;
-        }
-
-        /// <summary>
-        /// Converts a metfile number into hex symbols.
-        /// 
-        /// Uses a symbol lookup table to store characters of a number as a 
-        /// string in a small size.
-        /// 
-        /// The first hex symbol defines the number of characters that make up 
-        /// the number, then it is followed by a hex symbol for each character.
-        /// </summary>
-        /// <param name="data">Number in a string to convert</param>
-        /// <returns>Hex string representation of the number</returns>
-        private static string EncodeNumber(string data)
-        {
-            string output = "";
-            if (data.ToLower() == "nan")
-            {
-                output = UIntToHex(1, 1);
-                output += SYMBOLS_DICT['n'];
-            }
-            else
-            {
-                //numbers ending in .0 are just the number before the decimal
-                string trimmed = data;
-                if (trimmed.EndsWith(".0"))
-                    trimmed = data.Replace(".0", "");
-                if (trimmed.StartsWith("-0."))
-                    trimmed = trimmed.Replace("-0.", "-.");
-                //limit text to 15 characters because length must be single hex digit
-                if (trimmed.Length > 15)
-                    trimmed = trimmed.Substring(0, 15); 
-                output = UIntToHex((uint)trimmed.Length, 1);
-                foreach (char c in trimmed)
-                    output += SYMBOLS_DICT[c];
-            }
-            return output;
         }
 
         /// <summary>
@@ -1422,6 +1298,320 @@ namespace APSIM.Shared.Utilities
                 throw new Exception($"Cannot find met file in {filepath}. Zip file must contain a .met or .bin file.");
             else
                 return new WeatherZip(bytes, format);
+        }
+
+        ////////////////////////////////////////////////////////////////////////
+        // Hex Conversion Functions
+        ////////////////////////////////////////////////////////////////////////
+        
+        /// <summary>
+        /// Converts a system Type to a hex character
+        /// Types allowed: DateTime, string, double
+        /// </summary>
+        /// <param name="type">System Type</param>
+        /// <returns>
+        /// A hex string of length 1 with the symbol for that type
+        /// </returns>
+        private static char TypeToHex(Type type)
+        {
+            if (type == typeof(DateTime))
+                return '1';
+            else if (type == typeof(string))
+                return '2';
+            else if (type == typeof(double))
+                return '3';
+            else
+                return '0';
+        }
+        
+        /// <summary>
+        /// Converts a hex character to a system Type
+        /// Types allowed: DateTime, string, double
+        /// Will 
+        /// update the hex memory position after reading.
+        /// </summary>
+        /// <param name="data">Hex memory object</param>
+        /// <returns>
+        /// A system type matching the provided hex value
+        /// </returns>
+        private static Type HexToType(HexData data)
+        {
+            char c = data.Hex[data.Position];
+            data.Position += 1;
+            switch(c)
+            {
+                case '1': return typeof(DateTime);
+                case '2': return typeof(string);
+                case '3': return typeof(double);
+                default: return typeof(object);
+            }
+        }
+
+        /// <summary>
+        /// Converts a character to a hex character symbol
+        /// These symbols are a restricted character set that only covers the 
+        /// characters needed to represent a met number.
+        /// </summary>
+        /// <param name="symbol">Character to convert</param>
+        /// <returns>Hex character</returns>
+        private static char SymbolToHex(char symbol)
+        {
+            switch(symbol)
+            {
+                case '0': return '0';
+                case '1': return '1';
+                case '2': return '2';
+                case '3': return '3';
+                case '4': return '4';
+                case '5': return '5';
+                case '6': return '6';
+                case '7': return '7';
+                case '8': return '8';
+                case '9': return '9';
+                case '.': return 'A';
+                case '-': return 'B';
+                case '/': return 'C';
+                case 'n': return 'D';
+                case 'E': return 'E';
+                case ',': return 'F';
+                default: return '0';
+            }
+        }
+
+        /// <summary>
+        /// Converts a hex character to a character symbol
+        /// These symbols are a restricted character set that only covers the 
+        /// characters needed to represent a met number.
+        /// Will update the hex memory position after reading.
+        /// </summary>
+        /// <param name="data">HexData object</param>
+        /// <returns>Character of met number</returns>
+        private static string HexToSymbol(HexData data)
+        {
+            char c = data.Hex[data.Position];
+            data.Position += 1;
+            switch(c)
+            {
+                case '0': return "0";
+                case '1': return "1";
+                case '2': return "2";
+                case '3': return "3";
+                case '4': return "4";
+                case '5': return "5";
+                case '6': return "6";
+                case '7': return "7";
+                case '8': return "8";
+                case '9': return "9";
+                case 'A': return ".";
+                case 'B': return "-";
+                case 'C': return "/";
+                case 'D': return "nan";
+                case 'E': return "E";
+                case 'F': return ",";
+                default: return "";
+            }
+        }
+
+        /// <summary>
+        /// Converts an unsigned int to a hex string representation.
+        /// </summary>
+        /// <param name="value">The value to be converted</param>
+        /// <returns>
+        /// A hex string of the unsigned integer number
+        /// </returns>
+        private static char UIntToHex(int value)
+        {
+            switch(value)
+            {
+                case 0: return '0';
+                case 1: return '1';
+                case 2: return '2';
+                case 3: return '3';
+                case 4: return '4';
+                case 5: return '5';
+                case 6: return '6';
+                case 7: return '7';
+                case 8: return '8';
+                case 9: return '9';
+                case 10: return 'A';
+                case 11: return 'B';
+                case 12: return 'C';
+                case 13: return 'D';
+                case 14: return 'E';
+                case 15: return 'F';
+                default: return '0';
+            }
+        }
+
+        /// <summary>
+        /// Converts a single character hex string to an unsigned int. Will 
+        /// update the hex memory position after reading.
+        /// Optimised version to speed up DecodeNumber which only uses length 1 
+        /// integers.
+        /// </summary>
+        /// <param name="data">Hex memory object</param>
+        /// <returns>
+        /// Integer value that was read.
+        /// </returns>
+        private static int HexToUInt(HexData data)
+        {
+            char c = data.Hex[data.Position];
+            data.Position += 1;
+            switch(c)
+            {
+                case '0': return 0;
+                case '1': return 1;
+                case '2': return 2;
+                case '3': return 3;
+                case '4': return 4;
+                case '5': return 5;
+                case '6': return 6;
+                case '7': return 7;
+                case '8': return 8;
+                case '9': return 9;
+                case 'A': return 10;
+                case 'B': return 11;
+                case 'C': return 12;
+                case 'D': return 13;
+                case 'E': return 14;
+                case 'F': return 15;
+                default: return 0;
+            }
+        }
+
+        /// <summary>
+        /// Converts a varaible size int to a hex string representation.
+        /// </summary>
+        /// <param name="value">The value to be converted</param>
+        /// <param name="size">The number of hex symbols to use. 1 hex = 4 bits</param>
+        /// <returns>
+        /// A hex string of the unsigned integer number
+        /// </returns>
+        private static string UIntToHex(int value, int size)
+        {
+            string output = value.ToString("x");
+            while(output.Length < size)
+                output = "0" + output;
+            return output;
+        }
+
+        /// <summary>
+        /// Converts a varaible size hex string to an int. Will 
+        /// update the hex memory position after reading.
+        /// </summary>
+        /// <param name="data">Hex memory object</param>
+        /// <param name="size">How many hex symbols to read. 1 hex = 4 bits</param>
+        /// <returns>
+        /// Unsigned Integer value that was read.
+        /// </returns>
+        private static int HexToUInt(HexData data, int size)
+        {
+            string substring = data.Hex.Substring(data.Position, size);
+            data.Position += size;
+            return Convert.ToInt32(substring, 16);
+        }
+
+        /// <summary>
+        /// Converts an ASCII string to a hex string. Each ASCII character 
+        /// takes up two hex symbols.
+        /// </summary>
+        /// <param name="data">String to convert</param>
+        /// <returns>A hex string representation of the ASCII string</returns>
+        private static string StringToHex(string data)
+        {
+            string length = UIntToHex(data.Length, 2);
+            StringBuilder text = new StringBuilder(length);
+            foreach(char c in data)
+                text.Append(UIntToHex(c, 2));
+            return length + text;
+        }
+
+        /// <summary>
+        /// Converts a varaible size hex string to an ASCII string. Will update 
+        /// the hex memory position after reading.
+        /// Strings are stored with a integer at the start marking how many 
+        /// characters are in the string, followed by the text stored in hex 
+        /// symbols.
+        /// </summary>
+        /// <param name="data">Hex memory object</param>
+        /// <returns>
+        /// The string value that was stored in the given hex memory.
+        /// </returns>
+        private static string HexToString(HexData data)
+        {
+            int length = HexToUInt(data, 2);
+            int count = length * 2;
+
+            string substring = data.Hex.Substring(data.Position, count);
+            byte[] output = Convert.FromHexString(substring);
+
+            data.Position += count;
+
+            return Encoding.UTF8.GetString(output);
+        }
+
+        /// <summary>
+        /// Converts a metfile number into hex symbols.
+        /// 
+        /// Uses a symbol lookup table to store characters of a number as a 
+        /// string in a small size.
+        /// 
+        /// The first hex symbol defines the number of characters that make up 
+        /// the number, then it is followed by a hex symbol for each character.
+        /// </summary>
+        /// <param name="data">Number in a string to convert</param>
+        /// <returns>Hex string representation of the number</returns>
+        private static string EncodeNumber(string data)
+        {
+            StringBuilder output = new StringBuilder(data.Length + 1);
+            string dataLower = data.ToLower();
+            if (dataLower == "nan" || dataLower == "n")
+            {
+                output.Append(UIntToHex(1));
+                output.Append(SymbolToHex('n'));
+            }
+            else
+            {
+                //numbers ending in .0 are just the number before the decimal
+                string trimmed = data;
+                if (trimmed.EndsWith(".0"))
+                    trimmed = data.Replace(".0", "");
+                if (trimmed.StartsWith("-0."))
+                    trimmed = trimmed.Replace("-0.", "-.");
+                //limit text to 15 characters because length must be single hex digit
+                if (trimmed.Length > 15)
+                    trimmed = trimmed.Substring(0, 15); 
+
+                output.Append(UIntToHex(trimmed.Length));
+                foreach (char c in trimmed)
+                    output.Append(SymbolToHex(c));
+            }
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// Converts a hex string to a metfile number string. Will update 
+        /// the hex memory position after reading.
+        /// 
+        /// Uses a symbol lookup table to store characters of a number as a 
+        /// string in a small size.
+        /// 
+        /// The first hex symbol defines the number of characters that make up 
+        /// the number, then it is followed by a hex symbol for each character.
+        /// </summary>
+        /// <param name="data">Hex memory object</param>
+        /// <returns>
+        /// A string representing a number value
+        /// </returns>
+        private static string DecodeNumber(HexData data)
+        {
+            int length = HexToUInt(data);
+
+            StringBuilder output = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+                output.Append(HexToSymbol(data));
+
+            return output.ToString();
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -1725,6 +1915,11 @@ namespace APSIM.Shared.Utilities
             public List<MetRow> Rows;
 
             /// <summary>
+            /// 
+            /// </summary>
+            public DateTime StartDate = DateTime.MinValue;
+
+            /// <summary>
             /// Basic Constructor
             /// </summary>
             public MetData()
@@ -1805,21 +2000,21 @@ namespace APSIM.Shared.Utilities
                     constantText += StringToHex(constant.Name) + StringToHex(constant.Value);
                 }
             }
-            output.Append(UIntToHex((uint)constantCount, 2));
+            output.Append(UIntToHex(constantCount, 2));
             output.Append(constantText);
 
             //headers
             //titles
             MetColumn[] columns = datelessMetData.Columns.ToArray();
 
-            output.Append(UIntToHex((uint)columns.Length, 2));
+            output.Append(UIntToHex(columns.Length, 2));
             foreach(MetColumn column in columns)
                 output.Append(StringToHex(column.Name));
             foreach(MetColumn column in columns)
                 output.Append(StringToHex(column.Unit));
 
             //data
-            output.Append(UIntToHex((uint)datelessMetData.Rows.Count, 8));
+            output.Append(UIntToHex(datelessMetData.Rows.Count, 8));
             foreach(MetRow row in datelessMetData.Rows)
                 foreach(double value in row.Values)
                     output.Append(EncodeNumber(value.ToString()));
@@ -1845,7 +2040,7 @@ namespace APSIM.Shared.Utilities
             string version = HexToString(data);
 
             //read constants
-            int constantsLength = (int)HexToUInt(data, 2);
+            int constantsLength = HexToUInt(data, 2);
 
             string startDate = "";
 
@@ -1864,28 +2059,22 @@ namespace APSIM.Shared.Utilities
             //headers
             metData.Columns.Add(new MetColumn("date", ""));
 
-            int columnsLength = (int)HexToUInt(data, 2);
+            int columnsLength = HexToUInt(data, 2);
             for (int i = 0; i < columnsLength; i++)
                 metData.Columns.Add(new MetColumn(HexToString(data), ""));
 
             for (int i = 1; i < columnsLength + 1; i++)
-            {
-                string units = HexToString(data);
-                if (!units.StartsWith('('))
-                    units = "(" + units;
-                if (!units.EndsWith(')'))
-                    units = ")" + units;
-                metData.Columns[i].Unit = units;
-            }
-                
+                metData.Columns[i].Unit = HexToString(data);
 
             //data
             DateTime date;
             if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
+            metData.StartDate = date;
+
             //create rows and add date column to them
-            int rowsLength = (int)HexToUInt(data, 8);
+            int rowsLength = HexToUInt(data, 8);
             for (int i = 0; i < rowsLength; i++)
             {
                 MetRow row = new MetRow();
@@ -1924,5 +2113,85 @@ namespace APSIM.Shared.Utilities
 
             return metData;
         }
+
+        /// <summary>
+        /// Binary reading version 1.
+        /// Faster version
+        ///</summary>
+        private static MetData ReadBinaryV1Fast(HexData data)
+        {
+            MetData metData = new MetData();
+
+            //read version
+            string version = HexToString(data);
+
+            //read constants
+            int constantsLength = HexToUInt(data, 2);
+
+            string startDate = "";
+
+            for (int i = 0; i < constantsLength; i++)
+            {
+                string name = HexToString(data);
+                string value = HexToString(data);
+
+                //start date isn't an actual constant, but is stored as a constant to save space
+                if (name == "start_date")
+                    startDate = value;
+                else
+                    metData.Contants.Add(new MetConstant(name, value));
+            }
+
+            //headers
+            metData.Columns.Add(new MetColumn("date", ""));
+
+            int columnsLength = HexToUInt(data, 2);
+            for (int i = 0; i < columnsLength; i++)
+                metData.Columns.Add(new MetColumn(HexToString(data), ""));
+
+            for (int i = 1; i < columnsLength + 1; i++)
+                metData.Columns[i].Unit = HexToString(data);
+
+            //data
+            DateTime date;
+            if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
+
+            metData.StartDate = date;
+
+            //create rows and add date column to them
+            int rowsLength = HexToUInt(data, 8);
+            for (int i = 0; i < rowsLength; i++)
+            {
+                MetRow row = new MetRow();
+                row.Date = date;
+                row.Values.Add(double.NaN);
+                date = date.AddDays(1);
+                metData.Rows.Add(row);
+            }
+
+            foreach(MetRow row in metData.Rows)
+            {
+                for (int i = 0; i < columnsLength; i++)
+                {
+                    string number = DecodeNumber(data);
+                    //the original writer had a bug where it would store a 0 infront of the nan value, causing columns
+                    //unalign with the data
+                    if (number.Length == 0)
+                    {
+                        DecodeNumber(data);
+                        row.Values.Add(double.NaN);
+                    }
+                    else
+                    {
+                        double value = double.Parse(number);
+                        row.Values.Add(value);
+                    }
+                }
+            }
+
+            return metData;
+        }
+
     }
 }
