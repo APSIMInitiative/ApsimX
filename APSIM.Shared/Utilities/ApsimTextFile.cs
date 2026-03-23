@@ -189,7 +189,7 @@ namespace APSIM.Shared.Utilities
             //convert to text file so it fits into current reader
             if (IsBinaryFile)
             {
-                Stream metFileStream = new MetFile(fileName).GetStream();
+                Stream metFileStream = new MetFile(fileName).GetStream(MetFile.MetFileFormat.Text);
                 inStreamReader = new StreamReaderRandomAccess(metFileStream);
                 Open();
             }
