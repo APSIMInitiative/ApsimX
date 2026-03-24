@@ -66,8 +66,8 @@ namespace Models.Soils.SoilTemp
     /// </structure>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("UserInterface.Views.QuadView")]
-    [PresenterName("UserInterface.Presenters.QuadPresenter")]
+    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     public class SoilTemperature : Model, ISoilTemperature
     {
         [Link]
@@ -418,6 +418,28 @@ namespace Models.Soils.SoilTemp
         [JsonIgnore]   //FIXME, should this be in GUI?
         [Units("mm")]
         public double DepthToConstantTemperature { get; set; } = 10000.0;
+
+        private int interactionsPerDay = 8;
+        /// <summary>Number of internal timesteps per day. Permissible values are 48, 24, 12, 8, and 4. The default value is 8. Increase the value if the simulation is unstable. (-) </summary>
+        [JsonIgnore]
+        [Units("-")]
+        public int InteractionsPerDay
+        {
+            get
+            {
+                return interactionsPerDay;
+            }
+            set
+            {
+                if ((value == 48) || (value == 24) || (value == 12) || (value == 8) || (value == 4))
+                    interactionsPerDay = value;
+                else
+                    throw new ArgumentOutOfRangeException(nameof(InteractionsPerDay), $"InteractionsPerDay must be 48, 24, 12, 8 or 4, got {value}");
+            }
+        }
+
+
+
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -881,12 +903,13 @@ namespace Models.Soils.SoilTemp
         private void doProcess()
         {
             CalculateConstituentVariables();
-            const int interactionsPerDay = 8;     // number of iterations in a day
+            // interactionsPerDay is now InteractionsPerDay as a settable variable defaulting to 8
+            //const int interactionsPerDay = 8;     // number of iterations in a day
 
             double cva = 0.0;
             double cloudFr = 0.0;
             double[] solarRadn = new double[49];   // Total incoming short wave solar radiation per time-step
-            doNetRadiation(ref solarRadn, ref cloudFr, ref cva, interactionsPerDay);
+            doNetRadiation(ref solarRadn, ref cloudFr, ref cva, InteractionsPerDay);
 
             // zero the temperature profiles
             MathUtilities.Zero(minSoilTemp);
@@ -895,7 +918,7 @@ namespace Models.Soils.SoilTemp
             boundaryLayerConductance = 0.0;
 
             // calc dt
-            internalTimeStep = Math.Round(timestep / interactionsPerDay);
+            internalTimeStep = Math.Round(timestep / InteractionsPerDay);
 
             // These two call used to be inside the time-step loop. I've taken them outside,
             // as the results do not appear to vary over the course of the day.
@@ -905,7 +928,7 @@ namespace Models.Soils.SoilTemp
             doVolumetricSpecificHeat();      // RETURNS volSpecHeatSoil() (volumetric heat capacity of nodes)
             doThermalConductivity();     // RETURNS gThermConductivity_zb()
 
-            for (int timeStepIteration = 1; timeStepIteration <= interactionsPerDay; timeStepIteration++)
+            for (int timeStepIteration = 1; timeStepIteration <= InteractionsPerDay; timeStepIteration++)
             {
                 timeOfDaySecs = internalTimeStep * System.Convert.ToDouble(timeStepIteration);
                 if (timestep < 24.0 * 60.0 * 60.0)  // CHECK, this seem wrong, shouldn't be '>'?
@@ -944,7 +967,7 @@ namespace Models.Soils.SoilTemp
                 }
                 // Now start again with final atmosphere boundary layer conductance
                 doThomas(ref newTemperature);
-                doUpdate(interactionsPerDay);
+                doUpdate(InteractionsPerDay);
                 if (Math.Abs(timeOfDaySecs - 5.0 * 3600.0) <= Math.Min(timeOfDaySecs, 5.0 * 3600.0) * 0.0001)
                 {
                     soilTemp.CopyTo(morningSoilTemp, 0);
