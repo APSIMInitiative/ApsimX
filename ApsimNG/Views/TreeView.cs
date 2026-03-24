@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Timers;
 using APSIM.Shared.Utilities;
 using Gtk;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using TreeModel = Gtk.ITreeModel;
 
 namespace UserInterface.Views
@@ -275,7 +274,7 @@ namespace UserInterface.Views
             }
         }
 
-        private TreePath CreatePath(Utility.TreeNode node)
+        private TreePath CreatePath(APSIMNG.Utility.TreeNode node)
         {
             return new TreePath(node.Indices);
         }
@@ -284,16 +283,16 @@ namespace UserInterface.Views
         /// 
         /// </summary>
         /// <param name="expandedNodes"></param>
-        public void ExpandNodes(Utility.TreeNode[] expandedNodes)
+        public void ExpandNodes(APSIMNG.Utility.TreeNode[] expandedNodes)
         {
             foreach (var node in expandedNodes)
                 treeview1.ExpandRow(CreatePath(node), false);
         }
 
-        public Utility.TreeNode[] GetExpandedNodes()
+        public APSIMNG.Utility.TreeNode[] GetExpandedNodes()
         {
-            List<Utility.TreeNode> expandedRows = new List<Utility.TreeNode>();
-            treeview1.MapExpandedRows((view, path) => expandedRows.Add(new Utility.TreeNode(path.Indices)));
+            List<APSIMNG.Utility.TreeNode> expandedRows = new List<APSIMNG.Utility.TreeNode>();
+            treeview1.MapExpandedRows((view, path) => expandedRows.Add(new APSIMNG.Utility.TreeNode(path.Indices)));
             return expandedRows.ToArray();
         }
 
@@ -638,13 +637,13 @@ namespace UserInterface.Views
 
                         Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
 
-                        colour = Utility.Colour.FromGtk(foreground);
+                        colour = Colour.FromGtk(foreground);
                     }
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
 
                     // This is a bit of a hack which we use to convert a System.Drawing.Color
                     // to its hex string equivalent (e.g. #FF0000).
-                    string hex = Utility.Colour.ToHex(colour);
+                    string hex = Colour.ToHex(colour);
 
                     string text = (string)model.GetValue(iter, 0);
                     (cell as CellRendererText).Markup = "<span foreground=\"" + hex + "\">" + text + "</span>";

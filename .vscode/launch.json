@@ -87,11 +87,20 @@
             "name": "Autodocs",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Clean Debug",
+            "preLaunchTask": "Build Debug",
             "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            }
         },
         {
             "name": "Apsim.Workflow: Debug",

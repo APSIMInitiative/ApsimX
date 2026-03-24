@@ -43,8 +43,8 @@ namespace Models.WaterModel
     /// This contrasts with models such as SWIM that solve simultaneously a set of differential equations that describe the flow processes.
     /// </summary>
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [Serializable]
     public class WaterBalance : Model, ISoilWater, IStructureDependency
     {

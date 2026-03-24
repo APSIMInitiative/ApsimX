@@ -4,13 +4,18 @@
 # It generates an installer for the platform specified by the first argument, and
 # uploads the installer to builds.apsim.info.
 #
-# Expects 1 argument (platform name - either macos or debian).
-
+# Expects 1 argument (platform name - either macos or debian or windows).
+# Optionally, a second argument can be provided to indicate whether to upload the installer ("upload").
 set -e
 
-# Ensure that target platform name has been passed as an argument.
-usage="Usage: $0 <debian|macos|windows>"
-test $# -eq 1 || (echo $usage; exit 1)
+function upload() {
+    curl --fail -X POST -H "Authorization: bearer $BUILDS_JWT" -F "file=@$outfile" "$url"
+    return $?
+}
+
+# Ensure that target platform name has been passed as an argument. 
+usage="Usage: $0 <debian|macos|windows> <build|upload> <outfile>  # second and third arguments are optional - if not provided, both build and upload will be performed.>"
+test $# -ge 0 || (echo $usage; exit 1)
 test -z "$BUILDS_JWT" && echo "BUILDS_JWT is empty" && exit 1
 test -z "$DOCKER_METADATA_OUTPUT_VERSION" && echo "PULL_ID is empty" && exit 1
 PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
@@ -57,32 +62,36 @@ month=$(TZ=Australia/Brisbane date +%-m)
 full_version=$year.$month.$version.0
 ISSUE_NUMBER=$(echo $version | cut -d. -f 4)
 
-# Build the installer.
-echo Building installer...
-outfile="$DIR"/apsim-$version.$ext
-bash ./Setup/net8.0/$script $full_version "$outfile"
+if [[ $2 == "build" || -z "$2" ]]; then
+    # Build the installer.
+    echo Building installer...
+    outfile="$DIR"/apsim-$version.$ext
+    bash ./Setup/net8.0/$script $full_version "$outfile"
+fi
 
-# Finally, upload the installer.
-echo Uploading installer...
-url="https://builds.apsim.info/api/nextgen/upload/installer?revision=$revision&platform=$build_platform"
+if [[ "$2" == "upload" || -z "$2" ]]; then
 
-function upload() {
-    curl --fail -X POST -H "Authorization: bearer $BUILDS_JWT" -F "file=@$outfile" "$url"
-    return $?
-}
+    # Finally, upload the installer.
+    echo Uploading installer...
+    url="https://builds.apsim.info/api/nextgen/upload/installer?revision=$revision&platform=$build_platform"
+    retry=0
+    maxRetries=3
+    interval=60 # in seconds
 
-retry=0
-maxRetries=3
-interval=60 # in seconds
-until [ ${retry} -ge ${maxRetries} ]
-do
-	upload && break
-	retry=$((retry+1))
-	echo "Retrying [${retry}/${maxRetries}] in ${interval}(s) "
-	sleep ${interval}
-    interval=$((interval * 2))
-done
-if [ ${retry} -ge ${maxRetries} ]; then
-  echo "Failed to upload installer after ${maxRetries} attempts!"
-  exit 1
+    if [[ $# -gt 2 ]]; then
+        outfile=$3
+    fi
+
+    until [ ${retry} -ge ${maxRetries} ]
+    do
+        upload && break
+        retry=$((retry+1))
+        echo "Retrying [${retry}/${maxRetries}] in ${interval}(s) "
+        sleep ${interval}
+        interval=$((interval * 2))
+    done
+    if [ ${retry} -ge ${maxRetries} ]; then
+    echo "Failed to upload installer after ${maxRetries} attempts!"
+    exit 1
+    fi
 fi

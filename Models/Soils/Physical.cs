@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.APSoil;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
 using Models.Factorial;
-using Models.Interfaces;
-using Models.Utilities;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -17,8 +13,8 @@ namespace Models.Soils
 
     /// <summary>A model for capturing physical soil parameters</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Physical : Model, IPhysical, IStructureDependency
     {

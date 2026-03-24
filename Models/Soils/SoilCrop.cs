@@ -1,23 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
-using Newtonsoft.Json;
 
 namespace Models.Soils
 {
 
     /// <summary>A soil crop parameterization class.</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Physical))]
     public class SoilCrop : Model, IStructureDependency
     {

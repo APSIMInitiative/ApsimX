@@ -1,8 +1,9 @@
-﻿namespace UserInterface.Classes
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace UserInterface.Classes
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
 
     /// <summary>
     /// Represents all properties of an object, as they are to be displayed

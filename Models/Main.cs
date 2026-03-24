@@ -249,8 +249,6 @@ namespace Models
             if (string.IsNullOrEmpty(relativeToDirectory))
                 relativeToDirectory = Directory.GetCurrentDirectory();
 
-            List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
-
             if (options.Batch != null)
             {
                 if (File.Exists(options.Batch) && Path.GetExtension(options.Batch).Equals(".csv"))
@@ -260,6 +258,8 @@ namespace Models
 
                     foreach (DataRow row in dataTable.Rows)
                     {
+                        List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
+                        
                         var dict = row.Table.Columns
                                         .Cast<DataColumn>()
                                         .ToDictionary(c => c.ColumnName, c => row[c].ToString());
@@ -274,6 +274,7 @@ namespace Models
             }
             else
             {
+                List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
                 foreach (string file in files)
                     ExecuteCommands(options, commandsList, file, relativeToDirectory);
             }

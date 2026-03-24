@@ -3,6 +3,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Soils;
+using Models.Soils.SoilTemp;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -472,6 +473,41 @@ namespace UnitTests.Soils
 
 
         //}
+
+        /// <summary>Test that InteractionsPerDay property can be set with range constraints.</summary>
+        [Test]
+        public void TestInteractionsPerDayPropertyCanBeSet()
+        {
+            var soilTemp = new SoilTemperature();
+            
+            // Test default value is 8
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(8));
+
+            soilTemp.InteractionsPerDay = 4;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(4));
+
+            soilTemp.InteractionsPerDay = 8;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(8));
+            
+            soilTemp.InteractionsPerDay = 12;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(12));
+            
+            soilTemp.InteractionsPerDay = 24;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(24));
+
+            soilTemp.InteractionsPerDay = 48;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(48));
+            
+            // Test that setting a value below the minimum throws an exception
+            Assert.Throws<ArgumentOutOfRangeException>(() => soilTemp.InteractionsPerDay = 2);
+            
+            // Test that setting a value above the maximum throws an exception
+            Assert.Throws<ArgumentOutOfRangeException>(() => soilTemp.InteractionsPerDay = 64);
+            
+            // Verify that the property retains its value after failed assignment attempts
+            soilTemp.InteractionsPerDay = 48;
+            Assert.That(soilTemp.InteractionsPerDay, Is.EqualTo(48));
+        }
 
     }
 }
