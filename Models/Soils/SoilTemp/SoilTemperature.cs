@@ -389,6 +389,9 @@ namespace Models.Soils.SoilTemp
         /// <summary>Flag whether net radiation is calculated or gotten from input</summary>
         private string netRadiationSource = "calc";
 
+        /// <summary>Number of interactions per day for temperature calculations. Has access property.</summary>
+        private int interactionsPerDay = 8;
+
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region Input for this model  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -421,19 +424,19 @@ namespace Models.Soils.SoilTemp
 
         /// <summary>Number of interactions per day for temperature calculations</summary>
         [Summary]
-        [Display(Format = "N0")]
-        [System.ComponentModel.DataAnnotations.Range(8, 24, ErrorMessage = "InteractionsPerDay must be between 8 and 24")]
+        [Description("Interactions Per Day")]
+        [Units("")]
         public int InteractionsPerDay
         {
-            get { return _interactionsPerDay; }
+            get { return interactionsPerDay; }
             set
             {
-                if (value < 8 || value > 24)
-                    throw new ArgumentOutOfRangeException(nameof(InteractionsPerDay), $"InteractionsPerDay must be between 8 and 24, got {value}");
-                _interactionsPerDay = value;
+                if ((value == 48) || (value == 24) || (value == 12) || (value == 8) || (value == 4))
+                    interactionsPerDay = value;
+                else
+                    throw new ArgumentOutOfRangeException(nameof(InteractionsPerDay), $"InteractionsPerDay must be 48, 24, 12, 8 or 4, got {value}");
             }
         }
-        private int _interactionsPerDay = 8;
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
