@@ -589,7 +589,7 @@ namespace APSIM.Shared.Utilities
                     string text = Convert.ToHexString(bytes);
                     HexData data = new HexData(text, 0);
                     if (ReadBinaryVersion(data) == 1)
-                        return ReadBinaryV1Fast(data);
+                        return ReadBinaryV1(data);
                     else
                         return ReadBinaryV2(data);
                 }
