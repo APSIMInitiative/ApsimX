@@ -11089,15 +11089,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "2021-01-01",
-                              "Action": "[SurfaceOrganicMatter].Add(4450,61,0,\"Wheat\",0,0,0);",
-                              "Line": "2021-01-01 [SurfaceOrganicMatter].Add(4450,61,0,\"Wheat\",0,0,0);"
+                              "Action": "[SurfaceOrganicMatter].Add(4450,61,0,\"Wheat\",\"Wheat\");",
+                              "Line": "2021-01-01 [SurfaceOrganicMatter].Add(4450,61,0,\"Wheat\",\"Wheat\");"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": false,
                               "Date": null,
                               "Action": null,
-                              "Line": "//2021-01-01 [SurfaceOrganicMatter].Add(3215,32,0,\"Barley\",0,0,0);"
+                              "Line": "//2021-01-01 [SurfaceOrganicMatter].Add(3215,32,0,\"Barley\",\"Barley\");"
                             }
                           ],
                           "Name": "InitialiseSurfaceOM",
