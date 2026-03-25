@@ -98,6 +98,10 @@ namespace Models.Soils.Nutrients
         [Description("Factor for soil/atmosphere gas exchange (AFPV/mm):")]
         public double k_AFPV { get; set; } = 75.0;
 
+        /// <summary>For testing - apply k_AFPV to windspeed? If false then apply to Eo</summary>
+        [Description("For testing - apply k_AFPV to windspeed? If false then apply to Eo:")]
+        public bool ApplyKToWindspeed { get; set; } = true;
+
         /// <summary>The additional limits for volatilisation</summary>
         [Separator("Additional limits for volatilisation")]
         [Description("Fraction of total soil NH4 that can be volatilised per day:")]
@@ -335,8 +339,12 @@ namespace Models.Soils.Nutrients
                 // 10-Calc the amount of NH3 in gaseous form
                 NH3Gas[z] = NH3ppm[z] * NH3GtoNH3A;                   // ppm (ug/cm3_air in soil = mg/L)
 
-                // 11-Calc the amount of NH3 in gaseous form and the amount effectivelly lost by volatilization
-                PotGasExchangeNH = waterBalance.Eo * k_AFPV;   // air filled pore volumes/day
+                // 11-Calc the amount of NH3 in gaseous form and the amount effectivelly lost by volatilization mmm
+                // the test below is only for the testing phase - one of them will go
+                if (ApplyKToWindspeed)
+                    PotGasExchangeNH = weather.Wind * k_AFPV;   // air filled pore volumes/day
+                else
+                    PotGasExchangeNH = waterBalance.Eo * k_AFPV;   // air filled pore volumes/day
                 AirFilledPoreVolume[z] = (physical.SAT[z] - waterBalance.SW[z]) * physical.Thickness[z];    // L_air/m2
 
                 GasExchangeNH[z] = PotGasExchangeNH * AirFilledPoreVolume[z];      // L_air/m2/day
