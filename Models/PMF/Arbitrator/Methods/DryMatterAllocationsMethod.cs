@@ -30,9 +30,12 @@ namespace Models.PMF.Arbitrator
             DM.BalanceError = (DM.End - (DM.Start + DM.TotalPlantSupply));
             if (DM.BalanceError > 0.0001)
                 throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than DM supplied by photosynthesis and DM remobilisation");
-            DM.BalanceError = (DM.End - (DM.Start + DM.TotalStructuralDemand + DM.TotalMetabolicDemand + DM.TotalStorageDemand));
+
+            // Guard against biomass creation: plant dry matter cannot exceed start + final allocated DM.
+            // This is more robust than checking against raw demand values after nutrient-constrained clipping.
+            DM.BalanceError = (DM.End - (DM.Start + DM.Allocated));
             if (DM.BalanceError > 0.0001)
-                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than the sum of structural DM demand, metabolic DM demand and Storage DM capacity");
+                throw new Exception("DM Mass Balance violated!!!!  Daily Plant Wt increment is greater than final DM allocation");
         }
     }
 }

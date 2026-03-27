@@ -47,10 +47,10 @@ namespace Models.PMF.Arbitrator
             for (int i = 0; i < Organs.Length; i++)
                 N.End += Organs[i].Total.N;
             N.BalanceError = (N.End - (N.Start + N.TotalPlantSupply));
-            if (N.BalanceError > 0.05)
+            if (Math.Abs(N.BalanceError) > 0.05)
                 throw new Exception("N Mass balance violated!!!!.  Daily Plant N increment is greater than N supply");
             N.BalanceError = (N.End - (N.Start + N.TotalPlantDemand));
-            if (N.BalanceError > 0.001)
+            if (Math.Abs(N.BalanceError) > 0.001)
                 throw new Exception("N Mass balance violated!!!!  Daily Plant N increment is greater than N demand");
 
         }
