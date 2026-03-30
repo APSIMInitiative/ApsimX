@@ -1,0 +1,20 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+add_harvDate_to_obs|function|8347d1fd87a707c5|||||||||||||||
+add_stages_to_obs|function|385deba37a4bdaf6|||||||||||||||
+check_manual_params|function|c2beb0bd34e6f09a|||||||||||||||
+check_project_dependencies|function|b38df9e3403b4dcb|||||||||||||||
+config|stem|f2d263b910cd27e0|26481e10c9d2744d|1ef2e1048c97e009|1264390909||t20542.8724167413s|a8e900e9ec58a629|435|rds|local|vector|||0.64|package ggplot2 was built under R version 4.3.2. package purrr was built under R version 4.3.2. package stringr was built under R version 4.3.2. package lubridate was built under R version 4.3.2|
+df_new_obs|stem|671c687b87f62d19|602a51720017aa4b|dc90b597f50c6076|438823073||t20542.8884170758s|1f5c1adb7da41e14|5544|rds|local|vector|||0.03||
+df_obs_harvestRipe_dates|stem|be4d59fbdca16c88|82ab00be8ac63149|fc12e3e64b533260|428227956||t20542.872980807s|73e9d248c95c1f30|330|rds|local|vector|||0.07||
+df_obs_pheno_dates|stem|4d96d38a3b89f64a|a8e0128991c2dde9|57b673c57906800b|-1898161064||t20542.8724197868s|54ead9180b677586|1634|rds|local|vector|||0.16||
+df_obs_with_harvDate|stem|e8cbd6eb7e0fdb4b|6f92b7b135929abe|3aaa4bd81d16422d|-1511724804||t20542.8875219444s|f813622badc3db43|5394|rds|local|vector|||0.06||
+do_obs_means|function|6ca9a36c645cc0f6|||||||||||||||
+file_obs|stem|a4434521f023ba88|4db46a833c81f6cb|d20866bcc71fc777|2076400141||t20542.8724178442s|70ee9e468cc181c2|17814|rds|local|vector|||0.05||
+file_obs_mean|stem|8ca3c0d2b27f62b6|63f0f3905bc01c4b|99d0d02b0cefbec5|-1745307844||t20542.8122118517s|92bffb148bd9e48c|5345|rds|local|vector|||0.18||
+get_harvestRipe_dates|function|dc5e8d17cc8b078e|||||||||||||||
+get_pheno_dates|function|24ab1142309e3950|||||||||||||||
+haun_input_checked|stem|e67a21bd4c28d3f4|a71e9d76e218fc2b|72c89c9418d3f3cd|-1437321256||t20542.8724221322s|2a3cd98748fa2e3c|432|rds|local|vector|||0.18||
+msg_obs_saved|stem|cea850b43f7981ba|1d4bb47e9eca1a43|f9a34a1c952bb2f1|-211371097|C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/Gnarwarre2024_Observed.xlsx|t20542.8884177323s|6d3d0246aa2baeae|13831|file|local|vector|||0.04||
+proj_name|object|c22f82c57fc97f56|||||||||||||||
+read_excel_observed|function|9282a4763ebfc0ce|||||||||||||||
+save_df_into_excel|function|17ab727b7ccc6cea|||||||||||||||
