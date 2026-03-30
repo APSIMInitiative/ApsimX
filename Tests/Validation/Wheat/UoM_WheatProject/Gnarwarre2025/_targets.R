@@ -39,7 +39,7 @@ list(
       folder_inputs               = here::here("..", "inputs"),
       folder_apsimx               = here::here(), # a level up from where Analysis is
       folder_met                  = here::here("..", "met"),
-      file_rawData_excel          = "Gnarwarre2025/Observed.xlsx", # raw observed data (pre-defined file name),
+      file_rawData_excel          = paste0(proj_name, "/Observed.xlsx"), # raw observed data (pre-defined file name),
       file_workData_excel         = paste0(proj_name, "_Observed.xlsx"), # raw observed data (pre-defined file name)
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2025", # date to transform DOY output into ddmmyy within simulations
