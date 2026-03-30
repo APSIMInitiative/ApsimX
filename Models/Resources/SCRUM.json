@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
@@ -945,6 +945,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
                       "Name": "StageDilution",
                       "ResourceName": null,
@@ -1161,6 +1162,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "(divide(1,[Product].DryMatterContent,0)*[Product].Wt)/100",
               "Name": "Yield",
               "ResourceName": null,
@@ -1695,6 +1697,7 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
                       "Expression": "Min(1,exp(-[NDilutionConstant]*([Phenology].Stage-3)))",
                       "Name": "StageDilution",
                       "ResourceName": null,
@@ -2182,6 +2185,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                  "AccumulateToday": false,
                   "AccumulateEventName": "[SCRUM].Phenology.PostPhenology",
                   "NameOfPlantToLink": null,
                   "StartStageName": "Seed",
@@ -2410,6 +2414,7 @@
                 },
                 {
                   "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                  "AccumulateToday": false,
                   "AccumulateEventName": "[Clock].PrePhenology",
                   "NameOfPlantToLink": null,
                   "StartStageName": "Seed",
@@ -2504,6 +2509,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                  "AccumulateToday": false,
                   "AccumulateEventName": "[Clock].PartitioningComplete",
                   "NameOfPlantToLink": null,
                   "StartStageName": "EarlyReproductive",
@@ -2569,6 +2575,7 @@
                 },
                 {
                   "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                  "AccumulateToday": false,
                   "AccumulateEventName": "[Clock].PartitioningComplete",
                   "NameOfPlantToLink": null,
                   "StartStageName": "Seed",
@@ -3060,6 +3067,10 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "WaterUptakeSupply": null,
+          "NitrogenUptakeSupply": null,
+          "WaterTakenUp": null,
+          "NitrogenTakenUp": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "Name": "Root",
@@ -4305,7 +4316,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

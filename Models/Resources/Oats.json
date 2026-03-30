@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1218,10 +1218,49 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMF, Models",
+              "$type": "Models.PMF.Phen.Zadok, Models",
               "Name": "Zadok",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "Name": "VegetativePhaseFunction",
+                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculation"
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ZadokStageMapping",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "X": [
+                        4.3,
+                        4.9,
+                        5.0,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0
+                      ],
+                      "Y": [
+                        30.0,
+                        33.0,
+                        39.0,
+                        65.0,
+                        71.0,
+                        87.0,
+                        90.0
+                      ]
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
+                    }
+                  ]
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },

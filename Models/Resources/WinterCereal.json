@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -982,27 +982,51 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
+              "$type": "Models.PMF.Phen.Zadok, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Haunstage",
-                  "Name": "HaunStage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Name": "VegetativePhaseFunction",
+                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat"
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].StemNumberPerPlant.Total.Tillers",
-                  "Name": "TillerNumber",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ZadokStageMapping",
                   "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "X": [
+                        5.0,
+                        5.99,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0,
+                        11.0
+                      ],
+                      "Y": [
+                        30.0,
+                        34.0,
+                        39.0,
+                        55.0,
+                        65.0,
+                        71.0,
+                        87.0,
+                        90.0
+                      ]
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
+                    }
+                  ]
                 }
               ],
               "Enabled": true,

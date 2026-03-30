@@ -13,7 +13,7 @@ using UserInterface.Commands;
 using Models.Storage;
 using APSIM.Shared.Graphing;
 using Series = Models.Series;
-using Configuration = Utility.Configuration;
+using Configuration = APSIMNG.Utility.Configuration;
 
 namespace UserInterface.Presenters
 {

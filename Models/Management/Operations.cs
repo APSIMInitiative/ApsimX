@@ -18,6 +18,10 @@ namespace Models
     [Serializable]
     public class Operation
     {
+        private DateTime? ActionDate { get; set; }
+
+        private bool HasYear => ActionDate?.Year != DateTime.MinValue.Year;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -43,7 +47,27 @@ namespace Models
         public bool Enabled { get; set; }
 
         /// <summary>Gets or sets the date.</summary>
-        public string Date { get; set; }
+        public string Date
+        {
+            get
+            {
+                if (ActionDate is DateTime dt)
+                {
+                    if (HasYear)
+                        return DateUtilities.GetDateAsString(dt);
+                    else
+                        return DateUtilities.GetDateAsDayMonthString(dt);
+                }
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    ActionDate = null;
+                else
+                    ActionDate = DateUtilities.GetDate(value, DateTime.MinValue.Year);
+            }
+        }
 
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
@@ -62,6 +86,23 @@ namespace Models
                 return Action.Substring(0, posPeriod);
 
             return "";
+        }
+
+        /// <summary>
+        /// Check whether or not this operation should trigger on the given date.
+        /// </summary>
+        /// <param name="date">The date to check.</param>
+        /// <returns>True if the op should be performed at this time.</returns>
+        public bool TriggersOnDate(DateTime date)
+        {
+            if (ActionDate is DateTime dt)
+            {
+                if (HasYear)
+                    return date == dt;
+                else
+                    return date.Month == dt.Month && date.Day == dt.Day;
+            }
+            return false;
         }
 
         /// <summary>
@@ -242,14 +283,12 @@ namespace Models
             if (OperationsList == null)
                 OperationsList = new List<Operation>();
 
-            DateTime operationDate;
             foreach (Operation operation in OperationsList.Where(o => o.Enabled))
             {
                 if (operation.Date == null || operation.Action == null)
                     throw new Exception($"Error: Operation line '{operation.Line}' cannot be parsed.");
 
-                operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
-                if (operationDate == Clock.Today)
+                if (operation.TriggersOnDate(Clock.Today))
                 {
                     string st = operation.Action;
 

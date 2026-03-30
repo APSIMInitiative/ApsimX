@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1093,6 +1093,45 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "EndGrainFill",
+              "ReSetEvent": "never",
+              "Name": "EndGrainFillDAS",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nA function is used to provide maturity date as days after sowing(DAS).",
+                  "Name": "memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -1438,51 +1477,79 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+              "$type": "Models.Functions.AccumulateFunction, Models",
+              "StartStageName": "Emergence",
+              "EndStageName": "StartGrainFilling",
+              "ResetStageName": null,
+              "FractionRemovedOnCut": 0.0,
+              "FractionRemovedOnHarvest": 0.0,
+              "FractionRemovedOnGraze": 0.0,
+              "FractionRemovedOnPrune": 0.0,
               "Name": "HeightFunction",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "",
-                  "Name": "Memo",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DailyIncrease",
                   "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    1.0,
-                    2.0,
-                    3.0,
-                    4.0,
-                    5.0,
-                    6.0,
-                    9.0
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "ThermalTime",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "Rate",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            1.0,
+                            5.9,
+                            6.0,
+                            20.0
+                          ],
+                          "Y": [
+                            0.66,
+                            0.66,
+                            1.5,
+                            1.5
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].NodeNumber",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis.FW",
+                      "Name": "WaterStress",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
                   ],
-                  "Y": [
-                    0.0,
-                    0.0,
-                    50.0,
-                    400.0,
-                    700.0,
-                    900.0,
-                    1000.0
-                  ],
-                  "Name": "XYPairs",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Stage",
-                  "Name": "XValue",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1650,6 +1717,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target",
                                   "Name": "TTRequired",
                                   "ResourceName": null,
@@ -1659,6 +1727,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                                   "Name": "TTComplete",
                                   "ResourceName": null,
@@ -2895,6 +2964,10 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "WaterUptakeSupply": null,
+          "NitrogenUptakeSupply": null,
+          "WaterTakenUp": null,
+          "NitrogenTakenUp": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "Name": "Root",
@@ -4562,6 +4635,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                   "Name": "ReproductiveTT",
                                   "ResourceName": null,
@@ -4571,6 +4645,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyPodDevelopment.ProgressThroughPhase+[Phenology].EarlyGrainFilling.ProgressThroughPhase+[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                   "Name": "ReproductiveTT1Complete",
                                   "ResourceName": null,
@@ -5312,6 +5387,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].EarlyPodDevelopment.Target+[Phenology].EarlyGrainFilling.Target+[Phenology].MidGrainFilling.Target+[Phenology].LateGrainFilling.Target",
                                   "Name": "PostCanopyTT",
                                   "ResourceName": null,
@@ -5321,6 +5397,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
                                   "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase+[Phenology].LateGrainFilling.ProgressThroughPhase",
                                   "Name": "PostCanopyTTComplete",
                                   "ResourceName": null,
@@ -6327,6 +6404,74 @@
                     "[Leaf].AreaLargestLeaf.FixedValue=0.009"
                   ],
                   "Name": "Djakal1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "// Assume Maturity Group 8",
+                    "[Phenology].Vegetative.Target.FixedValue = 430",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.054",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 744",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.07, 15.1",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.07, 15.1"
+                  ],
+                  "Name": "Hayman",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "// Assume MG7",
+                    "[Phenology].Vegetative.Target.FixedValue = 416",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.055",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 728",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.33, 15.46",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.33, 15.46"
+                  ],
+                  "Name": "A6785",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "// Assume Maturity Group 8",
+                    "[Phenology].Vegetative.Target.FixedValue = 430",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.054",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 744",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.07, 15.1",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.07, 15.1"
+                  ],
+                  "Name": "Kuranda",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "// Assume Maturity Goup 6",
+                    "[Phenology].Vegetative.Target.FixedValue = 404",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 180",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.056",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 712",
+                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.8",
+                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.8"
+                  ],
+                  "Name": "Richmond",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

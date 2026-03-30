@@ -8,7 +8,7 @@ using GtkSource;
 using UserInterface.EventArguments;
 using UserInterface.Intellisense;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 using FontDescription = Pango.FontDescription;
 
 namespace UserInterface.Views
@@ -41,7 +41,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The find-and-replace form
         /// </summary>
-        private FindAndReplaceForm findForm = new FindAndReplaceForm();
+        private APSIMNG.Utility.FindAndReplaceForm findForm = new APSIMNG.Utility.FindAndReplaceForm();
 
         /// <summary>
         /// Scrolled window
@@ -413,7 +413,7 @@ namespace UserInterface.Views
 
             textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
-            ModifyFont(Utility.Configuration.Settings.EditorFontName);
+            ModifyFont(Configuration.Settings.EditorFontName);
         }
 
         /// <summary>
@@ -1072,7 +1072,7 @@ namespace UserInterface.Views
                     item.Activated += OnChangeEditorStyle;
                 }
 
-                Utility.Configuration.Settings.EditorStyleName = caption;
+                Configuration.Settings.EditorStyleName = caption;
                 Configuration.Settings.Save();
                 //textEditor.Options.ColorScheme = caption;
                 textEditor.QueueDraw();
