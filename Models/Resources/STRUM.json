@@ -6191,15 +6191,6 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[STRUM].Leaf.RadiationIntercepted",
-              "Name": "LeafInterception",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[STRUM].Trunk.EnergyBalance.RadiationInterceptedByDead",
               "Name": "TrunkInterception",
               "ResourceName": null,
@@ -6361,7 +6352,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[RootUptakesArbitrator].WaterUptake.amount",
+              "VariableName": "[RootUptakesArbitrator].WaterUptake.Amount",
               "Name": "Transpiration",
               "ResourceName": null,
               "Children": [],
