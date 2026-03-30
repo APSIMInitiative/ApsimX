@@ -209,8 +209,8 @@ namespace UserInterface.Views
             hpaned1.AddNotification(OnDividerNotified);
             vpaned1.AddNotification(OnDividerNotified);
 
-            notebook1.SetMenuLabel(vbox1, LabelWithIcon(indexTabText, "go-home"));
-            notebook2.SetMenuLabel(vbox2, LabelWithIcon(indexTabText, "go-home"));
+            notebook1.SetMenuLabel(notebook1.Children[0], LabelWithIcon(indexTabText, "go-home"));
+            notebook2.SetMenuLabel(notebook2.Children[0], LabelWithIcon(indexTabText, "go-home"));
 
             notebook1.SwitchPage += OnChangeTab;
             notebook2.SwitchPage += OnChangeTab;
