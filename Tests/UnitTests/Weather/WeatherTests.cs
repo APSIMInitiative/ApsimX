@@ -14,7 +14,6 @@ using Models.Core.Run;
 using Models.Interfaces;
 using Models.Storage;
 using NUnit.Framework;
-using UserInterface.Presenters;
 
 namespace UnitTests.Weather
 {
@@ -75,7 +74,7 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".bin");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin"))
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherFiles.BinaryMetfile.bin"))
                 {
                     stream.CopyTo(file);
                 }
@@ -122,19 +121,12 @@ namespace UnitTests.Weather
         /// Tests a weather file in .bin (Binary) format.
         /// </summary>
         [Test]
-        public void ZipWeatherFileTest()
-        {
-            MetFile data1 = new MetFile("C:/git/ApsimX/Tests/UnitTests/Weather/NoExtensionInZip.zip");
-        }
-
-        /// <summary>
-        /// Tests a weather file in .bin (Binary) format.
-        /// </summary>
-        [Test]
         public void MetWeatherFileTest()
         {
+            string directory = PathUtilities.GetApsimXDirectory() + "/Tests/UnitTests/Weather/WeatherFiles/";
+
             List<string> files = new List<string>();
-            foreach (var file in Directory.EnumerateFiles("C:\\git\\ApsimX\\", "*.met", SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(directory, "*.met", SearchOption.AllDirectories))
                 files.Add(file);
 
             MetFile data1 = new MetFile();
@@ -144,12 +136,14 @@ namespace UnitTests.Weather
             {
                 try
                 {
-                    data1 = new MetFile(file);
-                    data1.Save("C:/git/ApsimX/Examples/WeatherFiles/test1.met", MetFile.MetFileFormat.Text);
-                    data1.Save("C:/git/ApsimX/Examples/WeatherFiles/test1.bin", MetFile.MetFileFormat.Binary);
+                    DirectoryInfo info = Directory.CreateTempSubdirectory();
 
-                    data2 = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/test1.met");
-                    data3 = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/test1.met");
+                    data1 = new MetFile(file);
+                    data1.Save(info.FullName + "/test1.met", MetFile.MetFileFormat.Text);
+                    data1.Save(info.FullName + "/test1.bin", MetFile.MetFileFormat.Binary);
+
+                    data2 = new MetFile(info.FullName + "test1.met");
+                    data3 = new MetFile(info.FullName + "test1.bin");
 
                     for(int i = 0; i < data1.Comments.Length; i++)
                     {
@@ -194,31 +188,6 @@ namespace UnitTests.Weather
                     Console.WriteLine(exception.Message);
                 }
             }
-            
-            /*
-            MetFile data = new MetFile("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.met");
-            data.Save("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.bin", MetFile.MetFileFormat.Binary);
-            data.Load("C:/git/ApsimX/Tests/Validation/Grapevine/Dashwood.bin");
-
-            /*data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.met");
-            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi2.met", MetFile.MetFileFormat.Text);
-            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin", MetFile.MetFileFormat.Binary);
-
-            data = new MetFile("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi3.bin");
-            data.Save("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi5.met", MetFile.MetFileFormat.Text);
-
-            /*
-            string output = MetBinaryReader.WriteMet(data);
-            MetBinaryReader.SaveBin("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi.bin", data);
-
-            File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_2.met", output);
-
-            MetBinaryReader.BinaryData bin = MetBinaryReader.WriteBin(data);
-            data = MetBinaryReader.ReadBin(bin);
-
-            output = MetBinaryReader.WriteMet(data);
-            File.WriteAllText("C:/git/ApsimX/Examples/WeatherFiles/AU_Goondiwindi_3.met", output);
-            */
         }
 
         [Test]
