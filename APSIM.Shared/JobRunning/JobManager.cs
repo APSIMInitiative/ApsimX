@@ -1,9 +1,10 @@
-﻿namespace APSIM.Shared.JobRunning
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Linq;
+
+namespace APSIM.Shared.JobRunning
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Linq;
 
     /// <summary>
     /// Manages a collection of jobs.

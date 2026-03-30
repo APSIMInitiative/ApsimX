@@ -42,6 +42,9 @@ namespace Models.Core.Run
             }
         }
 
+        /// <summary>Returns true if the job is enabled.</summary>
+        public bool Enabled => baseSimulation.Enabled;
+
         /// <summary>
         /// Constructor
         /// </summary>
