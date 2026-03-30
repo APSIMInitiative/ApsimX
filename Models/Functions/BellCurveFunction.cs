@@ -1,6 +1,8 @@
 ﻿using System;
 using APSIM.Core;
+using MessagePack.Formatters;
 using Models.Core;
+using Models.PMF.Organs;
 using Models.PMF.Struct;
 
 namespace Models.Functions
@@ -11,24 +13,25 @@ namespace Models.Functions
     [Serializable]
     public class BellCurveFunction : Model, IFunction
     {
-        /// <summary>The largest leaf position</summary>
-        [Link(Type = LinkType.Child, ByName = true)] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
+        [Link(Type = LinkType.Child, ByName = true)] IFunction PositionLargestLeaf = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
         /// <summary>The area maximum</summary>
-        [Link(Type = LinkType.Child, ByName = true)] IFunction AreaMax = null;             // Area of the largest leaf of a plant (mm2)
+        [Link(Type = LinkType.Child, ByName = true)] IFunction AreaLargestLeaf = null;             // Area of the largest leaf of a plant (mm2)
         /// <summary>The breadth</summary>
-        [Link(Type = LinkType.Child, ByName = true)] IFunction Breadth = null;
-        /// <summary>The skewness</summary>
         [Link(Type = LinkType.Child, ByName = true)] IFunction Skewness = null;
+        /// <summary>The skewness</summary>
+        [Link(Type = LinkType.Child, ByName = true)] IFunction Breadth = null;
         /// <summary>The structure</summary>
-        [Link] Structure Structure = null;
+        [Link] Leaf leaf = null;
 
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double LeafNo = Structure.LeafTipsAppeared;
-
-            return AreaMax.Value(arrayIndex) * Math.Exp(Breadth.Value(arrayIndex) * Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 2.0)
-                                + Skewness.Value(arrayIndex) * (Math.Pow(LeafNo - LargestLeafPosition.Value(arrayIndex), 3.0)));
+            double x = leaf.AppearedCohortNo;
+            double x0 = PositionLargestLeaf.Value();
+            double a = Breadth.Value();
+            double b = Skewness.Value();
+            double aMax = AreaLargestLeaf.Value();
+            return aMax * Math.Exp(a * Math.Pow((x - x0),2) + b * Math.Pow((x - x0),3));
         }
     }
 }

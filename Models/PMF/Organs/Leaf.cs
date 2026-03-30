@@ -1258,7 +1258,7 @@ namespace Models.PMF.Organs
                 {
                     MostRecentlyExpandedPosition = ExpandedCohortNo;
                     MostRecentlyExpandedPotentialSize = PotentialSize[ExpandedCohortNo - 1];
-                    MostRecentlyExpandedSize = CohortSize[ExpandedCohortNo - 1];
+                    MostRecentlyExpandedSize = CohortMaxSize[ExpandedCohortNo - 1];
                 }
             }
         }
