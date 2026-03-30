@@ -1274,20 +1274,33 @@ namespace APSIM.Shared.Utilities
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
-                        if (!foundWeather && entry.FullName.EndsWith(".met") || entry.FullName.EndsWith(".bin"))
+                        if (!foundWeather)
                         {
-                            foundWeather = true;
                             if (entry.FullName.EndsWith(".met"))
-                                format = MetFileFormat.Text;
-                            else if (entry.FullName.EndsWith(".bin"))
-                                format = MetFileFormat.Binary;
-                            //Read file content into memory
-                            using (Stream entryStream = entry.Open())
                             {
-                                using(MemoryStream memoryStream = new MemoryStream())
+                                format = MetFileFormat.Text;
+                                foundWeather = true;
+                            }
+                            else if (entry.FullName.EndsWith(".bin"))
+                            {
+                                format = MetFileFormat.Binary;
+                                foundWeather = true;
+                            }
+                            else if (!entry.FullName.Contains('.'))
+                            {
+                                format = MetFileFormat.Binary;
+                                foundWeather = true;
+                            }
+                            if (foundWeather)
+                            {
+                                //Read file content into memory
+                                using (Stream entryStream = entry.Open())
                                 {
-                                    entryStream.CopyTo(memoryStream);
-                                    bytes = memoryStream.ToArray();
+                                    using(MemoryStream memoryStream = new MemoryStream())
+                                    {
+                                        entryStream.CopyTo(memoryStream);
+                                        bytes = memoryStream.ToArray();
+                                    }
                                 }
                             }
                         }
