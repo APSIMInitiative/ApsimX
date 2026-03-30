@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using APSIM.Core;
 using Models.Core;
 using Newtonsoft.Json;
@@ -25,8 +26,9 @@ namespace Models.Factorial
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in Structure.FindChildren<Factor>())
+                foreach (Factor factor in Structure.FindChildren<Factor>(recurse: true).Where(a => a.Node.FindParent<Permutation>(recurse: true) is null))
                     f.Add(factor);
+
                 return f;
             }
         }
