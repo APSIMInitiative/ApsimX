@@ -74,7 +74,7 @@ namespace UnitTests.Weather
             string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".bin");
             using (FileStream file = new FileStream(weatherFilePath, FileMode.Create, FileAccess.Write))
             {
-                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.BinaryMetfile.bin"))
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.WeatherFiles.BinaryMetfile.bin"))
                 {
                     stream.CopyTo(file);
                 }
@@ -115,6 +115,79 @@ namespace UnitTests.Weather
 
             var summary = baseSim.Node.FindChild<MockSummary>(recurse: true);
             Assert.That(summary.messages[0], Is.EqualTo("Simulation terminated normally"));
+        }
+
+        /// <summary>
+        /// Tests a weather file in .bin (Binary) format.
+        /// </summary>
+        [Test]
+        public void MetWeatherFileTest()
+        {
+            string directory = PathUtilities.GetApsimXDirectory() + "/Tests/UnitTests/Weather/WeatherFiles/";
+
+            List<string> files = new List<string>();
+            foreach (var file in Directory.EnumerateFiles(directory, "*.met", SearchOption.AllDirectories))
+                files.Add(file);
+
+            MetFile data1 = new MetFile();
+            MetFile data2 = new MetFile();
+            MetFile data3 = new MetFile();
+            foreach(string file in files)
+            {
+                try
+                {
+                    DirectoryInfo info = Directory.CreateTempSubdirectory();
+
+                    data1 = new MetFile(file);
+                    data1.Save(info.FullName + "/test1.met", MetFile.MetFileFormat.Text);
+                    data1.Save(info.FullName + "/test1.bin", MetFile.MetFileFormat.Binary);
+
+                    data2 = new MetFile(info.FullName + "test1.met");
+                    data3 = new MetFile(info.FullName + "test1.bin");
+
+                    for(int i = 0; i < data1.Comments.Length; i++)
+                    {
+                        Assert.That(data1.Comments[i], Is.EqualTo(data2.Comments[i]));
+                        Assert.That(data1.Comments[i], Is.EqualTo(data3.Comments[i]));
+                    }
+
+                    for(int i = 0; i < data1.Contants.Length; i++)
+                    {
+                        Assert.That(data1.Contants[i], Is.EqualTo(data2.Contants[i]));
+                        Assert.That(data1.GetConstant(data1.Contants[i]), Is.EqualTo(data2.GetConstant(data2.Contants[i])));
+                        Assert.That(data1.Contants[i], Is.EqualTo(data3.Contants[i]));
+                        Assert.That(data1.GetConstant(data1.Contants[i]), Is.EqualTo(data3.GetConstant(data3.Contants[i])));
+                    }
+
+                    for(int i = 0; i < data1.Columns.Length; i++)
+                    {
+                        Assert.That(data1.Columns[i], Is.EqualTo(data2.Columns[i]));
+                        Assert.That(data1.Columns[i], Is.EqualTo(data3.Columns[i]));
+                    }
+
+                    for(int i = 0; i < data1.Units.Length; i++)
+                    {
+                        Assert.That(data1.Units[i], Is.EqualTo(data2.Units[i]));
+                        Assert.That(data1.Units[i], Is.EqualTo(data3.Units[i]));
+                    }
+
+                    DateTime date = data1.StartDate;
+                    for(int i = 0; i < data1.NumberOfDays; i++)
+                    {
+                        double[] inputs1 = data1.GetDay(date);
+                        double[] inputs2 = data2.GetDay(date);
+                        double[] inputs3 = data3.GetDay(date);
+                        date = date.AddDays(1);
+                        Assert.That(inputs1, Is.EqualTo(inputs2));
+                        Assert.That(inputs1, Is.EqualTo(inputs3));
+                    }
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(file);
+                    Console.WriteLine(exception.Message);
+                }
+            }
         }
 
         [Test]
