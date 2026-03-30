@@ -122,6 +122,15 @@ namespace UnitTests.Weather
         /// Tests a weather file in .bin (Binary) format.
         /// </summary>
         [Test]
+        public void ZipWeatherFileTest()
+        {
+            MetFile data1 = new MetFile("C:/git/ApsimX/Tests/UnitTests/Weather/NoExtensionInZip.zip");
+        }
+
+        /// <summary>
+        /// Tests a weather file in .bin (Binary) format.
+        /// </summary>
+        [Test]
         public void MetWeatherFileTest()
         {
             List<string> files = new List<string>();
