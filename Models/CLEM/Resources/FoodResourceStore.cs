@@ -148,14 +148,10 @@ namespace Models.CLEM.Resources
         { 
             get 
             {
-                return Details.TypeOfFeed switch
-                {
-                    FeedType.HaySilage or
-                    FeedType.PastureTemperate or
-                    FeedType.PastureTropical => ME - (23.6 * UndegradableCrudeProtein),
-                    FeedType.Concentrate => ME - (23.6 * UndegradableCrudeProtein) - (39.3 * (Details.FatPercent / 100) * Details.Amount),
-                    _ => 0,
-                };
+                // Freer assumes only concentrates account for fat as all other feeds considered low fat
+                // For consistency we apply both the crude protein and fat given they are provided with any feed type.
+
+                return ME - (23.6 * UndegradableCrudeProtein) - (39.3 * (Details.FatPercent / 100) * Details.Amount);
             }
         }
 
