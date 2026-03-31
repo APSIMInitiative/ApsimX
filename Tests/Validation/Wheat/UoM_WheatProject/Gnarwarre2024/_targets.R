@@ -18,6 +18,8 @@ tar_option_set(packages = c("here", "tidyverse", "lubridate", "readxl"))
  source("R/add_stages_to_obs.R")
  source("R/get_harvestRipe_dates.R")
  source("R/add_harvDate_to_obs.R")
+ source("R/add_interp_pheno_dates.R")
+ source("R/save_df_into_csv.R")
 
 # NOTE: Incomplete - awaits raw data availability
 # We need Obs data for phenology stages 6 and 8 to continue development
@@ -64,6 +66,10 @@ list(
    tar_target(df_obs_pheno_dates, 
               get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
   
+  # create and add pheno-dates not measured in-between
+  tar_target(df_new_pheno_dates, 
+             add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)),
+  
   # retrieve harvest-ripe date for each treatment
   tar_target(df_obs_harvestRipe_dates, 
              get_harvestRipe_dates(file_obs_mean, config$ref_yield_var, "Clock.Today")),
@@ -79,7 +85,16 @@ list(
                                                        config$file_name_input_haun,
                                                        file_obs_mean)),
   
-
+  # save pheno-date input into excel
+  tar_target(
+    msg_pheno_param_saved,
+    save_df_into_csv(
+      df = df_new_pheno_dates, 
+      folder = config$folder_inputs, 
+      filename = config$file_name_input_pheno
+    ),
+    format = "file"
+  ),
   
   # save new mean Observed
   tar_target(

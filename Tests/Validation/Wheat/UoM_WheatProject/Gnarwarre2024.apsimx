@@ -1653,6 +1653,16 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Gnarwarre2024_PhenoDatesInput.csv",
+                  "Name": "SetPhenoDatesExternally",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -2021,7 +2031,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
