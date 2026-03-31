@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 212,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7794,6 +7794,37 @@
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
                   "Name": "Yagan",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Argentina",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Structure].Phyllochron.BasePhyllochron.FixedValue = 60",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].GrainFilling.Target.FixedValue = 550",
+                    "[Photosynthesis].RUE.FixedValue = 2.8",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 27",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0",
+                    "[Leaf].ExtinctionCoeff.FixedValue= 0.60",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
+                    "[Leaf].CohortParameters.GrowthDuration.Multiplier.FixedValue = 1.5"
+                  ],
+                  "Name": "Andreia",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

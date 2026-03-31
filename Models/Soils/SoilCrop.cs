@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using Models.Core;
-using Models.Interfaces;
-using Models.Utilities;
-using Newtonsoft.Json;
 
 namespace Models.Soils
 {

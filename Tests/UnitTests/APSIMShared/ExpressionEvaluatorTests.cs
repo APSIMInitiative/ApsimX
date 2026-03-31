@@ -47,6 +47,8 @@ namespace UnitTests.APSIMShared
         [TestCase("floor(2.99)", 2)]
         [TestCase("ceil(3.1)", 4)]
         [TestCase("ceiling(2.678)", 3)]
+        [TestCase("divide(1, 0)", 0)]
+        [TestCase("divide(1, 0, 2)", 2)]
         public void TestExpression(string expression, double value)
         {
             ExpressionEvaluator parser = new ExpressionEvaluator();

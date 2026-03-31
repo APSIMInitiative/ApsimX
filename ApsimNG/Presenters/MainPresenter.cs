@@ -73,7 +73,7 @@ namespace UserInterface.Presenters
             Configuration.Settings.CleanMruList();
 
             // Populate the 2 start pages.
-            PopulateStartPage(this.view.MenuList);
+            PopulateStartPage(this.view.StartPage1);
             PopulateStartPage(this.view.StartPage2);
             PopulateMRUList();
 
