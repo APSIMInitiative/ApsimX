@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         public ExpectedActualContainer MilkDaily { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
-        /// The potential and actual solids intake of the individual.
+        /// The potential and actual solids intake of the individual (kg).
         /// </summary>
         [JsonIgnore]
         public ExpectedActualContainer SolidsDaily { get; set; } = new ExpectedActualContainer();
@@ -87,13 +87,14 @@ namespace Models.CLEM.Resources
                 // FS relative availability of the feed
                 double FS = 0;
                 double RS = 0;
+                //double SF = 0; // temperate C3 pasture
                 //switch (item.Key)
                 //{
                 //    case FeedType.Concentrate:
                 //    case FeedType.HaySilage:
                 // 1.7 -> 1.25
                 double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
-                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Expected)/RQ;
+                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Received)/RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (isLactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
 
@@ -108,8 +109,10 @@ namespace Models.CLEM.Resources
 //                        break;
 //                    case FeedType.PastureTemperate:
 //                    case FeedType.PastureTropical:
-//                        //temp c3 SF =0
-                          //trop c4 SF = 1.6
+//                        if (item.Key is FeedType.PastureTropical)
+//                        {
+//                              SF = 0.16; // tropical pasture C4
+//                        }
 
 //                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.LegumePercent)*SF), item.Value.Details.DryMatterDigestibility/100.0);
 //                        // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
@@ -129,7 +132,7 @@ namespace Models.CLEM.Resources
 //                        break;
                 //}
 
-                iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Expected);
+                iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Received);
                 item.Value.ReduceIntakeByAmount(iReduction);
                 SolidsDaily.Unneeded += iReduction;
                 sumFs += FS;
@@ -494,7 +497,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return MathUtilities.IsPositive(SolidsDaily.Expected + MilkDaily.Expected) && (MathUtilities.IsPositive(SolidsDaily.Actual + MilkDaily.Actual) == false);
+                return MathUtilities.IsPositive(SolidsDaily.Expected + MilkDaily.Expected) & (MathUtilities.IsPositive(SolidsDaily.Actual + MilkDaily.Actual) == false);
             }
         }
     }

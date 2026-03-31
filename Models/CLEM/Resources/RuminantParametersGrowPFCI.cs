@@ -204,7 +204,7 @@ namespace Models.CLEM.Resources
         [Description("Relative intake digestibility slope [CR3]")]
         [Required]
         [Category("Breed", "Intake")]
-        public double DigestibilitySlope_CR3 { get; set; } = 1.7;
+        public double DigestibilitySlope_CR3 { get; set; } = 1.25; // originally 1.75 but 1.25 passes through origin.
 
         /// <summary>
         /// Effect of quality on intake substitution for non-lactating animals CR11
