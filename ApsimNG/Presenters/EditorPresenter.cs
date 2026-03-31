@@ -1,13 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Drawing;
+using System.Linq;
+using Models.Core;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using EventArguments;
-    using Views;
-    using Interfaces;
-    using Commands;
-    using System.Linq;
-    using Models.Core;
+
 
     /// <summary>
     /// A presenter class for showing a cultivar.
@@ -34,6 +36,7 @@
         {
             this.model = model as ILineEditor;
             this.view = view as IEditorView;
+            (this.view as EditorView).Language = "c-sharp";
             this.explorerPresenter = explorerPresenter;
 
             this.view.Lines = this.model.Lines?.ToArray();
