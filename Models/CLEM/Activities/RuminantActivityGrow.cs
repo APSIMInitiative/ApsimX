@@ -103,6 +103,7 @@ namespace Models.CLEM.Activities
                     // these three are from new intake approach
                     indi.Intake.SolidsDaily.Reset();
                     indi.Intake.MilkDaily.Reset(indi.IsSuckling);
+                    indi.Energy.MilkDaily.Reset(indi.IsSuckling);
 
                     CalculatePotentialIntake(indi);
 
@@ -125,26 +126,26 @@ namespace Models.CLEM.Activities
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
             double potentialIntake = 0;
-            ind.Intake.MilkDaily.Expected = 0;
+            ind.Energy.MilkDaily.Expected = 0;
 
             // calculate milk intake shortfall for sucklings
             // all in units per day and multiplied at end of this section
             if (!ind.IsWeaned)
             {
                 // potential milk intake/animal/day
-                ind.Intake.MilkDaily.Expected = ind.Parameters.Grow.MilkIntakeIntercept + ind.Parameters.Grow.MilkIntakeCoefficient * ind.Weight.Live;
+                ind.Energy.MilkDaily.Expected = ind.Parameters.Grow.MilkIntakeIntercept + ind.Parameters.Grow.MilkIntakeCoefficient * ind.Weight.Live;
 
                 // get estimated milk available. This will be updated to the corrected milk available in the calculate energy section.
-                ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
+                ind.Intake.MilkDaily.Received = Math.Min(ind.Energy.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
 
                 // if milk supply low, suckling will substitute forage up to a specified % of bodyweight (R_C60)
-                if (MathUtilities.IsLessThan(ind.Intake.MilkDaily.Received, ind.Weight.Live * ind.Parameters.Grow.MilkLWTFodderSubstitutionProportion))
+                if (MathUtilities.IsLessThan(ind.Energy.MilkDaily.Received, ind.Weight.Live * ind.Parameters.Grow.MilkLWTFodderSubstitutionProportion))
                 {
-                    potentialIntake = Math.Max(0.0, ind.Weight.Live * ind.Parameters.Grow.MaxJuvenileIntake - ind.Intake.MilkDaily.Received * ind.Parameters.Grow.ProportionalDiscountDueToMilk);
+                    potentialIntake = Math.Max(0.0, ind.Weight.Live * ind.Parameters.Grow.MaxJuvenileIntake - ind.Energy.MilkDaily.Received * ind.Parameters.Grow.ProportionalDiscountDueToMilk);
                 }
 
-                ind.Intake.MilkDaily.Received *= events.Interval;
-                ind.Intake.SolidsDaily.MaximumExpected = potentialIntake;
+                ind.Energy.MilkDaily.Received *= events.Interval;
+                ind.Intake.SolidsDaily.MaximumExpected = ind.Weight.Live * ind.Parameters.Grow.MaxJuvenileIntake;
                 ind.Intake.SolidsDaily.Expected = potentialIntake;
             }
             else
@@ -342,7 +343,7 @@ namespace Models.CLEM.Activities
 
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
 
-                        if (MathUtilities.IsLessThanOrEqual(ind.Intake.MilkDaily.Actual + ind.Intake.SolidsDaily.Received, 0))
+                        if (MathUtilities.IsLessThanOrEqual(ind.Energy.MilkDaily.Actual + ind.Intake.SolidsDaily.Received, 0))
                         {
                             unfedSucklings++;
                         }
@@ -440,16 +441,16 @@ namespace Models.CLEM.Activities
                 // unweaned individuals without mother or milk from mother will need to try and survive on limited pasture until weaned.
 
                 // calculate energy and growth from milk intake
-                // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
-                ind.Intake.MilkDaily.Received = Math.Min(ind.Intake.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
-                ind.Mother?.Milk.Take(ind.Intake.MilkDaily.Received, MilkUseReason.Suckling);
-                double milkIntakeDaily = ind.Intake.MilkDaily.Received;
+                // recalculate MJ milk intake based on mothers updated milk production (MJ day-1) for the time step using the previous monthly potential milk intake
+                ind.Energy.MilkDaily.Received = Math.Min(ind.Energy.MilkDaily.Expected, ind.MothersMilkProductionAvailable);
+                ind.Mother?.Milk.Take(ind.Energy.MilkDaily.Received, MilkUseReason.Suckling);
+                double milkIntakeDaily = ind.Energy.MilkDaily.Received;
                 //double milkIntakeDaily = ind.Intake.MilkDaily.Received / events.Interval;
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
                 double kgl = 1;
-                if (MathUtilities.IsPositive(ind.MetabolicIntake + ind.Intake.MilkDaily.Received))
+                if (MathUtilities.IsPositive(ind.MetabolicIntake + ind.Energy.MilkDaily.Received))
                 {
                     // average energy efficiency for maintenance
                     kml = ((milkIntakeDaily * 0.7) + (intakeDaily * km)) / (milkIntakeDaily + intakeDaily);

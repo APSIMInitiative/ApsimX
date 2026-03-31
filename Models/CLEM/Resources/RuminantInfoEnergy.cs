@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
 {
@@ -18,6 +19,12 @@ namespace Models.CLEM.Resources
         {
             this.ruminant = ruminant;
         }
+
+        /// <summary>
+        /// The potential and actual MJ milk intake of the individual.
+        /// </summary>
+        [JsonIgnore]
+        public ExpectedActualContainer MilkDaily { get; set; } = new ExpectedActualContainer();
 
         /// <summary>
         /// Energy obtained from intake

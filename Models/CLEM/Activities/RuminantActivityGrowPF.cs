@@ -168,6 +168,7 @@ namespace Models.CLEM.Activities
         {
             ind.Intake.SolidsDaily.Reset();
             ind.Intake.MilkDaily.Reset(ind.IsSuckling);
+            ind.Energy.MilkDaily.Reset(ind.IsSuckling);
             ind.Weight?.TimeStepReset();
             ind.Energy?.TimeStepReset();
 
@@ -200,8 +201,8 @@ namespace Models.CLEM.Activities
             if (!ind.IsWeaned)
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
-                double predictedIntake = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.NumberOfSucklings);
-                yf = (1 - (predictedIntake / ind.Intake.MilkDaily.Expected)) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4))); 
+                double predictedMilkEnergy = Math.Min(ind.Energy.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.NumberOfSucklings);
+                yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
                 // ToDo: reduce if only unweaned for proportion of time-step.
             }
 
@@ -231,7 +232,7 @@ namespace Models.CLEM.Activities
                     }
                     if (female.NumberOfSucklings > 0)
                     {
-                        // todo: trap for suckings not yet defined in month of birth but needed to calculate peak lactation. Assume 1 individual in the first few days if this is the case.
+                        // todo: trap for sucklings not yet defined in month of birth but needed to calculate peak lactation. Assume 1 individual in the first few days if this is the case.
                         lf = 1 + ind.Parameters.GrowPF_CI.PeakLactationIntakeLevel_CI19[Math.Max(female.NumberOfSucklings - 1, 0)] * Math.Pow(mi, ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9) * Math.Exp(ind.Parameters.GrowPF_CI.LactationResponseCurvature_CI9 * (1 - mi)); // SCA Eq.8
                         // Equation 10 ==================================================
                         lf *= lb * (1 - ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 + ind.Parameters.GrowPF_CI.ConditionAtParturitionAdjustment_CI15 * female.RelativeConditionAtParturition);
@@ -384,11 +385,11 @@ namespace Models.CLEM.Activities
                 // recalculate milk intake based on mothers updated milk production for the time step using the previous monthly potential milk intake
                 if(ind.Mother is not null)
                 {
-                    double received = Math.Min(ind.Intake.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
+                    double receivedKg = Math.Min(ind.Energy.MilkDaily.Expected / ind.Mother.Milk.EnergyContent, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
                     milkPacket.MetabolisableEnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
                     milkPacket.CrudeProteinPercent = ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15;
-                    milkPacket.Amount = received;
-                    ind.Mother.Milk.Take(received * Math.Min(ind.DaysSucklingInTimeStep, Math.Min(ind.AgeInDays, events.Interval)), MilkUseReason.Suckling);
+                    milkPacket.Amount = receivedKg;
+                    ind.Mother.Milk.Take(receivedKg * Math.Min(ind.DaysSucklingInTimeStep, Math.Min(ind.AgeInDays, events.Interval)), MilkUseReason.Suckling);
                     ind.Intake.AddFeed(milkPacket);
                 }
 
@@ -839,7 +840,7 @@ namespace Models.CLEM.Activities
             double ratioMilkProductionME = 1.0;
 
             // ToDo: JD? the first part of next if statement uses Energy.ForLactation but this value is being determined by this method so is currently 0 until final value is returned.
-            // therefore ratio will always be 0, and ad will always equal milktime.
+            // therefore ratio will always be 0, and ad will always equal milk time.
 
             if (updateValues)
             {
@@ -860,12 +861,12 @@ namespace Models.CLEM.Activities
                 - ind.Parameters.GrowPF_CKCL.PotentialYieldConditionEffect_CL23
                 * ind.Weight.RelativeCondition * (ratioMilkProductionME - ind.Parameters.GrowPF_CKCL.PotentialYieldConditionEffect2_CL24 * ind.Weight.RelativeCondition))));
 
-            double sucklingExpected = ind.Milk.EnergyContent * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit1_CL12 + (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit3_CL14 * milkTime)));
-            double MP2 = Math.Min(MP1, ind.NumberOfSucklings * sucklingExpected);
+            double sucklingMJExpected = Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit1_CL12 + (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit3_CL14 * milkTime)));
+            double MP2 = Math.Min(MP1, ind.NumberOfSucklings * sucklingMJExpected);
 
             foreach (var suckling in ind.SucklingOffspringList)
             {
-                suckling.Intake.MilkDaily.Expected = sucklingExpected / ind.Milk.EnergyContent;
+                suckling.Intake.MilkDaily.Expected = sucklingMJExpected / ind.Milk.EnergyContent;
             }
 
             if (updateValues)
