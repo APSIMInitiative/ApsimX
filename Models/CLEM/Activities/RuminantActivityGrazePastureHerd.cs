@@ -293,7 +293,7 @@ namespace Models.CLEM.Activities
 
             ResourceRequestList = new List<ResourceRequest>();
             pastureRequest = null;
-            // as the grazing activity has added a dynamic filter group (location and herd name) we do not need the where filter specifying the paddock here.
+            // as the grazing activity has added a dynamic filter group (location and herd name) we do not need to specifying the herd ot paddock here.
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
 
             PastureRequired = 0;
@@ -302,53 +302,55 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             PotentialIntakePastureBiomassLimiter = 1;
 
-            if (herd.Any())
+            if (herd.Any() == false)
+                return ResourceRequestList;
+
+            // Stand alone model is true unless dynamically created by parent graze paddock
+            if (isStandAloneModel && GrazeFoodStoreModel is GrazeFoodStoreType)
             {
-                // Stand alone model is true unless dynamically created by parent graze paddock
-                if (isStandAloneModel && GrazeFoodStoreModel is GrazeFoodStoreType)
-                {
-                    SetupPoolsAndLimits(1.0);
-                }
-                if (isStandAloneModel && !usingGrowPF)
-                {
-                    PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
-                }
-
-                // CLEM concept not included in AgPasture - reduce intake when pasture biomass becomes low to account for greater search time
-                PotentialIntakePastureBiomassLimiter = 1 - Math.Round(Math.Exp(-herd.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000),5);
-
-                foreach (Ruminant ind in herd)
-                {
-                    PastureRequired += Math.Min(ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakeLimit);
-                    DailyPastureRequired += Math.Min(ind.Intake.SolidsDaily.Required, ind.Intake.SolidsDaily.Expected * PotentialIntakeLimit);
-                    PastureDesired += Math.Min(ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
-
-                    // todo: I cannot see that there needs to be a difference in grazing between mature and early weaners or suckings with some solid intake..
-                }
-
-                if (GrazeFoodStoreModel is GrazeFoodStoreType)
-                {
-                    ConsumedPasturePoolsPacket.Reset();
-                }
-
-                if (MathUtilities.IsPositive(PastureRequired))
-                {
-                    GrazeFoodStoreModel.SetCurrentBiomass();
-                    pastureRequest = new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = PastureRequired,
-                        Resource = GrazeFoodStoreModel,
-                        ResourceType = typeof(GrazeFoodStore),
-                        ResourceTypeName = GrazeFoodStoreModel.Name,
-                        ActivityModel = this,
-                        AdditionalDetails = this,
-                        Category = "Consumed",
-                        RelatesToResource = PredictedHerdNameToDisplay
-                    };
-                    ResourceRequestList.Add(pastureRequest);
-                }
+                SetupPoolsAndLimits(1.0);
             }
+            if (isStandAloneModel && !usingGrowPF)
+            {
+                // TODO: this needs to be based on what is eaten, not to total pasture which may not represent the intake in many cases.
+                PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
+            }
+
+            // CLEM concept not included in AgPasture - reduce intake when pasture biomass becomes low to account for greater search time
+            PotentialIntakePastureBiomassLimiter = 1 - Math.Round(Math.Exp(-herd.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000),5);
+
+            foreach (Ruminant ind in herd)
+            {
+                PastureRequired += Math.Min(ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakeLimit);
+                DailyPastureRequired += Math.Min(ind.Intake.SolidsDaily.Required, ind.Intake.SolidsDaily.Expected * PotentialIntakeLimit);
+                PastureDesired += Math.Min(ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakePastureQualityLimiter * PotentialIntakeGrazingTimeLimiter);
+
+                // todo: I cannot see that there needs to be a difference in grazing between mature and early weaners or suckings with some solid intake..
+            }
+
+            if (GrazeFoodStoreModel is GrazeFoodStoreType)
+            {
+                ConsumedPasturePoolsPacket.Reset();
+            }
+
+            if (MathUtilities.IsPositive(PastureRequired))
+            {
+                GrazeFoodStoreModel.SetCurrentBiomass();
+                pastureRequest = new ResourceRequest()
+                {
+                    AllowTransmutation = false,
+                    Required = PastureRequired,
+                    Resource = GrazeFoodStoreModel,
+                    ResourceType = typeof(GrazeFoodStore),
+                    ResourceTypeName = GrazeFoodStoreModel.Name,
+                    ActivityModel = this,
+                    AdditionalDetails = this,
+                    Category = "Consumed",
+                    RelatesToResource = PredictedHerdNameToDisplay
+                };
+                ResourceRequestList.Add(pastureRequest);
+            }
+
             GrazeFoodStoreModel.CurrentGrazingRequest = pastureRequest;
             lastResourceRequest = events.Clock.Today;
             return ResourceRequestList;

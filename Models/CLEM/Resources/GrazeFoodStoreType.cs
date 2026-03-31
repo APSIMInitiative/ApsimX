@@ -985,20 +985,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        ///
+        /// Simple remove resource by specified amount
         /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activityName"></param>
-        /// <param name="reason"></param>
+        /// <param name="removeAmount">Amount to remove</param>
+        /// <param name="activityName">Activity requesting resource</param>
+        /// <param name="reason">Label representing reason for removal</param>
         public double Remove(double removeAmount, string activityName, string reason)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        ///
+        /// Remove resource based on a ResourceRequest
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Resource request specifying removal details</param>
         public new void Remove(ResourceRequest request)
         {
             // handles grazing by breed from this pasture pools based on breed pool limits
@@ -1116,7 +1116,7 @@ namespace Models.CLEM.Resources
             }
             else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(CropActivityManageProduct))
             {
-                // this occurs when the pasture is being replaced by the provided biomass and clears the stores
+                // this occurs when the pasture is being replaced by the provided biomass and clears the stores1
                 if (request.Category == "StoreCleared")
                 {
                     double amountCleared = Pools.Sum(a => a.Amount);
