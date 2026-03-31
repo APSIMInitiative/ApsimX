@@ -112,7 +112,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
             {
                 if (rumType.Parameters.General is not null)
                 {
-                    newInd = Ruminant.Create(model.Sex, new(2000, 1, 1), rumType.Parameters, model.AgeDetails.InDays, rumType.Parameters.General.BirthScalar[0]);
+                    newInd = Ruminant.Create(model.Sex, new(2000, 1, 1), rumType.Parameters, model.AgeDetails.InDays, rumType.Parameters.General.BirthScalar[0], cohortDetails: model);
                     normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0");
                 }
             }
