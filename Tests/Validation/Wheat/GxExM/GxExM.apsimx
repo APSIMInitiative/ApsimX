@@ -18430,7 +18430,7 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
                         "[SetPhenology].Script.EmergDate = 20-may-2015",
-                        "[SetPhenology].Script.FlagDate = 17-sep-2015",
+                        "[SetPhenology].Script.FlagDate = 13-sep-2015",
                         "[SetPhenology].Script.AnthDate = 9-oct-2015",
                         "[SetPhenology].Script.Phyllochron = 97",
                         "[SetPhenology].Script.PhyllochronMultiplier = 1.4"
@@ -18448,10 +18448,10 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
                         "[SetPhenology].Script.EmergDate = 20-may-2015",
-                        "[SetPhenology].Script.FlagDate = 29-aug-2015",
+                        "[SetPhenology].Script.FlagDate = 10-sep-2015",
                         "[SetPhenology].Script.AnthDate = 4-oct-2015",
                         "[SetPhenology].Script.Phyllochron = 95",
-                        "[SetPhenology].Script.PhyllochronMultiplier = 1.0"
+                        "[SetPhenology].Script.PhyllochronMultiplier = 1.3"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -18466,10 +18466,10 @@
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Hartog",
                         "[SetPhenology].Script.EmergDate = 20-may-2015",
-                        "[SetPhenology].Script.FlagDate = 4-sep-2015",
+                        "[SetPhenology].Script.FlagDate = 14-sep-2015",
                         "[SetPhenology].Script.AnthDate = 5-oct-2015",
                         "[SetPhenology].Script.Phyllochron = 95",
-                        "[SetPhenology].Script.PhyllochronMultiplier = 1.0"
+                        "[SetPhenology].Script.PhyllochronMultiplier = 1.3"
                       ],
                       "Paths": null,
                       "Values": null,
