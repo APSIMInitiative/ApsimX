@@ -12,9 +12,15 @@ tar_option_set(packages = c("here", "tidyverse", "lubridate", "readxl"))
  source("R/read_excel_observed.R")
  source("R/do_obs_means.R")
  source("R/save_df_into_excel.R")
+source("R/save_df_into_csv.R")
  source("R/get_pheno_dates.R")
  source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
+source("R/get_harvestRipe_dates.R")
+source("R/add_harvDate_to_obs.R")
+source("R/add_interp_pheno_dates.R")
+source("R/add_stages_to_obs.R")
+source("R/add_mock_pheno_dates.R") # ---- TEMPORARY TO BE REMOVED ----"
 
 # NOTE: Incomplete - awaits raw data availability
 # We need Obs data for phenology stages 6 and 8 to continue development
@@ -46,29 +52,64 @@ list(
       btwStgPerc                  = 0.5, # fraction of time in-between two pheno-stages when we assume a missing stage 
       file_name_input_pheno       = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun        = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met               = "Gnarwarre_-38.20_144.05_2025.met" # pre-defined met
-    )),
+      ref_yield_var               = "Wheat.AboveGround.Wt", # variable used to estimate harvest date
+      file_name_met               = "Gnarwarre_-38.20_144.05_2025.met", # pre-defined met
+      file_mock_pheno_csv         = "mock_pheno_dates.csv" # Temporary FIX to allow run (FIXME)
+          )),
   
   # # read observations
-   tar_target(file_obs, read_excel_observed(file.path(config$folder_apsimx, 
-                                                      config$file_rawData_excel))),
+  tar_target(file_obs, read_excel_observed(file.path(config$folder_apsimx, 
+                                                     config$file_rawData_excel))),
   # 
   # # average reps
   tar_target(file_obs_mean, do_obs_means(file_obs)),
-
-  # # retrieve measured pheno dates from observations
-   tar_target(df_obs_pheno_dates, 
-              get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
+  
+  # ----------------- TO BE REMOVED ----------------------------- #
+  # add MOCK pheno stages (emergence + flower) which are missing (Temporary FIX)
+  tar_target(file_obs_mean_with_mock_pheno, 
+             add_mock_pheno_dates(file_obs_mean,config$file_mock_pheno_csv)),
+  
+  # retrieve measured pheno dates from observations
+  tar_target(df_obs_pheno_dates, 
+             #get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
+             # ---- TO BE REMOVED AND FIXED WITH ABOVE -----
+             get_pheno_dates(file_obs_mean_with_mock_pheno, config$date_DOY_ref)),
+  
+  # create and add pheno-dates not measured in-between
+  tar_target(df_new_pheno_dates, 
+             add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)),
+  
+  # retrieve harvest-ripe date for each treatment
+  tar_target(df_obs_harvestRipe_dates, 
+             get_harvestRipe_dates(file_obs_mean, config$ref_yield_var, "Clock.Today")),
+  
+  # add observed stages to Observed excel
+  tar_target(df_obs_with_harvDate, add_harvDate_to_obs(file_obs_mean,df_obs_harvestRipe_dates)),
+  
+  # add observed stages to Observed excel
+  tar_target(df_new_obs, add_stages_to_obs(df_obs_with_harvDate,df_obs_pheno_dates)),
   
   # # check if haun manual parameters is correct
-   tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
-                                                       config$file_name_input_haun,
-                                                       file_obs_mean)),
+  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+                                                     config$file_name_input_haun,
+                                                     file_obs_mean)),
+  
+  # save pheno-date input into excel
+  tar_target(
+    msg_pheno_param_saved,
+    save_df_into_csv(
+      df = df_new_pheno_dates, 
+      folder = config$folder_inputs, 
+      filename = config$file_name_input_pheno
+    ),
+    format = "file"
+  ),
+  
   # save new mean Observed
   tar_target(
     msg_obs_saved,
     save_df_into_excel(
-      df = file_obs_mean,
+      df = df_new_obs,
       folder = config$folder_apsimx,
       filename = config$file_workData_excel,
       sheetname = config$sheet_name_observed
