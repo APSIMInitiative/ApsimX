@@ -1742,10 +1742,20 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": "0.06 - [Grain].Number * 0.00000055",
+              "Expression": "",
+              "Name": "MaximumPotentialGrainSize",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.05,
               "Units": "g",
-              "Name": "MaximumPotentialGrainSize",
+              "Name": "MaximumPotentialGrainSize____",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
