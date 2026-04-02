@@ -99,7 +99,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void SetupDynamicChildren()
         {
-            //InitialiseHerd(true, true);
             HerdResource = Structure.Find<RuminantHerd>();
             if (HerdResource is null)
                 return;
@@ -136,9 +135,10 @@ namespace Models.CLEM.Activities
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
                 item.ResourceRequestList = null;
-                item.PotentialIntakePastureQualityLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
-                var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is IGrazeFoodStoreType).FirstOrDefault();
-                totalNeeded += resourceRequest?.Required??0;
+                totalNeeded += item.CalculateFeedRequirement();
+                //item.PotentialIntakePastureQualityLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
+                //var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is IGrazeFoodStoreType).FirstOrDefault();
+                //totalNeeded += resourceRequest?.Required??0;
             }
 
             // Check available resources and only provide if there is truly competition between two or more breeds/herds
@@ -160,6 +160,35 @@ namespace Models.CLEM.Activities
             return ResourceRequestList;
         }
 
+        /// <summary>
+        /// Method to create mixed pool groups for feeding.
+        /// </summary>
+        public void GeneratePoolsGroups()
+        {
+            // create array for tracking intake 
+
+            // estimate green pools limit
+            // adjust to increase intake if not feedstrict limits to avoid second dip. 
+            // does non-green + reduced green meet diet needs?
+
+            // for each pool in pasture
+
+            //  for each breed 
+            // calculate each breed/herd requirement for pool
+
+            // reduce if competition - auto applies competition at this point in feed quality provided.
+            // try only apply this to the initial green limit
+
+            //  for each breed 
+            // add pool to each breed/herd intake group with limits, label PastureMixX
+            // had details linked to the pool, no need to copy
+            // provides amount needed for shandying
+            // stores the pool so we can return unneeded pasture proportional to sub pools taken
+
+        }
+
+
+
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
@@ -167,7 +196,6 @@ namespace Models.CLEM.Activities
             {
                 Status = ActivityStatus.NoTask;
             }
-
             return;
         }
 

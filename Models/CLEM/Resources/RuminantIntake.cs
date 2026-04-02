@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantIntake
     {
-        private Dictionary<FeedType, FoodResourceStore> feedTypeStoreDict = new();
+        private Dictionary<string, FoodResourceStore> feedTypeStoreDict = new();
         private double dpls = 0;
 
         /// <summary>
@@ -32,14 +32,18 @@ namespace Models.CLEM.Resources
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy on daily basis.
         /// </summary>
         /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
+        /// <param name="groupID">ID to mix multiple feed entries</param>
         /// <param name="bypassPotIntakeLimits">A switch to force animals to eat the amount provided.</param>
         /// <returns>The excess feed to the individual</returns>
-        public double AddFeed(FoodResourcePacket packet, bool bypassPotIntakeLimits = false)
+        public double AddFeed(FoodResourcePacket packet, string groupID = "", bool bypassPotIntakeLimits = false)
         {
             double excess = 0;
 
             if (packet.Amount <= 0)
             return excess;
+
+            if (groupID == "")
+                groupID = packet.TypeOfFeed.ToString();
 
             if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
             {
@@ -48,10 +52,10 @@ namespace Models.CLEM.Resources
                 packet.Amount -= excess;
             }
 
-            if (!feedTypeStoreDict.TryGetValue(packet.TypeOfFeed, out FoodResourceStore frs))
+            if (!feedTypeStoreDict.TryGetValue(groupID, out FoodResourceStore frs))
             {
                 frs = new FoodResourceStore(packet);
-                feedTypeStoreDict[packet.TypeOfFeed] = frs;
+                feedTypeStoreDict[groupID] = frs;
             }
             frs.Add(packet);
 
