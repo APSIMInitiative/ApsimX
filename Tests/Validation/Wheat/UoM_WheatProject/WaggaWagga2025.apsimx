@@ -11245,7 +11245,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/WaggaWagga2024.met",
+              "FileName": "%root%/Tests/Validation/Wheat/met/WaggaWagga2025.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -11255,8 +11255,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2024-04-22T00:00:00",
-              "End": "2024-11-22T00:00:00",
+              "Start": "2025-05-12T00:00:00",
+              "End": "2025-12-03T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],

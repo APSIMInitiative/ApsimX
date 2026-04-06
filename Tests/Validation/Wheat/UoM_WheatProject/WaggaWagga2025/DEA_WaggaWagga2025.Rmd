@@ -9,6 +9,12 @@ library(tidyverse)
 library(visNetwork)
 ```
 
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+```
+
+
 
 # Check pipeline status
 ```{r}
@@ -45,6 +51,12 @@ tar_destroy()
 
 # Get soil parameters in json format
 ```{r}
+tar_load(df_simNameByCult)
+str(processed_met_data)
+processed_met_data$data
+df_PCDS_int$pcds_3_emergPlants
 
+df1 <- tar_read(df_dateStageTargetReached)
+df2 <- tar_read(df_simNameByCult)
 ```
 

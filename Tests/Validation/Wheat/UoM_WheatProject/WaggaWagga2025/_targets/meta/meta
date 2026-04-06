@@ -1,0 +1,22 @@
+name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
+read_observed_func|function|1e6ef28006321ae9
+createWeatherFile|function|eb4dd885f98a61ae
+apply_corrections|function|96ea74d0b73b7a64
+save_met_file|function|ba051f4c2fcc713e
+proj_name|object|8ac2d2503dd37a7d
+interpolate_obs_phenoStages|function|b7c170efcf034164
+doAPSIMStageInput|function|75da4cb47bb7e65e
+targets|object|e581b88dd947d9b6
+filter_and_extract_pcds|function|0c9dcb755e4b309f
+findDateStageTarget|function|cf9885b7c95825a3
+compile_all_observed|function|c261a4e155e6d0f0
+config|stem|20c63fd9263653e8|2482746892b3d756|1cb9145c5a62e832|1264390909||t20549.7834519378s|b33821b7e8e8958f|640|rds|local|vector|||1.18|package ggplot2 was built under R version 4.3.2. package purrr was built under R version 4.3.2. package stringr was built under R version 4.3.2. package lubridate was built under R version 4.3.2. package readxl was built under R version 4.3.2. package jsonlite was built under R version 4.3.3|
+df_obs_info|stem|d5964b1ae9c31e79|26e7907c144237f3|bc911b4867edad6a|-935260803||t20549.783452471s|14438a794189323e|826|rds|local|vector|||0||
+df_simNameByCult|stem|092f4314774a0423|37618e9cd368f891|bc911b4867edad6a|1528684865||t20549.7834526396s|e8324796932fa831|400|rds|local|vector|||0||
+processed_met_data|stem|36580da8d49da82f|702c62e108444c10|e24f94b28edb82de|-1738863186||t20549.7834543599s|ddb7d189145a458e|5673|rds|local|vector|||0.14||
+list_observed_dfs|stem|62478aeae80a6702|1685c730ad9e8f12|74014ab9810fab50|-1393943302||t20549.7834787678s|314da1ded1acffb0|7277|rds|local|vector|||2.09|1m22mThere was 1 warning in mutate.1m22m36mℹ39m In argument Wheat.Leaf.Height  as.numeric.dataCanopy height cm.Caused by warning33m39m NAs introduced by coercion|
+msg_met_saved|stem|1ccdb6c21913b61a|3b24d53f460cbd28|02c60fbca713d1df|1329761733|C:/github/ApsimX/Tests/Validation/Wheat/UoM_WheatProject/../met/WaggaWagga2025.met|t20549.7834790477s|49107bd436166de7|11235|file|local|vector|||0.01||
+df_list_PCDS|stem|7eb32dd0de0bac57|16667c7466c822e8|b771e18781e53e2d|-109726151||t20549.7834792687s|77e11a448950b300|1783|rds|local|vector|||0||
+df_PCDS_int|stem|69f05aca4d0cd6cf|689033b6021092f4|01d6e1a35b5380f7|418675571||t20549.7834828627s|242f4f118a755d31|5609|rds|local|vector|||0.31||
+df_dateStageTargetReached|stem|2107de7c2d64cb44|ddee904ff45ea199|1318d4a426c5eb8a|1207638953||t20549.783484433s|d3389aeddb1f6897|1066|rds|local|vector|||0.1||
+df_apsimStageInput|stem|4e5a72f7d2adbbaa|56da6d4971ea5acd|c44bfe6d2cd56da7|1878273214||t20549.783485819s|5a04a2bfcda35a41|611|rds|local|vector|||0.11||
