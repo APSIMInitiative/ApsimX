@@ -276,7 +276,11 @@ namespace UserInterface.Presenters
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
             this.view.Tree.Droped -= this.OnDrop;
             this.view.Tree.Renamed -= this.OnRename;
-            this.view.Tree.ContextMenu.Destroy();
+            if (view.Tree.ContextMenu != null)
+            {
+                view.Tree.ContextMenu.Destroy();
+                view.Tree.ContextMenu = null;
+            }
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
