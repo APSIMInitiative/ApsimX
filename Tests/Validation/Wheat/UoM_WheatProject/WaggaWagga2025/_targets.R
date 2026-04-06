@@ -16,11 +16,12 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
  source("R/createWeatherFile.R")
  source("R/compile_all_observed.R")
  source("R/read_observed_func.R")
- source("R/apply_corrections.R")
  source("R/filter_and_extract_pcds.R")
  source("R/interpolate_obs_phenoStages.R")
  source("R/findDateStageTarget.R")
  source("R/doAPSIMStageInput.R")
+ source("R/doStageObsData.R")
+ source("R/apply_corrections.R")
 # source("R/prepare_final_observed.R")
 # source("R/save_df_final.R")
 
@@ -29,7 +30,7 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
 
 
 # source("R/saveInputParam.R")
-# source("R/doStageObsData.R")
+
 # source("R/add_to_observed_clean.R")
 # source("R/read_soil_water.R")
 # source("R/soil_water_in_json.R")
@@ -158,12 +159,12 @@ targets <- list(
   #' # Create synthetic in-between pheno stages within a APSIM format input file
   tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached,
                                                    df_simNameByCult,
-                                                   config$target_betwStages))
+                                                   config$target_betwStages)),
   #' 
   #' # Create Observed data of pheno-satges to be added to observations (as cross-check)
-  #' tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
-  #'                                             df_simNameByCult,
-  #'                                             config$varName_addedToObserv)),
+  tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
+                                              df_simNameByCult,
+                                              config$varName_addedToObserv)),
   #' 
   #' ### ----------------------------------------------------------------------------------------
   #' ### Finish observation file to be read by APSIM
@@ -171,7 +172,7 @@ targets <- list(
   #' 
   #' 
   #' # Makes by-hand data corrections as needed to fix raw excel data (see apply_corrections() for details)
-  #' tar_target(list_observed_clean, apply_corrections(list_observed_dfs, df_stages_Observ)),
+  tar_target(list_observed_clean, apply_corrections(list_observed_dfs, df_stages_Observ))
   #' 
   #' 
   #' tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,

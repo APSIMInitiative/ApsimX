@@ -51,12 +51,15 @@ tar_destroy()
 
 # Get soil parameters in json format
 ```{r}
-tar_load(df_simNameByCult)
+tar_load(list_observed_dfs)
 str(processed_met_data)
 processed_met_data$data
 df_PCDS_int$pcds_3_emergPlants
 
 df1 <- tar_read(df_dateStageTargetReached)
 df2 <- tar_read(df_simNameByCult)
+
+df1<- tar_read(list_observed_clean)
+df2<-tar_read(df_stages_Observ)
 ```
 
