@@ -51,7 +51,7 @@ tar_destroy()
 
 # Get soil parameters in json format
 ```{r}
-tar_load(list_observed_dfs)
+tar_load(df_final_observed)
 str(processed_met_data)
 processed_met_data$data
 df_PCDS_int$pcds_3_emergPlants

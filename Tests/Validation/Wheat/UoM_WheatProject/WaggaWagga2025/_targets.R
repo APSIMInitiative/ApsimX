@@ -14,6 +14,7 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
 #----------------------
 
  source("R/createWeatherFile.R")
+ source("R/save_met_file.R")
  source("R/compile_all_observed.R")
  source("R/read_observed_func.R")
  source("R/filter_and_extract_pcds.R")
@@ -22,21 +23,25 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
  source("R/doAPSIMStageInput.R")
  source("R/doStageObsData.R")
  source("R/apply_corrections.R")
-# source("R/prepare_final_observed.R")
-# source("R/save_df_final.R")
+ source("R/add_to_observed_clean.R")
+ source("R/prepare_final_observed.R")
+ source("R/check_manual_params.R")
+ #source("R/create_synthetic_pheno_dates.R")
+ source("R/saveInputParam.R")
+ source("R/save_df_final.R")
 
 
-# source("R/create_synthetic_pheno_dates.R")
 
 
-# source("R/saveInputParam.R")
 
-# source("R/add_to_observed_clean.R")
+ 
+
+
 # source("R/read_soil_water.R")
 # source("R/soil_water_in_json.R")
-# source("R/check_manual_params.R")
+
 # source("R/check_project_dependencies.R")
- source("R/save_met_file.R")
+
 
 #----------------
 # Project name
@@ -172,23 +177,31 @@ targets <- list(
   #' 
   #' 
   #' # Makes by-hand data corrections as needed to fix raw excel data (see apply_corrections() for details)
-  tar_target(list_observed_clean, apply_corrections(list_observed_dfs, df_stages_Observ))
+  tar_target(list_observed_clean, apply_corrections(list_observed_dfs, df_stages_Observ)),
   #' 
   #' 
-  #' tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,
-  #'                                                             df_stages_Observ,
-  #'                                                       config$var_name_stage)),
+  #' Add observed stages to clean observed variables
+  tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,
+                                                              df_stages_Observ,
+                                                        config$var_name_stage)),
   #' 
   #' 
   #' # Prepare the format of a APSIM observation standard file
-  #' tar_target(df_final_observed, 
-  #'            prepare_final_observed(list_observed_clean_final,
-  #'                                   df_simNameByCult)), 
+  tar_target(df_final_observed,
+             prepare_final_observed(list_observed_clean_final,
+                                    df_simNameByCult)),
   #' 
-  #' # check if manual parameters are correct
-  #' tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
-  #'                                                    config$file_name_input_haun,
-  #'                                                    df_final_observed)),
+  #' # check if manual parameters are correct (and create template if not)
+  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+                                                     config$file_name_input_haun,
+                                                     df_final_observed)),
+  
+  #' # Save parameter input file with forced pheno-dates into /input
+  tar_target(msg_param_saved, saveInputParam(df_apsimStageInput,
+                                             config$folder_inputs,
+                                             config$file_name_input_pheno),
+             format = "file"),
+  
   #' 
   #' 
   #' #### ---------------------------------------
@@ -197,18 +210,13 @@ targets <- list(
   #' 
   #' 
   #' # save the output as APSIM likes to read it
-  #' tar_target(msg_obs_saved, 
-  #'            save_df_final(df_final_observed, 
-  #'                          config$folder_apsimx, 
-  #'                          config$file_saved_obs_excel)),
+  tar_target(msg_obs_saved,
+             save_df_final(df_final_observed,
+                           config$folder_apsimx,
+                           config$file_saved_obs_excel))
+
   #' 
-  #' 
-  #' 
-  #' # Save parameter input file with forced pheno-dates into /input
-  #' tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
-  #'                                          config$folder_inputs, 
-  #'                                          config$file_name_input_pheno),
-  #'   format = "file"),
+
   #' 
   #' # Post-flight dependency check for APSIM
   #' tar_target(

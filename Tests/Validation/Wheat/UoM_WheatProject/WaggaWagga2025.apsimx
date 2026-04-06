@@ -31,7 +31,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "WaggaWagga2024_Observed.xlsx"
+            "WaggaWagga2025_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -11255,7 +11255,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2025-05-12T00:00:00",
+              "Start": "2025-04-01T00:00:00",
               "End": "2025-12-03T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -12781,7 +12781,7 @@
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12791,7 +12791,7 @@
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
