@@ -14,8 +14,8 @@ namespace Models.Factorial
     /// This class permutates all child models by each other.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Factors))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
     public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes
@@ -23,6 +23,11 @@ namespace Models.Factorial
         private enum CommandType { Replacement, Set, Label, None };
 
         private string _filename { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private DateTime _fileUpdated { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// The name of the factor that will be built
@@ -53,14 +58,9 @@ namespace Models.Factorial
             set
             {
                 _filename = value;
-                FileUpdated = File.GetLastWriteTime(value);
+                _fileUpdated = File.GetLastWriteTime(value);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public DateTime FileUpdated { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -83,6 +83,14 @@ namespace Models.Factorial
             }
         }
 
+        /// <summary></summary>
+        [Display]
+        public DataTable Data
+        {
+            get;
+            set;
+        }
+
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
@@ -101,9 +109,9 @@ namespace Models.Factorial
         public bool CheckFileUpdated()
         {
             DateTime time = File.GetLastWriteTime(FileName);
-            if (FileUpdated != time)
+            if (_fileUpdated != time)
             {
-                FileUpdated = time;
+                _fileUpdated = time;
                 return true;
             }
             else
@@ -159,21 +167,23 @@ namespace Models.Factorial
             using StringWriter log = new StringWriter();
             log.WriteLine($"Experiment factors imported from {FullFileName}");
 
-            DataTable data = FileUtilities.ReadDataFile(FullFileName);
+            Data = FileUtilities.ReadDataFile(FullFileName);
             List<CommandType> columnCommandType = new List<CommandType>();
-            foreach(DataColumn column in data.Columns)
+            foreach(DataColumn column in Data.Columns)
             {
-                string header = column.ColumnName;
+                string header = column.ColumnName.Trim();
                 if (header == LabelColumn)
                 {
                     columnCommandType.Add(CommandType.Label);
                 }
                 else
                 {
+                    if (header.StartsWith('[') && header.EndsWith(']'))
+                        header = header.Substring(1, header.Length-2).Trim();
                     VariableComposite variable = ColumnInfo.NameMatchesAPSIMModel(header, experiment);
                     if (variable == null)
                         columnCommandType.Add(CommandType.Set);
-                    else if (variable.DataType is IModel)
+                    else if (typeof(IModel).IsAssignableFrom(variable.DataType))
                         columnCommandType.Add(CommandType.Replacement);
                     else
                         columnCommandType.Add(CommandType.Set);
@@ -182,29 +192,41 @@ namespace Models.Factorial
 
             List<string> commands = new List<string>();
             commands.Add($"add new Factor to [{factors.Name}] name {FactorName}");
-            foreach(DataRow row in data.Rows)
+            foreach(DataRow row in Data.Rows)
             {
                 string label = LabelColumn + row[LabelColumn].ToString();
-                commands.Add($"add new CompositeFactor to [{FactorName}] name {label}");
-                for(int i = 0; i < data.Columns.Count; i++)
+                commands.Add($"add new CompositeFactor to [{factors.Name}].{FactorName} name {label}");
+                for(int i = 0; i < Data.Columns.Count; i++)
                 {
-                    DataColumn column = data.Columns[i];
+                    DataColumn column = Data.Columns[i];
                     CommandType commandType = columnCommandType[i];
-                    string columnName = column.ColumnName;
-                    string value = row[columnName].ToString();
+                    string columnName = column.ColumnName.Trim();
+                    string value = row[columnName].ToString().Trim();
+
+                    if (columnName.StartsWith('[') && columnName.EndsWith(']'))
+                        columnName = columnName.Substring(1, columnName.Length-2);
                     if (commandType == CommandType.Replacement)
                     {
-                        commands.Add($"[{label}].Specifications += {column}");
-                        commands.Add($"add new {value} to [{label}]");
+                        if (value.Contains(" from "))
+                        {
+                            int index = value.IndexOf(" from ");
+                            string modelToFetch = value.Substring(0, index).Trim();
+                            if (!modelToFetch.StartsWith('[') && !modelToFetch.EndsWith(']'))
+                                value = "[" + modelToFetch + "]" + value.Substring(index);
+                            commands.Add($"add {value} to [{factors.Name}].{FactorName}.{label}");
+                        }
+                        else
+                            commands.Add($"add new {value} to [{factors.Name}].{FactorName}.{label}");
+                        commands.Add($"[{factors.Name}].{FactorName}.{label}.Specifications += [{columnName}]");
                     }
                     else if (commandType == CommandType.Set)
                     {
-                        commands.Add($"[{label}].Specifications += {column}={value}");
-                        commands.Add($"[{label}].ReadOnly = true");
+                        commands.Add($"[{factors.Name}].{FactorName}.{label}.Specifications += {column}={value}");
                     }
                 }
+                commands.Add($"[{factors.Name}].{FactorName}.{label}.ReadOnly = true");
             }
-            commands.Add($"[{FactorName}].ReadOnly = true");
+            commands.Add($"[{factors.Name}].{FactorName}.ReadOnly = true");
 
             return commands;
 

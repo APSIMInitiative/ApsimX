@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Timers;
@@ -246,7 +247,8 @@ namespace UserInterface.Presenters
             {
                 if (factors.CheckFileUpdated())
                 {
-                    factors.GenerateNodes(presenter.ApsimXFile.FileName);
+                    string directory = Path.GetDirectoryName(presenter.ApsimXFile.FileName);
+                    factors.GenerateNodes(directory);
                     presenter.RebuildTree();
                 }
             }
