@@ -6,7 +6,6 @@ using Models.Core;
 using Models.Core.Run;
 using Models.Optimisation;
 using APSIM.Core;
-using System.IO;
 
 namespace Models.Factorial
 {

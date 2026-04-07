@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using APSIM.Core;
@@ -158,7 +157,6 @@ namespace Models.Core.Run
 
                 Simulation newSimulation = newNode.Model as Simulation;
                 newSimulation.Parent = null;
-
                 CommandProcessor.Run(replacementsToApply, newSimulation, runner: null);
 
                 // Give the simulation the descriptors.
