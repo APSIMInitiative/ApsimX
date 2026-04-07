@@ -1743,8 +1743,8 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Units": "0.06 - [Grain].Number * 0.00000055",
-              "Expression": "",
+              "Units": "mg",
+              "Expression": "0.06 - [Wheat].Grain.Number * 0.00000055",
               "Name": "MaximumPotentialGrainSize",
               "ResourceName": null,
               "Children": [],
