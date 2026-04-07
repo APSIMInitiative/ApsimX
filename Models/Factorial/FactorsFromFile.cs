@@ -20,14 +20,16 @@ namespace Models.Factorial
     [Description("Generate factors as specified in an Excel spreadsheet")]
     public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes
     {
+        /// <summary>
+        /// The types of columns within the CSV, used to help determine how to read the inputs.
+        /// </summary>
         private enum CommandType { Replacement, Set, Label, None };
 
-        private string _filename { get; set; }
+        private string _filename { get; set; } = null;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private DateTime _fileUpdated { get; set; } = DateTime.MinValue;
+
+        private DataTable _data { get; set; } = null;
 
         /// <summary>
         /// The name of the factor that will be built
@@ -54,7 +56,22 @@ namespace Models.Factorial
         [Description("Factor details spreadsheet")]
         [Display(Type = DisplayType.FileName)]
         public string FileName { 
-            get {return _filename;} 
+            get 
+            {
+                string apsimFilePath = "";
+                if (Node != null)
+                    apsimFilePath = Node.FileName;
+                else
+                {
+                    Simulations sims = Node.FindParent<Simulations>(recurse: true);
+                    if (sims != null)
+                        apsimFilePath = sims.FileName;
+                }
+                if (string.IsNullOrEmpty(apsimFilePath))
+                    throw new Exception("Cannot determine weather file path: Weather model is not attached to a simulation node or simulation. Please ensure the weather model is correctly attached to a simulation node.");
+                else
+                    return PathUtilities.GetRelativePath(_filename, apsimFilePath);
+            } 
             set
             {
                 _filename = value;
@@ -83,18 +100,17 @@ namespace Models.Factorial
             }
         }
 
-        /// <summary></summary>
+        /// <summary>Contents of the CSV file</summary>
         [Display]
         public DataTable Data
         {
-            get;
-            set;
+            get {return _data;}
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return new string[] { FullFileName };
+            return [FullFileName];
         }
 
         /// <summary>Remove all paths from referenced filenames.</summary>
@@ -104,20 +120,14 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// 
+        /// Returns true if the file has been updated more recently than the last read of the file.
         /// </summary>
         public bool CheckFileUpdated()
         {
-            DateTime time = File.GetLastWriteTime(FileName);
-            if (_fileUpdated != time)
-            {
-                _fileUpdated = time;
+            if (_fileUpdated != File.GetLastWriteTime(FileName))
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
 
         /// <summary>
@@ -167,9 +177,9 @@ namespace Models.Factorial
             using StringWriter log = new StringWriter();
             log.WriteLine($"Experiment factors imported from {FullFileName}");
 
-            Data = FileUtilities.ReadDataFile(FullFileName);
+            _data = FileUtilities.ReadDataFile(FullFileName);
             List<CommandType> columnCommandType = new List<CommandType>();
-            foreach(DataColumn column in Data.Columns)
+            foreach(DataColumn column in _data.Columns)
             {
                 string header = column.ColumnName.Trim();
                 if (header == LabelColumn)
@@ -192,13 +202,13 @@ namespace Models.Factorial
 
             List<string> commands = new List<string>();
             commands.Add($"add new Factor to [{factors.Name}] name {FactorName}");
-            foreach(DataRow row in Data.Rows)
+            foreach(DataRow row in _data.Rows)
             {
                 string label = LabelColumn + row[LabelColumn].ToString();
                 commands.Add($"add new CompositeFactor to [{factors.Name}].{FactorName} name {label}");
-                for(int i = 0; i < Data.Columns.Count; i++)
+                for(int i = 0; i < _data.Columns.Count; i++)
                 {
-                    DataColumn column = Data.Columns[i];
+                    DataColumn column = _data.Columns[i];
                     CommandType commandType = columnCommandType[i];
                     string columnName = column.ColumnName.Trim();
                     string value = row[columnName].ToString().Trim();
@@ -229,23 +239,6 @@ namespace Models.Factorial
             commands.Add($"[{factors.Name}].{FactorName}.ReadOnly = true");
 
             return commands;
-
-            // I'm not sure how to present this information to the user.
-            // summary hasn't been created and we don't want to write for each simulation in experiment, but once at start of simulation, but I couldn't find a suitable event.
-            // is there a way to ask if this is the first of a group of simulations?
-
-            // The components are actually added to the simulation tree as this is not a copy of base simulation as is used in the simulations.
-            // This is good as from this point onward the factors appear as if the user build them and will be overwritten each time the simulation runs based on the spreadsheet.
-            // The latest approach is to create the components as children below this component so they can been inspected by user and it is clear they are associated with the loading of factors from file.
-            // This required these to be included in factors identified below an experiment or permutation as they would otherwise be hidden  one level deeper so some recurse:true settings are needed.
-
-            // Is there a way to fire the building of the UI tree after this method so that the new components are visible in the UI immediately?
-            // This should not be possible as UI is not the concern of the Model, but the UI has no say over the execution of Experiments.
-            // If not, they only become visible upon opening the next instance of APISM, but are still present for the correct execution of the simulations.
-
-            // If we can't display this, all StringWriter code can be deleted.
-            // Otherwise it would need a special presenter with the property entry area and a text/markdown display section for the last genrated details information string.
-            // Summary.WriteMessage(this, log.ToString(), MessageType.Information);
         }
     }
 }
