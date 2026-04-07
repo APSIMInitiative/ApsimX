@@ -36,6 +36,7 @@ targets::tar_make()
 
 
 ```{r}
-tar_load(check_depend)
+tar_load(processed_met_data)
+df1<-processed_met_data$data
 ```
 
