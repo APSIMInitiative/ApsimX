@@ -31,7 +31,7 @@ namespace UserInterface.Views
         private string previouslySelectedNodePath;
         private string sourcePathOfItemBeingDragged;
         private string nodePathBeforeRename;
-        private static Gtk.TreeView _treeview1 = null;
+        private Gtk.TreeView _treeview1 = null;
         private TreeViewNode rootNode;
         private ISerializable dragDropData = null;
         private GCHandle dragSourceHandle;
@@ -54,7 +54,7 @@ namespace UserInterface.Views
         private bool acceleratorsAreAttached;
 
         // If you add a new item to the tree model that is not at the end, a lot of things will break.
-        private static TreeStore _treemodel {
+        private TreeStore _treemodel {
             get {
                 return (TreeStore)_treeview1.Model; 
             }

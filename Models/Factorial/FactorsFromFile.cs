@@ -18,7 +18,7 @@ namespace Models.Factorial
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Factors))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
-    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes
+    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
     {
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
@@ -104,13 +104,27 @@ namespace Models.Factorial
         [Display]
         public DataTable Data
         {
-            get {return _data;}
+            get {
+                if (_data != null)
+                    return _data;
+                else
+                    return new DataTable();
+            }
         }
 
         /// <summary>Return our input filenames</summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
             return [FullFileName];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<string> Lines { 
+            get {return GetCommands();} 
+            set {return;}
         }
 
         /// <summary>Remove all paths from referenced filenames.</summary>
@@ -124,7 +138,7 @@ namespace Models.Factorial
         /// </summary>
         public bool CheckFileUpdated()
         {
-            if (_fileUpdated != File.GetLastWriteTime(FileName))
+            if (_fileUpdated != File.GetLastWriteTime(FullFileName))
                 return true;
             else
                 return false;
@@ -166,6 +180,15 @@ namespace Models.Factorial
         /// </summary>
         public List<string> GetCommands()
         {
+            if (string.IsNullOrEmpty(FileName))
+                return new List<string>();
+
+            if (string.IsNullOrEmpty(FactorName))
+                return new List<string>();
+
+            if (string.IsNullOrEmpty(LabelColumn))
+                return new List<string>();
+
             Factors factors = Node.FindParent<Factors>();
             if (factors == null)
                 throw new Exception("FactorsFromFile cannot find parent Factors");
@@ -178,6 +201,7 @@ namespace Models.Factorial
             log.WriteLine($"Experiment factors imported from {FullFileName}");
 
             _data = FileUtilities.ReadDataFile(FullFileName);
+            _fileUpdated = File.GetLastWriteTime(FullFileName);
             List<CommandType> columnCommandType = new List<CommandType>();
             foreach(DataColumn column in _data.Columns)
             {
@@ -204,7 +228,7 @@ namespace Models.Factorial
             commands.Add($"add new Factor to [{factors.Name}] name {FactorName}");
             foreach(DataRow row in _data.Rows)
             {
-                string label = LabelColumn + row[LabelColumn].ToString();
+                string label = row[LabelColumn].ToString().Trim();
                 commands.Add($"add new CompositeFactor to [{factors.Name}].{FactorName} name {label}");
                 for(int i = 0; i < _data.Columns.Count; i++)
                 {

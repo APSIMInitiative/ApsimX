@@ -13,7 +13,8 @@ namespace UserInterface.Views
         Text,
         Graph,
         Grid,
-        Property
+        Property,
+        Code
     }
 
     /// <summary>
@@ -30,8 +31,6 @@ namespace UserInterface.Views
 
     public class QuadView : ViewBase
     {
-        public IEditorView EditorView { get; private set; } = null;
-
         private double horizontalSlider = -1;
 
         private Paned topPaned;
@@ -173,6 +172,10 @@ namespace UserInterface.Views
             {
                 container = this.GetControl<PropertyView>(name);
             }
+            else if (type == WidgetType.Code)
+            {
+                container = this.GetControl<EditorView>(name);
+            }
 
             SetView(container, position);
             return container;
@@ -278,8 +281,10 @@ namespace UserInterface.Views
                 return WidgetType.Property;
             else if (view is MarkdownView)
                 return WidgetType.Text;
-            else if (view is ContainerView containerView)
+            else if (view is ContainerView)
                 return WidgetType.Grid;
+            else if (view is EditorView)
+                return WidgetType.Code;
             else
                 return WidgetType.None;
         }

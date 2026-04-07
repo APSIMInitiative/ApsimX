@@ -234,11 +234,11 @@ namespace UserInterface.Presenters
                 view.Tree.Droped -= this.OnDrop;
                 view.Tree.Renamed -= this.OnRename;
             }
-            if (CommandHistory != null)
-                CommandHistory.UpdateTree(this.view.Tree);
 
             (view as ExplorerView).RebuildTree(GetNodeDescription(ApsimXFile), expandedNodes);
 
+            if (CommandHistory != null)
+                CommandHistory.UpdateTree(this.view.Tree);
             if (!string.IsNullOrEmpty(selectedNode))
                 view.Tree.SelectedNode = selectedNode;
             view.Tree.SelectedNodeChanged += this.OnNodeSelected;

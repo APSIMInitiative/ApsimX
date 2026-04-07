@@ -108,7 +108,8 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.Lines = this.model.Lines.ToArray();
+            if (changedModel is ILineEditor linesModel)
+                this.view.Lines = linesModel.Lines.ToArray();
         }
 
         /// <summary>

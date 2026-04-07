@@ -6,6 +6,8 @@ using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
+using Models.Factorial;
+using System;
 
 namespace UserInterface.Presenters
 {
@@ -47,6 +49,8 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
+            else if (model is FactorsFromFile)
+                CreateLayoutFactorsFromFile();
             else
                 CreateLayoutGeneric();
 
@@ -199,6 +203,19 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Add a Editor view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="text">Text to display in this view</param>
+        private void AddCode(WidgetPosition position)
+        {
+            EditorView editorView = view.AddComponent(WidgetType.Code, position) as EditorView;
+            EditorPresenter editorPresenter = new EditorPresenter();
+            editorPresenter.Attach(model, editorView, explorerPresenter);
+            presenters.Add(editorPresenter);
+        }
+
+        /// <summary>
         /// Setup a generic layout with grid, graph and properties
         /// </summary>
         private void CreateLayoutGeneric()
@@ -247,6 +264,16 @@ namespace UserInterface.Presenters
         {
             CreateLayoutGeneric();
             view.OverrideSlider(0.3);
+        }
+
+        /// <summary>
+        /// Create layout for a waterbalance, grid, graph and properties
+        /// </summary>
+        private void CreateLayoutFactorsFromFile()
+        {
+            AddProperty(WidgetPosition.TopLeft);
+            AddGrid(WidgetPosition.BottomLeft);
+            AddCode(WidgetPosition.TopRight);
         }
     }
 }
