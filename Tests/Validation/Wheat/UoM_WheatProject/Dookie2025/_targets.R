@@ -9,6 +9,8 @@ tar_option_set(packages = c("here", "tidyverse", "lubridate", "readxl"))
 
 source("R/createWeatherFile.R")
 source("R/save_met_file.R")
+source("R/compile_all_observed.R")
+source("R/read_observed_func.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -54,6 +56,7 @@ list(
                                       "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx"), # raw observed data (pre-defined file name),
       sheetExcel_weather          = "Met Data",
       coord_thisLatLon            = data.frame(lat = -36.39, lon = 145.70), # To check
+      file_metaData_observed      = paste0("Observed_data_requirements.csv"),# pre-defined list of obs vars to fetch
       file_saved_obs_excel         = paste0(proj_name,"_Observed.xlsx"), #produced observed data (pre-defined file name)
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2025", # date to transform DOY output into ddmmyy within simulations
@@ -96,7 +99,21 @@ list(
       lon = config$coord_thisLatLon$lon
     ),
     format = "file" # Track the saved output!
-  )
+  ),
+  
+  ### -------------------------------------------------------------------------------
+  ### Prepare excel data with observation in APSIM format to compare with simulations
+  ### -------------------------------------------------------------------------------
+  
+  # check which observed data is needed to use based on a hand-made csv meta-data file
+  tar_target(df_obs_info,read.csv2(file.path(config$folder_rawData, 
+                                             config$file_metaData_observed),
+                                   header = TRUE, stringsAsFactors = FALSE, sep = ",")),
+  
+  # Reads excel raw observations based on meta data above (raw as-is) and appends them into a single list of dfs 
+  tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,
+                                                    config$file_rawData_excel,
+                                                    df_obs_info))
   
   
   # Find emergence dates and population

@@ -36,7 +36,8 @@ targets::tar_make()
 
 
 ```{r}
-tar_load(processed_met_data)
+tar_load(list_observed_dfs)
 df1<-processed_met_data$data
+info_3 <- tar_read(df_obs_info)
 ```
 
