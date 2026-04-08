@@ -107,7 +107,19 @@ read_observed_func <- function(file_path, SheetName, VarName, NewVarName, UnitCo
     # 2. Add our new descriptive columns and clean existing ones
     dplyr::mutate(
       Dataset   = as.factor(dataset_name),
-      SowTime   = as.factor(.data[[sow_col]]),
+      
+      # DYNAMIC SOW TIME CLEANER (Safe from PCRE engine quirks)
+      # Finds the match, lowercases the prefix, title-cases the month, and adds a hyphen
+      SowTime   = as.factor(stringr::str_replace(
+        string = .data[[sow_col]],
+        pattern = stringr::regex("\\b(early|mid|late)[\\s_]+([a-z]+)", ignore_case = TRUE),
+        replacement = function(m) {
+          prefix <- tolower(stringr::str_extract(m, "(?i)early|mid|late"))
+          month  <- stringr::str_to_title(stringr::str_extract(m, "(?i)[a-z]+$"))
+          paste0(prefix, "-", month)
+        }
+      )),
+      
       Date      = parse_any_date(.data[[date_col]]),
       Block     = as.factor(`!Block`),
       Cultivar  = as.factor(Cultivar),
@@ -128,6 +140,7 @@ read_observed_func <- function(file_path, SheetName, VarName, NewVarName, UnitCo
       .groups = "drop"
     ) %>%
     stats::na.omit()
+  
   
   return(df)
 }
