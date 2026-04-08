@@ -59,6 +59,12 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
         }
 
+        public void Refresh()
+        {
+            view.Show();
+            view.Refresh();
+        }
+
         /// <summary>The user has changed the commands</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>

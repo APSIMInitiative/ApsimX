@@ -84,6 +84,8 @@ namespace UserInterface.Presenters
                     grid.Refresh();
                 else if (presenter is QuadGraphPresenter graph)
                     graph.Refresh();
+                else if (presenter is EditorPresenter editor)
+                    editor.Refresh();
             }
             view.Refresh();
             ConnectEvents();
@@ -273,7 +275,8 @@ namespace UserInterface.Presenters
         {
             AddProperty(WidgetPosition.TopLeft);
             AddGrid(WidgetPosition.BottomLeft);
-            AddCode(WidgetPosition.TopRight);
+            AddText(WidgetPosition.TopRight, "Override Commands:");
+            AddCode(WidgetPosition.BottomRight);
         }
     }
 }

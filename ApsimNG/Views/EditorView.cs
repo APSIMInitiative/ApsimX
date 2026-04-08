@@ -347,6 +347,7 @@ namespace UserInterface.Views
 
             scroller.Add(textEditor);
 
+            mainWidget = scroller;
             InitialiseWidget();
         }
 
@@ -363,12 +364,16 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            Container parent = (Container)gtkControl;
-            mainWidget = parent;
-            scroller = new ScrolledWindow();
+
+            if (gtkControl is ScrolledWindow sw)
+                scroller = sw;
+            else
+                scroller = new ScrolledWindow();
+
             textEditor = new SourceView();
             scroller.Add(textEditor);
-            parent.Add(scroller);
+
+            mainWidget = scroller;
             InitialiseWidget();
         }
 
@@ -385,7 +390,6 @@ namespace UserInterface.Views
             // line on the second press.
             textEditor.SmartHomeEnd = SmartHomeEndType.Before;
 
-            mainWidget = scroller;
             textEditor.Buffer.Changed += OnTextHasChanged;
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
