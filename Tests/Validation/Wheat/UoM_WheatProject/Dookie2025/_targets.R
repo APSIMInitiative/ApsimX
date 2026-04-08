@@ -116,6 +116,11 @@ list(
                                                     df_obs_info))
   
   
+  ### -------------------------------------------------------------------------------
+  ### Extract key parameters for manual addition into .apsimx simulation
+  ### -------------------------------------------------------------------------------
+  
+  
   # Find emergence dates and population
   # # Config: Get pre-defined simulation names per treatment from APSIM file (via APSIM-UI) - NOTE: func this might have to change with exp
   #tar_target(df_em_pop,get_em_pop())
