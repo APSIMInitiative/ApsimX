@@ -138,6 +138,9 @@ namespace Models.Factorial
         /// </summary>
         public bool CheckFileUpdated()
         {
+            if (string.IsNullOrEmpty(_filename))
+                return false;
+
             if (_fileUpdated != File.GetLastWriteTime(FullFileName))
                 return true;
             else

@@ -230,7 +230,8 @@ namespace UserInterface.Presenters
                 RefreshView(model);
                 if (model is IGenerateNodes generator)
                 {
-                    generator.GenerateNodes(presenter.ApsimXFile.FileName);
+                    string directory = Path.GetDirectoryName(presenter.ApsimXFile.FileName);
+                    generator.GenerateNodes(directory);
                     presenter.RebuildTree();
                 }
             }
