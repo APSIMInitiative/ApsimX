@@ -272,15 +272,6 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Arbitrator].WaterUptakeMethod.WSupply",
-              "Name": "WSupply",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Arbitrator].WaterUptakeMethod.WAllocated",
               "Name": "WAllocated",
               "ResourceName": null,
