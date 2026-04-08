@@ -11,6 +11,8 @@ source("R/createWeatherFile.R")
 source("R/save_met_file.R")
 source("R/compile_all_observed.R")
 source("R/read_observed_func.R")
+source("R/filter_and_extract_pcds.R")
+source("R/attach_sim_names.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -111,9 +113,25 @@ list(
                                    header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
   # Reads excel raw observations based on meta data above (raw as-is) and appends them into a single list of dfs 
-  tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,
+  tar_target(list_observed_dfs_raw,compile_all_observed(config$folder_rawData,
                                                     config$file_rawData_excel,
-                                                    df_obs_info))
+                                                    df_obs_info)),
+  
+  # 2. Map observations to Simulations
+  tar_target(
+    name = list_observed_dfs,
+    command = attach_sim_names(list_observed_dfs_raw, df_simNameByCult)
+  )
+  
+  ### ----------------------------------------------------------------------------------------
+  ### Create APSIM stage parameters as FORCED input - AND add it as synthetic data to observations (stages_raw)
+  ### ----------------------------------------------------------------------------------------
+  
+  # Filter and extract the PCDS pheno-stages observed from excel raw data
+ # tar_target(df_list_PCDS, filter_and_extract_pcds(list_observed_dfs)),
+  
+  #' Interpolates observed PCDS observed variables across Date
+  #tar_target(df_PCDS_int, interpolate_obs_phenoStages(df_list_PCDS))
   
   
   ### -------------------------------------------------------------------------------
