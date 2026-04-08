@@ -51,9 +51,9 @@ namespace UnitTests.Factorial
             Assert.That(generatedFactor, Is.Not.Null);
             Assert.That(generatedFactor.ReadOnly, Is.True);
             Assert.That(generatedFactor.Children.Count, Is.EqualTo(2));
-            Assert.That((generatedFactor.Children[0] as CompositeFactor).Name, Is.EqualTo("SiteA"));
+            Assert.That((generatedFactor.Children[0] as CompositeFactor).Name, Is.EqualTo("A"));
             Assert.That((generatedFactor.Children[0] as CompositeFactor).Specifications[0], Contains.Substring("1"));
-            Assert.That((generatedFactor.Children[0] as CompositeFactor).Name, Is.EqualTo("SiteB"));
+            Assert.That((generatedFactor.Children[1] as CompositeFactor).Name, Is.EqualTo("B"));
             Assert.That((generatedFactor.Children[1] as CompositeFactor).Specifications[0], Contains.Substring("2"));
         }
 
