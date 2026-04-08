@@ -17,8 +17,9 @@ namespace Models.Factorial
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Factors))]
+    [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
-    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
+    public class FactorFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
     {
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
@@ -32,17 +33,9 @@ namespace Models.Factorial
         private DataTable _data { get; set; } = null;
 
         /// <summary>
-        /// The name of the factor that will be built
+        /// Stores the name of the previous factor name in case its changed and we need to clean it up.
         /// </summary>
-        [Description("Factor Name")]
-        public string FactorName { get; set; }
-
-        /// <summary>
-        /// The column in the data table that is used to label the composite 
-        /// factor that is built from that row.
-        /// </summary>
-        [Description("Label Column")]
-        public string LabelColumn { get; set; }
+        private string _previousFactorName = "";
 
         /// <summary>
         /// The name of the Excel spreadsheet containing all factors details. 
@@ -75,9 +68,23 @@ namespace Models.Factorial
             set
             {
                 _filename = value;
-                _fileUpdated = File.GetLastWriteTime(value);
+                if (!string.IsNullOrEmpty(_filename))
+                    _fileUpdated = File.GetLastWriteTime(value);
             }
         }
+
+        /// <summary>
+        /// The name of the factor that will be built
+        /// </summary>
+        [Description("Factor Name")]
+        public string FactorName { get; set; }
+
+        /// <summary>
+        /// The column in the data table that is used to label the composite 
+        /// factor that is built from that row.
+        /// </summary>
+        [Description("Label Column")]
+        public string LabelColumn { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -150,32 +157,45 @@ namespace Models.Factorial
         /// <summary>
         /// Create the nodes
         /// </summary>
-        public void GenerateNodes(string relativeDirectory)
+        public bool GenerateNodes()
         {
-            CleanNodes(relativeDirectory);
+            string relativeDirectory = Path.GetDirectoryName(Node.FileName);
+            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FactorName) || string.IsNullOrEmpty(LabelColumn))
+                return false;
+
             Experiment experiment = Node.FindParent<Experiment>(recurse:true);
             if (experiment != null)
             {
                 IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(GetCommands(), experiment, relativeDirectory);
                 CommandProcessor.Run(commands, experiment, runner: null);
             }
+            return true;
         }
 
         /// <summary>
         /// Create the nodes
         /// </summary>
-        public void CleanNodes(string relativeDirectory)
+        public bool CleanNodes()
         {
+            string relativeDirectory = Path.GetDirectoryName(Node.FileName);
+            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FactorName) || string.IsNullOrEmpty(LabelColumn))
+                return false;
+
+            if (string.IsNullOrEmpty(_previousFactorName))
+                _previousFactorName = FactorName;
+
             Experiment experiment = Node.FindParent<Experiment>(recurse:true);
             if (experiment != null)
             {
-                Factor factor = experiment.Node.FindChild<Factor>(name: FactorName, recurse: true);
+                Factor factor = experiment.Node.FindChild<Factor>(name: _previousFactorName, recurse: true);
                 if (factor != null && factor.ReadOnly == true)
                 {
-                    IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(new List<string>() {$"delete [Factor] name {FactorName}"}, experiment, relativeDirectory);
+                    IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(new List<string>() {$"delete [Factor] name {_previousFactorName}"}, experiment, relativeDirectory);
                     CommandProcessor.Run(commands, experiment, runner: null);
                 }
             }
+            _previousFactorName = FactorName;
+            return true;
         }
 
         /// <summary>
@@ -215,11 +235,11 @@ namespace Models.Factorial
                 }
                 else
                 {
-                    if (header.StartsWith('[') && header.EndsWith(']'))
-                        header = header.Substring(1, header.Length-2).Trim();
+                    if (header.Contains('[') && header.Contains(']'))
+                        header = header.Replace("[", "").Replace("]", "");
                     VariableComposite variable = ColumnInfo.NameMatchesAPSIMModel(header, experiment);
                     if (variable == null)
-                        columnCommandType.Add(CommandType.Set);
+                        columnCommandType.Add(CommandType.None);
                     else if (typeof(IModel).IsAssignableFrom(variable.DataType))
                         columnCommandType.Add(CommandType.Replacement);
                     else

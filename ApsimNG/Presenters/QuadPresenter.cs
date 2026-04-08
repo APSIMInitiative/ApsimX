@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
-            else if (model is FactorsFromFile)
+            else if (model is FactorFromFile)
                 CreateLayoutFactorsFromFile();
             else
                 CreateLayoutGeneric();
@@ -277,6 +277,7 @@ namespace UserInterface.Presenters
             AddGrid(WidgetPosition.BottomLeft);
             AddText(WidgetPosition.TopRight, "Override Commands:");
             AddCode(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.5);
         }
     }
 }

@@ -110,7 +110,7 @@ namespace UserInterface.Views
 
             set
             {
-                if (value != null)
+                if (value != null && textEditor != null)
                 {
                     textEditor.Buffer.BeginNotUndoableAction();
                     textEditor.Buffer.Text = value;
@@ -658,7 +658,8 @@ namespace UserInterface.Views
         public void Refresh()
         {
             //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
-            textEditor.QueueDraw();
+            if (textEditor != null)
+                textEditor.QueueDraw();
         }
 
         /// <summary>
@@ -920,7 +921,8 @@ namespace UserInterface.Views
         /// </summary>
         public void Hide()
         {
-            textEditor.Visible = false;
+            if (textEditor != null)
+                textEditor.Visible = false;
         }
 
         /// <summary>
@@ -928,7 +930,8 @@ namespace UserInterface.Views
         /// </summary>
         public void Show()
         {
-            textEditor.Visible = true;
+            if (textEditor != null)
+                textEditor.Visible = true;
         }
 
         /// <summary>

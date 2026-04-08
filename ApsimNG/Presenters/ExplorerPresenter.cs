@@ -217,6 +217,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void RebuildTree()
         {
+            MainPresenter.ClearStatusPanel();
             string selectedNode = "";
             List<string> expandedNodes = new List<string>();
             if (view.Tree != null)

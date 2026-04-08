@@ -569,9 +569,11 @@ public class Node : IStructure
                 }
             }
             
-            string directory = Path.GetDirectoryName(fileName);
             foreach (IGenerateNodes model in generateNodes)
-                model.GenerateNodes(directory);
+            {
+                model.CleanNodes();
+                model.GenerateNodes();
+            }
         }
         finally
         {

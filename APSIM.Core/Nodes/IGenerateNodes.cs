@@ -11,13 +11,11 @@
         /// <summary>
         /// Generate the nodes
         /// </summary>
-        /// <param name="relativeDirectory"></param>
-        public void GenerateNodes(string relativeDirectory);
+        public bool GenerateNodes();
 
         /// <summary>
         /// Cleanup the generated nodes
         /// </summary>
-        /// <param name="relativeDirectory"></param>
-        public void CleanNodes(string relativeDirectory);
+        public bool CleanNodes();
     }
 }

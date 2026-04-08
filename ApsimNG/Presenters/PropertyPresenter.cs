@@ -79,7 +79,7 @@ namespace UserInterface.Presenters
             RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            if (model is FactorsFromFile factors)
+            if (model is FactorFromFile factors)
             {
                 _fileRefreshTimer = new Timer(2000);
                 _fileRefreshTimer.AutoReset = true;
@@ -230,9 +230,12 @@ namespace UserInterface.Presenters
                 RefreshView(model);
                 if (model is IGenerateNodes generator)
                 {
-                    string directory = Path.GetDirectoryName(presenter.ApsimXFile.FileName);
-                    generator.GenerateNodes(directory);
-                    presenter.RebuildTree();
+                    bool couldClean = generator.CleanNodes();
+                    if (couldClean)
+                    {
+                        generator.GenerateNodes();
+                        presenter.RebuildTree();
+                    }
                 }
             }
         }
@@ -244,13 +247,16 @@ namespace UserInterface.Presenters
         /// <param name="e"></param>
         protected virtual void OnRefreshElapsed(object sender, EventArgs e)
         {
-            if (model is FactorsFromFile factors)
+            if (model is FactorFromFile factors)
             {
                 if (factors.CheckFileUpdated())
                 {
-                    string directory = Path.GetDirectoryName(presenter.ApsimXFile.FileName);
-                    factors.GenerateNodes(directory);
-                    presenter.RebuildTree();
+                    bool couldClean = factors.CleanNodes();
+                    if (couldClean)
+                    {
+                        factors.GenerateNodes();
+                        presenter.RebuildTree();
+                    }
                 }
             }
         }
