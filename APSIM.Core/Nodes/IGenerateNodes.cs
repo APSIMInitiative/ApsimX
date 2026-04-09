@@ -4,11 +4,6 @@
     public interface IGenerateNodes
     {
         /// <summary>
-        /// Generate a list of CommandLanguage commands to create nodes
-        /// </summary>
-        public List<string> GetCommands();
-
-        /// <summary>
         /// Generate the nodes
         /// </summary>
         public bool GenerateNodes();

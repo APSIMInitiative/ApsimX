@@ -49,8 +49,8 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
-            else if (model is FactorsFromFile)
-                CreateLayoutFactorsFromFile();
+            else if (model is FactorFromFile)
+                CreateLayoutFactorFromFile();
             else
                 CreateLayoutGeneric();
 
@@ -271,13 +271,13 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Create layout for a waterbalance, grid, graph and properties
         /// </summary>
-        private void CreateLayoutFactorsFromFile()
+        private void CreateLayoutFactorFromFile()
         {
             AddProperty(WidgetPosition.TopLeft);
             AddGrid(WidgetPosition.BottomLeft);
-            AddText(WidgetPosition.TopRight, "Override Commands:");
+            AddText(WidgetPosition.TopRight, "Commands:");
             AddCode(WidgetPosition.BottomRight);
-            view.OverrideSlider(0.5);
+            view.OverrideSlider(0.6);
         }
     }
 }

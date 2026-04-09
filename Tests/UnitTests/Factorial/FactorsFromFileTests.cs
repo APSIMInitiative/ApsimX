@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using APSIM.Core;
-using APSIM.Documentation;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
@@ -10,9 +9,9 @@ using NUnit.Framework;
 
 namespace UnitTests.Factorial
 {
-    /// <summary>This is a test class for the FactorsFromFile class</summary>
+    /// <summary>This is a test class for the FactorFromFile class</summary>
     [TestFixture]
-    public class FactorsFromFileTests
+    public class FactorFromFileTests
     {
         /// <summary></summary>
         [Test]
@@ -25,13 +24,13 @@ namespace UnitTests.Factorial
             string filename = Path.ChangeExtension(Path.GetTempFileName(), ".csv");
             File.WriteAllText(filename, csv);
             
-            FactorsFromFile factorsFromFile = new FactorsFromFile();
-            factorsFromFile.FactorName = "Site";
-            factorsFromFile.LabelColumn = "Site";
-            factorsFromFile.FileName = filename;
+            FactorFromFile factorFromFile = new FactorFromFile();
+            factorFromFile.Factor = "Site";
+            factorFromFile.NameColumn = "Site";
+            factorFromFile.FileName = filename;
 
             Factors factors = new Factors();
-            factors.AddChild(factorsFromFile);
+            factors.AddChild(factorFromFile);
             Simulations simulations = Utilities.GetRunnableSim(useInMemoryDb: true);
             Experiment experiment = new Experiment();
             experiment.AddChild(factors);
@@ -46,7 +45,7 @@ namespace UnitTests.Factorial
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
 
-            Assert.That(simulations.Node.FindChild<FactorsFromFile>(recurse:true), Is.Not.Null);
+            Assert.That(simulations.Node.FindChild<FactorFromFile>(recurse:true), Is.Not.Null);
             Factor generatedFactor = simulations.Node.FindChild<Factor>("Site", recurse:true);
             Assert.That(generatedFactor, Is.Not.Null);
             Assert.That(generatedFactor.ReadOnly, Is.True);
