@@ -119,6 +119,8 @@ namespace UserInterface.Views
                 if (propertyView.AnyProperties)
                 {
                     propertyView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                    if (natHeight < 40)
+                        natHeight = 40;
                     if (position == WidgetPosition.TopLeft)
                         leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
@@ -139,6 +141,8 @@ namespace UserInterface.Views
                 if (!string.IsNullOrEmpty(markdownView.Text))
                 {
                     markdownView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                    if (natHeight < 40)
+                        natHeight = 40;
                     if (position == WidgetPosition.TopLeft)
                         leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
