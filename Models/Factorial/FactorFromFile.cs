@@ -211,6 +211,10 @@ namespace Models.Factorial
             if (experiment == null)
                 return ["### FactorFromFile cannot find Experiment ###"];
 
+            Simulation simulation = experiment.Node.FindChild<Simulation>();
+            if (simulation == null)
+                return ["### FactorFromFile cannot find Simulation ###"];
+
             try
             {
                 _data = FileUtilities.ReadDataFile(FullFileName, Factor);
@@ -234,9 +238,7 @@ namespace Models.Factorial
                 }
                 else
                 {
-                    if (header.Contains('[') && header.Contains(']'))
-                        header = header.Replace("[", "").Replace("]", "");
-                    VariableComposite variable = ColumnInfo.NameMatchesAPSIMModel(header, experiment);
+                    VariableComposite variable = Node.GetObject(header, LocatorFlags.None, simulation);
                     if (variable == null)
                         columnCommandType.Add(CommandType.None);
                     else if (typeof(IModel).IsAssignableFrom(variable.DataType))
@@ -268,30 +270,33 @@ namespace Models.Factorial
                     if (row[columnName] is DateTime date)
                         value = DateUtilities.GetDateAsString(date);
 
-                    if (columnName.StartsWith('[') && columnName.EndsWith(']'))
-                        columnName = columnName.Substring(1, columnName.Length-2);
-                    if (commandType == CommandType.Replacement)
+                    if (!string.IsNullOrEmpty(value))
                     {
-                        if (value.Contains(" from "))
+                        if (columnName.StartsWith('[') && columnName.EndsWith(']'))
+                            columnName = columnName.Substring(1, columnName.Length-2);
+                        if (commandType == CommandType.Replacement)
                         {
-                            int index = value.IndexOf(" from ");
-                            string modelToFetch = value.Substring(0, index).Trim();
-                            if (!modelToFetch.StartsWith('[') && !modelToFetch.EndsWith(']'))
-                                value = "[" + modelToFetch + "]" + value.Substring(index);
-                            commands.Add($"add {value} to [{parent.Name}].{Factor}.{label}");
+                            if (value.Contains(" from "))
+                            {
+                                int index = value.IndexOf(" from ");
+                                string modelToFetch = value.Substring(0, index).Trim();
+                                if (!modelToFetch.StartsWith('[') && !modelToFetch.EndsWith(']'))
+                                    value = "[" + modelToFetch + "]" + value.Substring(index);
+                                commands.Add($"add {value} to [{parent.Name}].{Factor}.{label}");
+                            }
+                            else
+                                commands.Add($"add new {value} to [{parent.Name}].{Factor}.{label}");
+                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += [{columnName}]");
                         }
-                        else
-                            commands.Add($"add new {value} to [{parent.Name}].{Factor}.{label}");
-                        commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += [{columnName}]");
-                    }
-                    else if (commandType == CommandType.SetDate)
-                    {
-                        string dateString = DateUtilities.GetDateAsString(DateUtilities.GetDate(row[columnName].ToString()));
-                        commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={dateString}");
-                    }
-                    else if (commandType == CommandType.Set)
-                    {
-                        commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={value}");
+                        else if (commandType == CommandType.SetDate)
+                        {
+                            string dateString = DateUtilities.GetDateAsString(DateUtilities.GetDate(row[columnName].ToString()));
+                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={dateString}");
+                        }
+                        else if (commandType == CommandType.Set)
+                        {
+                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={value}");
+                        }
                     }
                 }
                 commands.Add($"[{parent.Name}].{Factor}.{label}.ReadOnly = true");
