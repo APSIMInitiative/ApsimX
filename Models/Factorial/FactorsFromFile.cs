@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Models.Factorial
@@ -24,7 +25,7 @@ namespace Models.Factorial
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
         /// </summary>
-        private enum CommandType { Replacement, Set, Label, None };
+        private enum CommandType { Replacement, Set, SetDate, Label, None };
 
         private string _filename { get; set; } = null;
 
@@ -212,19 +213,20 @@ namespace Models.Factorial
             if (string.IsNullOrEmpty(LabelColumn))
                 return new List<string>();
 
-            Factors factors = Node.FindParent<Factors>();
-            if (factors == null)
-                throw new Exception("FactorsFromFile cannot find parent Factors");
+            IModel parent = Node.FindParent<IModel>();
+            if (parent == null)
+                throw new Exception("FactorsFromFile cannot find parent");
 
-            Experiment experiment = factors.Node.FindParent<Experiment>();
+            Experiment experiment = Node.FindParent<Experiment>(recurse:true);
             if (experiment == null)
                 throw new Exception("FactorsFromFile cannot find Experiment");
 
-            using StringWriter log = new StringWriter();
-            log.WriteLine($"Experiment factors imported from {FullFileName}");
-
             _data = FileUtilities.ReadDataFile(FullFileName);
             _fileUpdated = File.GetLastWriteTime(FullFileName);
+
+            if (!_data.GetColumnNames().Contains(LabelColumn))
+                return new List<string>();
+
             List<CommandType> columnCommandType = new List<CommandType>();
             foreach(DataColumn column in _data.Columns)
             {
@@ -243,22 +245,30 @@ namespace Models.Factorial
                     else if (typeof(IModel).IsAssignableFrom(variable.DataType))
                         columnCommandType.Add(CommandType.Replacement);
                     else
-                        columnCommandType.Add(CommandType.Set);
+                    {
+                        if (variable.DataType == typeof(DateTime))
+                            columnCommandType.Add(CommandType.SetDate);
+                        else
+                            columnCommandType.Add(CommandType.Set);
+                    }
+                        
                 }
             }
 
             List<string> commands = new List<string>();
-            commands.Add($"add new Factor to [{factors.Name}] name {FactorName}");
+            commands.Add($"add new Factor to [{parent.Name}] name {FactorName}");
             foreach(DataRow row in _data.Rows)
             {
                 string label = row[LabelColumn].ToString().Trim();
-                commands.Add($"add new CompositeFactor to [{factors.Name}].{FactorName} name {label}");
+                commands.Add($"add new CompositeFactor to [{parent.Name}].{FactorName} name {label}");
                 for(int i = 0; i < _data.Columns.Count; i++)
                 {
                     DataColumn column = _data.Columns[i];
                     CommandType commandType = columnCommandType[i];
                     string columnName = column.ColumnName.Trim();
                     string value = row[columnName].ToString().Trim();
+                    if (row[columnName] is DateTime date)
+                        value = DateUtilities.GetDateAsString(date);
 
                     if (columnName.StartsWith('[') && columnName.EndsWith(']'))
                         columnName = columnName.Substring(1, columnName.Length-2);
@@ -270,20 +280,25 @@ namespace Models.Factorial
                             string modelToFetch = value.Substring(0, index).Trim();
                             if (!modelToFetch.StartsWith('[') && !modelToFetch.EndsWith(']'))
                                 value = "[" + modelToFetch + "]" + value.Substring(index);
-                            commands.Add($"add {value} to [{factors.Name}].{FactorName}.{label}");
+                            commands.Add($"add {value} to [{parent.Name}].{FactorName}.{label}");
                         }
                         else
-                            commands.Add($"add new {value} to [{factors.Name}].{FactorName}.{label}");
-                        commands.Add($"[{factors.Name}].{FactorName}.{label}.Specifications += [{columnName}]");
+                            commands.Add($"add new {value} to [{parent.Name}].{FactorName}.{label}");
+                        commands.Add($"[{parent.Name}].{FactorName}.{label}.Specifications += [{columnName}]");
+                    }
+                    else if (commandType == CommandType.SetDate)
+                    {
+                        string dateString = DateUtilities.GetDateAsString(DateUtilities.GetDate(row[columnName].ToString()));
+                        commands.Add($"[{parent.Name}].{FactorName}.{label}.Specifications += {column}={dateString}");
                     }
                     else if (commandType == CommandType.Set)
                     {
-                        commands.Add($"[{factors.Name}].{FactorName}.{label}.Specifications += {column}={value}");
+                        commands.Add($"[{parent.Name}].{FactorName}.{label}.Specifications += {column}={value}");
                     }
                 }
-                commands.Add($"[{factors.Name}].{FactorName}.{label}.ReadOnly = true");
+                commands.Add($"[{parent.Name}].{FactorName}.{label}.ReadOnly = true");
             }
-            commands.Add($"[{factors.Name}].{FactorName}.ReadOnly = true");
+            commands.Add($"[{parent.Name}].{FactorName}.ReadOnly = true");
 
             return commands;
         }
