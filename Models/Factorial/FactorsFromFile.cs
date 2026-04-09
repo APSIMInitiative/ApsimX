@@ -88,6 +88,14 @@ namespace Models.Factorial
         public string LabelColumn { get; set; }
 
         /// <summary>
+        /// Property to update in order to trigger OnModelChanged events.
+        /// </summary>
+        [Description(" ")]
+        [Display(Type = DisplayType.Button)]
+        [JsonIgnore]
+        public bool Refresh {get;set;} = false;
+
+        /// <summary>
         /// Gets or sets the full file name (with path). 
         /// </summary>
         [JsonIgnore]

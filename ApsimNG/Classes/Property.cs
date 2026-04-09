@@ -31,10 +31,10 @@ namespace UserInterface.Classes
         File,
         Files,
         Directory,
-        //Directories,
         Font,
         Numeric,
-        Code
+        Code,
+        Button
     }
 
     /// <summary>
@@ -429,6 +429,9 @@ namespace UserInterface.Classes
                 case DisplayType.CanopyTypes:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[4] { "BroadAcre", "TreeRow", "CropRow", "VineRow" };
+                    break;
+                case DisplayType.Button:
+                    DisplayMethod = PropertyType.Button;
                     break;
 
                 // Should never happen - presenter should handle this(?)

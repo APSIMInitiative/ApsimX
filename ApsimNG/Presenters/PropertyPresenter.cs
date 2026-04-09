@@ -35,8 +35,6 @@ namespace UserInterface.Presenters
         /// </summary>
         protected ExplorerPresenter presenter;
 
-        private Timer _fileRefreshTimer;
-
         /// <summary>
         /// A filter function which can be used to filter which properties
         /// can be displayed.
@@ -78,15 +76,6 @@ namespace UserInterface.Presenters
 
             RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
-
-            if (model is FactorFromFile factors)
-            {
-                _fileRefreshTimer = new Timer(2000);
-                _fileRefreshTimer.AutoReset = true;
-                _fileRefreshTimer.Elapsed += OnRefreshElapsed;
-                _fileRefreshTimer.Start();
-            }
-
             this.view.PropertyChanged += OnViewChanged;
         }
 
@@ -201,11 +190,6 @@ namespace UserInterface.Presenters
         {
             view.SaveChanges();
             view.PropertyChanged -= OnViewChanged;
-            if (_fileRefreshTimer != null)
-            {
-                _fileRefreshTimer.Stop();
-                _fileRefreshTimer.Elapsed -= OnRefreshElapsed;
-            }
             (view as ViewBase).Dispose();
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
@@ -234,27 +218,6 @@ namespace UserInterface.Presenters
                     if (couldClean)
                     {
                         generator.GenerateNodes();
-                        presenter.RebuildTree();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected virtual void OnRefreshElapsed(object sender, EventArgs e)
-        {
-            if (model is FactorFromFile factors)
-            {
-                if (factors.CheckFileUpdated())
-                {
-                    bool couldClean = factors.CleanNodes();
-                    if (couldClean)
-                    {
-                        factors.GenerateNodes();
                         presenter.RebuildTree();
                     }
                 }
