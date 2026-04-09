@@ -20,7 +20,7 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel spreadsheet")]
-    public class FactorFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
+    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
     {
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
@@ -265,6 +265,7 @@ namespace Models.Factorial
 
             List<string> commands = new List<string>();
             commands.Add($"add new Factor to [{parent.Name}] name {FactorName}");
+            commands.Add($"move [{FactorName}] after [{Name}]");
             foreach(DataRow row in _data.Rows)
             {
                 string label = row[LabelColumn].ToString().Trim();

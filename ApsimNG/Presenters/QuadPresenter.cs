@@ -49,7 +49,7 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
-            else if (model is FactorFromFile)
+            else if (model is FactorsFromFile)
                 CreateLayoutFactorsFromFile();
             else
                 CreateLayoutGeneric();

@@ -25,7 +25,7 @@ namespace UnitTests.Factorial
             string filename = Path.ChangeExtension(Path.GetTempFileName(), ".csv");
             File.WriteAllText(filename, csv);
             
-            FactorFromFile factorsFromFile = new FactorFromFile();
+            FactorsFromFile factorsFromFile = new FactorsFromFile();
             factorsFromFile.FactorName = "Site";
             factorsFromFile.LabelColumn = "Site";
             factorsFromFile.FileName = filename;
@@ -46,7 +46,7 @@ namespace UnitTests.Factorial
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
 
-            Assert.That(simulations.Node.FindChild<FactorFromFile>(recurse:true), Is.Not.Null);
+            Assert.That(simulations.Node.FindChild<FactorsFromFile>(recurse:true), Is.Not.Null);
             Factor generatedFactor = simulations.Node.FindChild<Factor>("Site", recurse:true);
             Assert.That(generatedFactor, Is.Not.Null);
             Assert.That(generatedFactor.ReadOnly, Is.True);
