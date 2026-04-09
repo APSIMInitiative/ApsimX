@@ -49,6 +49,10 @@ namespace Models.PMF.Phen
         {
             if (camp.Params != null)
             {
+                if (dX < 0)
+                {
+                    return 0;
+                }
                 double UdVrn1 = Math.Exp(k.Value() * dX);
                 if (dX < deVernalisationTemp.Value())
                     return UdVrn1/24;
