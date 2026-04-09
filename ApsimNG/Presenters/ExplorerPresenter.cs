@@ -551,6 +551,12 @@ namespace UserInterface.Presenters
         {
             try
             {
+                if (model is IGenerateNodes generator)
+                {
+                    generator.CleanNodes();
+                    RebuildTree();
+                }
+
                 DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
                 this.ApsimXFile.Node.ClearLocator();
                 CommandHistory.Add(command, true);

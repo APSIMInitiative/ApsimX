@@ -34,7 +34,7 @@
         /// <param name="explorerView">The explorer view.</param>
         public DeleteModelCommand(IModel modelToDelete, TreeViewNode nodeDescription)
         {
-            if (modelToDelete.Parent.ReadOnly)
+            if (modelToDelete.ReadOnly)
                 throw new ApsimXException(modelToDelete, string.Format($"Unable to delete {modelToDelete.Name} - it is read-only."));
             this.modelToDelete = modelToDelete;
             this.nodeDescription = nodeDescription;

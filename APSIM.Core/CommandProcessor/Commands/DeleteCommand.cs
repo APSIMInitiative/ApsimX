@@ -1,3 +1,5 @@
+using Models.Core;
+
 namespace APSIM.Core;
 
 /// <summary>A delete model command</summary>
@@ -29,6 +31,8 @@ internal partial class DeleteCommand : IModelCommand
         if (modelToDelete.Node.Parent == null)
             throw new Exception($"Command 'delete [Simulations]' is an invalid command. [Simulations] node is the top-level node and cannot be deleted. Remove the command from your config file.");
 
+        if (modelToDelete is IGenerateNodes generator)
+            generator.CleanNodes();
         modelToDelete.Node.Parent.RemoveChild(modelToDelete);
         return relativeTo;
     }
