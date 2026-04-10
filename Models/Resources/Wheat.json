@@ -760,7 +760,7 @@
                     "",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //107.48",
                     //"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4",
@@ -967,7 +967,7 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                     //"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Gregory",
                   "ResourceName": null,
@@ -1055,7 +1055,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247088996399892",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -1075,7 +1075,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85.6989214218668",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.349562436956343",
                     "[Phenology].CAMP.FLNparams.MinLN = 8",
                     "[Phenology].CAMP.FLNparams.PpLN = 3",
@@ -1116,7 +1116,7 @@
                     "//[Leaf].TilleringRate.Vegetative.StressedRate.Stresses.CoverEffect.XYPairs.X=1.0,1.0,1,1",
                     "",
                     "//[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4",
@@ -1319,7 +1319,7 @@
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "//[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Livingston",
                   "ResourceName": null,
@@ -1367,7 +1367,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //106.268453805677",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.137742329295879",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -1446,7 +1446,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4.0",
                     "[Phenology].CAMP.FLNparams.VrnLN = 1",
@@ -1697,7 +1697,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 102.794916048683",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.192036818570067",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -1975,7 +1975,7 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.349562436956343",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].CAMP.FLNparams.MinLN = 8",
                     "[Phenology].CAMP.FLNparams.PpLN = 3",
                     "[Phenology].CAMP.FLNparams.VrnLN = 0.5",
@@ -2645,7 +2645,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 13",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 13",
                     "//[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
                     "[Phenology].GrainFilling.Target.FixedValue = 450",
                     "//[Stem].DMRetranslocationFactor.ReproductiveGrowth.DMRetranslocationFactor.FixedValue = 0.2",
@@ -2720,7 +2720,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 18",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 18",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4.0",
@@ -2736,7 +2736,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 20",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4.0",
@@ -2752,7 +2752,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4.0",
@@ -2768,7 +2768,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 25",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 25",
                     "[Grain].MaximumNConc.FixedValue = 0.02",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 4.0",
@@ -2879,7 +2879,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 17",
                     "[Phenology].GrainFilling.Target.FixedValue = 350",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
                     "[Phenology].CAMP.FLNparams.PpLN = 3.0",
@@ -3415,7 +3415,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
                     "[Photosynthesis].RUE.FixedValue = 2.8",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.65",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
+                    "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
                     "//[Grain].MaximumPotentialGrainSize.FixedValue = 0.040"
                   ],
                   "Name": "AGP_FAST",
