@@ -1,7 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.PreSimulationTools.ObservationsInfo;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,19 +46,10 @@ namespace Models.Factorial
         public string FileName { 
             get 
             {
-                string apsimFilePath = "";
                 if (Node != null)
-                    apsimFilePath = Node.FileName;
+                    return PathUtilities.GetRelativePath(_filename, Node.FileName);
                 else
-                {
-                    Simulations sims = Node.FindParent<Simulations>(recurse: true);
-                    if (sims != null)
-                        apsimFilePath = sims.FileName;
-                }
-                if (string.IsNullOrEmpty(apsimFilePath))
-                    throw new Exception("Cannot determine weather file path: Weather model is not attached to a simulation node or simulation. Please ensure the weather model is correctly attached to a simulation node.");
-                else
-                    return PathUtilities.GetRelativePath(_filename, apsimFilePath);
+                    return _filename;
             } 
             set
             {
@@ -150,6 +140,11 @@ namespace Models.Factorial
         {
             _commands = new string[0];
 
+            //Check if this model is read only, and disable temporarily while generating the children
+            bool readOnly = ReadOnly;
+            if (readOnly)
+                ReadOnly = false;
+
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
@@ -161,6 +156,9 @@ namespace Models.Factorial
                 IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, experiment, relativeDirectory);
                 CommandProcessor.Run(commands, experiment, runner: null);
             }
+
+            //reset the read only status
+            ReadOnly = readOnly;
             return true;
         }
 
@@ -175,7 +173,7 @@ namespace Models.Factorial
 
             List<string> commands = new List<string>();
             foreach(IModel child in Children)
-                commands.Add($"delete [Name].{child.Name}");
+                commands.Add($"delete [{Name}].{child.Name}");
 
             if (commands.Count > 0)
                 CommandProcessor.Run(CommandLanguage.StringToCommands(commands, this, relativeDirectory), this, runner: null);

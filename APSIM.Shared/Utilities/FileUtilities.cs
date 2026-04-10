@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="filepath"></param>
         /// <param name="sheetName"></param>
-        /// <returns>Contents ass DataTable</returns>
+        /// <returns>Contents as DataTable</returns>
         public static DataTable ReadDataFile(string filepath, string sheetName)
         {
             string extension = Path.GetExtension(filepath).ToLower();
@@ -58,6 +59,20 @@ namespace APSIM.Shared.Utilities
             {
                 throw new Exception($"Unable to read '{filepath}', extension '{extension}' not recognised");
             }
+        }
+
+        /// <summary>
+        /// Get the names of all the sheets in an excen file
+        /// </summary>
+        /// <param name="filepath">Filepath to open</param>
+        /// <returns></returns>
+        public static IEnumerable<string> ReadSheetNamesFromExcelFile(string filepath)
+        {
+            string extension = Path.GetExtension(filepath).ToLower();
+            if (ExcelUtilities.EXCEL_FORMATS_OPEN.Contains(extension) || ExcelUtilities.EXCEL_FORMATS_OLD.Contains(extension))
+                return ExcelUtilities.GetWorkSheetNames(filepath);
+            else
+                throw new Exception($"Unable to read '{filepath}', extension '{extension}' not recognised as Excel file");
         }
     }
 }
