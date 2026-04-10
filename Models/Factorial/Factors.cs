@@ -12,12 +12,8 @@ namespace Models.Factorial
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Experiment))]
-    public class Factors : Model, IStructureDependency
+    public class Factors : Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>Gets the factors.</summary>
         /// <value>The factors.</value>
         [JsonIgnore]
@@ -26,8 +22,9 @@ namespace Models.Factorial
             get
             {
                 List<Factor> f = new List<Factor>();
-                foreach (Factor factor in Structure.FindChildren<Factor>(recurse: true).Where(a => a.Node.FindParent<Permutation>(recurse: true) is null))
-                    f.Add(factor);
+                foreach (Factor factor in Node.FindChildren<Factor>(recurse: true))
+                    if (factor.Node.FindParent<Permutation>(recurse: true) == null)
+                        f.Add(factor);
 
                 return f;
             }

@@ -25,7 +25,6 @@ namespace UnitTests.Factorial
             File.WriteAllText(filename, csv);
             
             FactorFromFile factorFromFile = new FactorFromFile();
-            factorFromFile.Factor = "Site";
             factorFromFile.NameColumn = "Site";
             factorFromFile.FileName = filename;
 

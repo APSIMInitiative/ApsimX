@@ -34,11 +34,6 @@ namespace Models.Factorial
         private string[] _commands { get; set; } = new string[0];
 
         /// <summary>
-        /// Stores the name of the previous factor name in case its changed and we need to clean it up.
-        /// </summary>
-        private string _previousFactorName = "";
-
-        /// <summary>
         /// The name of the Excel spreadsheet containing all factors details. 
         /// One sheet (Properties) contains the label and full APSIM Node path 
         /// for any properties used. Each other spreadsheet if a factor using 
@@ -76,8 +71,8 @@ namespace Models.Factorial
         /// The column in the data table that is used to label the composite 
         /// factor that is built from that row.
         /// </summary>
-        [Description("Factor / Sheet")]
-        public string Factor { get; set; }
+        [Description("Sheet")]
+        public string Sheet { get; set; }
 
         /// <summary>
         /// The column in the data table that is used to label the composite 
@@ -156,7 +151,7 @@ namespace Models.Factorial
             _commands = new string[0];
 
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
-            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(Factor) || string.IsNullOrEmpty(NameColumn))
+            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
 
             Experiment experiment = Node.FindParent<Experiment>(recurse:true);
@@ -175,23 +170,16 @@ namespace Models.Factorial
         public bool CleanNodes()
         {
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
-            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(Factor) || string.IsNullOrEmpty(NameColumn))
+            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
 
-            if (string.IsNullOrEmpty(_previousFactorName))
-                _previousFactorName = Factor;
+            List<string> commands = new List<string>();
+            foreach(IModel child in Children)
+                commands.Add($"delete [Name].{child.Name}");
 
-            Experiment experiment = Node.FindParent<Experiment>(recurse:true);
-            if (experiment != null)
-            {
-                Factor factor = experiment.Node.FindChild<Factor>(name: _previousFactorName, recurse: true);
-                if (factor != null && factor.ReadOnly == true)
-                {
-                    IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(new List<string>() {$"delete [{factor.Name}]"}, experiment, relativeDirectory);
-                    CommandProcessor.Run(commands, experiment, runner: null);
-                }
-            }
-            _previousFactorName = Factor;
+            if (commands.Count > 0)
+                CommandProcessor.Run(CommandLanguage.StringToCommands(commands, this, relativeDirectory), this, runner: null);
+
             return true;
         }
 
@@ -200,7 +188,7 @@ namespace Models.Factorial
         /// </summary>
         private string[] GetCommands()
         {
-            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(Factor) || string.IsNullOrEmpty(NameColumn))
+            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return new string[0];
 
             IModel parent = Node.FindParent<IModel>();
@@ -217,7 +205,9 @@ namespace Models.Factorial
 
             try
             {
-                _data = FileUtilities.ReadDataFile(FullFileName, Factor);
+                _data = FileUtilities.ReadDataFile(FullFileName, Sheet);
+                foreach(DataColumn column in _data.Columns)
+                    column.ReadOnly = true;
             }
             catch (Exception exception)
             {
@@ -255,12 +245,10 @@ namespace Models.Factorial
             }
 
             List<string> commands = new List<string>();
-            commands.Add($"add new Factor to [{parent.Name}] name {Factor}");
-            commands.Add($"move [{Factor}] after [{Name}]");
             foreach(DataRow row in _data.Rows)
             {
                 string label = row[NameColumn].ToString().Trim();
-                commands.Add($"add new CompositeFactor to [{parent.Name}].{Factor} name {label}");
+                commands.Add($"add new CompositeFactor to [{parent.Name}].{Name} name {label}");
                 for(int i = 0; i < _data.Columns.Count; i++)
                 {
                     DataColumn column = _data.Columns[i];
@@ -282,28 +270,34 @@ namespace Models.Factorial
                                 string modelToFetch = value.Substring(0, index).Trim();
                                 if (!modelToFetch.StartsWith('[') && !modelToFetch.EndsWith(']'))
                                     value = "[" + modelToFetch + "]" + value.Substring(index);
-                                commands.Add($"add {value} to [{parent.Name}].{Factor}.{label}");
+                                commands.Add($"add {value} to [{parent.Name}].{Name}.{label}");
                             }
                             else
-                                commands.Add($"add new {value} to [{parent.Name}].{Factor}.{label}");
-                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += [{columnName}]");
+                                commands.Add($"add new {value} to [{parent.Name}].{Name}.{label}");
+                            commands.Add($"[{parent.Name}].{Name}.{label}.Specifications += [{columnName}]");
                         }
                         else if (commandType == CommandType.SetDate)
                         {
                             string dateString = DateUtilities.GetDateAsString(DateUtilities.GetDate(row[columnName].ToString()));
-                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={dateString}");
+                            commands.Add($"[{parent.Name}].{Name}.{label}.Specifications += {column}={dateString}");
                         }
                         else if (commandType == CommandType.Set)
                         {
-                            commands.Add($"[{parent.Name}].{Factor}.{label}.Specifications += {column}={value}");
+                            commands.Add($"[{parent.Name}].{Name}.{label}.Specifications += {column}={value}");
                         }
                     }
                 }
-                commands.Add($"[{parent.Name}].{Factor}.{label}.ReadOnly = true");
+                commands.Add($"[{parent.Name}].{Name}.{label}.ReadOnly = true");
             }
-            commands.Add($"[{parent.Name}].{Factor}.ReadOnly = true");
-
             return commands.ToArray();
+        }
+
+        /// <summary>
+        /// Return all possible factor values for this factor.
+        /// </summary>
+        public List<CompositeFactor> GetCompositeFactors()
+        {
+            return Node.FindChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
         }
     }
 }
