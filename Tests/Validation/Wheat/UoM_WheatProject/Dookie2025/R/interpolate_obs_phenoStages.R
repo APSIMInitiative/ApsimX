@@ -1,16 +1,15 @@
-# R/functions.R
-
 #' Interpolates PCDS variables across Date and estimates the date for 50% (0.50)
 #' of each variable for each Cultivar.
 #'
 #' @param df_list_PCDS A named list of data frames, where each data frame
-#'                     contains at least 'Cultivar', 'Date', and result variables
-#'                     with names like '...PCDS...'.
+#'                     contains at least 'SimulationName', 'Cultivar', 'Date', 
+#'                     and result variables with names like '...PCDS...'.
 #' @return A single data frame (df_50_interp) listing the date of 50% achievement
-#'         for each PCDS variable and Cultivar.
+#'         for each PCDS variable, SimulationName, and Cultivar.
 #'         
-#'  df_list_PCDS <- tar_read(df_list_PCDS)
-#'  PercTarg <- tar_read(PercTarg)       
+#' @importFrom dplyr arrange group_by mutate ungroup cur_group n
+#' @importFrom tidyr complete
+#' @export
 interpolate_obs_phenoStages <- function(df_list_PCDS) {
   
   # Load required packages
@@ -18,15 +17,17 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
   require(purrr)
   require(tidyr)
   
-  # Use purrr::map_dfr to iterate over the list and row-bind the results
-  
   df_interp_list <- list()
-  
   all_names <- names(df_list_PCDS)
   
   for (nm in all_names) {
     
     pcds_df <- df_list_PCDS[[nm]]
+    
+    # Optional but recommended: defensive check to ensure SimulationName exists
+    if (!"SimulationName" %in% names(pcds_df)) {
+      stop(sprintf("CRITICAL: 'SimulationName' column is missing from list element '%s'", nm))
+    }
     
     cat("====", nm, "====\n")
     print(head(pcds_df))
@@ -35,35 +36,66 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
     result_col <- names(pcds_df)[grepl("DateToProgress", names(pcds_df))]
     
     if (length(result_col) != 1) {
-      stop("Expected exactly one column matching ", value_pattern)
+      stop(sprintf("Expected exactly one column matching 'DateToProgress' in '%s', but found %d.", nm, length(result_col)))
     }
     
-  result_col <- result_col[[1]]
+    result_col <- result_col[[1]]
     
     # isolate each df for daily interpolation
-  df_interp <-  pcds_df %>%
-      arrange(Cultivar, Date) %>%
-      group_by(Cultivar) %>%
+    df_interp <- pcds_df %>%
+      # 1. Add SimulationName to the sorting and grouping hierarchy
+      # arrange(SimulationName, Cultivar, Date) %>%
+      # group_by(SimulationName, Cultivar) %>%
+      arrange(SimulationName, Date) %>%
+      group_by(SimulationName) %>%
       tidyr::complete(
         Date = seq(min(Date, na.rm = TRUE),
                    max(Date, na.rm = TRUE),
                    by = "day")
       ) %>%
       mutate(
-        !!result_col := approx(
-          x = Date[!is.na(.data[[result_col]])],
-          y = .data[[result_col]][!is.na(.data[[result_col]])],
-          xout = Date,
-          rule = 2
-        )$y
+        !!result_col := {
+          
+          # Extract the valid (non-NA) dates and values for this specific group
+          valid_idx <- !is.na(.data[[result_col]])
+          x_vals <- Date[valid_idx]
+          y_vals <- .data[[result_col]][valid_idx]
+          
+          # 2. SAFE INTERPOLATION CHECK
+          if (length(x_vals) >= 2) {
+            
+            # If we have 2 or more points, it is safe to interpolate
+            approx(x = x_vals, y = y_vals, xout = Date, rule = 2)$y
+            
+          } else {
+            
+            # 3. CONTEXTUAL WARNING
+            # Extract the exact group identifiers that failed
+            sim_name <- cur_group()$SimulationName
+            cult_name <- cur_group()$Cultivar
+            
+            warning(
+              sprintf(
+                "Skipping interpolation for '%s' | Simulation: '%s' | Cultivar: '%s'. Reason: Less than 2 valid data points available.",
+                nm, sim_name, cult_name
+              ),
+              call. = FALSE
+            )
+            
+            # Return a vector of NAs to fill the column for this group without crashing
+            rep(NA_real_, n())
+          }
+        }
       ) %>%
       ungroup()
-  
-  # ---- store as list element ----
-  df_interp_list[[nm]] <- df_interp
+    
+    df_interp <- df_interp %>%
+      dplyr::select(SimulationName, Date, dplyr::contains("[Wheat].Phenology"))
+    
+    # ---- store as list element ----
+    df_interp_list[[nm]] <- df_interp
     
   }
   
   return(df_interp_list)
-  
 }

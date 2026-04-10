@@ -13,6 +13,10 @@ source("R/compile_all_observed.R")
 source("R/read_observed_func.R")
 source("R/filter_and_extract_pcds.R")
 source("R/attach_sim_names.R")
+source("R/findDateStageTarget.R")
+source("R/interpolate_obs_phenoStages.R")
+source("R/doAPSIMStageInput.R")
+source("R/saveInputParam.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -62,7 +66,8 @@ list(
       file_saved_obs_excel         = paste0(proj_name,"_Observed.xlsx"), #produced observed data (pre-defined file name)
       sheet_name_observed         = "Observed",
       date_DOY_ref                = "01-01-2025", # date to transform DOY output into ddmmyy within simulations
-      btwStgFrac                  = 0.5, # fraction of time in-between two pheno-stages when we assume a missing stage 
+      target_stageDatePerc        = 50, # Percentage of phenological-stage development when its date is taken
+      target_btwStagesPerc        = 50, # Percentage of time in-between two pheno-stages when we assume a missing stage for interpolation
       file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"),
       file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv"),
       cols_to_extract             = c("SimulationName",
@@ -116,22 +121,48 @@ list(
   tar_target(list_observed_dfs_raw,compile_all_observed(config$folder_rawData,
                                                     config$file_rawData_excel,
                                                     df_obs_info)),
+
+  # All reading ok up until here
   
   # 2. Map observations to Simulations
   tar_target(
     name = list_observed_dfs,
     command = attach_sim_names(list_observed_dfs_raw, df_simNameByCult)
-  )
+  ),
   
   ### ----------------------------------------------------------------------------------------
   ### Create APSIM stage parameters as FORCED input - AND add it as synthetic data to observations (stages_raw)
   ### ----------------------------------------------------------------------------------------
   
   # Filter and extract the PCDS pheno-stages observed from excel raw data
- # tar_target(df_list_PCDS, filter_and_extract_pcds(list_observed_dfs)),
+  tar_target(df_list_PCDS, filter_and_extract_pcds(list_observed_dfs)),
   
   #' Interpolates observed PCDS observed variables across Date
-  #tar_target(df_PCDS_int, interpolate_obs_phenoStages(df_list_PCDS))
+  tar_target(df_PCDS_int, interpolate_obs_phenoStages(df_list_PCDS)),
+  
+  # Finds a date when a target % for each stage is reached
+  tar_target(df_dateStageTargetReached, findDateStageTarget(df_PCDS_int,
+                                                            config$target_stageDatePerc)),
+  
+  #--- All good until here
+  
+  # Create synthetic in-between pheno stages within a APSIM format input file
+  # tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached,
+  #                                                  config$target_btwStagesPerc))
+  
+  tar_target(
+    name = df_apsimStageInput,
+    command = doAPSIMStageInput(
+      df_dateWhenStageWasReached = df_dateStageTargetReached, 
+      BtwStgPerc = config$target_btwStagesPerc, 
+      fill_NAs_with_average = TRUE #<--- CHANGE THIS TO FALSE FOR FINAL ANALYSIS
+    ) ),
+  
+  # Save parameter input file with forced pheno-dates into /input
+  tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
+                                             config$folder_inputs, 
+                                             config$file_name_input_pheno),
+             format = "file")
   
   
   ### -------------------------------------------------------------------------------
