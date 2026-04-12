@@ -556,10 +556,10 @@ public class Node : IStructure
             {
                 try
                 {
-                    if (node.Model is IGenerateNodes generateNode)
-                        generateNodes.Add(generateNode);
-
                     (node.Model as ICreatable).OnCreated();
+                    if (node.Parent != null)
+                        if (node.Model is IGenerateNodes generateNode)
+                            generateNodes.Add(generateNode);
                 }
                 catch (Exception err)
                 {

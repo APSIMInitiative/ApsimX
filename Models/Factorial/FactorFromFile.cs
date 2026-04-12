@@ -140,11 +140,6 @@ namespace Models.Factorial
         {
             _commands = new string[0];
 
-            //Check if this model is read only, and disable temporarily while generating the children
-            bool readOnly = ReadOnly;
-            if (readOnly)
-                ReadOnly = false;
-
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
@@ -152,13 +147,28 @@ namespace Models.Factorial
             Experiment experiment = Node.FindParent<Experiment>(recurse:true);
             if (experiment != null)
             {
-                _commands = GetCommands().ToArray();
-                IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, experiment, relativeDirectory);
-                CommandProcessor.Run(commands, experiment, runner: null);
+                bool readOnly = ReadOnly;
+                try
+                {
+                    //Check if this model is read only, and disable temporarily while generating the children
+                    if (readOnly)
+                        ReadOnly = false;
+
+                    _commands = GetCommands().ToArray();
+                    IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, experiment, relativeDirectory);
+                    CommandProcessor.Run(commands, experiment, runner: null);
+                }
+                catch (Exception exception)
+                {
+                    CleanNodes();
+                    throw new Exception(exception.Message);
+                }
+                finally //reset the read only status
+                {
+                    ReadOnly = readOnly;
+                }
             }
 
-            //reset the read only status
-            ReadOnly = readOnly;
             return true;
         }
 
@@ -167,8 +177,7 @@ namespace Models.Factorial
         /// </summary>
         public bool CleanNodes()
         {
-            string relativeDirectory = Path.GetDirectoryName(Node.FileName);
-            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
+            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
 
             List<string> commands = new List<string>();
@@ -176,7 +185,13 @@ namespace Models.Factorial
                 commands.Add($"delete [{Name}].{child.Name}");
 
             if (commands.Count > 0)
-                CommandProcessor.Run(CommandLanguage.StringToCommands(commands, this, relativeDirectory), this, runner: null);
+            {
+                try
+                {
+                    CommandProcessor.Run(CommandLanguage.StringToCommands(commands, this, null), this, runner: null);
+                }
+                catch {}
+            }
 
             return true;
         }

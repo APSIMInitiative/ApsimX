@@ -1,3 +1,4 @@
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Factorial;
@@ -204,7 +205,8 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Called when a model is changed. Refreshes the view.
+        /// Called when a m
+        /// odel is changed. Refreshes the view.
         /// </summary>
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
@@ -213,14 +215,7 @@ namespace UserInterface.Presenters
             {
                 RefreshView(model);
                 if (model is IGenerateNodes generator)
-                {
-                    bool couldClean = generator.CleanNodes();
-                    if (couldClean)
-                    {
-                        generator.GenerateNodes();
-                        presenter.RebuildTree();
-                    }
-                }
+                    Node.Create(model.Node.FindParent<Simulations>(recurse: true), initInBackground: false);
             }
         }
 

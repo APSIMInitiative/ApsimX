@@ -129,18 +129,21 @@ namespace Models.Factorial
                 return false;
             
             _commands = GetCommands().ToArray();
-            if (_commands.Count() > 0)
-            {
-                IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, experiment, relativeDirectory);
-                CommandProcessor.Run(commands, experiment, runner: null);
-            }
 
-            foreach(string path in _createdNodes)
+            //Remove all comment lines
+            IEnumerable<string> lines = _commands.Where(line => !line.StartsWith('#'));
+            if (lines.Count() > 0)
             {
-                VariableComposite variable = Node.GetObject(path, LocatorFlags.ModelsOnly, experiment);
-                (variable.FirstModel as ICreatable).OnCreated();
-                if (variable.FirstModel is IGenerateNodes generator)
-                    generator.GenerateNodes();
+                IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(lines, experiment, relativeDirectory);
+                CommandProcessor.Run(commands, experiment, runner: null);
+
+                foreach(string path in _createdNodes)
+                {
+                    VariableComposite variable = Node.GetObject(path, LocatorFlags.ModelsOnly, experiment);
+                    (variable.FirstModel as ICreatable).OnCreated();
+                    if (variable.FirstModel is IGenerateNodes generator)
+                        generator.GenerateNodes();
+                }
             }
 
             return true;
@@ -151,8 +154,7 @@ namespace Models.Factorial
         /// </summary>
         public bool CleanNodes()
         {
-            string relativeDirectory = Path.GetDirectoryName(Node.FileName);
-            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
+            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return false;
 
             Experiment experiment = Node.FindParent<Experiment>(recurse:true);
@@ -164,7 +166,7 @@ namespace Models.Factorial
                 commands.Add($"delete {name}");
 
             if (commands.Count > 0)
-                CommandProcessor.Run(CommandLanguage.StringToCommands(commands, experiment, relativeDirectory), experiment, runner: null);
+                CommandProcessor.Run(CommandLanguage.StringToCommands(commands, experiment, null), experiment, runner: null);
 
             return true;
         }
@@ -174,12 +176,17 @@ namespace Models.Factorial
         /// </summary>
         private string[] GetCommands()
         {
+            _createdNodes = new string[0];
+            
             if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return new string[0];
 
             IModel parent = Node.FindParent<IModel>();
             if (parent == null)
                 return ["### FactorFromFile cannot find parent ###"];
+
+            if (!File.Exists(FullFileName))
+                return [$"### {FullFileName} does not exist ###"];
 
             List<string> sheets = new List<string>();
             try
@@ -200,7 +207,7 @@ namespace Models.Factorial
                 if (Sheets == null || Sheets.Count() == 0 || Sheets.Contains(sheet))
                 {
                     commands.Add($"add new FactorFromFile to [{parent.Name}] name {sheet}");
-                    commands.Add($"move [{parent.Name}].{sheet} after [{parent.Name}].{Name}");
+                    //commands.Add($"move [{parent.Name}].{sheet} after [{parent.Name}].{Name}");
                     commands.Add($"[{parent.Name}].{sheet}.FileName = {FileName}");
                     commands.Add($"[{parent.Name}].{sheet}.Sheet = {sheet}");
                     commands.Add($"[{parent.Name}].{sheet}.NameColumn = {NameColumn}");
