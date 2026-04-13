@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
             double iReduction = 0;
 
             //for each food type
-            foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility))
+            foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility))
             {
                 // RQ is relative quality
                 // FS relative availability of the feed
@@ -151,7 +151,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.Amount);
+                return feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).Sum(a => a.Value.Details.Amount);
             }
         }
 
