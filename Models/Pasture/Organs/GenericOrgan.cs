@@ -83,6 +83,23 @@ namespace Models.GrazPlan.Organs
             return result;
              
         }
+
+         /// <summary>
+        /// Get the average digestibility of this herbage
+        /// </summary>
+        /// <param name="comp">Herbage component</param>
+        /// <param name="part">Plant part</param>
+        /// <returns></returns>
+        private double GetDMD(int comp, int part)
+        {
+            string sUnit = PastureModel.MassUnit;
+            PastureModel.MassUnit = "kg/ha";
+            double result = PastureModel.Digestibility(comp, part);
+            PastureModel.MassUnit = sUnit;
+
+            return result;
+        }
+
         
 
         /// <summary>
@@ -202,6 +219,127 @@ namespace Models.GrazPlan.Organs
 
             }
         }
+
+        private PMF.Biomass liveBiomass = new PMF.Biomass();
+        private PMF.Biomass deadBiomass = new PMF.Biomass();
+
+        /// <summary>
+        /// Live Biomass
+        /// </summary>
+        public PMF.Biomass Live
+        {
+            get
+            {
+                CalculateLiveDead();
+                return liveBiomass;
+            }
+
+        }
+
+        /// <summary>
+        /// Dead Biomass
+        /// </summary>
+        public PMF.Biomass Dead
+        {
+            get
+            {
+                CalculateLiveDead();
+                return deadBiomass;
+            }
+
+        }
+
+
+
+
+        /// <summary>Calculate the values for calculated states.</summary>
+        private void CalculateLiveDead()
+        {
+
+
+           if (PastureModel != null)
+            {
+              
+                if (Name == "Leaf")
+                {
+                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptLEAF)/10.0;  // to g/m2
+                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); // to g/m2
+                
+                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptLEAF)/10.0;  // to g/m2
+                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); 
+                } 
+
+                if(Name=="Stem")
+                {
+                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptSTEM)/10.0;  // to g/m2
+                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); // to g/m2
+                
+                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptSTEM)/10.0;  // to g/m2
+                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); 
+                }
+            }
+
+   
+        } 
+
+        /// <summary>
+        /// Live digestibility
+        /// </summary>
+        public double LiveDigestibility
+        {
+            get
+            {   
+                 if (PastureModel != null)
+                {
+                    if (Name == "Leaf")
+                    {
+                        return GetDMD(sgGREEN, GrazType.ptLEAF);
+                    }
+                    if (Name == "Stem")
+                    {
+                        return GetDMD(sgGREEN, GrazType.ptSTEM);
+                    }
+                    
+                }  
+
+                return 0;  
+            }
+        }
+
+        /// <summary>
+        /// Dead digestibility
+        /// </summary>
+        public double DeadDigestibility
+        {
+            get
+            {   
+                 if (PastureModel != null)
+                {
+                    if (Name == "Leaf")
+                    {
+                        return GetDMD(sgDRY, GrazType.ptLEAF);
+                    }
+                    if (Name == "Stem")
+                    {
+                        return GetDMD(sgDRY, GrazType.ptSTEM);
+                    }
+                    
+                }  
+
+                return 0;  
+            }
+        }
+
+         /// <summary>A list of material (biomass) that can be damaged.</summary>
+         public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Live, true, LiveDigestibility);
+                yield return new DamageableBiomass($"{Parent.Name}.{Name}", Dead, false, DeadDigestibility);
+            }
+        }
+
 
 
 
