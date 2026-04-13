@@ -184,8 +184,7 @@ targets <- list(
   tar_target(list_observed_clean_final, add_to_observed_clean(list_observed_clean,
                                                               df_stages_Observ,
                                                         config$var_name_stage)),
-  #' 
-  #' 
+  
   #' # Prepare the format of a APSIM observation standard file
   tar_target(df_final_observed,
              prepare_final_observed(list_observed_clean_final,
