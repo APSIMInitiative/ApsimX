@@ -21,6 +21,7 @@ source("R/doStageObsData.R")
 source("R/add_to_observed.R")
 source("R/prepare_observed_final.R")
 source("R/save_df_final.R")
+source("R/check_manual_params.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -32,6 +33,7 @@ source("R/save_df_final.R")
 # source("R/read_and_merge_obs_files.R")
 # source("R/save_df_to_excel.R")
 # source("R/check_project_dependencies.R")
+
 
 
 
@@ -183,12 +185,17 @@ list(
   tar_target(msg_obs_saved, 
              save_df_final(df_observed_wide, 
                            config$folder_apsimx, 
-                           config$file_saved_obs_excel))
+                           config$file_saved_obs_excel)),
   
   
   ### -------------------------------------------------------------------------------
   ### Extract key parameters for manual addition into .apsimx simulation
   ### -------------------------------------------------------------------------------
+  
+  # check if external/manual HAUN parameters are correct (and create template if not)
+  tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
+                                                     config$file_name_input_haun,
+                                                     df_observed_wide))
   
   
   # Find emergence dates and population
