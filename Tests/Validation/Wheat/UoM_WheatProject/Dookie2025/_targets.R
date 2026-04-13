@@ -17,6 +17,10 @@ source("R/findDateStageTarget.R")
 source("R/interpolate_obs_phenoStages.R")
 source("R/doAPSIMStageInput.R")
 source("R/saveInputParam.R")
+source("R/doStageObsData.R")
+source("R/add_to_observed.R")
+source("R/prepare_observed_final.R")
+source("R/save_df_final.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -143,13 +147,6 @@ list(
   # Finds a date when a target % for each stage is reached
   tar_target(df_dateStageTargetReached, findDateStageTarget(df_PCDS_int,
                                                             config$target_stageDatePerc)),
-  
-  #--- All good until here
-  
-  # Create synthetic in-between pheno stages within a APSIM format input file
-  # tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached,
-  #                                                  config$target_btwStagesPerc))
-  
   tar_target(
     name = df_apsimStageInput,
     command = doAPSIMStageInput(
@@ -162,7 +159,31 @@ list(
   tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
                                              config$folder_inputs, 
                                              config$file_name_input_pheno),
-             format = "file")
+             format = "file"),
+  
+  
+  # Create Observed data of pheno-stages to be added to observations (as cross-check)
+  tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
+                                              "Wheat.Phenology.Stage")),
+  
+  
+  ### ----------------------------------------------------------------------------------------
+  ### Finish observation file to be read by APSIM
+  ### ----------------------------------------------------------------------------------------
+  
+  # Add stage to list of observed data and clean metadata
+  tar_target(list_observed_dfs_clean, add_to_observed(list_observed_dfs,
+                                                              df_stages_Observ,"phenology_stage_raw")),
+  
+    # Prepare the format of a APSIM observation standard file
+  tar_target(df_observed_wide, 
+             prepare_observed_final(list_observed_dfs_clean)),
+  
+  # save the output as APSIM likes to read it
+  tar_target(msg_obs_saved, 
+             save_df_final(df_observed_wide, 
+                           config$folder_apsimx, 
+                           config$file_saved_obs_excel))
   
   
   ### -------------------------------------------------------------------------------

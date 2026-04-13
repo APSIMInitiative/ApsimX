@@ -36,7 +36,7 @@ targets::tar_make()
 
 
 ```{r}
-tar_load(df_dateStageTargetReached)
+tar_load(df_observed_wide)
 tar_load(list_observed_dfs)
 df1<-processed_met_data$data
 info_3 <- tar_read(df_list_PCDS)
