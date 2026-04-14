@@ -22,6 +22,7 @@ source("R/add_to_observed.R")
 source("R/prepare_observed_final.R")
 source("R/save_df_final.R")
 source("R/check_manual_params.R")
+source("R/add_harv_into_obs.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -181,9 +182,14 @@ list(
   tar_target(df_observed_wide, 
              prepare_observed_final(list_observed_dfs_clean)),
   
+  #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
+  tar_target(df_observed_wide_harv, add_harv_into_obs(df_observed_wide,
+                                                     "Wheat.Phenology.CurrentStageName",
+                                                     "HarvestRipe")),
+    
   # save the output as APSIM likes to read it
   tar_target(msg_obs_saved, 
-             save_df_final(df_observed_wide, 
+             save_df_final(df_observed_wide_harv, 
                            config$folder_apsimx, 
                            config$file_saved_obs_excel)),
   

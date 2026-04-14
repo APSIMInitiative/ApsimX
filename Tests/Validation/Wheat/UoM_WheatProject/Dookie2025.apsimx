@@ -671,11 +671,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -1131,11 +1131,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
