@@ -1,5 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -142,7 +143,17 @@ namespace Models.Factorial
                     VariableComposite variable = Node.GetObject(path, LocatorFlags.ModelsOnly, experiment);
                     (variable.FirstModel as ICreatable).OnCreated();
                     if (variable.FirstModel is IGenerateNodes generator)
-                        generator.GenerateNodes();
+                    {
+                        try
+                        {
+                            generator.GenerateNodes();
+                        }
+                        catch (Exception exception)
+                        {
+                            _commands = [$"### {path}: {exception.Message} ###"];
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -201,19 +212,25 @@ namespace Models.Factorial
 
             List<string> commands = new List<string>();
             List<string> createdNodes = new List<string>();
-            sheets.Reverse(); //do the children in oppersite order
-            foreach(string sheet in sheets)
+
+            List<string> matchingSheetNames = new List<string>();
+            if (Sheets == null || Sheets.Count() == 0)
+                matchingSheetNames = sheets.ToList();
+            else
+                foreach(string sheet in Sheets)
+                    if (sheets.Contains(sheet))
+                        matchingSheetNames.Add(sheet);
+            matchingSheetNames.Reverse(); //do the children in oppersite order
+
+            foreach(string sheet in matchingSheetNames)
             {
-                if (Sheets == null || Sheets.Count() == 0 || Sheets.Contains(sheet))
-                {
-                    commands.Add($"add new FactorFromFile to [{parent.Name}] name {sheet}");
-                    //commands.Add($"move [{parent.Name}].{sheet} after [{parent.Name}].{Name}");
-                    commands.Add($"[{parent.Name}].{sheet}.FileName = {FileName}");
-                    commands.Add($"[{parent.Name}].{sheet}.Sheet = {sheet}");
-                    commands.Add($"[{parent.Name}].{sheet}.NameColumn = {NameColumn}");
-                    commands.Add($"[{parent.Name}].{sheet}.ReadOnly = true");
-                    createdNodes.Add($"[{parent.Name}].{sheet}");
-                }
+                commands.Add($"add new FactorFromFile to [{parent.Name}] name {sheet}");
+                //commands.Add($"move [{parent.Name}].{sheet} after [{parent.Name}].{Name}");
+                commands.Add($"[{parent.Name}].{sheet}.FileName = {FileName}");
+                commands.Add($"[{parent.Name}].{sheet}.Sheet = {sheet}");
+                commands.Add($"[{parent.Name}].{sheet}.NameColumn = {NameColumn}");
+                commands.Add($"[{parent.Name}].{sheet}.ReadOnly = true");
+                createdNodes.Add($"[{parent.Name}].{sheet}");
             }
             _createdNodes = createdNodes.ToArray();
             return commands.ToArray();

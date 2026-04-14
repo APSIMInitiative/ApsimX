@@ -51,6 +51,8 @@ namespace UserInterface.Presenters
                 CreateLayoutWaterBalance();
             else if (model is FactorFromFile)
                 CreateLayoutFactorFromFile();
+            else if (model is FactorsFromFile)
+                CreateLayoutFactorFromFile();
             else
                 CreateLayoutGeneric();
 
@@ -269,7 +271,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Create layout for a waterbalance, grid, graph and properties
+        /// Create layout for a FactorsFromFile
         /// </summary>
         private void CreateLayoutFactorFromFile()
         {

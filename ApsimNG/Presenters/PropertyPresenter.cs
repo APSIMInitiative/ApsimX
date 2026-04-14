@@ -215,7 +215,10 @@ namespace UserInterface.Presenters
             {
                 RefreshView(model);
                 if (model is IGenerateNodes generator)
-                    Node.Create(model.Node.FindParent<Simulations>(recurse: true), initInBackground: false);
+                {
+                    Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
+                    presenter.RebuildTree();
+                }
             }
         }
 

@@ -229,7 +229,7 @@ namespace Models.Factorial
             }
 
             if (!_data.GetColumnNames().Contains(NameColumn))
-                return new string[0];
+                return [$"### Sheet \"{Sheet}\" does not have a column called \"{NameColumn}\" ###"];
 
             List<CommandType> columnCommandType = new List<CommandType>();
             foreach(DataColumn column in _data.Columns)
