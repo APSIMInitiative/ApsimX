@@ -422,7 +422,7 @@ namespace Models.CLEM.Activities
                     if (details.Amount < 0.001)
                         details.Amount = 0;
                     // try to feed. excess will be returned.
-                    overfed += ind.Intake.AddFeed(details, ForceFeed);
+                    overfed += ind.Intake.AddFeed(details, bypassPotIntakeLimits: ForceFeed);
                 }
             }
             if (numberToDo > 0)

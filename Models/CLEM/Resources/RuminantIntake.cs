@@ -213,7 +213,7 @@ namespace Models.CLEM.Resources
         /// <returns>The food resource packet containing feed store details.</returns>
         public FoodResourceStore GetStore(FeedType feedType)
         {
-            if (feedTypeStoreDict.TryGetValue(feedType, out FoodResourceStore frs))
+            if (feedTypeStoreDict.TryGetValue(feedType.ToString(), out FoodResourceStore frs))
                 return frs;
             return null;
         }
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Get all food stores available
         /// </summary>
-        public Dictionary<FeedType, FoodResourceStore> GetAllStores { get { return feedTypeStoreDict; } }
+        public Dictionary<string, FoodResourceStore> GetAllStores { get { return feedTypeStoreDict; } }
 
         /// <summary>
         /// Reset all intake values.
@@ -286,7 +286,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key == FeedType.Milk).Sum(a => a.Value.ME);
+                return feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed == FeedType.Milk).Sum(a => a.Value.ME);
             }
         }
 
@@ -297,7 +297,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.ME);
+                return feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).Sum(a => a.Value.ME);
             }
         }
 
@@ -311,7 +311,7 @@ namespace Models.CLEM.Resources
             {
                 if (MathUtilities.IsGreaterThan(SolidIntake, 0))
                 {
-                    return feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.ME) / SolidIntake;
+                    return feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).Sum(a => a.Value.ME) / SolidIntake;
                 }
                 return 0;
             }
@@ -326,7 +326,7 @@ namespace Models.CLEM.Resources
             {
                 double sumDMD = 0;
                 double sumAmount = 0;
-                foreach (var item in feedTypeStoreDict.Where(a => a.Key != FeedType.Milk))
+                foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
                 {
                     sumDMD += item.Value.Details.DryMatterDigestibility * item.Value.Details.Amount;
                     sumAmount += item.Value.Details.Amount;
@@ -345,8 +345,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                var total = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.Amount);
-                var totalN = feedTypeStoreDict.Where(a => a.Key != FeedType.Milk).Sum(a => a.Value.Details.NitrogenPercent * a.Value.Details.Amount);
+                var total = feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).Sum(a => a.Value.Details.Amount);
+                var totalN = feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).Sum(a => a.Value.Details.NitrogenPercent * a.Value.Details.Amount);
                 if(total > 0)
                     return totalN / total;
                 return 0;
@@ -400,7 +400,7 @@ namespace Models.CLEM.Resources
             dpls = (0.6 * RDPRequired); // microbe component.
             foreach (var item in feedTypeStoreDict)
             {
-                if(item.Key == FeedType.Milk)
+                if(item.Value.Details.TypeOfFeed == FeedType.Milk)
                 {
                     dpls += milkProteinDigestibility * item.Value.CrudeProtein; // CA5 = 0.92
                 }

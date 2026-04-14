@@ -7,8 +7,8 @@ using Models.CLEM;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using UserInterface.Views;
-using Models.CLEM.DescriptiveSummary;
 using APSIMNG.Utility;
+using Models.CLEM.DescriptiveSummary;
 
 namespace UserInterface.Presenters
 {

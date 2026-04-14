@@ -712,16 +712,16 @@ namespace Models.CLEM.Activities
             double rdpi = 0;
             if (feedingLevel <= 0)
             {
-                foreach (var store in ind.Intake.GetAllStores.Where(a => a.Key != FeedType.Milk))
+                foreach (var store in ind.Intake.GetAllStores.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
                 {
                     rdpi += store.Value.DegradableCrudeProtein;
                 }
             }
             else
             {
-                foreach (var store in ind.Intake.GetAllStores.Where(a => a.Key != FeedType.Milk))
+                foreach (var store in ind.Intake.GetAllStores.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
                 {
-                    switch (store.Key)
+                    switch (store.Value.Details.TypeOfFeed)
                     {
                         case FeedType.Concentrate:
                             rdpi += (1 - ind.Parameters.GrowPF_CACRD.RumenDegradabilityConcentrateSlope_CRD3 * feedingLevel) * store.Value.DegradableCrudeProtein;
