@@ -219,7 +219,7 @@
             "[Wheat].Leaf.FinalLeafNumber",
             "[Wheat].Leaf.Fn",
             "[Wheat].Leaf.Fw",
-            "[Wheat].Leaf.Height",
+            "[Wheat].Leaf.Height /10 as Height",
             "[Wheat].Leaf.LAI",
             "[Wheat].Leaf.Ligules",
             "[Wheat].Leaf.Live.N",
