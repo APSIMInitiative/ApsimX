@@ -23,6 +23,7 @@ source("R/add_stages_to_obs.R")
 source("R/get_column_var_from_observ.R")
 source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
+source("R/add_harv_into_obs.R")
 
 #----------------
 # Project name
@@ -68,6 +69,11 @@ list(
   # add observed stages to Observed excel
   tar_target(df_new_obs, add_stages_to_obs(file_obs_mean,df_obs_pheno_dates)),
   
+  #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
+  tar_target(df_observed_wide_harv, add_harv_into_obs(df_new_obs,
+                                                      "Wheat.Phenology.CurrentStageName",
+                                                      "HarvestRipe")),
+  
   # create and add pheno-dates not measured in-between
   tar_target(df_new_pheno_dates, 
              add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)),
@@ -96,7 +102,7 @@ list(
   tar_target(
     msg_obs_saved,
     save_df_into_excel(
-      df = df_new_obs, 
+      df = df_observed_wide_harv, 
       folder = config$folder_apsimx, 
       filename = config$file_workData_excel,
       sheetname = config$sheet_name_observed
