@@ -34,7 +34,7 @@ namespace Models.PMF.Phen
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
-        private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
+        private Zadok zadok = null; // This is here so that manager scripts can access it easily.
 
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private Age age = null;

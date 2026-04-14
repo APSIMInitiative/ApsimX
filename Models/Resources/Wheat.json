@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1019,27 +1019,51 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
+              "$type": "Models.PMF.Phen.Zadok, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].HaunStage",
-                  "Name": "HaunStage",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Name": "VegetativePhaseFunction",
+                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat"
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Structure].TillerNumber",
-                  "Name": "TillerNumber",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ZadokStageMapping",
                   "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "X": [
+                        5.0,
+                        5.99,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0,
+                        11.0
+                      ],
+                      "Y": [
+                        30.0,
+                        34.0,
+                        39.0,
+                        55.0,
+                        65.0,
+                        71.0,
+                        87.0,
+                        90.0
+                      ]
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].Stage"
+                    }
+                  ]
                 }
               ],
               "Enabled": true,
@@ -10666,6 +10690,43 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
                   ],
                   "Name": "UOM001_9_1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Argentina",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.24",
+                    "[Phenology].CAMP.FLNparams.MinLN = 10",
+                    "[Phenology].CAMP.FLNparams.PpLN = 0.5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 10",
+                    "[Phenology].GrainFilling.Target.FixedValue = 290",
+                    "[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
+                    "[Photosynthesis].RUE.FixedValue = 2.8",
+                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.65",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.040"
+                  ],
+                  "Name": "AGP_FAST",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 210,
+  "Version": 213,
   "Name": "Simulations",
   "Children": [
     {
@@ -1573,7 +1573,7 @@
           "LightProfile": null,
           "MicroClimatePresent": true,
           "KDead": 0.2,
-          "MaximumMainStemLeafNumber": 0,
+          "MaximumMainStemLeafNumber": 150,
           "TipsAtEmergence": 0,
           "CohortsAtInitialisation": 0,
           "FractionDied": 0.0,
