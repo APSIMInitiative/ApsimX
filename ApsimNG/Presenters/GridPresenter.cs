@@ -19,7 +19,7 @@ namespace UserInterface.Presenters
     /// This is built to run within other presenters, so pass in a ContainerView in the attach method to have it drawn.
     /// Table Presenter can be used for a two grid view, or for additional functionality like intellisense
     /// </summary>
-    class GridPresenter : IPresenter
+    class GridPresenter : IPresenter, ISubPresenter
     {
         /// <summary>Stores a reference to the model.</summary>
         private IModel model;
@@ -121,10 +121,6 @@ namespace UserInterface.Presenters
             //Create the sheet widget here.
             SetupSheet(dataProvider);
 
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            if (dataProvider != null)
-                dataProvider.CellChanged += OnCellChanged;
-
             //this is created with AddIntellisense by another presenter if intellisense is required
             intellisense = null;
 
@@ -134,16 +130,6 @@ namespace UserInterface.Presenters
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            contextMenuHelper.ContextMenu -= OnContextMenuPopup;
-
-            if (dataProvider != null)
-                dataProvider.CellChanged -= OnCellChanged;
-
-            SaveGridToModel();
-
-            grid.Cleanup();
-
             if (intellisense != null)
             {
                 intellisense.Cleanup();
@@ -151,6 +137,27 @@ namespace UserInterface.Presenters
                 intellisense.ContextItemsNeeded -= OnIntellisenseNeedContextItems;
             }
 
+            DisconnectEvents();
+            SaveGridToModel();
+            grid.Cleanup();
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        public void ConnectEvents()
+        {
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (dataProvider != null)
+                dataProvider.CellChanged += OnCellChanged;
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        public void DisconnectEvents()
+        {
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            contextMenuHelper.ContextMenu -= OnContextMenuPopup;
+
+            if (dataProvider != null)
+                dataProvider.CellChanged -= OnCellChanged;
         }
 
         public void SetupSheet(IDataProvider dataProvider)
@@ -204,8 +211,10 @@ namespace UserInterface.Presenters
         /// <summary>Refresh the grid.</summary>
         public void Refresh()
         {
+            DisconnectEvents();
             grid.SetDataProvider(dataProvider);
             grid?.UpdateScrollBars();
+            ConnectEvents();
         }
 
         /// <summary>The number of rows of data in the grid.</summary>

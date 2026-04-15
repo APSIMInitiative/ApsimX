@@ -1,16 +1,12 @@
-using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Factorial;
 using Models.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Timers;
 using UserInterface.Classes;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
@@ -19,7 +15,7 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class PropertyPresenter : IPresenter
+    public class PropertyPresenter : IPresenter, ISubPresenter
     {
         /// <summary>
         /// The model whose properties are being displayed.
@@ -76,8 +72,6 @@ namespace UserInterface.Presenters
                 throw new ArgumentException($"The view must be an IPropertyView instance");
 
             RefreshView(this.model);
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
-            this.view.PropertyChanged += OnViewChanged;
         }
 
         /// <summary>
@@ -87,8 +81,7 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                view.PropertyChanged -= OnViewChanged;
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                DisconnectEvents();
 
                 this.view.SaveChanges();
 
@@ -98,8 +91,7 @@ namespace UserInterface.Presenters
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
 
-                view.PropertyChanged += OnViewChanged;
-                presenter.CommandHistory.ModelChanged += OnModelChanged;
+                ConnectEvents();
 
                 ViewRefreshed?.Invoke(this, new EventArgs());
             }
@@ -190,9 +182,27 @@ namespace UserInterface.Presenters
         public virtual void Detach()
         {
             view.SaveChanges();
-            view.PropertyChanged -= OnViewChanged;
+            DisconnectEvents();
             (view as ViewBase).Dispose();
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        public void ConnectEvents()
+        {
+            view.PropertyChanged += OnViewChanged;
+            presenter.CommandHistory.ModelChanged += OnModelChanged;
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        public void DisconnectEvents()
+        {
+            view.PropertyChanged -= OnViewChanged;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        public void Refresh()
+        {
+            RefreshView(model);
         }
 
         /// <summary>
@@ -211,15 +221,10 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
         {
+            DisconnectEvents();
             if (propertyMap.Values.Any(p => p.Model == changedModel))
-            {
                 RefreshView(model);
-                if (model is IGenerateNodes generator)
-                {
-                    Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
-                    presenter.RebuildTree();
-                }
-            }
+            ConnectEvents();
         }
 
         /// <summary>
@@ -231,7 +236,7 @@ namespace UserInterface.Presenters
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.
-            //presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            DisconnectEvents();
 
             // Figure out which property of which object is being changed.
             PropertyInfo property = propertyMap[args.ID].Property;
@@ -280,7 +285,7 @@ namespace UserInterface.Presenters
 
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
-            //presenter.CommandHistory.ModelChanged += OnModelChanged;
+            ConnectEvents();
         }
 
         /// <summary>

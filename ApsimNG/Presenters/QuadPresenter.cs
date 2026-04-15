@@ -1,13 +1,12 @@
 ﻿using Models.Core;
 using UserInterface.Views;
-using Gtk.Sheet;
 using System.Collections.Generic;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
 using Models.Factorial;
-using System;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -24,7 +23,7 @@ namespace UserInterface.Presenters
         private IModel model;
 
         /// <summary>Sub-presenters that are added to this presenter</summary>
-        private List<IPresenter> presenters;
+        private List<ISubPresenter> presenters;
 
         /// <summary>Default constructor</summary>
         public QuadPresenter() {}
@@ -38,7 +37,7 @@ namespace UserInterface.Presenters
             this.model = model as IModel;
             this.view = v as QuadView;
             this.explorerPresenter = explorerPresenter;
-            this.presenters = new List<IPresenter>();
+            this.presenters = new List<ISubPresenter>();
 
             if (this.view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
@@ -57,7 +56,6 @@ namespace UserInterface.Presenters
                 CreateLayoutGeneric();
 
             Refresh();
-            ConnectEvents();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -80,49 +78,28 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             DisconnectEvents();
-            foreach (IPresenter presenter in presenters)
-            {
-                if (presenter is GridPresenter grid)
-                    grid.Refresh();
-                else if (presenter is QuadGraphPresenter graph)
-                    graph.Refresh();
-                else if (presenter is EditorPresenter editor)
-                    editor.Refresh();
-            }
+
+            foreach (ISubPresenter presenter in presenters)
+                presenter.Refresh();
             view.Refresh();
+
             ConnectEvents();
         }
 
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            foreach (IPresenter presenter in presenters)
-            {
-                if (presenter is GridPresenter grid)
-                    grid.CellChanged += OnCellChanged;
-            }
+            foreach (ISubPresenter presenter in presenters)
+                presenter.ConnectEvents();
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>Disconnect all widget events.</summary>
         private void DisconnectEvents()
         {
-            foreach (IPresenter presenter in presenters)
-            {
-                if (presenter is GridPresenter grid)
-                    grid.CellChanged -= OnCellChanged;
-            }
+            foreach (ISubPresenter presenter in presenters)
+                presenter.DisconnectEvents();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-        }
-
-        /// <summary>Invoked when a grid cell has changed.</summary>
-        /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
-        /// <param name="values">The cell values.</param>
-        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
-        {
-            Refresh();
         }
 
         /// <summary>
@@ -132,6 +109,11 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             model = changedModel as IModel;
+            if (model is IGenerateNodes generator)
+            {
+                Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
+                explorerPresenter.RebuildTree();
+            }
             Refresh();
         }
 
