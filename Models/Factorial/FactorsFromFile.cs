@@ -54,7 +54,7 @@ namespace Models.Factorial
         /// The column in the data table that is used to label the composite 
         /// factor that is built from that row.
         /// </summary>
-        //[Description("Include Sheets (Comma seperated)")]
+        [Description("Include Sheets (Comma seperated)")]
         public string[] Sheets { get; set; }
 
         /// <summary>
