@@ -32,6 +32,7 @@ source("R/soil_water_in_json.R")
 source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
 source("R/save_met_file.R")
+source("R/add_harv_into_obs.R")
 
 #----------------
 # Project name
@@ -174,11 +175,15 @@ targets <- list(
                                                               df_stages_Observ,
                                                         config$var_name_stage)),
   
-  
   # Prepare the format of a APSIM observation standard file
   tar_target(df_final_observed, 
              prepare_final_observed(list_observed_clean_final,
                                     df_simNameByCult)), 
+  
+  #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
+  tar_target(df_final_observed_harv, add_harv_into_obs(df_final_observed,
+                                                "Wheat.Phenology.CurrentStageName",
+                                                "HarvestRipe")),
   
   # check if manual parameters are correct
   tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
@@ -193,7 +198,7 @@ targets <- list(
   
   # save the output as APSIM likes to read it
   tar_target(msg_obs_saved, 
-             save_df_final(df_final_observed, 
+             save_df_final(df_final_observed_harv, 
                            config$folder_apsimx, 
                            config$file_saved_obs_excel)),
   
