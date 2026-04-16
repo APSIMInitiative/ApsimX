@@ -23,6 +23,7 @@ source("R/prepare_observed_final.R")
 source("R/save_df_final.R")
 source("R/check_manual_params.R")
 source("R/add_harv_into_obs.R")
+source("R/do_entry_fixes.R")
 
 
 # source("R/read_and_merge_phenology_observed.R")
@@ -128,13 +129,18 @@ list(
   tar_target(list_observed_dfs_raw,compile_all_observed(config$folder_rawData,
                                                     config$file_rawData_excel,
                                                     df_obs_info)),
+  
+  # Fix bad data entries (so far only dates)
+  tar_target(list_observed_dfs_raw_clean,do_entry_fixes(list_observed_dfs_raw,
+                                                        config$date_DOY_ref)),
+  
 
   # All reading ok up until here
   
   # 2. Map observations to Simulations
   tar_target(
     name = list_observed_dfs,
-    command = attach_sim_names(list_observed_dfs_raw, df_simNameByCult)
+    command = attach_sim_names(list_observed_dfs_raw_clean, df_simNameByCult)
   ),
   
   ### ----------------------------------------------------------------------------------------
