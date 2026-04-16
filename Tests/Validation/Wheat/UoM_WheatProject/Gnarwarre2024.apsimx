@@ -263,30 +263,14 @@
             "[Wheat].Total.Wt",
             "sum([Soil].NO3.kgha)",
             "sum([Soil].Water.MM)",
-            "([Wheat].Leaf.Transpiration + [ISoilWater].Es + [MicroClimate].PrecipitationInterception)"
-          ],
-          "EventNames": [
-            "[Clock].DoReport"
-          ],
-          "GroupByVariableName": null,
-          "Name": "DailyReport",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Simulation].Name",
-            "[Clock].Today",
+            "([Wheat].Leaf.Transpiration + [ISoilWater].Es + [MicroClimate].PrecipitationInterception)",
             "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
           ],
           "GroupByVariableName": null,
-          "Name": "NDVIDailyReport",
+          "Name": "DailyReport",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -1618,23 +1602,6 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Simulation].Name",
-                    "[Clock].Today",
-                    "[Spectral].NDVI"
-                  ],
-                  "EventNames": [
-                    "[Clock].DoReport"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "NDVIDailyReport",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -1972,7 +1939,7 @@
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
-                          "TableName": "NDVIDailyReport",
+                          "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
