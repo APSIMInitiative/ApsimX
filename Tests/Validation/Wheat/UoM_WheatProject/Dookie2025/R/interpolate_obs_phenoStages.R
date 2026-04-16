@@ -7,8 +7,10 @@
 #' @return A single data frame (df_50_interp) listing the date of 50% achievement
 #'         for each PCDS variable, SimulationName, and Cultivar.
 #'         
-#' @importFrom dplyr arrange group_by mutate ungroup cur_group n
+#' @importFrom dplyr arrange group_by mutate ungroup cur_group n filter select contains
 #' @importFrom tidyr complete
+#' @importFrom lubridate year
+#' @importFrom purrr walk2
 #' @export
 interpolate_obs_phenoStages <- function(df_list_PCDS) {
   
@@ -16,9 +18,13 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
   require(dplyr)
   require(purrr)
   require(tidyr)
+  require(lubridate)
   
   df_interp_list <- list()
   all_names <- names(df_list_PCDS)
+  
+  # Set the target year for global correction
+  target_year <- 2025
   
   for (nm in all_names) {
     
@@ -28,6 +34,33 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
     if (!"SimulationName" %in% names(pcds_df)) {
       stop(sprintf("CRITICAL: 'SimulationName' column is missing from list element '%s'", nm))
     }
+    
+    # ------------------------------------------------------------------
+    # NEW: DATE TYPO CORRECTION & WARNING GENERATION
+    # ------------------------------------------------------------------
+    # Identify any rows where the year is explicitly wrong (ignoring NAs)
+    bad_dates <- pcds_df %>%
+      dplyr::filter(!is.na(Date) & lubridate::year(Date) != target_year)
+    
+    if (nrow(bad_dates) > 0) {
+      
+      # Loop through the bad dates and throw a targeted warning for each
+      purrr::walk2(bad_dates$SimulationName, bad_dates$Date, ~{
+        
+        raw_date <- .y
+        fixed_date <- .y
+        lubridate::year(fixed_date) <- target_year
+        
+        warning(sprintf(
+          "DATE CORRECTION | SimulationName '%s' had a correction in date format/value RAW: %s and FIXED: %s",
+          .x, as.character(raw_date), as.character(fixed_date)
+        ), call. = FALSE)
+      })
+      
+      # Force the entire Date column to the target year, preserving month/day
+      lubridate::year(pcds_df$Date) <- target_year
+    }
+    # ------------------------------------------------------------------
     
     cat("====", nm, "====\n")
     print(head(pcds_df))
@@ -44,8 +77,6 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
     # isolate each df for daily interpolation
     df_interp <- pcds_df %>%
       # 1. Add SimulationName to the sorting and grouping hierarchy
-      # arrange(SimulationName, Cultivar, Date) %>%
-      # group_by(SimulationName, Cultivar) %>%
       arrange(SimulationName, Date) %>%
       group_by(SimulationName) %>%
       tidyr::complete(
@@ -70,7 +101,6 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
           } else {
             
             # 3. CONTEXTUAL WARNING
-            # Extract the exact group identifiers that failed
             sim_name <- cur_group()$SimulationName
             cult_name <- cur_group()$Cultivar
             

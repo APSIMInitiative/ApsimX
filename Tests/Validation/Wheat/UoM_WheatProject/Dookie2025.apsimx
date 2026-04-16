@@ -1131,11 +1131,11 @@
               "Name": "Tests",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         }
       ],
@@ -11986,8 +11986,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 101",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 101"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12001,8 +12000,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 108",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 108"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12016,8 +12014,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 92",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 92"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12031,8 +12028,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 105",
-                        "[Sowing].Script.EmergeDate = 26-Apr"
+                        "[Sowing].Script.Population = 105"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12046,8 +12042,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 103",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 103"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12061,8 +12056,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 103",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 103"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12076,8 +12070,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 119",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 119"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12091,8 +12084,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 86",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 86"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12106,8 +12098,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 127",
-                        "[Sowing].Script.EmergeDate = 25-May"
+                        "[Sowing].Script.Population = 127"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12121,8 +12112,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 138",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 138"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12136,8 +12126,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 135",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 135"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12151,8 +12140,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 130",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 130"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12166,8 +12154,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 123",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 123"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12181,8 +12168,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 140",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 140"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12196,8 +12182,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 146",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 146"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12211,8 +12196,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 131",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 131"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -12228,7 +12212,7 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.SowDate = 16-Apr,13-May",
+                  "Specification": "[Sowing].Script.SowDate = 16-Apr, 13-May",
                   "Name": "Sow",
                   "ResourceName": null,
                   "Children": [],
@@ -12262,7 +12246,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2025-04-17T00:00:00",
+              "Start": "2025-04-01T00:00:00",
               "End": "2025-12-17T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
