@@ -7668,13 +7668,11 @@ internal class Converter
         [
             ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
             ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
-            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron"),
-            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.ExtinctionCoefficient")
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron")
         ];
         List<(string, string)> canolaUpdates =
         [
             ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
-            ("[Leaf].ExtinctionCoefficient", "[Leaf].ExtinctionCoefficient.PotentialExtinctionCoefficient"),
             ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
             ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
         ];
