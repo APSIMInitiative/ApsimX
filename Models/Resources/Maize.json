@@ -9373,6 +9373,14 @@
           ],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Soils.Waterlogging, Models",
+          "Name": "Waterlogging",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
