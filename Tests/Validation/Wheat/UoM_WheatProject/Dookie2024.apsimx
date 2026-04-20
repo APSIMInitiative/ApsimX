@@ -10846,6 +10846,18 @@
     {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": [
+        "DookieWWHI2024CvJanzSow14-May",
+        "DookieWWHI2024CvYitpiSow14-May",
+        "DookieWWHI2024CvWyalkatchemSow14-May",
+        "DookieWWHI2024CvGregorySow14-May",
+        "DookieWWHI2024CvMaceSow14-May",
+        "DookieWWHI2024CvScepterSow14-May",
+        "DookieWWHI2024CvRosellaSow17-Apr",
+        "DookieWWHI2024CvWhistlerSow17-Apr",
+        "DookieWWHI2024CvWylahSow17-Apr",
+        "DookieWWHI2024CvWedgetailSow17-Apr",
+        "DookieWWHI2024CvKittyhawkSow17-Apr",
+        "DookieWWHI2024CvIllaboSow17-Apr",
         "DookieWWHI2024CvMowhawkSow14-May",
         "DookieWWHI2024CvIllaboSow14-May",
         "DookieWWHI2024CvKittyhawkSow14-May",
