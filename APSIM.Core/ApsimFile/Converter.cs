@@ -7651,7 +7651,7 @@ internal class Converter
     }
 
     /// <summary>
-    /// Perform necessary cultivar path updates following waterlogging modifications for the Maize, Canola and Soybean models.
+    /// The 'address' of various model parameters has changed. User's cultivars should be kept synchronized.
     /// </summary>
     /// <param name="root">Root json token.</param>
     /// <param name="name">File name.</param>
@@ -7659,7 +7659,6 @@ internal class Converter
     {
         List<(string, string)> maizeUpadtes =
         [
-            ("[Grain].MaximumPotentialGrainSize.FixedValue", "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue"),
             ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
             ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
             ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")

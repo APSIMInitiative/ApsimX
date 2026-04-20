@@ -1396,57 +1396,12 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.3,
+              "Units": "g",
               "Name": "MaximumPotentialGrainSize",
               "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.3,
-                  "Units": "g",
-                  "Name": "PotentialGrainSize",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "FOXgs",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        5.0,
-                        10.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[CumulativeExcessWaterStress]",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
+              "Children": [],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -7632,7 +7587,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 600",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 360",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.217"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.217"
               ],
               "Name": "malawi_local",
               "ResourceName": null,
@@ -7661,7 +7616,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh19",
               "ResourceName": null,
@@ -7690,7 +7645,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh17",
               "ResourceName": null,
@@ -7719,7 +7674,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh16",
               "ResourceName": null,
@@ -7748,7 +7703,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh12",
               "ResourceName": null,
@@ -7777,7 +7732,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc623",
               "ResourceName": null,
@@ -7806,7 +7761,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 570",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 504",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc625",
               "ResourceName": null,
@@ -7835,7 +7790,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 560",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 495",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc601",
               "ResourceName": null,
@@ -7864,7 +7819,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "CG4141",
               "ResourceName": null,
@@ -7893,7 +7848,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 486",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "mh18",
               "ResourceName": null,
@@ -7922,7 +7877,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "r215",
               "ResourceName": null,
@@ -7951,7 +7906,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 387",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.33"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.33"
               ],
               "Name": "Melkassa",
               "ResourceName": null,
@@ -7980,7 +7935,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sr52",
               "ResourceName": null,
@@ -8009,7 +7964,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 468",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.361"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.361"
               ],
               "Name": "sc501",
               "ResourceName": null,
@@ -8038,7 +7993,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "r201",
               "ResourceName": null,
@@ -8067,7 +8022,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "sc401",
               "ResourceName": null,
@@ -8096,7 +8051,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 550",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 450",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "NSCM_41",
               "ResourceName": null,
@@ -8125,7 +8080,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 530",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 432",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "Makueni",
               "ResourceName": null,
@@ -8154,7 +8109,7 @@
                 "[Phenology].GrainFilling.Target.FixedValue = 530",
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 14",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 405",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.375"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.375"
               ],
               "Name": "Katumani",
               "ResourceName": null,
@@ -8191,7 +8146,7 @@
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550",
                 "[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10",
                 "[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.6,1,1",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.25"
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.25"
               ],
               "Name": "Pioneer_39G12",
               "ResourceName": null,
@@ -8214,7 +8169,7 @@
                 "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                 "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                 "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 640",
-                "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                 "[Maize].Root.SpecificRootLength.FixedValue = 135",
                 "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                 "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -8250,7 +8205,7 @@
                 "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
                 "[Leaf].Photosynthesis.RUE.FixedValue = 2.4",
                 "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue =  637",
-                "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.34",
+                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.34",
                 "[Phenology].Emerging.Target.ShootLag.FixedValue = 250",
                 "[Phenology].Emerging.Target.DepthxRate.ShootRate.FixedValue = 0.7",
                 "[Root].RootFrontVelocity.AFPSFactor.XYPairs.Y = 0, 1, 1",
@@ -8289,7 +8244,7 @@
                 "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                 "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                 "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 650",
-                "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.30",
+                "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.30",
                 "[Maize].Root.SpecificRootLength.FixedValue = 135",
                 "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                 "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -8792,7 +8747,7 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
                     "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 2.2",
-                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.36",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.36",
                     "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 850"
                   ],
                   "Name": "HY_110",
@@ -8814,7 +8769,7 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 100",
                     "[Cob].DMDemands.Structural.DMDemandFunction.MaximumOrganWt.FixedValue = 36",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.7",
-                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.25",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.25",
                     "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550"
                   ],
                   "Name": "LY_110",
@@ -8834,7 +8789,7 @@
                     "[Phenology].Maturing.Target.FixedValue=50",
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue=50",
                     "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 640",
-                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue=22",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03"
@@ -8870,7 +8825,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 640",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32 //0.31",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.31",
                     "[Grain].MinimumNConc.FixedValue = 0.00955 //0.0125",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
@@ -8899,7 +8854,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 690",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.31",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.31",
                     "[Grain].MinimumNConc.FixedValue = 0.00875 //0.0125",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
@@ -8928,7 +8883,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 550",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 700 //650",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32 //0.30",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.30",
                     "[Grain].MinimumNConc.FixedValue = 0.0115",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
@@ -8957,7 +8912,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 550",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 640 //600",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.31 //0.305",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.31 //0.305",
                     "[Grain].MinimumNConc.FixedValue = 0.0125",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
@@ -8986,7 +8941,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 950",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 650 //670",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32 //0.3",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32 //0.3",
                     "[Grain].MinimumNConc.FixedValue = 0.0115",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue=0.03",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
@@ -9025,7 +8980,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.275",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.275",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9053,7 +9008,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 550",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9081,7 +9036,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 650",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9109,7 +9064,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 625",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9137,7 +9092,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 750",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9165,7 +9120,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 750",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9193,7 +9148,7 @@
                     "[Leaf].CohortParameters.SenescenceDuration.XYPairs.Y = 200, 300, 1100",
                     "[Leaf].CohortParameters.DMRetranslocationFactor.FixedValue = 0.025",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 675",
-                    "[Maize].Grain.MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.32",
+                    "[Maize].Grain.MaximumPotentialGrainSize.FixedValue = 0.32",
                     "[Maize].Root.SpecificRootLength.FixedValue = 135",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue = 25",
                     "[Grain].MaximumNConc.InitialPhase.InitialNconc.FixedValue = 0.025",
@@ -9228,7 +9183,7 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue= 250",
                     "[Maize].Root.RootFrontVelocity.PotentialRootFrontVelocity.PreFlowering.RootFrontVelocity.FixedValue=25",
                     "[Maize].Grain.MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue=550",
-                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.3"
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3"
                   ],
                   "Name": "AG7800",
                   "ResourceName": null,
@@ -9245,7 +9200,7 @@
                     "[Grain].NumberFunction.GrowthRateFactor.XYPairs.X = 0.2,2,4,10",
                     "[Grain].NumberFunction.GrowthRateFactor.XYPairs.Y = 0,0.7,1,1",
                     "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue = 500",
-                    "[Grain].MaximumPotentialGrainSize.PotentialGrainSize.FixedValue = 0.3",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.3",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.6"
                   ],
                   "Name": "P39G12",
