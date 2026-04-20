@@ -14,7 +14,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// A presenter class for showing a cultivar.
     /// </summary>
-    public class EditorPresenter : IPresenter
+    public class EditorPresenter : IPresenter, ISubPresenter
     {
         /// <summary>The cultivar model</summary>
         private ILineEditor model;
@@ -27,6 +27,13 @@ namespace UserInterface.Presenters
 
         /// <summary>The intellisense object.</summary>
         private IntellisensePresenter intellisense;
+
+        /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
 
         /// <summary>Attach the cultivar model to the cultivar view</summary>
         /// <param name="model">The mode</param>
@@ -41,22 +48,47 @@ namespace UserInterface.Presenters
 
             this.view.Lines = this.model.Lines?.ToArray();
             intellisense = new IntellisensePresenter(this.view as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
-
-            this.view.LeaveEditor += this.OnCommandsChanged;
-            this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            ConnectEvents();
         }
 
         /// <summary>Detach the model from the view</summary>
         public void Detach()
         {
-            this.OnCommandsChanged(this, new EventArgs());
-            this.view.LeaveEditor -= this.OnCommandsChanged;
-            this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            DisconnectEvents();
+            OnCommandsChanged(this, new EventArgs());
             intellisense.Cleanup();
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        public void ConnectEvents()
+        {
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                intellisense.ItemSelected += OnIntellisenseItemSelected;
+                view.LeaveEditor += OnCommandsChanged;
+                view.ContextItemsNeeded += OnContextItemsNeeded;
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        public void DisconnectEvents()
+        {
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                view.LeaveEditor -= OnCommandsChanged;
+                view.ContextItemsNeeded -= OnContextItemsNeeded;
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            }
+        }
+
+        public void Refresh()
+        {
+            view.Show();
+            view.Refresh();
         }
 
         /// <summary>The user has changed the commands</summary>
@@ -108,7 +140,9 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.Lines = this.model.Lines.ToArray();
+            if (changedModel is ILineEditor linesModel)
+                if (linesModel.FullPath == model.FullPath)
+                    view.Lines = linesModel.Lines.ToArray();
         }
 
         /// <summary>

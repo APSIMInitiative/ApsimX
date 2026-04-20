@@ -12,7 +12,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n# STRUM: the Simple Tree Resource Uptake Model\n\n_Hamish Brown, Edith Khaembah, Rogerio Cichota, Xiumei Yang and Jo Sharp, New Zealand Institute for Bioeconomy Science_ \n\n_Neil Huth and Dean Holzworth, Commonwealth Scientific and Industrial Research Organisation_\n\n_Steven Reeves, Queensland Department of the Environment, Tourism, Science and Innovation_\n\nThe STRUM model is designed and built along the same lines and the SCRUM and SPRUM models.  Its primary purpose is the represent the contributions of orchard trees to the nitrogen and water balance of an orchard.  It can also be used to assess the impacts of water and nitrogen supply on tree stress and potential fruit production.  It can be used where a simple plant model is required to reduce structural uncertainty in simulations or where simulations of tree crop systems are required but no detailed tree crop model exists.  \n\nThe trees phenology is represented in a very simple manner with a series of phases that represent dormancy; a period of canopy expansion; a period or full canopy and a period of leaf fall returning to the Dormant phase:  The dates that the model transitions between these phases are user inputs provide in the model configuration.  Date of flowering and subsequent fruit growth are also provided as user inputs.  As such it is easy to parameterize the timing canopy and fruit development to occur at times that are sensible for the given context.  However, the crops phenology does not respond to temperature or photoperiod so the model is not appropriate where users are wanting to simulate the effects of environment and management on tree development.\n\nIn most cases STRUM is used in a multizone simulation with the STRUM model growing in a “Row” zone along-side an “Alley” zone that may have a crop or pasture model growing in it.  A schematic representation of a typical Row/Alley structure is shown below.\n \n![Schematic of radiation interception scheme as modelled for tree row crops](RowAlley.png)\n\nAttention has been paid to modelling the interception of solar radiation by the tree row zone and the interaction of roots with other plants growing in the alley.  A modified implementation of the [#gou_intercropping_2017] radiation interception model has been implemented and tested in the APSIM Microclimate module to simulate the radiation of a row of tree canopies and a shorter alley understory.  Briefly, the tree canopy is treated as a cube and the proportion of diffuse radiation that would be intercepted by this cube is calculated firstly assuming it is a black body.  Then transmission through the cube is calculated based on the fractional radiation interception of the canopy (based on LAI and extinction coefficient).  Radiation that is not captured by the tree canopy is then partitioned between the Row and Alley understories.  The STRUM canopy intercepts radiation with both green leaves (which drives photosynthesis and transpiration) and trunk area (which shades the understory).  An example of a typical seasonal pattern of radiation interception is shown in the figure below.  While the tree has no green leaves it is intercepting a small proportion of the total radiation over the simulation area (Tree_FRad, as shown by the black line).  At Bud break the leaf area starts expanding and the fractional radiation interception of the green canopy increases (Canopy_FRad as shown by the green line).  Canopy_FRad remains constant from the start of full canopy until the start of leaf fall but Tree_FRad continues to increase during this time as the trees hight and width increases and it captures more of the total radiation.\n\n![Figure of seasonal pattern of canopy and tree radiation interception](RadnInt.png)\n\nThe STRUM model consists of 4 organs: \n\n   1. <b>Leaf</b> which represents leaves on a tree.  \n   2. <b>Fruit</b> which represents the biomass and nitrogen that may be removed from the orchard each year as harvested product\n   3. <b>Trunk</b> which represents the perennial biomass of the trees and will grow a small amount each year but is mostly pruned out at the end of the year and may be returned to the soil surface.\n   4. <b>Root</b> which extracts water and nitrogen from the soil for plant growth, grows a small amount of biomass each year and senesesses a proportion of this to the soil.  \n\n# Using STRUM in simulations\n * STRUM is programmed to work with rectangular zones so users must ensure this zone type is used. It also requires the TreeRow strip crop radiation model to be selected for each zone.\n * While the STRUM model will run as a stand alone model, in most cases fruit trees and vines are grown in rows with a grass or herb ley growing in the alleys.  As such it is important to set up a simulation with two rectangular zones, one containing the STRUM fruit tree model and another with the understory crop or pasture.  In most cases the SPRUM model is adequate to represent the energy, water and nitrogen balance of the alleys.\n * STRUM has been designed to repeat through annual growth cycles over any number of years.  If STRUM is included in a simulation it will establish itself on the first day of the simulation.  The annual cycle is based around the winter solstice so it is best to start simulations including STRUM on the 21st of June (Southern Hemisphere) or 21st of December (Northern Hemisphere).  \nSome working examples are provided in the STRUM.apsimx file  in the released example folder. \n \nThe zone representing the tree row needs to have the STRUM model included and a STRUMTreeInstance where the parameters for the orchard layout and tree behaviour are set.  BiomassRemovalEvents models must also be included to specify the dates and amounts of biomass removed by picking and pruning.\nThe STRUMTreeInstance has the following parameters:\n * Tree Type:  The user specifies if the tree is deciduous or evergreen which influences leaf senescence and winter cover patterns\n * Distance between rows, Distance between trees within rows and Relative alley width: These parameters are used to set the size of the Row and Alley zones.  Note that STRUM overwrites the length and width properties on the Rectangular zone model when it is established so those properties have not effect in simulations containing STRUM.\n * Tree age at start of simulation:  STRUM simulates an increase in its dimensions annually until it reaches its maximum dimension.  This parameter is used to determine the size of the tree relative to its maximum on the day of initialisation.\n * Age of tree at maximum dimension:  The trees dimensions will no longer increase annually once this age is reached\n * Trunk mass when maximum dimension is reached.  Trunk is defined as all above ground material that is not leaf or fruit.  Set this as the weight that a tree would typically reach when it is at the maximum dimension that it would be pruned back to annually.\n * Date for Budbreak, Start of full canopy, Start of leaf fall and End of leaf fall represent typical dates for these canopy development stages for the location where the tree is being simulated.  Some experience with the tree crop being modelled is required to ensure sensible values are set here.\n* Grow roots into Alley zone: The trees roots will be present in the Row zone, this option specifies if they also grow into the alley zone.\n* Root depth when mature:  Sets the root depth that the tree will achieve at the Age of maximum dimension (see above).  If the Age of the tree at the start of the simulation is less that the age at maximum dimension the root system will start shallower that this and grow down to this depth over time.  If XF parameters are set to zero at any depth the roots will only achieve that depth and not reach the depth specified here.\n * Root, Leaf and Trunk biomass proportions set what proportion of the total photosynthesis is demanded by these organs each day.  Note that fruit biomass demand is determined by fruit size, number and growth pattern parameters (see below) and its demands are given a higher priority so Root, Leaf and Trunk might not get the full proportion of biomass demanded when fruit are growing.\n * Height of the bottom of the canopy is the height at which tree leaves are held above the ground.  This should be higher than the top of the alley crop to avoid errors in the radiation interception predictions.\n * Height and Width of the mature tree before pruning is the maximum hight and width that the trees reach before they are pruned each year.\n * Height and Width of the mature tree after pruning is the height and width the tree is pruned down to each year.  Note, the model adjusts its height and width independent of the Pruning Biomass removal event and it is assumed that pruning occurs annually on the winter solstice.\n * Nitrogen content of Leaf, Trunk, Root and Fruit are used to determine the N demands for the growth of each of these organs\n * Extinction coefficient is used to derive maximum LAI from cover.  \n * Winter cover of the tree canopy is only relevant for evergreen trees and sets the cover that is maintained through the winter\n * Maximum cover sets the cover that the tree crop achieves between Start of full canopy and Start of leaf fall.  Note for this (and the winter cover) it is the fractional radiation interception of the area of the canopy.  The radiation interception model also uses the width of the tree (relative to row spacing) and the height of the canopy to determine total radiation interception by the tree canopy.\n * Radiation use efficiency is the amount of biomass (g) that is produced by photosynthesis per unit of radiation (MJ) intercepted by the canopy.  This is then partitioned to leaf, root, trunk and fruit.  The base, optima and maximum temperatures specify the seasonal response of photosynthesis to temperature.  Note that temperatures represent daily mean temperatures not maximums.\n * Maximum canopy conductance and Net radiation at 50% canopy conductance determine the trees water demand.  Typical values for trees are 0.005 and 50 respectively.\n * KL in the top soil layer specified the kl in the top 30 CM of soil.  Note that STRUM overwrites the KL values specified on the STRUMSoil node on the Soil.Physical Node so there is no need to pay attention to setting these values.  Instead STRUM calculates KL for each soil layer assuming an exponential decline from the top layer values to zero at the maximum root depth.\n * It is also possible to turn off the crops response to water stress which will stop the canopy and biomass production being affected by any water shortages.\n * Fruit number retained is the number of fruit that will be left on the tree after thinning.  It is specified per m^2 of canopy so the total number of fruit per tree will increase as the tree grows \n * Potential Fruit weight is the average fresh weight of individual fruits.\n * Fruit DM concentration is the dry matter concentration of fresh fruit which is used to calculate fruit dry weight from fresh weight\n * Fruit Density is used to calculate fruit size assuming fruit are spherical.  \n * Date of maximum bloom is the date that flowering occurs and is when slow fruit growth starts.  An approximate sigmoidal increase in fruit mass is assumed with 1% of the final mass reached at Start Linear Growth and 90% reached on end linear growth.  Users need to have some experience with the crop to ensure appropriate dates are entered for flowering and the points of fruit growth to ensure sensible fruit growth patterns. \n\nSTRUM sets the area of Row and Alley zones so that a simulatoin is representing a single tree and the area or row and alley zone that goes with it.  The user needs to be careful when considering STRUM model outputs becaue the outputs are generally on a per tree basis. \n\n\n\n",
+          "Text": "\n# STRUM: the Simple Tree Resource Uptake Model\n\n_Hamish Brown, Edith Khaembah, Rogerio Cichota, Xiumei Yang and Jo Sharp, New Zealand Institute for Bioeconomy Science_ \n\n_Neil Huth and Dean Holzworth, Commonwealth Scientific and Industrial Research Organisation_\n\n_Steven Reeves, Queensland Department of the Environment, Tourism, Science and Innovation_\n\nThe STRUM model is designed and built along the same lines and the SCRUM and SPRUM models.  Its primary purpose is the represent the contributions of orchard trees to the nitrogen and water balance of an orchard.  It can also be used to assess the impacts of water and nitrogen supply on tree stress and potential fruit production.  It can be used where a simple plant model is required to reduce structural uncertainty in simulations or where simulations of tree crop systems are required but no detailed tree crop model exists.  \n\nThe trees phenology is represented in a very simple manner with a series of phases that represent dormancy; a period of canopy expansion; a period or full canopy and a period of leaf fall returning to the Dormant phase:  The dates that the model transitions between these phases are user inputs provide in the model configuration.  Date of flowering and subsequent fruit growth are also provided as user inputs.  As such it is easy to parameterize the timing canopy and fruit development to occur at times that are sensible for the given context.  However, the crops phenology does not respond to temperature or photoperiod so the model is not appropriate where users are wanting to simulate the effects of environment and management on tree development.\n\nIn most cases STRUM is used in a multizone simulation with the STRUM model growing in a “Row” zone along-side an “Alley” zone that may have a crop or pasture model growing in it.  A schematic representation of a typical Row/Alley structure is shown below.\n \n![Schematic of radiation interception scheme as modelled for tree row crops](RowAlley.png)\n\nAttention has been paid to modelling the interception of solar radiation by the tree row zone and the interaction of roots with other plants growing in the alley.  A modified implementation of the [#gou_intercropping_2017] radiation interception model has been implemented and tested in the APSIM Microclimate module to simulate the radiation of a row of tree canopies and a shorter alley understory.  Briefly, the tree canopy is treated as a cube and the proportion of diffuse radiation that would be intercepted by this cube is calculated firstly assuming it is a black body.  Then transmission through the cube is calculated based on the fractional radiation interception of the canopy (based on LAI and extinction coefficient).  Radiation that is not captured by the tree canopy is then partitioned between the Row and Alley understories.  The STRUM canopy intercepts radiation with both green leaves (which drives photosynthesis and transpiration) and Wood area (which shades the understory).  An example of a typical seasonal pattern of radiation interception is shown in the figure below.  While the tree has no green leaves it is intercepting a small proportion of the total radiation over the simulation area (Tree_FRad, as shown by the black line).  At Bud break the leaf area starts expanding and the fractional radiation interception of the green canopy increases (Canopy_FRad as shown by the green line).  Canopy_FRad remains constant from the start of full canopy until the start of leaf fall but Tree_FRad continues to increase during this time as the trees hight and width increases and it captures more of the total radiation.\n\n![Figure of seasonal pattern of canopy and tree radiation interception](RadnInt.png)\n\nThe STRUM model consists of 4 organs: \n\n   1. <b>Leaf</b> which represents leaves on a tree.  \n   2. <b>Fruit</b> which represents the biomass and nitrogen that may be removed from the orchard each year as harvested product\n   3. <b>Wood</b> which represents the perennial biomass of the trees and will grow a small amount each year but is mostly pruned out at the end of the year and may be returned to the soil surface.\n   4. <b>Root</b> which extracts water and nitrogen from the soil for plant growth, grows a small amount of biomass each year and senesesses a proportion of this to the soil.  \n\n# Using STRUM in simulations\n * STRUM is programmed to work with rectangular zones so users must ensure this zone type is used. It also requires the TreeRow strip crop radiation model to be selected for each zone.\n * While the STRUM model will run as a stand alone model, in most cases fruit trees and vines are grown in rows with a grass or herb ley growing in the alleys.  As such it is important to set up a simulation with two rectangular zones, one containing the STRUM fruit tree model and another with the understory crop or pasture.  In most cases the SPRUM model is adequate to represent the energy, water and nitrogen balance of the alleys.\n * STRUM has been designed to repeat through annual growth cycles over any number of years.  If STRUM is included in a simulation it will establish itself on the first day of the simulation.  The annual cycle is based around the winter solstice so it is best to start simulations including STRUM on the 21st of June (Southern Hemisphere) or 21st of December (Northern Hemisphere).  \nSome working examples are provided in the STRUM.apsimx file  in the released example folder. \n \nThe zone representing the tree row needs to have the STRUM model included and a STRUMTreeInstance where the parameters for the orchard layout and tree behaviour are set.  BiomassRemovalEvents models must also be included to specify the dates and amounts of biomass removed by picking and pruning.\nThe STRUMTreeInstance has the following parameters:\n * Tree Type:  The user specifies if the tree is deciduous or evergreen which influences leaf senescence and winter cover patterns\n * Distance between rows, Distance between trees within rows and Relative alley width: These parameters are used to set the size of the Row and Alley zones.  Note that STRUM overwrites the length and width properties on the Rectangular zone model when it is established so those properties have not effect in simulations containing STRUM.\n * Crown Shape:  Specifies the shape that the canopy grows in or is pruned to.  If width of mature canopy < the distance between trees crown volumes assume free standing trees, otherwise assumes continues hedge rows.\n * Tree age at start of simulation:  STRUM simulates an increase in its dimensions annually until it reaches its maximum dimension.  This parameter is used to determine the size of the tree relative to its maximum on the day of initialisation.\n * Age of tree at maximum dimension:  The trees dimensions will no longer increase annually once this age is reached\n * Wood bulk density.  This is the density of the wood.  Fruit trees typically between 500 - 750 kg/m^3.\n * Diameter at breast height is a measure of the size of the Wood when the trees are at mature orchard size for a specified reference canopy area.  Note that STRUM adjusts the DBH used in simulations if the area of the trees canopy is different to the reference area for the DBH parameter provided.  See table further down for typical ranges for some common orchard plants.\n * Reference Canopy Area is the area of the canopy of the trees for which the above DBH was observed.\n * Date for Budbreak, Start of full canopy, Start of leaf fall and End of leaf fall represent typical dates for these canopy development stages for the location where the tree is being simulated.  Some experience with the tree crop being modelled is required to ensure sensible values are set here.\n* Grow roots into Alley zone: The trees roots will be present in the Row zone, this option specifies if they also grow into the alley zone.\n* Root depth when mature:  Sets the root depth that the tree will achieve at the Age of maximum dimension (see above).  If the Age of the tree at the start of the simulation is less that the age at maximum dimension the root system will start shallower that this and grow down to this depth over time.  If XF parameters are set to zero at any depth the roots will only achieve that depth and not reach the depth specified here.\n * Root, Leaf and Wood biomass proportions set what proportion of the total photosynthesis is demanded by these organs each day.  Note that fruit biomass demand is determined by fruit size, number and growth pattern parameters (see below) and its demands are given a higher priority so Root, Leaf and Wood might not get the full proportion of biomass demanded when fruit are growing.\n * Height of the bottom of the canopy is the height at which tree leaves are held above the ground.  This should be higher than the top of the alley crop to avoid errors in the radiation interception predictions.\n * Height and Width of the mature tree before pruning is the maximum hight and width that the trees reach before they are pruned each year.\n * Height and Width of the mature tree after pruning is the height and width the tree is pruned down to each year.  Note, the model adjusts its height and width independent of the Pruning Biomass removal event and it is assumed that pruning occurs annually on the winter solstice.\n * Nitrogen content of Leaf, Wood, Root and Fruit are used to determine the N demands for the growth of each of these organs\n * Extinction coefficient is used to derive maximum LAI from cover.  \n * Winter cover of the tree canopy is only relevant for evergreen trees and sets the cover that is maintained through the winter\n * Maximum cover sets the cover that the tree crop achieves between Start of full canopy and Start of leaf fall.  Note for this (and the winter cover) it is the fractional radiation interception of the area of the canopy.  The radiation interception model also uses the width of the tree (relative to row spacing) and the height of the canopy to determine total radiation interception by the tree canopy.\n * Radiation use efficiency is the amount of biomass (g) that is produced by photosynthesis per unit of radiation (MJ) intercepted by the canopy.  This is then partitioned to leaf, root, Wood and fruit.  The base, optima and maximum temperatures specify the seasonal response of photosynthesis to temperature.  Note that temperatures represent daily mean temperatures not maximums.\n * Maximum canopy conductance and Net radiation at 50% canopy conductance determine the trees water demand.  Typical values for trees are 0.005 and 50 respectively.\n * KL in the top soil layer specified the kl in the top 30 CM of soil.  Note that STRUM overwrites the KL values specified on the STRUMSoil node on the Soil.Physical Node so there is no need to pay attention to setting these values.  Instead STRUM calculates KL for each soil layer assuming an exponential decline from the top layer values to zero at the maximum root depth.\n * It is also possible to turn off the crops response to water stress which will stop the canopy and biomass production being affected by any water shortages.\n * Fruit number retained is the number of fruit that will be left on the tree after thinning.  It is specified per m^2 of canopy so the total number of fruit per tree will increase as the tree grows \n * Potential Fruit weight is the average fresh weight of individual fruits.\n * Fruit DM concentration is the dry matter concentration of fresh fruit which is used to calculate fruit dry weight from fresh weight\n * Fruit Density is used to calculate fruit size assuming fruit are spherical.  \n * Date of maximum bloom is the date that flowering occurs and is when slow fruit growth starts.  An approximate sigmoidal increase in fruit mass is assumed with 1% of the final mass reached at Start Linear Growth and 90% reached on end linear growth.  Users need to have some experience with the crop to ensure appropriate dates are entered for flowering and the points of fruit growth to ensure sensible fruit growth patterns. \n\nSTRUM sets the area of Row and Alley zones so that a simulatoin is representing a single tree and the area or row and alley zone that goes with it.  The user needs to be careful when considering STRUM model outputs becaue the outputs are generally on a per tree basis. \n\n\n## Typical Orchard‑Maturity DBH by Crop\n### Indicative DBH Ranges (cm) at Orchard Maturity\n\n\n| Crop | Training System | Managed Height | Typical DBH | Typical Canopy Area | Evidence |\n|------|-----------------|----------------|----------------|-------------------------------|----------|\n| **Apple** | Tall Spindle / Vertical Axis on dwarfing rootstocks | 2.7–4.0 m | **8–16 cm** | **4–6 m²** (≈3 m canopy width × 1.2–2 m spacing) | High‑density apple systems with 3–4 m trees on dwarfing stocks. |\n| **Pear** | Hedgerow on quince / semi‑dwarf stocks | 3–4.5 m | **12–22 cm** | **6–9 m²** (3–4 m canopy width × 2–2.5 m spacing) | Density & rootstock trials showing wide crowns. |\n| **Peach** | Open‑vase or hedged fruiting walls | 2.8–3.8 m | **12–20 cm** | **5–8 m²** (2.5–3 m canopy width × 2–2.5 m spacing) | Hedged systems stabilise DBH in low‑teens to ~20 cm. |\n| **Avocado** | Hedgerow / pedestrian canopy | 4–6 m | **20–40 cm** | **12–20 m²** (3–5 m canopy width × 3–5 m spacing) | Mature hedgerow examples ~30–35 cm stems. |\n| **Macadamia** | Hedgerow walls (e.g., 8×4 m) | 6–7 m | **18–25 cm** | **20–32 m²** (4–5 m canopy width × 4–6 m spacing) | Crowding–yield studies showing DBH in low‑20 cm. |\n| **Kiwifruit (A. deliciosa)** | T‑bar or pergola | 1.8–2.2 m | **5–12 cm (leader)** | **3–5 m²** (2–3.5 m bay width × ~1.5 m vine spacing) | Leader diameter & trellis design guidelines. |\n| **Grapevine** | VSP / bilateral Guyot | 0.6–1.0 m | **4–10 cm (cordon wood)** | **1–2 m²** (row spacing 2.5–3 m × vine spacing 1–1.5 m; effective crown smaller) | Mature vine cordon diameter ranges. |\n\n### Canopy size affects on DBH in STRUM\nSTRUM automatically adjusts a tree’s diameter at breast height (DBH) based on the horizontal canopy area available per tree, using a simple power‑law scaling relationship grounded in well‑established size–density allometry. As trees are given more or less horizontal space (through changes in row spacing, in‑row spacing, or mature canopy width), STRUM scales DBH up or down accordingly. This approach follows classic stand‑density theory, where tree size increases predictably with available growing area (e.g., Reineke’s rule: tree diameter scales with area per tree to an exponent of ~0.6). STRUM does not use canopy height when inferring DBH, because height is strongly shaped by orchard management (topping, training, pruning) rather than natural competition, and studies consistently show that crown width — not height — is the reliable geometric correlate of DBH across species and management systems. This ensures DBH inference behaves in a stable, predictable, and biologically defensible way for hedgerows and orchard systems\n",
           "Name": "TitlePage",
           "ResourceName": null,
           "Children": [],
@@ -354,7 +354,17 @@
               "Units": "g/tree",
               "Name": "InitialWt",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                  "Name": "Param value set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1079,7 +1089,6 @@
             },
             {
               "$type": "Models.PMF.RootNetwork, Models",
-              "ZoneNamesToGrowRootsIn": [],
               "klByLayer": null,
               "WaterTakenUp": null,
               "NitrogenTakenUp": null,
@@ -1313,26 +1322,128 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "TotalDMDemand",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis",
-                      "Name": "PotentialPhotosynthesis",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Available",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis",
+                          "Name": "PotentialPhotosynthesis",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "PartitionFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PartitionFraction",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "SizeDemand",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "Rate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "SizeDemand",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SizeDemand",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "TargetSize",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 300.0,
+                                      "Units": null,
+                                      "Name": "gPerM2",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[STRUM].CanopyArea",
+                                      "Name": "TreeArea",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[STRUM].RelativeAnnualDimension",
+                                      "Name": "AgePattern",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Root].Wt",
+                                  "Name": "CurrentWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1383,7 +1494,17 @@
               "Units": "g/tree",
               "Name": "InitialWt",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                  "Name": "Param value set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1510,130 +1631,51 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "DecidiousSensecence",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartLeafFall",
-                      "End": "BareTree",
-                      "Name": "LeafFall",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Switch",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SeasonalRate",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Switch",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                              "NumeratorErrVal": 0.0,
-                              "DenominatorErrVal": 0.0,
-                              "Name": "ProtectedDivideFunction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.BoundFunction, Models",
-                                  "Name": "LAIReduction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 10000.0,
-                                      "Units": "0-1",
-                                      "Name": "Upper",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.0,
-                                      "Units": "0-1",
-                                      "Name": "Lower",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "LeafAreaLoss",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.DeltaFunction, Models",
-                                          "StartStageName": null,
-                                          "Name": "DeltaLeafArea",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[STRUM].Leaf.Canopy.GreenAreaIndex",
-                                              "Name": "Integral",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": -1.0,
-                                          "Units": "0-1",
-                                          "Name": "Inverter",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.HoldFunction, Models",
-                                  "WhenToHold": "StartLeafFall",
-                                  "Name": "LAIatStartLeafFall",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].Canopy.GreenAreaIndex",
-                                      "Name": "LAI",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            3.0,
+                            4.0,
+                            5.0,
+                            6.0
                           ],
+                          "Y": [
+                            0.0,
+                            0.0,
+                            0.01,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Stage",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -2427,7 +2469,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Height.CanopyBaseHeight",
+                      "VariableName": "[STRUM].BaseHeight",
                       "Name": "CanopyBase",
                       "ResourceName": null,
                       "Children": [],
@@ -2482,51 +2524,98 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.BoundFunction, Models",
                       "Name": "SeasonalGrowth",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": "m2/m2",
-                          "Name": "AnnualDelta",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "RelativeSeasonalDimension",
+                          "$type": "Models.Functions.AccumulateFunctionGeneral, Models",
+                          "AccumulateToday": false,
+                          "AccumulateEventName": null,
+                          "NameOfPlantToLink": null,
+                          "StartStageName": null,
+                          "EndStageName": null,
+                          "StartEventName": null,
+                          "EndEventName": null,
+                          "StartDate": null,
+                          "EndDate": null,
+                          "ReduceStageName": "BudBreak",
+                          "FractionRemovedOnStage": 1.0,
+                          "ReduceEventName": "[StrumTreeInstance].Pruning",
+                          "FractionRemovedOnEvent": 0.0,
+                          "ReduceDates": null,
+                          "FractionRemovedOnDate": 0.0,
+                          "FractionRemovedOnCut": 0.0,
+                          "FractionRemovedOnHarvest": 0.0,
+                          "FractionRemovedOnGraze": 0.0,
+                          "FractionRemovedOnPrune": 0.0,
+                          "Name": "Accumulated",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                3.0,
-                                4.0,
-                                5.0,
-                                6.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.95,
-                                1.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
+                              "$type": "Models.Functions.DeltaFunction, Models",
+                              "StartStageName": null,
+                              "Name": "DailyGrowth",
                               "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].Stage",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "Integral",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.0,
+                                      "Units": "m2/m2",
+                                      "Name": "AnnualDelta",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                                      "Name": "RelativeSeasonalDimension",
+                                      "ResourceName": null,
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.XYPairs, Models",
+                                          "X": [
+                                            3.0,
+                                            4.0,
+                                            5.0,
+                                            6.0
+                                          ],
+                                          "Y": [
+                                            0.0,
+                                            0.95,
+                                            1.0,
+                                            0.0
+                                          ],
+                                          "Name": "XYPairs",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Phenology].Stage",
+                                          "Name": "XValue",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -2536,9 +2625,19 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
+                          "FixedValue": 0.0,
                           "Units": null,
-                          "Name": "FrostFactor",
+                          "Name": "Lower",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 20.0,
+                          "Units": null,
+                          "Name": "Upper",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2838,26 +2937,128 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "TotalDMDemand",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis",
-                      "Name": "PotentialPhotosynthesis",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Available",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Photosynthesis",
+                          "Name": "PotentialPhotosynthesis",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.3,
+                          "Units": "",
+                          "Name": "PartitionFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PartitionFraction",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "SizeDemand",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.05,
+                          "Units": null,
+                          "Name": "Rate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "SizeDemand",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SizeDemand",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "TargetSize",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 500.0,
+                                      "Units": null,
+                                      "Name": "gPerM2",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[STRUM].CanopyArea",
+                                      "Name": "TreeArea",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[STRUM].RelativeAnnualDimension",
+                                      "Name": "AgePattern",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].Wt",
+                                  "Name": "CurrentWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Zero",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2909,7 +3110,7 @@
           "RootNetworkObject": null,
           "Cconc": 0.4,
           "IsAboveGround": true,
-          "Name": "Trunk",
+          "Name": "Wood",
           "ResourceName": null,
           "Children": [
             {
@@ -2918,7 +3119,17 @@
               "Units": "g/tree",
               "Name": "InitialWt",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                  "Name": "Param value set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2928,7 +3139,17 @@
               "Units": "g/tree",
               "Name": "MatureWt",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                  "Name": "Param value set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -3107,11 +3328,21 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Trunk.TotalCarbonDemand",
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "BudBreak",
+                      "End": "BareTree",
                       "Name": "Structural",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "Name": "Structural",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3126,9 +3357,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
+                      "$type": "Models.PMF.DeficitDemandFunction, Models",
                       "Name": "Storage",
                       "ResourceName": null,
                       "Children": [],
@@ -3259,12 +3488,21 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.PMF.MobilisationSupplyFunction, Models",
                           "Name": "Storage",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.1,
+                              "Units": null,
+                              "Name": "Proportion",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -3283,11 +3521,21 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
+                      "FixedValue": 0.7,
+                      "Units": "g/g",
                       "Name": "Structural",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3303,11 +3551,21 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
+                      "FixedValue": 0.3,
+                      "Units": "g/g",
                       "Name": "Storage",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3548,7 +3806,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Trunk].Nitrogen.ConcFunctions.Maximum",
+                      "VariableName": "[Wood].Nitrogen.ConcFunctions.Maximum",
                       "Name": "Critical",
                       "ResourceName": null,
                       "Children": [],
@@ -3557,7 +3815,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Trunk].Nitrogen.ConcFunctions.Maximum",
+                      "VariableName": "[Wood].Nitrogen.ConcFunctions.Maximum",
                       "Name": "Minimum",
                       "ResourceName": null,
                       "Children": [],
@@ -3610,7 +3868,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 0.5,
                           "Units": null,
                           "Name": "PartitionFraction",
                           "ResourceName": null,
@@ -3639,7 +3897,7 @@
                         },
                         {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "TotalDemand",
+                          "Name": "DMToReachTargetWt",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -3658,7 +3916,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Trunk].MatureWt",
+                                  "VariableName": "[Wood].MatureWt",
                                   "Name": "MatureWt",
                                   "ResourceName": null,
                                   "Children": [],
@@ -3671,7 +3929,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Trunk].Wt",
+                              "VariableName": "[Wood].Wt",
                               "Name": "CurrentWt",
                               "ResourceName": null,
                               "Children": [],
@@ -4955,7 +5213,17 @@
               "Units": "g/tree",
               "Name": "InitialWt",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                  "Name": "Param value set at establishment",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5820,8 +6088,8 @@
             "[Leaf].Dead",
             "[Fruit].Live",
             "[Fruit].Dead",
-            "[Trunk].Live",
-            "[Trunk].Dead"
+            "[Wood].Live",
+            "[Wood].Dead"
           ],
           "Name": "AboveGround",
           "ResourceName": null,
@@ -5834,7 +6102,7 @@
           "Propertys": [
             "[Leaf].Dead",
             "[Fruit].Dead",
-            "[Trunk].Dead"
+            "[Wood].Dead"
           ],
           "Name": "AboveGroundDead",
           "ResourceName": null,
@@ -5861,8 +6129,8 @@
             "[Leaf].Dead",
             "[Fruit].Live",
             "[Fruit].Dead",
-            "[Trunk].Live",
-            "[Trunk].Dead",
+            "[Wood].Live",
+            "[Wood].Dead",
             "[Root].Live",
             "[Root].Dead"
           ],
@@ -5877,7 +6145,7 @@
           "Propertys": [
             "[Leaf].Live",
             "[Fruit].Live",
-            "[Trunk].Live",
+            "[Wood].Live",
             "[Root].Live"
           ],
           "Name": "TotalLive",
@@ -5891,7 +6159,7 @@
           "Propertys": [
             "[Leaf].Dead",
             "[Fruit].Dead",
-            "[Trunk].Dead",
+            "[Wood].Dead",
             "[Root].Dead"
           ],
           "Name": "TotalDead",
@@ -5914,16 +6182,6 @@
           "$type": "Models.Functions.Constant, Models",
           "FixedValue": 0.0,
           "Units": null,
-          "Name": "MaxPrunedHeight",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.Constant, Models",
-          "FixedValue": 0.0,
-          "Units": null,
           "Name": "MortalityRate",
           "ResourceName": null,
           "Children": [],
@@ -5931,61 +6189,26 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.AddFunction, Models",
-          "Name": "Height",
+          "$type": "Models.Functions.SubtractFunction, Models",
+          "Name": "BaseHeight",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "CanopyBaseHeight",
+              "Name": "PrunedCanopyBaseHeight",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": "NaN",
                   "Units": null,
-                  "Name": "Maximum",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeAnnualDimension",
-                  "Name": "Age pattern",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "PrunedCanopyDepth",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.SubtractFunction, Models",
-                  "Name": "Maximum",
+                  "Name": "PrunedMatureCanopyBaseHeight",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].MaxPrunedHeight",
-                      "Name": "MaxPrunedHeight",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[STRUM].Height.CanopyBaseHeight.Maximum",
-                      "Name": "MaxBaseHeight",
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6014,19 +6237,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeSeasonalDimension",
-                  "Name": "Seasonal pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": "NaN",
+                  "Units": "mm",
+                  "Name": "BaseHeightSeasonalIncrement",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 100.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6051,6 +6284,136 @@
         },
         {
           "$type": "Models.Functions.AddFunction, Models",
+          "Name": "Height",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[STRUM].BaseHeight.PrunedCanopyBaseHeight",
+              "Name": "PrunedCanopyBaseHeight",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "PrunedCanopyDepth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.SubtractFunction, Models",
+                  "Name": "MatureDepth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "MaturePrunedHeight",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[STRUM].BaseHeight.PrunedCanopyBaseHeight.PrunedMatureCanopyBaseHeight",
+                      "Name": "PrunedBaseHeight",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeAnnualDimension",
+                  "Name": "Age pattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "SeasonalDepthGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "Increment",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 100.0,
+                      "Units": "mm",
+                      "Name": "SeasonalHeightIncrement",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                          "Name": "Param value set at establishment",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[STRUM].BaseHeight.SeasonalGrowth.BaseHeightSeasonalIncrement",
+                      "Name": "SeasonalBaseIncrement",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.AddFunction, Models",
           "Name": "Width",
           "ResourceName": null,
           "Children": [
@@ -6060,19 +6423,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeAnnualDimension",
-                  "Name": "Age pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 500.0,
+                  "Units": "mm",
+                  "Name": "MaturePrunedWidth",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 500.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeAnnualDimension",
+                  "Name": "Age pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6088,19 +6461,29 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[STRUM].RelativeSeasonalDimension",
-                  "Name": "Seasonal pattern",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 500.0,
+                  "Units": "mm",
+                  "Name": "SeasonalWidthIncrement",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\nSTRUM calculates this parameter value during run-time when the crop is established from parameter values set in the relevent STRUMtree object\n",
+                      "Name": "Param value set at establishment",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 500.0,
-                  "Units": "mm",
-                  "Name": "Maximum",
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[STRUM].RelativeSeasonalDimension",
+                  "Name": "Seasonal pattern",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -6122,7 +6505,7 @@
             {
               "$type": "Models.Functions.XYPairs, Models",
               "X": [
-                0.0,
+                1.0,
                 6.0
               ],
               "Y": [
@@ -6200,8 +6583,8 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[STRUM].Trunk.EnergyBalance.RadiationInterceptedByDead",
-              "Name": "TrunkInterception",
+              "VariableName": "[STRUM].Wood.EnergyBalance.RadiationInterceptedByDead",
+              "Name": "WoodInterception",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
