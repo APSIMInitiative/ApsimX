@@ -759,7 +759,6 @@
                     "// Phenology parameters taken from Harto as it is near isogenic",
                     "",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100. //107.48",
-                    //"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
                     "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 24",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.247",
                     "[Phenology].CAMP.FLNparams.MinLN = 7",
@@ -966,7 +965,6 @@
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
-                    //"[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
                     "[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                   ],
                   "Name": "Gregory",
