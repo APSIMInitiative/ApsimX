@@ -12246,7 +12246,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2025-04-01T00:00:00",
+              "Start": "2025-01-01T00:00:00",
               "End": "2025-12-17T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
