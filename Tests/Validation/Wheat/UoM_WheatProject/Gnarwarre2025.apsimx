@@ -125,7 +125,7 @@
           "Name": "Harvesting",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -471,7 +471,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2025-03-03T00:00:00",
-              "End": "2026-03-12T00:00:00",
+              "End": "2026-02-17T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -869,7 +869,7 @@
                   "Name": "Harvesting",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {

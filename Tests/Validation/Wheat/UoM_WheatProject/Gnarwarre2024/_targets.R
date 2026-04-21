@@ -20,6 +20,7 @@ tar_option_set(packages = c("here", "tidyverse", "lubridate", "readxl"))
  source("R/add_harvDate_to_obs.R")
  source("R/add_interp_pheno_dates.R")
  source("R/save_df_into_csv.R")
+source("R/apply_tailored_obs_corrections.R")
 
 # NOTE: Incomplete - awaits raw data availability
 # We need Obs data for phenology stages 6 and 8 to continue development
@@ -80,6 +81,9 @@ list(
   # add observed stages to Observed excel
   tar_target(df_new_obs, add_stages_to_obs(df_obs_with_harvDate,df_obs_pheno_dates)),
   
+  # apply corrections (apply tailored needed corrections - see code)
+  tar_target(df_new_obs_fixed, apply_tailored_obs_corrections(df_new_obs)),
+  
   # # check if haun manual parameters is correct
    tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
                                                        config$file_name_input_haun,
@@ -100,7 +104,7 @@ list(
   tar_target(
    msg_obs_saved,
    save_df_into_excel(
-     df = df_new_obs,
+     df = df_new_obs_fixed,
      folder = config$folder_apsimx,
     filename = config$file_workData_excel,
      sheetname = config$sheet_name_observed

@@ -125,7 +125,7 @@
           "Name": "Harvesting",
           "ResourceName": null,
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -3816,17 +3816,6 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": null
-                        },
-                        {
-                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                          "Title": "Wheat.Grain.Size",
-                          "Position": 2,
-                          "Inverted": false,
-                          "CrossesAtZero": false,
-                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -3873,7 +3862,7 @@
                           "$type": "Models.Series, Models",
                           "Type": 1,
                           "XAxis": 3,
-                          "YAxis": 2,
+                          "YAxis": 0,
                           "ColourArgb": 0,
                           "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": "Sow",
