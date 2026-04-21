@@ -66,14 +66,14 @@ list(
   
   # ----------------- TO BE REMOVED ----------------------------- #
   # add MOCK pheno stages (emergence + flower) which are missing (Temporary FIX)
-  tar_target(file_obs_mean_with_mock_pheno, 
-             add_mock_pheno_dates(file_obs_mean,config$file_mock_pheno_csv)),
+  # tar_target(file_obs_mean_with_mock_pheno, 
+  #            add_mock_pheno_dates(file_obs_mean,config$file_mock_pheno_csv)),
   
   # retrieve measured pheno dates from observations
   tar_target(df_obs_pheno_dates, 
-             #get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
+             get_pheno_dates(file_obs_mean, config$date_DOY_ref)),
              # ---- TO BE REMOVED AND FIXED WITH ABOVE -----
-             get_pheno_dates(file_obs_mean_with_mock_pheno, config$date_DOY_ref)),
+            # get_pheno_dates(file_obs_mean_with_mock_pheno, config$date_DOY_ref)),
   
   # create and add pheno-dates not measured in-between
   tar_target(df_new_pheno_dates, 
