@@ -2523,12 +2523,74 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 20.0,
-              "Units": null,
+              "$type": "Models.Functions.PhaseLookup, Models",
               "Name": "MaxDailyNUptake",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "Germination",
+                  "End": "FlagLeafAppearance",
+                  "Name": "Vegetative",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 20.0,
+                      "Units": null,
+                      "Name": "MaxDailyNUptake",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "FlagLeafAppearance",
+                  "End": "MaximumGrainLength",
+                  "Name": "EarlyReproductive",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 5.0,
+                      "Units": null,
+                      "Name": "MaxDailyNUptake",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "Start": "MaximumGrainLength",
+                  "End": "EndGrainFill",
+                  "Name": "GrainFill",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "MaxDailyNUptake",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -5181,8 +5243,8 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MaximumFunction, Models",
-                          "Name": "Fraction",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "StreesAdjusted",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5244,20 +5306,20 @@
                             },
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "WaterStress",
+                              "Name": "WaterStressAcellerator",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
                                   "X": [
-                                    0.0,
                                     0.5,
+                                    0.7,
                                     1.0
                                   ],
                                   "Y": [
-                                    0.15,
-                                    0.0,
-                                    0.0
+                                    5.0,
+                                    1.0,
+                                    1.0
                                   ],
                                   "Name": "XYPairs",
                                   "ResourceName": null,
@@ -5267,7 +5329,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].WaterTensionFactor",
+                                  "VariableName": "[Leaf].Fw",
                                   "Name": "XValue",
                                   "ResourceName": null,
                                   "Children": [],
@@ -5332,8 +5394,8 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.MaximumFunction, Models",
-                          "Name": "Fraction",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "MultiplyFunction",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -5395,7 +5457,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].SenescenceRate.Reproductive.Rate.Fraction.WaterStress",
+                              "VariableName": "[Leaf].SenescenceRate.Reproductive.Rate.StreesAdjusted.WaterStressAcellerator",
                               "Name": "WaterStress",
                               "ResourceName": null,
                               "Children": [],
@@ -5904,12 +5966,23 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "Anthesis",
                       "Name": "NitrogenDemandSwitch",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "Vegetative",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6507,7 +6580,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.7,
+                              "FixedValue": 0.8,
                               "Units": null,
                               "Name": "StructuralFraction",
                               "ResourceName": null,
@@ -7646,13 +7719,13 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "Sowing",
-                              "End": "FlagLeafAppearance",
+                              "End": "Anthesis",
                               "Name": "VegetativeGrowth",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.6,
+                                  "FixedValue": 0.8,
                                   "Units": null,
                                   "Name": "Fraction",
                                   "ResourceName": null,
@@ -7715,6 +7788,42 @@
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Leaf].Fw",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "NStressResponse",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.9,
+                                1.0
+                              ],
+                              "Y": [
+                                0.4,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Arbitrator].Fn",
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
