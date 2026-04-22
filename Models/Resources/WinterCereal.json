@@ -1789,16 +1789,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.05,
-              "Units": "g",
-              "Name": "MaximumPotentialGrainSize____",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.PhaseLookup, Models",
               "Name": "DMDemandFunction",
               "ResourceName": null,
@@ -3527,7 +3517,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0001,
+                          "FixedValue": 0.0002,
                           "Units": null,
                           "Name": "AreaPerPlant",
                           "ResourceName": null,
@@ -5851,7 +5841,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1000.0,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -5861,7 +5851,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1000.0,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -6715,7 +6705,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 1000.0,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -7456,17 +7446,36 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stem].MinimumNConc",
+              "$type": "Models.Functions.MultiplyFunction, Models",
               "Name": "CriticalNConc",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].MaximumNConc",
+                  "Name": "MaximumNConc",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.5,
+                  "Units": null,
+                  "Name": "Factor",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.004,
+              "FixedValue": 0.001,
               "Units": null,
               "Name": "MinimumNConc",
               "ResourceName": null,
@@ -7519,7 +7528,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0.05,
                       "Units": null,
                       "Name": "Fraction",
                       "ResourceName": null,
@@ -8074,7 +8083,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 10.0,
                   "Units": null,
                   "Name": "QStructuralPriority",
                   "ResourceName": null,
@@ -8084,7 +8093,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 10.0,
                   "Units": null,
                   "Name": "QMetabolicPriority",
                   "ResourceName": null,
@@ -8094,7 +8103,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
