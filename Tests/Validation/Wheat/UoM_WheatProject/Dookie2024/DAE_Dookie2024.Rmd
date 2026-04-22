@@ -9,6 +9,13 @@ library(tidyverse)
 library(visNetwork)
 ```
 
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+```
+
+
+
 # Check pipeline status
 ```{r}
 tar_glimpse()

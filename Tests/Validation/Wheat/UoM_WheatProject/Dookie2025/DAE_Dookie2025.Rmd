@@ -1,0 +1,53 @@
+---
+title: "Dookie2025 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+```
+
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+```{r}
+tar_visnetwork()
+```
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+# tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+```
+
+
+```{r}
+tar_load(df_list_PCDS)
+tar_load(list_observed_dfs)
+df1<-processed_met_data$data
+info_3 <- tar_read(df_list_PCDS)
+
+x<-info_3$pcds_3_emergPlants
+tar_read(msg_obs_saved)
+```
+

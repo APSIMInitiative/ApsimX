@@ -9,6 +9,15 @@ library(tidyverse)
 library(visNetwork)
 ```
 
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+getwd()
+```
+
+
+
 # Check pipeline status
 ```{r}
 tar_glimpse()
@@ -34,4 +43,7 @@ targets::tar_make()
 # targets::tar_destroy(ask = FALSE)
 ```
 
+```{r}
+tar_load(df_new_obs)
+```
 
