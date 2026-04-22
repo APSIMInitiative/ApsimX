@@ -3517,7 +3517,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0002,
+                          "FixedValue": 0.0001,
                           "Units": null,
                           "Name": "AreaPerPlant",
                           "ResourceName": null,
