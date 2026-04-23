@@ -874,7 +874,22 @@
                 },
                 {
                   "$type": "Models.Operations, Models",
-                  "OperationsList": [],
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2026-01-06",
+                      "Action": "[Wheat].Harvest();",
+                      "Line": "2026-01-06 [Wheat].Harvest();"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2026-01-06",
+                      "Action": "[Wheat].EndCrop();",
+                      "Line": "2026-01-06 [Wheat].EndCrop();"
+                    }
+                  ],
                   "Name": "Management",
                   "ResourceName": null,
                   "Children": [],

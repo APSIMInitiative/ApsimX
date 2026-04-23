@@ -33,6 +33,9 @@ source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
 source("R/save_met_file.R")
 source("R/add_harv_into_obs.R")
+source("R/find_max_leaf_date.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
 
 #----------------
 # Project name
@@ -73,6 +76,7 @@ targets <- list(
       target_betwStages           = 50, # % of period between two adjacent events when a synthetic event date is assumed
       var_name_stage              = "apsim_stage_raw", # name of synthetic var with observed PCSD data
       varName_addedToObserv       = "Wheat.Phenology.Stage", # new synthetic variable to be added into observations
+      max_leaf_limit              = 0.95, # fractional value of maximum number of leaves assumed when terminal spiklet is set
       file_name_input_pheno       = paste0(proj_name,"_PhenoDatesInput.csv"), # to save
       file_name_input_haun        = paste0(proj_name,"_HaunStagesInput.csv") # to save
     )
@@ -92,10 +96,6 @@ targets <- list(
                                      config$sheetExcel_soilWater)),
   
   tar_target(json_soil_water, soil_water_in_json(df_soil_water)),
-  
-  ### ------------------------------------------------
-  ### Create met file to run APSIM
-  ### ------------------------------------------------
   
   ### ------------------------------------------------
   ### Create met file to run APSIM
@@ -134,9 +134,16 @@ targets <- list(
              header = TRUE, stringsAsFactors = FALSE, sep = ",")),
   
   # Reads excel raw observations based on meta data above (raw as-is) and appends them into a single list of dfs 
-  tar_target(list_observed_dfs,compile_all_observed(config$folder_rawData,
-                                                    config$file_rawData_excel,
-                                                    df_obs_info)),
+  # 2. Read excel raw observations and dynamically inject SimulationName
+  tar_target(
+    name = list_observed_dfs,
+    command = compile_all_observed(
+      folder           = config$folder_rawData,
+      excel_file       = config$file_rawData_excel,
+      df_obs_info      = df_obs_info,
+      df_simNameByCult = df_simNameByCult # The new lookup target gets passed here!
+    )
+  ),
   
   ### ----------------------------------------------------------------------------------------
   ### Create APSIM stage parameters as FORCED input - AND add it as synthetic data to observations (stages_raw)
@@ -154,8 +161,25 @@ targets <- list(
   
   # Create synthetic in-between pheno stages within a APSIM format input file
   tar_target(df_apsimStageInput, doAPSIMStageInput(df_dateStageTargetReached, 
-                                                   df_simNameByCult, 
                                                    config$target_betwStages)),
+  
+  # find new Spikelets differentiating date based on leaf emergence
+  tar_target(df_maxLeafDate, find_max_leaf_date(list_observed_dfs, 
+                                                   config$max_leaf_limit)),
+  # get pheno stages from haun
+  tar_target(
+    name = df_haun_pheno_dates, 
+    command = derive_haun_pheno_dates(
+      compiled_obs = list_observed_dfs, 
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+  
+  # expand and overwrite interpolated pheno-dates based on haun observations (Haun-based has priority)
+  tar_target(name = df_apsimStageInput_haunBased, 
+                   command = updatePhenoStageInput(
+                   obsIntPheno  = df_apsimStageInput, # from interpolation of observations
+                   haunPheno = df_haun_pheno_dates)), # from Haun stages
   
   # Create Observed data of pheno-satges to be added to observations (as cross-check)
   tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
@@ -177,8 +201,7 @@ targets <- list(
   
   # Prepare the format of a APSIM observation standard file
   tar_target(df_final_observed, 
-             prepare_final_observed(list_observed_clean_final,
-                                    df_simNameByCult)), 
+             prepare_final_observed(list_observed_clean_final)), 
   
   #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
   tar_target(df_final_observed_harv, add_harv_into_obs(df_final_observed,
@@ -205,7 +228,7 @@ targets <- list(
   
   
   # Save parameter input file with forced pheno-dates into /input
-  tar_target(msg_param_saved, saveInputParam(df_apsimStageInput, 
+  tar_target(msg_param_saved, saveInputParam(df_apsimStageInput_haunBased, 
                                            config$folder_inputs, 
                                            config$file_name_input_pheno),
     format = "file"),

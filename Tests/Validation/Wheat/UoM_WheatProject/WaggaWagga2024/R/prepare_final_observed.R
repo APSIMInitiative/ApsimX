@@ -1,6 +1,6 @@
 # R/functions.R
 
-prepare_final_observed <- function(list_observed_clean,df_sim_names) {
+prepare_final_observed <- function(list_observed_clean) {
   # --- Setup ---
   # Ensure all required packages are loaded
   # Add 'openxlsx' and 'lubridate' to tar_option_set(packages = ...) in _targets.R
@@ -14,8 +14,6 @@ prepare_final_observed <- function(list_observed_clean,df_sim_names) {
     pull(data) # Extract the list of data frames from the 'data' column
   
   df_final <- dplyr::bind_rows(df_list) %>%
-    # 2. Merge with simulation names
-    dplyr::inner_join(df_sim_names, by = "Cultivar") %>%
     # 3. Create the 'Clock.Today' column in the required APSIM format
     dplyr::mutate(
       Clock.Today = format(
