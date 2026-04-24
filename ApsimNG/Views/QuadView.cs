@@ -13,7 +13,8 @@ namespace UserInterface.Views
         Text,
         Graph,
         Grid,
-        Property
+        Property,
+        Code
     }
 
     /// <summary>
@@ -30,8 +31,6 @@ namespace UserInterface.Views
 
     public class QuadView : ViewBase
     {
-        public IEditorView EditorView { get; private set; } = null;
-
         private double horizontalSlider = -1;
 
         private Paned topPaned;
@@ -120,6 +119,8 @@ namespace UserInterface.Views
                 if (propertyView.AnyProperties)
                 {
                     propertyView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                    if (natHeight < 40)
+                        natHeight = 40;
                     if (position == WidgetPosition.TopLeft)
                         leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
@@ -140,6 +141,8 @@ namespace UserInterface.Views
                 if (!string.IsNullOrEmpty(markdownView.Text))
                 {
                     markdownView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                    if (natHeight < 40)
+                        natHeight = 40;
                     if (position == WidgetPosition.TopLeft)
                         leftPaned.Position = natHeight;
                     else if (position == WidgetPosition.TopRight)
@@ -172,6 +175,10 @@ namespace UserInterface.Views
             else if (type == WidgetType.Property)
             {
                 container = this.GetControl<PropertyView>(name);
+            }
+            else if (type == WidgetType.Code)
+            {
+                container = this.GetControl<EditorView>(name);
             }
 
             SetView(container, position);
@@ -278,8 +285,10 @@ namespace UserInterface.Views
                 return WidgetType.Property;
             else if (view is MarkdownView)
                 return WidgetType.Text;
-            else if (view is ContainerView containerView)
+            else if (view is ContainerView)
                 return WidgetType.Grid;
+            else if (view is EditorView)
+                return WidgetType.Code;
             else
                 return WidgetType.None;
         }
