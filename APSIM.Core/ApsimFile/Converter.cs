@@ -9,6 +9,7 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.Json.Nodes;
 
 namespace APSIM.Core;
 
@@ -18,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 213; } }
+    public static int LatestVersion { get { return 214; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7509,12 +7510,147 @@ internal class Converter
                     if (fraction["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
                         fraction["OrganName"] = "Cob";
             }
-
-
         }
-
-
-        }
-
-
     }
+
+    /// <summary>
+    /// Fix some things in STRUM
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion214(JObject root, string _)
+    {
+        // Find all StrumTreeInstance models in the JSON and update values
+        foreach (var model in root
+            .SelectTokens("$..[?(@.$type && @.$type =~ /StrumTreeInstance/i)]")
+            .OfType<JObject>())
+        {
+            // 1) Targeted fix: only the explicit property used to store the tree type.
+            var treeType = model["TreeType"] as JValue;
+            if (treeType != null &&
+                treeType.Type == JTokenType.String &&
+                string.Equals((string)treeType, "Ever green", StringComparison.OrdinalIgnoreCase))
+            {
+                model["TreeType"] = "Evergreen";
+            }
+        }
+
+        // 1) Define your replacements: substring -> replacement (partial matches allowed)
+        //    Examples (replace with your real renames):
+        var map = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "STRUM.Height.CanopyBaseHeight", "STRUM.Height.PrunedCanopyBaseHeight" },
+            { "[STRUM].Height.CanopyBaseHeight", "[STRUM].Height.PrunedCanopyBaseHeight" },
+            { "STRUM.Height.SeasonalGrowth", "STRUM.Height.SeasonalDepthGrowth" },
+            { "[STRUM].Height.SeasonalGrowth", "[STRUM].Height.SeasonalDepthGrowth" },
+            { "STRUM.CanopyBaseHeight", "STRUM.BaseHeight" },
+            { "[STRUM].CanopyBaseHeight", "[STRUM].BaseHeight" },
+            { "STRUM.Trunk.", "STRUM.Wood." },
+            { "[STRUM].Trunk.", "[STRUM].Wood." },
+        };
+
+        // 2) REPORT models (Models.Report.VariableNames, Models)
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, key, map[key], caseSensitive: false);
+            }
+        }
+
+        // 3) GRAPH SERIES models (Models.Graph.Series, Models)
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, key, map[key]);
+            }
+        }
+
+        // 4) rename trunk to wook in biomass removal events
+        foreach (var remove in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+            if (remove["NameOfPlantToRemoveFrom"].ToString() == "STRUM")
+            {
+                JArray organs = remove["BiomassRemovalFractions"] as JArray;
+
+                foreach (JToken organ in organs)
+                {
+                    if (organ["OrganName"].ToString() == "Trunk")
+                    {
+                        organ["OrganName"] = "Wood";
+                    }
+                }
+            }
+        }
+
+        // 5) Manager script renames
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            foreach (string key in map.Keys)
+            {
+                var changed = manager.Replace(key, map[key]);
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        List<string> toRescale = new List<string> { "MaxRD",
+                                                    "MatureCanopyBaseHeight",
+                                                    "MaturePrunedCanopyBaseHeight",
+                                                    "MatureHeight",
+                                                    "MaturePrunedHeight",
+                                                    "MatureWidth",
+                                                    "MaturePrunedWidth" };
+
+        // 6. convert canopy and root dimensions from mm to m
+        foreach (var ScrumTreeInstance in JsonUtilities.ChildrenOfType(root, "StrumTreeInstance"))
+        {
+            foreach (string param in toRescale)
+            {
+
+                if (!ScrumTreeInstance.TryGetValue(param, out JToken token))
+                    continue;
+
+                if ((double)ScrumTreeInstance[param] > 100)
+                    ScrumTreeInstance[param] = (double)ScrumTreeInstance[param] / 1000;
+            }
+        }
+
+        string paramGroup = string.Join("|", toRescale.Select(Regex.Escape));
+        var regex = new Regex(
+            $@"^(?<prefix>\[Row\]\.[^\.]+\.({paramGroup})\s*=\s*)" +
+            @"(?<value>-?\d+(\.\d+)?)",
+            RegexOptions.Compiled);
+        foreach (var CompositeFactor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+        {
+
+            JArray specs = CompositeFactor["Specifications"] as JArray;
+            if (specs == null || specs.Count == 0)
+                continue;
+
+            for (int i = 0; i < specs.Count; i++)
+            {
+                if (specs[i].Type != JTokenType.String)
+                    continue;
+
+                string specText = specs[i].Value<string>();
+                specs[i] = regex.Replace(specText, match =>
+                {
+                    double value = double.Parse(
+                        match.Groups["value"].Value,
+                        CultureInfo.InvariantCulture);
+
+                    // Same guard as StrumTreeInstance
+                    if (value <= 100)
+                        return match.Value;
+
+                    double scaled = value / 1000.0;
+
+                    return match.Groups["prefix"].Value +
+                           scaled.ToString("G", CultureInfo.InvariantCulture);
+                });
+            }
+        }
+    }
+
+}
