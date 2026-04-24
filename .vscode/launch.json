@@ -6,7 +6,7 @@
     "configurations": [
 
         {
-            "name": "ApsimNG: Debug",
+            "name": "Apsim NG: Debug",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Debug",
@@ -21,10 +21,16 @@
             },
             "symbolOptions": {
                 "searchMicrosoftSymbolServer": false
+            },
+            "presentation": {
+                "hidden": false,
+                "group": "APSIM UI",
+                "order": 1,
+                "focus": true
             }
         },
         {
-            "name": "ApsimNG: Release",
+            "name": "Apsim NG: Release",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Release",
@@ -33,6 +39,11 @@
             "requireExactSource": true,
             "symbolOptions": {
                 "searchMicrosoftSymbolServer": false
+            },
+            "presentation": {
+                "hidden": false,
+                "group": "APSIM UI",
+                "order": 2
             }
         },
         {
@@ -47,7 +58,12 @@
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "presentation": {
+                "hidden": true,
+                "group": "APSIM CLI",
+                "order": 1
+            }
         },
         {
             "name": "Models: Debug",
@@ -60,7 +76,12 @@
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "presentation": {
+                "hidden": false,
+                "group": "Models",
+                "order": 1
+            }
         },
         {
             "name": "APSIM Server: Debug",
@@ -75,13 +96,23 @@
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "presentation": {
+                "hidden": false,
+                "group": "APSIM Server",
+                "order": 4
+            }
         },
         {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
-            "processId": "${command:pickProcess}"
+            "processId": "${command:pickProcess}",
+            "presentation": {
+                "hidden": true,
+                "group": "attach",
+                "order": 1
+            }
         },
         {
             "name": "Autodocs",
@@ -100,6 +131,11 @@
             },
             "symbolOptions": {
                 "searchMicrosoftSymbolServer": false
+            },
+            "presentation": {
+                "hidden": false,
+                "group": "Documentation",
+                "order": 1
             }
         },
         {
@@ -122,7 +158,13 @@
                 // "C:/Users/RIC394/source/repos/ApsimX/Tests/Validation/Maize",
                 "-v",
                 // "-l"
-            ]
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Workflow",
+                "order": 1,
+            }
+
         },
         {
             "name": "Apsim.Workflow: Splitter",
@@ -146,7 +188,12 @@
                 "${workspaceFolder}/Tests/Validation/Eucalyptus/Eucalyptus.apsimx",
                 "-s",
                 "${workspaceFolder}/Tests/Validation/Eucalyptus/split.json"
-            ]
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Workflow",
+                "order": 10
+            }
         },
         {
             "name": "Apsim.Workflow: Sim Count",
@@ -168,7 +215,12 @@
             "args": [
                 "--sim-count",
                 ""
-            ]
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Workflow",
+                "order": 11
+            }
         },
         {
             "name": "Apsim.Workflow: List directories",
@@ -190,7 +242,46 @@
             "args": [
                 "-l",
                 ""
-            ]
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Workflow",
+                "order": 4
+            }
+        },
+        {
+            "name": "Generate Single: APSIM.Documentation",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
+            "preLaunchTask": "Build Debug",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            // Note: the first argument is the name of the simulation 
+            // to document or the exact name of a APSIM Model.
+            // The second argument is the output directory. 
+            // The third argument is whether to include images in 
+            // the generated documentation this defaults to false if not
+            //provided.
+            "args": [
+                "Waterlogging",
+                "${workspaceFolder}/GeneratedDocumentation",
+                "true"
+            ],
+            "presentation": {
+                "hidden": false,
+                "group": "Documentation",
+                "order": 5
+            }
         }
     ]
 }
