@@ -181,10 +181,14 @@ targets <- list(
                    obsIntPheno  = df_apsimStageInput, # from interpolation of observations
                    haunPheno = df_haun_pheno_dates)), # from Haun stages
   
-  # Create Observed data of pheno-satges to be added to observations (as cross-check)
-  tar_target(df_stages_Observ, doStageObsData(df_dateStageTargetReached,
-                                              df_simNameByCult,
-                                              config$varName_addedToObserv)),
+  # Create Observed data of pheno-stages to be added to observations (as cross-check)
+  tar_target(
+    name = df_stages_Observ, 
+    command = doStageObsData(
+      df_haunBased = df_apsimStageInput_haunBased, # Only the Haun-based timeline!
+      var_name     = config$varName_addedToObserv  # The name of the new column
+    )
+  ),
   
   ### ----------------------------------------------------------------------------------------
   ### Finish observation file to be read by APSIM

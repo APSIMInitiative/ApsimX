@@ -1,29 +1,46 @@
-# R/functions.R
-
+#' Prepare Final Observations for APSIM
+#'
+#' @description
+#' Unnests the master observation list, binds all dataframes together, 
+#' aggressively scrubs "ghost" empty rows, and formats the timestamps into 
+#' the strict `Clock.Today` format required by APSIM.
+#'
+#' @param list_observed_clean A nested tibble containing the final corrected dataframes.
+#'
+#' @return A single, wide dataframe ready for APSIM injection without empty rows.
+#'
+#' @importFrom dplyr bind_rows filter mutate select any_of everything
+#' @export
 prepare_final_observed <- function(list_observed_clean) {
-  # --- Setup ---
-  # Ensure all required packages are loaded
-  # Add 'openxlsx' and 'lubridate' to tar_option_set(packages = ...) in _targets.R
+  
   require(dplyr)
- # require(purrr)
-  # require(openxlsx)
   
-  # 1. Bind all internal data frames into one large data frame
-  # list_observed_clean is a tibble with columns like df_name and data (list-column)
-  df_list <- list_observed_clean %>%
-    pull(data) # Extract the list of data frames from the 'data' column
-  
-  df_final <- dplyr::bind_rows(df_list) %>%
+  # 1. Bind all internal data frames into one large master dataframe
+  df_final <- dplyr::bind_rows(list_observed_clean$data) %>%
+    
+    # ----------------------------------------------------------------
+  # 2. THE FIREWALL: Aggressively scrub "ghost" rows
+  # ----------------------------------------------------------------
+  # Drop any row where SimulationName or Date is NA or completely blank
+  dplyr::filter(
+    !is.na(SimulationName), 
+    SimulationName != "",
+    !is.na(Date)
+  ) %>%
+    
     # 3. Create the 'Clock.Today' column in the required APSIM format
     dplyr::mutate(
-      Clock.Today = format(
-        as.POSIXct(Date),
-        "%d/%m/%Y 00:00:00"
-      )
+      Clock.Today = format(as.POSIXct(Date), "%d/%m/%Y 00:00:00")
     ) %>%
-    # 4. Reorder and select final columns
-    dplyr::select(SimulationName, Clock.Today, dplyr::everything(), -Cultivar, -Date)
+    
+    # 4. Reorder and safely drop old columns
+    dplyr::select(
+      SimulationName, 
+      Clock.Today, 
+      dplyr::everything(), 
+      -dplyr::any_of(c("Cultivar", "Date"))
+    )
   
-  # Return the data frame (the actual target value)
+  message("Successfully compiled, scrubbed empty rows, and formatted the final observation dataframe.")
   return(df_final)
 }
