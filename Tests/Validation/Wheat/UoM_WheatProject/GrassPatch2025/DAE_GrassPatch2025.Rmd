@@ -64,8 +64,6 @@ df <- tar_read(df_obs_pheno)
 
 
 ```{r}
-tar_load(df_new_pheno_dates)
-tar_load(df_haun)
-tar_load(df_haun_pheno_dates)
+tar_load(df_obs_mean_harv)
 ```
 

@@ -68,8 +68,8 @@ list(
       # Output file names
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met           = "Grass Patch_-33.20_121.65.met" ,
-      max_leaf_limit   = 0.95 # fraction of maximum leaf no. assumed to get date 
+      file_name_met           = "Grass Patch_-33.20_121.65.met",
+      max_leaf_limit          = 0.95 # fraction of maximum leaf no. assumed to get date 
     )
   ),
   
@@ -77,15 +77,15 @@ list(
   # PHASE B: RAW OBSERVATION INGESTION & PROCESSING
   # ----------------------------------------------------------------------------
   tar_target(
-    name = file_obs, 
+    name = df_obs, 
     command = read_excel_observed(
       file.path(config$folder_rawData, config$file_rawData_excel)
     )
   ),
   
   tar_target(
-    name = file_obs_mean, 
-    command = do_obs_means(file_obs)
+    name = df_obs_mean, 
+    command = do_obs_means(df_obs)
   ),
   
   # ----------------------------------------------------------------------------
@@ -93,61 +93,67 @@ list(
   # ----------------------------------------------------------------------------
   tar_target(
     name = df_obs_pheno_dates, 
-    command = get_pheno_dates(file_obs_mean, config$date_DOY_ref)
+    command = get_pheno_dates(df_obs_mean, config$date_DOY_ref)
   ),
   
+  # Add flags of HarvestRipe at final measurements for graphing
   tar_target(
-    name = df_obs_pheno, 
-    command = add_stages_to_obs(file_obs_mean, df_obs_pheno_dates)
-  ),
-  
-  tar_target(
-    name = df_final_observed_harv, 
+    name = df_obs_mean_harv, 
     command = add_harv_into_obs(
-      df            = df_obs_pheno,
-      ref_var       = c("Wheat.AboveGround.Wt","Wheat.Grain.Wt"), 
+      df            = df_obs_mean,
+      ref_vars      = c("Wheat.AboveGround.Wt","Wheat.Grain.Wt"), 
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )
   ),
   
+  # create input parameter files to force pheno dates
   tar_target(
-    name = df_new_pheno_dates, 
+    name = df_pheno_dates_paramInput, 
     command = add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)
   ),
   
+  # isolate haun observations
   tar_target(
     name = df_haun, 
     command = get_column_var_from_observ(
-      file_obs_mean, 
+      df_obs_mean, 
       "Wheat.Phenology.HaunStage"
     )
   ),
   
+  # derive pheno-stages' dates from haun
   tar_target(
     name = df_haun_pheno_dates,
     command = derive_haun_pheno_dates(
-      df   = df_haun,
+      df             = df_haun,
       max_leaf_limit = config$max_leaf_limit
     )
   ),
-
+  
+  # Join interpolated and haun-based pheno dates (haun has priority)
   tar_target(
     name = df_apsimStageInput_haunBased,
     command = updatePhenoStageInput(
-      obsIntPheno = df_new_pheno_dates,  # Interpolated observations
-      haunPheno   = df_haun_pheno_dates  # Haun stage priority
+      obsIntPheno = df_pheno_dates_paramInput,  # Interpolated observations
+      haunPheno   = df_haun_pheno_dates         # Haun stage has priority
     )
   ),
   
-  
+  # Check and create (if-needed) external-haun-parameter input file 
   tar_target(
     name = haun_input_checked, 
     command = check_manual_params(
       config$folder_inputs,
       config$file_name_input_haun,
-      file_obs_mean
+      df_obs_mean
     )
+  ),
+  
+  # Convert pheno dates into obs file friendly input and add to obs
+  tar_target(
+    name = df_obs_mean_harv_pheno,
+    command = add_stages_to_obs(df_obs_mean_harv, df_apsimStageInput_haunBased)
   ),
   
   # ----------------------------------------------------------------------------
@@ -166,7 +172,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_df_into_excel(
-      df        = df_final_observed_harv, 
+      df        = df_obs_mean_harv_pheno, 
       folder    = config$folder_apsimx, 
       filename  = config$file_workData_excel,
       sheetname = config$sheet_name_observed
