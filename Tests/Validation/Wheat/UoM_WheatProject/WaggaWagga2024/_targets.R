@@ -207,11 +207,10 @@ targets <- list(
   tar_target(df_final_observed, 
              prepare_final_observed(list_observed_clean_final)), 
   
-  #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
-  tar_target(df_final_observed_harv, add_harv_into_obs(df_final_observed,
-                                                "Wheat.Phenology.CurrentStageName",
-                                                "HarvestRipe")),
-  
+  tar_target(df_final_observed_harv, add_harv_into_obs(df=df_final_observed,
+                                                        ref_var="Wheat.Grain.Wt", 
+                                                        new_col_name = "Wheat.Phenology.CurrentStageName",
+                                                        new_col_value="HarvestRipe")),
   # check if manual parameters are correct
   tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
                                                      config$file_name_input_haun,
