@@ -66,5 +66,7 @@ df <- tar_read(df_obs_pheno)
 ```{r}
 tar_load(df_obs_mean_harv)
 tar_load(df_apsimStageInput_haunBased)
+tar_load(df_obs_mean_harv_pheno)
+
 ```
 

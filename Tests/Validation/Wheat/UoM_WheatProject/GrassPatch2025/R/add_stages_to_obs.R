@@ -69,7 +69,7 @@ add_stages_to_obs <- function(df_obs, df_pheno, new_var_name) {
         stringr::str_detect(Stage_String, "StemElongating") ~ 6,
         stringr::str_detect(Stage_String, "Heading") ~ 7,
         stringr::str_detect(Stage_String, "Flowering") ~ 8,
-        stringr::str_detect(Stage_String, "GrainFilling") ~ 9,
+        stringr::str_detect(Stage_String, "GrainFilling") ~ 10,
         TRUE ~ NA_real_
       )
     ) %>%
