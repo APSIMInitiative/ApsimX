@@ -64,14 +64,8 @@ df <- tar_read(df_obs_pheno)
 
 
 ```{r}
-tar_load(df_obs_pheno)
-
-# 1. How many rows actually have data in the grain weight column?
-sum(!is.na(df_obs_pheno$Wheat.Grain.Wt))
-
-# 2. Show me the exact rows where Grain Weight exists (if any)
-df_obs_pheno %>% 
-  dplyr::filter(!is.na(Wheat.Grain.Wt)) %>% 
-  dplyr::select(SimulationName, Clock.Today, Wheat.Grain.Wt)
+tar_load(df_new_pheno_dates)
+tar_load(df_haun)
+tar_load(df_haun_pheno_dates)
 ```
 

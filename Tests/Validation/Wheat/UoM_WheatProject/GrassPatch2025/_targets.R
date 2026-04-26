@@ -31,6 +31,8 @@ source("R/get_column_var_from_observ.R")
 source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
 source("R/add_harv_into_obs.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -66,7 +68,8 @@ list(
       # Output file names
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met           = "Grass Patch_-33.20_121.65.met" 
+      file_name_met           = "Grass Patch_-33.20_121.65.met" ,
+      max_leaf_limit   = 0.95 # fraction of maximum leaf no. assumed to get date 
     )
   ),
   
@@ -122,6 +125,23 @@ list(
   ),
   
   tar_target(
+    name = df_haun_pheno_dates,
+    command = derive_haun_pheno_dates(
+      df   = df_haun,
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno = df_new_pheno_dates,  # Interpolated observations
+      haunPheno   = df_haun_pheno_dates  # Haun stage priority
+    )
+  ),
+  
+  
+  tar_target(
     name = haun_input_checked, 
     command = check_manual_params(
       config$folder_inputs,
@@ -136,7 +156,7 @@ list(
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
-      df       = df_new_pheno_dates, 
+      df       = df_apsimStageInput_haunBased, 
       folder   = config$folder_inputs, 
       filename = config$file_name_input_pheno
     ),
