@@ -15,6 +15,7 @@ source("R/spread_and_csv_save.R")
 source("R/read_and_merge_obs_files.R")
 source("R/save_df_to_excel.R")
 source("R/check_project_dependencies.R")
+source("R/add_harv_into_obs.R")
 
 
 # Read Wheat.Phenology.Stage from Observed (2 sets)
@@ -89,10 +90,21 @@ list(
                                                         config$file_rawData_excel,
                                                         config$sheet_name_observed)),
   
+  tar_target(
+    name = df_final_observed_harv,
+    command = add_harv_into_obs(
+      df            = df_all_obs_files,
+      ref_var       = "Wheat.Grain.Wt",
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
+  
+  
   tar_target(msg_obs_saved,save_df_to_excel(config$folder_apsimx,
                                              config$file_saved_obs_excel, 
                                              config$sheet_name_observed, 
-                                             df_all_obs_files)),
+                                            df_final_observed_harv)),
   
   # Post-flight dependency check for APSIM
   tar_target(

@@ -53,4 +53,25 @@ tar_destroy()
 # Get soil parameters in json format
 ```{r}
 tar_read(json_soil_water)
+tar_load(df_new_obs)
+tar_load(df_final_observed_harv)
+tar_load(file_obs)
+tar_load(file_obs_mean)
+
+tar_load(df_obs_pheno)
+df <- tar_read(df_obs_pheno)
 ```
+
+
+```{r}
+tar_load(df_obs_pheno)
+
+# 1. How many rows actually have data in the grain weight column?
+sum(!is.na(df_obs_pheno$Wheat.Grain.Wt))
+
+# 2. Show me the exact rows where Grain Weight exists (if any)
+df_obs_pheno %>% 
+  dplyr::filter(!is.na(Wheat.Grain.Wt)) %>% 
+  dplyr::select(SimulationName, Clock.Today, Wheat.Grain.Wt)
+```
+
