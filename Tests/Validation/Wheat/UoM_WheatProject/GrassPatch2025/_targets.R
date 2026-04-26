@@ -153,7 +153,9 @@ list(
   # Convert pheno dates into obs file friendly input and add to obs
   tar_target(
     name = df_obs_mean_harv_pheno,
-    command = add_stages_to_obs(df_obs_mean_harv, df_apsimStageInput_haunBased)
+    command = add_stages_to_obs(df_obs_mean_harv, 
+                                df_apsimStageInput_haunBased,
+                                "Wheat.Phenology.Stage")
   ),
   
   # ----------------------------------------------------------------------------
