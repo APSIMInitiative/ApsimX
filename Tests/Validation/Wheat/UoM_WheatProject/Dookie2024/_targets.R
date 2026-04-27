@@ -166,7 +166,7 @@ list(
     command = spread_pheno_dates(df_pheno_interp)
   ),
   
-  # 3. Merge Pathways (Haun priority)
+  # 3. Merge Pathways (give priority to Haun-derive-stages )
   tar_target(
     name = df_apsimStageInput_haunBased,
     command = updatePhenoStageInput(
@@ -211,14 +211,14 @@ list(
     ),
     format = "file" 
   ),
-  
+
   tar_target(
     name = msg_obs_saved,
     command = save_df_to_excel(
-      config$folder_apsimx,
-      config$file_saved_obs_excel, 
-      config$sheet_name_observed, 
-      df_obs_mean_harv_pheno
+      folder_path = config$folder_apsimx,
+      file_name   = config$file_saved_obs_excel, 
+      sheet_name  = config$sheet_name_observed, 
+      df          = df_obs_mean_harv_pheno
     ),
     format = "file" 
   ),

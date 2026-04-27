@@ -70,9 +70,16 @@ list(
   tar_target(df_new_obs, add_stages_to_obs(file_obs_mean,df_obs_pheno_dates)),
   
   #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
-  tar_target(df_observed_wide_harv, add_harv_into_obs(df_new_obs,
-                                                      "Wheat.Phenology.CurrentStageName",
-                                                      "HarvestRipe")),
+  # Add HarvestRipe flags at final measurements
+  tar_target(
+    name = df_observed_wide_harv, 
+    command = add_harv_into_obs(
+      df            = df_new_obs,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
   
   # create and add pheno-dates not measured in-between
   tar_target(df_new_pheno_dates, 
