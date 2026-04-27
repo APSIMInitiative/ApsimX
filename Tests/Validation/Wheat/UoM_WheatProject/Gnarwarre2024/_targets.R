@@ -90,10 +90,10 @@ list(
   ),
   
   # add observed stages to Observed excel
-  tar_target(df_new_obs, add_stages_to_obs(df_obs_with_harvDate,df_obs_pheno_dates)),
+  #tar_target(df_new_obs, add_stages_to_obs(df_obs_with_harvDate,df_obs_pheno_dates)),
   
   # apply corrections (apply tailored needed corrections - see code)
-  tar_target(df_new_obs_fixed, apply_tailored_obs_corrections(df_new_obs)),
+  tar_target(df_new_obs_fixed, apply_tailored_obs_corrections(df_obs_with_harvDate)),
   
   # # check if haun manual parameters is correct
    tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
