@@ -16,6 +16,7 @@ source("R/read_and_merge_obs_files.R")
 source("R/save_df_to_excel.R")
 source("R/check_project_dependencies.R")
 source("R/add_harv_into_obs.R")
+source("R/derive_haun_pheno_dates.R")
 
 
 # Read Wheat.Phenology.Stage from Observed (2 sets)
@@ -54,6 +55,7 @@ list(
                                          "Clock.Today",
                                          "Wheat.Phenology.HaunStage",
                                          "Wheat.Phenology.Stage"),
+      max_leaf_limit             = 0.95, # Fractional of max leaf number to define date when final leaf appears 
       file_name_cult_by_sowDate  = "CultivarBySowingDatesTemplate.csv"
         )),
   
@@ -64,7 +66,14 @@ list(
                                                config$sheet_name_observed,
                                                config$cols_to_extract)),
   
-  
+  # derive pheno-stages' dates from haun
+  # tar_target(
+  #   name = df_haun_pheno_dates,
+  #   command = derive_haun_pheno_dates(
+  #     df             = file_pheno_haun_obs,
+  #     max_leaf_limit = config$max_leaf_limit
+  #   )
+  # ),
   
   # check if haun manual-parameters are correct
   tar_target(msg_haun_input_checked, check_manual_params(config$folder_inputs,
@@ -90,16 +99,16 @@ list(
                                                         config$file_rawData_excel,
                                                         config$sheet_name_observed)),
   
+  # Add flags of HarvestRipe at final measurements for graphing
   tar_target(
-    name = df_final_observed_harv,
+    name = df_final_observed_harv, 
     command = add_harv_into_obs(
       df            = df_all_obs_files,
-      ref_var       = "Wheat.Grain.Wt",
+      ref_vars      = c("Wheat.AboveGround.Wt","Wheat.Grain.Wt"), 
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )
   ),
-  
   
   tar_target(msg_obs_saved,save_df_to_excel(config$folder_apsimx,
                                              config$file_saved_obs_excel, 

@@ -15,8 +15,6 @@ setwd(this.path::this.dir())
 getwd()
 ```
 
-
-
 # Check pipeline status
 ```{r}
 tar_glimpse()

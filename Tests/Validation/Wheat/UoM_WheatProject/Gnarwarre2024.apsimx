@@ -407,7 +407,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2024-03-03T00:00:00",
-              "End": "2025-03-12T00:00:00",
+              "End": "2024-12-10T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -819,7 +819,7 @@
                   "Name": "Harvesting",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {

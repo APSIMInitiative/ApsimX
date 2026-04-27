@@ -29,13 +29,7 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
  #source("R/create_synthetic_pheno_dates.R")
  source("R/saveInputParam.R")
  source("R/save_df_final.R")
-
-
-
-
-
- 
-
+ source("R/add_harvDate_to_obs.R")
 
 # source("R/read_soil_water.R")
 # source("R/soil_water_in_json.R")
@@ -101,10 +95,6 @@ targets <- list(
   #'                                    config$sheetExcel_soilWater)),
   #' 
   #' tar_target(json_soil_water, soil_water_in_json(df_soil_water)),
-  #' 
-  #' ### ------------------------------------------------
-  #' ### Create met file to run APSIM
-  #' ### ------------------------------------------------
   #' 
   #' ### ------------------------------------------------
   #' ### Create met file to run APSIM
