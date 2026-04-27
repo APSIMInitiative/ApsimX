@@ -17,7 +17,7 @@ source("R/save_df_into_csv.R")
  source("R/check_manual_params.R")
 source("R/check_project_dependencies.R")
 source("R/get_harvestRipe_dates.R")
-source("R/add_harvDate_to_obs.R")
+source("R/add_harv_into_obs.R")
 source("R/add_interp_pheno_dates.R")
 source("R/add_stages_to_obs.R")
 source("R/add_mock_pheno_dates.R") # ---- TEMPORARY TO BE REMOVED ----"
@@ -84,10 +84,20 @@ list(
              get_harvestRipe_dates(file_obs_mean, config$ref_yield_var, "Clock.Today")),
   
   # add observed stages to Observed excel
-  tar_target(df_obs_with_harvDate, add_harvDate_to_obs(file_obs_mean,df_obs_harvestRipe_dates)),
+  #tar_target(df_obs_with_harvDate, add_harvDate_to_obs(file_obs_mean,df_obs_harvestRipe_dates)),
+  # Add HarvestRipe flags at final measurements
+  tar_target(
+    name = df_final_observed_harv, 
+    command = add_harv_into_obs(
+      df            = file_obs_mean,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
   
   # add observed stages to Observed excel
-  tar_target(df_new_obs, add_stages_to_obs(df_obs_with_harvDate,df_obs_pheno_dates)),
+  tar_target(df_new_obs, add_stages_to_obs(df_final_observed_harv,df_obs_pheno_dates)),
   
   # # check if haun manual parameters is correct
   tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
