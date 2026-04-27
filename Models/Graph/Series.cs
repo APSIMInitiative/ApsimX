@@ -267,9 +267,9 @@ namespace Models
 
             foreach (var combination in MathUtilities.AllCombinationsOf(validValuesForEachVaryByField.ToArray(), reverse: true))
             {
-                var descriptors = new List<SimulationDescription.Descriptor>();
+                var descriptors = new List<SimulationDescriptor>();
                 for (int i = 0; i < combination.Count; i++)
-                    descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i],
+                    descriptors.Add(new SimulationDescriptor(varyByThatExistInTable[i],
                                                                          combination[i]));
                 definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, inScopeSimulationNames, Filter, descriptors));
             }
@@ -317,7 +317,7 @@ namespace Models
             {
                 // Determine the descriptors to pass to the new definition that will
                 // be created below. We only want to pass the 'vary by' descriptors.
-                var descriptorsForDefinition = new List<SimulationDescription.Descriptor>();
+                var descriptorsForDefinition = new List<SimulationDescriptor>();
                 foreach (var descriptor in simulationDescription.Descriptors)
                 {
                     if (varyByFieldNames.Contains(descriptor.Name) || NeedsDescriptor(descriptor))
@@ -349,7 +349,7 @@ namespace Models
         /// Check if the given descriptor is needed by the series definition.
         /// </summary>
         /// <param name="descriptor">The descriptor to be checked.</param>
-        private bool NeedsDescriptor(SimulationDescription.Descriptor descriptor)
+        private bool NeedsDescriptor(SimulationDescriptor descriptor)
         {
             // We need a simulation name descriptor if any child event names
             // on graph components exist and require it.
@@ -383,7 +383,7 @@ namespace Models
             var newList = new List<SimulationDescription>();
             foreach (var simulationDescription in simulationDescriptions)
             {
-                var descriptors = new List<List<SimulationDescription.Descriptor>>();
+                var descriptors = new List<List<SimulationDescriptor>>();
                 var descriptorGroups = simulationDescription.Descriptors.GroupBy(d => d.Name);
                 foreach (var group in descriptorGroups)
                     descriptors.Add(group.ToList());

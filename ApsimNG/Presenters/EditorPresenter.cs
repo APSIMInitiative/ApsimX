@@ -28,6 +28,17 @@ namespace UserInterface.Presenters
         /// <summary>The intellisense object.</summary>
         private IntellisensePresenter intellisense;
 
+        /// <summary>Delegate for a TextChanged event.</summary>
+        /// <param name="model">The model</param>
+        /// <param name="property">The property changed</param>
+        /// <param name="lines">The lines it should be given</param>
+        public delegate void TextChangedDelegate(ILineEditor model, string property, string[] lines);
+
+        /// <summary>
+        /// Invoked when the user changes the text in the editor
+        /// </summary>
+        public event TextChangedDelegate TextChanged;
+
         /// <summary>
         /// Flag to record if Presenter is currently listening for events.
         /// Prevents event listeners from being doubled up when used as sub 
@@ -68,6 +79,7 @@ namespace UserInterface.Presenters
                 intellisense.ItemSelected += OnIntellisenseItemSelected;
                 view.LeaveEditor += OnCommandsChanged;
                 view.ContextItemsNeeded += OnContextItemsNeeded;
+                view.TextHasChangedByUser += OnTextChanged;
                 explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             }
         }
@@ -80,6 +92,7 @@ namespace UserInterface.Presenters
                 _eventsConnected = false;
                 view.LeaveEditor -= OnCommandsChanged;
                 view.ContextItemsNeeded -= OnContextItemsNeeded;
+                view.TextHasChangedByUser -= OnTextChanged;
                 explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
                 intellisense.ItemSelected -= OnIntellisenseItemSelected;
             }
@@ -154,6 +167,27 @@ namespace UserInterface.Presenters
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+        }
+
+        /// <summary>
+        /// User has changed the paths. Save to model.
+        /// </summary>
+        /// <param name="sender">The text control</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTextChanged(object sender, EventArgs e)
+        {
+            //if nothing is listening to the change, update model here
+            if (TextChanged == null)
+            {
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Lines", view.Lines));
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
+            //if something is, let the other presenter do the change (such as this being a sub presenter)
+            else 
+            {
+                TextChanged?.Invoke(model, "Lines", view.Lines);
+            }
         }
     }
 }
