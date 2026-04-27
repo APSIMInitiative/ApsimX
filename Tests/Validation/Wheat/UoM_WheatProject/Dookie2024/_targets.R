@@ -11,13 +11,17 @@ source("R/check_manual_params.R")
 source("R/read_csv_sowDates.R")
 source("R/find_first_stage_dates.R")
 source("R/interpolate_and_create_phenoStages.R")
-source("R/spread_and_csv_save.R")
+#source("R/spread_and_csv_save.R")
 source("R/read_and_merge_obs_files.R")
 source("R/save_df_to_excel.R")
 source("R/check_project_dependencies.R")
 source("R/add_harv_into_obs.R")
 source("R/derive_haun_pheno_dates.R")
-
+source("R/tidy_up_haun.R")
+source("R/spread_pheno_dates.R")
+source("R/save_df_into_csv.R")
+source("R/updatePhenoStageInput.R")
+source("R/add_stages_to_obs.R")
 
 # Read Wheat.Phenology.Stage from Observed (2 sets)
 # Organise in spread format
@@ -67,13 +71,20 @@ list(
                                                config$cols_to_extract)),
   
   # derive pheno-stages' dates from haun
-  # tar_target(
-  #   name = df_haun_pheno_dates,
-  #   command = derive_haun_pheno_dates(
-  #     df             = file_pheno_haun_obs,
-  #     max_leaf_limit = config$max_leaf_limit
-  #   )
-  # ),
+  
+  tar_target(df_haun, tidy_up_haun(file_pheno_haun_obs)), # prepare haun input format
+  
+  # derive pheno-stages' dates from haun
+  tar_target(
+    name = df_haun_pheno_dates,
+    command = derive_haun_pheno_dates(
+      df             = df_haun,
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+  
+
+  
   
   # check if haun manual-parameters are correct
   tar_target(msg_haun_input_checked, check_manual_params(config$folder_inputs,
@@ -91,9 +102,33 @@ list(
   tar_target(df_pheno_interp, 
              interpolate_and_create_phenoStages(df_pheno_start_date, config$btwStgFrac)),
   
-  tar_target(msg_pheno_input_saved, spread_and_csv_save(config$folder_inputs, 
-                                                               config$file_name_input_pheno, 
-                                                   df_pheno_interp)),
+  # tar_target(msg_pheno_input_saved, spread_and_csv_save(config$folder_inputs, 
+  #                                                       config$file_name_input_pheno, 
+  #                                                       df_pheno_interp)),
+  
+  tar_target(
+    name = df_pheno_wide, 
+    command = spread_pheno_dates(df_pheno_interp)
+  ),
+  
+  # Join interpolated and haun-based pheno dates (haun has priority) ------------
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno = df_pheno_wide,  # Interpolated observations
+      haunPheno   = df_haun_pheno_dates         # Haun stage has priority
+    )
+  ),
+  
+  tar_target(
+    name = msg_pheno_csv_saved, 
+    command = save_df_into_csv(
+      df       = df_apsimStageInput_haunBased, 
+      folder   = config$folder_inputs, 
+      filename = config$file_name_input_pheno
+    ),
+    format = "file" # Tells targets to watch the actual physical file!
+  ),
   
   tar_target(df_all_obs_files, read_and_merge_obs_files(file.path(config$folder_rawData),
                                                         config$file_rawData_excel,
@@ -110,10 +145,19 @@ list(
     )
   ),
   
+  # Convert pheno dates into obs file friendly input and add to obs
+  tar_target(
+    name = df_obs_mean_harv_pheno,
+    command = add_stages_to_obs(df_final_observed_harv, 
+                                df_apsimStageInput_haunBased,
+                                "Wheat.Phenology.Stage")
+  ),
+  
+  
   tar_target(msg_obs_saved,save_df_to_excel(config$folder_apsimx,
                                              config$file_saved_obs_excel, 
                                              config$sheet_name_observed, 
-                                            df_final_observed_harv)),
+                                            df_obs_mean_harv_pheno)),
   
   # Post-flight dependency check for APSIM
   tar_target(
@@ -122,7 +166,7 @@ list(
       # 1. List the targets here to force `{targets}` to wait for them
       msg_obs_saved
       msg_haun_input_checked
-      msg_pheno_input_saved
+      msg_pheno_csv_saved
       
       # 2. Now run the actual function
       check_project_dependencies(
