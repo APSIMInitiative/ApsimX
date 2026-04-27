@@ -14,8 +14,6 @@ library(visNetwork)
 setwd(this.path::this.dir())
 ```
 
-
-
 # Check pipeline status
 ```{r}
 tar_glimpse()
@@ -44,5 +42,9 @@ targets::tar_make()
 
 ```{r}
 tar_load(check_depend)
+tar_load(df_all_obs_files)
+tar_load(file_pheno_haun_obs)
+tar_load(df_haun_pheno_dates)
+tar_load(df_pheno_interp)
 ```
 

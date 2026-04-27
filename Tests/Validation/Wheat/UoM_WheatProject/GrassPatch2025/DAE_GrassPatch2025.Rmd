@@ -53,4 +53,20 @@ tar_destroy()
 # Get soil parameters in json format
 ```{r}
 tar_read(json_soil_water)
+tar_load(df_new_obs)
+tar_load(df_final_observed_harv)
+tar_load(file_obs)
+tar_load(file_obs_mean)
+
+tar_load(df_obs_pheno)
+df <- tar_read(df_obs_pheno)
 ```
+
+
+```{r}
+tar_load(df_obs_mean_harv)
+tar_load(df_apsimStageInput_haunBased)
+tar_load(df_obs_mean_harv_pheno)
+
+```
+

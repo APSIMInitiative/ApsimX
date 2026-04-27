@@ -1,5 +1,4 @@
 doAPSIMStageInput <- function(df_dateStageTargetReached,
-                              df_simNameByCult,
                               BtwStgPerc) {
   
   require(dplyr)
@@ -11,8 +10,7 @@ doAPSIMStageInput <- function(df_dateStageTargetReached,
   # ------------------------------------------------------------------
   # (i) Attach SimulationName
   # ------------------------------------------------------------------
-  df <- df_dateStageTargetReached %>%
-    left_join(df_simNameByCult, by = "Cultivar")
+  df <- df_dateStageTargetReached
   
   # ------------------------------------------------------------------
   # (ii) Spread stages into columns
