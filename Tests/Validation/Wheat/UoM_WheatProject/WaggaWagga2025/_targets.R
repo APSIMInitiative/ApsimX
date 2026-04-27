@@ -29,7 +29,7 @@ tar_option_set(packages = c("tidyverse", "lubridate","purrr",
  #source("R/create_synthetic_pheno_dates.R")
  source("R/saveInputParam.R")
  source("R/save_df_final.R")
- source("R/add_harvDate_to_obs.R")
+ source("R/add_harv_into_obs.R")
 
 # source("R/read_soil_water.R")
 # source("R/soil_water_in_json.R")
@@ -179,7 +179,19 @@ targets <- list(
   tar_target(df_final_observed,
              prepare_final_observed(list_observed_clean_final,
                                     df_simNameByCult)),
-  #' 
+  
+  
+  # Add HarvestRipe flags at final measurements
+  tar_target(
+    name = df_final_observed_harv, 
+    command = add_harv_into_obs(
+      df            = df_final_observed,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
+
   #' # check if manual parameters are correct (and create template if not)
   tar_target(haun_input_checked, check_manual_params(config$folder_inputs,
                                                      config$file_name_input_haun,
@@ -191,8 +203,7 @@ targets <- list(
                                              config$file_name_input_pheno),
              format = "file"),
   
-  #' 
-  #' 
+
   #' #### ---------------------------------------
   #' ### Save files that need to be read by APSIM
   #' #### ----------------------------------------
@@ -200,7 +211,7 @@ targets <- list(
   #' 
   #' # save the output as APSIM likes to read it
   tar_target(msg_obs_saved,
-             save_df_final(df_final_observed,
+             save_df_final(df_final_observed_harv,
                            config$folder_apsimx,
                            config$file_saved_obs_excel))
 

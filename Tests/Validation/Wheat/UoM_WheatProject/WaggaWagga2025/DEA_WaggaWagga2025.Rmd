@@ -59,5 +59,7 @@ df2 <- tar_read(df_simNameByCult)
 
 df1<- tar_read(list_observed_clean)
 df2<-tar_read(df_stages_Observ)
+tar_load(df_final_observed_harv)
+tar_load(df_final_observed)
 ```
 
