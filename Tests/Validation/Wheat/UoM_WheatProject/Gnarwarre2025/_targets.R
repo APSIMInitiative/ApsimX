@@ -3,7 +3,7 @@
 # ==============================================================================
 # Description: Base simulation and observed data copied from FAR Australia.
 # Author: Edmar Teixeira (edmar.teixeira@plantandfood.co.nz)
-# data provider: Ben Jones @ FAR Australia (ben.jones@faraustralia.com.au)
+# Data provider: Ben Jones @ FAR Australia (ben.jones@faraustralia.com.au)
 # Date: 2026-02-09
 #
 # NOTE: Incomplete - awaits raw data availability.

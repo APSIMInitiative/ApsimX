@@ -12,6 +12,7 @@ library(visNetwork)
 ```{r}
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd(this.path::this.dir())
+getwd()
 ```
 
 
@@ -49,5 +50,6 @@ info_3 <- tar_read(df_list_PCDS)
 
 x<-info_3$pcds_3_emergPlants
 tar_read(msg_obs_saved)
+tar_load(df_observed_wide)
 ```
 

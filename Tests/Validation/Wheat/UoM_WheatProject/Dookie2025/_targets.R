@@ -188,10 +188,16 @@ list(
   tar_target(df_observed_wide, 
              prepare_observed_final(list_observed_dfs_clean)),
   
-  #Add Wheat.Phenology.CurrentStageName as new variable with value HarvestRipe for 1:1 graph analysis
-  tar_target(df_observed_wide_harv, add_harv_into_obs(df_observed_wide,
-                                                     "Wheat.Phenology.CurrentStageName",
-                                                     "HarvestRipe")),
+  # Add HarvestRipe flags at final measurements
+  tar_target(
+    name = df_observed_wide_harv, 
+    command = add_harv_into_obs(
+      df            = df_observed_wide,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
     
   # save the output as APSIM likes to read it
   tar_target(msg_obs_saved, 
