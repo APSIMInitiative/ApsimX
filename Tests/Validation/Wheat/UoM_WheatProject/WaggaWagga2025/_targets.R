@@ -40,6 +40,10 @@ source("R/check_manual_params.R")
 source("R/saveInputParam.R")
 source("R/save_df_final.R")
 source("R/add_harv_into_obs.R")
+source("R/check_project_dependencies.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
+source("R/add_stages_to_obs.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -79,6 +83,7 @@ list(
       coord_thisLatLon        = data.frame(lat = -35.041, lon = 147.319),
       target_stagePerc        = 50, # % of stage development when event date is retrieved
       target_betwStages       = 50, # % of period between adjacent events for synthetic dates
+      max_leaf_limit          = 0.95,   # Fractional max leaves assumed when terminal spikelet is set
       
       # Column names
       var_name_stage          = "apsim_stage_raw",       # Synthetic var with observed PCSD data
@@ -142,7 +147,8 @@ list(
     command = compile_all_observed(
       folder           = config$folder_rawData,
       excel_file       = config$file_rawData_excel,
-      df_obs_info      = df_obs_info
+      df_obs_info      = df_obs_info,
+      df_simNameByCult = df_simNameByCult
     )
   ),
   
@@ -203,10 +209,25 @@ list(
   ),
   
   tar_target(
+    name = df_haun_pheno_dates, 
+    command = derive_haun_pheno_dates(
+      compiled_obs   = list_observed_clean_final, 
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+  
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno = df_apsimStageInput,  # Interpolated observations
+      haunPheno   = df_haun_pheno_dates  # Haun stage priority
+    )
+  ),
+  
+  tar_target(
     name = df_final_observed,
     command = prepare_final_observed(
-      list_observed_clean_final,
-      df_simNameByCult
+      list_observed_clean_final
     )
   ),
   
@@ -220,6 +241,16 @@ list(
     )
   ),
   
+  # add pheno dates to obs
+  tar_target(
+    name = df_obs_mean_harv_pheno,
+    command = add_stages_to_obs(
+      df_obs       = df_final_observed_harv, 
+      df_pheno     = df_apsimStageInput_haunBased,
+      new_var_name = "Wheat.Phenology.Stage"
+    )
+  ),
+
   tar_target(
     name = haun_input_checked, 
     command = check_manual_params(
@@ -235,7 +266,7 @@ list(
   tar_target(
     name = msg_param_saved, 
     command = saveInputParam(
-      df_apsimStageInput,
+      df_apsimStageInput_haunBased,
       config$folder_inputs,
       config$file_name_input_pheno
     ),
@@ -245,7 +276,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_df_final(
-      df_final_observed_harv,
+      df_obs_mean_harv_pheno,
       config$folder_apsimx,
       config$file_saved_obs_excel
     ),
@@ -260,10 +291,10 @@ list(
       msg_obs_saved
       msg_param_saved
       msg_met_saved
+      haun_input_checked
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = paste0(config$proj_name, ".met"), # <-- THE FIX
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
