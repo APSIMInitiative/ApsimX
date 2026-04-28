@@ -1,5 +1,5 @@
 ---
-title: "GrassPatch2024 Notebook"
+title: "Gnarwarre2024 Notebook"
 output: html_notebook
 ---
 # Libraries
@@ -58,7 +58,7 @@ tar_read(json_soil_water)
 ```
 
 ```{r}
-tar_load(df_new_obs_fixed)
+tar_load(df_apsimStageInput_haunBased)
 x<-tar_read(df_new_obs_fixed)
 x %>%
   filter(Wheat.Phenology.CurrentStageName == "HarvestRipe") %>%

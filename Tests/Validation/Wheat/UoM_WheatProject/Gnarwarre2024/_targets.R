@@ -35,6 +35,9 @@ source("R/add_harv_into_obs.R")
 source("R/add_interp_pheno_dates.R")
 source("R/save_df_into_csv.R")
 source("R/apply_tailored_obs_corrections.R")
+source("R/get_column_var_from_observ.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -104,9 +107,55 @@ list(
   
   # Create and add interpolated pheno-dates not measured in-between
   tar_target(
-    name = df_new_pheno_dates, 
+    name = df_pheno_dates_paramInput, 
     command = add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)
   ),
+  
+  #----
+  
+  # isolate haun observations
+  tar_target(
+    name = df_haun, 
+    command = get_column_var_from_observ(
+      df_obs_mean, 
+      "Wheat.Phenology.HaunStage"
+    )
+  ),
+  
+  # derive pheno-stages' dates from haun
+  tar_target(
+    name = df_haun_pheno_dates,
+    command = derive_haun_pheno_dates(
+      df             = df_haun,
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+  
+  # Join interpolated and haun-based pheno dates (haun has priority)
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno = df_pheno_dates_paramInput,  # Interpolated observations
+      haunPheno   = df_haun_pheno_dates         # Haun stage has priority
+    )
+  ),
+  
+  # Check and create (if-needed) external-haun-parameter input file 
+  tar_target(
+    name = haun_input_checked, 
+    command = check_manual_params(
+      config$folder_inputs,
+      config$file_name_input_haun,
+      df_obs_mean
+    )
+  ),
+  
+
+  
+  
+  
+  
+  
   
   # ----------------------------------------------------------------------------
   # PHASE D: OBSERVATION FORMATTING & CORRECTIONS
@@ -128,15 +177,25 @@ list(
     command = apply_tailored_obs_corrections(df_obs_with_harvDate)
   ),
   
-  # Check if Haun manual parameters are correct
+  
+  # Convert pheno dates into obs file friendly input and add to obs
   tar_target(
-    name = haun_input_checked, 
-    command = check_manual_params(
-      config$folder_inputs,
-      config$file_name_input_haun,
-      df_obs_mean
-    )
+    name = df_obs_mean_harv_pheno,
+    command = add_stages_to_obs(df_new_obs_fixed, 
+                                df_apsimStageInput_haunBased,
+                                "Wheat.Phenology.Stage")
   ),
+  
+  
+  # # Check if Haun manual parameters are correct
+  # tar_target(
+  #   name = haun_input_checked, 
+  #   command = check_manual_params(
+  #     config$folder_inputs,
+  #     config$file_name_input_haun,
+  #     df_obs_mean
+  #   )
+  # ),
   
   # ----------------------------------------------------------------------------
   # PHASE E: EXPORT & VALIDATION
@@ -145,7 +204,7 @@ list(
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
-      df       = df_new_pheno_dates, 
+      df       = df_pheno_dates_paramInput, 
       folder   = config$folder_inputs, 
       filename = config$file_name_input_pheno
     ),
@@ -156,7 +215,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_df_into_excel(
-      df        = df_new_obs_fixed,
+      df        = df_obs_mean_harv_pheno,
       folder    = config$folder_apsimx,
       filename  = config$file_workData_excel,
       sheetname = config$sheet_name_observed
