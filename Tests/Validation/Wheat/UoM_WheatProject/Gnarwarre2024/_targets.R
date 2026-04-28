@@ -71,6 +71,7 @@ list(
       date_DOY_ref            = "01-01-2024", # Transform DOY output into ddmmyy
       btwStgPerc              = 0.5,          # Fraction of time in-between stages
       ref_yield_var           = "Wheat.AboveGround.Wt", 
+      max_leaf_limit          = 0.95,         # Fractional limit for max leaves (Haun)
       
       # Output file names & Metadata
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
@@ -97,23 +98,27 @@ list(
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE C: PHENOLOGY STAGES
+  # PHASE C: PHENOLOGY & HAUN PRIORITY
   # ----------------------------------------------------------------------------
   # Retrieve measured pheno dates from observations
   tar_target(
     name = df_obs_pheno_dates, 
-    command = get_pheno_dates(df_obs_mean, config$date_DOY_ref)
+    command = get_pheno_dates(
+      df_obs_mean, 
+      config$date_DOY_ref
+    )
   ),
   
   # Create and add interpolated pheno-dates not measured in-between
   tar_target(
     name = df_pheno_dates_paramInput, 
-    command = add_interp_pheno_dates(df_obs_pheno_dates, config$btwStgPerc)
+    command = add_interp_pheno_dates(
+      df_obs_pheno_dates, 
+      config$btwStgPerc
+    )
   ),
   
-  #----
-  
-  # isolate haun observations
+  # Isolate Haun observations
   tar_target(
     name = df_haun, 
     command = get_column_var_from_observ(
@@ -122,7 +127,7 @@ list(
     )
   ),
   
-  # derive pheno-stages' dates from haun
+  # Derive pheno-stages' dates from Haun
   tar_target(
     name = df_haun_pheno_dates,
     command = derive_haun_pheno_dates(
@@ -131,7 +136,7 @@ list(
     )
   ),
   
-  # Join interpolated and haun-based pheno dates (haun has priority)
+  # Join interpolated and Haun-based pheno dates (Haun has priority)
   tar_target(
     name = df_apsimStageInput_haunBased,
     command = updatePhenoStageInput(
@@ -149,13 +154,6 @@ list(
       df_obs_mean
     )
   ),
-  
-
-  
-  
-  
-  
-  
   
   # ----------------------------------------------------------------------------
   # PHASE D: OBSERVATION FORMATTING & CORRECTIONS
@@ -177,34 +175,24 @@ list(
     command = apply_tailored_obs_corrections(df_obs_with_harvDate)
   ),
   
-  
-  # Convert pheno dates into obs file friendly input and add to obs
+  # Convert pheno dates into obs file friendly input and add to obs timeline
   tar_target(
     name = df_obs_mean_harv_pheno,
-    command = add_stages_to_obs(df_new_obs_fixed, 
-                                df_apsimStageInput_haunBased,
-                                "Wheat.Phenology.Stage")
+    command = add_stages_to_obs(
+      df_obs       = df_new_obs_fixed, 
+      df_pheno     = df_apsimStageInput_haunBased,
+      new_var_name = "Wheat.Phenology.Stage"
+    )
   ),
-  
-  
-  # # Check if Haun manual parameters are correct
-  # tar_target(
-  #   name = haun_input_checked, 
-  #   command = check_manual_params(
-  #     config$folder_inputs,
-  #     config$file_name_input_haun,
-  #     df_obs_mean
-  #   )
-  # ),
   
   # ----------------------------------------------------------------------------
   # PHASE E: EXPORT & VALIDATION
   # ----------------------------------------------------------------------------
-  # Save pheno-date input into CSV
+  # Save Haun-prioritized pheno-date input into CSV
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
-      df       = df_pheno_dates_paramInput, 
+      df       = df_apsimStageInput_haunBased, 
       folder   = config$folder_inputs, 
       filename = config$file_name_input_pheno
     ),
