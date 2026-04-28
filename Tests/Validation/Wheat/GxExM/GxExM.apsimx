@@ -15559,15 +15559,15 @@
                             0.08,
                             0.15,
                             0.14,
-                            0.17,
+                            0.16,
                             0.19,
-                            0.21,
+                            0.2,
                             0.23,
                             0.24,
                             0.24,
                             0.24,
                             0.26,
-                            0.3,
+                            0.29,
                             0.3,
                             0.31
                           ],
@@ -15575,15 +15575,15 @@
                             0.09,
                             0.15,
                             0.14,
-                            0.17,
+                            0.16,
                             0.19,
-                            0.21,
+                            0.2,
                             0.23,
                             0.24,
                             0.24,
                             0.24,
                             0.26,
-                            0.3,
+                            0.29,
                             0.3,
                             0.31
                           ],
@@ -15599,8 +15599,8 @@
                             0.3,
                             0.29,
                             0.3,
-                            0.31,
-                            0.31,
+                            0.315,
+                            0.32,
                             0.34
                           ],
                           "SAT": [
@@ -15805,15 +15805,15 @@
                                 0.09,
                                 0.15,
                                 0.14,
-                                0.17,
+                                0.16,
                                 0.19,
-                                0.21,
+                                0.2,
                                 0.23,
                                 0.24,
                                 0.24,
                                 0.24,
                                 0.26,
-                                0.3,
+                                0.29,
                                 0.3,
                                 0.31
                               ],
@@ -15834,8 +15834,8 @@
                                 0.04
                               ],
                               "XF": [
-                                1.0,
-                                1.0,
+                                0.3,
+                                0.3,
                                 1.0,
                                 1.0,
                                 1.0,
@@ -15915,9 +15915,9 @@
                           "WinterDate": "1-Apr",
                           "WinterU": 2.0,
                           "WinterCona": 2.0,
-                          "DiffusConst": 88.0,
-                          "DiffusSlope": 35.0,
-                          "Salb": 0.13,
+                          "DiffusConst": 40.0,
+                          "DiffusSlope": 16.0,
+                          "Salb": 0.18,
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
@@ -18473,7 +18473,7 @@
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
                           "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -18627,8 +18627,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 0.25,
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -18783,7 +18783,7 @@
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
                           "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -18937,8 +18937,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 0.25,
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -19092,8 +19092,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 0.25,
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -19247,8 +19247,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 0.25,
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -19402,8 +19402,8 @@
                           "Inverted": false,
                           "CrossesAtZero": false,
                           "LabelOnOneLine": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
+                          "Minimum": 0.25,
+                          "Maximum": 0.35,
                           "Interval": null
                         }
                       ],
@@ -19412,7 +19412,7 @@
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Volumetric SW30cm2",
+                      "Name": "Volumetric SW140cm",
                       "ResourceName": null,
                       "Children": [
                         {
