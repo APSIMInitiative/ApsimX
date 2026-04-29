@@ -59,5 +59,7 @@ tar_read(json_soil_water)
 
 ```{r}
 tar_load(file_obs_mean)
+tar_load(df_haun_pheno_dates)
+tar_load(df_apsimStageInput_haunBased)
 ```
 
