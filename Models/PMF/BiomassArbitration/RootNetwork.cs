@@ -647,11 +647,12 @@ namespace Models.PMF
                         checkTotalN += (z.LayerLive[layer].N + z.LayerDead[layer].N);
 
                         OrganNutrientsState rootToFOM = detachedToday + liveToResidues + deadToResidues;
-                        
+
+                        double zoneMassTokgPerHa = 10 / (z.Area * 10000); // divide by z.Area to convert from g/area to g/m2.  multiply by 10 to convert from g/m2 to kg/ha
                         FOMType fom = new FOMType();
-                        fom.amount = (float)(rootToFOM.Wt * 10);
-                        fom.N = (float)(rootToFOM.N * 10);
-                        fom.C = (float)(0.40 * rootToFOM.Wt * 10);
+                        fom.amount = (float)(rootToFOM.Wt * zoneMassTokgPerHa);
+                        fom.N = (float)(rootToFOM.N * zoneMassTokgPerHa);
+                        fom.C = (float)(0.40 * rootToFOM.Wt * zoneMassTokgPerHa);
                         fom.P = 0.0;
                         fom.AshAlk = 0.0;
 
