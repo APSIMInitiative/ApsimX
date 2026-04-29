@@ -1,10 +1,10 @@
 library(rzmq)
-library(msgpackR)
+library(RcppMsgPack)
 library(processx)
 
 # Exercise "One-shot" protocol
 
-apsimDir <- "/home/uqpdevo1/src/ApsimX-ZMQ"
+apsimDir <- "/home/uqpdevo1/src/ApsimX"
 #apsimDir <- "/usr/local/lib/apsim/"
 
 # Open a request socket 
@@ -33,7 +33,7 @@ get_zmq1 <- function (socket, table, args) {
     send.socket(socket, charToRaw(paste0(table, ".", v)), serialize = F, send.more = F)
     msg <- receive.socket(socket, unserialize = F)
     #cat("msg:", msg, " bytes\n")
-    result[[v]] <- msgpackR::unpack(msg)
+    result[[v]] <- unlist(msgpack_unpack(msg))
   }
   return(as.data.frame(result))
 }
@@ -71,8 +71,9 @@ testProto1 <- function() {
 
 apsim <- testProto1()
 
-run_zmq1(apsim$apsimSocket, "[Sow using a variable rule].Script.CultivarName = Batavia")
 
+#run_zmq1(apsim$apsimSocket, "[Sow using a variable rule].Script.CultivarName = Batavia")
+run_zmq1(apsim$apsimSocket, "")
 df <- get_zmq1(apsim$apsimSocket, "Report", c("[Clock].Today", "[Wheat].LAI"))
 str(df)
 

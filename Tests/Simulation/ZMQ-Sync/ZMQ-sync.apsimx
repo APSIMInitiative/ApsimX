@@ -1150,7 +1150,7 @@
                 "                   //Console.WriteLine(\"Sending NA\"); ",
                 "                   bytes = JsonSerializer.SerializeToUtf8Bytes(\"NA\"); // fixme. Probably a better way to do this",
                 "                } ",
-                "                //Console.WriteLine(\"Got get '{0}' of type '{1}', sending {2} bytes\", variableName, value?.GetType(), bytes.Length); ",
+                "                Console.WriteLine(\"Got get '{0}' of type '{1}', sending {2} bytes\", variableName, value?.GetType(), bytes.Length); ",
                 "",
                 "                connection.SendFrame(bytes);",
                 "             } else {",

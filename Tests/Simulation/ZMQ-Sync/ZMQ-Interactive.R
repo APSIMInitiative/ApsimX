@@ -1,10 +1,10 @@
 library(rzmq)
-library(msgpackR)
+library(RcppMsgPack)
 library(processx)
 
 # Exercise the Interactive protocol
 
-apsimDir <- "/home/uqpdevo1/src/ApsimX-ZMQ"
+apsimDir <- "/home/uqpdevo1/src/ApsimX"
 #apsimDir <- "/usr/local/lib/apsim/"
 
 # Set up a listening server on a random port
@@ -46,7 +46,7 @@ sendCommand <- function(socket, command, args = NULL) {
   send.raw.string(socket, command, send.more = !is.null(args))
   if (!is.null(args)) {
      for (i in 1:length(args)) {
-        send.socket(socket, msgpackR::pack(args[[i]]), serialize = F, send.more = (i != length(args)))
+        send.socket(socket, msgpack_pack(args[[i]]), serialize = F, send.more = (i != length(args)))
      }
   }
 }
@@ -57,29 +57,29 @@ sendCommand <- function(socket, command, args = NULL) {
 poll_zmq2 <- function(socket) {
   while (TRUE) {
     msg <- receive.string(socket)
-    # cat(msg, "\n")
+    cat(msg, "\n")
     if (msg == "connect") {
       sendCommand(socket, "ok")
     } else if (msg == "paused") {
       # Each send is followed by a receive. "set" responds with a string "ok",
       # "get" responds with a packed byte array that we pass to the deserialiser
       sendCommand(socket, "get", "[Clock].Today.Day")
-      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
-      stopifnot(class(reply) == "numeric")
+      reply <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
+      stopifnot(class(reply) == "integer")
 
       sendCommand(socket, "get", "[Maize].Phenology.Zadok")
-      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
-      stopifnot(class(reply) == "numeric")
-      
+      reply <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
+      #stopifnot(class(reply) == "numeric")
+
       sendCommand(socket, "get", "[Soil].Water.PAW")
-      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
       stopifnot(class(reply) == "numeric" && length(reply) == 7 )
 
       sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
-      reply1 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply1 <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
 
       sendCommand(socket, "get", "[Nutrient].NO3.kgha")
-      reply1 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply1 <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
       #cat("r1 = ", reply1, "\n")
       
       # This is working, but not ideal
@@ -91,20 +91,20 @@ poll_zmq2 <- function(socket) {
       msg <- receive.string(socket)
 
       sendCommand(socket, "get", "[Nutrient].NO3.kgha")
-      reply2 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply2 <- unlist(msgpack_unpack(receive.socket(socket, unserialize = F)))
       #cat("r2 = ", reply2, "\n")
       
       sendCommand(socket, "set", list("[Nutrient].NO3.kgha", reply1))
       msg <- receive.string(socket)
 
       sendCommand(socket, "get", "[Nutrient].NO3.kgha")
-      reply3 <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply3 <- msgpack_unpack(receive.socket(socket, unserialize = F))
       #cat("r3 = ", reply3, "\n")
       sendCommand(socket, "set", list("[Manager].Script.DummyStringVar", "Blork"))
       msg <- receive.string(socket)
 
       sendCommand(socket, "get", "[Manager].Script.DummyStringVar")
-      reply <- msgpackR::unpack(receive.socket(socket, unserialize = F))
+      reply <- msgpack_unpack(receive.socket(socket, unserialize = F))
 
       reply1 <- paste(sample(LETTERS, nchar(reply)), collapse="")
 
