@@ -97,32 +97,6 @@ namespace Models.CLEM.Resources
         /// Indicates that this request should use the pending resource pathway and the transaction reported at a later time.
         /// </summary>
         public bool TransactionPending { get; set; } = false;
-
-        ///// <summary>
-        ///// Create a copy of this ResourceRequest.
-        ///// Performs a shallow clone for reference-type properties but duplicates mutable collections.
-        ///// </summary>
-        //public ResourceRequest Clone()
-        //{
-        //    // Shallow copy of this instance
-        //    var clone = (ResourceRequest)this.MemberwiseClone();
-
-        //    // Duplicate mutable collection to avoid shared list mutations
-        //    if (this.FilterDetails != null)
-        //        clone.FilterDetails = new List<object>(this.FilterDetails);
-
-        //    // For AdditionalDetails, try to clone if possible, otherwise keep reference
-        //    //if (this.AdditionalDetails is ICloneable cloneable)
-        //    //    clone.AdditionalDetails = cloneable.Clone();
-        //    //else
-        //    clone.AdditionalDetails = this.AdditionalDetails;
-
-        //    // Explicitly copy the value-tuple (not strictly necessary, MemberwiseClone already copies it)
-        //    clone.CompanionModelDetails = this.CompanionModelDetails;
-
-        //    // Leave references for Resource, ResourceType, ActivityModel and SuccessfulTransmutation as-is.
-        //    return clone;
-        //}
     }
 
     ///<summary>

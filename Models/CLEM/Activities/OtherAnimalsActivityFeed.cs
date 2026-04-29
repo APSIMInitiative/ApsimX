@@ -28,7 +28,6 @@ namespace Models.CLEM.Activities
         private IEnumerable<OtherAnimalsGroup> filterGroups;
         private OtherAnimals otherAnimals;
         int numberToDo = 0;
-        double amountToDo = 0;
         double feedEstimated = 0;
 
         /// <summary>
@@ -106,7 +105,6 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            amountToDo = 0;
             feedEstimated = 0;
             CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
             foreach (var cohort in CohortsToBeFed)
@@ -154,7 +152,7 @@ namespace Models.CLEM.Activities
                                         valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per kg fed":
-                                        amountToDo = feedEstimated;
+                                        //amountToDo = feedEstimated;
                                         valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                                         break;
                                     default:

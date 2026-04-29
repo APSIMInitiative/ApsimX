@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                     AllowTransmutation = false,
                     Category = TransactionCategory,
                     ResourceTypeName = PaddockName,
-                    Resource = pasture
+                    Resource = pasture,
                 }
                 );
 

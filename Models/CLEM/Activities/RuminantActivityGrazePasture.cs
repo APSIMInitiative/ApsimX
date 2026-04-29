@@ -37,7 +37,6 @@ namespace Models.CLEM.Activities
         private IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren;
         private double[] totalNeededDaily;
         private double[] totalRequestedTimeStep;
-        private double totalPastureAvailable = 0;
 
         /// <summary>
         /// Number of hours grazed based on an 8 hour grazing days. Can be modfied later to account for rain/heat
@@ -163,7 +162,7 @@ namespace Models.CLEM.Activities
             // fill individual's feed requirements from first pool
             // Reduce based on shortfall of pasture for all herds. 
 
-            totalPastureAvailable = GrazeFoodStoreModel.AmountAvailable;
+            //totalPastureAvailable = GrazeFoodStoreModel.AmountAvailable;
             int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
             var poolGroups = GeneratePoolsGroups(GrazeFoodStoreModel, events.Interval, greenAge);
 

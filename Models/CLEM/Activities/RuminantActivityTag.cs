@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityTag()
         {
-            // activity is performed in ManageAnimals
+            // activity is performed in CLEMMark event
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 

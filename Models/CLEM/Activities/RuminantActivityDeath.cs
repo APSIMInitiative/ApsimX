@@ -91,12 +91,8 @@ namespace Models.CLEM.Activities
                 HerdResource.RemoveRuminant(died, this);
             }
 
-            //// if any individuals not checked
-            //if (CurrentIndividuals.Count != 0)
-            //{
-            //    string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
-            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-            //}
+            //todo: check if any individuals not checked
+            // not easy to achieve as we need to remember which individuals have been assessed, probably with another list. 
         }
 
         #region validation

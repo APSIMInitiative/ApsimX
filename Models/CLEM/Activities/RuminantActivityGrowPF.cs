@@ -36,12 +36,6 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private ProductStoreTypeManure manureStore;
-        private readonly FoodResourcePacket milkPacket = new ()
-        {
-            TypeOfFeed = FeedType.Milk,
-            RumenDegradableProteinPercent = 0,
-            GutFill = 0.04
-        };
         private readonly FoodResourceStore milkProvided = new (new FoodResourcePacket() { TypeOfFeed = FeedType.Milk, RumenDegradableProteinPercent = 0, GutFill = 0.04 });
 
         /// <summary>

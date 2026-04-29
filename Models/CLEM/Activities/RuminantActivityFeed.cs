@@ -440,23 +440,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        ///// <summary>
-        ///// An event handler to allow final adjustment of intake based on diet quality and ensure this is accounted for
-        ///// in forage take.
-        ///// </summary>
-        ///// <param name="sender">The sender.</param>
-        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        //[EventSubscribe("CLEMPostRuminantConsumption")]
-        //private void OnAfterDietQualityDetermined(object sender, EventArgs e)
-        //{
-        //    // perform pending transactions as all feed returned due to low quality will now be accounted for.
-        //    foreach (var request in ResourceRequestList)
-        //    {
-        //        request.TransactionPending = false;
-        //        FeedResource.Remove(request); 
-        //    }
-        //}
-
         #region validation
             /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -95,13 +95,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public double BiomassPerHectare { get; set; }
 
-        // ToDo: don't allow link unless using GrowPF. Therefore we don't need the limiter values.
-        ///// <summary>
-        ///// Potential intake limiter based on pasture quality
-        ///// </summary>
-        //[JsonIgnore]
-        //public double PotentialIntakePastureQualityLimiter { get; set; }
-
         /// <summary>
         /// Potential intake limiter based on the biomass of available pasture
         /// </summary>
@@ -340,10 +333,7 @@ namespace Models.CLEM.Activities
         /// </param>
         public void TakeFromGrazingPoolGroup(FoodResourceStore group, int groupIndex, double shortfallMultiplier, bool imposeGreenLimit = true)
         {
-            //Debug.WriteLine($"Pool index\t{groupIndex}\t{events.Clock.Today.ToShortDateString()}\t{currentHerdSize}");
-
             DailyPastureTaken = 0;
-            //Debug.WriteLine($"herd size\t{currentHerdSize} herd count\t{herdToFeed.Count}");
             for (int i = 0; i < currentHerdSize; i++)
             {
                 double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier;
@@ -353,8 +343,6 @@ namespace Models.CLEM.Activities
                 }
 
                 // TODO: Any individual grazing time calculation needs to be added here rather than the assumed proportion of 8 hours for the entire herd
-
-                //Debug.WriteLine($"{i}\t{herdToFeed[i].ID}");
                 var excess = herdToFeed[i].Intake.AddFeed(group, groupID: $"GrazePool_DMD{(int)group.Details.DryMatterDigestibility}", specifyAmount: amountToEat);
 
                 amountToEat -= excess;
@@ -365,7 +353,7 @@ namespace Models.CLEM.Activities
                 }
                 DailyPastureTaken += amountToEat;
             }
-            // add dialy amount to details.amount and specifiy the total time step amount as pending in pools.
+            // add daily amount to details.amount and specifiy the total time step amount as pending in pools.
             group.AdjustDailyAmountAsIntake(DailyPastureTaken);
         }
 

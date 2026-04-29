@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
             {
                 newPastureAdded = true;
                 var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, "", nextUID);
-                newGrazePasture.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
+                newGrazePasture.OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction;
                 Structure.AddChild(newGrazePasture);
                 Links links = new();
                 links.Resolve(newGrazePasture as IModel, true, recurse: false);

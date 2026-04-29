@@ -532,6 +532,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMManagePendingTransactions")]
         protected virtual void ManagePendingTransactions(object sender, EventArgs e)
         {
+            if (pending.Count == 0)
+                return;
+
             foreach (var item in pending)
             {
                 if (item.Value > 0)

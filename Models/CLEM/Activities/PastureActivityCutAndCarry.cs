@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                     AdditionalDetails = this,
                     Category = TransactionCategory,
                     Required = amountToDo - amountToSkip,
-                    Resource = pasture
+                    Resource = pasture,
                 });
                 AmountAvailableForHarvest = amountToDo;
                 AmountHarvested = amountToDo - amountToSkip;
@@ -234,7 +234,7 @@ namespace Models.CLEM.Activities
                 FoodResourcePacket packet = new(amountToDo - amountToSkip)
                 {
                     NitrogenPercent = pasture.SwardNitrogenPercent,
-                    DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent)
+                    DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent),
                 };
 
                 foodStore.Add(packet, this, null, TransactionCategory);

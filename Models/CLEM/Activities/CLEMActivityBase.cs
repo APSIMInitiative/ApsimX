@@ -205,15 +205,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A method to allow the resource holder to be set when [Link] not possible for dynamically created model
-        /// </summary>
-        /// <param name="resourceHolder">The resource holder to provide</param>
-        public void SetLinkedModels(ResourcesHolder resourceHolder)
-        {
-            Resources = resourceHolder;
-        }
-
-        /// <summary>
         /// Report error or set status to partial if shortfall found otherwise set to success if notneeded
         /// </summary>
         public void SetStatusSuccessOrPartial(bool shortfallOccurred = false)
