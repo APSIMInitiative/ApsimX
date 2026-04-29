@@ -38826,7 +38826,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [

@@ -72,11 +72,11 @@
             public SimulationDescription ToSimulationDescription()
             {
                 var description = new SimulationDescription(null, name);
-                description.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName1, descriptorValue1));
+                description.Descriptors.Add(new SimulationDescriptor(descriptorName1, descriptorValue1));
                 if (descriptorName2 != null)
-                    description.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName2, descriptorValue2));
+                    description.Descriptors.Add(new SimulationDescriptor(descriptorName2, descriptorValue2));
                 if (descriptorName3 != null)
-                    description.Descriptors.Add(new SimulationDescription.Descriptor(descriptorName3, descriptorValue3));
+                    description.Descriptors.Add(new SimulationDescriptor(descriptorName3, descriptorValue3));
                 return description;
             }
 

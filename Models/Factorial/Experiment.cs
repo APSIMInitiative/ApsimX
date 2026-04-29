@@ -46,43 +46,11 @@ namespace Models.Factorial
                 allCombinations.RemoveAll(comb => DisabledSimNames.Contains(GetName(comb)));
             }
 
+            // Loop through all combinations and add a simulation description to the
+            // list of simulations descriptions being returned to the caller.
             if (allCombinations != null)
-            {
-                // Find base simulation.
-                var baseSimulation = Structure.FindChild<Simulation>();
-
-                // Loop through all combinations and add a simulation description to the
-                // list of simulations descriptions being returned to the caller.
                 foreach (var combination in allCombinations)
-                {
-                    // Create a simulation.
-                    var simulationName = GetName(combination);
-                    var simDescription = new SimulationDescription(baseSimulation, simulationName);
-
-                    // Add an experiment descriptor.
-                    simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", Name));
-
-                    // Add a simulation descriptor.
-                    simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
-
-                    // Don't need to add a folderName descriptor, as this will be added by the base simulation.
-                    IEnumerable<SimulationDescription> descriptions = baseSimulation?.GenerateSimulationDescriptions();
-                    if (descriptions == null)
-                        descriptions = Enumerable.Empty<SimulationDescription>();
-                    foreach (var simulationDescriptor in descriptions)
-                    {
-                        foreach (var descriptor in simulationDescriptor.Descriptors)
-                            if (descriptor.Name != "SimulationName")
-                                simDescription.Descriptors.Add(descriptor);
-                    }
-
-                    // Apply each composite factor of this combination to our simulation description.
-                    combination.ForEach(c => c.ApplyToSimulation(simDescription));
-
-                    // Add simulation description to the return list of descriptions
-                    yield return simDescription;
-                }
-            }
+                    yield return GetDescriptors(combination);
         }
 
         /// <summary>
@@ -98,6 +66,43 @@ namespace Models.Factorial
             var simulationNames = GenerateSimulationDescriptions().Select(s => s.Name);
             design.Append($" ({simulationNames.Count()})");
             return design.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="factors"></param>
+        /// <returns></returns>
+        public SimulationDescription GetDescriptors(List<CompositeFactor> factors)
+        {
+            Simulation baseSimulation = Structure.FindChild<Simulation>();
+
+            // Create a simulation.
+            string simulationName = GetName(factors);
+            SimulationDescription simDescription = new SimulationDescription(baseSimulation, simulationName);
+
+            // Add an experiment descriptor.
+            simDescription.Descriptors.Add(new SimulationDescriptor("Experiment", Name));
+
+            // Add a simulation descriptor.
+            simDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", simulationName));
+
+            // Don't need to add a folderName descriptor, as this will be added by the base simulation.
+            IEnumerable<SimulationDescription> descriptions = baseSimulation?.GenerateSimulationDescriptions();
+            if (descriptions == null)
+                descriptions = Enumerable.Empty<SimulationDescription>();
+            foreach (var simulationDescriptor in descriptions)
+            {
+                foreach (var descriptor in simulationDescriptor.Descriptors)
+                    if (descriptor.Name != "SimulationName")
+                        simDescription.Descriptors.Add(descriptor);
+            }
+
+            // Apply each composite factor of this combination to our simulation description.
+            factors.ForEach(c => c.ApplyToSimulation(simDescription));
+
+            // Add simulation description to the return list of descriptions
+            return simDescription;
         }
 
         private string GetTreatmentDescription(IModel factors)
