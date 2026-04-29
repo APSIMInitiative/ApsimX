@@ -42,6 +42,7 @@ namespace Models.CLEM.Activities
             RumenDegradableProteinPercent = 0,
             GutFill = 0.04
         };
+        private readonly FoodResourceStore milkProvided = new (new FoodResourcePacket() { TypeOfFeed = FeedType.Milk, RumenDegradableProteinPercent = 0, GutFill = 0.04 });
 
         /// <summary>
         /// Switch to perform unfed test and reporting.
@@ -386,11 +387,11 @@ namespace Models.CLEM.Activities
                 if(ind.Mother is not null)
                 {
                     double receivedKg = Math.Min(ind.Energy.MilkDaily.Expected / ind.Mother.Milk.EnergyContent, ind.Mother.Milk.ProductionRate / ind.Mother.Milk.EnergyContent / ind.Mother.SucklingOffspringList.Count);
-                    milkPacket.MetabolisableEnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
-                    milkPacket.CrudeProteinPercent = ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15;
-                    milkPacket.Amount = receivedKg;
+                    milkProvided.Details.MetabolisableEnergyContent = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6;
+                    milkProvided.Details.CrudeProteinPercent = ind.Parameters.GrowPF_CKCL.ProteinPercentMilk_CL15;
+                    milkProvided.Details.SetAmount(receivedKg);
                     ind.Mother.Milk.Take(receivedKg * Math.Min(ind.DaysSucklingInTimeStep, Math.Min(ind.AgeInDays, events.Interval)), MilkUseReason.Suckling);
-                    ind.Intake.AddFeed(milkPacket);
+                    ind.Intake.AddFeed(milkProvided);
                 }
 
                 double milkIntakeME = ind.Intake.MilkME;

@@ -1,25 +1,26 @@
 ﻿using APSIM.Numerics;
 using Docker.DotNet.Models;
-using DocumentFormat.OpenXml.Office.CustomUI;
+using Microsoft.IdentityModel.Protocols;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Functions;
 using Newtonsoft.Json;
-using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design.Serialization;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant grazing activity</summary>
-    /// <summary>Specific version where pasture and breed is specified</summary>
-    /// <summary>This activity determines how a ruminant breed will graze on a particular pasture (GrazeFoodStoreType)</summary>
+    /// <summary>
+    /// This activity determines how a specified ruminant herd will graze a specified pasture
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -34,22 +35,21 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private CLEMEvents events = null;
-        [JsonIgnore]
-        private DateTime lastResourceRequest = new();
-        //private double totalPastureRequired = 0;
-        //private double totalPastureDesired = 0;
-        [JsonIgnore]
+        //[JsonIgnore]
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
-        private readonly bool isStandAloneModel = true;
-        private bool usingGrowPF = false;
+        private bool isStandAloneModel = true;
         private readonly string shortHerdName = "";
-        IEnumerable<Ruminant> herdToFeed = null;
+        private List<Ruminant> herdToFeed = null;
+        private double[,] indRelativeDailyIntake;
+        private double[] indDailyIntakeRemaining;
+        private double[] indDailyGreenIntakeRemaining;
+        private double currentHerdDemand = 0;
+        private int currentHerdSize = 0;
 
         /// <summary>
-        /// Number of hours grazed
-        /// Based on 8 hour grazing days
-        /// Could be modified to account for rain/heat walking to water etc.
+        /// Number of hours grazed Based on 8 hour grazing days Could be modified to account for rain/heat walking to
+        /// water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
@@ -64,13 +64,13 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
-        /// paddock or pasture to graze
+        /// Paddock (GrazeFoodStoreType) model used
         /// </summary>
         [JsonIgnore]
         public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
-        /// Ruminant group to graze
+        /// Ruminant Type to graze
         /// </summary>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
         public string RuminantTypeName { get; set; }
 
         /// <summary>
-        /// Ruminant group to graze
+        /// RuminantType model used
         /// </summary>
         [JsonIgnore]
         public RuminantType RuminantTypeModel { get; set; }
@@ -96,7 +96,6 @@ namespace Models.CLEM.Activities
         public double BiomassPerHectare { get; set; }
 
         // ToDo: don't allow link unless using GrowPF. Therefore we don't need the limiter values.
-
         ///// <summary>
         ///// Potential intake limiter based on pasture quality
         ///// </summary>
@@ -107,50 +106,46 @@ namespace Models.CLEM.Activities
         /// Potential intake limiter based on the biomass of available pasture
         /// </summary>
         [JsonIgnore]
-        public double PotentialIntakePastureBiomassLimiter { get; set; }
+        public double PotentialIntakePastureBiomassLimiter { get; set; } = 1.0;
 
         /// <summary>
         /// Potential intake limiter based on the proportion of 8 hours grazing allowed
         /// </summary>
         [JsonIgnore]
-        public double PotentialIntakeGrazingTimeLimiter { get; set; }
+        public double PotentialIntakeGrazingTimeLimiter { get; set; } = 1.0;
 
         /// <summary>
-        /// Potential intake limit including low biomass, pasture quality and time limited
+        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
         /// </summary>
         [JsonIgnore]
-        public double PotentialIntakeLimit
-        {
-            get { return PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter; } // PotentialIntakePastureQualityLimiter * 
-        }
+        public double PotentialIntakeShortfallLimiter { get; set; } = 1.0;
 
         /// <summary>
-        /// A pasture packet used to track the quality of the mixed pasture pools eaten.
+        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
         /// </summary>
         [JsonIgnore]
-        public FoodResourcePacket ConsumedPasturePoolsPacket { get; set; } = new();
+        public double PotentialIntakeGreenPastureLimiter { get; set; } = 1.0;
 
         /// <summary>
-        /// Proportion of intake that can be taken from each pool
+        /// The daily biomass of pasture desired (Potential intake) by the herd (kg)
         /// </summary>
-        [JsonIgnore]
-        public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
+        public double DailyPastureDesired { get; set; }
 
         /// <summary>
-        /// The total biomass of pasture required by the herd (kg)
-        /// </summary>
-        public double PastureRequired { get; set; }
-
-        ///// <summary>
-        ///// The biomass of pasture desired by the herd (kg). Does not include biomass limiter.
-        ///// </summary>
-        //public double PastureDesired { get; set; }
-
-        /// <summary>
-        /// The daily biomass of pasture required by the herd (kg)
+        /// The daily biomass of pasture required (Accounting for pasture biomass limiter) by the herd (kg)
         /// </summary>
         public double DailyPastureRequired { get; set; }
 
+        /// <summary>
+        /// The daily biomass of pasture required by the herd (kg) including shortfall and proportion green limiter
+        /// </summary>
+        public double DailyPastureTaken { get; set; }
+
+        /// <summary>
+        /// Pools available grouped into classes form which individals feed in order
+        /// </summary>
+        [JsonIgnore]
+        public List<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
 
         /// <summary>
         /// Default constructor
@@ -160,7 +155,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor using details from a GrazeAll activity
+        /// Constructor using details from a GrazePasture activity
         /// </summary>
         public RuminantActivityGrazePastureHerd(RuminantActivityGrazePasture grazePasture, RuminantType herdType, string transactionCategory, Guid parentBasedUid)
         {
@@ -179,7 +174,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Add required children to this activity after the activity is fully created
+        /// Dynamically create the filters needed to select ruminants for this pasture-herd combination created
         /// </summary>
         public void AddHerdLocationFilter()
         {
@@ -229,8 +224,6 @@ namespace Models.CLEM.Activities
             GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             RuminantTypeModel = Resources.FindResourceType<RuminantHerd, RuminantType>(this, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            usingGrowPF = Structure.Find<RuminantActivityGrowPF>()?.Enabled ?? false;
-
             shortfallReportingCutoff = Structure.Find<ReportResourceShortfalls>()?.PropPastureShortfallOfDesiredIntake ?? 0.02;
 
             HerdResource = Structure.Find<RuminantHerd>();
@@ -238,6 +231,8 @@ namespace Models.CLEM.Activities
             AddHerdLocationFilter();
 
             InitialiseHerd(true, false);
+
+            isStandAloneModel = Structure.FindParent<RuminantActivityGrazePasture>() is null;
         }
 
         /// <summary>An event handler to allow us to clear requests at start of month.</summary>
@@ -246,41 +241,18 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnStartOfTimeStep(object sender, EventArgs e)
         {
-            ResourceRequestList = null;
-            PoolFeedLimits.Clear(); // = null;
+            ResourceRequestList.Clear();
+
             //TODO: add local hoursGrazed that is reset to user level each time step but can be reduced by other activities such as RuminantActivityMove, or ManageRuminants
             // this actually needs to be a property of each individual as we don't know the how management of an individual affects grazing time.
             // grazing competition should probably favour individuals with the lowest grazing time. maybe. 
+
             PotentialIntakeGrazingTimeLimiter = HoursGrazed / 8;
-
-            PastureRequired = 0;
+            PotentialIntakePastureBiomassLimiter = 1.0;
+            PotentialIntakeShortfallLimiter = 1.0;
             DailyPastureRequired = 0;
+            DailyPastureDesired = 0;
             Status = ActivityStatus.NotNeeded;
-            PotentialIntakePastureBiomassLimiter = 1;
-        }
-
-        /// <summary>
-        /// Calculate the potential intake limiter based on pasture quality.
-        /// </summary>
-        /// <returns>Limiter as proportion</returns>
-        public double CalculatePotentialIntakePastureQualityLimiter()
-        {
-            //// GrowPF (Dougherty 2025 and Frier 2012) will do the feed quality adjustment in greater detail (Intake.AdjustByFeedQuality)
-            //if (usingGrowPF) return 1;
-
-            //if (GrazeFoodStoreModel is GrazeFoodStoreType grazeFoodStore)
-            //{
-            //    // determine pasture quality from all pools (DMD) at start of grazing
-            //    // ToDo: need to get this from IGrazeFoodStore where this interface is on GrazeFoodStoreType and GrazeFoodStoreAPSIMLink 
-            //    double pastureDMD = grazeFoodStore.SwardDryMatterDigestibility;
-
-            //    // Reduce potential intake based on pasture quality for the proportion consumed (zero legume).
-            //    // TODO: check that this doesn't need to be performed for each breed based on how pasture taken
-            //    // this will still occur when grazing on improved, irrigated or crops.
-            //    // CLEM does not allow grazing on two pastures in the time step (i.e. month), whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
-            //    return 1 - Math.Max(0.0, grazeFoodStore.IntakeQualityCoefficient * (0.8 - grazeFoodStore.IntakeTropicalQualityCoefficient - pastureDMD / 100));
-            //}
-            return 1;
         }
 
         /// <summary>
@@ -291,129 +263,211 @@ namespace Models.CLEM.Activities
             return RequestResourcesForTimestep();
         }
 
+        /// <summary>
+        /// Caclulate total herd daily pasture required and initialise intake tracking arrays.
+        /// </summary>
+        /// <param name="greenAge"></param>
+        public double CalculateDailyFeedRequirement(int greenAge)
+        {
+            herdToFeed = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).ToList();
+            currentHerdSize = herdToFeed.Count;
+            if (herdToFeed.Count == 0)
+            {
+                return 0;
+            }
+
+            // CLEM concept not included in APSIM-AusFarm - reduce intake when pasture biomass becomes low to account for greater search time
+            PotentialIntakePastureBiomassLimiter = 1 - Math.Round(Math.Exp(-RuminantTypeModel.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000), 5);
+
+            // calculate green limit for the breed
+            double green = DigestiblePasturePoolGroups.Where(a => a.ProportionGreen == 1).Sum(a => a.Pools.Sum(p => p.AmountAvailable));
+            double proportionGreen = green / DigestiblePasturePoolGroups.Sum(a => a.Pools.Sum(p => p.AmountAvailable));
+
+            PotentialIntakeGreenPastureLimiter = 1;
+            if (proportionGreen < 0.9)
+            {
+                PotentialIntakeGreenPastureLimiter = Math.Max(0.0, (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))))) / 100.0;
+            }
+
+            indRelativeDailyIntake = new double[currentHerdSize, DigestiblePasturePoolGroups.Count()];
+            indDailyIntakeRemaining = new double[currentHerdSize];
+            indDailyGreenIntakeRemaining = new double[currentHerdSize];
+            for (int i = 0; i < currentHerdSize; i++)
+            {
+                // required is the smallest of time and low biomass-limited potential intake (expected) and the remaining intake needed for the individual
+                // it is not the remaining intake that is adjusted by the PastureBiomassLimiter but the potential, otherwise we 
+                indDailyIntakeRemaining[i] = Math.Min(herdToFeed[i].Intake.SolidsDaily.Expected * PotentialIntakeGrazingTimeLimiter * PotentialIntakePastureBiomassLimiter, herdToFeed[i].Intake.SolidsDaily.Required) ;
+                DailyPastureDesired += herdToFeed[i].Intake.SolidsDaily.Expected * PotentialIntakeGrazingTimeLimiter * PotentialIntakePastureBiomassLimiter;
+                DailyPastureRequired += indDailyIntakeRemaining[i];
+                indDailyGreenIntakeRemaining[i] = indDailyIntakeRemaining[i] * PotentialIntakeGreenPastureLimiter;
+            }
+            currentHerdDemand = DailyPastureRequired;
+            return DailyPastureRequired;
+        }
+
+        /// <summary>
+        /// Calculate relative intake as proportion of the individuals demand and current herd demand including green
+        /// pasture limitations.
+        /// </summary>
+        /// <param name="group">Pasture pool group to consume</param>
+        /// <param name="groupIndex">0 based index of the PoolGroup in list</param>
+        /// <param name="imposeGreenLimit">Switch to determine if green limits are imposed</param>
+        public double PrepareTakeFromGrazingPoolGroup(FoodResourceStore group, int groupIndex, bool imposeGreenLimit = true)
+        {
+            double sumRelIntake = 0;
+            for (int i = 0; i < currentHerdSize; i++)
+            {
+                double amountToEat = indDailyIntakeRemaining[i];
+                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeGreenPastureLimiter < 1.0) // must be considered green pool and a green limiter calculated
+                {
+                    amountToEat = Math.Min(indDailyGreenIntakeRemaining[i], amountToEat);
+                }
+                indRelativeDailyIntake[i, groupIndex] = amountToEat/currentHerdDemand;
+                sumRelIntake += indRelativeDailyIntake[i, groupIndex];
+            }
+            return sumRelIntake;
+        }
+
+        /// <summary>
+        /// Method to take the relative intake and consider any pastureshortfall andcompetition modifiers
+        /// </summary>
+        /// <param name="group">Pasture pool group to consume</param>
+        /// <param name="groupIndex">0 based index of pasture pool in list</param>
+        /// <param name="shortfallMultiplier">Intake multiplier based resulting from any pasture shortfall</param>
+        /// <param name="imposeGreenLimit">
+        /// Switch to determine if green limits are imposed. Must be set if greenlimit was imposed in previous
+        /// PrepareTakeFromGrazingPool
+        /// </param>
+        public void TakeFromGrazingPoolGroup(FoodResourceStore group, int groupIndex, double shortfallMultiplier, bool imposeGreenLimit = true)
+        {
+            //Debug.WriteLine($"Pool index\t{groupIndex}\t{events.Clock.Today.ToShortDateString()}\t{currentHerdSize}");
+
+            DailyPastureTaken = 0;
+            //Debug.WriteLine($"herd size\t{currentHerdSize} herd count\t{herdToFeed.Count}");
+            for (int i = 0; i < currentHerdSize; i++)
+            {
+                double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier;
+                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeGreenPastureLimiter < 1.0)
+                {
+                    indDailyGreenIntakeRemaining[i] -= amountToEat;
+                }
+
+                // TODO: Any individual grazing time calculation needs to be added here rather than the assumed proportion of 8 hours for the entire herd
+
+                //Debug.WriteLine($"{i}\t{herdToFeed[i].ID}");
+                var excess = herdToFeed[i].Intake.AddFeed(group, groupID: $"GrazePool_DMD{(int)group.Details.DryMatterDigestibility}", specifyAmount: amountToEat);
+
+                amountToEat -= excess;
+                indDailyIntakeRemaining[i] -= amountToEat; 
+                if (excess > 0)
+                {
+                    throw new Exception($"Core development error: excess feed found in grazing [a={this.NameWithParent}] where this should not be possible");
+                }
+                DailyPastureTaken += amountToEat;
+            }
+            // add dialy amount to details.amount and specifiy the total time step amount as pending in pools.
+            group.AdjustDailyAmountAsIntake(DailyPastureTaken);
+        }
+
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // if this is the first time of this request. (a) called manually from a RuminantActivityGrazePasture, or (b) called from this activity OnGetResources event.
-            if (lastResourceRequest == events.Clock.Today)
+            if (!isStandAloneModel)
                 return null;
 
-            CalculateFeedRequirement();
+            ResourceRequestList.Clear();
 
-            // Stand alone model is true unless dynamically created by parent graze paddock
-            if (isStandAloneModel && GrazeFoodStoreModel is GrazeFoodStoreType)
+            int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
+            double totalNeededDaily = CalculateDailyFeedRequirement(greenAge);
+
+            if (DigestiblePasturePoolGroups is null)
             {
-                SetupPoolsAndLimits(1.0);
-            }
-            //if (isStandAloneModel && !usingGrowPF)
-            //{
-            //    // TODO: this needs to be based on what is eaten, not to total pasture which may not represent the intake in many cases.
-            //    PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
-            //}
-
-
-            if (GrazeFoodStoreModel is GrazeFoodStoreType)
-            {
-                ConsumedPasturePoolsPacket.Reset();
+                DigestiblePasturePoolGroups = RuminantActivityGrazePasture.GeneratePoolsGroups(GrazeFoodStoreModel, events.Interval, greenAge);
             }
 
-            if (MathUtilities.IsPositive(PastureRequired))
+            // TODO: check when SetCurrentBiomass needs to be called
+            //GrazeFoodStoreModel.SetCurrentBiomass();
+
+            // fill all animals by calculating relative fill for each pool group 
+            for (int i = 0; i < DigestiblePasturePoolGroups.Count; i++)
             {
-                GrazeFoodStoreModel.SetCurrentBiomass();
-                pastureRequest = new ResourceRequest()
-                {
-                    AllowTransmutation = false,
-                    Required = PastureRequired,
-                    Resource = GrazeFoodStoreModel,
-                    ResourceType = typeof(GrazeFoodStore),
-                    ResourceTypeName = GrazeFoodStoreModel.Name,
-                    ActivityModel = this,
-                    AdditionalDetails = this,
-                    Category = "Consumed",
-                    RelatesToResource = PredictedHerdNameToDisplay
-                };
-                ResourceRequestList.Add(pastureRequest);
+                double totalRequestedTimestep = PrepareTakeFromGrazingPoolGroup(DigestiblePasturePoolGroups[i], i);
+
+                totalRequestedTimestep *= totalNeededDaily * events.Interval;
+
+                // shortfall limiter
+                double shortfallMultiplier = RuminantActivityGrazePasture.CalculateShortfallMultiplier(DigestiblePasturePoolGroups[i].Pools.Sum(a => a.AmountAvailable), [totalRequestedTimestep]);
+
+                TakeFromGrazingPoolGroup(DigestiblePasturePoolGroups[i], i, shortfallMultiplier);
             }
 
-            GrazeFoodStoreModel.CurrentGrazingRequest = pastureRequest;
-            lastResourceRequest = events.Clock.Today;
+            PotentialIntakeShortfallLimiter = CalculatePotentialShortfallLimiter();
+
+            CreateResourceRequest();
+
             return ResourceRequestList;
         }
 
         /// <summary>
-        /// Reset stores for start of time step
+        /// Method to calculate the shortfall limiter based on the pasture required vs desired. This handles all the
+        /// individual FoodResourceStore biomass limits applied
         /// </summary>
-        public double CalculateFeedRequirement()
+        /// <returns></returns>
+        public double CalculatePotentialShortfallLimiter()
         {
-            ResourceRequestList = new List<ResourceRequest>();
-            pastureRequest = null;
-            // as the grazing activity has added a dynamic filter group (location and herd name) we do not need to specifying the herd ot paddock here.
-            herdToFeed = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm);
+            if (DailyPastureRequired == 0)
+                return 1;
+            return (DailyPastureRequired >= DailyPastureDesired) ? 1 - ((DailyPastureRequired - DailyPastureDesired) / DailyPastureRequired) : 1;
+        }
 
-            if (herdToFeed.Any() == false)
-                return 0;
-
-            // CLEM concept not included in AgPasture - reduce intake when pasture biomass becomes low to account for greater search time
-            PotentialIntakePastureBiomassLimiter = 1 - Math.Round(Math.Exp(-herdToFeed.FirstOrDefault().Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000), 5);
-
-            foreach (Ruminant ind in herdToFeed)
+        /// <summary>
+        /// Method to create the resource request for pasture required for current herd.
+        /// </summary>
+        public void CreateResourceRequest()
+        {
+            double eaten = DigestiblePasturePoolGroups.Sum(a => a.Details.Amount);
+            pastureRequest = new ResourceRequest()
             {
-                PastureRequired += Math.Min(ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval), ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval) * PotentialIntakeLimit);
-                DailyPastureRequired += Math.Min(ind.Intake.SolidsDaily.Required, ind.Intake.SolidsDaily.Expected * PotentialIntakeLimit);
+                AllowTransmutation = false,
+                Required = DailyPastureRequired,
+                Resource = GrazeFoodStoreModel,
+                ResourceType = typeof(GrazeFoodStore),
+                ResourceTypeName = GrazeFoodStoreModel.Name,
+                ActivityModel = this,
+                AdditionalDetails = this,
+                Category = "Grazed",
+                RelatesToResource = PredictedHerdNameToDisplay,
+                TransactionPending = true
+            };
+            if (MathUtilities.IsPositive(eaten))
+            {
+                ResourceRequestList.Add(pastureRequest);
             }
-            return PastureRequired;
         }
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()
         {
-            //if (pastureRequest != null && MathUtilities.IsLessThan(Math.Round(GrazingCompetitionLimiter,4), 1))
-            //{
-            //    // reduce the amount provided by the grazing competition limiter
-            //    // accounts for reduction based on other herds of ruminants in the paddock adn insufficient feed available  
-            //    ResourceRequestList.Where(a => a.Resource is IGrazeFoodStoreType).FirstOrDefault().Required *= GrazingCompetitionLimiter;
-            //}
-
             if (GrazeFoodStoreModel is GrazeFoodStoreAPSIMLink apsimLink)
             {
                 // call here to describe diet before feeding in PerformTasksForTimeStep
-                apsimLink.SetDailyForageTakeFromGrazing(pastureRequest);
+                //apsimLink.SetDailyForageTakeFromGrazing(pastureRequest);
             }
         }
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            // Go through amount received and put it into the animals intake with quality measures.
-            // needs to be done here as the GrowPF activity will determine any intake quality reductions handled in OnAfterDietQualityDetermined
+            // all pools have been eaten in RequestResourcesForTimestep for CLEM graze forage.
+            // nothing to do. We will also send apsim forage DMD pools to the IEnumerable<GrazeFoodStorePoolGroup> 
 
-            if (MathUtilities.IsLessThanOrEqual(PastureRequired, 0.0))
-                return;
-
-            // shortfall already takes into account competition (AdjustResourcesForActivity) and availability
-            //double shortfall = (pastureRequest?.Provided??0) / totalPastureRequired;
-
-            foreach (Ruminant ind in herdToFeed)
-            {
-                double eaten = Math.Min(ind.Intake.SolidsDaily.Required, ind.Intake.SolidsDaily.Expected * PotentialIntakeLimit * GrazingCompetitionLimiter);
-
-                if (GrazeFoodStoreModel is GrazeFoodStoreAPSIMLink grazePaddock)
-                {
-                    grazePaddock.TimeStepForageConsumed.Amount = eaten;
-                    ind.Intake.AddFeed(grazePaddock.TimeStepForageConsumed);
-                }
-                else
-                {
-                    ConsumedPasturePoolsPacket.Amount = eaten;
-                    ind.Intake.AddFeed(ConsumedPasturePoolsPacket);
-                }
-
-                // todo: set grazing energy requirement
-                // todo: set movement energy requirement
-            }
+            // ToDo: work out where and how to update grazePaddock.TimeStepForageConsumed.Amount
         }
 
-        /// <summary>An event handler to allow final adjustment of intake based on diet quality and ensure this is accounted for in forage take.</summary>
+        /// <summary>
+        /// An event handler to allow final adjustment of intake based on diet quality and ensure this is accounted for
+        /// in forage take.
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMPostRuminantConsumption")]
@@ -422,53 +476,57 @@ namespace Models.CLEM.Activities
             if (pastureRequest is null)
                 return;
 
-            // calculate if any of the feed wasn't eaten due to intake quality reduction or insufficient rumen digestible protein provided.
-            double notNeeded = 0;
-            if (pastureRequest.Required > 0)
-            {
-                notNeeded = herdToFeed.Sum(a => a.Intake.SolidsDaily.Unneeded) / pastureRequest.Required;
-            }
+            // feed quality reduction will now have been handled by ruminant.Intake
+            // report any grazePaddock.TimeStepForageConsumed.Amount here
 
-            if (notNeeded > 0)
-                GrazeFoodStoreModel.ApplyDailyIntakeReduction(Math.Min(1.0, notNeeded));
+            // check if we need to update the resource request or if this is handled automatically. 
+            // update the amount actually taken and perfrm transaction recording.
 
-            GrazeFoodStoreModel.ReportGrazingTransaction();
+            // convert amounts to total per time step
+            pastureRequest.Available *= events.Interval;
+            pastureRequest.Required *= events.Interval;
+
+            // provided has been tracked by the pending amounts in each pasture pool group
+            // the details.Amount from each resource group can't be used as they seem to have been reset.
+            pastureRequest.Provided = Math.Min(pastureRequest.Required, DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending)); // . Sum(a => a.Pools.Sum(a => a.AmountPending)));
 
             Status = ActivityStatus.Success;
 
-            if (MathUtilities.IsLessThan(GrazingCompetitionLimiter, 1) || MathUtilities.IsGreaterThan(PastureDesired - (pastureRequest?.Provided ?? 0), PastureDesired * shortfallReportingCutoff))
+            // report shortfalls based on multipliers.
+
+            if (MathUtilities.IsGreaterThan(DailyPastureDesired * events.Interval - (pastureRequest.Provided), DailyPastureDesired * events.Interval * shortfallReportingCutoff))
             {
                 ResourceRequest shortfallRequest = pastureRequest;
-                shortfallRequest.Required = PastureRequired;
+                shortfallRequest.Required = DailyPastureRequired * events.Interval;
                 if (shortfallRequest is null)
                 {
                     shortfallRequest = new ResourceRequest()
                     {
-                        Available = pastureRequest?.Provided ?? 0, // display all that was given
-                        Required = PastureRequired,
+                        Available = pastureRequest.Provided, // display all that was given
+                        Required = DailyPastureRequired * events.Interval,
                         ResourceType = typeof(GrazeFoodStore),
                         ResourceTypeName = GrazeFoodStoreModel.Name
                     };
                 }
-                if (MathUtilities.IsLessThan(GrazingCompetitionLimiter, 1))
+                if (MathUtilities.IsLessThan(PotentialIntakeShortfallLimiter, 1.0))
                 {
-                    Status = ((pastureRequest?.Provided ?? 0) == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
+                    Status = (pastureRequest.Provided == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
                     if (Status == ActivityStatus.Warning)
                     {
                         AddStatusMessage("No pasture");
                     }
                     // report desired to ignore the very low pasture biomass limiter that has been invoked with zero pasture.
-                    shortfallRequest.Required = PastureRequired;
+                    shortfallRequest.Required = DailyPastureRequired * events.Interval;
                     shortfallRequest.ShortfallStatus = "BelowRequired";
                 }
                 else
                 {
-                    if ((pastureRequest?.Provided ?? 0) == 0)
+                    if (pastureRequest.Provided == 0)
                     {
                         AddStatusMessage("No pasture");
                         Status = ActivityStatus.Warning;
                     }
-                    shortfallRequest.Required = PastureDesired;
+                    shortfallRequest.Required = DailyPastureDesired * events.Interval;
                     shortfallRequest.ShortfallStatus = "BelowDesired";
                 }
 
@@ -477,100 +535,17 @@ namespace Models.CLEM.Activities
                 // only allow the stop error if this is a shortfall in required not desired.
                 if (MathUtilities.IsLessThan(Math.Round(GrazingCompetitionLimiter, 4), 1) && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
-                    throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in {events.Clock.Today:dd\\yyyy}");
+                    throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in time step index: {events.IntervalIndex} ({events.Clock.Today:dd\\MM\\yyyy})");
                 }
             }
-        }
 
-        // Methods for GrazeFoodStoreType
-
-        /// <summary>
-        /// Method to set up pools from currently available graze pools and limit based upon green content herd limit parameters for CLEM Pasture approach
-        /// </summary>
-        /// <param name="limit">The competition limit defined from GrazePasture parent</param>
-        public void CreateMixedPoolFeedItems(double limit)
-        {
-            if (GrazeFoodStoreModel is not GrazeFoodStoreType gfst)
-                return;
-
-            GrazingCompetitionLimiter = limit;
-            // store kg/ha available for consumption calculation
-            BiomassPerHectare = gfst.KilogramsPerHa;
-
-            // calculate green proportion and green limit for species
-            
-            // if green prop + brown prop < intake required & strict feeding limits
-            // increase green prop till shortfall met or green prop hits one
-
-            // walk through all available pasture pools and add to groups by specified DMD range where 0 is all individual and 1 is all combined.
-            // create a FoodResourcePacket for each group
-            // add each pool to create the mix and store the pool in the food resource packet items.
-
-            // we will feed animals down the groups
-            // do we use proportion of fed from each group based on proportion of pasture (proportional feedeing)
-            // or feed from top up to intake limit, leaving the poorest pasture till very end.
-
-            // do this in paddock
-            // at each pool - see if too much is taken - reduce based on breed proportion
-            // walk down all pools..
-
-
-        }
-
-
-        /// <summary>
-        /// Method to set up pools from currently available graze pools and limit based upon green content herd limit parameters for CLEM Pasture approach
-        /// </summary>
-        /// <param name="limit">The competition limit defined from GrazePasture parent</param>
-        public void SetupPoolsAndLimits(double limit)
-        {
-            if (GrazeFoodStoreModel is not GrazeFoodStoreType gfst)
+            foreach (var foodStore in DigestiblePasturePoolGroups)
             {
-                return;
+                foodStore.PerformPendingRemoval();
             }
 
-            GrazingCompetitionLimiter = limit;
-            // store kg/ha available for consumption calculation
-            BiomassPerHectare = gfst.Amount; //.KilogramsPerHa;
-
-            // calculate breed feed limits
-            if (PoolFeedLimits == null)
-            {
-                PoolFeedLimits = new();
-            }
-            else
-            {
-                PoolFeedLimits.Clear();
-            }
-
-            foreach (var pool in gfst.Pools)
-            {
-                PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
-            }
-
-            // if Jan-March then use first three months otherwise use 2
-            int greenage = (events.Clock.Today.Month <= 3) ? 2 : 1;
-
-            double green = gfst.Pools.Where(a => (a.Age <= greenage)).Sum(b => b.Amount);
-            double proportionGreen = green / gfst.Amount;
-
-            // All values are now proportions.
-            // Convert to percentage before calculation
-
-            double greenLimit = (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))));
-            greenLimit = Math.Max(0.0, greenLimit);
-            if (MathUtilities.IsGreaterThan(proportionGreen, 0.9))
-            {
-                greenLimit = 100;
-            }
-
-            foreach (var pool in PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
-            {
-                pool.Limit = greenLimit / 100.0;
-            }
-
-            // order feedPools by age so that diet is taken from youngest greenest first
-            PoolFeedLimits = PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
+            pastureRequest.TransactionPending = false;
+            GrazeFoodStoreModel.Remove(pastureRequest);
         }
 
         #region validation

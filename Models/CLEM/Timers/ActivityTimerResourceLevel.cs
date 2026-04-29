@@ -98,7 +98,7 @@ namespace Models.CLEM.Timers
             {
                 if (clock.Today != checkDate)
                 {
-                    amountAtFirstCheck = ResourceTypeModel.Amount;
+                    amountAtFirstCheck = ResourceTypeModel.AmountAvailable;
                     checkDate = clock.Today;
                 }
 

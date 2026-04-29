@@ -401,7 +401,7 @@ namespace Models.CLEM.Activities
                                     AllowTransmutation = false,
                                     Category = TransactionCategory,
                                     RelatesToResource = this.PredictedHerdNameToDisplay,
-                                    Available = bankAccount.Amount,
+                                    Available = bankAccount.AmountAvailable,
                                     Required = request.Required - valueOfSkipped,
                                     Provided = request.Provided - valueOfSkipped,
                                     ResourceType = typeof(Finance),

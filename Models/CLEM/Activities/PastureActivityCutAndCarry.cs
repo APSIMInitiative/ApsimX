@@ -144,7 +144,7 @@ namespace Models.CLEM.Activities
             switch (CutStyle)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                    amountToDo += pasture.Amount * Supply;
+                    amountToDo += pasture.AmountAvailable * Supply;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                     amountToDo += Supply * events.Interval;
@@ -231,9 +231,8 @@ namespace Models.CLEM.Activities
                 AmountAvailableForHarvest = amountToDo;
                 AmountHarvested = amountToDo - amountToSkip;
 
-                FoodResourcePacket packet = new()
+                FoodResourcePacket packet = new(amountToDo - amountToSkip)
                 {
-                    Amount = amountToDo - amountToSkip,
                     NitrogenPercent = pasture.SwardNitrogenPercent,
                     DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent)
                 };

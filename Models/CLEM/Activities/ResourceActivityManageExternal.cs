@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
                         // get price of resource
                         ResourcePricing price = resource.Item1.Price(amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale);
 
-                        double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Item1.Amount) : amount;
+                        double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Item1.AmountAvailable) : amount;
 
                         double packets = amountAvailable / price.PacketSize;
                         if (price.UseWholePackets)
@@ -332,7 +332,7 @@ namespace Models.CLEM.Activities
                             amountRemaining = amountPossible - amountPerformed[0];
                         }
 
-                        amount = Math.Min(amountRemaining, Math.Min(amount, resourceItem.resource.Amount));
+                        amount = Math.Min(amountRemaining, Math.Min(amount, resourceItem.resource.AmountAvailable));
                         if (amount > 0)
                         {
                             if (price != null)

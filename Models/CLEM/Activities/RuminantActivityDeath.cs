@@ -75,28 +75,28 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
 
             CurrentIndividuals = CurrentHerd().ToList();
+            List<Ruminant> died  = CurrentIndividuals.Where(a => a.Died).ToList();
+            CurrentIndividuals.RemoveAll(a => a.Died);
 
             foreach (var group in filterGroups)
             {
-                IEnumerable<Ruminant> individualsToCheck = (group as RuminantGroup).Filter(CurrentIndividuals); 
-                group.DetermineDeaths(individualsToCheck);
-                CurrentIndividuals.RemoveAll(a => individualsToCheck.Contains(a));
+                died.AddRange(group.DetermineDeaths((group as RuminantGroup).Filter(CurrentIndividuals)));
+                CurrentIndividuals.RemoveAll(a => a.Died);
             }
 
             // remove individuals that died from the herd.
-            var died = CurrentHerd().Where(a => a.Died);
-            if (died.Any())
+            if (died.Count > 0)
             {
                 Status = ActivityStatus.Success;
                 HerdResource.RemoveRuminant(died, this);
             }
 
-            // if any individuals not checked
-            if (CurrentIndividuals.Count != 0)
-            {
-                string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-            }
+            //// if any individuals not checked
+            //if (CurrentIndividuals.Count != 0)
+            //{
+            //    string warn = $"Some specified individuals not considered in {NameWithParent}{Environment.NewLine}SOLUTION: Ensure [FilterGroups] include all individuals";
+            //    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+            //}
         }
 
         #region validation

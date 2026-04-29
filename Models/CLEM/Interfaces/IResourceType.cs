@@ -19,8 +19,15 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Remove this Amount from the existing Amount
         /// </summary>
-        /// <param name="request">The resource request object that hold information</param>
+        /// <param name="request">Request to remove.</param>
         void Remove(ResourceRequest request);
+
+        /// <summary>
+        /// Reduce the current pending amount by a specified amount
+        /// </summary>
+        /// <param name="request">Associated resource request</param>
+        /// <param name="amountToReduce">Amount by which to reduce pending amount</param>
+        public void ReducePending(ResourceRequest request, double amountToReduce);
 
         /// <summary>
         /// Set the amount to this new value.
@@ -28,9 +35,19 @@ namespace Models.CLEM.Interfaces
         void Set(double newAmount);
 
         /// <summary>
-        /// Get the current amount of this resource available.
+        /// Amount of resource currently available
         /// </summary>
-        double Amount { get; }
+        double AmountAvailable { get; }
+
+        /// <summary>
+        /// Total resource in store inclusing pending amounts
+        /// </summary>
+        double AmountTotal { get; }
+
+        /// <summary>
+        /// Total resource currently pending.
+        /// </summary>
+        double AmountPending { get; }
 
         /// <summary>
         /// Get the amount of the last gain in this resource 

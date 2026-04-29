@@ -165,6 +165,13 @@ namespace Models.CLEM.Resources
             {
                 ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
+            //if (ManagedPasture is null)
+            //{
+            //    if (Parent is RuminantInitialCohorts allCohorts && allCohorts.ManagedPasture is not null)
+            //    {
+            //        ManagedPasture = allCohorts.ManagedPasture;
+            //    }
+            //}
         }
 
         /// <summary>

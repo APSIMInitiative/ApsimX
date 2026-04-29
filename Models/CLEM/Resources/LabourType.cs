@@ -125,18 +125,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return null;
-            }
-        }
-
+        /// <inheritdoc/>
+        public new double? Value => null;
 
         /// <summary>
         /// Monthly dietary components

@@ -109,18 +109,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
-
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -195,11 +183,10 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double TonnesPerHectareStartOfTimeStep { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        /// <inheritdoc/>
-        public void ReportGrazingTransaction()
-        {
-            ReportTransaction(TransactionType.Loss, CurrentGrazingRequest.Provided, CurrentGrazingRequest.ActivityModel, CurrentGrazingRequest.RelatesToResource, CurrentGrazingRequest.Category, this);
-        }
+        /// <summary>
+        /// Gets or sets the collection of digestible pasture pool groups available as food resources.
+        /// </summary>
+        public IEnumerable<FoodResourceStore> DigestiblePasturePoolGroups { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         #region validation
 
@@ -253,10 +240,12 @@ namespace Models.CLEM.Resources
         #region transactions
 
         /// <summary>
-        /// Graze food add method.
-        /// This style is not supported in GrazeFoodStoreType
+        /// Graze food add method. This style is not supported in GrazeFoodStoreType
         /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="resourceAmount">
+        /// Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being
+        /// added
+        /// </param>
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
@@ -271,9 +260,8 @@ namespace Models.CLEM.Resources
                 pool = resourceAmount as GrazeFoodStorePool;
             else
             {
-                pool = new GrazeFoodStorePool();
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
-                pool.Set(packet.Amount);
+                pool = new(packet.Amount);
                 pool.NitrogenPercent = packet.NitrogenPercent;
                 pool.DryMatterDigestibility = packet.DryMatterDigestibility;
             }
@@ -285,23 +273,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public double Remove(double removeAmount, string activityName, string reason)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public new void Remove(ResourceRequest request)
+        public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
         {
             // grazing or feeding from store treated the same way
             // grazing does not access pools by breed but gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket
+            FoodResourcePacket additionalDetails = new FoodResourcePacket(request.Required)
             {
                 NitrogenPercent = this.Nitrogen,
                 DryMatterDigestibility = this.dryMatterDigestibility,
-                Amount = request.Required
             };
             request.AdditionalDetails = additionalDetails;
 
@@ -323,7 +304,7 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>>
+        /// <inheritdoc/>
         public void ApplyDailyIntakeReduction(double fractionReduced)
         {
         }

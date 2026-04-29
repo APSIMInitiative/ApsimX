@@ -1,9 +1,11 @@
 ﻿using APSIM.Numerics;
+using Models.CLEM.Interfaces;
 using StdUnits;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Topten.RichTextKit.Utils;
 
 namespace Models.CLEM.Resources
 {
@@ -31,38 +33,55 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// A function to add intake and track rumen totals of N, CP, DMD, Fat and energy on daily basis.
         /// </summary>
-        /// <param name="packet">Feed packet containing intake information kg, %N, DMD.</param>
+        /// <param name="store">Feed packet containing intake information kg, %N, DMD.</param>
         /// <param name="groupID">ID to mix multiple feed entries</param>
         /// <param name="bypassPotIntakeLimits">A switch to force animals to eat the amount provided.</param>
+        /// <param name="specifyAmount">Specify the amount to add rather than obtain from the FoodResourcePacket.Amount</param>
         /// <returns>The excess feed to the individual</returns>
-        public double AddFeed(FoodResourcePacket packet, string groupID = "", bool bypassPotIntakeLimits = false)
+        public double AddFeed(FoodResourceStore store, string groupID = "", bool bypassPotIntakeLimits = false, double specifyAmount = double.NaN)
         {
             double excess = 0;
 
-            if (packet.Amount <= 0)
-            return excess;
+            if (double.IsNaN(specifyAmount))
+            {
+                specifyAmount = store.Details.Amount;
+            }
+
+            if (specifyAmount <= 0)
+            {
+                return excess;
+            }
 
             if (groupID == "")
-                groupID = packet.TypeOfFeed.ToString();
+            {
+                groupID = store.Details.TypeOfFeed.ToString();
+            }
 
-            if (!bypassPotIntakeLimits && packet.TypeOfFeed != FeedType.Milk)
+            if (!bypassPotIntakeLimits && store.Details.TypeOfFeed != FeedType.Milk)
             {
                 // limit feed to animals maximum intake.
-                excess = StdMath.DIM(packet.Amount, SolidsDaily.Required);
-                packet.Amount -= excess;
+                excess = StdMath.DIM(specifyAmount, SolidsDaily.Required);
+                if (excess > 0 && excess < 1e-5)
+                {
+                    excess = 0;
+                }
+                specifyAmount -= excess;
             }
 
             if (!feedTypeStoreDict.TryGetValue(groupID, out FoodResourceStore frs))
             {
-                frs = new FoodResourceStore(packet);
+                frs = new FoodResourceStore(store, specifyAmount);
                 feedTypeStoreDict[groupID] = frs;
             }
-            frs.Add(packet);
-
-            if (packet.TypeOfFeed == FeedType.Milk)
-                MilkDaily.Received += packet.Amount;
             else
-                SolidsDaily.Received += packet.Amount;
+            {
+                frs.Add(store.Details, specifyAmount);
+            }
+
+            if (store.Details.TypeOfFeed == FeedType.Milk)
+                MilkDaily.Received += specifyAmount;
+            else
+                SolidsDaily.Received += specifyAmount;
 
             return excess;
         }
@@ -85,7 +104,8 @@ namespace Models.CLEM.Resources
             double iReduction = 0;
 
             //for each food type
-            foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility))
+            // sorted by DMD descending and concentrate first (if same DMD) to ensure quality reduction is applied to lower quality feeds first, and concentrates are last to be reduced (as they are often the highest quality feed).
+            foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility).OrderByDescending(a => a.Value.Details.TypeOfFeed == FeedType.Concentrate))
             {
                 // RQ is relative quality
                 // FS relative availability of the feed
@@ -98,7 +118,8 @@ namespace Models.CLEM.Resources
                 //    case FeedType.HaySilage:
                 // 1.7 -> 1.25
                 double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
-                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Received)/RQ;
+
+                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Received)*RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (isLactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
 
@@ -137,8 +158,11 @@ namespace Models.CLEM.Resources
                 //}
 
                 iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Received);
-                item.Value.ReduceIntakeByAmount(iReduction);
-                SolidsDaily.Unneeded += iReduction;
+                if (iReduction > 0)
+                {
+                    item.Value.ReduceByDailyAmount(iReduction);
+                    SolidsDaily.Unneeded += iReduction;
+                }
                 sumFs += FS;
             }
         }
@@ -473,7 +497,7 @@ namespace Models.CLEM.Resources
             double amountReduced = 0;
             foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk))
             {
-                amountReduced += item.Value.ReduceIntakeByProportion(proportion);
+                amountReduced += item.Value.ReduceByProportion(proportion);
             }
             SolidsDaily.Unneeded += amountReduced;
         }

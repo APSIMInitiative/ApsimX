@@ -13,7 +13,7 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <param name="individuals">Individuals to assess</param>
         /// <returns>A list of ruminants that died</returns>
-        public void DetermineDeaths(IEnumerable<Ruminant> individuals);
+        public List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals);
 
     }
 }

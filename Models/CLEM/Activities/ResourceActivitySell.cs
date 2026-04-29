@@ -129,16 +129,16 @@ namespace Models.CLEM.Activities
                         amount = Value;
                         break;
                     case ResourceSellStyle.ProportionOfStore:
-                        amount = resourceToSell.Amount * Value;
+                        amount = resourceToSell.AmountAvailable * Value;
                         break;
                     case ResourceSellStyle.ProportionOfLastGain:
                         amount = resourceToSell.LastGain * Value;
                         break;
                     case ResourceSellStyle.ReserveAmount:
-                        amount = Math.Max(0,resourceToSell.Amount - Value);
+                        amount = Math.Max(0,resourceToSell.AmountAvailable - Value);
                         break;
                     case ResourceSellStyle.ReserveProportion:
-                        amount = resourceToSell.Amount * (1 - Value);
+                        amount = resourceToSell.AmountAvailable * (1 - Value);
                         break;
                     default:
                         break;

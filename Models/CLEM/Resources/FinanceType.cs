@@ -79,7 +79,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    return amount - WithdrawalLimit;
+                    return AmountAvailable - WithdrawalLimit;
                 }
             }
         }
@@ -87,31 +87,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current balance
         /// </summary>
-        public double Balance { get { return amount; } }
+        public double Balance { get { return AmountAvailable; } }
 
-        private double amount;
-        /// <summary>
-        /// Current amount of this resource
-        /// </summary>
+        /// <inheritdoc/>
         [Core.Display(Format = "N2")]
-        public double Amount
-        {
-            get
-            {
-                return FundsAvailable;
-            }
-        }
+        public new double AmountTotal => FundsAvailable;
 
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return null;
-            }
-        }
+        /// <inheritdoc/>
+        public new double? Value => null;
 
         /// <summary>
         /// Determines whether the withdrawal limit has been set for enabling amount property
@@ -128,7 +111,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
             if (OpeningBalance > 0)
             {
                 Add(OpeningBalance, null, null, "Opening balance");
@@ -163,7 +145,7 @@ namespace Models.CLEM.Resources
 
             if (amountAdded > 0)
             {
-                amount += amountAdded;
+                Add(amountAdded);
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
 
@@ -183,47 +165,15 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Remove from finance type store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        /// <inheritdoc/>
+        public new double Remove(double amountToRemove, ResourceRequest pendingRequestActivity)
         {
-            if (request.Required == 0)
-            {
-                return;
-            }
-
-            // if this request aims to trade with a market see if we need to set up details for the first time
-            if (request.MarketTransactionMultiplier > 0)
-            {
-                FindEquivalentMarketStore();
-            }
-
-            double amountRemoved = request.Required;
-
-            // more than positive balance can be taken if withdrawal limit set to false
             if (this.EnforceWithdrawalLimit)
             {
-                amountRemoved = Math.Min(amountRemoved, FundsAvailable);
+                amountToRemove = Math.Min(amountToRemove, FundsAvailable);
             }
-
-            if (amountRemoved == 0)
-            {
-                return;
-            }
-
-            this.amount -= amountRemoved;
-
-            // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
-                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, (request.RelatesToResource != "" ? request.RelatesToResource : this.NameWithParent), "Household purchase");
-            }
-
-            request.Provided = amountRemoved;
-
-            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
+            double amountRemoved = base.Remove(amountToRemove, pendingRequestActivity);
+            return amountRemoved;
         }
 
         /// <summary>
@@ -232,7 +182,8 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
-            amount = Math.Round(newAmount, 2, MidpointRounding.ToEven);
+            newAmount = Math.Round(newAmount, 2, MidpointRounding.ToEven);
+            base.Set(newAmount);
         }
 
         #endregion

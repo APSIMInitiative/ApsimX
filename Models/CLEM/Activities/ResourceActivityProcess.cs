@@ -100,7 +100,7 @@ namespace Models.CLEM.Activities
             resourceRequest = null;
 
             amountToSkip = 0;
-            amountToDo = resourceTypeProcessModel.Amount;
+            amountToDo = resourceTypeProcessModel.AmountAvailable;
             if (MathUtilities.IsPositive(Reserve))
             {
                 amountToDo = Math.Min(amountToDo, Reserve);

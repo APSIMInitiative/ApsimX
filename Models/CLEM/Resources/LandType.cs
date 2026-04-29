@@ -51,36 +51,25 @@ namespace Models.CLEM.Resources
         public double ProportionOfTotalArea { get; set; } = 1.0;
 
         /// <summary>
-        /// Soil Type (1-5) 
+        /// Soil Type (1-5)
         /// </summary>
         [Description("Land type id")]
         [Required]
         public string SoilType { get; set; }
 
-        /// <summary>
+        /*/// <summary>
         /// Area not currently being used (ha)
         /// </summary>
         [JsonIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
         private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
-        private double roundedAreaAvailable;
+        private double roundedAreaAvailable;*/
 
         /// <summary>
-        /// The total area available 
+        /// The total area available
         /// </summary>
         [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
 
         /// <summary>
         /// List of currently allocated land
@@ -90,16 +79,8 @@ namespace Models.CLEM.Resources
 
         private CLEMModel ActivityRequestingRemainingLand;
 
-        /// <summary>
-        /// Resource available
-        /// </summary>
-        public double Amount
-        {
-            get
-            {
-                return AreaAvailable;
-            }
-        }
+        ///// <inheritdoc/>
+        //public new double AmountTotal => AreaAvailable;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -131,7 +112,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="resourceAmount">
+        /// Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being
+        /// added
+        /// </param>
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
@@ -142,28 +126,26 @@ namespace Models.CLEM.Resources
 
             double addAmount = (double)resourceAmount;
 
-            if (addAmount > 0)
+            if (AmountAvailable + addAmount > UsableArea)
             {
-                double amountAdded = addAmount;
-                if (this.areaAvailable + addAmount > this.UsableArea)
-                {
-                    amountAdded = this.UsableArea - this.areaAvailable;
-                    string message = $"Tried to add more available land to [r={this.Name}] than exists.";
-                    Summary.WriteMessage(this, message, MessageType.Warning);
-                    this.areaAvailable = this.UsableArea;
-                }
-                else
-                    this.areaAvailable += addAmount;
+                addAmount = AmountAvailable + addAmount - UsableArea;
+                string message = $"Tried to add more available land to [r={Name}] than exists.";
+                Summary.WriteMessage(this, message, MessageType.Warning);
+            }
 
-                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
+            if (addAmount == 0)
+                return;
 
-                if (category != "Starting value")
-                {
-                    UpdateLandAllocatedList(activity, amountAdded, true);
-                    // adjust activity using all remaining land as well.
-                    if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
-                        UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, false);
-                }
+            Add(addAmount);
+
+            ReportTransaction(TransactionType.Gain, addAmount, activity, relatesToResource, category, this);
+
+            if (category != "Starting value")
+            {
+                UpdateLandAllocatedList(activity, addAmount, true);
+                // adjust activity using all remaining land as well.
+                if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
+                    UpdateLandAllocatedList(ActivityRequestingRemainingLand, addAmount, false);
             }
         }
 
@@ -178,10 +160,10 @@ namespace Models.CLEM.Resources
 
             double amountRemoved = request.Required;
             // avoid taking too much
-            amountRemoved = Math.Min(this.areaAvailable, amountRemoved);
+            amountRemoved = Math.Min(AmountAvailable, amountRemoved);
 
             if (request.Category != "Assign unallocated")
-                this.areaAvailable -= amountRemoved;
+                Remove(amountRemoved, request.TransactionPending?request:null);
             else
             {
                 // activitiy requesting all unallocated land.
@@ -189,7 +171,7 @@ namespace Models.CLEM.Resources
                     ActivityRequestingRemainingLand = request.ActivityModel;
                 else if (ActivityRequestingRemainingLand != request.ActivityModel)
                     // error! more than one activity is requesting all unallocated land.
-                    throw new ApsimXException(this, "More than one activity [" + ActivityRequestingRemainingLand.Name + "] and [" + request.ActivityModel.Name + "] is requesting to use all unallocated land from land type [" + this.Name + "]");
+                    throw new ApsimXException(this, "More than one activity [" + ActivityRequestingRemainingLand.Name + "] and [" + request.ActivityModel.Name + "] is requesting to use all unallocated land from land type [" + Name + "]");
             }
 
             request.Provided = amountRemoved;

@@ -177,7 +177,7 @@ namespace Models.CLEM
 
             if (queryOnly)
             {
-                return request.Required + requiredByActivities <= TransmuteResourceType.Amount;
+                return request.Required + requiredByActivities <= TransmuteResourceType.AmountAvailable;
             }
             else
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Docker.DotNet.Models;
+using System;
 
 namespace Models.CLEM.Interfaces
 {

@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace Models.CLEM.Groupings
 {
-    ///<summary>
+    /// <summary>
     /// Contains a group of filters to identify individual ruminants for determining death by a specified rate
-    ///</summary> 
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -57,12 +57,13 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public override void DetermineDeaths(IEnumerable<Ruminant> individuals)
+        public override List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
             // convert mortality from annual to time-step.
             double mortalityRate = Rate * events.Interval;
+            List<Ruminant> deaths = new List<Ruminant>();
 
-            foreach (var ind in individuals.Where(a => a.Died == false))
+            foreach (var ind in individuals)
             {
                 if (Style == ParameterStyle.GetFromParameters)
                 {
@@ -76,8 +77,10 @@ namespace Models.CLEM.Groupings
                 {
                     ind.Died = true;
                     ind.SaleFlag = HerdChangeReason.DiedMortality;
+                    deaths.Add(ind);
                 }
             }
+            return deaths;
         }
 
         #region validation

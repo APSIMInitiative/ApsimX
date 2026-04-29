@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.ServiceModel.Channels;
 
 namespace Models.CLEM.Resources
 {
@@ -22,9 +23,6 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType, IValidatableObject
     {
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
-
         /// <inheritdoc/>
         public string Units { get; private set; } = "kg";
 
@@ -128,12 +126,6 @@ namespace Models.CLEM.Resources
         public double StartingAmount { get; set; }
 
         /// <summary>
-        /// Amount currently available (kg dry)
-        /// </summary>
-        [JsonIgnore]
-        public double Amount { get { return amount; } set { return; } }
-
-        /// <summary>
         /// A packet to pass the current food quality to activities. Allows for mixing of feed into store
         /// </summary>
         [JsonIgnore]
@@ -144,17 +136,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public FoodResourcePacket StoreDetails { get; set; }
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
 
         /// <summary>
         /// Determine whether N% or CP% are displayed to user based on CP style.
@@ -197,7 +178,6 @@ namespace Models.CLEM.Resources
             CurrentStoreDetails = new FoodResourcePacket(this);
             StoreDetails = new FoodResourcePacket(this);
 
-            this.amount = 0;
             if (StartingAmount > 0)
                 Add(StartingAmount, null, null, "Starting value");
         }
@@ -232,56 +212,26 @@ namespace Models.CLEM.Resources
             if (addAmount > 0)
             {
                 // update quality details to allow mixed feed inputs
-                CurrentStoreDetails.NitrogenPercent = ((CurrentStoreDetails.NitrogenPercent * Amount) + (foodPacket.NitrogenPercent * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * Amount) + (foodPacket.DryMatterDigestibility * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.FatPercent = ((CurrentStoreDetails.FatPercent * Amount) + (foodPacket.FatPercent * addAmount)) / (Amount + addAmount);
-                CurrentStoreDetails.MetabolisableEnergyContent = ((CurrentStoreDetails.MetabolisableEnergyContent * Amount) + (foodPacket.MetabolisableEnergyContent * addAmount)) / (Amount + addAmount);
+                CurrentStoreDetails.NitrogenPercent = ((CurrentStoreDetails.NitrogenPercent * AmountAvailable) + (foodPacket.NitrogenPercent * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * AmountAvailable) + (foodPacket.DryMatterDigestibility * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.FatPercent = ((CurrentStoreDetails.FatPercent * AmountAvailable) + (foodPacket.FatPercent * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.MetabolisableEnergyContent = ((CurrentStoreDetails.MetabolisableEnergyContent * AmountAvailable) + (foodPacket.MetabolisableEnergyContent * addAmount)) / (AmountTotal + addAmount);
 
-                this.amount += addAmount;
+                base.Add(addAmount);
 
                 ReportTransaction(TransactionType.Gain, addAmount, activity, relatesToResource, category, this);
             }
         }
 
-        /// <summary>
-        /// Remove from animal food store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        /// <inheritdoc/>
+        public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
         {
             if (request.Required == 0)
             {
                 return;
             }
-
-            // if this request aims to trade with a market see if we need to set up details for the first time
-            if (request.MarketTransactionMultiplier > 0)
-            {
-                FindEquivalentMarketStore();
-            }
-
-            double amountRemoved = request.Required;
-            // avoid taking too much
-            amountRemoved = Math.Min(this.amount, amountRemoved);
-
-            if (amountRemoved > 0)
-            {
-                this.amount -= amountRemoved;
-
-                request.AdditionalDetails = CurrentStoreDetails;
-
-                request.Provided = amountRemoved;
-
-                // send to market if needed
-                if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                {
-                    FoodResourcePacket marketDetails = CurrentStoreDetails.Clone(amountRemoved * request.MarketTransactionMultiplier);
-                    (EquivalentMarketStore as AnimalFoodStoreType).Add(marketDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
-                }
-
-                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            }
-            return;
+            request.AdditionalDetails = CurrentStoreDetails;
+            base.Remove(request);
         }
 
         #endregion

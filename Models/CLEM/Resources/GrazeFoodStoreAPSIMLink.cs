@@ -200,17 +200,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double StartingAmount { get; set; } = 0;
 
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
-
         private double amount = 0;
 
         /// <summary>
@@ -600,7 +589,7 @@ namespace Models.CLEM.Resources
                 // combine into single paddock level food store
                 dailyPaddockPacket = new FoodResourcePacket();
                 dailyPaddockPacket.TypeOfFeed = this.TypeOfFeed;
-                dailyPaddockPacket.Amount = totalRemoved;
+                dailyPaddockPacket.AddAmount(totalRemoved);
                 double avgDMD = sumDMDTimesAmt / totalRemoved; // fraction
                 double avgCP = sumCPTimesAmt / totalRemoved;   // percent
                 dailyPaddockPacket.DryMatterDigestibility = avgDMD * 100.0;
@@ -614,7 +603,7 @@ namespace Models.CLEM.Resources
                 dailyPaddockPacket.GutFill = this.GutFill;
             }
 
-            timeStepPaddockPacket = dailyPaddockPacket.Clone((request.AdditionalDetails as RuminantActivityGrazePastureHerd).PastureRequired);
+            timeStepPaddockPacket = dailyPaddockPacket.Clone((request.AdditionalDetails as RuminantActivityGrazePastureHerd).DailyPastureRequired);
         }
 
         /// <summary>
@@ -720,6 +709,9 @@ namespace Models.CLEM.Resources
         [Category("Advanced", "Intake")]
         [Description("Method of combining consumption for reporting")]
         public FeedAggregationMode AggregationMode { get; set; } = FeedAggregationMode.CombinePaddock;
+
+        /// <inheritdoc/>
+        public IEnumerable<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
 
         /// <summary>
         /// Apply the prepared forage removals for the daily intake request
@@ -847,10 +839,10 @@ namespace Models.CLEM.Resources
                 CurrentGrazingRequest.Provided *= fractionRemaining;
 
             if (timeStepPaddockPacket != null)
-                timeStepPaddockPacket.Amount *= fractionRemaining;
+                timeStepPaddockPacket.SetAmount(timeStepPaddockPacket.Amount * fractionRemaining);
 
             if (dailyPaddockPacket != null)
-                dailyPaddockPacket.Amount *= fractionRemaining;
+                dailyPaddockPacket.SetAmount(dailyPaddockPacket.Amount * fractionRemaining);
 
             // Scale per-class removal array (kg)
             if (dailyRemovalByClass != null && dailyRemovalByClass.Length > 0)
@@ -868,12 +860,6 @@ namespace Models.CLEM.Resources
                     for (int j = 0; j < dim1; j++)
                         dailyRemovalSeed[i, j] *= fractionRemaining;
             }
-        }
-
-        /// <inheritdoc/>
-        public void ReportGrazingTransaction()
-        {
-            ReportTransaction(TransactionType.Loss, timeStepPaddockPacket.Amount, CurrentGrazingRequest.ActivityModel, CurrentGrazingRequest.RelatesToResource, CurrentGrazingRequest.Category, this);
         }
 
         #region transactions

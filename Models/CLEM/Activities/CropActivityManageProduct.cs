@@ -615,11 +615,12 @@ namespace Models.CLEM.Activities
                         }
                         else
                         {
-                            FoodResourcePacket packet = new()
+                            FoodResourcePacket packet = new(AmountHarvested)
                             {
-                                Amount = AmountHarvested,
                                 NitrogenPercent = percentN
                             };
+
+
                             if (LinkedResourceItem is GrazeFoodStoreType)
                             {
                                 packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);

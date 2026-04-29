@@ -148,7 +148,7 @@ namespace Models.CLEM.Activities
             if (Area == 0 || !UseAreaAvailable)
             {
                 // is the requested land different to land currently provided
-                double areaNeeded = UseAreaAvailable ? LinkedLandItem.AreaAvailable : (AreaRequested * cropProduct.PlantedMultiplier) - Area;
+                double areaNeeded = UseAreaAvailable ? LinkedLandItem.AmountAvailable : (AreaRequested * cropProduct.PlantedMultiplier) - Area;
                 if (areaNeeded != 0)
                 {
                     if (areaNeeded > 0)
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
         // only listens when use available is set for parent
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
-            Area = LinkedLandItem.AreaAvailable;
+            Area = LinkedLandItem.AmountAvailable;
         }
 
         /// <inheritdoc/>

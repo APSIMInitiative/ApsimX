@@ -128,8 +128,8 @@ namespace Models.CLEM.Activities
             areaToSkip = 0;
             areaToDo = pasture.Manager.Area;
             // proportion green
-            double greenPasture = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.Amount);
-            pastureToDo = pasture.Amount;
+            double greenPasture = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.AmountAvailable);
+            pastureToDo = pasture.AmountAvailable;
             if (MathUtilities.IsPositive(pastureToDo))
             {
                 if (MathUtilities.IsGreaterThan(greenPasture / pastureToDo, MinimumProportionGreen))

@@ -13,8 +13,8 @@ using System.Linq;
 namespace Models.CLEM.Groupings
 {
     /// <summary>
-    /// Manages the death of ruminants each time step based using the original IAT/NABSA approach
-    /// The base mortality rate is modified by adult body condition or the mother's body condition for sucklings
+    /// Manages the death of ruminants each time step based using the original IAT/NABSA approach The base mortality
+    /// rate is modified by adult body condition or the mother's body condition for sucklings
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -29,10 +29,12 @@ namespace Models.CLEM.Groupings
         private readonly CLEMEvents events = null;
 
         /// <inheritdoc/>
-        public virtual void DetermineDeaths(IEnumerable<Ruminant> individuals)
+        public virtual List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
+            List<Ruminant> deaths = [];
+
             // order descending to ensure mothers' deaths are determined before juveniles.
-            foreach (var ind in individuals.Where(a => a.Died == false))
+            foreach (var ind in individuals)
             {
                 double mortalityRate;
                 if (!ind.IsWeaned)
@@ -63,8 +65,10 @@ namespace Models.CLEM.Groupings
                 {
                     ind.Died = true;
                     ind.SaleFlag = HerdChangeReason.DiedMortality;
+                    deaths.Add(ind);
                 }
             }
+            return deaths;
         }
 
         #region validation

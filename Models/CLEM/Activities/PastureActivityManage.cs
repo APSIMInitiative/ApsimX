@@ -206,7 +206,7 @@ namespace Models.CLEM.Activities
                 {
                     Resource = land,
                     AllowTransmutation = false,
-                    Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
+                    Required = UseAreaAvailable ? LinkedLandItem.AmountAvailable : AreaRequested,
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
                     ActivityModel = this,
@@ -303,11 +303,7 @@ namespace Models.CLEM.Activities
                     if (growth > 0)
                     {
                         Status = ActivityStatus.Success;
-                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool
-                        {
-                            Age = 0
-                        };
-                        newPasture.Set(growth * Area);
+                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool(growth * Area);
                         newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
                         if (LinkedNativeFoodType.DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
                         {
@@ -318,7 +314,6 @@ namespace Models.CLEM.Activities
                             newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                         }
                         newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
-                        newPasture.Growth = newPasture.Amount;
                         newPasture.GrowthDate = dataEntry.CutDate;
                         newPasture.RumenDegradableProteinPercent = LinkedNativeFoodType.RumenDegradableProteinPercent;
                         LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
@@ -461,7 +456,7 @@ namespace Models.CLEM.Activities
         // This allows this activity to dynamically respond when use available area is selected
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
-            Area = LinkedLandItem.AreaAvailable;
+            Area = LinkedLandItem.AmountAvailable;
         }
 
         #region validation

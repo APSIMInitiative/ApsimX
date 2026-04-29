@@ -1,5 +1,11 @@
 ﻿using APSIM.Numerics;
+using Docker.DotNet.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.CLEM.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Resources
@@ -11,10 +17,30 @@ namespace Models.CLEM.Resources
     public class FoodResourceStore
     {
         /// <summary>
+        /// Store for the number of days in time step
+        /// </summary>
+        [JsonIgnore]
+        public int NumberOfDaysInTimestep { get; private set; } = 1;
+        /// <summary>
         /// Store quality and quantity details.
         /// </summary>
         [JsonIgnore]
         public FoodResourcePacket Details { get; private set; } = new();
+
+        /// <summary>
+        /// The graze food store pools included in this group
+        /// </summary>
+        public List<GrazeFoodStorePool> Pools { get; private set; }
+
+        /// <summary>
+        /// The proportion of the total biomass from each pool
+        /// </summary>
+        public double[] PoolProportions { get; set; }
+
+        /// <summary>
+        /// The proportion of the group that is considered green
+        /// </summary>
+        public double ProportionGreen { get; private set; }
 
         /// <summary>
         /// Total crude protein in the store.
@@ -32,69 +58,203 @@ namespace Models.CLEM.Resources
         public double UndegradableCrudeProtein { get { return CrudeProtein - DegradableCrudeProtein; } }
 
         /// <summary>
-        /// Constructor for a FoodResourceStore.
+        /// Link to the feed type to handle pending and returned feed from quality based reductions
+        /// </summary>
+        public ResourceRequest AssociatedResourceRequest { get; set; }
+
+        /// <summary>
+        /// Constructor for a FoodResourceStore with local packet details.
         /// </summary>
         /// <param name="foodResourcePacket">The food resource packet to initialise the resource with values</param>
         public FoodResourceStore(FoodResourcePacket foodResourcePacket)
         {
-            Details.TypeOfFeed = foodResourcePacket.TypeOfFeed;
+            Details.SetPropertiesFromPacket(foodResourcePacket, foodResourcePacket.Amount);
+            CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+        }
+
+        /// <summary>
+        /// Constructor for a FoodResourceStore with local packet details and a specified amount.
+        /// </summary>
+        /// <param name="foodResourcePacket">The food resource packet to initialise the resource with values</param>
+        /// <param name="amount">Amount to initialise store with</param>
+        /// <param name="request">Associated resource request for transactions</param>
+        /// <param name="daysInTimeStep">Number of days in time step</param>
+        public FoodResourceStore(FoodResourcePacket foodResourcePacket, double amount, ResourceRequest request = null, int daysInTimeStep = 1)
+        {
+            Details.SetPropertiesFromPacket(foodResourcePacket, amount);
+            CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            if (request is not null)
+                AssociatedResourceRequest = request;
+            NumberOfDaysInTimestep = daysInTimeStep;
+        }
+
+        /// <summary>
+        /// Constructor for a FoodResourceStore to create a shallow copy from another FoodResourceStore and a specified
+        /// ensuring the Details with amount is only for the new FoodResourceStore.
+        /// </summary>
+        /// <param name="foodResourceStore">
+        /// The food resource store to initialise the resource with values and pasture pools
+        /// </param>
+        /// <param name="amount">Amount to initialise store with</param>
+        public FoodResourceStore(FoodResourceStore foodResourceStore, double amount)
+        {
+            Details.SetPropertiesFromPacket(foodResourceStore.Details, amount);
+            if (Details.Amount > 0)
+            {
+                CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+                DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            }
+
+            NumberOfDaysInTimestep = foodResourceStore.NumberOfDaysInTimestep;
+            Pools = foodResourceStore.Pools;
+            AssociatedResourceRequest = foodResourceStore.AssociatedResourceRequest;
+            PoolProportions = foodResourceStore.PoolProportions;
+            ProportionGreen = foodResourceStore.ProportionGreen;
+        }
+
+        /// <summary>
+        /// Constructor to create a FoodResourceStore for pasture pool group given pasure pools, green age and the
+        /// number of time steps
+        /// </summary>
+        /// <param name="pools">Graze food store pools included</param>
+        /// <param name="greenAge">The age (months) below which considered green</param>
+        /// <param name="numberOfTimesteps">
+        /// The number of timesteps to convert from daily rates to toal for intake to total
+        /// </param>
+        public FoodResourceStore(List<GrazeFoodStorePool> pools, int greenAge, int numberOfTimesteps)
+        {
+            NumberOfDaysInTimestep = numberOfTimesteps;
+            Pools = pools;
+            double totalInPools = pools.Sum(p => p.AmountAvailable);
+            PoolProportions = pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0).ToArray();
+            foreach (var pool in pools)
+            {
+                if (pool.AmountAvailable > 0)
+                {
+                    Details.AddAndMix(pool, pool.AmountAvailable);
+                }
+            }
+            Details.ClearAmount();
+            ProportionGreen = pools.Count == 0 ? 0 : pools.Where(p => p.Age <= greenAge).Sum(a => a.AmountAvailable) / totalInPools;
         }
 
         /// <summary>
         /// Adds a FoodResourcePacket to this store and adjusts pool qualities.
         /// </summary>
         /// <param name="packet">Packet to add.</param>
-        public void Add(FoodResourcePacket packet)
+        /// <param name="specifyAmount">Specify the amount to add rather than obtain from the packet.Amount</param>
+        public void Add(FoodResourcePacket packet, double? specifyAmount)
         {
-            Details.GrossEnergyContent = ((Details.GrossEnergyContent * Details.Amount) + (packet.GrossEnergyContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.FatPercent = ((Details.FatPercent * Details.Amount) + (packet.FatPercent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.NitrogenPercent = ((Details.NitrogenPercent * Details.Amount) + (packet.NitrogenPercent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.CrudeProteinPercent = ((Details.CrudeProteinPercent * Details.Amount) + (packet.CrudeProteinPercent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.AcidDetergentInsolubleProtein = ((Details.AcidDetergentInsolubleProtein * Details.Amount) + (packet.AcidDetergentInsolubleProtein * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.RumenDegradableProteinPercent = ((Details.RumenDegradableProteinPercent * Details.Amount) + (packet.RumenDegradableProteinPercent * packet.Amount)) / (Details.Amount + packet.Amount);
-            Details.GutFill = ((Details.GutFill * Details.Amount) + (packet.GutFill * packet.Amount)) / (Details.Amount + packet.Amount);
+            if (!specifyAmount.HasValue)
+            {
+                specifyAmount = packet.Amount;
+            }
 
-            Details.Amount += packet.Amount;
+            Details.GrossEnergyContent = ((Details.GrossEnergyContent * Details.Amount) + (packet.GrossEnergyContent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.DryMatterDigestibility = ((Details.DryMatterDigestibility * Details.Amount) + (packet.DryMatterDigestibility * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.FatPercent = ((Details.FatPercent * Details.Amount) + (packet.FatPercent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.NitrogenPercent = ((Details.NitrogenPercent * Details.Amount) + (packet.NitrogenPercent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.CrudeProteinPercent = ((Details.CrudeProteinPercent * Details.Amount) + (packet.CrudeProteinPercent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.MetabolisableEnergyContent = ((Details.MetabolisableEnergyContent * Details.Amount) + (packet.MEContent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.AcidDetergentInsolubleProtein = ((Details.AcidDetergentInsolubleProtein * Details.Amount) + (packet.AcidDetergentInsolubleProtein * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.RumenDegradableProteinPercent = ((Details.RumenDegradableProteinPercent * Details.Amount) + (packet.RumenDegradableProteinPercent * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+            Details.GutFill = ((Details.GutFill * Details.Amount) + (packet.GutFill * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
+
+            Details.AddAmount(specifyAmount.Value);
 
             CrudeProtein += packet.CrudeProtein;
             DegradableCrudeProtein += packet.DegradableProtein;
         }
 
         /// <summary>
-        /// Reduce current amount supplied
+        /// Add a specified amount as intake and adjust details and pool pending amounts accordingly.
         /// </summary>
-        /// <param name="amount">the amount to add or subtract</param>
-        public void ReduceIntakeByAmount(double amount)
+        /// <param name="amountPerDay">Amount considered intake for time step</param>
+        public void AdjustDailyAmountAsIntake(double amountPerDay)
         {
-            if (MathUtilities.IsGreaterThan(amount, Details.Amount))
+            if (amountPerDay <= 0)
+                return;
+
+            Details.AddAmount(amountPerDay);
+            CrudeProtein += (Details.CrudeProteinPercent / 100.0) * amountPerDay;
+            DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * amountPerDay * (Details.RumenDegradableProteinPercent / 100.0);
+
+            if (Pools is not null)
             {
-                Details.Amount = 0;
+                for (int i = 0; i < Pools.Count; i++)
+                {
+                    Pools[i].AmountPending += amountPerDay * NumberOfDaysInTimestep * PoolProportions[i];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reduce the store by specified amount
+        /// </summary>
+        /// <param name="amountPerDay">The amount to remove</param>
+        /// <param name="reducePending">Whether to reduce the pending take from pools as well (default true)</param>
+        public void ReduceByDailyAmount(double amountPerDay, bool reducePending = true)
+        {
+            if (amountPerDay <= 0)
+                return;
+
+            amountPerDay = Details.ReduceAmount(amountPerDay);
+
+            if (reducePending)
+            {
+                if ((Pools?.Count ?? 0) > 0)
+                {
+                    double totalPendingReduction = 0;
+                    for (int i = 0; i < Pools.Count; i++)
+                    {
+                        Pools[i].ReducePending(amountPerDay * NumberOfDaysInTimestep * PoolProportions[i]);
+                        totalPendingReduction += amountPerDay * NumberOfDaysInTimestep * PoolProportions[i];
+                    }
+                }
+                if (AssociatedResourceRequest is not null)
+                {
+                    AssociatedResourceRequest.Resource.ReducePending(AssociatedResourceRequest, amountPerDay);
+                }
+            }
+
+            if (Details.Amount == 0)
+            {
                 CrudeProtein = 0;
                 DegradableCrudeProtein = 0;
                 return;
             }
-            Details.Amount -= amount;
-            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * amount;
+            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * amountPerDay;
             DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
-        /// Reduce current amount by proportion
+        /// Reduce from the pending take by a proportion
         /// </summary>
         /// <param name="proportion">the proportion to reduce by</param>
-        public double ReduceIntakeByProportion(double proportion)
+        /// <param name="reducePending">Whether to reduce the pending take from pools as well (default true)</param>
+
+        public double ReduceByProportion(double proportion, bool reducePending = true)
         {
-            double amountReduced = 0;
-            if (MathUtilities.IsPositive(proportion) && MathUtilities.IsLessThan(proportion, 1.0))
+            proportion = Math.Max(proportion, 0);
+            if (proportion <= 0)
+                return 0;
+
+            double amountToReduce = Details.Amount * proportion;
+            amountToReduce = Details.ReduceAmount(amountToReduce);
+            CrudeProtein *= (1 - proportion);
+            DegradableCrudeProtein *= (1 - proportion);
+
+            if (reducePending && Pools.Count > 0)
             {
-                amountReduced = Details.Amount * proportion;
-                Details.Amount *= (1 - proportion);
-                CrudeProtein *= (1 - proportion);
-                DegradableCrudeProtein *= (1 - proportion);
+                for (int i = 0; i < Pools.Count; i++)
+                {
+                    Pools[i].ReducePending(amountToReduce * NumberOfDaysInTimestep * PoolProportions[i]);
+                }
             }
-            return amountReduced;
+
+            return amountToReduce;
         }
 
         /// <summary>
@@ -105,6 +265,21 @@ namespace Models.CLEM.Resources
         {
             DegradableCrudeProtein *= factor;
             CrudeProtein *= factor;
+        }
+
+        /// <summary>
+        /// Take action to account for pending take assume this is the final amount to be taken pool's total amount.
+        /// </summary>
+        /// <remarks>
+        /// If the requested amount exceeds the total available in all pools, only the available amount is removed.
+        /// After execution, the requested amount is reset to zero.
+        /// </remarks>
+        public void PerformPendingRemoval()
+        {
+            for (int i = 0; i < Pools.Count; i++)
+            {
+                Pools[i].ConsumePending();
+            }
         }
 
         /// <summary>

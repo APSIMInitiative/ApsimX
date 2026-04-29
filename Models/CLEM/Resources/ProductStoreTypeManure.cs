@@ -79,17 +79,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
-
-        /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
@@ -175,7 +164,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public double Amount { get { return amount; } }
+        public new double AmountTotal { get { return amount; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
@@ -208,24 +197,6 @@ namespace Models.CLEM.Resources
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
-        }
-
-        /// <summary>
-        /// Remove from product type store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
-        {
-            if (request.Required == 0)
-                return;
-
-            // avoid taking too much
-            double amountRemoved = request.Required;
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
-            this.amount -= amountRemoved;
-
-            request.Provided = amountRemoved;
-            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
         }
 
         /// <summary>

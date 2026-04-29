@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         /// Current list of resources requested by this activity
         /// </summary>
         [JsonIgnore]
-        public List<ResourceRequest> ResourceRequestList { get; set; }
+        public List<ResourceRequest> ResourceRequestList { get; set; } = [];
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -522,25 +522,6 @@ namespace Models.CLEM.Activities
 
         #endregion
 
-        /// <summary>A method to arrange clearing the activity status on CLEMStartOfTimeStep event.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        protected virtual void ResetActivityStatus(object sender, EventArgs e)
-        {
-            // clear Resources Required list
-            ResourceRequestList = new List<ResourceRequest>();
-            foreach (var key in valuesForCompanionModels.Keys)
-            {
-                valuesForCompanionModels[key] = null;
-            }
-            statusMessageList.Clear();
-            if (Status != ActivityStatus.NoTask)
-            {
-                Status = ActivityStatus.Ignored;
-            }
-        }
-
         /// <summary>
         /// Add a new message to the list of current status messages.
         /// </summary>
@@ -710,7 +691,7 @@ namespace Models.CLEM.Activities
             // adjust if needed using method supplied by activity
             AdjustResourcesForTimestep();
 
-            if (ReportShortfalls(ResourceRequestList) == false)
+            if (ResourceRequestList is not null && ReportShortfalls(ResourceRequestList) == false)
             {
                 // take resources
                 // if no resources required perform Activity if code is present.
@@ -991,7 +972,7 @@ namespace Models.CLEM.Activities
                         {
                             request.Available = 0;
                             // get amount available
-                            request.Available = Math.Min(request.Resource.Amount, request.Required);
+                            request.Available = Math.Min(request.Resource.AmountAvailable, request.Required);
                         }
                     }
                 }
@@ -1287,7 +1268,7 @@ namespace Models.CLEM.Activities
 
             if (request.Resource != null)
             {
-                request.Available = Math.Min(request.Resource.Amount, request.Required);
+                request.Available = Math.Min(request.Resource.AmountAvailable, request.Required);
             }
 
             if (removeFromResource && request.Resource != null)

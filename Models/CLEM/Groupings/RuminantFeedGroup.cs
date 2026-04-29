@@ -104,7 +104,8 @@ namespace Models.CLEM.Groupings
                 ResourceTypeName = feedActivityParent.FeedTypeName,
                 ActivityModel = Parent as CLEMActivityBase,
                 Category = TransactionCategory,
-                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay
+                RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay,
+                TransactionPending = true
             };
 
             switch (feedActivityParent.FeedStyle)
@@ -204,7 +205,7 @@ namespace Models.CLEM.Groupings
                         feedNeeded = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        feedNeeded = value * feedActivityParent.FeedResource.Amount;
+                        feedNeeded = value * feedActivityParent.FeedResource.AmountAvailable;
                         break;
                     default:
                         break;
@@ -220,7 +221,7 @@ namespace Models.CLEM.Groupings
                     // restrict to max intake permitted by individuals and avoid overfeed wastage
                     feedNeeded = Math.Min(feedNeeded, FeedToSatisfy);
                 }
-                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).Amount = feedNeeded;
+                (currentFeedRequest.AdditionalDetails as FoodResourcePacket).SetAmount(feedNeeded);
                 currentFeedRequest.Required = feedNeeded;
             }
         }

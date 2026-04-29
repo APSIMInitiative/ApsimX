@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
 
-                    double pastureBiomass = pasture.Amount;
+                    double pastureBiomass = pasture.AmountAvailable;
 
                     // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
                     // AL found the best estimate for AAsh Barkly example was 2/3 difference between detachment and carryover detachment rate with average 12month pool ranging from 10 to 96% and average 46% of total pasture.

@@ -166,19 +166,19 @@ namespace Models.CLEM.Reporting
                                 {
                                     foreach (CLEMModel item in Structure.FindChildren<CLEMModel>(relativeTo: model))
                                     {
-                                        string amountStr = "Amount";
-                                        switch (item)
-                                        {
-                                            case FinanceType ftype:
-                                                amountStr = "Balance";
-                                                break;
-                                            case LandType ltype:
-                                                if (ReportLandEntire)
-                                                    amountStr = "LandArea";
-                                                break;
-                                            default:
-                                                break;
-                                        }
+                                        string amountStr = "AmountTotal";
+                                        //switch (item)
+                                        //{
+                                        //    case FinanceType ftype:
+                                        //        amountStr = "Balance";
+                                        //        break;
+                                        //    case LandType ltype:
+                                        //        if (ReportLandEntire)
+                                        //            amountStr = "LandArea";
+                                        //        break;
+                                        //    default:
+                                        //        break;
+                                        //}
                                         if (item is RuminantType)
                                         {
                                             // add each variable needed

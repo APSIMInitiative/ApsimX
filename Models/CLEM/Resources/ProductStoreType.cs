@@ -52,17 +52,6 @@ namespace Models.CLEM.Resources
                 Add(StartingAmount, null, null, "Starting value");
         }
 
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
-
         #region transactions
 
         /// <summary>

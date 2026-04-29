@@ -1,11 +1,12 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.CLEM.Interfaces;
 using System;
 
 namespace Models.CLEM.Resources
 {
-    ///<summary>
+    /// <summary>
     /// Additional information for animal food requests
-    ///</summary> 
+    /// </summary>
     [Serializable]
     public class FoodResourcePacket : IFeed
     {
@@ -60,7 +61,8 @@ namespace Models.CLEM.Resources
         public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <summary>
-        /// Method to calculate the Acid Detergent Insoluble Protein based on the rumen degradable protein and type of feed
+        /// Method to calculate the Acid Detergent Insoluble Protein based on the rumen degradable protein and type of
+        /// feed
         /// </summary>
         /// <param name="rumenDegradableProteinPercent">RDP of feed</param>
         /// <param name="typeOfFeed">Type of feed to identify forage</param>
@@ -93,13 +95,45 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///<inheritdoc/>
+        /// <inheritdoc/>
         public double GutFill { get; set; } = 0.08;
 
-        ///<summary>
-        /// Amount of food supplied
-        ///</summary> 
-        public double Amount { get; set; }
+        /// <summary>
+        /// Amount of food in packet
+        /// </summary>
+        public double Amount { get; private set; }
+
+        /// <summary>
+        /// Set the amount present to zero but maintain the quality details.
+        /// </summary>
+        public void ClearAmount()
+        {
+            Amount = 0;
+        }
+
+        /// <summary>
+        /// Add a specified amount of current content to this packet
+        /// </summary>
+        /// <param name="amount">The amount to add</param>
+        public void SetAmount(double amount) => Amount = amount;
+
+        /// <summary>
+        /// Add a specified amount of current content to this packet
+        /// </summary>
+        /// <param name="amount">The amount to add</param>
+        public void AddAmount(double amount) => Amount += amount;
+
+        /// <summary>
+        /// Reduce the take pending by a specified amount
+        /// </summary>
+        /// <param name="amount">The amount returned from pending request</param>
+        /// <returns>The amount reduced</returns>
+        public double ReduceAmount(double amount)
+        {
+            double amountReduced = Math.Min(Amount, amount);
+            Amount -= amountReduced;
+            return amountReduced;
+        }
 
         /// <summary>
         /// Metabolic Energy Content of the food resource packet
@@ -201,7 +235,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Clone this packet 
+        /// Clone this packet
         /// </summary>
         /// <returns>A copy of this packet</returns>
         public FoodResourcePacket Clone(double amount)
@@ -221,10 +255,27 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FoodResourcePacket(double initialAmount)
+        {
+            Amount = initialAmount;
+        }
+
+        /// <summary>
         /// Constructor based on an IFeed clone
         /// </summary>
         /// <param name="packet"></param>
         public FoodResourcePacket(IFeed packet)
+        {
+            SetPropertiesFromPacket(packet);
+        }
+
+        /// <summary>
+        /// Set properties based on Ifeed packet
+        /// </summary>
+        /// <param name="packet">Packet providing quality settings</param>
+        public void SetPropertiesFromPacket(IFeed packet)
         {
             TypeOfFeed = packet.TypeOfFeed;
             MetabolisableEnergyContent = packet.MetabolisableEnergyContent;
@@ -239,7 +290,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// A method to add an amount of another packet (i.e. graze food pool) and mix to give amount weighted average properties
+        /// Set propterties based on Ifeed packet and amount
+        /// </summary>
+        /// <param name="packet">Packet providing quality</param>
+        /// <param name="amount">Amount to inialise packet</param>
+        public void SetPropertiesFromPacket(IFeed packet, double amount)
+        {
+            SetPropertiesFromPacket(packet);
+            Amount = amount;
+        }
+
+        /// <summary>
+        /// A method to add an amount of another packet (i.e. graze food pool) and mix to give amount weighted average
+        /// properties
         /// </summary>
         /// <param name="packet">The details of the packet added</param>
         /// <param name="amount">The amount of the packet added</param>

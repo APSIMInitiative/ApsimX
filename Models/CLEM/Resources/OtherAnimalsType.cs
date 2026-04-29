@@ -259,7 +259,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Total value of resource
         /// </summary>
-        public double? Value
+        public new double? Value
         {
             get
             {

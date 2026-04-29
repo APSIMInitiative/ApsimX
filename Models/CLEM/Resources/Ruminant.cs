@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void CheckWeanedStatus()
         {
-            if (dateOfWeaning != default)
+            if (dateOfWeaning == default || Parameters.Details.CurrentTimeStep is null)  // todo: changed the != to == as I think it should drop out only when default wean weaning
                 return;
 
             if (AgeInDays >= AgeToWeanNaturally)

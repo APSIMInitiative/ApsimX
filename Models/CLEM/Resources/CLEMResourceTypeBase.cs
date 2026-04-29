@@ -1,15 +1,20 @@
+using Docker.DotNet.Models;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using NetTopologySuite.Precision;
 using Newtonsoft.Json;
+using StdUnits;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Models.CLEM.Resources
 {
-    ///<summary>
+    /// <summary>
     /// CLEM Resource Type base model
-    ///</summary>
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -20,6 +25,25 @@ namespace Models.CLEM.Resources
         [Link]
         private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
+        private double amount = 0;
+        private Dictionary<ResourceRequest, double> pending = new ();
+        private bool marketStoreChecked = false;
+
+        private const double TOLERANCE = 0.0000001;
+
+        /// <summary>
+        /// The amount available accounting for pending transactions.
+        /// </summary>
+        [JsonIgnore]
+        public double AmountAvailable { get { return AmountTotal - AmountPending; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double AmountTotal { get { return amount; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double AmountPending { get { return pending.Sum(a => a.Value); } }
 
         /// <summary>
         /// A link to the equivalent market store for trading.
@@ -35,17 +59,10 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!EquivalentMarketStoreDetermined)
-                    FindEquivalentMarketStore();
-
+                FindEquivalentMarketStore();
                 return EquivalentMarketStore is not null;
             }
         }
-
-        /// <summary>
-        /// Determines if an equivalent resource has been found in the market
-        /// </summary>
-        protected bool EquivalentMarketStoreDetermined { get; set; }
 
         /// <summary>
         /// Determine whether transmutation has been defined for this food type
@@ -66,6 +83,23 @@ namespace Models.CLEM.Resources
         protected void OnSetupTypeBase(object sender, EventArgs e)
         {
             parent = Structure.FindParent<ResourceBaseWithTransactions>(recurse: true);
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        protected void OnStartOfTimeStep(object sender, EventArgs e)
+        {
+            foreach (var item in pending)
+            {
+                if (item.Value > 0)
+                {
+                    string warnMessage = $"Pending transaction for [r={Name}] from [a={item.Key.ActivityModel.Name}] has not been completed at the start of the time step. Amount pending of [a={item.Value}] was cleared";
+                    Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+                }
+            }
+            pending.Clear();
         }
 
         /// <summary>
@@ -137,6 +171,17 @@ namespace Models.CLEM.Resources
                 return new ResourcePricing() { PricePerPacket = 0, PacketSize = 1, UseWholePackets = true };
             }
             return price;
+        }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(AmountAvailable);
+            }
         }
 
         /// <summary>
@@ -236,7 +281,7 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public object ConvertTo(string converterName)
         {
-            return ConvertTo(converterName, (this as IResourceType).Amount);
+            return ConvertTo(converterName, (this as IResourceType).AmountAvailable);
         }
 
         /// <summary>
@@ -262,6 +307,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         protected void FindEquivalentMarketStore()
         {
+            if (marketStoreChecked)
+                return;
+
             // determine what resource types allow market transactions
             switch (this)
             {
@@ -275,25 +323,18 @@ namespace Models.CLEM.Resources
                     throw new NotImplementedException($"[r={Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\r\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources [r={this.Name}] with the [m=Market]\r\nPlease contact developers for assistance.");
             }
 
-            // if not already checked
-            if (!EquivalentMarketStoreDetermined)
+            ResourcesHolder holder = Structure.FindParent<ResourcesHolder>(recurse: true);
+            // is there a market
+            if (holder is not null && holder.FoundMarket is not null)
             {
-                // haven't already found a market store
-                if (EquivalentMarketStore is null)
+                IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
+                if (store is not null)
                 {
-                    ResourcesHolder holder = Structure.FindParent<ResourcesHolder>(recurse: true);
-                    // is there a market
-                    if (holder != null && holder.FoundMarket != null)
-                    {
-                        IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
-                        if (store != null)
-                        {
-                            EquivalentMarketStore = store as CLEMResourceTypeBase;
-                        }
-                    }
+                    EquivalentMarketStore = store as CLEMResourceTypeBase;
                 }
-                EquivalentMarketStoreDetermined = true;
             }
+
+            marketStoreChecked = true;
         }
 
         /// <summary>
@@ -325,7 +366,6 @@ namespace Models.CLEM.Resources
         /// <param name="extraInformation"></param>
         public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource, object extraInformation = null)
         {
-            //ResourceBaseWithTransactions parent = FindAncestor<ResourceBaseWithTransactions>();
             if (parent != null)
             {
                 // update the last transaction object of parent
@@ -355,24 +395,152 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add resources from various objects
+        /// Add an amount to the resource.
         /// </summary>
-        /// <param name="resourceAmount">Amount to be applied</param>
+        /// <param name="amountToAdd">Amount to add to resource store</param>
+        /// <returns></returns>
+        protected void Add(double amountToAdd)
+        {
+            amount += amountToAdd;
+            if (amount < TOLERANCE) amount = 0;
+        }
+
+        /// <summary>
+        /// Add resource to store from various sources with transaction handling and reporting.
+        /// </summary>
+        /// <param name="resourceAmount">Object containing amount to be applied</param>
         /// <param name="activity">Activity performing this transaction</param>
         /// <param name="relatesToResource">Resource this transaction relates to</param>
         /// <param name="category">Category of this resource transaction</param>
         public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            throw new NotImplementedException();
+            // overridden methods will handle other types of resourceAmount object, this base method only handles double amounts and is used by most resource types. If other types are needed (e.g. food with nutritional information) then the resource type can override this method and handle the additional information as needed.
+            if (resourceAmount.GetType().ToString() != "System.Double")
+            {
+                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+            }
+
+            double amountAdded = (double)resourceAmount;
+            if (amountAdded > 0)
+            {
+                Add(amountAdded);
+                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
+            }
+        }
+
+        /// <summary>
+        /// Remove a specified amount from the resource.
+        /// </summary>
+        /// <param name="amountToRemove">Amount to remove from resource store</param>
+        /// <param name="pendingRequest">
+        /// Provides a the request if this is a pending transaction that has not yet been completed. This will not
+        /// reduce the amount total until available until the transaction is completed.
+        /// </param>
+        /// <returns>Amount removed</returns>
+        protected double Remove(double amountToRemove, ResourceRequest pendingRequest)
+        {
+            amountToRemove = Math.Min(amountToRemove, AmountAvailable);
+            if (pendingRequest is not null)
+            {
+                if (pending.ContainsKey(pendingRequest))
+                {
+                    pending[pendingRequest] += amountToRemove;
+                }
+                else
+                {
+                    pending.Add(pendingRequest, amountToRemove);
+                }
+            }
+            else
+            {
+                amount -= amountToRemove;
+                if (amount < TOLERANCE) amount = 0;
+            }
+            return amountToRemove;
         }
 
         /// <summary>
         /// Remove amount based on a ResourceRequest object
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">Object containing amount required</param>
         public void Remove(ResourceRequest request)
         {
-            throw new NotImplementedException();
+            if (request.Required == 0)
+                return;
+
+            double amountRemoved = Remove(request.Required, request.TransactionPending ? request : null);
+            request.Provided = amountRemoved;
+
+            PerformTransaction(request, !request.TransactionPending);
+        }
+
+        /// <inheritdoc/>
+        public void ReducePending(ResourceRequest request, double amount)
+        {
+            if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
+            {
+                string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+                return;
+            }
+            amount = Math.Min(amount, pending[request]);
+            pending[request] -= amount;
+        }
+
+        /// <summary>
+        /// Performs a transaction by specified amount.
+        /// </summary>
+        /// <param name="request">The amount of the transaction.</param>
+        /// <param name="handlePendingTransaction">
+        /// This transaction should handle any pending amount rather than the amount provided.
+        /// </param>
+        private void PerformTransaction(ResourceRequest request, bool handlePendingTransaction = false)
+        {
+            double amountToRemove = request.Provided;
+            if (handlePendingTransaction)
+            {
+                if (pending.ContainsKey(request))
+                {
+                    amountToRemove = pending[request];
+                    pending.Remove(request);
+                }
+                else
+                {
+                    amountToRemove = 0;
+                }
+            }
+
+            if (amountToRemove == 0)
+                return;
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+                // send to market if needed
+                if (MarketStoreExists)
+                {
+                    EquivalentMarketStore.Add(amountToRemove * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+                }
+            }
+            ReportTransaction(TransactionType.Loss, amountToRemove, request.ActivityModel, request.RelatesToResource, request.Category, this);
+        }
+
+        /// <summary>A method to arrange clearing the activity status on CLEMStartOfTimeStep event.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMManagePendingTransactions")]
+        protected virtual void ManagePendingTransactions(object sender, EventArgs e)
+        {
+            foreach (var item in pending)
+            {
+                if (item.Value > 0)
+                {
+                    item.Key.Provided = item.Value;
+                    PerformTransaction(item.Key, true);
+                }
+            }
+            pending.Clear();
         }
 
         /// <summary>
@@ -381,7 +549,13 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public void Set(double newAmount)
         {
-            throw new NotImplementedException();
+            amount = newAmount;
+            if (pending.Count > 0) 
+            {
+                string warnMessage = $"Pending transactions for [r={Name}] have not been completed at the time of a Set operation. Amount pending of [a={AmountPending}] was not reported";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+            }
+            pending.Clear();
         }
     }
 }

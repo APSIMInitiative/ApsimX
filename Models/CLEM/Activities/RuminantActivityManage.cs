@@ -935,13 +935,13 @@ namespace Models.CLEM.Activities
                         }
                         break;
                     case "Stock - female breeder purchases":
-                        if (ManageFemaleBreederNumbers && PerformFemaleStocking && excessBreeders < 0 && (grazeStoreBreeders?.Amount ?? 0) >= MinimumPastureBeforeRestock)
+                        if (ManageFemaleBreederNumbers && PerformFemaleStocking && excessBreeders < 0 && (grazeStoreBreeders?.AmountAvailable ?? 0) >= MinimumPastureBeforeRestock)
                         {
                             number = excessBreeders * -1;
                         }
                         break;
                     case "Stock - sire purchases":
-                        if (ManageMaleBreederNumbers && PerformFemaleDestocking && siresPresent < SiresKept && (grazeStoreSires?.Amount??0) >= MinimumPastureBeforeRestock)
+                        if (ManageMaleBreederNumbers && PerformFemaleDestocking && siresPresent < SiresKept && (grazeStoreSires?.AmountAvailable ?? 0) >= MinimumPastureBeforeRestock)
                         {
                             number = maleBreedersRequired;
                         }
@@ -957,7 +957,7 @@ namespace Models.CLEM.Activities
                     _ => (double?)0,
                 };
             }
-            return null;
+            return new ();
         }
 
         /// <inheritdoc/>

@@ -33,10 +33,5 @@ namespace Models.CLEM.Interfaces
         /// The current resource request from grazing
         /// </summary>
         public ResourceRequest CurrentGrazingRequest { get; set; }
-
-        /// <summary>
-        /// Method to report the status of current grazing request after all diet changes accounted for
-        /// </summary>
-        public void ReportGrazingTransaction();
     }
 }

@@ -93,6 +93,8 @@ namespace Models.CLEM
         public event EventHandler CLEMFinalizeTimeStep;
         /// <summary>CLEM end of timestep event</summary>
         public event EventHandler CLEMEndOfTimeStep;
+        /// <summary>CLEM event to ensure all pending transactions are processed</summary>
+        public event EventHandler CLEMManagePendingTransactions;
 
         private DateTime timeStepStart;
         private DateTime timeStepEnd;
@@ -378,6 +380,7 @@ namespace Models.CLEM
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
             if (Clock.Today == timeStepEnd)
             {
+                CLEMManagePendingTransactions?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
                 CLEMAnimalMilking?.Invoke(this, args);
                 CLEMCalculateEcologicalState?.Invoke(this, args);

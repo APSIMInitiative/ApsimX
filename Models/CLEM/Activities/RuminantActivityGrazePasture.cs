@@ -20,8 +20,7 @@ using System.ServiceModel.Security;
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant graze activity</summary>
-    /// <summary>This activity determines how a ruminant group will graze</summary>
-    /// <summary>It is designed to request food via a food store arbitrator</summary>
+    /// <summary>This activity determines how ruminants will graze a specified pasture</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -36,11 +35,13 @@ namespace Models.CLEM.Activities
         [Link]
         private CLEMEvents events = null;
         private IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren;
+        private double[] totalNeededDaily;
+        private double[] totalRequestedTimeStep;
+        private double totalPastureAvailable = 0;
 
         /// <summary>
-        /// Number of hours grazed
-        /// Based on 8 hour grazing days
-        /// Could be modified to account for rain/heat walking to water etc.
+        /// Number of hours grazed based on an 8 hour grazing days. Can be modfied later to account for rain/heat
+        /// walking to water etc.
         /// </summary>
         [Description("Number of hours grazed (based on 8 hr grazing day)")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
@@ -55,7 +56,7 @@ namespace Models.CLEM.Activities
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
-        /// paddock or pasture to graze
+        /// The model representing the paddock or pasture to graze
         /// </summary>
         [JsonIgnore]
         public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
@@ -68,7 +69,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Constructor using details from a GrazeAll activity
+        /// Constructor using details from a parent GrazeAll activity
         /// </summary>
         public RuminantActivityGrazePasture(RuminantActivityGrazeAll grazeAll, IGrazeFoodStoreType pastureType, string transactionCategory, Guid parentProvidedUid)
         {
@@ -101,7 +102,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to define dynamic breed grazing children
+        /// Method to dynamically create all pasture-herd children for grazing
         /// </summary>
         public void SetupDynamicChildren()
         {
@@ -113,11 +114,14 @@ namespace Models.CLEM.Activities
 
             Guid nextUID = ActivitiesHolder.AddToGuID(UniqueID, 2);
             grazeHerdChildren = Structure.FindChildren<RuminantActivityGrazePastureHerd>();
+            totalNeededDaily = [grazeHerdChildren.Count()];
+            totalRequestedTimeStep = [grazeHerdChildren.Count()];
             foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
             {
                 if (grazeHerdChildren.Where(a => a.RuminantTypeModel != herdType).Any() == false)
                 {
                     var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
+                    newGrazePastureHerd.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
                     Structure.AddChild(newGrazePastureHerd);
                     Links links = new();
                     links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);
@@ -131,43 +135,99 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Method to calculate the shortfall multiplier based on the total intake required and the amount available in
+        /// the pools. This is used to reduce intake proportionally across all herds when there is insufficient pasture
+        /// to meet requirements.
+        /// </summary>
+        /// <param name="pastureAvailable">Pasture available at start of time step</param>
+        /// <param name="intakeRequired">Intake required by herd</param>
+        /// <returns></returns>
+        public static double CalculateShortfallMultiplier(double pastureAvailable, double[] intakeRequired)
+        {
+            double competitionMultiplier = 1.0;
+            double totalIntake = intakeRequired.Sum();
+            if (totalIntake <= pastureAvailable)
+            {
+                return competitionMultiplier;
+            }
+           
+            return 1.0 - (totalIntake - pastureAvailable) / totalIntake;
+        }
+
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
-            // if calling the getResources from child PastureHerd components they will only run once.
+            // generate pool gropus based on available pasture in the graze food store pools
+            // For each pool group (i.e. based on DMD)
+            // fill individual's feed requirements from first pool
+            // Reduce based on shortfall of pasture for all herds. 
 
-            double totalNeeded = 0;
+            totalPastureAvailable = GrazeFoodStoreModel.AmountAvailable;
+            int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
+            var poolGroups = GeneratePoolsGroups(GrazeFoodStoreModel, events.Interval, greenAge);
+
+            int cnt = 0;
             foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
             {
-                grazeHerd.ResourceRequestList = null;
-                totalNeeded += grazeHerd.CalculateFeedRequirement();
-                //item.PotentialIntakePastureQualityLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
-                //var resourceRequest = item.RequestDetermineResources().Where(a => a.Resource is IGrazeFoodStoreType).FirstOrDefault();
-                //totalNeeded += resourceRequest?.Required??0;
+                grazeHerd.DigestiblePasturePoolGroups = poolGroups;
+                grazeHerd.ResourceRequestList.Clear();
+                totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement(greenAge);
+                cnt++;
             }
 
-            int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
-            GeneratePoolsGroups(GrazeFoodStoreModel, grazeHerdChildren, greenAge);
-
-
-
-            // Check available resources and only provide if there is truly competition between two or more breeds/herds
-            double available = GrazeFoodStoreModel.Amount;
-            double limit = 1.0;
-            if (MathUtilities.IsPositive(totalNeeded) & grazeHerdChildren.Count() > 1)
+            // fill all animals by calculating relative fill for each pool group 
+            for (int i = 0; i < poolGroups.Count; i++)
             {
-                limit = Math.Min(1.0, available / totalNeeded);
+                // fill pool by desired by each herd
+                cnt = 0;
+                double intakeSum = 0;
+                foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
+                {
+                    totalRequestedTimeStep[cnt] = grazeHerd.PrepareTakeFromGrazingPoolGroup(poolGroups[i], i) * totalNeededDaily[cnt] * events.Interval;
+                    intakeSum += totalRequestedTimeStep[cnt];
+                    cnt++;
+                }
+
+                // shortfall limiter
+                double shortfallMultiplier = CalculateShortfallMultiplier(poolGroups[i].Pools.Sum(a => a.AmountAvailable), totalRequestedTimeStep);
+
+                foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
+                {
+                    grazeHerd.TakeFromGrazingPoolGroup(poolGroups[i], i, shortfallMultiplier);
+                    grazeHerd.CreateResourceRequest();
+                }
             }
 
-            // apply limits to children
-            foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
+            foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
             {
-                if (item.GrazeFoodStoreModel is GrazeFoodStoreAPSIMLink)
-                    item.GrazingCompetitionLimiter = limit;
-                else
-                    item.SetupPoolsAndLimits(limit);
+                grazeHerd.PotentialIntakeShortfallLimiter = grazeHerd.CalculatePotentialShortfallLimiter();
             }
+
+            // looking at form of relationships for lowbiomass and greenpasture modifiers, I don't think there is much scope to take more intake if still not satisfied
+
+            // determine if individuals can still feed by order of least overhead
+            // if StrictFeedingLimits = false - individuals can eat beyond the green limit if needed
+            // if green proportion < 1 - there was a green limit imposed
+            // there is still feed in green pools
+            // if individual unsatisfied - still demands feed
+
+            /*            foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
+                        {
+                            if (grazeHerd.RuminantTypeModel.Parameters.Grazing.StrictFeedingLimits)
+                                continue;
+                            if (grazeHerd.PotentialIntakeGreenPastureLimiter >= 1.0)
+                                continue;
+
+                            foreach (var poolGroup in poolGroups.Where(a => a.ProportionGreen > 0.9 && a.Pools.Sum(b => b.AmountAvailable) > 0))
+                            {
+                                if (grazeHerd.DailyPastureTaken >= grazeHerd.DailyPastureRequired)
+                                    continue;
+
+                                throw new NotImplementedException("Second take from green pools is not enabled in current version");
+                            }
+                        }*/
+
             return ResourceRequestList;
         }
 
@@ -175,67 +235,43 @@ namespace Models.CLEM.Activities
         /// Method to create mixed pasture pool groups for feeding.
         /// </summary>
         /// <param name="grazeFoodStore">The graze food store type for the pasture.</param>
-        /// <param name="grazeHerdModels">The collection of graze herd models to include in calculations.</param>
-        /// <param name="greenAge">The age (in months) for pasture to be considered green. (-1 ignore green details)</param>
+        /// <param name="numberOfTimesteps">Number of timesteps to convert daily to total intake</param>
+        /// <param name="greenAge">
+        /// The age (in months) for pasture to be considered green. (-1 ignore green details)
+        /// </param>
         /// <param name="dmdStep">The step size for Dry Matter Digestibility (DMD) categories (100 no groups).</param>
-        public static void GeneratePoolsGroups(IGrazeFoodStoreType grazeFoodStore, IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdModels, int greenAge = -1, int dmdStep = 10)
+        public static List<FoodResourceStore> GeneratePoolsGroups(IGrazeFoodStoreType grazeFoodStore, int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
         {
-            List<GrazeFoodStorePool> pasturePools;
+            IEnumerable<GrazeFoodStorePool> pasturePools;
             if (grazeFoodStore is GrazeFoodStoreType grazeFoodStoreType)
+            {
                 pasturePools = grazeFoodStoreType.Pools;
+            }
             else
+            {
                 // Handled in GrazeFoodStoreAPSIMLink. Could move code here out of resource
-                return;
+                return null;
+            }
 
-            // organise groups of pasture pools based on whether green and DMD categories.
-            double green = grazeFoodStoreType.Pools.Where(a => (a.Age <= greenAge)).Sum(b => b.Amount);
+            // think about different approaches
+            // 1. whole avearge pasture pool (DMD step = 100)
+            // 2. select by DMD - current DMD step (e.g. 10)
+            // 3. proportional with weighting toward green
+            // 4. CLEM green biomass limit - implemented
+            // 5. CLEM low biomass intake limited - implemented
+
+            // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
 
             var nestedGroups = pasturePools
-            .GroupBy(a => a.Age <= greenAge)
-            .Select(dmdGroup => new
-            {
-                Green = dmdGroup.Key,
-                DMDGroups = dmdGroup
-                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-                    .Select(groups => new GrazePasturePoolGroup(
-                        $"{grazeFoodStoreType.Name}_{(dmdGroup.Key ? "alive" : "dead")}_DMD{groups.Key}",
-                        groups.Select(a => a)
-                        )
+                .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+                .Select(groups => new FoodResourceStore(
+                    groups.ToList(),
+                    greenAge,
+                    numberOfTimesteps
                     )
-            });
+                ).OrderByDescending(a => a.Details.DryMatterDigestibility);
 
-            // clear relative intake details from previous time step
-            foreach (RuminantActivityGrazePastureHerd item in grazeHerdModels)
-            {
-                // item.RelativePoolIntake = new [nestedGroups.Count(), nestedGroups.Max(a => a.DMDGroups.Count())];
-            }
-
-            // group pools by green and then by DMD 
-            foreach (var greenGroup in nestedGroups)
-            {
-                foreach (var dmdGroup in greenGroup.DMDGroups)
-                {
-                    double amountNeeded = 0;
-
-                    // calculate limits for each breed/herd based on requirements and pool quality
-                    foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdModels)
-                    {
-                        // calculate green pool limits to apply
-                        foreach (var ind in grazeHerd.CurrentHerd())
-                        {
-                            // work out relative intake
-                            // start with green prop
-                            relIntake
-
-                            amountNeeded += ind.Intake * limits * relIntake[]
-
-                        }
-
-                        // reduce intake if exceeded amount available.
-
-                    }
-
-            }
+            return nestedGroups.ToList();
         }
 
         /// <inheritdoc/>

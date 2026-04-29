@@ -254,7 +254,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Total value of resource
         /// </summary>
-        public double? Value
+        public new double? Value
         {
             get
             {
@@ -485,7 +485,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current number of individuals of this herd.
         /// </summary>
-        public double Amount
+        public new double AmountTotal
         {
             get
             {

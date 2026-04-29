@@ -71,28 +71,9 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
 
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
+        /// <inheritdoc/>
         [JsonIgnore]
-        public double Amount
-        {
-            get
-            {
-                return Pools.Sum(a => a.Amount);
-            }
-        }
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
+        public new double AmountTotal => Pools.Sum(a => a.Amount);
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -104,6 +85,42 @@ namespace Models.CLEM.Resources
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
                 Add(initialpPool, null, null, "Starting value");
+            }
+        }
+
+        /// <summary>
+        /// Cleans up pools
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Pools?.Clear();
+            Pools = null;
+        }
+
+        /// <summary>
+        /// Function to age resource pools
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAgeResources")]
+        private void OnCLEMAgeResources(object sender, EventArgs e)
+        {
+            if (UseByAge > 0)
+            {
+                foreach (var pool in Pools)
+                {
+                    pool.Age++;
+                }
+
+                // remove all spoiled pools
+                double spoiled = Pools.Where(a => a.Age >= UseByAge).Sum(a => a.Amount);
+                if (spoiled > 0)
+                {
+                    Pools.RemoveAll(a => a.Age >= UseByAge);
+                    // report spoiled loss
+                    ReportTransaction(TransactionType.Loss, spoiled, this, "", "Spoiled", this);
+                }
             }
         }
 
@@ -147,10 +164,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Remove from human food store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
+        /// <inheritdoc/>
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
@@ -194,41 +208,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Cleans up pools
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            Pools?.Clear();
-            Pools = null;
-        }
-
-        /// <summary>
-        /// Function to age resource pools
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void OnCLEMAgeResources(object sender, EventArgs e)
-        {
-            if (UseByAge > 0)
-            {
-                foreach (var pool in Pools)
-                {
-                    pool.Age++;
-                }
-
-                // remove all spoiled pools
-                double spoiled = Pools.Where(a => a.Age >= UseByAge).Sum(a => a.Amount);
-                if (spoiled > 0)
-                {
-                    Pools.RemoveAll(a => a.Age >= UseByAge);
-                    // report spoiled loss
-                    ReportTransaction(TransactionType.Loss, spoiled, this, "", "Spoiled", this);
-                }
-            }
-        }
 
         #endregion
     }

@@ -21,9 +21,6 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
-
         /// <summary>
         /// Unit type
         /// </summary>
@@ -45,102 +42,16 @@ namespace Models.CLEM.Resources
         [Required]
         public double StartingAmount { get; set; }
 
-        /// <summary>
-        /// Current amount of this resource
-        /// </summary>
-        public double Amount { get { return amount; } }
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
             if (StartingAmount > 0)
             {
                 Add(StartingAmount, null, null, "Starting value");
             }
         }
-
-        #region transactions
-
-        /// <summary>
-        /// Add money to account
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
-        {
-            if (resourceAmount.GetType().ToString() != "System.Double")
-            {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
-
-            double amountAdded = (double)resourceAmount;
-            if (amountAdded > 0)
-            {
-                amount += amountAdded;
-
-                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
-            }
-        }
-
-        /// <summary>
-        /// Remove from finance type store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
-        {
-            if (request.Required == 0)
-            {
-                return;
-            }
-
-            // if this request aims to trade with a market see if we need to set up details for the first time
-            if (request.MarketTransactionMultiplier > 0)
-            {
-                FindEquivalentMarketStore();
-            }
-
-            // avoid taking too much
-            double amountRemoved = request.Required;
-            amountRemoved = Math.Min(Amount, amountRemoved);
-            amount -= amountRemoved;
-
-            // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
-                (EquivalentMarketStore as GreenhouseGasesType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, NameWithParent, "Farm sales");
-            }
-
-            request.Provided = amountRemoved;
-
-            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
-        }
-
-        /// <summary>
-        /// Set the amount in an account.
-        /// </summary>
-        /// <param name="newAmount"></param>
-        public new void Set(double newAmount)
-        {
-            amount = newAmount;
-        }
-
-        #endregion
     }
 }
