@@ -3,13 +3,13 @@
 #' @description
 #' Transforms a wide-format phenology dataframe (with APSIM stage dates as columns) 
 #' into a long format. Maps specific APSIM stage names to their corresponding numeric 
-#' values, renames the date column to 'Clock.Today', and securely appends these 
-#' discrete event rows to the continuous observations dataframe.
+#' values, standardizes dates, and securely appends these discrete event rows 
+#' to the continuous observations dataframe.
 #'
 #' @details
 #' The mapping dictionary enforces strict numeric values based on APSIM standards:
 #' Emerging = 3, LeavesInitiating = 4, SpikeletsDifferentiating = 5, 
-#' StemElongating = 6, Heading = 7, Flowering = 8, GrainFilling = 9.
+#' StemElongating = 6, Heading = 7, Flowering = 8, GrainFilling = 10.
 #'
 #' @param df_obs Data frame. The main observations containing continuous data.
 #' @param df_pheno Data frame. Wide format containing interpolated/Haun phenology dates.
@@ -48,12 +48,11 @@ add_stages_to_obs <- function(df_obs, df_pheno, new_var_name) {
   # ------------------------------------------------------------------
   df_pheno_long <- df_pheno %>%
     tidyr::pivot_longer(
-      cols = -SimulationName, # Pivot everything except SimulationName
+      cols = -SimulationName, 
       names_to = "Stage_String",
       values_to = "Clock.Today",
-      values_transform = list(Clock.Today = as.character) # Prevent date coercion crashes
+      values_transform = list(Clock.Today = as.character) 
     ) %>%
-    # Filter out stages that did not occur (missing/empty dates)
     dplyr::filter(!is.na(Clock.Today), Clock.Today != "")
   
   # ------------------------------------------------------------------
@@ -61,7 +60,6 @@ add_stages_to_obs <- function(df_obs, df_pheno, new_var_name) {
   # ------------------------------------------------------------------
   df_pheno_mapped <- df_pheno_long %>%
     dplyr::mutate(
-      # Scan the complex APSIM column string for the exact stage name
       !!new_var_name := dplyr::case_when(
         stringr::str_detect(Stage_String, "Emerging") ~ 3,
         stringr::str_detect(Stage_String, "LeavesInitiating") ~ 4,
@@ -73,27 +71,29 @@ add_stages_to_obs <- function(df_obs, df_pheno, new_var_name) {
         TRUE ~ NA_real_
       )
     ) %>%
-    
-    # Drop rows if a non-stage column was accidentally caught in the pivot
     dplyr::filter(!is.na(!!rlang::sym(new_var_name))) %>%
-    
-    # Employ the bulletproof date parser to ensure it matches df_obs Date class
     dplyr::mutate(
       .temp_date = suppressWarnings(
         lubridate::parse_date_time(Clock.Today, orders = c("dmy HMS", "ymd HMS", "dmy", "ymd", "Ymd"))
       ),
       Clock.Today = as.Date(.temp_date)
     ) %>%
-    
-    # Strip away temporary columns, keeping strictly what is needed for the bind
     dplyr::select(SimulationName, Clock.Today, !!rlang::sym(new_var_name))
   
   # ------------------------------------------------------------------
-  # 4. BIND TO OBSERVED DATA & SORT
+  # 4. HARMONIZE CLASSES & BIND TO OBSERVED DATA
   # ------------------------------------------------------------------
-  # bind_rows elegantly handles the structural difference, padding 
-  # variables like Wheat.Grain.Wt with NAs for these specific stage rows.
-  df_combined <- dplyr::bind_rows(df_obs, df_pheno_mapped) %>%
+  # THE FIX: df_obs likely holds Clock.Today as a character string.
+  # We MUST convert it to a strict Date object so bind_rows doesn't crash 
+  # and arrange() mathematically sorts by time instead of alphabetically by string.
+  df_obs_safe <- df_obs %>%
+    dplyr::mutate(
+      Clock.Today = as.Date(suppressWarnings(
+        lubridate::parse_date_time(as.character(Clock.Today), orders = c("dmy HMS", "ymd HMS", "dmy", "ymd", "Ymd"))
+      ))
+    )
+  
+  df_combined <- dplyr::bind_rows(df_obs_safe, df_pheno_mapped) %>%
     dplyr::arrange(SimulationName, Clock.Today)
   
   message(sprintf("Successfully appended %d numeric phenology stages into '%s'.", 

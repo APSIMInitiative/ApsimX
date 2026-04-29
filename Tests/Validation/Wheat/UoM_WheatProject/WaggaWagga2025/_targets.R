@@ -40,6 +40,10 @@ source("R/check_manual_params.R")
 source("R/saveInputParam.R")
 source("R/save_df_final.R")
 source("R/add_harv_into_obs.R")
+source("R/check_project_dependencies.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
+source("R/add_stages_to_obs.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -57,7 +61,7 @@ list(
   tar_target(
     name = config,
     command = list(
-      # Folders and file names
+      # Folders and file paths
       proj_name               = proj_name,
       folder_thisScript       = here::here(),
       folder_rawData          = here::here(proj_name),       # Cloud source
@@ -65,22 +69,24 @@ list(
       folder_apsimx           = here::here(),                
       folder_met              = here::here("..", "met"),
       
+      # Target file names
       file_rawData_excel      = "2025_WaggaWagga_PHDA25WARI2.xlsx", 
       file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       file_SimNameByCultivar  = paste0(proj_name, "_CultivarToSimName.csv"), 
       file_metaData_observed  = paste0(proj_name, "_observed_data_requirements.csv"),
       
-      # Excel sheet names used from raw data
+      # Excel sheet mappings
       sheetExcel_weather      = "Weather",
       sheetExcel_haun         = "Haun stage ", # Note: retains raw data typo " "
       sheetExcel_soilWater    = "GravimetricMoistureNearSowing",
       
-      # Model parameters
+      # Model calculation parameters
       coord_thisLatLon        = data.frame(lat = -35.041, lon = 147.319),
-      target_stagePerc        = 50, # % of stage development when event date is retrieved
-      target_betwStages       = 50, # % of period between adjacent events for synthetic dates
+      target_stagePerc        = 50,    # % of stage development when event date is retrieved
+      target_betwStages       = 50,    # % of period between adjacent events for synthetic dates
+      max_leaf_limit          = 0.95,  # Fractional max leaves assumed when terminal spikelet is set
       
-      # Column names
+      # Variable tracking
       var_name_stage          = "apsim_stage_raw",       # Synthetic var with observed PCSD data
       varName_addedToObserv   = "Wheat.Phenology.Stage", # Synthetic var added into observations
       
@@ -90,29 +96,32 @@ list(
     )
   ),
   
+  # Load mapping dictionary: Cultivar -> Simulation Name
   tar_target(
     name = df_simNameByCult,
     command = read.csv2(
       file.path(config$folder_rawData, config$file_SimNameByCultivar),
-      header = TRUE, 
+      header           = TRUE, 
       stringsAsFactors = FALSE, 
-      sep = ","
+      sep              = ","
     )
   ),
   
+  # Load tracking list of variables to fetch from observations
   tar_target(
     name = df_obs_info,
     command = read.csv2(
       file.path(config$folder_rawData, config$file_metaData_observed),
-      header = TRUE, 
+      header           = TRUE, 
       stringsAsFactors = FALSE, 
-      sep = ","
+      sep              = ","
     )
   ),
   
   # ----------------------------------------------------------------------------
   # PHASE B: WEATHER PROCESSING
   # ----------------------------------------------------------------------------
+  # Parse the weather sheet into list format
   tar_target(
     name = processed_met_data,
     command = createWeatherFile(
@@ -122,6 +131,7 @@ list(
     )
   ),
   
+  # Export the APSIM-formatted .met file
   tar_target(
     name = msg_met_saved,
     command = save_met_file(
@@ -137,28 +147,33 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE C: RAW OBSERVATION INGESTION
   # ----------------------------------------------------------------------------
+  # Read and map all observation sheets to simulations
   tar_target(
     name = list_observed_dfs,
     command = compile_all_observed(
       folder           = config$folder_rawData,
       excel_file       = config$file_rawData_excel,
-      df_obs_info      = df_obs_info
+      df_obs_info      = df_obs_info,
+      df_simNameByCult = df_simNameByCult
     )
   ),
   
   # ----------------------------------------------------------------------------
   # PHASE D: PHENOLOGY SYNTHESIS
   # ----------------------------------------------------------------------------
+  # 1. Filter and extract the continuous PCDS pheno-stages from raw data
   tar_target(
     name = df_list_PCDS, 
     command = filter_and_extract_pcds(list_observed_dfs)
   ),
   
+  # 2. Mathematically interpolate stages across dates
   tar_target(
     name = df_PCDS_int, 
     command = interpolate_obs_phenoStages(df_list_PCDS)
   ),
   
+  # 3. Locate exact dates where target completion percentage is reached
   tar_target(
     name = df_dateStageTargetReached, 
     command = findDateStageTarget(
@@ -167,6 +182,7 @@ list(
     )
   ),
   
+  # 4. Generate the base APSIM stage input file
   tar_target(
     name = df_apsimStageInput, 
     command = doAPSIMStageInput(
@@ -176,6 +192,7 @@ list(
     )
   ),
   
+  # 5. Build an observed version of these discrete stages for the master dataframe
   tar_target(
     name = df_stages_Observ, 
     command = doStageObsData(
@@ -186,13 +203,18 @@ list(
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE E: FINAL OBSERVATION FORMATTING
+  # PHASE E: FINAL OBSERVATION FORMATTING & HAUN PRIORITY MERGE
   # ----------------------------------------------------------------------------
+  # Apply raw data corrections
   tar_target(
     name = list_observed_clean, 
-    command = apply_corrections(list_observed_dfs, df_stages_Observ)
+    command = apply_corrections(
+      list_observed_dfs, 
+      df_stages_Observ
+    )
   ),
   
+  # Append stage data securely into the nested tibbles
   tar_target(
     name = list_observed_clean_final, 
     command = add_to_observed_clean(
@@ -202,14 +224,31 @@ list(
     )
   ),
   
+  # Derive advanced phenology milestones directly from Haun stage records
   tar_target(
-    name = df_final_observed,
-    command = prepare_final_observed(
-      list_observed_clean_final,
-      df_simNameByCult
+    name = df_haun_pheno_dates, 
+    command = derive_haun_pheno_dates(
+      compiled_obs   = list_observed_clean_final, 
+      max_leaf_limit = config$max_leaf_limit
     )
   ),
   
+  # Overwrite base interpolated dates with higher-priority Haun dates
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno = df_apsimStageInput,
+      haunPheno   = df_haun_pheno_dates
+    )
+  ),
+  
+  # Flatten nested tibbles into a clean, wide dataframe, scrubbing ghost rows
+  tar_target(
+    name = df_final_observed,
+    command = prepare_final_observed(list_observed_clean_final)
+  ),
+  
+  # Flag the final measurement dates as "HarvestRipe"
   tar_target(
     name = df_final_observed_harv, 
     command = add_harv_into_obs(
@@ -220,6 +259,20 @@ list(
     )
   ),
   
+  # Re-inject the finalized, Haun-prioritized discrete event dates into the timeline
+  tar_target(
+    name = df_obs_mean_harv_pheno,
+    command = add_stages_to_obs(
+      df_obs       = df_final_observed_harv, 
+      df_pheno     = df_apsimStageInput_haunBased,
+      new_var_name = "Wheat.Phenology.Stage"
+    )
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE F: EXPORT & VALIDATION
+  # ----------------------------------------------------------------------------
+  # Validate that the manual Haun CSV is present and properly formatted
   tar_target(
     name = haun_input_checked, 
     command = check_manual_params(
@@ -229,30 +282,29 @@ list(
     )
   ),
   
-  # ----------------------------------------------------------------------------
-  # PHASE F: EXPORT & VALIDATION
-  # ----------------------------------------------------------------------------
+  # Export final Phenology parameterization file for APSIM
   tar_target(
     name = msg_param_saved, 
     command = saveInputParam(
-      df_apsimStageInput,
+      df_apsimStageInput_haunBased,
       config$folder_inputs,
       config$file_name_input_pheno
     ),
     format = "file"
   ),
   
+  # Export the final master Observations Excel file for APSIM
   tar_target(
     name = msg_obs_saved,
     command = save_df_final(
-      df_final_observed_harv,
+      df_obs_mean_harv_pheno,
       config$folder_apsimx,
       config$file_saved_obs_excel
     ),
     format = "file"
   ),
   
-  # Post-flight dependency check for APSIM
+  # Post-flight dependency check for APSIM (Verifies all files exist correctly)
   tar_target(
     name = check_depend, 
     command = {
@@ -260,10 +312,10 @@ list(
       msg_obs_saved
       msg_param_saved
       msg_met_saved
+      haun_input_checked
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = paste0(config$proj_name, ".met"), # <-- THE FIX
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
