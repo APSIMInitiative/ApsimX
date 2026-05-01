@@ -19,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 214; } }
+    public static int LatestVersion { get { return 215; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7503,7 +7503,6 @@ internal class Converter
         // change biomass removal objects that mention Rachis
         foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
         {
-
             foreach (var fraction in OrganType["BiomassRemovalFractions"])
             {
                 if (fraction["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
@@ -7653,4 +7652,81 @@ internal class Converter
         }
     }
 
+    /// Makes StoreTypes in Stores property of Supplement into children instead.
+    /// Also updates stores report variables as well.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion215(JObject root, string fileName)
+    {
+        foreach(JObject supplement in JsonUtilities.ChildrenOfType(root, "Supplement"))
+        {
+            var stores = supplement["Stores"];
+            if (stores != null)
+            {
+                foreach(JObject store in stores.Cast<JObject>())
+                {
+                    // Fodder StoreTypes have historically been a hidden StoreType property of Supplement.
+                    // Now that they are children and not in a Stores property we only want them to exist
+                    // in memory and not be serialised to the .apsimx file. 
+                    string fodderStoreTypeName = "fodder";
+                    if (!store["Name"].ToString().Equals(fodderStoreTypeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var newChildStore = new JObject
+                        {
+                            ["$type"] = store["$type"],
+                            ["Name"] = store["Name"],
+                            ["Stored"] = store["Stored"],
+                            ["IsRoughage"] = store["IsRoughage"],
+                            ["DMContent"] = store["DMContent"],
+                            ["DMD"] = store["DMD"],
+                            ["MEContent"] = store["MEContent"],
+                            ["CPConc"] = store["CPConc"],
+                            ["ProtDg"] = store["ProtDg"],
+                            ["PConc"] = store["PConc"],
+                            ["SConc"] = store["SConc"],
+                            ["EEConc"] = store["EEConc"],
+                            ["ADIP2CP"] = store["ADIP2CP"],
+                            ["AshAlk"] = store["AshAlk"],
+                            ["MaxPassage"] = store["MaxPassage"]
+                        };
+
+                        if (newChildStore["Name"].ToString().Contains(".5me"))
+                        {
+                            newChildStore["Name"] = newChildStore["Name"].ToString().Replace(".", "");
+                        }
+                        JObject supplementStoreParent = JsonUtilities.Parent(store) as JObject;
+                        JsonUtilities.AddChild(supplementStoreParent, newChildStore);  
+                    }
+                }
+                supplement.Remove("Stores");                
+            }
+        }
+
+        foreach(JObject operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+        {
+            foreach(JObject operation in operations["OperationsList"])
+            {
+                // Remove period from supplement names in the Actions and 
+                // Line properties.
+                // The names of these supplements will be changed to above to a
+                // legal name as periods are not allowed.
+                if (operation["Action"] is JToken actionObject)
+                {
+                    if (actionObject.ToString().Contains(".5me"))
+                    {
+                        operation["Action"] = actionObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+
+                if (operation["Line"] is JToken lineObject)
+                {
+                    if (lineObject.ToString().Contains(".5me"))
+                    {
+                        operation["Line"] = lineObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+            }
+        }
+    }
 }

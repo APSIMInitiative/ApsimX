@@ -5,6 +5,9 @@ using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
+using Models.Factorial;
+using System;
+using UserInterface.Commands;
 
 namespace UserInterface.Presenters
 {
@@ -46,6 +49,8 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
+            else if (model is CompositeFactor)
+                CreateLayoutCompositeFactor();
             else
                 CreateLayoutGeneric();
 
@@ -84,11 +89,13 @@ namespace UserInterface.Presenters
         private void ConnectEvents()
         {
             foreach (ISubPresenter presenter in presenters)
+            {
                 presenter.ConnectEvents();
-
-            foreach (ISubPresenter presenter in presenters)
                 if (presenter is GridPresenter grid)
                     grid.CellChanged += OnCellChanged;
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged += OnTextChanged;
+            }
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
@@ -97,12 +104,13 @@ namespace UserInterface.Presenters
         private void DisconnectEvents()
         {
             foreach (ISubPresenter presenter in presenters)
+            {
                 presenter.DisconnectEvents();
-
-            foreach (ISubPresenter presenter in presenters)
                 if (presenter is GridPresenter grid)
                     grid.CellChanged -= OnCellChanged;
-
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged -= OnTextChanged;
+            }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
@@ -121,6 +129,20 @@ namespace UserInterface.Presenters
             DisconnectEvents();
             foreach (ISubPresenter presenter in presenters)
                 presenter.Refresh();
+            ConnectEvents();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="property">The property changed</param>
+        /// <param name="lines">The lines it should be given</param>
+        private void OnTextChanged(ILineEditor model, string property, string[] lines)
+        {
+            DisconnectEvents();
+            ChangeProperty command = new ChangeProperty(model, property, lines);
+            explorerPresenter.CommandHistory.Add(command);
             ConnectEvents();
         }
 
@@ -257,6 +279,17 @@ namespace UserInterface.Presenters
         {
             CreateLayoutGeneric();
             view.OverrideSlider(0.3);
+        }
+
+        /// <summary>
+        /// Create layout for a CompositeFactor with code and grid
+        /// </summary>
+        private void CreateLayoutCompositeFactor()
+        {
+            AddCode(WidgetPosition.TopLeft);
+            AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
+            AddGrid(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.7);
         }
     }
 }
