@@ -194,12 +194,12 @@ namespace Models.CLEM.Activities
                 foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
                 {
                     grazeHerd.TakeFromGrazingPoolGroup(poolGroups[i], i, shortfallMultiplier);
-                    grazeHerd.CreateResourceRequest();
                 }
             }
 
             foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
             {
+                grazeHerd.CreateResourceRequest();
                 grazeHerd.PotentialIntakeShortfallLimiter = grazeHerd.CalculatePotentialShortfallLimiter();
             }
 

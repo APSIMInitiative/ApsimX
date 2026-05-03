@@ -99,6 +99,12 @@ namespace Models.CLEM.Activities
         /// Potential intake limiter based on the biomass of available pasture
         /// </summary>
         [JsonIgnore]
+        public double PotentialIntakePastureQualityLimiter { get; set; } = 1.0;
+
+        /// <summary>
+        /// Potential intake limiter based on the biomass of available pasture
+        /// </summary>
+        [JsonIgnore]
         public double PotentialIntakePastureBiomassLimiter { get; set; } = 1.0;
 
         /// <summary>
@@ -117,7 +123,13 @@ namespace Models.CLEM.Activities
         /// Potential intake limiter based on the proportion of 8 hours grazing allowed
         /// </summary>
         [JsonIgnore]
-        public double PotentialIntakeGreenPastureLimiter { get; set; } = 1.0;
+        public double PotentialIntakeProportionGreenLimit { get; set; } = 1.0;
+
+        /// <summary>
+        /// Potential intake limiter based on the proportion of 8 hours grazing allowed
+        /// </summary>
+        [JsonIgnore]
+        public double CombinedLimiter { get { return PotentialIntakePastureBiomassLimiter * PotentialIntakeGrazingTimeLimiter * PotentialIntakeShortfallLimiter * PotentialIntakePastureQualityLimiter; } }
 
         /// <summary>
         /// The daily biomass of pasture desired (Potential intake) by the herd (kg)
@@ -243,6 +255,7 @@ namespace Models.CLEM.Activities
             PotentialIntakeGrazingTimeLimiter = HoursGrazed / 8;
             PotentialIntakePastureBiomassLimiter = 1.0;
             PotentialIntakeShortfallLimiter = 1.0;
+            PotentialIntakePastureQualityLimiter = 1.0;
             DailyPastureRequired = 0;
             DailyPastureDesired = 0;
             Status = ActivityStatus.NotNeeded;
@@ -276,10 +289,10 @@ namespace Models.CLEM.Activities
             double green = DigestiblePasturePoolGroups.Where(a => a.ProportionGreen == 1).Sum(a => a.Pools.Sum(p => p.AmountAvailable));
             double proportionGreen = green / DigestiblePasturePoolGroups.Sum(a => a.Pools.Sum(p => p.AmountAvailable));
 
-            PotentialIntakeGreenPastureLimiter = 1;
+            PotentialIntakeProportionGreenLimit = 1;
             if (proportionGreen < 0.9)
             {
-                PotentialIntakeGreenPastureLimiter = Math.Max(0.0, (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))))) / 100.0;
+                PotentialIntakeProportionGreenLimit = Math.Max(0.0, (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))))) / 100.0;
             }
 
             indRelativeDailyIntake = new double[currentHerdSize, DigestiblePasturePoolGroups.Count()];
@@ -292,7 +305,7 @@ namespace Models.CLEM.Activities
                 indDailyIntakeRemaining[i] = Math.Min(herdToFeed[i].Intake.SolidsDaily.Expected * PotentialIntakeGrazingTimeLimiter * PotentialIntakePastureBiomassLimiter, herdToFeed[i].Intake.SolidsDaily.Required) ;
                 DailyPastureDesired += herdToFeed[i].Intake.SolidsDaily.Expected * PotentialIntakeGrazingTimeLimiter * PotentialIntakePastureBiomassLimiter;
                 DailyPastureRequired += indDailyIntakeRemaining[i];
-                indDailyGreenIntakeRemaining[i] = indDailyIntakeRemaining[i] * PotentialIntakeGreenPastureLimiter;
+                indDailyGreenIntakeRemaining[i] = indDailyIntakeRemaining[i] * PotentialIntakeProportionGreenLimit;
             }
             currentHerdDemand = DailyPastureRequired;
             return DailyPastureRequired;
@@ -311,7 +324,7 @@ namespace Models.CLEM.Activities
             for (int i = 0; i < currentHerdSize; i++)
             {
                 double amountToEat = indDailyIntakeRemaining[i];
-                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeGreenPastureLimiter < 1.0) // must be considered green pool and a green limiter calculated
+                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeProportionGreenLimit < 1.0) // must be considered green pool and a green limiter calculated
                 {
                     amountToEat = Math.Min(indDailyGreenIntakeRemaining[i], amountToEat);
                 }
@@ -337,7 +350,7 @@ namespace Models.CLEM.Activities
             for (int i = 0; i < currentHerdSize; i++)
             {
                 double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier;
-                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeGreenPastureLimiter < 1.0)
+                if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeProportionGreenLimit < 1.0)
                 {
                     indDailyGreenIntakeRemaining[i] -= amountToEat;
                 }
@@ -354,7 +367,7 @@ namespace Models.CLEM.Activities
                 DailyPastureTaken += amountToEat;
             }
             // add daily amount to details.amount and specifiy the total time step amount as pending in pools.
-            group.AdjustDailyAmountAsIntake(DailyPastureTaken);
+            group.Add(DailyPastureTaken);
         }
 
         /// <inheritdoc/>
@@ -388,10 +401,8 @@ namespace Models.CLEM.Activities
 
                 TakeFromGrazingPoolGroup(DigestiblePasturePoolGroups[i], i, shortfallMultiplier);
             }
-
-            PotentialIntakeShortfallLimiter = CalculatePotentialShortfallLimiter();
-
             CreateResourceRequest();
+            PotentialIntakeShortfallLimiter = CalculatePotentialShortfallLimiter();
 
             return ResourceRequestList;
         }
@@ -414,23 +425,22 @@ namespace Models.CLEM.Activities
         public void CreateResourceRequest()
         {
             double eaten = DigestiblePasturePoolGroups.Sum(a => a.Details.Amount);
+            if (eaten <= 0)
+                return;
             pastureRequest = new ResourceRequest()
             {
                 AllowTransmutation = false,
-                Required = DailyPastureRequired,
+                Required = eaten,
                 Resource = GrazeFoodStoreModel,
                 ResourceType = typeof(GrazeFoodStore),
                 ResourceTypeName = GrazeFoodStoreModel.Name,
                 ActivityModel = this,
-                AdditionalDetails = this,
+                AdditionalDetails = DigestiblePasturePoolGroups,
                 Category = "Grazed",
                 RelatesToResource = PredictedHerdNameToDisplay,
                 TransactionPending = true
             };
-            if (MathUtilities.IsPositive(eaten))
-            {
-                ResourceRequestList.Add(pastureRequest);
-            }
+            ResourceRequestList.Add(pastureRequest);
         }
 
         /// <inheritdoc/>
@@ -477,6 +487,8 @@ namespace Models.CLEM.Activities
             // provided has been tracked by the pending amounts in each pasture pool group
             // the details.Amount from each resource group can't be used as they seem to have been reset.
             pastureRequest.Provided = Math.Min(pastureRequest.Required, DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending)); // . Sum(a => a.Pools.Sum(a => a.AmountPending)));
+
+            PotentialIntakePastureQualityLimiter = pastureRequest.Provided / pastureRequest.Required;
 
             Status = ActivityStatus.Success;
 
@@ -527,13 +539,18 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            foreach (var foodStore in DigestiblePasturePoolGroups)
-            {
-                foodStore.PerformPendingRemoval();
-            }
 
-            pastureRequest.TransactionPending = false;
-            GrazeFoodStoreModel.Remove(pastureRequest);
+            // todo: set the total consumed for this herd so easily reported.
+
+            // the GrazeFoodStoreType will automatically report pending transactions at end of time step
+
+            //foreach (var foodStore in DigestiblePasturePoolGroups)
+            //{
+            //    foodStore.PerformPendingRemoval();
+            //}
+
+            //pastureRequest.TransactionPending = false;
+            //GrazeFoodStoreModel.Remove(pastureRequest);
         }
 
         #region validation

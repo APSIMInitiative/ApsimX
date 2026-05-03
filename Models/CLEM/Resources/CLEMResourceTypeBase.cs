@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.PMF;
 using NetTopologySuite.Precision;
 using Newtonsoft.Json;
 using StdUnits;
@@ -61,18 +62,6 @@ namespace Models.CLEM.Resources
             {
                 FindEquivalentMarketStore();
                 return EquivalentMarketStore is not null;
-            }
-        }
-
-        /// <summary>
-        /// Determine whether transmutation has been defined for this food type
-        /// </summary>
-        [JsonIgnore]
-        public bool TransmutationDefined
-        {
-            get
-            {
-                return Structure.FindChildren<Transmutation>().Where(a => a.Enabled).Any();
             }
         }
 
@@ -338,6 +327,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Determines if any transmutation is defined for this resource type
+        /// </summary>
+        public bool TransmutationDefined
+        {
+            get
+            {
+                return Structure.FindChildren<Transmutation>().Where(a => a.Enabled).Any();
+            }
+        }
+
+        /// <summary>
         /// Last transaction received
         /// </summary>
         [JsonIgnore]
@@ -494,7 +494,7 @@ namespace Models.CLEM.Resources
         /// <param name="handlePendingTransaction">
         /// This transaction should handle any pending amount rather than the amount provided.
         /// </param>
-        private void PerformTransaction(ResourceRequest request, bool handlePendingTransaction = false)
+        public virtual void PerformTransaction(ResourceRequest request, bool handlePendingTransaction = false)
         {
             double amountToRemove = request.Provided;
             if (handlePendingTransaction)
@@ -530,7 +530,7 @@ namespace Models.CLEM.Resources
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMManagePendingTransactions")]
-        protected virtual void ManagePendingTransactions(object sender, EventArgs e)
+        public virtual void ManagePendingTransactions(object sender, EventArgs e)
         {
             if (pending.Count == 0)
                 return;

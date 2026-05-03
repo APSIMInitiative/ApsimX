@@ -169,55 +169,35 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add a specified amount as intake and adjust details and pool pending amounts accordingly.
+        /// Simple add to store the total amount given the daily amount required.
         /// </summary>
-        /// <param name="amountPerDay">Amount considered intake for time step</param>
-        public void AdjustDailyAmountAsIntake(double amountPerDay)
+        /// <param name="dailyAmount">The daily amount to record</param>
+        public void Add(double dailyAmount)
         {
-            if (amountPerDay <= 0)
+            if (dailyAmount <= 0)
                 return;
 
-            Details.AddAmount(amountPerDay);
-            CrudeProtein += (Details.CrudeProteinPercent / 100.0) * amountPerDay;
-            DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * amountPerDay * (Details.RumenDegradableProteinPercent / 100.0);
-
-            if (Pools is not null)
-            {
-                for (int i = 0; i < Pools.Count; i++)
-                {
-                    Pools[i].AmountPending += amountPerDay * NumberOfDaysInTimestep * PoolProportions[i];
-                }
-            }
+            dailyAmount *= NumberOfDaysInTimestep;
+            Details.AddAmount(dailyAmount);
+            CrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount;
+            DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
-        /// Reduce the store by specified amount
+        /// Reduce the store by specified amount as required by indake reduction due to quality
         /// </summary>
-        /// <param name="amountPerDay">The amount to remove</param>
-        /// <param name="reducePending">Whether to reduce the pending take from pools as well (default true)</param>
-        public void ReduceByDailyAmount(double amountPerDay, bool reducePending = true)
+        /// <param name="dailyAmount">The daily amount to remove</param>
+        public void ReturnPending(double dailyAmount)
         {
-            if (amountPerDay <= 0)
+            if (dailyAmount <= 0)
                 return;
 
-            amountPerDay = Details.ReduceAmount(amountPerDay);
+            // do we need to modify the values in the foodStore.Details?
+            dailyAmount = Details.ReduceAmount(dailyAmount);
 
-            if (reducePending)
-            {
-                if ((Pools?.Count ?? 0) > 0)
-                {
-                    double totalPendingReduction = 0;
-                    for (int i = 0; i < Pools.Count; i++)
-                    {
-                        Pools[i].ReducePending(amountPerDay * NumberOfDaysInTimestep * PoolProportions[i]);
-                        totalPendingReduction += amountPerDay * NumberOfDaysInTimestep * PoolProportions[i];
-                    }
-                }
-                if (AssociatedResourceRequest is not null)
-                {
-                    AssociatedResourceRequest.Resource.ReducePending(AssociatedResourceRequest, amountPerDay);
-                }
-            }
+            // reduce pending in graze food store
+            // reduce pending in associated pools by amount and poolProportions[]
+            AssociatedResourceRequest?.Resource.ReducePending(AssociatedResourceRequest, dailyAmount);
 
             if (Details.Amount == 0)
             {
@@ -225,7 +205,7 @@ namespace Models.CLEM.Resources
                 DegradableCrudeProtein = 0;
                 return;
             }
-            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * amountPerDay;
+            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * dailyAmount;
             DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
@@ -237,23 +217,12 @@ namespace Models.CLEM.Resources
 
         public double ReduceByProportion(double proportion, bool reducePending = true)
         {
-            proportion = Math.Max(proportion, 0);
+            proportion = Math.Min(1.0, Math.Max(proportion, 0));
             if (proportion <= 0)
                 return 0;
 
             double amountToReduce = Details.Amount * proportion;
-            amountToReduce = Details.ReduceAmount(amountToReduce);
-            CrudeProtein *= (1 - proportion);
-            DegradableCrudeProtein *= (1 - proportion);
-
-            if (reducePending && Pools.Count > 0)
-            {
-                for (int i = 0; i < Pools.Count; i++)
-                {
-                    Pools[i].ReducePending(amountToReduce * NumberOfDaysInTimestep * PoolProportions[i]);
-                }
-            }
-
+            ReturnPending(Details.Amount * proportion);
             return amountToReduce;
         }
 
@@ -265,21 +234,6 @@ namespace Models.CLEM.Resources
         {
             DegradableCrudeProtein *= factor;
             CrudeProtein *= factor;
-        }
-
-        /// <summary>
-        /// Take action to account for pending take assume this is the final amount to be taken pool's total amount.
-        /// </summary>
-        /// <remarks>
-        /// If the requested amount exceeds the total available in all pools, only the available amount is removed.
-        /// After execution, the requested amount is reset to zero.
-        /// </remarks>
-        public void PerformPendingRemoval()
-        {
-            for (int i = 0; i < Pools.Count; i++)
-            {
-                Pools[i].ConsumePending();
-            }
         }
 
         /// <summary>
@@ -325,7 +279,6 @@ namespace Models.CLEM.Resources
             {
                 // Freer assumes only concentrates account for fat as all other feeds considered low fat
                 // For consistency we apply both the crude protein and fat given they are provided with any feed type.
-
                 return ME - (23.6 * UndegradableCrudeProtein) - (39.3 * (Details.FatPercent / 100) * Details.Amount);
             }
         }

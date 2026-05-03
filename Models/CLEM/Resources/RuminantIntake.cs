@@ -160,7 +160,7 @@ namespace Models.CLEM.Resources
                 iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Received);
                 if (iReduction > 0)
                 {
-                    item.Value.ReduceByDailyAmount(iReduction);
+                    item.Value.ReturnPending(iReduction);
                     SolidsDaily.Unneeded += iReduction;
                 }
                 sumFs += FS;

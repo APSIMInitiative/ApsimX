@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
         /// </returns>
         public double Detach(double proportion)
         {
-            double removeAmount = Amount * proportion;
+            double removeAmount = AmountAvailable * proportion;
             AmountPending *= proportion;
             Detached += removeAmount;
             amount -= removeAmount;

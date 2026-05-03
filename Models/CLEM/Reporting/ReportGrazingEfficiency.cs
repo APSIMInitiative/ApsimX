@@ -28,30 +28,37 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Includes the potential intake modifier from pasture quality
         /// </summary>
-        [Description("Include potential intake modifier from pasture quality")]
+        [Description("Include pasture quality potential intake modifier")]
         [System.ComponentModel.DefaultValue(true)]
         public bool IncludePastureQualityLimiter { get; set; }
 
         /// <summary>
         /// Includes the potential intake modifier from pasture biomass
         /// </summary>
-        [Description("Include potential intake modifier from pasture biomass")]
+        [Description("Include pasture biomass potential intake modifier")]
         [System.ComponentModel.DefaultValue(true)]
         public bool IncludePastureBiomassLimiter { get; set; }
 
         /// <summary>
         /// Includes the potential intake modifier from grazing time
         /// </summary>
-        [Description("Include potential intake modifier from grazing time")]
+        [Description("Include grazing time potential intake modifier")]
         [System.ComponentModel.DefaultValue(true)]
         public bool IncludeGrazingTimeLimiter { get; set; }
 
         /// <summary>
         /// Includes the potential intake modifier from competition
         /// </summary>
-        [Description("Include potential intake modifier competition")]
+        [Description("Include pasture shortfall potential intake modifier")]
         [System.ComponentModel.DefaultValue(true)]
         public bool IncludeCompetitionLimiter { get; set; }
+
+        /// <summary>
+        /// Provide the max proprtion of diet than can be green
+        /// </summary>
+        [Description("Include potential intake max green proportion")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool IncludeIntakeGreenProportion { get; set; }
 
         /// <summary>
         /// Includes the potential intake combined modifier
@@ -59,7 +66,6 @@ namespace Models.CLEM.Reporting
         [Description("Include combined potential intake modifier")]
         [System.ComponentModel.DefaultValue(true)]
         public bool IncludeCombinedLimit { get; set; }
-
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -78,15 +84,17 @@ namespace Models.CLEM.Reporting
             foreach (var grz in grzes)
             {
                 if (IncludePastureQualityLimiter)
-                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureQualityLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PastureQualityLimiter")}");
+                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureQualityLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "QualityLimiter")}");
                 if (IncludePastureBiomassLimiter)
-                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PastureBiomassLimiter")}");
+                    variableNames.Add($"[{grz.Name}].PotentialIntakePastureBiomassLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "BiomassLimiter")}");
                 if (IncludeGrazingTimeLimiter)
                     variableNames.Add($"[{grz.Name}].PotentialIntakeGrazingTimeLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "GrazingTimeLimiter")}");
                 if (IncludeCompetitionLimiter)
-                    variableNames.Add($"[{grz.Name}].GrazingCompetitionLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CompetitionLimiter")}");
+                    variableNames.Add($"[{grz.Name}].PotentialIntakeShortfallLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "ShortfallLimiter")}");
                 if (IncludeCombinedLimit)
-                    variableNames.Add($"[{grz.Name}].PotentialIntakeLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CombinedLimiter")}");
+                    variableNames.Add($"[{grz.Name}].CombinedLimiter as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "CombinedLimiter")}");
+                if (IncludeIntakeGreenProportion)
+                    variableNames.Add($"[{grz.Name}].PotentialIntakeProportionGreenLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PropDietGreen")}");
             }
 
             VariableNames = variableNames.ToArray();
