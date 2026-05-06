@@ -65,7 +65,8 @@ internal class Converter
             int fileVersion = (int)returnData.Root["Version"];
 
             if (fileVersion > LatestVersion)
-                throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
+                throw new Exception(string.Format("Unable to open file '{0}'. This file has a version number of "+ fileVersion.ToString() + " but the version of apsim trying to run it is "+LatestVersion.ToString()+".  " +
+                    "Files can only be run on an equal or greater versions of apsim. Was this file previously opened in a more recent version of Apsim?", fileName));
 
             // Run converters if not at the latest version.
             while (fileVersion < toVersion)
