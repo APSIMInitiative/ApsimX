@@ -1,0 +1,41 @@
+# Ignore R and Pipeline Meta Files
+.Rhistory
+.RData
+.Ruserdata
+_targets/
+.db
+.db-shm
+.db-wal
+.nb.html
+
+# Ignore metadata
+ListOfVariablesToCheck.xlsx
+InputFilesFromCloud/
+
+# Ignore all .apsimx files in all folders EXCEPT the ones located in this exact root directory
+*.apsimx
+!/*.apsimx
+
+#Ignore all excel files 
+*.xlsx
+*.xls
+*.xlsm
+~$*.xlsx
+~$*.xls
+~$*.xlsm
+
+# All the metadata folders that have rawdata
+#Dookie2024/
+#Dookie2025/
+#WaggaWagga2024/
+#WaggaWagga2025/
+#GrassPatch2024/
+#GrassPatch2025/
+#Gnarwarre2024/
+#Gnarwarre2025/
+#Turretfield2024/
+#Turretfield2025/
+FolderBackUp/
+
+# Super secret passwords
+secret_pass.txt
