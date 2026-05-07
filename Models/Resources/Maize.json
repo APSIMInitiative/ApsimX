@@ -20,6 +20,15 @@
           "ReadOnly": false
         },
         {
+          "$type": "Models.Memo, Models",
+          "Text": "### Waterlogging Model (7th May 2026)\nSotirios Archontoulis, Isaiah Huber, Ke Liu, Matthew Harrison\n\nExcess soil moisture could affect several processes within the soil-plant-atmosphere system. The new functions affect root depth, radiation use efficiency, phenology, leaf senescence, and grain components, as reported in the literature. \n\nWith the new additions, APSIM crop models can simulate both types of \nwater stress: drought and excess water. We used SWIM as the primary soil water model to parameterize the new routines; however, users can use either SWIM or SoilWat; the new functions work with both soil water models.\n\nFurther documentation can be [found here](https://docs.apsim.info/model/Waterlogging)",
+          "Name": "History",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.OrganArbitrator, Models",
           "Name": "Arbitrator",
           "ResourceName": null,
