@@ -6,22 +6,19 @@
 #' and overwrites the Terminal Spikelet (SpikeletsDifferentiating) stage.
 #'
 #' @details
-#' Safely handles bracketed APSIM column names using base R for merges to prevent 
-#' tidy-eval subsetting errors. Utilizes lubridate to prevent the greedy base R 
-#' "%Y" parsing bug that causes 4-digit years to collapse into 2-digit years.
+#' The function safely handles bracketed APSIM column names by using base R 
+#' for merges and evaluations to prevent tidy-eval subsetting errors.
 #'
 #' @param obsIntPheno Data frame containing base interpolated phenology dates.
 #' @param haunPheno Data frame containing Haun-derived target dates.
 #'
 #' @return A rigorously formatted data frame ready for APSIM parameterization.
 #'
-#' @importFrom dplyr select mutate across contains left_join any_of if_else coalesce
-#' @importFrom lubridate parse_date_time
+#' @importFrom dplyr select mutate across contains left_join any_of if_else
 #' @export
 updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
   
   require(dplyr)
-  require(lubridate)
   
   # ------------------------------------------------------------------
   # 0. DEFINE APSIM TARGET COLUMNS
@@ -40,16 +37,11 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
   )
   
   # ------------------------------------------------------------------
-  # 1. TYPE SAFETY & PREPARATION (The Lubridate Fix)
+  # 1. TYPE SAFETY & PREPARATION
   # ------------------------------------------------------------------
   safe_parse_date <- function(x) {
     if (inherits(x, "Date")) return(x)
-    
-    # Lubridate prevents the "0006" year bug by strictly evaluating formats
-    parsed <- suppressWarnings(
-      lubridate::parse_date_time(as.character(x), orders = c("dmy", "ymd", "dmy HMS", "ymd HMS"))
-    )
-    return(as.Date(parsed))
+    as.Date(x, tryFormats = c("%Y-%m-%d", "%d-%m-%Y"))
   }
   
   # Prepare base data (cleanly dropping LeavesInitiating if it exists)
@@ -74,8 +66,10 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
   
   # Safe Coalesce Overwrite: Give Haun priority, fallback to base
   if (col_spike %in% names(updated_df)) {
+    # If base already had spike dates, coalesce them safely
     updated_df[[col_spike]] <- dplyr::coalesce(updated_df$haun_spike, updated_df[[col_spike]])
   } else {
+    # If base didn't have spike dates, just assign the Haun ones
     updated_df[[col_spike]] <- updated_df$haun_spike
   }
   
@@ -116,7 +110,7 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
     warning_box <- c(
       "",
       "======================================================================",
-      "  ⚠️  CHRONOLOGY ERROR IN PHENOLOGY DATES DETECTED ⚠️ ",
+      " ⚠️  CHRONOLOGY ERROR IN PHENOLOGY DATES DETECTED ⚠️ ",
       "======================================================================",
       " The following SimulationNames have non-sequential dates after merging",
       " the Haun data (a later stage occurs before an earlier stage):",
@@ -139,6 +133,6 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
       )
     )
   
-  message("Successfully applied Haun-priority updates and formatted dates to dd-mm-yyyy.")
+  message("Successfully applied Haun-priority updates and validated phenology chronology.")
   return(final_df)
 }

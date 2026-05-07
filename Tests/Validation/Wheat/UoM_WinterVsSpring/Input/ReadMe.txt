@@ -1,1 +1,0 @@
-# Phenology and Haun Stage input files to run APSIM

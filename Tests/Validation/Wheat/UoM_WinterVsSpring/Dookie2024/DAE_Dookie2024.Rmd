@@ -46,5 +46,12 @@ tar_load(df_all_obs_files)
 tar_load(file_pheno_haun_obs)
 tar_load(df_haun_pheno_dates)
 tar_load(df_pheno_interp)
+tar_load(df_simNameByCult)
+tar_load(df_obs_meta_data)
+tar_load(list_observed_dfs_raw_clean)
+tar_load(df_list_PCDS)
+tar_load(df_PCDS_int)
+tar_load(df_dateStageTargetReached)
+tar_load(df_haun_pheno_dates)
 ```
 
