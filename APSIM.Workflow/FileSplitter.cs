@@ -199,13 +199,10 @@ namespace APSIM.Workflow
                     foreach (PredictedObserved po in predictedObserveds)
                     {
                         foreach (string name in group.Folders)
-                            if (po.Node.FindParents<Folder>(name).Count() > 0)
-                                matchingPOs.Add(po);
+                            if (matchingPOs.Count(m => m.Name == po.Name) == 0)
+                                if (po.Node.FindParents<Folder>(name).Count() > 0 || po.Node.FindSiblings<Folder>(name).Count() > 0)
+                                    matchingPOs.Add(po.Clone());
                     }
-
-                    //remove the experiments from the main list
-                    foreach (PredictedObserved po in matchingPOs)
-                        predictedObserveds.Remove(po);
 
                     string subFolder = inputPath + outputPath + group.Name + "/";
                     string filename = group.Name + ".apsimx";

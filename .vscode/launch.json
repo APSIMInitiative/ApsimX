@@ -143,9 +143,9 @@
             },
             "args": [
                 "-d",
-                "${workspaceFolder}/Tests/Validation/Eucalyptus/Eucalyptus.apsimx",
+                "${workspaceFolder}/Tests/Validation/Barley/Barley.apsimx",
                 "-s",
-                "${workspaceFolder}/Tests/Validation/Eucalyptus/split.json"
+                "${workspaceFolder}/Tests/Validation/Barley/split.json"
             ]
         },
         {

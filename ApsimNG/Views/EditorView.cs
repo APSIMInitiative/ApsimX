@@ -110,7 +110,7 @@ namespace UserInterface.Views
 
             set
             {
-                if (value != null)
+                if (value != null && textEditor != null)
                 {
                     textEditor.Buffer.BeginNotUndoableAction();
                     textEditor.Buffer.Text = value;
@@ -347,6 +347,7 @@ namespace UserInterface.Views
 
             scroller.Add(textEditor);
 
+            mainWidget = scroller;
             InitialiseWidget();
         }
 
@@ -363,12 +364,20 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            Container parent = (Container)gtkControl;
-            mainWidget = parent;
-            scroller = new ScrolledWindow();
+
+            if (gtkControl is ScrolledWindow sw)
+                scroller = sw;
+            else
+                scroller = new ScrolledWindow();
+
             textEditor = new SourceView();
+            textEditor.DragDataReceived += TextEditorDragDataReceived;
+            textEditor.AutoIndent = true;
+            textEditor.InsertSpacesInsteadOfTabs = true;
+            
             scroller.Add(textEditor);
-            parent.Add(scroller);
+
+            mainWidget = scroller;
             InitialiseWidget();
         }
 
@@ -385,7 +394,6 @@ namespace UserInterface.Views
             // line on the second press.
             textEditor.SmartHomeEnd = SmartHomeEndType.Before;
 
-            mainWidget = scroller;
             textEditor.Buffer.Changed += OnTextHasChanged;
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
@@ -654,7 +662,8 @@ namespace UserInterface.Views
         public void Refresh()
         {
             //textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
-            textEditor.QueueDraw();
+            if (textEditor != null)
+                textEditor.QueueDraw();
         }
 
         /// <summary>
@@ -916,7 +925,8 @@ namespace UserInterface.Views
         /// </summary>
         public void Hide()
         {
-            textEditor.Visible = false;
+            if (textEditor != null)
+                textEditor.Visible = false;
         }
 
         /// <summary>
@@ -924,7 +934,8 @@ namespace UserInterface.Views
         /// </summary>
         public void Show()
         {
-            textEditor.Visible = true;
+            if (textEditor != null)
+                textEditor.Visible = true;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 212,
+  "Version": 213,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -896,8 +896,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 10-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -909,8 +907,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 03-Jun"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2",
                               "ResourceName": null,
                               "Children": [],
@@ -922,8 +918,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 27-Jun"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3",
                               "ResourceName": null,
                               "Children": [],
@@ -1732,6 +1726,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -6109,8 +6104,6 @@
                                 "[Sowing].Script.Population = 35",
                                 "[Irrigate].Script.IrrigateDates = 2-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -6124,8 +6117,6 @@
                                 "[Sowing].Script.Population = 27",
                                 "[Irrigate].Script.IrrigateDates = 20-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2",
                               "ResourceName": null,
                               "Children": [],
@@ -6139,8 +6130,6 @@
                                 "[Sowing].Script.Population = 35",
                                 "[Irrigate].Script.IrrigateDates = 09-Jun"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3",
                               "ResourceName": null,
                               "Children": [],
@@ -6934,6 +6923,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -10765,8 +10755,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 21-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -10778,8 +10766,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 28-Jun"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3",
                               "ResourceName": null,
                               "Children": [],
@@ -10810,8 +10796,6 @@
                               "Specifications": [
                                 "[Sowing].Script.Population = 23"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "23",
                               "ResourceName": null,
                               "Children": [],
@@ -10823,8 +10807,6 @@
                               "Specifications": [
                                 "[Sowing].Script.Population = 30"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "30",
                               "ResourceName": null,
                               "Children": [],
@@ -11732,6 +11714,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -14711,8 +14694,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 30-Apr"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -14724,8 +14705,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 21-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2",
                               "ResourceName": null,
                               "Children": [],
@@ -14737,8 +14716,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 12-Jun"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3",
                               "ResourceName": null,
                               "Children": [],
@@ -14770,8 +14747,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 0.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "0",
                               "ResourceName": null,
                               "Children": [],
@@ -14784,8 +14759,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 10.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 15.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -15925,6 +15898,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -23638,8 +23612,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 18-Apr"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -23651,8 +23623,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 21-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2",
                               "ResourceName": null,
                               "Children": [],
@@ -24678,6 +24648,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -29043,8 +29014,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 0.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1_Dry",
                               "ResourceName": null,
                               "Children": [
@@ -29101,8 +29070,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 0.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 15.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2_Dry",
                               "ResourceName": null,
                               "Children": [
@@ -29159,8 +29126,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 0.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3_Dry",
                               "ResourceName": null,
                               "Children": [
@@ -29217,8 +29182,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 10.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1_Wet",
                               "ResourceName": null,
                               "Children": [
@@ -29275,8 +29238,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 10.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 15.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2_Wet",
                               "ResourceName": null,
                               "Children": [
@@ -29333,8 +29294,6 @@
                                 "[IrrigateFixedDates].Script.Amount = 10.0",
                                 "[IrrigateOnSow_TOS2only].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3_Wet",
                               "ResourceName": null,
                               "Children": [
@@ -30516,6 +30475,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -31601,8 +31561,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 16-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -31614,8 +31572,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 29-May"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "2",
                               "ResourceName": null,
                               "Children": [],
@@ -31627,8 +31583,6 @@
                               "Specifications": [
                                 "[Sowing].Script.SowDate = 2-Jul"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "3",
                               "ResourceName": null,
                               "Children": [],
@@ -31659,8 +31613,6 @@
                               "Specifications": [
                                 "[IrrigateForIrrTreatsOnly].Script.Amount = 0.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "0",
                               "ResourceName": null,
                               "Children": [],
@@ -31672,8 +31624,6 @@
                               "Specifications": [
                                 "[IrrigateForIrrTreatsOnly].Script.Amount = 30.0"
                               ],
-                              "Paths": null,
-                              "Values": null,
                               "Name": "1",
                               "ResourceName": null,
                               "Children": [],
@@ -32999,6 +32949,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -37838,6 +37789,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -40146,6 +40098,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -44231,6 +44184,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -46920,6 +46874,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -50171,6 +50126,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -52091,6 +52047,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -53392,7 +53349,7 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule]",
+                      "Specification": "[Operations]",
                       "Name": "Cv_",
                       "ResourceName": null,
                       "Children": [
@@ -53668,15 +53625,6 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Operations, Models",
-                          "OperationsList": null,
-                          "Name": "IrrigationSchedule",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
@@ -53718,6 +53666,15 @@
                           ],
                           "GroupByVariableName": null,
                           "Name": "HarvestReport",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Operations, Models",
+                          "OperationsList": null,
+                          "Name": "Operations",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -53783,85 +53740,6 @@
                           "$type": "Models.PMF.Plant, Models",
                           "Name": "Chickpea",
                           "ResourceName": "Chickpea",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "CodeArray": [
-                            "using APSIM.Shared.Utilities;",
-                            "using Models.Utilities;",
-                            "using Models.Soils;",
-                            "using Models.PMF;",
-                            "using Models.Core;",
-                            "using System;",
-                            "",
-                            "namespace Models",
-                            "{",
-                            "    [Serializable]",
-                            "    public class Script : Model",
-                            "    {",
-                            "        [Link] Clock Clock;",
-                            "        [Link] Fertiliser Fertiliser;",
-                            "        [Link] Summary Summary;",
-                            "        [Link] Plant Chickpea;",
-                            "        [Link] Soil Soil;",
-                            "        Accumulator accumulatedRain;",
-                            "        ",
-                            "        [Description(\"Sowing date (d-mmm)\")]",
-                            "        public string SowDate { get; set; }",
-                            "        [Description(\"Cultivar to be sown\")]",
-                            "        public string CultivarName { get; set; }",
-                            "        [Description(\"Sowing depth (mm)\")]",
-                            "        public double SowingDepth { get; set; }",
-                            "        [Description(\"Row spacing (mm)\")]",
-                            "        public double RowSpacing { get; set; }",
-                            "        [Description(\"Plant population (/m2)\")]",
-                            "        public double Population { get; set; }",
-                            "        ",
-                            "        ",
-                            "",
-                            "",
-                            "        [EventSubscribe(\"DoManagement\")]",
-                            "        private void OnDoManagement(object sender, EventArgs e)",
-                            "        {",
-                            "        ",
-                            "            ",
-                            "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
-                            "            {",
-                            "                Chickpea.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                            "            }",
-                            "        ",
-                            "        }",
-                            "        ",
-                            "    }",
-                            "}"
-                          ],
-                          "Parameters": [
-                            {
-                              "Key": "SowDate",
-                              "Value": "24-Jul"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "Amethyst"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "RowSpacing",
-                              "Value": "300"
-                            },
-                            {
-                              "Key": "Population",
-                              "Value": "30"
-                            }
-                          ],
-                          "Name": "SowingRule",
-                          "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -54365,6 +54243,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -60145,6 +60024,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -61406,6 +61286,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -64042,6 +63923,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -64489,8 +64371,6 @@
                             "[Sowing].Script.SowDate = 1-Jan",
                             "[Irrigate].Script.IrrigateDates = 1-Jan"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Jan",
                           "ResourceName": null,
                           "Children": [],
@@ -64503,8 +64383,6 @@
                             "[Sowing].Script.SowDate = 1-Mar",
                             "[Irrigate].Script.IrrigateDates = 1-Mar"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Mar",
                           "ResourceName": null,
                           "Children": [],
@@ -64517,8 +64395,6 @@
                             "[Sowing].Script.SowDate = 1-May",
                             "[Irrigate].Script.IrrigateDates = 1-May"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "May",
                           "ResourceName": null,
                           "Children": [],
@@ -64531,8 +64407,6 @@
                             "[Sowing].Script.SowDate = 1-Jul",
                             "[Irrigate].Script.IrrigateDates = 1-Jul"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Jul",
                           "ResourceName": null,
                           "Children": [],
@@ -64545,8 +64419,6 @@
                             "[Sowing].Script.SowDate = 1-Sep",
                             "[Irrigate].Script.IrrigateDates = 1-Sep"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Sep",
                           "ResourceName": null,
                           "Children": [],
@@ -64559,8 +64431,6 @@
                             "[Sowing].Script.SowDate = 1-Nov",
                             "[Irrigate].Script.IrrigateDates = 1-Nov"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Nov",
                           "ResourceName": null,
                           "Children": [],
@@ -65263,6 +65133,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -65549,8 +65420,6 @@
                             "[Sowing].Script.SowDate = 1-Jan",
                             "[Irrigate].Script.IrrigateDates = 1-Jan"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Jan",
                           "ResourceName": null,
                           "Children": [],
@@ -65563,8 +65432,6 @@
                             "[Sowing].Script.SowDate = 2-Mar",
                             "[Irrigate].Script.IrrigateDates = 2-Mar"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Mar",
                           "ResourceName": null,
                           "Children": [],
@@ -65577,8 +65444,6 @@
                             "[Sowing].Script.SowDate = 1-May",
                             "[Irrigate].Script.IrrigateDates = 1-May"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "May",
                           "ResourceName": null,
                           "Children": [],
@@ -65591,8 +65456,6 @@
                             "[Sowing].Script.SowDate = 1-Jul",
                             "[Irrigate].Script.IrrigateDates = 1-Jul"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Jul",
                           "ResourceName": null,
                           "Children": [],
@@ -65605,8 +65468,6 @@
                             "[Sowing].Script.SowDate = 1-Sep",
                             "[Irrigate].Script.IrrigateDates = 1-Sep"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Sep",
                           "ResourceName": null,
                           "Children": [],
@@ -65619,8 +65480,6 @@
                             "[Sowing].Script.SowDate = 1-Nov",
                             "[Irrigate].Script.IrrigateDates = 1-Nov"
                           ],
-                          "Paths": null,
-                          "Values": null,
                           "Name": "Nov",
                           "ResourceName": null,
                           "Children": [],
@@ -66323,6 +66182,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],

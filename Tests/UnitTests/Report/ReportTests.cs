@@ -401,13 +401,13 @@ namespace UnitTests.Report
         {
             // When report gets an oncommencing it should write a _Factors table to storage.
             var sim = new Simulation();
-            sim.Descriptors = new List<SimulationDescription.Descriptor>();
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", "exp1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", "sim1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", "F"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Zone", "z"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Cultivar", "cult1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("N", "0"));
+            sim.Descriptors = new List<SimulationDescriptor>();
+            sim.Descriptors.Add(new SimulationDescriptor("Experiment", "exp1"));
+            sim.Descriptors.Add(new SimulationDescriptor("SimulationName", "sim1"));
+            sim.Descriptors.Add(new SimulationDescriptor("FolderName", "F"));
+            sim.Descriptors.Add(new SimulationDescriptor("Zone", "z"));
+            sim.Descriptors.Add(new SimulationDescriptor("Cultivar", "cult1"));
+            sim.Descriptors.Add(new SimulationDescriptor("N", "0"));
 
             var report = new Models.Report()
             {
