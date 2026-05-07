@@ -19,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 215; } }
+    public static int LatestVersion { get { return 216; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7248,7 +7248,7 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
-    
+
     /// <summary>
     /// Change manager scripts:
     ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
@@ -7339,7 +7339,6 @@ internal class Converter
         // Change graph variables.
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
-
     }
 
     /// <summary>
@@ -7355,7 +7354,7 @@ internal class Converter
             ["Name"] = "XValue",
             ["VariableName"] = "[Phenology].Stage"
         };
-        
+
         //children for PMF zadok
         JObject VegetativePhasePMF = new JObject()
         {
@@ -7439,13 +7438,13 @@ internal class Converter
     }
 
     /// <summary>
-    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH 
-    /// under a canola plant should use the Canola version, all others should 
+    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH
+    /// under a canola plant should use the Canola version, all others should
     /// use the generic version.
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion212(JObject root, string _)
-    {        
+    {
         //child for Generic BBCH
         JObject bbchCalculation = new JObject()
         {
@@ -7513,7 +7512,6 @@ internal class Converter
         }
     }
 
-    /// <summary>
     /// Fix some things in STRUM
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
@@ -7582,7 +7580,6 @@ internal class Converter
                 }
             }
         }
-
         // 5) Manager script renames
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
@@ -7653,6 +7650,7 @@ internal class Converter
         }
     }
 
+    /// <summary>
     /// Makes StoreTypes in Stores property of Supplement into children instead.
     /// Also updates stores report variables as well.
     /// </summary>
@@ -7728,6 +7726,60 @@ internal class Converter
                     }
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// The 'address' of various model parameters has changed. User's cultivars should be kept synchronized.
+    /// </summary>
+    /// <param name="root">Root json token.</param>
+    /// <param name="name">File name.</param>
+    private static void UpgradeToVersion216(JObject root, string name)
+    {
+        List<(string, string)> maizeUpadtes =
+        [
+            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+        ];
+        List<(string, string)> soybeanUpdates =
+        [
+            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron")
+        ];
+        List<(string, string)> canolaUpdates =
+        [
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
+        ];
+
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            var plantName = plant["Name"].Value<string>();
+            var updates = plantName switch
+            {
+                "Maize" => maizeUpadtes.Concat(maizeUpadtes.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Soybean" => soybeanUpdates.Concat(soybeanUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Canola" => canolaUpdates.Concat(canolaUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                _ => []
+            };
+            if (updates.Any() && plant["ResourceName"].Value<string>() == plantName)
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    JsonUtilities.UpdateCultivarPaths(cultivar, updates);
+                }
+            }
+        }
+
+        // Not uncommon to see people write a cultivar path like it is a report entry. Want our path updates to hit both.
+        static string ReformatPath(string normalPath, string plant)
+        {
+            var parts = normalPath.Split(".");
+            var organ = parts[0][1..^1];
+            return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
 }
