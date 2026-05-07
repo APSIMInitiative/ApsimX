@@ -53,5 +53,15 @@ tar_load(df_list_PCDS)
 tar_load(df_PCDS_int)
 tar_load(df_dateStageTargetReached)
 tar_load(df_haun_pheno_dates)
+df1<-tar_read(list_observed_dfs_raw_clean)
+tar_load(df_apsimStageInput_haunBased)
+tar_invalidate(df_stages_Observ)
+```
+
+```{r}
+tar_invalidate(config)
+tar_make(config)
+tar_read(config)$varName_addedToObserv
+df2<- tar_read(df_apsimStageInput_haunBased)
 ```
 

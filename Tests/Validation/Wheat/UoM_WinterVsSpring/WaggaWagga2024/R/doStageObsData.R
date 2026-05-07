@@ -23,6 +23,9 @@
 #' @export
 doStageObsData <- function(df_haunBased, var_name) {
   
+  # df_haunBased <- df2
+  # var_name     <- "Wheat.Phenology.Stage"
+  
   require(dplyr)
   require(tidyr)
   require(rlang)

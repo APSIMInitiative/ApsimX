@@ -2,27 +2,18 @@
 #'
 #' @description
 #' Compiles a nested list of cleaned observation dataframes into a single, master 
-#' dataframe ready for APSIM ingestion. It merges the dataframes by SimulationName 
-#' and Date to prevent staggered rows, and standardizes the date format to match 
-#' APSIM requirements.
+#' dataframe ready for APSIM ingestion. 
 #'
 #' @details
-#' **Structural Validation:** Before merging, the function verifies that every nested 
-#' dataframe contains the exact required structure: `SimulationName`, `Date`, and 
-#' at least one dynamically named variable of interest.
-#' 
-#' **Date Formatting:** APSIM strictly requires dates in the `Clock.Today` format 
-#' (e.g., "15/05/2024 00:00:00"). This function safely converts the standard R `Date` 
-#' objects into this exact string structure while dropping the original `Date` column.
+#' Utilizes a stack-then-crush approach to perfectly align variables and completely 
+#' avoid .x and .y column mutations caused by full_join overlapping data.
 #'
-#' @param list_observed_clean A tibble containing a `data` list-column, where each 
-#'   inner dataframe represents cleaned observations for a specific variable.
+#' @param list_observed_clean A tibble containing a `data` list-column.
+#' @return A flattened tibble containing `SimulationName`, `Clock.Today`, etc.
 #'
-#' @return A single, flattened tibble containing `SimulationName`, `Clock.Today`, 
-#'   and all dynamically combined variables of interest.
-#'
-#' @importFrom dplyr pull full_join mutate select everything
-#' @importFrom purrr walk reduce
+#' @importFrom dplyr pull bind_rows mutate select everything group_by summarise across if_else filter contains starts_with first
+#' @importFrom purrr walk
+#' @importFrom stats na.omit
 #' @export
 prepare_observed_final <- function(list_observed_clean) {
   
@@ -32,40 +23,66 @@ prepare_observed_final <- function(list_observed_clean) {
   # ------------------------------------------------------------------
   # 1. STRICT SAFETY CHECKS
   # ------------------------------------------------------------------
-  # Inspect every internal dataframe before attempting to merge them
   purrr::walk(list_observed_clean$data, function(df) {
     if (!all(c("SimulationName", "Date") %in% names(df))) {
-      stop("Validation Failed: One or more dataframes are missing 'SimulationName' or 'Date'.")
-    }
-    if (ncol(df) < 3) {
-      stop("Validation Failed: One or more dataframes are missing a variable of interest. Found only: ", paste(names(df), collapse = ", "))
+      stop("Validation Failed: Missing 'SimulationName' or 'Date'.")
     }
   })
   
   # ------------------------------------------------------------------
-  # 2. EXTRACT AND MERGE (The APSIM Fix)
+  # 2. STACK AND AGGREGATE (The .x / .y Fix)
   # ------------------------------------------------------------------
   df_list <- list_observed_clean %>%
     dplyr::pull(data)
   
-  # purrr::reduce combined with full_join forces R to merge all the dataframes
-  # side-by-side using the SimulationName and Date as the anchor. 
-  # This guarantees that observations on the same day land on the EXACT same row.
-  df_final <- purrr::reduce(
-    df_list, 
-    ~dplyr::full_join(.x, .y, by = c("SimulationName", "Date"))
-  )
+  # Step A: Stack everything. bind_rows NEVER creates .x or .y columns.
+  # It aligns identical column names, temporarily creating staggered NA rows.
+  df_stacked <- dplyr::bind_rows(df_list)
+  
+  # Step B: Crush the staggered rows down into a perfect 1-to-1 grid.
+  # This mathematically merges any overlapping data seamlessly.
+  df_crushed <- df_stacked %>%
+    dplyr::group_by(SimulationName, Date) %>%
+    dplyr::summarise(
+      dplyr::across(
+        where(is.numeric), 
+        ~ mean(.x, na.rm = TRUE)
+      ),
+      dplyr::across(
+        where(is.character),
+        ~ dplyr::first(stats::na.omit(.x))
+      ),
+      .groups = "drop"
+    ) %>%
+    # Replace NaN (created by taking the mean of all NAs) back to NA
+    dplyr::mutate(
+      dplyr::across(where(is.numeric), ~ dplyr::if_else(is.nan(.x), NA_real_, .x))
+    )
   
   # ------------------------------------------------------------------
-  # 3. FORMAT FOR APSIM
+  # 3. FORMAT FOR APSIM & STRICT CLEANUP
   # ------------------------------------------------------------------
-  df_final <- df_final %>%
+  df_final <- df_crushed %>%
+    
+    # A. FIREWALL: Drop any row that doesn't have a valid Date
+    dplyr::filter(!is.na(Date)) %>%
+    
+    # B. Format to APSIM standard
     dplyr::mutate(
-      # Safely format directly to avoid POSIXct timezone shifts
-      Clock.Today = format(as.Date(Date), "%d/%m/%Y 00:00:00")
+      Clock.Today = format(as.Date(Date), "%Y-%m-%d")
     ) %>%
-    # Reorder columns: SimulationName first, Clock.Today second, everything else next.
-    # The minus sign drops the old Date column safely.
+    
+    # C. PURGE GARBAGE COLUMNS:
+    # - Drop bleeding APSIM params (like [Wheat].Leaf.StemPopulation)
+    # - Drop DateToProgress
+    # - Drop the empty Excel ghost columns ("...10")
+    dplyr::select(
+      -dplyr::contains("[Wheat]"),
+      -dplyr::contains("DateToProgress"),
+      -dplyr::starts_with("...")
+    ) %>%
+    
+    # D. Reorder perfectly: SimulationName, Clock.Today, then everything else
     dplyr::select(SimulationName, Clock.Today, dplyr::everything(), -Date)
   
   return(df_final)

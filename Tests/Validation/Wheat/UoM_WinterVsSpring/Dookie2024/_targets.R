@@ -74,6 +74,8 @@ list(
       sheetExcel_weather        = "Weather",
       file_metaData_observed    = "Observed_data_requirements.csv",
       file_name_cult_by_sowDate = "CultivarBySowingDatesTemplate.csv",
+      varName_addedToObserv     = "Wheat.Phenology.Stage", # Synthetic var added into observations
+      
       
       # Location
       coord_thisLatLon          = data.frame(lat = -36.39, lon = 145.70), 
@@ -227,8 +229,8 @@ list(
   tar_target(
     name = df_stages_Observ, 
     command = doStageObsData(
-      df_dateStageTargetReached,
-      "Wheat.Phenology.Stage"
+      df_haunBased = df_apsimStageInput_haunBased, 
+      var_name     = config$varName_addedToObserv  
     )
   ),
   
