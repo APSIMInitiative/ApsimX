@@ -44,6 +44,10 @@ namespace UnitTests
         public double[] StemWtGms { get; private set; }
         public double[] RootWtGms { get; private set; }
         public double[] RootWt { get; private set; }
+        public double[] LeafLiveWt { get; private set; }
+        public double[] LeafDeadWt { get; private set; }
+        public double[] StemLiveWt { get; private set; }
+        public double[] StemDeadWt { get; private set; }
 
         [Test]
         public void TestPastureBiomasses()
@@ -90,7 +94,11 @@ namespace UnitTests
                 "[Pasture].StemDM/10",
                 "[Pasture].Stem.Wt",
                 "[Pasture].Root.Wt",
-                "[Pasture].RootDM/10"
+                "[Pasture].RootDM/10",
+                "[Pasture].Leaf.Live.Wt",
+                "[Pasture].Leaf.Dead.Wt",
+                "[Pasture].Stem.Live.Wt",
+                "[Pasture].Stem.Dead.Wt",
             };
             report.EventNames = new[]
             {
@@ -134,6 +142,22 @@ namespace UnitTests
                     {
                         RootWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Root.Wt", CultureInfo.InvariantCulture);
                     }
+                    if (col.ColumnName == "Pasture.Leaf.Live.Wt")
+                    {
+                        LeafLiveWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Leaf.Live.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Leaf.Dead.Wt")
+                    {
+                        LeafDeadWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Leaf.Dead.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Stem.Live.Wt")
+                    {
+                        StemLiveWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Stem.Live.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Stem.Dead.Wt")
+                    {
+                        StemDeadWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Stem.Dead.Wt", CultureInfo.InvariantCulture);
+                    }
             }
             
 
@@ -142,6 +166,8 @@ namespace UnitTests
             Assert.That (LeafDMgms, Is.EqualTo(LeafWt));
             Assert.That(StemWtGms, Is.EqualTo(StemWt));
             Assert.That(RootWtGms, Is.EqualTo(RootWt));
+            Assert.That(LeafLiveWt.Add(LeafDeadWt),Is.EqualTo(LeafWt).Within(1e-10));
+            Assert.That(StemLiveWt.Add(StemDeadWt),Is.EqualTo(StemWt).Within(1e-10));
 
               
         }

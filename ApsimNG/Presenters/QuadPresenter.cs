@@ -6,7 +6,8 @@ using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
 using Models.Factorial;
-using APSIM.Core;
+using System;
+using UserInterface.Commands;
 
 namespace UserInterface.Presenters
 {
@@ -48,10 +49,8 @@ namespace UserInterface.Presenters
                 CreateLayoutPhysical();
             else if (model is WaterBalance)
                 CreateLayoutWaterBalance();
-            else if (model is FactorFromFile)
-                CreateLayoutFactorFromFile();
-            else if (model is FactorsFromFile)
-                CreateLayoutFactorFromFile();
+            else if (model is CompositeFactor)
+                CreateLayoutCompositeFactor();
             else
                 CreateLayoutGeneric();
 
@@ -62,7 +61,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             DisconnectEvents();
-            foreach (IPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in presenters)
             {
                 if (presenter is GridPresenter grid)
                     grid.Detach();
@@ -90,7 +89,14 @@ namespace UserInterface.Presenters
         private void ConnectEvents()
         {
             foreach (ISubPresenter presenter in presenters)
+            {
                 presenter.ConnectEvents();
+                if (presenter is GridPresenter grid)
+                    grid.CellChanged += OnCellChanged;
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged += OnTextChanged;
+            }
+
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -98,7 +104,13 @@ namespace UserInterface.Presenters
         private void DisconnectEvents()
         {
             foreach (ISubPresenter presenter in presenters)
+            {
                 presenter.DisconnectEvents();
+                if (presenter is GridPresenter grid)
+                    grid.CellChanged -= OnCellChanged;
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged -= OnTextChanged;
+            }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
@@ -109,12 +121,29 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             model = changedModel as IModel;
-            if (model is IGenerateNodes generator)
-            {
-                Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
-                explorerPresenter.RebuildTree();
-            }
             Refresh();
+        }
+
+        void OnCellChanged(Gtk.Sheet.IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        {
+            DisconnectEvents();
+            foreach (ISubPresenter presenter in presenters)
+                presenter.Refresh();
+            ConnectEvents();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="property">The property changed</param>
+        /// <param name="lines">The lines it should be given</param>
+        private void OnTextChanged(ILineEditor model, string property, string[] lines)
+        {
+            DisconnectEvents();
+            ChangeProperty command = new ChangeProperty(model, property, lines);
+            explorerPresenter.CommandHistory.Add(command);
+            ConnectEvents();
         }
 
         /// <summary>
@@ -253,15 +282,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Create layout for a FactorsFromFile
+        /// Create layout for a CompositeFactor with code and grid
         /// </summary>
-        private void CreateLayoutFactorFromFile()
+        private void CreateLayoutCompositeFactor()
         {
-            AddProperty(WidgetPosition.TopLeft);
-            AddGrid(WidgetPosition.BottomLeft);
-            AddText(WidgetPosition.TopRight, "Commands:");
-            AddCode(WidgetPosition.BottomRight);
-            view.OverrideSlider(0.6);
+            AddCode(WidgetPosition.TopLeft);
+            AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
+            AddGrid(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.7);
         }
     }
 }

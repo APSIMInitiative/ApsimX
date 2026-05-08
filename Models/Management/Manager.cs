@@ -137,7 +137,7 @@ namespace Models
             SetParametersInScriptModel();
 
             if (CodeForLastSuccessfullCompile == null && !string.IsNullOrEmpty(Code))
-                throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
+                throw new Exception($"Errors found in manager model {Name} located at {FullPath}{Environment.NewLine}{Errors}");
         }
 
         /// <summary>Rebuild the script model and return error message if script cannot be compiled.</summary>
@@ -176,7 +176,7 @@ namespace Models
                 {
                     CodeForLastSuccessfullCompile = null;
                     if (Errors != null)
-                        throw new Exception($"Errors found in manager model {Name}{Environment.NewLine}{Errors}");
+                        throw new Exception($"Errors found in manager model {Name} located at {FullPath}{Environment.NewLine}{Errors}");
                 }
 
                 SetParametersInScriptModel();

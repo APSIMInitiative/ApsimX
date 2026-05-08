@@ -367,7 +367,9 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
-                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'." + 
+                " Check that the cultivar name is correct and that the cultivar definition is included " +
+                "in the simulation and is enabled.");
 
             cultivarDefinition.Apply(this);
 

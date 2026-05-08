@@ -22,8 +22,14 @@
 			"Simulations":[]			
 		},
 		{
-			"Name":"WheatPhenology-NPIField",
-			"Folders":["NPIField2019", "NPIField2020"],
+			"Name":"WheatPhenology-NPIField2019",
+			"Folders":["NPIField2019"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"WheatPhenology-NPIField2020",
+			"Folders":["NPIField2020"],
 			"Experiments":[],
 			"Simulations":[]
 		},

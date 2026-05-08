@@ -59,6 +59,13 @@ namespace UserInterface.Presenters
         /// <summary>A replace model command to enable the undo system to work.</summary>
         private ReplaceModelCommand replaceModelCommand;
 
+        /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
+
         /// <summary>Delegate for a CellChanged event.</summary>
         /// <param name="dataProvider">The data provider.</param>
         /// <param name="colIndices">The indices of the columns that were changed.</param>
@@ -145,19 +152,27 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         public void ConnectEvents()
         {
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            if (dataProvider != null)
-                dataProvider.CellChanged += OnCellChanged;
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+                contextMenuHelper.ContextMenu += OnContextMenuPopup;
+                if (dataProvider != null)
+                    dataProvider.CellChanged += OnCellChanged;
+            }
         }
 
         /// <summary>Disconnect all widget events.</summary>
         public void DisconnectEvents()
         {
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            contextMenuHelper.ContextMenu -= OnContextMenuPopup;
-
-            if (dataProvider != null)
-                dataProvider.CellChanged -= OnCellChanged;
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+                contextMenuHelper.ContextMenu -= OnContextMenuPopup;
+                if (dataProvider != null)
+                    dataProvider.CellChanged -= OnCellChanged;
+            }
         }
 
         public void SetupSheet(IDataProvider dataProvider)

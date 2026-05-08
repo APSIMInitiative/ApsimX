@@ -24,6 +24,13 @@ namespace UserInterface.Presenters
         /// <summary>The model.</summary>
         private IModel model;
 
+        /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
+
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
@@ -139,13 +146,21 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         public void ConnectEvents()
         {
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
         }
 
         /// <summary>Disconnect all widget events.</summary>
         public void DisconnectEvents()
         {
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            }
         }
 
         /// <summary>

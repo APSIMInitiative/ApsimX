@@ -371,6 +371,10 @@ namespace UserInterface.Views
                 scroller = new ScrolledWindow();
 
             textEditor = new SourceView();
+            textEditor.DragDataReceived += TextEditorDragDataReceived;
+            textEditor.AutoIndent = true;
+            textEditor.InsertSpacesInsteadOfTabs = true;
+            
             scroller.Add(textEditor);
 
             mainWidget = scroller;

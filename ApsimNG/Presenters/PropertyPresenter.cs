@@ -50,6 +50,13 @@ namespace UserInterface.Presenters
         public event EventHandler ViewRefreshed;
 
         /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
+
+        /// <summary>
         /// Attach the model to the view.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -189,15 +196,23 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         public void ConnectEvents()
         {
-            view.PropertyChanged += OnViewChanged;
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                view.PropertyChanged += OnViewChanged;
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
         }
 
         /// <summary>Disconnect all widget events.</summary>
         public void DisconnectEvents()
         {
-            view.PropertyChanged -= OnViewChanged;
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                view.PropertyChanged -= OnViewChanged;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            }
         }
 
         public void Refresh()
@@ -215,16 +230,13 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Called when a m
-        /// odel is changed. Refreshes the view.
+        /// Called when a model is changed. Refreshes the view.
         /// </summary>
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
         {
-            DisconnectEvents();
             if (propertyMap.Values.Any(p => p.Model == changedModel))
                 RefreshView(model);
-            ConnectEvents();
         }
 
         /// <summary>

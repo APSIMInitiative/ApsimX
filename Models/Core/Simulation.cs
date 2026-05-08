@@ -109,7 +109,8 @@ namespace Models.Core
         public bool IsInitialising => Node.IsInitialising;
 
         /// <summary>A list of keyword/value meta data descriptors for this simulation.</summary>
-        public List<SimulationDescription.Descriptor> Descriptors { get; set; }
+        [JsonIgnore]
+        public List<SimulationDescriptor> Descriptors { get; set; }
 
         /// <summary>Return the filename that this simulation sits in.</summary>
         /// <value>The name of the file.</value>
@@ -146,12 +147,12 @@ namespace Models.Core
             // Add a folderName descriptor.
             var folderNode = Structure.FindParent<Folder>(recurse: true);
             if (folderNode != null)
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", folderNode.Name));
+                simulationDescription.Descriptors.Add(new SimulationDescriptor("FolderName", folderNode.Name));
 
-            simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", Name));
+            simulationDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", Name));
 
             foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
+                simulationDescription.Descriptors.Add(new SimulationDescriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
         }
