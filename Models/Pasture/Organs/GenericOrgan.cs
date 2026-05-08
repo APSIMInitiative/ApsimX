@@ -21,6 +21,7 @@ using APSIM.Core;
 using Models.PMF.Interfaces;
 using Models.PMF;
 using Models.PMF.Organs;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.GrazPlan.Organs
 {
@@ -31,7 +32,7 @@ namespace Models.GrazPlan.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Pasture))]
     
-    public class GenericOrgan: Model,IStructureDependency,IBiomass
+    public class GenericOrgan: Model,IStructureDependency,IBiomass,IHasDamageableBiomass,IOrganDamage
     {   
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -222,6 +223,8 @@ namespace Models.GrazPlan.Organs
 
         private PMF.Biomass liveBiomass = new PMF.Biomass();
         private PMF.Biomass deadBiomass = new PMF.Biomass();
+        private int part;
+
 
         /// <summary>
         /// Live Biomass
@@ -252,7 +255,8 @@ namespace Models.GrazPlan.Organs
 
 
 
-        /// <summary>Calculate the values for calculated states.</summary>
+        /// <summary>Calculate the values for live and dead biomasses.</summary>
+        /// Mass of the live and dead herbage has to be calculated looping through all the DMD classes. TOTAL cannot be used as it is updated later (end of the day).
         private void CalculateLiveDead()
         {
 
@@ -262,25 +266,53 @@ namespace Models.GrazPlan.Organs
               
                 if (Name == "Leaf")
                 {
-                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptLEAF)/10.0;  // to g/m2
-                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); // to g/m2
-                
-                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptLEAF)/10.0;  // to g/m2
-                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); 
-                } 
+                    double totalBiomasslive = 0;
+                    double totalBiomassdead = 0;
+                    double  totalNLive = 0.0;
+                    double totalNDead =0.0;
+                    for (int cls=1; cls <= HerbClassNo; cls++)
+                    {
+                        totalBiomasslive += PastureModel.GetHerbageMass(stESTAB, ptLEAF, cls) ;
+                        totalBiomassdead += PastureModel.GetHerbageMass(stDEAD, ptLEAF, cls);
+                        totalNLive += PastureModel.GetHerbageNutr(stESTAB,ptLEAF,cls,TPlantElement.N);
+                        totalNDead += PastureModel.GetHerbageNutr(stDEAD,ptLEAF,cls,TPlantElement.N);
+                    }
 
-                if(Name=="Stem")
+                    liveBiomass.StructuralWt =  totalBiomasslive;
+                    liveBiomass.StructuralN = totalNLive;
+
+                    deadBiomass.StructuralWt = totalBiomassdead ;
+                    deadBiomass.StructuralN = totalNDead;
+
+               
+                 }
+
+                 if (Name == "Stem")
                 {
-                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptSTEM)/10.0;  // to g/m2
-                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); // to g/m2
-                
-                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptSTEM)/10.0;  // to g/m2
-                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); 
-                }
-            }
 
-   
-        } 
+                    double totalBiomasslive = 0;
+                    double totalBiomassdead = 0;
+                    double  totalNLive = 0.0;
+                    double totalNDead =0.0;
+                    for (int cls=1; cls <= HerbClassNo; cls++)
+                    {
+                        totalBiomasslive += PastureModel.GetHerbageMass(stESTAB, ptSTEM, cls) ;
+                        totalBiomassdead += PastureModel.GetHerbageMass(stDEAD, ptSTEM, cls);
+                        totalNLive += PastureModel.GetHerbageNutr(stESTAB, ptSTEM, cls,TPlantElement.N);
+                        totalNDead += PastureModel.GetHerbageNutr(stDEAD, ptSTEM, cls, TPlantElement.N);
+                    }
+
+                    liveBiomass.StructuralWt =  totalBiomasslive;
+                    liveBiomass.StructuralN = totalNLive;
+
+                    deadBiomass.StructuralWt = totalBiomassdead ;
+                    deadBiomass.StructuralN = totalNDead;
+                }
+
+            }
+              
+    }   
+
 
         /// <summary>
         /// Live digestibility
@@ -340,9 +372,95 @@ namespace Models.GrazPlan.Organs
             }
         }
 
+    /// <summary>
+    /// Removes biomass from organs - leaf and stem across all DMD classes proportionally and sets the herbage in each class 
+    /// </summary>
+    /// <param name="liveToRemove"></param>
+    /// <param name="deadToRemove"></param>
+    /// <param name="liveToResidue"></param>
+    /// <param name="deadToResidue"></param>
+    /// <param name="fractionStanding"></param>
+    /// <returns></returns>
+    public double RemoveBiomass( double liveToRemove = 0,  double deadToRemove = 0,   double liveToResidue = 0,   double deadToResidue = 0,   double fractionStanding = 0)
+    {
+        double totalBiomass = 0.0;
+        double totalBiomassRemoved = 0.0;
+        double PostDMTotal = 0.0;
+        double totalDM =  PastureModel.GetHerbageMass(stESTAB, TOTAL, TOTAL) +  PastureModel.GetHerbageMass(stDEAD, TOTAL, TOTAL);
+        if (totalDM > 0.0)
+            {
+                if(Name == "Leaf")
+                     part = ptLEAF;
+     
+                if(Name == "Stem")
+                    part = ptSTEM;
 
+                for (int cls=1; cls <= HerbClassNo; cls++)
+                    {
+                        double totalBiomasslive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
+                        double totalBiomassdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                        totalBiomass += totalBiomasslive+totalBiomassdead;
+                    }
+        
+                for (int cls = 1; cls <= HerbClassNo; cls++)
+                    {
+                        double liveDM = PastureModel.GetHerbageMass(stESTAB, part, cls);
+                        double liveN = PastureModel.GetHerbageNutr(stESTAB, part, cls, TPlantElement.N);
 
+                        double deadDM = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                        double deadN = PastureModel.GetHerbageNutr(stDEAD, part, cls, TPlantElement.N);
 
+                        if(liveDM > 0.0)
+                        {
+                            double setmass = liveDM - liveDM * liveToRemove;
+                            PastureModel.SetHerbageMass(stESTAB, part, cls, setmass); 
+                        }
+                        else
+                        PastureModel.SetHerbageMass(stESTAB, part, cls, 0.0);
+                                        
+                        if(deadDM > 0.0)
+                        {
+                            double setmass = deadDM - deadDM * deadToRemove;   
+                            PastureModel.SetHerbageMass(stDEAD, part, cls, setmass);                        
+                        }
+                        else
+                        PastureModel.SetHerbageMass(stDEAD, part, cls, 0.0);
+                    
+                        if(liveN > 0.0)
+                        {
+                            double setN = liveN - liveN * liveToRemove;
+                            PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N, setN);
+                        }
+                        else
+                        PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N, 0.0);
+
+                        if(deadN > 0.0)
+                        {
+                            double setN = deadN - deadN * deadToRemove;
+                            PastureModel.SetHerbageNutr(stDEAD, part, cls, TPlantElement.N, setN);
+                        }
+                        else
+                        PastureModel.SetHerbageNutr(stDEAD, part, cls, TPlantElement.N, 0.0);
+
+                    }
+                    for (int cls=1; cls <= HerbClassNo; cls++)
+                    {
+                        double PostDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
+                        double PostDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                        PostDMTotal += PostDMlive + PostDMdead;
+                    }               
+
+                    //update live and dead biomasses
+                    CalculateLiveDead();
+                double RemoveDM = totalBiomass - totalBiomassRemoved;
+                return RemoveDM;    
+            }
+            else
+                throw new Exception($"There is insufficient biomass to remove.");
+  
+    }
 
     }
+
+
 }

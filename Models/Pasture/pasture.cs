@@ -792,12 +792,9 @@ namespace Models.GrazPlan
         public void RemoveBiomass(string type, double amount)
         {
             double totalBiomass =0.0;
-            double totalBiomassPost =0.0;
-            double defoliatedDM = 0.0;
-      
-            string sUnit = PastureModel.MassUnit;
-            PastureModel.MassUnit = "kg/ha";
-            double amountToRemove=0.0;  
+            double totalBiomassPost = 0.0;
+            double amountToRemove = 0.0;  
+            double defoliatedDM  = 0.0;
          
 
             // Calculate leaf and stem live and dead biomass across classes before defoliating 
@@ -889,7 +886,7 @@ namespace Models.GrazPlan
                 }
             }
             //Check mass balance 
-            defoliatedDM = totalBiomass - totalBiomassPost;
+             defoliatedDM = totalBiomass - totalBiomassPost;
             if(!MathUtilities.FloatsAreEqual(defoliatedDM , amountToRemove, 0.000001))
             {
                 throw new Exception("Removal of DM resulted in loss of mass balance");
