@@ -65,3 +65,89 @@ tar_read(config)$varName_addedToObserv
 df2<- tar_read(df_apsimStageInput_haunBased)
 ```
 
+```{r}
+# 1. Get the master list of all expected simulations
+master_sims <- tar_read(df_simNameByCult)$SimulationName
+
+# 2. Check the final output
+final_sims <- tar_read(df_apsimStageInput_haunBased)$SimulationName
+print(paste("Final output has", length(final_sims), "simulations. Expected:", length(master_sims)))
+
+# 3. Identify exactly which ones are missing
+missing_sims <- setdiff(master_sims, final_sims)
+print("Missing Simulations:")
+print(missing_sims)
+
+# 4. TRACE BACKWARDS: Find out where they dropped!
+# Did they make it through the Haun update?
+print(length(tar_read(df_apsimStageInput)$SimulationName))
+
+# Did they make it through the PCDS target finder?
+print(length(tar_read(df_dateStageTargetReached)$SimulationName))
+
+# Did they even exist in the interpolated PCDS data?
+print(length(unique(tar_read(df_PCDS_int)$SimulationName)))
+```
+
+```{r}
+require(dplyr)
+require(targets)
+
+# Pull the raw data right after it was read from Excel
+raw_data <- tar_read(list_observed_dfs_raw)
+raw_bound <- dplyr::bind_rows(raw_data$data)
+all_raw_sims <- unique(raw_bound$SimulationName)
+
+# Search for ANY simulation name containing "Gregory" (ignoring capitals)
+gregory_search <- grep("Gregory", all_raw_sims, value = TRUE, ignore.case = TRUE)
+
+message("Found these Gregory-like names in the raw data:")
+print(gregory_search)
+
+# Let's also check Wedgetail just in case
+wedge_search <- grep("Wedge", all_raw_sims, value = TRUE, ignore.case = TRUE)
+message("Found these Wedgetail-like names in the raw data:")
+print(wedge_search)
+```
+
+```{r}
+require(dplyr)
+require(targets)
+
+target_sim <- "DookieEVA2024SowApril_BigRed"
+pcds_list <- tar_read(df_list_PCDS)
+
+# Flatten the list into one master dataframe, tagging the source name
+gregory_timeline <- dplyr::bind_rows(pcds_list, .id = "df_name") %>%
+  dplyr::filter(SimulationName == target_sim) %>%
+  dplyr::arrange(Date)
+
+# Print the full timeline
+print(gregory_timeline, n = Inf)
+```
+```{r}
+require(dplyr)
+require(targets)
+
+# 1. Pull the rawest data right after it was read from Excel
+raw_nested <- tar_read(list_observed_dfs_raw)
+
+# 2. Flatten it so we can search the whole thing
+raw_flat <- dplyr::bind_rows(raw_nested$data, .id = "df_name")
+
+# 3. Search for anything remotely resembling "Big" or "Red"
+bigred_search <- raw_flat %>%
+  dplyr::filter(
+    grepl("Big", SimulationName, ignore.case = TRUE) | 
+    grepl("Red", SimulationName, ignore.case = TRUE) |
+    grepl("Big", df_name, ignore.case = TRUE)
+  ) %>%
+  # Just show us where it is and what it's named
+  dplyr::select(df_name, dplyr::any_of(c("SimulationName", "Date", "Cultivar"))) %>%
+  dplyr::distinct()
+
+print(bigred_search, n = Inf)
+
+
+```
+

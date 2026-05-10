@@ -220,8 +220,9 @@ list(
   tar_target(
     name = df_apsimStageInput_haunBased,
     command = updatePhenoStageInput(
-      obsIntPheno = df_apsimStageInput,  # Interpolated observations
-      haunPheno   = df_haun_pheno_dates  # Haun stage priority
+      obsIntPheno    = df_apsimStageInput, 
+      haunPheno      = df_haun_pheno_dates,
+      df_master_sims = df_simNameByCult      # <--- NEW: Feeds the master list
     )
   ),
   
@@ -281,7 +282,7 @@ list(
   tar_target(
     name = msg_param_saved, 
     command = saveInputParam(
-      df_apsimStageInput, 
+      df_apsimStageInput_haunBased,  # <--- CRITICAL FIX: Was previously df_apsimStageInput
       config$folder_inputs, 
       config$file_name_input_pheno
     ),

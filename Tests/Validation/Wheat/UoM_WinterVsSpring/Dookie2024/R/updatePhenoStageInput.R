@@ -2,21 +2,18 @@
 #'
 #' @description
 #' Updates base interpolated phenology dates with higher-priority dates derived 
-#' from Haun stage observations. Inserts the Double Ridge (LeavesInitiating) stage 
-#' and overwrites the Terminal Spikelet (SpikeletsDifferentiating) stage.
-#'
-#' @details
-#' The function safely handles bracketed APSIM column names by using base R 
-#' for merges and evaluations to prevent tidy-eval subsetting errors.
+#' from Haun stage observations. Forces a skeleton join to ensure all simulations 
+#' survive to the final APSIM parameter file.
 #'
 #' @param obsIntPheno Data frame containing base interpolated phenology dates.
 #' @param haunPheno Data frame containing Haun-derived target dates.
+#' @param df_master_sims Data frame containing the complete list of simulations.
 #'
 #' @return A rigorously formatted data frame ready for APSIM parameterization.
 #'
-#' @importFrom dplyr select mutate across contains left_join any_of if_else
+#' @importFrom dplyr select mutate across contains left_join any_of if_else coalesce distinct
 #' @export
-updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
+updatePhenoStageInput <- function(obsIntPheno, haunPheno, df_master_sims) {
   
   require(dplyr)
   
@@ -44,45 +41,53 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
     as.Date(x, tryFormats = c("%Y-%m-%d", "%d-%m-%Y"))
   }
   
-  # Prepare base data (cleanly dropping LeavesInitiating if it exists)
+  # Prepare base data 
   base_df <- obsIntPheno %>%
     dplyr::select(-dplyr::any_of(col_leaves)) %>%
     dplyr::mutate(dplyr::across(dplyr::contains("DateToProgress"), safe_parse_date))
   
-  # Isolate and explicitly rename Haun columns to avoid bracket issues in join
+  # Isolate and explicitly rename Haun columns
   haun_sub <- haunPheno %>%
-    dplyr::select(SimulationName, dplyr::all_of(c(col_leaves, col_spike))) %>%
+    dplyr::select(SimulationName, dplyr::any_of(c(col_leaves, col_spike))) %>%
     dplyr::mutate(dplyr::across(dplyr::contains("DateToProgress"), safe_parse_date))
   
-  # Rename to completely safe, standard strings
   names(haun_sub)[names(haun_sub) == col_leaves] <- "haun_leaves"
   names(haun_sub)[names(haun_sub) == col_spike]  <- "haun_spike"
   
   # ------------------------------------------------------------------
-  # 2. JOIN AND OVERWRITE (Base R approach for safety)
+  # 2. JOIN AND OVERWRITE
   # ------------------------------------------------------------------
   updated_df <- base_df %>%
     dplyr::left_join(haun_sub, by = "SimulationName")
   
-  # Safe Coalesce Overwrite: Give Haun priority, fallback to base
-  if (col_spike %in% names(updated_df)) {
-    # If base already had spike dates, coalesce them safely
+  if (col_spike %in% names(updated_df) && "haun_spike" %in% names(updated_df)) {
     updated_df[[col_spike]] <- dplyr::coalesce(updated_df$haun_spike, updated_df[[col_spike]])
-  } else {
-    # If base didn't have spike dates, just assign the Haun ones
+  } else if ("haun_spike" %in% names(updated_df)) {
     updated_df[[col_spike]] <- updated_df$haun_spike
   }
   
-  # Insert the leaves data directly
-  updated_df[[col_leaves]] <- updated_df$haun_leaves
+  if ("haun_leaves" %in% names(updated_df)) {
+    updated_df[[col_leaves]] <- updated_df$haun_leaves
+  }
   
-  # Clean up and force the final strict order
   updated_df <- updated_df %>%
-    dplyr::select(-haun_leaves, -haun_spike) %>%
+    dplyr::select(-dplyr::any_of(c("haun_leaves", "haun_spike"))) %>%
     dplyr::select(dplyr::any_of(ordered_cols))
   
   # ------------------------------------------------------------------
-  # 3. CHRONOLOGICAL VALIDATION (Loop avoids dplyr subsetting bugs)
+  # 3. THE SKELETON JOIN (APSIM CRASH FIX)
+  # ------------------------------------------------------------------
+  # Force every simulation from the master list into the final dataframe.
+  # If a simulation had no raw data, this creates a row filled with NAs.
+  skeleton <- df_master_sims %>% 
+    dplyr::select(SimulationName) %>% 
+    dplyr::distinct()
+  
+  updated_df <- skeleton %>%
+    dplyr::left_join(updated_df, by = "SimulationName")
+  
+  # ------------------------------------------------------------------
+  # 4. CHRONOLOGICAL VALIDATION 
   # ------------------------------------------------------------------
   present_stage_cols <- intersect(ordered_cols[-1], names(updated_df))
   bad_sims <- character(0)
@@ -91,14 +96,12 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
     is_bad <- logical(nrow(updated_df))
     
     for (i in seq_len(nrow(updated_df))) {
-      # Extract row i as a vector, dropping NAs
       row_dates <- unlist(updated_df[i, present_stage_cols])
       row_dates <- row_dates[!is.na(row_dates)]
       
       if (length(row_dates) < 2) {
         is_bad[i] <- FALSE
       } else {
-        # Check if the differences between consecutive dates are strictly >= 0
         is_bad[i] <- !all(as.numeric(diff(row_dates)) >= 0)
       }
     }
@@ -107,23 +110,11 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
   }
   
   if (length(bad_sims) > 0) {
-    warning_box <- c(
-      "",
-      "======================================================================",
-      " ⚠️  CHRONOLOGY ERROR IN PHENOLOGY DATES DETECTED ⚠️ ",
-      "======================================================================",
-      " The following SimulationNames have non-sequential dates after merging",
-      " the Haun data (a later stage occurs before an earlier stage):",
-      paste("   -", bad_sims),
-      "======================================================================",
-      ""
-    )
-    message(paste(warning_box, collapse = "\n"))
-    warning("Non-chronological phenology dates detected. See console for details.", call. = FALSE)
+    warning("Non-chronological phenology dates detected in: ", paste(bad_sims, collapse = ", "))
   }
   
   # ------------------------------------------------------------------
-  # 4. FINAL APSIM FORMATTING
+  # 5. FINAL APSIM FORMATTING
   # ------------------------------------------------------------------
   final_df <- updated_df %>%
     dplyr::mutate(
@@ -133,6 +124,6 @@ updatePhenoStageInput <- function(obsIntPheno, haunPheno) {
       )
     )
   
-  message("Successfully applied Haun-priority updates and validated phenology chronology.")
+  message("Successfully applied Haun updates and enforced master skeleton join.")
   return(final_df)
 }
