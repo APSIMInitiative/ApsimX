@@ -224,8 +224,8 @@ namespace Models.CLEM.Activities
                     }
                 }
                 // add clip to stores
-                (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
-                (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (WoolStoreType as IResourceType).AddToResource(kgWoolShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (CashmereStoreType as IResourceType).AddToResource(kgCashmereShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial(shorn != numberToDo || MathUtilities.IsPositive(amountToDo));
             }

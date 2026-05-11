@@ -287,7 +287,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
@@ -327,7 +327,7 @@ namespace Models.CLEM.Resources
         /// Remove from labour store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
             {

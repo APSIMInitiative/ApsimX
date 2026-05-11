@@ -169,30 +169,6 @@ namespace Models.CLEM
 
                 DescriptiveSummaryGenerator summaryGenerator = new DescriptiveSummaryGenerator(DescriptiveSummaryFormatStyle, false);
                 summaryGenerator.GenerateSummaryForComponentAndChildren(Structure.FindParent<Simulation>(recurse: true), wholeSimulationSummaryFile);
-
-                //
-                //
-                // ToDo: leave until I confirm that the new descriptive summary with providers works on all APSIM components from Simulation down.
-                //
-                //
-
-                //if (!File.Exists(wholeSimulationSummaryFile))
-                //{
-                //    File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, false, (sender as Simulation).FileName));
-                //}
-                //else
-                //{
-                //    string html = File.ReadAllText(wholeSimulationSummaryFile);
-                //    using StringWriter htmlWriter = new();
-                //    int index = html.IndexOf("<!-- CLEMZoneBody -->");
-                //    if (index > 0)
-                //    {
-                //        htmlWriter.Write(html[..(index - 1)]);
-                //        htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, Structure, false, true));
-                //        htmlWriter.Write(html[index..]);
-                //        File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
-                //    }
-                //}
             }
         }
 

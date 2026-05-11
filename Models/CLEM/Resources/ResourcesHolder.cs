@@ -405,7 +405,7 @@ namespace Models.CLEM.Resources
                                     // assumed successful transaction based on where clause in transaction selection
                                     // Add resource: tops up resource from transmutation so available in CheckResources
                                     // if pricing based
-                                    resourceTypeInShortfall.Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
+                                    resourceTypeInShortfall.AddToResource(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
                                     if (allTransmutesSucceeed)
                                     {
                                         request.ShortfallStatus = "Transmuted";

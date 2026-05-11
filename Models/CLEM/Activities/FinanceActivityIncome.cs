@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         {
             if (MathUtilities.IsPositive(Amount))
             {
-                bankAccount.Add(Amount, this, null, TransactionCategory);
+                bankAccount.AddToResource(Amount, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial();
             }
         }

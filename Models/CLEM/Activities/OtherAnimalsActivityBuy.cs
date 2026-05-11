@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
                 int numberAdjusted = cohorts.Sum(a => a.AdjustedNumber);
                 foreach (var cohort in cohorts.Where(a => a.Number > 0))
                 {
-                    cohort.AnimalType.Add(cohort, this, null, "Purchase");
+                    cohort.AnimalType.AddToResource(cohort, this, null, "Purchase");
                 }
                 if (numberAdjusted == numberToBuy)
                 {

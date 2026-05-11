@@ -89,7 +89,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             if (UsableArea > 0)
-                Add(UsableArea, null, null, "Starting value");
+                AddToResource(UsableArea, null, null, "Starting value");
 
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)
@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
                     Resource = this as IResourceType,
                     ResourceTypeName = this.Name,
                 };
-                this.Remove(resourceRequest);
+                this.RemoveFromResource(resourceRequest);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
                 throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
@@ -153,7 +153,7 @@ namespace Models.CLEM.Resources
         /// Remove from finance type store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
                 return;
@@ -163,7 +163,7 @@ namespace Models.CLEM.Resources
             amountRemoved = Math.Min(AmountAvailable, amountRemoved);
 
             if (request.Category != "Assign unallocated")
-                Remove(amountRemoved, request.TransactionPending?request:null);
+                RemoveFromResource(amountRemoved, request.TransactionPending?request:null);
             else
             {
                 // activitiy requesting all unallocated land.

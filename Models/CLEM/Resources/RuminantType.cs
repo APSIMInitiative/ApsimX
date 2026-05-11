@@ -198,7 +198,7 @@ namespace Models.CLEM.Resources
             // go right back to maturity to work out number of births.
             // IS THIS NEEDED OR DOES IT CORRUPT THE MODEL OUTCOMES
 
-            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.DateOfLastConception == default && !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.HighestAttained >= a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight));
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.DateOfLastConception == default && !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.RelativeSizeByHighWeight >= a.Parameters.General.MinimumSizeForMaturityFemale));
             if (remainingFemales.Any() == false || Structure.FindAll<RuminantParametersBreeding>().Any() == false)
             {
                 return;
@@ -449,7 +449,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -458,7 +458,7 @@ namespace Models.CLEM.Resources
         /// Remove resource
         /// </summary>
         /// <param name="request"></param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             throw new NotImplementedException();
         }

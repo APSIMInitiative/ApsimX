@@ -343,7 +343,7 @@ namespace Models.CLEM.Activities
                                     packets = Math.Truncate(packets);
                                     amount = packets * price.PacketSize;
                                 }
-                                bankAccount.Add(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
+                                bankAccount.AddToResource(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
                             }
                             ResourceRequest sellRequest = new ResourceRequest
                             {
@@ -353,7 +353,7 @@ namespace Models.CLEM.Activities
                                 Category = "External output",
                                 RelatesToResource = (resourceItem.resource as CLEMModel).NameWithParent
                             };
-                            resourceItem.resource.Remove(sellRequest);
+                            resourceItem.resource.RemoveFromResource(sellRequest);
                         }
                     }
                     else
@@ -388,9 +388,9 @@ namespace Models.CLEM.Activities
                                     Category = "External input",
                                     RelatesToResource = (resourceItem.resource as CLEMModel).NameWithParent
                                 };
-                                bankAccount.Remove(sellRequestDollars);
+                                bankAccount.RemoveFromResource(sellRequestDollars);
                             }
-                            resourceItem.resource.Add(amount, this, (resourceItem.resource as CLEMModel).NameWithParent, "External input");
+                            resourceItem.resource.AddToResource(amount, this, (resourceItem.resource as CLEMModel).NameWithParent, "External input");
                         }
                     }
                 }

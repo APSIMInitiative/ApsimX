@@ -84,7 +84,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, null, null, "Starting value");
+                AddToResource(initialpPool, null, null, "Starting value");
             }
         }
 
@@ -133,7 +133,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             HumanFoodStorePool pool;
             switch (resourceAmount)
@@ -165,7 +165,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
             {
@@ -191,7 +191,7 @@ namespace Models.CLEM.Resources
                 // send to market if needed
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove * request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
+                    (EquivalentMarketStore as HumanFoodStoreType).AddToResource(new HumanFoodStorePool(amountToRemove * request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
                 }
 
                 if (amountRequired <= 0)

@@ -49,7 +49,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-                Add(StartingAmount, null, null, "Starting value");
+                AddToResource(StartingAmount, null, null, "Starting value");
         }
 
         #region transactions
@@ -61,7 +61,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double amountAdded;
             switch (resourceAmount)
@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         /// Remove from finance type store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
                 return;
@@ -104,7 +104,7 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                (EquivalentMarketStore as ProductStoreType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+                (EquivalentMarketStore as ProductStoreType).AddToResource(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
 
             request.Provided = amountRemoved;
             if (amountRemoved > 0)

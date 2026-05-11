@@ -216,7 +216,7 @@ namespace Models.CLEM.Activities
                     Category = TransactionCategory,
                     RelatesToResource = (resourceToSell as CLEMModel).NameWithParent
                 };
-                resourceToSell.Remove(purchaseRequest);
+                resourceToSell.RemoveFromResource(purchaseRequest);
 
                 // transfer money earned
                 if (bankAccount != null)
@@ -227,13 +227,13 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                     }
 
-                    bankAccount.Add((unitsToDo - unitsToSkip) * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
+                    bankAccount.AddToResource((unitsToDo - unitsToSkip) * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = (unitsToDo - unitsToSkip) * price.PricePerPacket;
                         purchaseRequest.Category = TransactionCategory;
                         purchaseRequest.RelatesToResource = (resourceToSell as CLEMModel).NameWithParent;
-                        (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                        (bankAccount.EquivalentMarketStore as FinanceType).RemoveFromResource(purchaseRequest);
                     }
                 }
 

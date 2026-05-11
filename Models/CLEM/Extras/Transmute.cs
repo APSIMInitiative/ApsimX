@@ -184,7 +184,7 @@ namespace Models.CLEM
                 if (TransmuteStyle == TransmuteStyle.UsePricing && !(TransmuteResourceType is FinanceType))
                 {
                     // add finance transaction to sell transmute
-                    financeType.Add(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
+                    financeType.AddToResource(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // add finance transaction to buy shortfall
                     ResourceRequest financeRequest = new ResourceRequest()
@@ -196,11 +196,11 @@ namespace Models.CLEM
                         ActivityModel = request.ActivityModel,
                         Category = request.Category,
                     };
-                    financeType.Remove(financeRequest);
+                    financeType.RemoveFromResource(financeRequest);
                 }
                 else
                 {
-                    TransmuteResourceType.Remove(request);
+                    TransmuteResourceType.RemoveFromResource(request);
                 }
             }
             return true;

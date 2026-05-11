@@ -113,7 +113,7 @@ namespace Models.CLEM.Resources
         {
             if (OpeningBalance > 0)
             {
-                Add(OpeningBalance, null, null, "Opening balance");
+                AddToResource(OpeningBalance, null, null, "Opening balance");
             }
         }
 
@@ -126,7 +126,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double multiplier = 0;
             double amountAdded;
@@ -159,20 +159,20 @@ namespace Models.CLEM.Resources
                         (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
                         (resourceAmount as ResourceRequest).Category = "Farm transaction";
                         (resourceAmount as ResourceRequest).RelatesToResource = EquivalentMarketStore.NameWithParent;
-                        (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
+                        (EquivalentMarketStore as FinanceType).RemoveFromResource(resourceAmount as ResourceRequest);
                     }
                 }
             }
         }
 
         /// <inheritdoc/>
-        public new double Remove(double amountToRemove, ResourceRequest pendingRequestActivity)
+        protected double Remove(double amountToRemove, ResourceRequest pendingRequestActivity)
         {
             if (this.EnforceWithdrawalLimit)
             {
                 amountToRemove = Math.Min(amountToRemove, FundsAvailable);
             }
-            double amountRemoved = base.Remove(amountToRemove, pendingRequestActivity);
+            double amountRemoved = base.RemoveFromResource(amountToRemove, pendingRequestActivity);
             return amountRemoved;
         }
 

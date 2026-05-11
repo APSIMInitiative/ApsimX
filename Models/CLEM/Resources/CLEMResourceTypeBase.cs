@@ -412,7 +412,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Activity performing this transaction</param>
         /// <param name="relatesToResource">Resource this transaction relates to</param>
         /// <param name="category">Category of this resource transaction</param>
-        public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             // overridden methods will handle other types of resourceAmount object, this base method only handles double amounts and is used by most resource types. If other types are needed (e.g. food with nutritional information) then the resource type can override this method and handle the additional information as needed.
             if (resourceAmount.GetType().ToString() != "System.Double")
@@ -437,7 +437,7 @@ namespace Models.CLEM.Resources
         /// reduce the amount total until available until the transaction is completed.
         /// </param>
         /// <returns>Amount removed</returns>
-        protected double Remove(double amountToRemove, ResourceRequest pendingRequest)
+        protected double RemoveFromResource(double amountToRemove, ResourceRequest pendingRequest)
         {
             amountToRemove = Math.Min(amountToRemove, AmountAvailable);
             if (pendingRequest is not null)
@@ -463,19 +463,19 @@ namespace Models.CLEM.Resources
         /// Remove amount based on a ResourceRequest object
         /// </summary>
         /// <param name="request">Object containing amount required</param>
-        public void Remove(ResourceRequest request)
+        public void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
                 return;
 
-            double amountRemoved = Remove(request.Required, request.TransactionPending ? request : null);
+            double amountRemoved = RemoveFromResource(request.Required, request.TransactionPending ? request : null);
             request.Provided = amountRemoved;
 
             PerformTransaction(request, !request.TransactionPending);
         }
 
         /// <inheritdoc/>
-        public void ReducePending(ResourceRequest request, double amount)
+        public void DecreasePending(ResourceRequest request, double amount)
         {
             if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
             {
@@ -520,7 +520,7 @@ namespace Models.CLEM.Resources
                 // send to market if needed
                 if (MarketStoreExists)
                 {
-                    EquivalentMarketStore.Add(amountToRemove * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+                    EquivalentMarketStore.AddToResource(amountToRemove * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
                 }
             }
             ReportTransaction(TransactionType.Loss, amountToRemove, request.ActivityModel, request.RelatesToResource, request.Category, this);

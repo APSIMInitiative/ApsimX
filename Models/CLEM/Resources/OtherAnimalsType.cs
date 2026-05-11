@@ -240,7 +240,7 @@ namespace Models.CLEM.Resources
                 {
                     cohort.SaleFlag = HerdChangeReason.InitialHerd;
                     cohort.AdjustedNumber = cohort.Number;
-                    Add(child, null, null, "Initial numbers");
+                    AddToResource(child, null, null, "Initial numbers");
                 }
             }
         }
@@ -336,7 +336,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
         {
             if (addIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {

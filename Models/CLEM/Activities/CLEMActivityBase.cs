@@ -1193,7 +1193,7 @@ namespace Models.CLEM.Activities
 
                     if (removeFromResource)
                     {
-                        lt.Remove(removeRequest);
+                        lt.RemoveFromResource(removeRequest);
                         request.Provided += removeRequest.Provided;
                         request.Value += request.Provided * lt.PayRate();
                     }
@@ -1232,7 +1232,7 @@ namespace Models.CLEM.Activities
 
                                 if (removeFromResource)
                                 {
-                                    item.Remove(removeRequest);
+                                    item.RemoveFromResource(removeRequest);
                                     request.Provided += removeRequest.Provided;
                                     request.Value += request.Provided * item.PayRate();
                                 }
@@ -1264,7 +1264,7 @@ namespace Models.CLEM.Activities
 
             if (removeFromResource && request.Resource != null)
             {
-                request.Resource.Remove(request);
+                request.Resource.RemoveFromResource(request);
             }
 
             return request.Available;

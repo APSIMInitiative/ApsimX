@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
             if (resourceRequest != null && resourceRequest.Provided > 0)
             {
                 // add created resources
-                resourceTypeCreatedModel.Add(resourceRequest.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
+                resourceTypeCreatedModel.AddToResource(resourceRequest.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }

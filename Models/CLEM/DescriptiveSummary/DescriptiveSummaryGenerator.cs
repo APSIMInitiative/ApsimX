@@ -841,7 +841,7 @@ public class DescriptiveSummaryGenerator
         if (openBlockIds.Count == 0) return;
 
         if (id != "" && openBlockIds[^1].id != id)
-            throw new InvalidOperationException($"Mismatched block close. Expected to close block with id '{openBlockIds[^1].id}', but got '{id}'.");
+            throw new InvalidOperationException($"CLEM: Mismatched block close in generating Descriptive Summary. Expected to close block with id '{openBlockIds[^1].id}', but got '{id}'.");
 
         string tag = openBlockIds[^1].tag;
 

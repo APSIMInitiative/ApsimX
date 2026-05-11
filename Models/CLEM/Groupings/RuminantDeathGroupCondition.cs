@@ -57,7 +57,7 @@ namespace Models.CLEM.Groupings
             switch (ConditionMetric)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.Live, a.Weight.HighestAttained * CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
+                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.ProportionOfHighWeight, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
                     break;
                 case ConditionBasedCalculationStyle.RelativeCondition:
                     died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.RelativeCondition, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();

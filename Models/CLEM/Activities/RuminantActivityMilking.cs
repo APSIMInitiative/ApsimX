@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
                         break;
                 }
                 // add clip to stores
-                (milkStore as IResourceType).Add(amountDone, this, PredictedHerdNameToDisplay, TransactionCategory);
+                (milkStore as IResourceType).AddToResource(amountDone, this, PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }

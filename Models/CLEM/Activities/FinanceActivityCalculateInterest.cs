@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
                     {
                         if (MathUtilities.IsPositive(account.InterestRatePaid))
                         {
-                            account.Add(account.Balance * account.InterestRatePaid / 1200, this, null, "Interest");
+                            account.AddToResource(account.Balance * account.InterestRatePaid / 1200, this, null, "Interest");
                             SetStatusSuccessOrPartial();
                         }
                     }
@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
                                 AllowTransmutation = false,
                                 Category = TransactionCategory
                             };
-                            account.Remove(interestRequest);
+                            account.RemoveFromResource(interestRequest);
 
                             // report status
                             if (interestRequest.Required > interestRequest.Provided)

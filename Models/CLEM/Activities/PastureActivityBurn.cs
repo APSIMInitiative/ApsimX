@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
             if(MathUtilities.IsPositive(areaToDo - areaToSkip))
             {
                 // remove biomass
-                pasture.Remove(new ResourceRequest()
+                pasture.RemoveFromResource(new ResourceRequest()
                 {
                     ActivityModel = this,
                     Required = pastureToDo,
@@ -178,8 +178,8 @@ namespace Models.CLEM.Activities
                 // add emissions
                 double burnKg = pastureToDo * BurningEfficiency * (CarbonPercent / 100.0); // burn kg * burning efficiency * carbon content
                 //TODO: change emissions for green material
-                methaneStore?.Add(burnKg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
-                n2oStore?.Add(burnKg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
+                methaneStore?.AddToResource(burnKg * 1.333 * 0.0035, this, PaddockName, TransactionCategory); // * 21; // methane emissions from fire (CO2 eq)
+                n2oStore?.AddToResource(burnKg * 1.571 * 0.0076 * 0.12, this, PaddockName, TransactionCategory); // * 21; // N20 emissions from fire (CO2 eq)
 
                 // TODO: add fertilisation to pasture for given period.
 

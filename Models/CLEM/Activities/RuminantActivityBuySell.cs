@@ -470,7 +470,7 @@ namespace Models.CLEM.Activities
                     {
                         foreach (var item2 in item.RuminantTypeGroup)
                         {
-                            bankAccount.Add(item2.TotalPrice, this, $"{item.RuminantTypeNameToDisplay}.{item2.GroupName}".TrimStart('.'), TransactionCategory);
+                            bankAccount.AddToResource(item2.TotalPrice, this, $"{item.RuminantTypeNameToDisplay}.{item2.GroupName}".TrimStart('.'), TransactionCategory);
                         }
                     }
                 }

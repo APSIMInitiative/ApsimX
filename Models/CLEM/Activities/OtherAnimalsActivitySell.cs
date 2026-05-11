@@ -239,7 +239,7 @@ namespace Models.CLEM.Activities
                 return;
             }
 
-            bankAccount?.Add(finalSaleAmount, this, PredictedAnimalType, TransactionCategory);
+            bankAccount?.AddToResource(finalSaleAmount, this, PredictedAnimalType, TransactionCategory);
             SetStatusSuccessOrPartial(numberSold < numberToDo);
         }
     }

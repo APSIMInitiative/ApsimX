@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
                         // careful that this doesn't get taken by a use all available elsewhere if you want it back again.
                         if (LinkedLandItem != null)
                         {
-                            LinkedLandItem.Add(-areaNeeded, this, cropProduct.LinkedResourceItem.Name, TransactionCategory);
+                            LinkedLandItem.AddToResource(-areaNeeded, this, cropProduct.LinkedResourceItem.Name, TransactionCategory);
                             Area += areaNeeded;
                         }
                     }

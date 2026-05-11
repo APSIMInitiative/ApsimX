@@ -49,14 +49,14 @@ namespace Models.CLEM.Groupings
                     else
                     {
                         // if mother's weight >= criticalCowWeight * SFR
-                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowMortality.JuvenileMortalityCoefficient * (ind.Mother.Weight.Live / ind.Mother.Weight.NormalisedForAge), ind.Parameters.GrowMortality.JuvenileMortalityExponent));
+                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowMortality.JuvenileMortalityCoefficient * (ind.Mother.Weight.RelativeCondition), ind.Parameters.GrowMortality.JuvenileMortalityExponent));
                     }
 
                     mortalityRate += ind.Parameters.Grow.MortalityBase;
                     mortalityRate = Math.Min(mortalityRate, ind.Parameters.GrowMortality.JuvenileMortalityMaximum);
                 }
                 else
-                    mortalityRate = 1 - (1 - ind.Parameters.Grow.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.GrowMortality.MortalityCoefficient * (ind.Weight.Live / ind.Weight.NormalisedForAge - ind.Parameters.GrowMortality.MortalityIntercept)), ind.Parameters.GrowMortality.MortalityExponent)));
+                    mortalityRate = 1 - (1 - ind.Parameters.Grow.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.GrowMortality.MortalityCoefficient * (ind.Weight.RelativeCondition - ind.Parameters.GrowMortality.MortalityIntercept)), ind.Parameters.GrowMortality.MortalityExponent)));
 
                 // convert mortality from annual (calculated) to time-step (applied).
                 mortalityRate /= (DateTime.IsLeapYear(events.Clock.Today.Year) ? 366 : 365) / events.Interval;

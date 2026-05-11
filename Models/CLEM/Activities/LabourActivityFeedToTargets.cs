@@ -365,7 +365,7 @@ namespace Models.CLEM.Activities
                             MarketTransactionMultiplier = 1,
                             RelatesToResource = item.Key.NameWithParent
                         };
-                        bankAccount.Remove(marketRequest);
+                        bankAccount.RemoveFromResource(marketRequest);
                     }
 
                     // is this a market
@@ -443,7 +443,7 @@ namespace Models.CLEM.Activities
                                             MarketTransactionMultiplier = 1,
                                             RelatesToResource = foodType.NameWithParent
                                         };
-                                        bankAccount.Remove(marketRequest);
+                                        bankAccount.RemoveFromResource(marketRequest);
                                     }
                                     else
                                     {
@@ -611,7 +611,7 @@ namespace Models.CLEM.Activities
                                 RelatesToResource = foodStore.NameWithParent,
                                 MarketTransactionMultiplier = this.FarmMultiplier
                             };
-                            foodStore.Remove(purchaseRequest);
+                            foodStore.RemoveFromResource(purchaseRequest);
 
                             // transfer money earned
                             if (bankAccount != null)
@@ -625,7 +625,7 @@ namespace Models.CLEM.Activities
                                     RelatesToResource = foodStore.NameWithParent,
                                     MarketTransactionMultiplier = this.FarmMultiplier
                                 };
-                                bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, TransactionCategory);
+                                bankAccount.AddToResource(purchaseFinance, this, foodStore.NameWithParent, TransactionCategory);
                             }
                         }
                     }

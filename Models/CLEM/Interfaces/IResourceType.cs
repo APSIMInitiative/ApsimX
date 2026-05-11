@@ -8,26 +8,26 @@ namespace Models.CLEM.Interfaces
     public interface IResourceType
     {
         /// <summary>
-        /// Add this Amount to the existing Amount.
+        /// Add to this resource with transactions and checking.
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity requesting resource</param>
+        /// <param name="activity">Activity requesting the resource</param>
         /// <param name="relatesToResource">The resource the transaction relates to, not uses</param>
-        /// <param name="category">Name of individual requesting resource</param>
-        void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category);
+        /// <param name="category">Category of the resource</param>
+        void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category);
 
         /// <summary>
         /// Remove this Amount from the existing Amount
         /// </summary>
         /// <param name="request">Request to remove.</param>
-        void Remove(ResourceRequest request);
+        void RemoveFromResource(ResourceRequest request);
 
         /// <summary>
         /// Reduce the current pending amount by a specified amount
         /// </summary>
         /// <param name="request">Associated resource request</param>
         /// <param name="amountToReduce">Amount by which to reduce pending amount</param>
-        public void ReducePending(ResourceRequest request, double amountToReduce);
+        public void DecreasePending(ResourceRequest request, double amountToReduce);
 
         /// <summary>
         /// Set the amount to this new value.

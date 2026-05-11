@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
                             AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this, null, "Births");
+                        SelectedOtherAnimalsType.AddToResource(newmales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
                         {
                             Status = ActivityStatus.Success;
@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
                             AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newFemales, this, null, "Births");
+                        SelectedOtherAnimalsType.AddToResource(newFemales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
                         {
                             Status = ActivityStatus.Success;

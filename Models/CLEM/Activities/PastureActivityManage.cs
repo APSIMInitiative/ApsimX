@@ -303,7 +303,7 @@ namespace Models.CLEM.Activities
                     if (growth > 0)
                     {
                         Status = ActivityStatus.Success;
-                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool(growth * Area);
+                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool(growth * Area, LinkedNativeFoodType);
                         newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
                         if (LinkedNativeFoodType.DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
                         {
@@ -316,7 +316,7 @@ namespace Models.CLEM.Activities
                         newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
                         newPasture.GrowthDate = dataEntry.CutDate;
                         newPasture.RumenDegradableProteinPercent = LinkedNativeFoodType.RumenDegradableProteinPercent;
-                        LinkedNativeFoodType.Add(newPasture, this, null, "Growth");
+                        LinkedNativeFoodType.AddToResource(newPasture, this, null, "Growth");
                     }
                 }
             }

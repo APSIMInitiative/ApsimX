@@ -581,7 +581,7 @@ namespace Models.CLEM.Activities
                         if (AddProductStyle == AddNewCropProductStyle.Replace)
                         {
                             // remove current store ready to be replaced by new product
-                            LinkedResourceItem.Remove(new ResourceRequest()
+                            LinkedResourceItem.RemoveFromResource(new ResourceRequest()
                             {
                                 ActivityModel = this,
                                 AdditionalDetails = this,
@@ -611,7 +611,7 @@ namespace Models.CLEM.Activities
                         {
                             //Add without adding any new nitrogen.
                             //The nitrogen value for this feed item in the store remains the same.
-                            LinkedResourceItem.Add(AmountHarvested, this, "", addReason);
+                            LinkedResourceItem.AddToResource(AmountHarvested, this, "", addReason);
                         }
                         else
                         {
@@ -626,7 +626,7 @@ namespace Models.CLEM.Activities
                                 packet.DryMatterDigestibility = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.NitrogenPercent);
                             }
 
-                            LinkedResourceItem.Add(packet, this, null, addReason);
+                            LinkedResourceItem.AddToResource(packet, this, null, addReason);
                         }
                         SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));
                     }

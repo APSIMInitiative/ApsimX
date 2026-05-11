@@ -143,7 +143,7 @@ namespace Models.CLEM
                 if (TransmuteStyle == TransmuteStyle.UsePricing && financeType != null)
                 {
                     // finance transaction from sale of animals
-                    financeType.Add(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
+                    financeType.AddToResource(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // finance transaction from purchase of shortfall
                     ResourceRequest financeRequest = new ResourceRequest()
@@ -155,7 +155,7 @@ namespace Models.CLEM
                         ActivityModel = request.ActivityModel,
                         Category = request.Category,
                     };
-                    financeType.Remove(financeRequest);
+                    financeType.RemoveFromResource(financeRequest);
                 }
             }
             return true;

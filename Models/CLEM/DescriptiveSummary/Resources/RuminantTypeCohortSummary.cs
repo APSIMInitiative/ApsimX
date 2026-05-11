@@ -123,7 +123,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                 {
                     textWriter.Write($"Individuals will be randomly assigned a weight based on a mean ");
                     if (model.Weight == 0)
-                        textWriter.Write($"(using the normalised weight) of {generator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge??0, warnZero:true)} kg");
+                        textWriter.Write($"(using the normalised weight, 8% gut fill) of {generator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge??0, warnZero:true)} kg");
                     else
                         textWriter.Write($"of {generator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
                     textWriter.Write($" with a standard deviation of {generator.DisplaySummaryValueSnippet(model.WeightSD, warnZero: true)} kg");

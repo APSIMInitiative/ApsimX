@@ -61,7 +61,7 @@ namespace Models.CLEM.Resources
         {
             if (StartingAmount > 0)
             {
-                Add(StartingAmount, null, null, "Starting value");
+                AddToResource(StartingAmount, null, null, "Starting value");
             }
         }
     }

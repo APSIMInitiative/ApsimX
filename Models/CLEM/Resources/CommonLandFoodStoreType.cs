@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace Models.CLEM.Resources
 {
@@ -108,6 +110,17 @@ namespace Models.CLEM.Resources
                 return double.PositiveInfinity;
             }
         }
+
+        /// <summary>
+        /// Calculate gut fill based on the pasture gutfill quality values and a specified dry matter digestibility.
+        /// </summary>
+        /// <param name="dmd">The dry matter digesibility with which to calculate gut fill</param>
+        /// <returns></returns>
+        public double CalculateGutFill(double dmd)
+        {
+            throw new NotImplementedException("Cannot currently calculate GutFill for a Common Land Pasture.");
+        }
+
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -249,7 +262,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
             if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() != typeof(FoodResourcePacket)))

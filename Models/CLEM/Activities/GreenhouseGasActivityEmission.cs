@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
 
             if (emissionStore != null && MathUtilities.IsPositive(amountOfEmission))
             {
-                emissionStore.Add(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
+                emissionStore.AddToResource(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
             }
         }
 

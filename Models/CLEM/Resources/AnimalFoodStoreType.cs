@@ -179,7 +179,7 @@ namespace Models.CLEM.Resources
             StoreDetails = new FoodResourcePacket(this);
 
             if (StartingAmount > 0)
-                Add(StartingAmount, null, null, "Starting value");
+                AddToResource(StartingAmount, null, null, "Starting value");
         }
 
         #region Transactions
@@ -191,7 +191,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource">Resource the transasction relates to</param>
         /// <param name="category">Transaction category</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             FoodResourcePacket foodPacket;
             double addAmount;
@@ -231,7 +231,7 @@ namespace Models.CLEM.Resources
                 return;
             }
             request.AdditionalDetails = CurrentStoreDetails;
-            base.Remove(request);
+            base.RemoveFromResource(request);
         }
 
         #endregion

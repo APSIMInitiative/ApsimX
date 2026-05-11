@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
                 foreach (Tuple<string, double> a in aa)
                 {
                     // g -> total kg. per time-step to store in kg methane in store
-                    methaneEmissions?.Add(a.Item2 / 1000.0, this, a.Item1, TransactionCategory);
+                    methaneEmissions?.AddToResource(a.Item2 / 1000.0, this, a.Item1, TransactionCategory);
                 }
                 Status = ActivityStatus.Success;
             }

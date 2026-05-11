@@ -220,7 +220,7 @@ namespace Models.CLEM.Activities
         {
             if (amountToDo > 0)
             {
-                pasture.Remove(new ResourceRequest()
+                pasture.RemoveFromResource(new ResourceRequest()
                 {
                     ActivityModel = this,
                     AdditionalDetails = this,
@@ -237,7 +237,7 @@ namespace Models.CLEM.Activities
                     DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent),
                 };
 
-                foodStore.Add(packet, this, null, TransactionCategory);
+                foodStore.AddToResource(packet, this, null, TransactionCategory);
                 limiter?.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }

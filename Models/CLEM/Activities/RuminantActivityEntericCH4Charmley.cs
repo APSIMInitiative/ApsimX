@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
             foreach (Tuple<string, double> a in aa)
             {
                 // g -> total kg. per timestep calculated for each individual in CalculateEnergy()  
-                methaneEmissions?.Add(a.Item2 / 1000, this, a.Item1, TransactionCategory);
+                methaneEmissions?.AddToResource(a.Item2 / 1000, this, a.Item1, TransactionCategory);
             }
         }
     }

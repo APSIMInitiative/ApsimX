@@ -157,7 +157,7 @@ namespace Models.CLEM.Resources
                     // if 0 delete
                     store.Pools.RemoveAll(a => a.Amount == 0);
                 }
-                this.Add(amountMoved, activity, this.NameWithParent, ((storeName == "") ? "General" : storeName));
+                this.AddToResource(amountMoved, activity, this.NameWithParent, ((storeName == "") ? "General" : storeName));
             }
         }
 
@@ -185,7 +185,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));

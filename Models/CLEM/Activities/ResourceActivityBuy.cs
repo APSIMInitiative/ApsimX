@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
         {
             if (unitsToDo - unitsToSkip > 0)
             {
-                resourceToBuy.Add((unitsToDo - unitsToSkip) * price.PacketSize, this, null, TransactionCategory);
+                resourceToBuy.AddToResource((unitsToDo - unitsToSkip) * price.PacketSize, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial(unitsToSkip > 0);
             }
         }
