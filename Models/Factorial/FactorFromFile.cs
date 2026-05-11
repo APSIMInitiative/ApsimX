@@ -285,6 +285,10 @@ namespace Models.Factorial
                                     value = "[" + modelToFetch + "]" + value.Substring(index);
                                 commands.Add($"add {value} to [{parent.Name}].{Name}.{label}");
                             }
+                            else if (value.StartsWith('[') && value.Contains(']') || value.StartsWith('.'))
+                            {
+                                commands.Add($"add {value} to [{parent.Name}].{Name}.{label}");
+                            }
                             else
                                 commands.Add($"add new {value} to [{parent.Name}].{Name}.{label}");
                             commands.Add($"[{parent.Name}].{Name}.{label}.Specifications += [{columnName}]");
