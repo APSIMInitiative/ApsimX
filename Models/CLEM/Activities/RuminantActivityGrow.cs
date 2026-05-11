@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
                         // move to half way through timestep
                         double dayOfLactation = femaleIndividual.DaysLactating(true);
                         // Reference: Intake multiplier for lactating cow (M.Freer)
-                        double intakeMilkMultiplier = 1 + ind.Parameters.Grow.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB), ind.Parameters.Grow.LactatingPotentialModifierConstantC) * Math.Exp(ind.Parameters.Grow.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB))) * (1 - 0.5 + 0.5 * (ind.Weight.Live / ind.Weight.NormalisedForAge));
+                        double intakeMilkMultiplier = 1 + ind.Parameters.Grow.LactatingPotentialModifierConstantA * Math.Pow((dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB), ind.Parameters.Grow.LactatingPotentialModifierConstantC) * Math.Exp(ind.Parameters.Grow.LactatingPotentialModifierConstantC * (1 - (dayOfLactation / ind.Parameters.Grow.LactatingPotentialModifierConstantB))) * (1 - 0.5 + 0.5 * (ind.Weight.RelativeCondition));
 
                         // To make this flexible for sheep and goats, added three new Ruminant coefficients
                         // Feeding standard values for Beef, Dairy suck, Dairy non-suck and sheep are:
@@ -235,7 +235,7 @@ namespace Models.CLEM.Activities
                 milkCurve = ind.Parameters.Lactation.MilkCurveSuckling_CL3;
             }
 
-            ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.Live / ind.Weight.NormalisedForAge * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));
+            ind.Milk.PotentialRate = ind.Parameters.Lactation.MilkPeakYield * ind.Weight.RelativeCondition * (Math.Pow(((milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.Parameters.Lactation.MilkOffsetDay) / ind.Parameters.Lactation.MilkPeakDay));
             ind.Milk.PotentialRate = Math.Max(ind.Milk.PotentialRate, 0.0);
             // Reference: Potential milk production, 3.2 MJ/kg milk - Jouven et al 2008
             double energyMilk = ind.Milk.PotentialRate * 3.2 / kl;
@@ -488,7 +488,7 @@ namespace Models.CLEM.Activities
 
                 feedingValue = ((energyMetabolicFromIntake / energyMaintenance) - 1);
 
-                double energyEmptyBodyGain = ind.Parameters.Grow.GrowthEnergyIntercept1 + feedingValue + (ind.Parameters.Grow.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight.Live / ind.Weight.NormalisedForAge - 0.4)));
+                double energyEmptyBodyGain = ind.Parameters.Grow.GrowthEnergyIntercept1 + feedingValue + (ind.Parameters.Grow.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight.RelativeCondition - 0.4)));
 
                 energyPredictedBodyMassChange = ind.Parameters.Grow.GrowthEfficiency * 0.7 * EnergyBalance / energyEmptyBodyGain;
             }

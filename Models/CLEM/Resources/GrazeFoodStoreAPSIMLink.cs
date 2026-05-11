@@ -150,20 +150,27 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (DryMatterDigestibility <= LowestDMD)
-                {
-                    return GutFillLowQuality;
-                }
-                if (DryMatterDigestibility >= HighestDMD)
-                {
-                    return GutFillHighQuality;
-                }
-                return GutFillLowQuality + ((DryMatterDigestibility - LowestDMD)/(HighestDMD - LowestDMD)) * (GutFillHighQuality - GutFillLowQuality);
+                return CalculateGutFill(DryMatterDigestibility);
             }
             set
             {
             }
         }
+
+        /// <inheritdoc/>
+        public double CalculateGutFill(double dmd)
+        {
+            if (DryMatterDigestibility <= LowestDMD)
+            {
+                return GutFillLowQuality;
+            }
+            if (DryMatterDigestibility >= HighestDMD)
+            {
+                return GutFillHighQuality;
+            }
+            return GutFillLowQuality + ((DryMatterDigestibility - LowestDMD) / (HighestDMD - LowestDMD)) * (GutFillHighQuality - GutFillLowQuality);
+        }
+
 
         /// <summary>
         /// Forage consumed in current time step
@@ -601,6 +608,7 @@ namespace Models.CLEM.Resources
                 dailyPaddockPacket.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
                 dailyPaddockPacket.AcidDetergentInsolubleProtein = this.AcidDetergentInsolubleProtein;
                 dailyPaddockPacket.GutFill = this.GutFill;
+                //todo: calculate gutfill somehow. We don't know the range from min to max dmd here!
             }
 
             timeStepPaddockPacket = dailyPaddockPacket.Clone((request.AdditionalDetails as RuminantActivityGrazePastureHerd).DailyPastureRequired);
@@ -865,7 +873,7 @@ namespace Models.CLEM.Resources
         #region transactions
 
         /// <inheritdoc/>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -890,7 +898,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException("Biomass cannot be added to a linked APSIM paddock");
         }

@@ -135,8 +135,9 @@ namespace Models.CLEM.Resources
         /// Current weight of individual (kg) includes conceptus and wool
         /// </summary>
         /// <remarks>
-        /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the time step
-        /// This should be true as these are either done early (birth) on activity (shear) or in the growth model before weight gain.
+        /// Live is calculated on change in base weight that assumes conceptus and wool weight have been updated for the
+        /// time step This should be true as these are either done early (birth) on activity (shear) or in the growth
+        /// model before weight gain.
         /// </remarks>
         [FilterByProperty]
         public double Live { get { return live; } }
@@ -153,20 +154,16 @@ namespace Models.CLEM.Resources
         /// Current live weight gain of individual (kg)
         /// </summary>
         [FilterByProperty]
-        public double Gain { get { return Live - Previous; } }
+        public double LiveChange { get { return Live - Previous; } }
 
         /// <summary>
-        /// Highest weight attained (kg)
+        /// Highest weight attained (kg) does not include conceptus or fleece weight, but does include gut fill of 8%
+        /// for NormalisedWeightForAge
         /// </summary>
-        public double HighestAttained { get; private set; }
+        public double HighestAttained { get { return EmptyBodyMassHighest * 1.09; } }
 
         /// <summary>
-        /// Highest base weight attained (kg)
-        /// </summary>
-        public double HighestBaseAttained { get; private set; }
-
-        /// <summary>
-        /// Adult equivalent (live weight) 
+        /// Adult equivalent (live weight)
         /// </summary>
         [FilterByProperty]
         public double AdultEquivalent { get; private set; }
@@ -209,14 +206,14 @@ namespace Models.CLEM.Resources
         /// The current live weight as a proportion of highest weight achieved
         /// </summary>
         [FilterByProperty]
-        public double ProportionOfHighWeight { get { return HighestAttained == 0 ? 1 : Live / HighestAttained; } }
+        public double ProportionOfHighWeight { get { return EmptyBodyMassHighest == 0 ? 1 : EmptyBodyMass / EmptyBodyMassHighest; } }
 
         /// <summary>
         /// Standard reference weight
         /// </summary>
         /// <remarks>
-        /// The mature base weight of an adult female (not pregnant, not lactating) at midpoint of BCS where achieved skeletal maturity.
-        /// Technically includes fleece but can be ignored for most purposes and so assume.
+        /// The mature base weight of an adult female (not pregnant, not lactating) at midpoint of BCS where achieved
+        /// skeletal maturity. Technically includes fleece but can be ignored for most purposes and so assume.
         /// </remarks>
         public double StandardReferenceWeight { get; private set; }
 
@@ -252,7 +249,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Relative size (normalised weight / standard reference weight), Z
+        /// Relative size (normalised weight (Freer et al 8% gut fill) / standard reference weight), Z
         /// </summary>
         [FilterByProperty]
         public double RelativeSize { get { return NormalisedForAge / StandardReferenceWeight; } }
@@ -261,22 +258,16 @@ namespace Models.CLEM.Resources
         /// Relative size based on highest base weight achieved (highest base weight / standard reference weight)
         /// </summary>
         [FilterByProperty]
-        public double RelativeSizeByHighWeight { get { return HighestBaseAttained / StandardReferenceWeight; } }
+        public double RelativeSizeByHighWeight { get { return EmptyBodyMassHighest * 1.09 / StandardReferenceWeight; } }
 
         /// <summary>
-        /// Relative condition (base weight / normalised weight)
+        /// Relative condition (base weight (8% gutfill) / normalised weight)
         /// </summary>
         /// <remarks>
         /// Does not include conceptus weight in pregnant females, or wool in sheep.
         /// </remarks>
         [FilterByProperty]
-        public double RelativeCondition { get { return Base.Amount / NormalisedForAge; } }
-
-        /// <summary>
-        /// The current base weight as a proportion of normalised weight for age
-        /// </summary>
-        [FilterByProperty]
-        public double ProportionOfNormalisedWeight { get { return NormalisedForAge == 0 ? 1 : Base.Amount / NormalisedForAge; } }
+        public double RelativeCondition { get { return EmptyBodyMass * 1.09 / NormalisedForAge; } }  // relative to Freer 8% gut fill assumption
 
         /// <summary>
         /// Is still growing (Z less than or equal to 0.9)
@@ -294,9 +285,16 @@ namespace Models.CLEM.Resources
         public double EmptyBodyMass { get; private set; }
 
         /// <summary>
-        /// Empty body mass change  (kg)
+        /// Empty body mass change (kg)
         /// </summary>
+        [FilterByProperty]
         public double EmptyBodyMassChange { get; private set; }
+
+        /// <summary>
+        /// The highest empty body mass achieved by the individual (kg)
+        /// </summary>
+        [FilterByProperty]
+        public double EmptyBodyMassHighest { get; private set; }
 
         /// <summary>
         /// The empty body mass of the individual including fleece weight (kg)
@@ -305,7 +303,7 @@ namespace Models.CLEM.Resources
         public double EmptyBodyMassWithFleece { get { return EmptyBodyMass + (Wool?.Amount??0); } }
 
         /// <summary>
-        /// Empty body mass change including fleece weight (kg)
+        /// Empty body mass with fleece plus the current fleece weight change (kg)
         /// </summary>
         public double EmptyBodyMassWithFleeceChange { get { return EmptyBodyMassChange + (Wool?.Change ?? 0);  } }
 
@@ -314,7 +312,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="parameters">Access to the parameter set of the ruminant</param>
         /// <param name="ageInDays">The age of the individual in days</param>
-        /// <returns>Current greasy fleece weight as proportion of  </returns>
+        /// <returns>Current greasy fleece weight as proportion of</returns>
         public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters, int ageInDays)
         {
             if (ruminant.Parameters.General.IncludeWool == false)
@@ -328,7 +326,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculate the expected fleece weight based on age
         /// </summary>
-        /// <returns>Current greasy fleece weight as proportion of  </returns>
+        /// <returns>Current greasy fleece weight as proportion of</returns>
         public double FleeceWeightExpectedByAge()
         {
             return ruminant.Parameters.GrowPF_CW.StandardFleeceWeight * StandardReferenceWeight * ruminant.Parameters.GrowPF_CW.AgeFactorForWool(ruminant.AgeInDays);
@@ -362,9 +360,10 @@ namespace Models.CLEM.Resources
             }
             EmptyBodyMass += wtChange;
 
+            EmptyBodyMassHighest = Math.Max(EmptyBodyMassHighest, EmptyBodyMass);
+
             // account for gut fill and adjust base weight
             Base.Set(EmptyBodyMass * EBMToLiveWeight());
-            //Base.Adjust(wtChange * EBMToLiveWeight()); // (ruminant.Parameters.General?.EBW2LW_CG18 ?? 1.09));
 
             UpdateLiveWeight();
 
@@ -374,8 +373,6 @@ namespace Models.CLEM.Resources
             }
 
             AdultEquivalent = Math.Pow(Live, 0.75) / Math.Pow(ruminant.Parameters.General.BaseAnimalEquivalent, 0.75);
-            HighestAttained = Math.Max(HighestAttained, Live);
-            HighestBaseAttained = Math.Max(HighestBaseAttained, Base.Amount);
         }
 
         /// <summary>
@@ -393,6 +390,9 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         private double EBMToLiveWeight()
         {
+            if (ruminant.Intake.GutFill >= 1)
+                return 1; // avoid divide by zero or negative base weight if gut fill is at or above 100% (should not happen but just in case)
+            // todo: what should we return if gutfill is 1.
             return 1.0 / (1.0 - ruminant.Intake.GutFill);
         }
 
