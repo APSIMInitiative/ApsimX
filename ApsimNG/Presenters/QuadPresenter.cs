@@ -6,7 +6,7 @@ using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
 using Models.Factorial;
-using System;
+using APSIM.Core;
 using UserInterface.Commands;
 
 namespace UserInterface.Presenters
@@ -51,6 +51,10 @@ namespace UserInterface.Presenters
                 CreateLayoutWaterBalance();
             else if (model is CompositeFactor)
                 CreateLayoutCompositeFactor();
+            else if (model is FactorFromFile)
+                CreateLayoutFactorFromFile();
+            else if (model is FactorsFromFile)
+                CreateLayoutFactorFromFile();
             else
                 CreateLayoutGeneric();
 
@@ -121,6 +125,11 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             model = changedModel as IModel;
+            if (model is IGenerateNodes generator)
+            {
+                Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
+                explorerPresenter.RebuildTree();
+            }
             Refresh();
         }
 
@@ -290,6 +299,18 @@ namespace UserInterface.Presenters
             AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
             AddGrid(WidgetPosition.BottomRight);
             view.OverrideSlider(0.7);
+        }
+
+        /// <summary>
+        /// Create layout for a FactorsFromFile
+        /// </summary>
+        private void CreateLayoutFactorFromFile()
+        {
+            AddProperty(WidgetPosition.TopLeft);
+            AddGrid(WidgetPosition.BottomLeft);
+            AddText(WidgetPosition.TopRight, "Commands:");
+            AddCode(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.6);
         }
     }
 }
