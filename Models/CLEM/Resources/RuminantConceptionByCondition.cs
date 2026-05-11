@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
             switch(ConditionBasedConceptionStyle)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    return (female.Weight.Live >= female.Weight.HighestAttained * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                    return (female.Weight.EmptyBodyMass >= female.Weight.EmptyBodyMassHighest * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
                 case ConditionBasedCalculationStyle.RelativeCondition:
                     return (female.Weight.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
                 case ConditionBasedCalculationStyle.BodyConditionScore:

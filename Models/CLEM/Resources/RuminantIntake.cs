@@ -189,6 +189,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateGutFill()
         {
+            if (SolidsDaily.Expected == 0 || feedTypeStoreDict.Count <= 0)
+                return;
+
             double proportionAttained = (SolidsDaily.Actual + SolidsDaily.Unneeded) / SolidsDaily.Expected;
             double shortfallModifier = proportionAttained + (1 - proportionAttained) * 0.5;
             GutFill = feedTypeStoreDict.Sum(a => a.Value.Details.GutFill * a.Value.Details.Amount) / feedTypeStoreDict.Sum(a => a.Value.Details.Amount) * shortfallModifier;
@@ -268,10 +271,12 @@ namespace Models.CLEM.Resources
             // * I think leaving them might be most optimised
             // * ensure they are cleared and removed on disposal of individual.
 
-            foreach (var item in feedTypeStoreDict)
-            {
-                item.Value.Reset();
-            }
+            feedTypeStoreDict.Clear();
+
+            //foreach (var item in feedTypeStoreDict)
+            //{
+            //    item.Value.Reset();
+            //}
             dpls = double.NaN;
             kDPLS = double.NaN;
         }

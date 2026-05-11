@@ -23,15 +23,22 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         public double TonnesPerHectareStartOfTimeStep { get; set; }
 
-        /// <summary>
-        /// Scale the  current intake by a reduction factor before it is applied to the forage model.
-        /// </summary>
-        /// <param name="fractionReduced">Remaining proportion to apply (0..1).</param>
-        public void ApplyDailyIntakeReduction(double fractionReduced);
+        ///// <summary>
+        ///// Scale the  current intake by a reduction factor before it is applied to the forage model.
+        ///// </summary>
+        ///// <param name="fractionReduced">Remaining proportion to apply (0..1).</param>
+        //public void ApplyDailyIntakeReduction(double fractionReduced);
 
         /// <summary>
         /// The current resource request from grazing
         /// </summary>
         public ResourceRequest CurrentGrazingRequest { get; set; }
+
+        /// <summary>
+        /// Calculate gut fill for the feed type
+        /// </summary>
+        /// <param name="dmd">Dry matter digestibility if needed</param>
+        /// <returns></returns>
+        public double CalculateGutFill(double dmd);
     }
 }

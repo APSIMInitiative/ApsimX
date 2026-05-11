@@ -248,12 +248,22 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return GutFillLowQuality + ((DryMatterDigestibility - MinimumDMD)/(GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
+                return CalculateGutFill(DryMatterDigestibility);
             }
             set
             {
                 throw new NotImplementedException("Setting GutFill is not possible in GrazeFoodStoreType as this value is calculated.");
             }
+        }
+
+        /// <summary>
+        /// Calculate gut fill based on the pasture gutfill quality values and a specified dry matter digestibility.
+        /// </summary>
+        /// <param name="dmd">The dry matter digesibility with which to calculate gut fill</param>
+        /// <returns></returns>
+        public double CalculateGutFill(double dmd)
+        {
+            return GutFillLowQuality + ((dmd - MinimumDMD) / (GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
         }
 
         /// <inheritdoc/>
@@ -666,7 +676,7 @@ namespace Models.CLEM.Resources
 
                 if (detached > 0)
                 {
-                    base.Remove(detached, null);
+                    base.RemoveFromResource(detached, null);
                     ReportTransaction(TransactionType.Loss, detached, null, null, "Detached", this);
                 }
             }
@@ -821,7 +831,7 @@ namespace Models.CLEM.Resources
 
                 if (insideGrowthWindow) // (month <= 3 | month >= 11)
                 {
-                    GrazeFoodStorePool newPool = new (0)
+                    GrazeFoodStorePool newPool = new (0, this)
                     {
                         GrossEnergyContent = this.GrossEnergyContent,
                         MetabolisableEnergyContent = this.MetabolisableEnergyContent,
@@ -880,7 +890,7 @@ namespace Models.CLEM.Resources
                     reason = "Initialise pool " + pool.Age.ToString();
                 }
 
-                Add(pool, null, null, reason);
+                AddToResource(pool, null, null, reason);
             }
         }
 
@@ -901,9 +911,9 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            GrazeFoodStorePool pool = new(0)
+            GrazeFoodStorePool pool = new(0, this)
             {
                 GrossEnergyContent = GrossEnergyContent,
                 MetabolisableEnergyContent = MetabolisableEnergyContent,
@@ -929,6 +939,7 @@ namespace Models.CLEM.Resources
                         pool.NitrogenPercent = incomingPool.NitrogenPercent;
                         pool.DryMatterDigestibility = incomingPool.DryMatterDigestibility;
                     }
+                    pool.GutFill = CalculateGutFill(pool.DryMatterDigestibility);
                     pool.Age = incomingPool.Age;
                     pool.InitialBiomassSet(incomingPool.Amount);
                     pool.GrowthDate = incomingPool.GrowthDate;
@@ -949,6 +960,8 @@ namespace Models.CLEM.Resources
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
+
+
 
             if (pool.Amount > 0)
             {
@@ -977,9 +990,9 @@ namespace Models.CLEM.Resources
         /// reduce the amount total until available until the transaction is completed.
         /// </param>
         /// <returns>Amount removed</returns>
-        public new double Remove(double amountToRemove, ResourceRequest pendingRequest)
+        protected double Remove(double amountToRemove, ResourceRequest pendingRequest)
         {
-            amountToRemove = base.Remove(amountToRemove, pendingRequest);
+            amountToRemove = base.RemoveFromResource(amountToRemove, pendingRequest);
 
             // add pending amount to each pool
             if (pendingRequest.AdditionalDetails is IEnumerable<FoodResourceStore> foodStores)
@@ -996,7 +1009,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public new void ReducePending(ResourceRequest request, double amount)
+        public new void DecreasePending(ResourceRequest request, double amount)
         {
             if (request.AdditionalDetails is FoodResourceStore foodStore)
             {
@@ -1007,25 +1020,25 @@ namespace Models.CLEM.Resources
                 }
             }
             // do removal from pending
-            base.ReducePending(request, amount);
+            base.DecreasePending(request, amount);
         }
 
-        /// <summary>
-        /// Simple remove resource by specified amount
-        /// </summary>
-        /// <param name="removeAmount">Amount to remove</param>
-        /// <param name="activityName">Activity requesting resource</param>
-        /// <param name="reason">Label representing reason for removal</param>
-        public double Remove(double removeAmount, string activityName, string reason)
-        {
-            throw new NotImplementedException();
-        }
+        ///// <summary>
+        ///// Simple remove resource by specified amount
+        ///// </summary>
+        ///// <param name="removeAmount">Amount to remove</param>
+        ///// <param name="activityName">Activity requesting resource</param>
+        ///// <param name="reason">Label representing reason for removal</param>
+        //public double Remove(double removeAmount, string activityName, string reason)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         /// <summary>
         /// Remove resource based on a ResourceRequest
         /// </summary>
         /// <param name="request">Resource request specifying removal details</param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
             {
@@ -1049,7 +1062,7 @@ namespace Models.CLEM.Resources
                 case PastureActivityBurn:
                     RemoveFromPools(request);
                     // use generic removal to handle pending and reporting transaction if needed 
-                    base.Remove(request);
+                    base.RemoveFromResource(request);
                     break;
                 case CropActivityManageProduct:
                     // this occurs when the pasture is being replaced by the provided biomass and clears the stores
@@ -1063,7 +1076,7 @@ namespace Models.CLEM.Resources
                         Pools.Clear();
                         request.Provided = amountCleared;
                         // use generic removal to handle pending and reporting transaction if needed 
-                        base.Remove(request);
+                        base.RemoveFromResource(request);
                         //ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
                     }
 
@@ -1196,9 +1209,9 @@ namespace Models.CLEM.Resources
                 {
                     for (int i = 0; i < foodStore.Pools.Count; i++)
                     {
-                        provided += Pools[i].AmountPending;
-                        biomassConsumed += Pools[i].AmountPending;
-                        Pools[i].ConsumePending();
+                        provided += foodStore.Pools[i].AmountPending;
+                        biomassConsumed += foodStore.Pools[i].AmountPending;
+                        foodStore.Pools[i].ConsumePending();
                     }
                 }
             }
@@ -1236,7 +1249,7 @@ namespace Models.CLEM.Resources
             dryMatterDigestibility /= request.Provided;
             nitrogen /= request.Provided;
 
-            base.Remove(amountCollected, null);
+            base.RemoveFromResource(amountCollected, null);
         }
 
         /// <summary>

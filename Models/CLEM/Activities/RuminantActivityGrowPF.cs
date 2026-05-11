@@ -13,12 +13,28 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant growth activity (PF, Protein and Fat version)</summary>
-    /// <summary>This class represents the CLEM activity responsible for determining potential intake from the quality of all food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and growth).</summary>
-    /// <summary>Full documentation and equations required for this component are available in Dougherty et al, 2025 (in prep).</summary>
-    /// <remarks>Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.</remarks>
-    /// <authors>Summary and implementation of best methods in predicting ruminant growth based on Frier 2012 (AusFarm) and latest research, James Dougherty, CSIRO</authors>
-    /// <authors>CLEM upgrade and implementation, Adam Liedloff, CSIRO</authors>
-    /// <acknowledgements>This animal production continues to develop upon the equations provided by Frier (2007, 2012), implemented in GRAZPLAN (Moore, CSIRO) and APSFARM (CSIRO)</acknowledgements>
+    /// <summary>
+    /// This class represents the CLEM activity responsible for determining potential intake from the quality of all
+    /// food eaten, and providing energy and protein for all needs (e.g. wool production, pregnancy, lactation and
+    /// growth).
+    /// </summary>
+    /// <summary>
+    /// Full documentation and equations required for this component are available in Dougherty et al, 2025 (in prep).
+    /// </summary>
+    /// <remarks>
+    /// Ruminant death activity controls mortality, while the Breed activity is responsible for conception and births.
+    /// </remarks>
+    /// <authors>
+    /// Summary and implementation of best methods in predicting ruminant growth based on Frier 2012 (AusFarm) and
+    /// latest research, James Dougherty, CSIRO
+    /// </authors>
+    /// <authors>
+    /// CLEM upgrade and implementation, Adam Liedloff, CSIRO
+    /// </authors>
+    /// <acknowledgements>
+    /// This animal production continues to develop upon the equations provided by Frier (2007, 2012), implemented in
+    /// GRAZPLAN (Moore, CSIRO) and APSFARM (CSIRO)
+    /// </acknowledgements>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -94,7 +110,10 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to naturally wean individuals on CLEMAnimalBreeding so will beat wean activity on CLEMAnimalBreeding.</summary>
+        /// <summary>
+        /// Function to naturally wean individuals on CLEMAnimalBreeding so will beat wean activity on
+        /// CLEMAnimalBreeding.
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMAnimalBreeding")]
@@ -127,7 +146,10 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>Function to determine all individuals potential intake and suckling intake after milk consumption from mother.</summary>
+        /// <summary>
+        /// Function to determine all individuals potential intake and suckling intake after milk consumption from
+        /// mother.
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMPotentialIntake")]
@@ -175,11 +197,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and lactation.
+        /// Method to calculate an individual's potential intake for the time step scaling for condition, young age, and
+        /// lactation.
         /// </summary>
         /// <param name="ind">Individual for which potential intake is determined.</param>
         public static void CalculatePotentialIntake(Ruminant ind)
         {
+            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.GrowPF_CI.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowPF_CI.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
+
             // Equation 3 ==================================================
             double cf = 1.0;
             if (ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
@@ -197,7 +222,7 @@ namespace Models.CLEM.Activities
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
                 double predictedMilkEnergy = Math.Min(ind.Energy.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.NumberOfSucklings);
-                yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
+                //yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
                 // ToDo: reduce if only unweaned for proportion of time-step.
             }
 
@@ -253,7 +278,6 @@ namespace Models.CLEM.Activities
             }
 
             // Equation 2     ==================================================
-            ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.GrowPF_CI.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowPF_CI.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
             ind.Intake.SolidsDaily.Expected = ind.Intake.SolidsDaily.MaximumExpected * cf * yf * tf * lf;
         }
 
@@ -341,7 +365,7 @@ namespace Models.CLEM.Activities
         /// Function to calculate energy from intake and subsequent growth.
         /// </summary>
         /// <remarks>
-        /// All energy calculations are per day and multiplied at end to give weight gain for time-step (e.g. monthly). 
+        /// All energy calculations are per day and multiplied at end to give weight gain for time-step (e.g. monthly).
         /// </remarks>
         /// <param name="ind">Individual ruminant for calculation.</param>
         public void CalculateEnergy(Ruminant ind)
@@ -428,7 +452,7 @@ namespace Models.CLEM.Activities
                 CalculateGrowthEfficiency(ind);
             }
 
-            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), (ind.Weight.HighestBaseAttained / ind.Weight.StandardReferenceWeight));
+            double relativeSizeForWeightGainPurposes = Math.Min(1 - ((1 - (ind.Weight.AtBirth/ind.Weight.StandardReferenceWeight)) * Math.Exp(-(ind.Parameters.General.AgeGrowthRateCoefficient_CN1 * ind.AgeInDays) / Math.Pow(ind.Weight.StandardReferenceWeight, ind.Parameters.General.SRWGrowthScalar_CN2))), ind.Weight.RelativeSizeByHighWeight);
             double sizeFactor1ForGain = 1 / (1 + Math.Exp(-ind.Parameters.GrowPF_CG.GainCurvature_CG4 * (relativeSizeForWeightGainPurposes - ind.Parameters.GrowPF_CG.GainMidpoint_CG5)));
             double sizeFactor2ForGain = Math.Max(0, Math.Min(((relativeSizeForWeightGainPurposes - ind.Parameters.GrowPF_CG.ConditionNoEffect_CG6) / (ind.Parameters.GrowPF_CG.ConditionMaxEffect_CG7 - ind.Parameters.GrowPF_CG.ConditionNoEffect_CG6)), 1));
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
@@ -774,7 +798,10 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Female individual.</param>
         /// <param name="timestep">The number of days in current time-step</param>
-        /// <param name="updateValues">A flag to indicate whether tracking values should be updated in this calculation as call from PotentialIntake and CalculateEnergy.</param>
+        /// <param name="updateValues">
+        /// A flag to indicate whether tracking values should be updated in this calculation as call from
+        /// PotentialIntake and CalculateEnergy.
+        /// </param>
         /// <returns>Daily energy required for lactation this time step.</returns>
         private static double CalculateLactationEnergy(RuminantFemale ind, int timestep, bool updateValues = true)
         {
@@ -862,6 +889,7 @@ namespace Models.CLEM.Activities
             foreach (var suckling in ind.SucklingOffspringList)
             {
                 suckling.Intake.MilkDaily.Expected = sucklingMJExpected / ind.Milk.EnergyContent;
+                suckling.Energy.MilkDaily.Expected = sucklingMJExpected;
             }
 
             if (updateValues)
@@ -921,16 +949,17 @@ namespace Models.CLEM.Activities
                     ind.Weight.Fetus.Set(normalWeightFetus);
                 }
 
-                if (propOfPregnancy >= 0.7 && ind.WeightAt70PctPregnant == 0)
+                if (propOfPregnancy >= 0.7 && ind.EBMAt70PctPregnant == 0)
                 {
                     // todo: this is not correct for initially pregnant breeders as the 70% rate has been missed prior to start of the simulation
-                    ind.WeightAt70PctPregnant = ind.Weight.Base.Amount;
+                    ind.EBMAt70PctPregnant = ind.Weight.EmptyBodyMass;
                 }
 
+                // todo: check when this mortality need to be implemented and ensure we don't get multiple calculations of this in a time step when we have multiple intervals of growth within a time step. This is currently being calculated in each interval of growth within the time step which may be too much.
                 // toxaemia mortality
                 if (ind.NumberOfFetuses >= 2 && propOfPregnancy > 0.7)
                 {
-                    double toxaemiaRate = StdMath.SIG((ind.WeightAt70PctPregnant - ind.Weight.Base.Amount) / ind.Weight.NormalisedForAge,
+                    double toxaemiaRate = StdMath.SIG((ind.EBMAt70PctPregnant - ind.Weight.EmptyBodyMass) * 1.09 / ind.Weight.NormalisedForAge,
                                                        ind.Parameters.GrowPF_CP.ToxaemiaCoefficients);
                     if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * ind.DaysPregnantInTimeStep))
                     {
@@ -1120,8 +1149,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in ProductResources.
-        /// This is called at the end of CLEMAnimalWeightGain so after intake determined and before deaths and sales.
+        /// Function to calculate manure production and place in uncollected manure pools of the "manure" resource in
+        /// ProductResources. This is called at the end of CLEMAnimalWeightGain so after intake determined and before
+        /// deaths and sales.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

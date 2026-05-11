@@ -2,6 +2,7 @@
 using Docker.DotNet.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Interfaces;
+using Models.PMF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,13 +46,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Total crude protein in the store.
         /// </summary>
-        public double CrudeProtein { get; set; }
+        public double CrudeProtein 
+        {
+            get
+            {
+                return Details.CrudeProtein;
+            }
+        }
         
         /// <summary>
         /// Total rumen degradable crude protein in the store.
         /// </summary>
-        public double DegradableCrudeProtein { get; set; }
-        
+        public double DegradableCrudeProtein
+        {
+            get
+            {
+                return Details.DegradableProtein;
+            }
+        }
+
         /// <summary>
         /// Total rumen undegradable crude protein in the store.
         /// </summary>
@@ -69,8 +82,8 @@ namespace Models.CLEM.Resources
         public FoodResourceStore(FoodResourcePacket foodResourcePacket)
         {
             Details.SetPropertiesFromPacket(foodResourcePacket, foodResourcePacket.Amount);
-            CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            //CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
@@ -83,8 +96,8 @@ namespace Models.CLEM.Resources
         public FoodResourceStore(FoodResourcePacket foodResourcePacket, double amount, ResourceRequest request = null, int daysInTimeStep = 1)
         {
             Details.SetPropertiesFromPacket(foodResourcePacket, amount);
-            CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            //CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
             if (request is not null)
                 AssociatedResourceRequest = request;
             NumberOfDaysInTimestep = daysInTimeStep;
@@ -101,11 +114,11 @@ namespace Models.CLEM.Resources
         public FoodResourceStore(FoodResourceStore foodResourceStore, double amount)
         {
             Details.SetPropertiesFromPacket(foodResourceStore.Details, amount);
-            if (Details.Amount > 0)
-            {
-                CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-                DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
-            }
+            //if (Details.Amount > 0)
+            //{
+            //    CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
+            //    DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            //}
 
             NumberOfDaysInTimestep = foodResourceStore.NumberOfDaysInTimestep;
             Pools = foodResourceStore.Pools;
@@ -164,8 +177,8 @@ namespace Models.CLEM.Resources
 
             Details.AddAmount(specifyAmount.Value);
 
-            CrudeProtein += packet.CrudeProtein;
-            DegradableCrudeProtein += packet.DegradableProtein;
+            //CrudeProtein += Details.CrudeProtein;
+            //DegradableCrudeProtein += Details.DegradableProtein;
         }
 
         /// <summary>
@@ -179,8 +192,8 @@ namespace Models.CLEM.Resources
 
             dailyAmount *= NumberOfDaysInTimestep;
             Details.AddAmount(dailyAmount);
-            CrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount;
-            DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount * (Details.RumenDegradableProteinPercent / 100.0);
+            //CrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount;
+            //DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
@@ -197,16 +210,16 @@ namespace Models.CLEM.Resources
 
             // reduce pending in graze food store
             // reduce pending in associated pools by amount and poolProportions[]
-            AssociatedResourceRequest?.Resource.ReducePending(AssociatedResourceRequest, dailyAmount);
+            AssociatedResourceRequest?.Resource.DecreasePending(AssociatedResourceRequest, dailyAmount);
 
             if (Details.Amount == 0)
             {
-                CrudeProtein = 0;
-                DegradableCrudeProtein = 0;
+                //CrudeProtein = 0;
+                //DegradableCrudeProtein = 0;
                 return;
             }
-            CrudeProtein -= (Details.CrudeProteinPercent/100.0) * dailyAmount;
-            DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            //CrudeProtein -= (Details.CrudeProteinPercent/100.0) * dailyAmount;
+            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
@@ -232,8 +245,8 @@ namespace Models.CLEM.Resources
         /// <param name="factor">The reduction factor.</param>
         public void ReduceDegradableProtein(double factor)
         {
-            DegradableCrudeProtein *= factor;
-            CrudeProtein *= factor;
+            //DegradableCrudeProtein *= factor;
+            //CrudeProtein *= factor;
         }
 
         /// <summary>
@@ -293,8 +306,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            CrudeProtein = 0;
-            DegradableCrudeProtein = 0;
+            //CrudeProtein = 0;
+            //DegradableCrudeProtein = 0;
             Details.Reset();
         }
     }

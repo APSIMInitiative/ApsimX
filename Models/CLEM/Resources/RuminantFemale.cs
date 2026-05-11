@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Next Oestrus date
         /// </summary>
-        public DateTime? NextOestrusDate { get { return (nextOestrusDate == default) ? null : nextOestrusDate; } }
+        public DateTime NextOestrusDate { get { return nextOestrusDate; } }
 
 
         /// <summary>
@@ -207,7 +207,6 @@ namespace Models.CLEM.Resources
             dateOfLastConception = date;
         }
 
-
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
         /// </summary>
@@ -265,9 +264,9 @@ namespace Models.CLEM.Resources
         public double HighWeightWhenNotPregnant { get; private set; }
 
         /// <summary>
-        /// Weight at 70% of pregnancy
+        /// Empty Body Mass at 70% of pregnancy
         /// </summary>
-        public double WeightAt70PctPregnant { get; set; }
+        public double EBMAt70PctPregnant { get; set; }
 
         /// <summary>
         /// Previous conception rate
@@ -284,7 +283,7 @@ namespace Models.CLEM.Resources
         /// Store for the style of mating
         /// </summary>
         [FilterByProperty]
-        public ConceptionStatus LastConceptionStatus { get; set; } = ConceptionStatus.NotAvailable;
+        public ConceptionStatus LastConceptionStatus { get; set; } = ConceptionStatus.NotReady;
 
         /// <summary>
         /// The number of days from conception to the start of the current time-step
@@ -317,7 +316,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The date births are due or null if not pregnant. 
         /// </summary>
-        public DateTime? BirthDueDate { get; private set; }
+        public DateTime BirthDueDate { get; private set; } = default; // ToDO: trying default if not pregnant
         //{
         //    get
         //    {
@@ -513,7 +512,7 @@ namespace Models.CLEM.Resources
             // This will occur at the start of each time-step called by the RuminantType resource before any activities.
             // Mother's will always be processed before offspring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
 
-            if (BirthDueDate is null) return;
+            //if (BirthDueDate is null) return; // null check
 
             if (IsSterilised) //|| BirthDueDate is null)
             {
@@ -536,7 +535,7 @@ namespace Models.CLEM.Resources
                     if (BirthDueDate <= Parameters.Details.CurrentTimeStep.TimeStepEnd)
                     {
                         //daysInTimeStepPregnant = (int)((BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart) - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
-                        daysInTimeStepPregnant = (int)((BirthDueDate - Parameters.Details.CurrentTimeStep.TimeStepStart)?.TotalDays);
+                        daysInTimeStepPregnant = (int)((BirthDueDate - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays);
                         daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
                         IsBirthDue = true;
                     }
@@ -563,9 +562,10 @@ namespace Models.CLEM.Resources
                 }
 
                 // check for start of oestrus cycling after births
-                if (nextOestrusDate == default && !IsBirthDue && !IsPregnant)
+                if (nextOestrusDate == default(DateTime) && !IsBirthDue && !IsPregnant)
                 {
-                    daysAgo = Convert.ToInt32(DaysSince(RuminantTimeSpanTypes.GaveBirth, 0) - (Parameters.Breeding.DaysLastBirthToStartOestrus - (Parameters.Breeding.OestrusCycleLength - Parameters.Breeding.DaysInHeat)));
+                    int offset = Parameters.Breeding.DaysLastBirthToStartOestrus - (Parameters.Breeding.OestrusCycleLength - Parameters.Breeding.DaysInHeat);
+                    daysAgo = DaysSince(RuminantTimeSpanTypes.GaveBirth, offset) - offset;
                     if (daysAgo >= 0)
                     {
                         nextOestrusDate = Parameters.Details.CurrentTimeStep.TimeStepStart.AddDays(daysAgo);
@@ -732,7 +732,7 @@ namespace Models.CLEM.Resources
             for (int i = 0; i < number; i++)
             {
                 AddFetus((RandomNumberGenerator.Generator.NextDouble() <= Parameters.Breeding.ProportionOffspringMale) ? Sex.Male : Sex.Female);
-                WeightAt70PctPregnant = 0;
+                EBMAt70PctPregnant = 0;
             }
 
             //ToDo: Check this is correct
@@ -798,7 +798,7 @@ namespace Models.CLEM.Resources
                 // RuminantGrowSCA
                 // RuminantGrowOddy
 
-                Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate ?? events.Clock.Today, herd.NextUniqueID, this, herd.RuminantGrowActivity);
+                Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate, herd.NextUniqueID, this, herd.RuminantGrowActivity);
 
                 herd.AddRuminant(newSuckling, activity);
 
@@ -806,10 +806,10 @@ namespace Models.CLEM.Resources
                 SucklingOffspringList.Add(newSuckling);
 
                 // this now reports for each individual born not a birth event as individual wean events are reported
-                conceptionArgs.Update(ConceptionStatus.Birth, this, BirthDueDate ?? events.Clock.Today);
+                conceptionArgs.Update(ConceptionStatus.Birth, this, BirthDueDate);
                 Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
-            UpdateBirthDetails(BirthDueDate ?? events.Clock.Today);
+            UpdateBirthDetails(BirthDueDate);
             return true;
         }
 
@@ -854,7 +854,7 @@ namespace Models.CLEM.Resources
             //daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
             //daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
             //daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
-            BirthDueDate = default; // null;
+            BirthDueDate = default(DateTime); // null;
         }
 
 
@@ -902,6 +902,12 @@ namespace Models.CLEM.Resources
             {
                 string warn = $"Breeding sire switch is not valid for individual females [r={cohortDetails.NameWithParent}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
                 cohortDetails.Warnings.CheckAndWrite(warn, cohortDetails.Summary, cohortDetails, MessageType.Warning);
+            }
+
+            if (IsMature)
+            {
+                LastConceptionStatus = ConceptionStatus.NotAvailable;
+                //ToDo: Set conceptus weight if pregnant. Do this where fetus are added
             }
 
             UpdateBreedingDetails();

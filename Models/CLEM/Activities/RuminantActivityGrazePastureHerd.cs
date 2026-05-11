@@ -481,8 +481,8 @@ namespace Models.CLEM.Activities
             // update the amount actually taken and perfrm transaction recording.
 
             // convert amounts to total per time step
-            pastureRequest.Available *= events.Interval;
-            pastureRequest.Required *= events.Interval;
+            //pastureRequest.Available *= events.Interval;
+            //pastureRequest.Required *= events.Interval;
 
             // provided has been tracked by the pending amounts in each pasture pool group
             // the details.Amount from each resource group can't be used as they seem to have been reset.

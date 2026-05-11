@@ -358,7 +358,7 @@ namespace Models.CLEM.Resources
             }
 
             toDate = toDate == default ? Parameters.Details.CurrentTimeStep.TimeStepStart : toDate;
-            if (toDate == default || fromDate == default || toDate < fromDate)
+            if (toDate == default(DateTime) || fromDate == default(DateTime) || toDate < fromDate)
                 return TimeSpan.Zero;
             else
                 return toDate - fromDate;
@@ -1050,7 +1050,7 @@ namespace Models.CLEM.Resources
 
             // must get set after weight and birth weight are assigned in order to calculate normalised weight correctly
             AgeInDays = 0;
-            DateOfBirth = mother.BirthDueDate??date;
+            DateOfBirth = mother.BirthDueDate;
             DateEnteredSimulation = DateOfBirth;
 
             // add attributes inherited from mother

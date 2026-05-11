@@ -16,6 +16,8 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class GrazeFoodStorePool : IFeed
     {
+        private GrazeFoodStoreType grazeStore;
+
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
 
@@ -52,8 +54,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         public DryMatterDigestibilityStyle DMDStyle { get; set; }
 
+        private double dmd = 0;
+
         /// <inheritdoc/>
-        public double DryMatterDigestibility { get; set; }
+        public double DryMatterDigestibility 
+        { 
+            get
+            {
+                return dmd;
+            }
+            set
+            {
+                dmd = value;
+                GutFill = grazeStore?.CalculateGutFill(dmd)??0.08; // ToDo: determine default gut fill if grazestore not provided.
+            }
+        }
 
         /// <inheritdoc/>
         private double rumenDegradableProteinPercent;
@@ -149,11 +164,13 @@ namespace Models.CLEM.Resources
         /// Constructor
         /// </summary>
         /// <param name="startingAmount">Initial amount of biomass in the pool (kg)</param>
+        /// <param name="store"></param>
         /// <param name="age">Age of pool (in months) when created</param>
-        public GrazeFoodStorePool(double startingAmount, int age = 0)
+        public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store = null, int age = 0)
         {
             amount = startingAmount;
             Age = age;
+            grazeStore = store;
         }
 
         /// <summary>
