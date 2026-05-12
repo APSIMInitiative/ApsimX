@@ -270,6 +270,8 @@ namespace Models.Factorial
                     string value = row[columnName].ToString().Trim();
                     if (row[columnName] is DateTime date)
                         value = DateUtilities.GetDateAsString(date);
+                    if (value.StartsWith('"') && value.EndsWith('"') && value.Contains(','))
+                        value = value.Substring(1, value.Length-2);
 
                     if (!string.IsNullOrEmpty(value))
                     {
