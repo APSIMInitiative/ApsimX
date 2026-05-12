@@ -39,7 +39,9 @@ source("R/check_manual_params.R")
 source("R/add_harv_into_obs.R")
 source("R/do_entry_fixes.R")
 source("R/check_project_dependencies.R")
-
+source("R/secure_zip_folder.R")
+source("R/derive_haun_pheno_dates.R")
+source("R/updatePhenoStageInput.R")
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
 # ------------------------------------------------------------------------------
@@ -59,8 +61,9 @@ list(
       # Folders and file names
       proj_name                  = proj_name, 
       folder_thisScript          = here::here(),
-      folder_inputs              = here::here("..", "inputs"),
-      folder_met                 = here::here("..", "met"),
+      folder_met                = here::here("Met"),
+      folder_inputs             = here::here("Inputs"),
+      folder_observed           = file.path(here::here(), "Observed"),
       folder_apsimx              = here::here(),                
       folder_rawData             = here::here(proj_name),  
       
@@ -79,6 +82,11 @@ list(
       date_DOY_ref               = "01-01-2025", # Transform DOY output into ddmmyy
       target_stageDatePerc       = 50,           # % of phenological-stage development
       target_btwStagesPerc       = 50,           # % of time in-between two pheno-stages
+      max_leaf_limit            = 0.95,
+      
+      # Security
+      file_zip_out               = file.path(here::here(), "Observed.zip"), 
+      file_pass                  = file.path(here::here(), "secret_pass.txt"),
       
       # Output file names & Metadata
       file_name_input_pheno      = paste0(proj_name, "_PhenoDatesInput.csv"),
@@ -133,9 +141,11 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE C: RAW OBSERVATION INGESTION & PROCESSING
   # ----------------------------------------------------------------------------
+
+  # Load observation metadata requirements
   tar_target(
-    name = df_obs_info,
-    command = read.csv2(
+    name = df_obs_meta_data,
+    command = read.csv(
       file.path(config$folder_rawData, config$file_metaData_observed),
       header = TRUE, 
       stringsAsFactors = FALSE, 
@@ -147,8 +157,9 @@ list(
     name = list_observed_dfs_raw,
     command = compile_all_observed(
       folder      = config$folder_rawData,
-      excel_file  = config$file_rawData_excel,
-      df_obs_info = df_obs_info
+      excel_files = config$file_rawData_excel,
+      df_obs_info = df_obs_meta_data,
+      df_simNames = df_simNameByCult   # Inject the mapping table here
     )
   ),
   
@@ -161,14 +172,14 @@ list(
     )
   ),
   
-  # Map observations to Simulations
-  tar_target(
-    name = list_observed_dfs,
-    command = attach_sim_names(
-      list_observed_dfs_raw_clean, 
-      df_simNameByCult
-    )
-  ),
+  # # Map observations to Simulations
+  # tar_target(
+  #   name = list_observed_dfs,
+  #   command = attach_sim_names(
+  #     list_observed_dfs_raw_clean, 
+  #     df_simNameByCult
+  #   )
+  # ),
   
   # ----------------------------------------------------------------------------
   # PHASE D: PHENOLOGY SYNTHESIS
@@ -176,7 +187,7 @@ list(
   # Filter and extract the PCDS pheno-stages observed from excel raw data
   tar_target(
     name = df_list_PCDS, 
-    command = filter_and_extract_pcds(list_observed_dfs)
+    command = filter_and_extract_pcds(list_observed_dfs_raw_clean)
   ),
   
   # Interpolates observed PCDS variables across Date
@@ -203,6 +214,25 @@ list(
     )
   ),
   
+  # Find haun-stage derived pheno-dates
+  tar_target(
+    name = df_haun_pheno_dates, 
+    command = derive_haun_pheno_dates(
+      compiled_obs   = list_observed_dfs_raw_clean, 
+      max_leaf_limit = config$max_leaf_limit
+    )
+  ),
+  
+  tar_target(
+    name = df_apsimStageInput_haunBased,
+    command = updatePhenoStageInput(
+      obsIntPheno    = df_apsimStageInput, 
+      haunPheno      = df_haun_pheno_dates,
+      df_master_sims = df_simNameByCult      # <--- NEW: Feeds the master list
+    )
+  ),
+  
+  
   # Create Observed data of pheno-stages to be added to observations (as cross-check)
   tar_target(
     name = df_stages_Observ, 
@@ -219,7 +249,7 @@ list(
   tar_target(
     name = list_observed_dfs_clean, 
     command = add_to_observed(
-      list_observed_dfs,
+      list_observed_dfs_raw_clean,
       df_stages_Observ,
       "phenology_stage_raw"
     )
@@ -228,7 +258,7 @@ list(
   # Prepare the format of an APSIM observation standard file
   tar_target(
     name = df_observed_wide, 
-    command = prepare_observed_final(list_observed_dfs_clean)
+    command = prepare_observed_final(list_observed_dfs_raw_clean)
   ),
   
   # Add HarvestRipe flags at final measurements
@@ -271,7 +301,7 @@ list(
     name = msg_obs_saved, 
     command = save_df_final(
       df_observed_wide_harv, 
-      config$folder_apsimx, 
+      config$folder_observed, 
       config$file_saved_obs_excel
     ),
     format = "file"
@@ -295,6 +325,36 @@ list(
         dir_obs    = config$folder_apsimx
       )
     }
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+      
+      # CRITICAL FIX: Return the file string so targets can hash it!
+      config$file_zip_out
+    },
+    format = "file"
   )
   
 )

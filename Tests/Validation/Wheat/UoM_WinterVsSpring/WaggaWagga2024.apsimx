@@ -777,7 +777,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/WaggaWagga2024.met",
+              "FileName": "Met/WaggaWagga2024.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -2298,7 +2298,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/WaggaWagga2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -2308,7 +2308,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/WaggaWagga2024_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/WaggaWagga2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],

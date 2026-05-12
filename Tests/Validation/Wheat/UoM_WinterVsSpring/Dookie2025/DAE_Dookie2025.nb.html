@@ -1801,6 +1801,42 @@ getwd()</code></pre>
 <h1>Construct pipeline</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== -->
+<pre class="r"><code>targets::tar_make(callr_function = NULL)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiPT09PSBwY2RzXzNfZW1lcmdQbGFudHMgPT09PVxuIyBBIHRpYmJsZTogNiDDlyAzXG4gIFNpbXVsYXRpb25OYW1lICAgICAgICAgICAgICAgRGF0ZSAgICAgICBgW1doZWF0XS5QaGVub2xvZ3kuRW1lcmdpbmcuRGF0ZVRvUHJvZ3Jlc3NgXG4gIDxjaHI+ICAgICAgICAgICAgICAgICAgICAgICAgPGRhdGU+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkYmw+XG4xIERvb2tpZUVWQTIwMjVTb3dBcHJpbF9CaWdSZWQgMjAyNS0wNC0yMyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMCAgXG4yIERvb2tpZUVWQTIwMjVTb3dBcHJpbF9CaWdSZWQgMjAyNS0wNC0yNSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAyNy44XG4zIERvb2tpZUVWQTIwMjVTb3dBcHJpbF9CaWdSZWQgMjAyNS0wNC0yOCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzMi44XG40IERvb2tpZUVWQTIwMjVTb3dBcHJpbF9CaWdSZWQgMjAyNS0wNS0wMSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzMi4yXG41IERvb2tpZUVWQTIwMjVTb3dBcHJpbF9CaWdSZWQgMjAyNS0wNS0xMyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzMSAgXG42IERvb2tpZUVWQTIwMjVTb3dBcHJpbF9JbGxhYm8gMjAyNS0wNC0yMyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxMy44XG49PT09IHBjZHNfNl9mbGFnTGVhZiA9PT09XG4jIEEgdGliYmxlOiA2IMOXIDNcbiAgU2ltdWxhdGlvbk5hbWUgICAgICAgICAgICAgICAgRGF0ZSAgICAgICBgW1doZWF0XS5QaGVub2xvZ3kuU3RlbUVsb25nYXRpbmcuRGF0ZVRvUHJvZ3Jlc3NgXG4gIDxjaHI+ICAgICAgICAgICAgICAgICAgICAgICAgIDxkYXRlPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGJsPlxuMSBEb29raWVFVkEyMDI1U293QXByaWxfSWxsYWJvICAyMDI1LTA5LTEwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMzMuMyBcbjIgRG9va2llRVZBMjAyNVNvd0FwcmlsX0lsbGFibyAgMjAyNS0wOS0xMiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDM0LjEgXG4zIERvb2tpZUVWQTIwMjVTb3dBcHJpbF9JbGxhYm8gIDIwMjUtMDktMTUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA3My44IFxuNCBEb29raWVFVkEyMDI1U293TWF5X1N1bm1hc3RlciAyMDI1LTA5LTE3ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDkuMDFcbjUgRG9va2llRVZBMjAyNVNvd01heV9TdW5tYXN0ZXIgMjAyNS0wOS0xOSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDE0LjIgXG42IERvb2tpZUVWQTIwMjVTb3dNYXlfU3VubWFzdGVyIDIwMjUtMDktMjIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA0Ni4wIFxuPT09PSBwY2RzXzhfYW50aGVzaXMgPT09PVxuIyBBIHRpYmJsZTogNiDDlyAzXG4gIFNpbXVsYXRpb25OYW1lICAgICAgICAgICAgICAgIERhdGUgICAgICAgYFtXaGVhdF0uUGhlbm9sb2d5LkZsb3dlcmluZy5EYXRlVG9Qcm9ncmVzc2BcbiAgPGNocj4gICAgICAgICAgICAgICAgICAgICAgICAgPGRhdGU+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGJsPlxuMSBEb29raWVFVkEyMDI1U293QXByaWxfSWxsYWJvICAyMDI1LTEwLTAxICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwICAgXG4yIERvb2tpZUVWQTIwMjVTb3dBcHJpbF9JbGxhYm8gIDIwMjUtMTAtMDYgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgNjIuOCBcbjMgRG9va2llRVZBMjAyNVNvd01heV9TdW5tYXN0ZXIgMjAyNS0xMC0wMSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCAgIFxuNCBEb29raWVFVkEyMDI1U293TWF5X1N1bm1hc3RlciAyMDI1LTEwLTA2ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwICAgXG41IERvb2tpZUVWQTIwMjVTb3dNYXlfU3VubWFzdGVyIDIwMjUtMTAtMDggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDEuNjFcbjYgRG9va2llRVZBMjAyNVNvd01heV9TdW5tYXN0ZXIgMjAyNS0xMC0xMCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAxOC4xIFxuIn0= -->
+<pre><code>==== pcds_3_emergPlants ====
+# A tibble: 6 × 3
+  SimulationName               Date       `[Wheat].Phenology.Emerging.DateToProgress`
+  &lt;chr&gt;                        &lt;date&gt;                                           &lt;dbl&gt;
+1 DookieEVA2025SowApril_BigRed 2025-04-23                                        10  
+2 DookieEVA2025SowApril_BigRed 2025-04-25                                        27.8
+3 DookieEVA2025SowApril_BigRed 2025-04-28                                        32.8
+4 DookieEVA2025SowApril_BigRed 2025-05-01                                        32.2
+5 DookieEVA2025SowApril_BigRed 2025-05-13                                        31  
+6 DookieEVA2025SowApril_Illabo 2025-04-23                                        13.8
+==== pcds_6_flagLeaf ====
+# A tibble: 6 × 3
+  SimulationName                Date       `[Wheat].Phenology.StemElongating.DateToProgress`
+  &lt;chr&gt;                         &lt;date&gt;                                                 &lt;dbl&gt;
+1 DookieEVA2025SowApril_Illabo  2025-09-10                                             33.3 
+2 DookieEVA2025SowApril_Illabo  2025-09-12                                             34.1 
+3 DookieEVA2025SowApril_Illabo  2025-09-15                                             73.8 
+4 DookieEVA2025SowMay_Sunmaster 2025-09-17                                              9.01
+5 DookieEVA2025SowMay_Sunmaster 2025-09-19                                             14.2 
+6 DookieEVA2025SowMay_Sunmaster 2025-09-22                                             46.0 
+==== pcds_8_anthesis ====
+# A tibble: 6 × 3
+  SimulationName                Date       `[Wheat].Phenology.Flowering.DateToProgress`
+  &lt;chr&gt;                         &lt;date&gt;                                            &lt;dbl&gt;
+1 DookieEVA2025SowApril_Illabo  2025-10-01                                         0   
+2 DookieEVA2025SowApril_Illabo  2025-10-06                                        62.8 
+3 DookieEVA2025SowMay_Sunmaster 2025-10-01                                         0   
+4 DookieEVA2025SowMay_Sunmaster 2025-10-06                                         0   
+5 DookieEVA2025SowMay_Sunmaster 2025-10-08                                         1.61
+6 DookieEVA2025SowMay_Sunmaster 2025-10-10                                        18.1 </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1814,24 +1850,107 @@ getwd()</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>DEBUG</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX2xvYWQoZGZfbGlzdF9QQ0RTKVxudGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnMpXG5kZjE8LXByb2Nlc3NlZF9tZXRfZGF0YSRkYXRhXG5pbmZvXzMgPC0gdGFyX3JlYWQoZGZfbGlzdF9QQ0RTKVxuXG54PC1pbmZvXzMkcGNkc18zX2VtZXJnUGxhbnRzXG50YXJfcmVhZChtc2dfb2JzX3NhdmVkKVxudGFyX2xvYWQoZGZfb2JzZXJ2ZWRfd2lkZSlcbmBgYCJ9 -->
-<pre class="r"><code>tar_load(df_list_PCDS)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX2xvYWQoZGZfc2ltTmFtZUJ5Q3VsdClcbnRhcl9sb2FkKGRmX29ic19tZXRhX2RhdGEpXG50YXJfbG9hZChsaXN0X29ic2VydmVkX2Rmc19yYXcpXG50YXJfbG9hZChsaXN0X29ic2VydmVkX2Rmc19yYXdfY2xlYW4pXG50YXJfbG9hZChkZl9saXN0X1BDRFMpXG50YXJfbG9hZChkZl9QQ0RTX2ludClcbnRhcl9sb2FkKGRmX2RhdGVTdGFnZVRhcmdldFJlYWNoZWQpXG50YXJfbG9hZChkZl9hcHNpbVN0YWdlSW5wdXQpXG50YXJfbG9hZChkZl9oYXVuX3BoZW5vX2RhdGVzKVxudGFyX2xvYWQoZGZfYXBzaW1TdGFnZUlucHV0X2hhdW5CYXNlZClcblxuXG5cbnRhcl9sb2FkKGRmX2xpc3RfUENEUylcbnRhcl9sb2FkKGxpc3Rfb2JzZXJ2ZWRfZGZzKVxuZGYxPC1wcm9jZXNzZWRfbWV0X2RhdGEkZGF0YVxuaW5mb18zIDwtIHRhcl9yZWFkKGRmX2xpc3RfUENEUylcblxueDwtaW5mb18zJHBjZHNfM19lbWVyZ1BsYW50c1xudGFyX3JlYWQobXNnX29ic19zYXZlZClcbnRhcl9sb2FkKGRmX29ic2VydmVkX3dpZGUpXG5cbnRhcl9sb2FkKGRmX2hhdW5fcGhlbm9fZGF0ZXMpXG50YXJfbG9hZChkZl9hcHNpbVN0YWdlSW5wdXRfaGF1bkJhc2VkKVxudGFyX2xvYWQoZGZfYXBzaW1TdGFnZUlucHV0KVxudGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnNfcmF3X2NsZWFuKVxuYGBgIn0= -->
+<pre class="r"><code>tar_load(df_simNameByCult)
+tar_load(df_obs_meta_data)
+tar_load(list_observed_dfs_raw)
+tar_load(list_observed_dfs_raw_clean)
+tar_load(df_list_PCDS)
+tar_load(df_PCDS_int)
+tar_load(df_dateStageTargetReached)
+tar_load(df_apsimStageInput)
+tar_load(df_haun_pheno_dates)
+tar_load(df_apsimStageInput_haunBased)
+
+
+
+tar_load(df_list_PCDS)
 tar_load(list_observed_dfs)
 df1&lt;-processed_met_data$data
 info_3 &lt;- tar_read(df_list_PCDS)
 
 x&lt;-info_3$pcds_3_emergPlants
 tar_read(msg_obs_saved)
-tar_load(df_observed_wide)</code></pre>
+tar_load(df_observed_wide)
+
+tar_load(df_haun_pheno_dates)
+tar_load(df_apsimStageInput_haunBased)
+tar_load(df_apsimStageInput)
+tar_load(list_observed_dfs_raw_clean)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVxdWlyZShkcGx5cilcbnJlcXVpcmUodGFyZ2V0cylcblxuIyAxLiBMb2FkIHRoZSBtYXN0ZXIgbGlzdCBvZiBhbGwgZXhwZWN0ZWQgU2ltdWxhdGlvbk5hbWVzXG5tYXN0ZXJfZGYgPC0gdGFyX3JlYWQoZGZfc2ltTmFtZUJ5Q3VsdClcbmV4cGVjdGVkX3NpbXMgPC0gdW5pcXVlKG1hc3Rlcl9kZiRTaW11bGF0aW9uTmFtZSlcblxuIyAyLiBMb2FkIHRoZSBpbnRlcnBvbGF0ZWQgZGF0YSB5b3Ugd2FudCB0byBjaGVja1xucGNkc19pbnQgPC0gdGFyX3JlYWQoZGZfUENEU19pbnQpXG5wY2RzX2ludCA8LSB0YXJfcmVhZChkZl9saXN0X1BDRFMpXG5cbiMgMy4gRXh0cmFjdCB0aGUgc3Vydml2aW5nIFNpbXVsYXRpb25OYW1lcyBzYWZlbHlcbmlmIChpcy5kYXRhLmZyYW1lKHBjZHNfaW50KSkge1xuICBzdXJ2aXZpbmdfc2ltcyA8LSB1bmlxdWUocGNkc19pbnQkU2ltdWxhdGlvbk5hbWUpXG59IGVsc2UgaWYgKGlzLmxpc3QocGNkc19pbnQpKSB7XG4gICMgSWYgaXQncyBhIGxpc3Qgb2YgZGF0YWZyYW1lcywgYmluZCB0aGVtIGZpcnN0XG4gIHN1cnZpdmluZ19zaW1zIDwtIHVuaXF1ZShkcGx5cjo6YmluZF9yb3dzKHBjZHNfaW50KSRTaW11bGF0aW9uTmFtZSlcbn0gZWxzZSB7XG4gIHN0b3AoXCJkZl9QQ0RTX2ludCBpcyBhbiB1bmV4cGVjdGVkIGZvcm1hdC5cIilcbn1cblxuIyA0LiBGaW5kIHRoZSBvbmVzIHRoYXQgZ290IGRyb3BwZWQgKEluIEV4cGVjdGVkLCBidXQgTk9UIGluIFN1cnZpdmluZylcbmRyb3BwZWRfc2ltcyA8LSBzZXRkaWZmKGV4cGVjdGVkX3NpbXMsIHN1cnZpdmluZ19zaW1zKVxuXG4jIDUuIFByaW50IHRoZSBhdXRvcHN5IHJlcG9ydFxubWVzc2FnZShcIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cIilcbm1lc3NhZ2UoXCIgICBEUk9QUEVEIFNJTVVMQVRJT05TIFJFUE9SVFwiKVxubWVzc2FnZShcIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cIilcbm1lc3NhZ2UoXCJUb3RhbCBFeHBlY3RlZDogIFwiLCBsZW5ndGgoZXhwZWN0ZWRfc2ltcykpXG5tZXNzYWdlKFwiVG90YWwgU3Vydml2aW5nOiBcIiwgbGVuZ3RoKHN1cnZpdmluZ19zaW1zKSlcblxuaWYgKGxlbmd0aChkcm9wcGVkX3NpbXMpID09IDApIHtcbiAgbWVzc2FnZShcIlxcbuKchSBQRVJGRUNUOiBObyBzaW11bGF0aW9ucyB3ZXJlIGRyb3BwZWQhXCIpXG59IGVsc2Uge1xuICBtZXNzYWdlKFwiXFxu4p2MIEFMRVJUOiBcIiwgbGVuZ3RoKGRyb3BwZWRfc2ltcyksIFwiIHNpbXVsYXRpb25zIGFyZSBtaXNzaW5nOlwiKVxuICBwcmludChkcm9wcGVkX3NpbXMpXG59XG5tZXNzYWdlKFwiPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVwiKVxuYGBgIn0= -->
+<pre class="r"><code>require(dplyr)
+require(targets)
+
+# 1. Load the master list of all expected SimulationNames
+master_df &lt;- tar_read(df_simNameByCult)
+expected_sims &lt;- unique(master_df$SimulationName)
+
+# 2. Load the interpolated data you want to check
+pcds_int &lt;- tar_read(df_PCDS_int)
+pcds_int &lt;- tar_read(df_list_PCDS)
+
+# 3. Extract the surviving SimulationNames safely
+if (is.data.frame(pcds_int)) {
+  surviving_sims &lt;- unique(pcds_int$SimulationName)
+} else if (is.list(pcds_int)) {
+  # If it&#39;s a list of dataframes, bind them first
+  surviving_sims &lt;- unique(dplyr::bind_rows(pcds_int)$SimulationName)
+} else {
+  stop(&quot;df_PCDS_int is an unexpected format.&quot;)
+}
+
+# 4. Find the ones that got dropped (In Expected, but NOT in Surviving)
+dropped_sims &lt;- setdiff(expected_sims, surviving_sims)
+
+# 5. Print the autopsy report
+message(&quot;==========================================================&quot;)
+message(&quot;   DROPPED SIMULATIONS REPORT&quot;)
+message(&quot;==========================================================&quot;)
+message(&quot;Total Expected:  &quot;, length(expected_sims))
+message(&quot;Total Surviving: &quot;, length(surviving_sims))
+
+if (length(dropped_sims) == 0) {
+  message(&quot;\n✅ PERFECT: No simulations were dropped!&quot;)
+} else {
+  message(&quot;\n❌ ALERT: &quot;, length(dropped_sims), &quot; simulations are missing:&quot;)
+  print(dropped_sims)
+}
+message(&quot;==========================================================&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVxdWlyZShkcGx5cilcbnJlcXVpcmUodGFyZ2V0cylcblxudGFyZ2V0X3NpbSA8LSBcIkRvb2tpZVdXSEkyMDI0Q3ZNb3doYXdrU293MTctQXByXCJcbnBjZHNfbGlzdCA8LSB0YXJfcmVhZChkZl9saXN0X1BDRFMpXG5cbiMgRmxhdHRlbiBhbmQgZmlsdGVyIGZvciBNb3doYXdrXG5tb3doYXdrX3RpbWVsaW5lIDwtIGRwbHlyOjpiaW5kX3Jvd3MocGNkc19saXN0LCAuaWQgPSBcImRmX25hbWVcIikgJT4lXG4gIGRwbHlyOjpmaWx0ZXIoU2ltdWxhdGlvbk5hbWUgPT0gdGFyZ2V0X3NpbSkgJT4lXG4gIGRwbHlyOjphcnJhbmdlKERhdGUpXG5cbiMgUHJpbnQgdGhlIGZpbmRpbmdzXG5tZXNzYWdlKFwiVG90YWwgUENEUyBvYnNlcnZhdGlvbnMgZm91bmQgZm9yIE1vd2hhd2s6IFwiLCBucm93KG1vd2hhd2tfdGltZWxpbmUpKVxucHJpbnQobW93aGF3a190aW1lbGluZSlcbmBgYCJ9 -->
+<pre class="r"><code>require(dplyr)
+require(targets)
+
+target_sim &lt;- &quot;DookieWWHI2024CvMowhawkSow17-Apr&quot;
+pcds_list &lt;- tar_read(df_list_PCDS)
+
+# Flatten and filter for Mowhawk
+mowhawk_timeline &lt;- dplyr::bind_rows(pcds_list, .id = &quot;df_name&quot;) %&gt;%
+  dplyr::filter(SimulationName == target_sim) %&gt;%
+  dplyr::arrange(Date)
+
+# Print the findings
+message(&quot;Total PCDS observations found for Mowhawk: &quot;, nrow(mowhawk_timeline))
+print(mowhawk_timeline)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRvb2tpZTIwMjUgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KIyBMaWJyYXJpZXMNCmBgYHtyLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeSh0YXJnZXRzKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHZpc05ldHdvcmspDQpgYGANCg0KYGBge3J9DQojc2V0d2QoZGlybmFtZShyc3R1ZGlvYXBpOjpnZXRBY3RpdmVEb2N1bWVudENvbnRleHQoKSRwYXRoKSkNCnNldHdkKHRoaXMucGF0aDo6dGhpcy5kaXIoKSkNCmdldHdkKCkNCmBgYA0KDQoNCiMgQ2hlY2sgcGlwZWxpbmUgc3RhdHVzDQpgYGB7cn0NCnRhcl9nbGltcHNlKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KIyBDb25zdHJ1Y3QgcGlwZWxpbmUNCmBgYHtyfQ0KIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZw0KdGFyZ2V0czo6dGFyX21ha2UoKQ0KYGBgDQoNCiMgRGVzdHJveSBwaXBlbGluZSAob2ZmIGJ5IGRlZmF1bHQpDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgZXZhbCA9IEZBTFNFIH0NCiMgdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCmBgYA0KDQoNCmBgYHtyfQ0KdGFyX2xvYWQoZGZfbGlzdF9QQ0RTKQ0KdGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnMpDQpkZjE8LXByb2Nlc3NlZF9tZXRfZGF0YSRkYXRhDQppbmZvXzMgPC0gdGFyX3JlYWQoZGZfbGlzdF9QQ0RTKQ0KDQp4PC1pbmZvXzMkcGNkc18zX2VtZXJnUGxhbnRzDQp0YXJfcmVhZChtc2dfb2JzX3NhdmVkKQ0KdGFyX2xvYWQoZGZfb2JzZXJ2ZWRfd2lkZSkNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRvb2tpZTIwMjUgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KIyBMaWJyYXJpZXMNCmBgYHtyLCB3YXJuaW5nPUZBTFNFfQ0KbGlicmFyeSh0YXJnZXRzKQ0KbGlicmFyeSh0aWR5dmVyc2UpDQpsaWJyYXJ5KHZpc05ldHdvcmspDQpgYGANCg0KYGBge3J9DQojc2V0d2QoZGlybmFtZShyc3R1ZGlvYXBpOjpnZXRBY3RpdmVEb2N1bWVudENvbnRleHQoKSRwYXRoKSkNCnNldHdkKHRoaXMucGF0aDo6dGhpcy5kaXIoKSkNCmdldHdkKCkNCmBgYA0KDQoNCiMgQ2hlY2sgcGlwZWxpbmUgc3RhdHVzDQpgYGB7cn0NCnRhcl9nbGltcHNlKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KIyBDb25zdHJ1Y3QgcGlwZWxpbmUNCmBgYHtyfQ0KIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZw0KdGFyZ2V0czo6dGFyX21ha2UoKQ0KYGBgDQoNCiMgRGVzdHJveSBwaXBlbGluZSAob2ZmIGJ5IGRlZmF1bHQpDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgZXZhbCA9IEZBTFNFIH0NCiMgdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCmBgYA0KDQpERUJVRw0KDQpgYGB7cn0NCnRhcl9sb2FkKGRmX3NpbU5hbWVCeUN1bHQpDQp0YXJfbG9hZChkZl9vYnNfbWV0YV9kYXRhKQ0KdGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnNfcmF3KQ0KdGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnNfcmF3X2NsZWFuKQ0KdGFyX2xvYWQoZGZfbGlzdF9QQ0RTKQ0KdGFyX2xvYWQoZGZfUENEU19pbnQpDQp0YXJfbG9hZChkZl9kYXRlU3RhZ2VUYXJnZXRSZWFjaGVkKQ0KdGFyX2xvYWQoZGZfYXBzaW1TdGFnZUlucHV0KQ0KdGFyX2xvYWQoZGZfaGF1bl9waGVub19kYXRlcykNCnRhcl9sb2FkKGRmX2Fwc2ltU3RhZ2VJbnB1dF9oYXVuQmFzZWQpDQoNCg0KDQp0YXJfbG9hZChkZl9saXN0X1BDRFMpDQp0YXJfbG9hZChsaXN0X29ic2VydmVkX2RmcykNCmRmMTwtcHJvY2Vzc2VkX21ldF9kYXRhJGRhdGENCmluZm9fMyA8LSB0YXJfcmVhZChkZl9saXN0X1BDRFMpDQoNCng8LWluZm9fMyRwY2RzXzNfZW1lcmdQbGFudHMNCnRhcl9yZWFkKG1zZ19vYnNfc2F2ZWQpDQp0YXJfbG9hZChkZl9vYnNlcnZlZF93aWRlKQ0KDQp0YXJfbG9hZChkZl9oYXVuX3BoZW5vX2RhdGVzKQ0KdGFyX2xvYWQoZGZfYXBzaW1TdGFnZUlucHV0X2hhdW5CYXNlZCkNCnRhcl9sb2FkKGRmX2Fwc2ltU3RhZ2VJbnB1dCkNCnRhcl9sb2FkKGxpc3Rfb2JzZXJ2ZWRfZGZzX3Jhd19jbGVhbikNCmBgYA0KDQpgYGB7cn0NCnJlcXVpcmUoZHBseXIpDQpyZXF1aXJlKHRhcmdldHMpDQoNCiMgMS4gTG9hZCB0aGUgbWFzdGVyIGxpc3Qgb2YgYWxsIGV4cGVjdGVkIFNpbXVsYXRpb25OYW1lcw0KbWFzdGVyX2RmIDwtIHRhcl9yZWFkKGRmX3NpbU5hbWVCeUN1bHQpDQpleHBlY3RlZF9zaW1zIDwtIHVuaXF1ZShtYXN0ZXJfZGYkU2ltdWxhdGlvbk5hbWUpDQoNCiMgMi4gTG9hZCB0aGUgaW50ZXJwb2xhdGVkIGRhdGEgeW91IHdhbnQgdG8gY2hlY2sNCnBjZHNfaW50IDwtIHRhcl9yZWFkKGRmX1BDRFNfaW50KQ0KcGNkc19pbnQgPC0gdGFyX3JlYWQoZGZfbGlzdF9QQ0RTKQ0KDQojIDMuIEV4dHJhY3QgdGhlIHN1cnZpdmluZyBTaW11bGF0aW9uTmFtZXMgc2FmZWx5DQppZiAoaXMuZGF0YS5mcmFtZShwY2RzX2ludCkpIHsNCiAgc3Vydml2aW5nX3NpbXMgPC0gdW5pcXVlKHBjZHNfaW50JFNpbXVsYXRpb25OYW1lKQ0KfSBlbHNlIGlmIChpcy5saXN0KHBjZHNfaW50KSkgew0KICAjIElmIGl0J3MgYSBsaXN0IG9mIGRhdGFmcmFtZXMsIGJpbmQgdGhlbSBmaXJzdA0KICBzdXJ2aXZpbmdfc2ltcyA8LSB1bmlxdWUoZHBseXI6OmJpbmRfcm93cyhwY2RzX2ludCkkU2ltdWxhdGlvbk5hbWUpDQp9IGVsc2Ugew0KICBzdG9wKCJkZl9QQ0RTX2ludCBpcyBhbiB1bmV4cGVjdGVkIGZvcm1hdC4iKQ0KfQ0KDQojIDQuIEZpbmQgdGhlIG9uZXMgdGhhdCBnb3QgZHJvcHBlZCAoSW4gRXhwZWN0ZWQsIGJ1dCBOT1QgaW4gU3Vydml2aW5nKQ0KZHJvcHBlZF9zaW1zIDwtIHNldGRpZmYoZXhwZWN0ZWRfc2ltcywgc3Vydml2aW5nX3NpbXMpDQoNCiMgNS4gUHJpbnQgdGhlIGF1dG9wc3kgcmVwb3J0DQptZXNzYWdlKCI9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IikNCm1lc3NhZ2UoIiAgIERST1BQRUQgU0lNVUxBVElPTlMgUkVQT1JUIikNCm1lc3NhZ2UoIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKQ0KbWVzc2FnZSgiVG90YWwgRXhwZWN0ZWQ6ICAiLCBsZW5ndGgoZXhwZWN0ZWRfc2ltcykpDQptZXNzYWdlKCJUb3RhbCBTdXJ2aXZpbmc6ICIsIGxlbmd0aChzdXJ2aXZpbmdfc2ltcykpDQoNCmlmIChsZW5ndGgoZHJvcHBlZF9zaW1zKSA9PSAwKSB7DQogIG1lc3NhZ2UoIlxu4pyFIFBFUkZFQ1Q6IE5vIHNpbXVsYXRpb25zIHdlcmUgZHJvcHBlZCEiKQ0KfSBlbHNlIHsNCiAgbWVzc2FnZSgiXG7inYwgQUxFUlQ6ICIsIGxlbmd0aChkcm9wcGVkX3NpbXMpLCAiIHNpbXVsYXRpb25zIGFyZSBtaXNzaW5nOiIpDQogIHByaW50KGRyb3BwZWRfc2ltcykNCn0NCm1lc3NhZ2UoIj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0iKQ0KYGBgDQoNCmBgYHtyfQ0KcmVxdWlyZShkcGx5cikNCnJlcXVpcmUodGFyZ2V0cykNCg0KdGFyZ2V0X3NpbSA8LSAiRG9va2llV1dISTIwMjRDdk1vd2hhd2tTb3cxNy1BcHIiDQpwY2RzX2xpc3QgPC0gdGFyX3JlYWQoZGZfbGlzdF9QQ0RTKQ0KDQojIEZsYXR0ZW4gYW5kIGZpbHRlciBmb3IgTW93aGF3aw0KbW93aGF3a190aW1lbGluZSA8LSBkcGx5cjo6YmluZF9yb3dzKHBjZHNfbGlzdCwgLmlkID0gImRmX25hbWUiKSAlPiUNCiAgZHBseXI6OmZpbHRlcihTaW11bGF0aW9uTmFtZSA9PSB0YXJnZXRfc2ltKSAlPiUNCiAgZHBseXI6OmFycmFuZ2UoRGF0ZSkNCg0KIyBQcmludCB0aGUgZmluZGluZ3MNCm1lc3NhZ2UoIlRvdGFsIFBDRFMgb2JzZXJ2YXRpb25zIGZvdW5kIGZvciBNb3doYXdrOiAiLCBucm93KG1vd2hhd2tfdGltZWxpbmUpKQ0KcHJpbnQobW93aGF3a190aW1lbGluZSkNCmBgYA0KDQo=</div>
 
 
 

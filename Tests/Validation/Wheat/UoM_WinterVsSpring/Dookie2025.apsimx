@@ -1355,7 +1355,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/Dookie2025.met",
+              "FileName": "Met/Dookie2025.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -1366,7 +1366,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2025-01-01T00:00:00",
-              "End": "2025-12-17T00:00:00",
+              "End": "2025-11-24T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -2662,7 +2662,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Dookie2025_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/Dookie2025_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -2672,7 +2672,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Dookie2025_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/Dookie2025_HaunStagesInput.csv",
                   "Name": "SetHaunStageExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -5714,7 +5714,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2025-04-01T00:00:00",
-              "End": "2025-12-01T00:00:00",
+              "End": "2025-11-24T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -7010,7 +7010,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Dookie2025_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/Dookie2025_HaunStagesInput.csv",
                   "Name": "SetHaunStageExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -7020,7 +7020,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Dookie2025_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/Dookie2025_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],

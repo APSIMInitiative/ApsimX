@@ -1,81 +1,64 @@
-#' Zip a Folder with Password Protection via OS Command
+#' Securely Zip a Folder using 7-Zip
 #'
-#' @param input_folder Character. The path to the folder you want to zip.
-#' @param output_zip Character. The target file path (e.g., "Observed.zip").
-#' @param pass_file Character. Path to the git-ignored text file containing the password.
+#' @param input_folder The directory to compress.
+#' @param output_zip The full path of the output .zip file.
+#' @param pass_file The text file containing the password.
 #'
-#' @return The path to the generated zip file.
 #' @export
 secure_zip_folder <- function(input_folder, output_zip, pass_file) {
   
-  # 1. Defensive Checks
-  if (!dir.exists(input_folder)) stop(sprintf("Folder '%s' does not exist.", input_folder))
-  if (!file.exists(pass_file)) stop(sprintf("Password file '%s' not found.", pass_file))
+  # 1. Check if the password file actually exists
+  if (!file.exists(pass_file)) {
+    stop("CRITICAL: Password file not found at ", pass_file)
+  }
   
-  # 2. Read the password securely
-  # warn = FALSE prevents R from complaining if the text file lacks a trailing newline
-  my_pass <- readLines(pass_file, n = 1, warn = FALSE) 
-  my_pass <- trimws(my_pass)
+  # 2. Read the password string
+  secret_pass <- trimws(readLines(pass_file, warn = FALSE)[1])
   
-  if (nchar(my_pass) == 0) stop("Password file is empty.")
+  if (nchar(secret_pass) == 0) {
+    stop("CRITICAL: Password file is empty!")
+  }
   
-  # ------------------------------------------------------------------
-  # NEW: CONSOLE METADATA SUMMARY
-  # ------------------------------------------------------------------
-  # Find all Excel files (supports .xlsx, .xls, .xlsm)
-  excel_files <- list.files(input_folder, pattern = "\\.xls[mx]?$", full.names = TRUE)
+  # 3. Clean up the old zip if it exists
+  if (file.exists(output_zip)) {
+    file.remove(output_zip)
+  }
   
-  if (length(excel_files) > 0) {
-    # Extract file metadata
-    f_info <- file.info(excel_files)
-    f_info$name <- basename(rownames(f_info)) # Add file names as a column
-    
-    # Sort by modification time (oldest to newest)
-    f_info <- f_info[order(f_info$mtime), ]
-    
-    # Get counts and sizes
-    num_files <- nrow(f_info)
-    
-    # Base R trick to format bytes into auto KB/MB strings
-    min_size <- format(structure(min(f_info$size), class = "object_size"), units = "auto")
-    max_size <- format(structure(max(f_info$size), class = "object_size"), units = "auto")
-    
-    # Get oldest and newest stats
-    oldest <- f_info[1, ]
-    newest <- f_info[num_files, ] # the last row
-    
-    # Format dates to dd-MMM-yyyy
-    old_date <- format(oldest$mtime, "%d-%b-%Y")
-    new_date <- format(newest$mtime, "%d-%b-%Y")
-    
-    folder_name <- basename(input_folder)
-    
-    # Print the requested message
-    message(sprintf(
-      "%s folder has %d excel files from %s to %s size saved from %s (%s) until %s (%s).",
-      folder_name, num_files, min_size, max_size, 
-      old_date, oldest$name, new_date, newest$name
-    ))
+  # 4. THE PATHFINDER: Find 7-Zip explicitly
+  exe_7z <- Sys.which("7z")
+  
+  if (exe_7z == "") {
+    # If the background worker can't find it, hardcode the Windows path
+    fallback_path <- "C:/Program Files/7-Zip/7z.exe"
+    if (file.exists(fallback_path)) {
+      # Wrap in quotes because of the space in "Program Files"
+      exe_7z <- sprintf('"%s"', fallback_path) 
+    } else {
+      stop("CRITICAL: 7-Zip is not in PATH and not at C:/Program Files/7-Zip/7z.exe")
+    }
   } else {
-    message(sprintf("%s folder has 0 excel files. Proceeding to zip empty folder.", basename(input_folder)))
+    exe_7z <- "7z"
   }
-  # ------------------------------------------------------------------
   
-  # 3. Formulate the OS Command for Windows (7-Zip)
-  # 'a' stands for 'add to archive'
-  # '-p' followed immediately by the password applies the encryption
+  # 5. Construct the 7-Zip system command using the explicit executable
+  cmd <- sprintf(
+  #  '%s a -tzip -p"%s" -mem=AES256 "%s" "%s\\*"', # needs 7z installed- - powerEncription
+    '%s a -tzip -p"%s" -mem=AES256 "%s" "%s\\*"',
+    exe_7z,
+    secret_pass, 
+    output_zip, 
+    input_folder
+  )
   
-  # Try the standard command name first
-  cmd <- "C:/Program Files/7-Zip/7z.exe"
-  args <- c("a", paste0("-p", my_pass), output_zip, input_folder)
+  # 6. Execute the command quietly
+  message("Encrypting archive...")
+  sys_result <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
   
-  # 4. Execute and capture output
-  sys_run <- suppressWarnings(system2(cmd, args, stdout = TRUE, stderr = TRUE))
-  
-  # Check if the zip was actually created
+  # 7. Verify creation
   if (!file.exists(output_zip)) {
-    stop(paste("Zipping failed. OS Output:\n", paste(sys_run, collapse = "\n")))
+    stop("Failed to create encrypted archive. Check 7-Zip installation and paths.")
   }
   
+  message("✅ Successfully created password-protected archive: ", basename(output_zip))
   return(output_zip)
 }

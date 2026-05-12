@@ -62,9 +62,9 @@ list(
       folder_thisScript         = here::here(),
       folder_met                = here::here("Met"),
       folder_inputs             = here::here("Inputs"),
+      folder_observed           = file.path(here::here(), "Observed"),
       folder_apsimx             = here::here(),                
       folder_rawData            = here::here(proj_name),  
-      folder_observed           = file.path(here::here(), "Observed"),
       
       # Input Files with raw data
       file_rawData_excel        = c(
@@ -85,10 +85,10 @@ list(
       sheet_name_observed       = "Observed",
       file_name_input_pheno     = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun      = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_zip_out              = file.path(here::here(), "Observed.zip"),
-      
+     
       # Security
-      file_pass                 = file.path(here::here(), "secret_pass.txt"), 
+      file_zip_out               = file.path(here::here(), "Observed.zip"), 
+      file_pass                  = file.path(here::here(), "secret_pass.txt"), 
       
       # Model parameters
       date_DOY_ref              = "01-01-2024", # Transform DOY output into ddmmyy

@@ -47,6 +47,7 @@ source("R/add_harv_into_obs.R")
 source("R/find_max_leaf_date.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
+source("R/secure_zip_folder.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -68,9 +69,10 @@ list(
       proj_name               = proj_name,
       folder_thisScript       = here::here(),
       folder_rawData          = here::here(proj_name), # Cloud source
-      folder_inputs           = here::here("..", "inputs"),
       folder_apsimx           = here::here(), 
-      folder_met              = here::here("..", "met"),
+      folder_met              = here::here("Met"),
+      folder_inputs           = here::here("Inputs"),
+      folder_observed         = file.path(here::here(), "Observed"),
       file_rawData_excel      = "2024_WaggaWagga_PHDA24WARI2.xlsx", 
       file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       file_SimNameByCultivar  = paste0(proj_name, "_CultivarToSimName.csv"), 
@@ -80,6 +82,10 @@ list(
       sheetExcel_weather      = "Weather",
       sheetExcel_haun         = "Haun stage ", # Note: retains raw data typo " "
       sheetExcel_soilWater    = "GravimetricMoistureNearSowing",
+      
+      # Security
+      file_zip_out               = file.path(here::here(), "Observed.zip"), 
+      file_pass                  = file.path(here::here(), "secret_pass.txt"),
       
       # Model parameters
       coord_thisLatLon        = data.frame(lat = -35.041, lon = 147.319),
@@ -297,6 +303,36 @@ list(
         dir_obs    = config$folder_apsimx
       )
     }
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+      
+      # CRITICAL FIX: Return the file string so targets can hash it!
+      config$file_zip_out
+    },
+    format = "file"
   )
   
 )
