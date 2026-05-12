@@ -19,9 +19,25 @@ secure_zip_folder <- function(input_folder, output_zip, pass_file) {
     stop("CRITICAL: Password file is empty!")
   }
   
-  # 3. Clean up the old zip if it exists
+  # 3. STRICT CLEANUP: Delete the old zip if it exists
   if (file.exists(output_zip)) {
-    file.remove(output_zip)
+    # Attempt to delete and store the result (TRUE/FALSE)
+    was_deleted <- file.remove(output_zip)
+    
+    # If Windows refused to let R delete it, crash the pipeline and warn the user
+    if (!was_deleted) {
+      stop(
+        "\n========================================================\n",
+        "🚨 WINDOWS FILE LOCK DETECTED 🚨\n",
+        "R cannot delete the old '", basename(output_zip), "'.\n",
+        "It is currently locked by another program.\n\n",
+        "HOW TO FIX:\n",
+        "1. Close any open Excel files.\n",
+        "2. Close the 7-Zip File Manager.\n",
+        "3. Click away from the file in Windows File Explorer.\n",
+        "========================================================\n"
+      )
+    }
   }
   
   # 4. THE PATHFINDER: Find 7-Zip explicitly

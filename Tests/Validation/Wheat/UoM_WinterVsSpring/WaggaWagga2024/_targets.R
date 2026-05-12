@@ -272,7 +272,7 @@ list(
     name = msg_obs_saved, 
     command = save_df_final(
       df_final_observed_harv, 
-      config$folder_apsimx, 
+      config$folder_observed, 
       config$file_saved_obs_excel
     )
   ),
@@ -300,7 +300,7 @@ list(
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
   ),
