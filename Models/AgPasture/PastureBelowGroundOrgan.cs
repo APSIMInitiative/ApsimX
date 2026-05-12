@@ -297,7 +297,7 @@ namespace Models.AgPasture
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
-                        MaximumAllowedRootingDepth = soilPhysical.ThicknessCumulative[z - 1];
+                        MaximumAllowedRootingDepth = Math.Min(MaximumAllowedRootingDepth, soilPhysical.ThicknessCumulative[z - 1]);
                         break;
                     }
                     else
