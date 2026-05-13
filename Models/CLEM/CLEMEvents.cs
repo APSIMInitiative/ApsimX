@@ -132,27 +132,31 @@ namespace Models.CLEM
         /// <summary>
         /// Custom interval (days)
         /// </summary>
-        public int Interval { get; set; }
+        [JsonIgnore]
+        public int Interval { get; private set; }
 
         /// <summary>
         /// The index of the current interval
         /// </summary>
+        [JsonIgnore]
         public int IntervalIndex { get; private set; } = 0;
 
         /// <summary>
         /// Month this ecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
-        public DateTime EcologicalIndicatorsNextDueDate { get; set; }
+        public DateTime EcologicalIndicatorsNextDueDate { get; private set; }
 
         /// <summary>
         /// The start date of the current time-step
         /// </summary>
+        [JsonIgnore]
         public DateTime TimeStepStart { get { return timeStepStart; } }
 
         /// <summary>
         /// The end date of the current time-step
         /// </summary>
+        [JsonIgnore]
         public DateTime TimeStepEnd { get { return timeStepEnd; } }
 
         /// <summary>

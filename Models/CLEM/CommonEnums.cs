@@ -840,14 +840,6 @@ namespace Models.CLEM
         /// Breeder
         /// </summary>
         Breeder,
-        ///// <summary>
-        ///// Castrate
-        ///// </summary>
-        //Castrate,
-        ///// <summary>
-        ///// Sire
-        ///// </summary>
-        //Sire
     }
 
     /// <summary>
