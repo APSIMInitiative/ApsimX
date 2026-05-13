@@ -19,6 +19,9 @@
 #' @export
 apply_corrections <- function(df_tbl, df_stages_Observ) {
   
+  df_tbl<-df2
+  df_stages_Observ<-df3
+  
   # 1. Package Checks (Defensive Programming)
   if (!requireNamespace("lubridate", quietly = TRUE)) stop("Package 'lubridate' is required.")
   if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' is required.")
@@ -35,7 +38,7 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
   # 3. Create the Date Lookup Table (Wide Format)
   date_lookup <- df_stages_Observ %>%
     dplyr::filter(Wheat.Phenology.Stage %in% c(6, 8)) %>%
-    dplyr::select(Cultivar, Date, Wheat.Phenology.Stage) %>%
+    dplyr::select(SimulationName, Date, Wheat.Phenology.Stage) %>%
     dplyr::mutate(PhenoDate = paste0("PhenoDate_", Wheat.Phenology.Stage)) %>%
     dplyr::select(-Wheat.Phenology.Stage) %>%
     tidyr::pivot_wider(names_from = PhenoDate, values_from = Date) # Modern replacement for spread()
@@ -58,7 +61,7 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
             
             # Perform the join once
             df <- df %>%
-              dplyr::left_join(date_lookup, by = "Cultivar")
+              dplyr::left_join(date_lookup, by = "SimulationName")
             
             # Apply the specific date based on the group mapping
             if (nm %in% group_6_vars) {

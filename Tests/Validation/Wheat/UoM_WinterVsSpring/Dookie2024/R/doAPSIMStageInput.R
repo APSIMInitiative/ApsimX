@@ -40,7 +40,7 @@
 #' 
 doAPSIMStageInput <- function(df_dateWhenStageWasReached, 
                               BtwStgPerc, 
-                              fill_NAs_with_average = FALSE) {
+                              fill_NAs_with_average) {
   
   require(dplyr)
   require(tidyr)

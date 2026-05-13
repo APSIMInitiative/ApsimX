@@ -25,8 +25,8 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
     
     # find first date reaching target
     res <- df %>%
-      arrange(Cultivar, Date) %>%
-      group_by(Cultivar) %>%
+      arrange(SimulationName, Date) %>%
+      group_by(SimulationName) %>%
       mutate(
         max_value    = max(.data[[value_col]], na.rm = TRUE),
         target_value = max_value * StageTargetPerc / 100
@@ -35,7 +35,7 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
       slice_min(Date, n = 1, with_ties = FALSE) %>%
       ungroup() %>%
       transmute(
-        Cultivar        = Cultivar,
+        SimulationName  = SimulationName,
         StageName       = StageName,
         TargetPerc      = StageTargetPerc,
         Maxvalue        = max_value,

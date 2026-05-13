@@ -44,6 +44,7 @@ source("R/check_project_dependencies.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
 source("R/add_stages_to_obs.R")
+source("R/secure_zip_folder.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -65,15 +66,21 @@ list(
       proj_name               = proj_name,
       folder_thisScript       = here::here(),
       folder_rawData          = here::here(proj_name),       # Cloud source
-      folder_inputs           = here::here("..", "inputs"),
-      folder_apsimx           = here::here(),                
-      folder_met              = here::here("..", "met"),
+      folder_met                = here::here("Met"),
+      folder_inputs             = here::here("Inputs"),
+      folder_observed           = file.path(here::here(), "Observed"),
+      folder_apsimx             = here::here(),   
+      
+      # Security
+      file_zip_out               = file.path(here::here(), "Observed.zip"), 
+      file_pass                  = file.path(here::here(), "secret_pass.txt"),
       
       # Target file names
       file_rawData_excel      = "2025_WaggaWagga_PHDA25WARI2.xlsx", 
       file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       file_SimNameByCultivar  = paste0(proj_name, "_CultivarToSimName.csv"), 
       file_metaData_observed  = paste0(proj_name, "_observed_data_requirements.csv"),
+      date_DOY_ref               = "01-01-2025", # Transform DOY output into ddmmyy
       
       # Excel sheet mappings
       sheetExcel_weather      = "Weather",
@@ -109,7 +116,7 @@ list(
   
   # Load tracking list of variables to fetch from observations
   tar_target(
-    name = df_obs_info,
+    name = df_obs_meta_data,
     command = read.csv2(
       file.path(config$folder_rawData, config$file_metaData_observed),
       header           = TRUE, 
@@ -149,12 +156,12 @@ list(
   # ----------------------------------------------------------------------------
   # Read and map all observation sheets to simulations
   tar_target(
-    name = list_observed_dfs,
+    name = list_observed_dfs_raw,
     command = compile_all_observed(
-      folder           = config$folder_rawData,
-      excel_file       = config$file_rawData_excel,
-      df_obs_info      = df_obs_info,
-      df_simNameByCult = df_simNameByCult
+      folder      = config$folder_rawData,
+      excel_files = config$file_rawData_excel,
+      df_obs_info = df_obs_meta_data,
+      df_simNames = df_simNameByCult   # Inject the mapping table here
     )
   ),
   
@@ -164,13 +171,13 @@ list(
   # 1. Filter and extract the continuous PCDS pheno-stages from raw data
   tar_target(
     name = df_list_PCDS, 
-    command = filter_and_extract_pcds(list_observed_dfs)
+    command = filter_and_extract_pcds(list_observed_dfs_raw)
   ),
   
   # 2. Mathematically interpolate stages across dates
   tar_target(
     name = df_PCDS_int, 
-    command = interpolate_obs_phenoStages(df_list_PCDS)
+    command = interpolate_obs_phenoStages(df_list_PCDS, config$date_DOY_ref)
   ),
   
   # 3. Locate exact dates where target completion percentage is reached
@@ -185,11 +192,8 @@ list(
   # 4. Generate the base APSIM stage input file
   tar_target(
     name = df_apsimStageInput, 
-    command = doAPSIMStageInput(
-      df_dateStageTargetReached,
-      df_simNameByCult,
-      config$target_betwStages
-    )
+    command = doAPSIMStageInput(df_dateStageTargetReached, 
+                                config$target_betwStages)
   ),
   
   # 5. Build an observed version of these discrete stages for the master dataframe
@@ -197,7 +201,6 @@ list(
     name = df_stages_Observ, 
     command = doStageObsData(
       df_dateStageTargetReached,
-      df_simNameByCult,
       config$varName_addedToObserv
     )
   ),
@@ -209,7 +212,7 @@ list(
   tar_target(
     name = list_observed_clean, 
     command = apply_corrections(
-      list_observed_dfs, 
+      list_observed_dfs_raw, 
       df_stages_Observ
     )
   ),
@@ -298,7 +301,7 @@ list(
     name = msg_obs_saved,
     command = save_df_final(
       df_obs_mean_harv_pheno,
-      config$folder_apsimx,
+      config$folder_observed,
       config$file_saved_obs_excel
     ),
     format = "file"
@@ -319,9 +322,39 @@ list(
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+      
+      # CRITICAL FIX: Return the file string so targets can hash it!
+      config$file_zip_out
+    },
+    format = "file"
   )
   
 )
