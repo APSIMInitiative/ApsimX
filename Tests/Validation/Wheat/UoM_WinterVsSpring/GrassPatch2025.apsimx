@@ -13,7 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "GrassPatch2025_Observed.xlsx"
+            "Observed\\GrassPatch2025_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -581,7 +581,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/Grass Patch_-33.20_121.65.met",
+              "FileName": "Met/Grass Patch_-33.20_121.65.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -2035,7 +2035,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/GrassPatch2025_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/GrassPatch2025_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -2045,7 +2045,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/GrassPatch2025_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/GrassPatch2025_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],

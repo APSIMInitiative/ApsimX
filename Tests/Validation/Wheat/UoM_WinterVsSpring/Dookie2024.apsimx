@@ -5075,7 +5075,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/Dookie2024.met",
+              "FileName": "Met/Dookie2024.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
