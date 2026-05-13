@@ -514,7 +514,7 @@ namespace Models.CLEM.Resources
 
             //if (BirthDueDate is null) return; // null check
 
-            if (IsSterilised) //|| BirthDueDate is null)
+            if (IsSterilised || Parameters.Details.CurrentTimeStep is null) //|| BirthDueDate is null)
             {
                 return;
             }
@@ -529,7 +529,7 @@ namespace Models.CLEM.Resources
                 daysInTimeStepLactating = 0;
 
                 // calculate number of days in time-step pregnant
-                if (BirthDueDate >= Parameters.Details.CurrentTimeStep.TimeStepStart)
+                if (BirthDueDate != default && BirthDueDate >= Parameters.Details.CurrentTimeStep.TimeStepStart)
                 {
                     daysInTimeStepPregnant = Parameters.Details.CurrentTimeStep.Interval;
                     if (BirthDueDate <= Parameters.Details.CurrentTimeStep.TimeStepEnd)

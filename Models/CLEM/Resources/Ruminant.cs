@@ -357,6 +357,11 @@ namespace Models.CLEM.Resources
                     break;
             }
 
+            if (Parameters.Details.CurrentTimeStep is null)
+            {
+                return TimeSpan.Zero;
+            }
+
             toDate = toDate == default ? Parameters.Details.CurrentTimeStep.TimeStepStart : toDate;
             if (toDate == default(DateTime) || fromDate == default(DateTime) || toDate < fromDate)
                 return TimeSpan.Zero;
