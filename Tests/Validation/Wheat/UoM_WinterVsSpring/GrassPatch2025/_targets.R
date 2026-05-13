@@ -214,7 +214,7 @@ list(
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = config$file_name_met,
+        met_name   = config$file_name_new_met,
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,

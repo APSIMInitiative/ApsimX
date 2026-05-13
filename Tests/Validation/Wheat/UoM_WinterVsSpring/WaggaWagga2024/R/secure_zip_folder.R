@@ -19,25 +19,9 @@ secure_zip_folder <- function(input_folder, output_zip, pass_file) {
     stop("CRITICAL: Password file is empty!")
   }
   
-  # 3. STRICT CLEANUP: Delete the old zip if it exists
+  # 3. Clean up the old zip if it exists
   if (file.exists(output_zip)) {
-    # Attempt to delete and store the result (TRUE/FALSE)
-    was_deleted <- file.remove(output_zip)
-    
-    # If Windows refused to let R delete it, crash the pipeline and warn the user
-    if (!was_deleted) {
-      stop(
-        "\n========================================================\n",
-        "🚨 WINDOWS FILE LOCK DETECTED 🚨\n",
-        "R cannot delete the old '", basename(output_zip), "'.\n",
-        "It is currently locked by another program.\n\n",
-        "HOW TO FIX:\n",
-        "1. Close any open Excel files.\n",
-        "2. Close the 7-Zip File Manager.\n",
-        "3. Click away from the file in Windows File Explorer.\n",
-        "========================================================\n"
-      )
-    }
+    file.remove(output_zip)
   }
   
   # 4. THE PATHFINDER: Find 7-Zip explicitly
@@ -66,15 +50,51 @@ secure_zip_folder <- function(input_folder, output_zip, pass_file) {
     input_folder
   )
   
-  # 6. Execute the command quietly
+  # 6. Execute the command and capture the exit status
   message("Encrypting archive...")
-  sys_result <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
+  sys_result <- system(cmd, intern = TRUE)
   
-  # 7. Verify creation
-  if (!file.exists(output_zip)) {
-    stop("Failed to create encrypted archive. Check 7-Zip installation and paths.")
+  # R stores the error code as an attribute. If it succeeded, it is NULL.
+  exit_status <- attr(sys_result, "status")
+  
+  if (!is.null(exit_status) && exit_status != 0) {
+    stop(
+      "\n========================================================\n",
+      "🚨 CRITICAL 7-ZIP ERROR (Status ", exit_status, ") 🚨\n",
+      "========================================================\n",
+      "7-Zip failed to zip the files. It likely couldn't find the source data.\n",
+      "Last lines from 7-Zip:\n  ", 
+      paste(tail(sys_result, 5), collapse = "\n  "), "\n",
+      "========================================================\n"
+    )
   }
   
+  # 7. Verify creation AND verify it's not a "Ghost Zip"
+  if (!file.exists(output_zip)) {
+    stop("CRITICAL: The archive was not created at all.")
+  }
+  
+  # An empty AES-256 zip file wrapper is tiny (usually ~22 to 100 bytes).
+  # If it's less than 500 bytes, we know absolutely no data was added.
+  zip_size <- file.info(output_zip)$size
+  
+  if (zip_size < 500) {
+    # Delete the empty ghost file so it doesn't trick you later
+    file.remove(output_zip)
+    
+    stop(
+      "\n========================================================\n",
+      "🚨 GHOST ZIP DETECTED 🚨\n",
+      "========================================================\n",
+      "The zip file was created, but NO FILES WERE ADDED to it.\n",
+      "Double-check that this path actually contains files:\n", 
+      " -> ", input_folder, "\n",
+      "========================================================\n"
+    )
+  }
+  
+  message("✅ Successfully created password-protected archive: ", basename(output_zip))
+  return(output_zip)
   message("✅ Successfully created password-protected archive: ", basename(output_zip))
   return(output_zip)
 }

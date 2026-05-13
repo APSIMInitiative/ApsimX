@@ -13,7 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Gnarwarre2024_Observed.xlsx"
+            "Observed/Gnarwarre2024_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -396,7 +396,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "%root%/Tests/Validation/Wheat/met/Gnarwarre_-38.20_144.05_2024.met",
+              "FileName": "Met/Gnarwarre2024.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -1548,7 +1548,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Gnarwarre2024_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/Gnarwarre2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -1558,7 +1558,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/Gnarwarre2024_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/Gnarwarre2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],

@@ -37,6 +37,7 @@ source("R/add_mock_pheno_dates.R") # ---- TEMPORARY TO BE REMOVED ----
 source("R/get_column_var_from_observ.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
+source("R/copy_and_check_met.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -58,13 +59,18 @@ list(
       proj_name               = proj_name,
       folder_thisScript       = here::here(),
       folder_rawData          = here::here(proj_name),       # Cloud source
-      folder_inputs           = here::here("..", "inputs"),
       folder_apsimx           = here::here(),                # One level up from Analysis
-      folder_met              = here::here("..", "met"),
+      folder_met                = here::here("Met"),
+      folder_inputs             = here::here("Inputs"),
+      folder_observed           = file.path(here::here(), "Observed"),
       
       file_rawData_excel      = paste0(proj_name, "/Observed.xlsx"), 
       file_workData_excel     = paste0(proj_name, "_Observed.xlsx"), 
       sheet_name_observed     = "Observed",
+      
+      # Security
+      file_zip_out             = file.path(here::here(), "Observed.zip"), 
+      file_pass                = file.path(here::here(), "secret_pass.txt"),
       
       # Model parameters
       date_DOY_ref            = "01-01-2025", # Transform DOY output into ddmmyy
@@ -75,10 +81,26 @@ list(
       # Output file names & Metadata
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met           = "Gnarwarre_-38.20_144.05_2025.met", 
+      file_name_new_met       = paste0(proj_name, ".met"),
+      file_name_met           = "Gnarwarre_-38.20_144.05.met", 
       file_mock_pheno_csv     = "mock_pheno_dates.csv" # Temporary FIX
     )
   ),
+  
+  # ------------------------------------------------------------------
+  # 2. VALIDATE AND COPY MET FILE
+  # ------------------------------------------------------------------
+  tar_target(
+    name = validated_met_file,
+    command = copy_and_check_met(
+      sourceFolder   = config$folder_rawData,    # Automatically grabs "data/raw_weather"
+      targetFolder   = config$folder_met,        # Where you want it to go
+      orig_file_name = config$file_name_met,     # Automatically grabs "GrassPatch_original.met"
+      new_file_name  = config$file_name_new_met  # Your new clean name
+    ),
+    format = "file" # CRITICAL: Tells targets the output is a physical file, not an R object
+  ),
+  
   
   # ----------------------------------------------------------------------------
   # PHASE B: RAW OBSERVATION INGESTION & PROCESSING
@@ -211,7 +233,7 @@ list(
     name = msg_obs_saved,
     command = save_df_into_excel(
       df        = df_final_observed_harv_pheno,
-      folder    = config$folder_apsimx,
+      folder    = config$folder_observed,
       filename  = config$file_workData_excel,
       sheetname = config$sheet_name_observed
     ),
@@ -229,13 +251,41 @@ list(
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = config$file_name_met,
+        met_name   = config$file_name_new_met,
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+    },
+    format = "file"
   )
+  
   
 )

@@ -21,23 +21,11 @@ tar_option_set(
 )
 
 # ------------------------------------------------------------------------------
-# 2. SOURCE CUSTOM FUNCTIONS
+# 2. SOURCE CUSTOM FUNCTIONS (UNIVERSAL INGESTOR)
 # ------------------------------------------------------------------------------
-source("R/read_excel_observed.R")
-source("R/do_obs_means.R")
-source("R/save_df_into_excel.R")
-source("R/get_pheno_dates.R")
-source("R/check_manual_params.R")
-source("R/check_project_dependencies.R")
-source("R/add_stages_to_obs.R")
-source("R/get_harvestRipe_dates.R")
-source("R/add_harv_into_obs.R")
-source("R/add_interp_pheno_dates.R")
-source("R/save_df_into_csv.R")
-source("R/apply_tailored_obs_corrections.R")
-source("R/get_column_var_from_observ.R")
-source("R/derive_haun_pheno_dates.R")
-source("R/updatePhenoStageInput.R")
+# This single command safely loads EVERY .R file inside the "R/" directory.
+# (If you create a central hub later, change "R" to "C:/github/APSIM_Master_Scripts")
+targets::tar_source("R") 
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -56,32 +44,64 @@ list(
     name = config,
     command = list(
       # Folders and file names
-      proj_name               = proj_name,
-      folder_thisScript       = here::here(),
-      folder_rawData          = here::here(proj_name),       # Cloud source
-      folder_inputs           = here::here("..", "inputs"),
-      folder_apsimx           = here::here(),                # One level up from Analysis
-      folder_met              = here::here("..", "met"),
+      proj_name                = proj_name,
+      folder_thisScript        = here::here(),
+      folder_rawData           = here::here(proj_name),        # Cloud source
+      folder_apsimx            = here::here(),                 # One level up from Analysis
+      folder_met               = here::here("Met"),
+      folder_inputs            = here::here("Inputs"),
+      folder_observed          = file.path(here::here(), "Observed"),
       
-      file_rawData_excel      = paste0(proj_name, "/Observed.xlsx"), 
-      file_workData_excel     = paste0(proj_name, "_Observed.xlsx"), 
-      sheet_name_observed     = "Observed",
+      # Security
+      file_zip_out             = file.path(here::here(), "Observed.zip"), 
+      file_pass                = file.path(here::here(), "secret_pass.txt"),
+      
+      file_rawData_excel       = paste0(proj_name, "/Observed.xlsx"), 
+      file_workData_excel      = paste0(proj_name, "_Observed.xlsx"), 
+      sheet_name_observed      = "Observed",
       
       # Model parameters
-      date_DOY_ref            = "01-01-2024", # Transform DOY output into ddmmyy
-      btwStgPerc              = 0.5,          # Fraction of time in-between stages
-      ref_yield_var           = "Wheat.AboveGround.Wt", 
-      max_leaf_limit          = 0.95,         # Fractional limit for max leaves (Haun)
+      date_DOY_ref             = "01-01-2024", # Transform DOY output into ddmmyy
+      btwStgPerc               = 0.5,          # Fraction of time in-between stages
+      ref_yield_var            = "Wheat.AboveGround.Wt", 
+      max_leaf_limit           = 0.95,         # Fractional limit for max leaves (Haun)
       
       # Output file names & Metadata
-      file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
-      file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met           = "Gnarwarre_-38.20_144.05_2024.met" 
+      file_name_input_pheno    = paste0(proj_name, "_PhenoDatesInput.csv"),
+      file_name_input_haun     = paste0(proj_name, "_HaunStagesInput.csv"),
+      file_name_new_met        = paste0(proj_name, ".met"),
+      file_name_met            = "Gnarwarre_-38.20_144.05.met" 
     )
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE B: RAW OBSERVATION INGESTION & PROCESSING
+  # PHASE B: MET DATA VALIDATION & INGESTION
+  # ----------------------------------------------------------------------------
+  # 1. Track the raw physical file so updates trigger a pipeline rerun
+  tar_target(
+    name = raw_met_tracker,
+    command = file.path(config$folder_rawData, config$file_name_met),
+    format = "file"
+  ),
+  
+  # 2. Validate and copy
+  tar_target(
+    name = validated_met_file,
+    command = {
+      force(raw_met_tracker) # Explicitly bind to the file tracker
+      
+      copy_and_check_met(
+        sourceFolder   = config$folder_rawData,
+        targetFolder   = config$folder_met,
+        orig_file_name = config$file_name_met,
+        new_file_name  = config$file_name_new_met
+      )
+    },
+    format = "file"
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE C: RAW OBSERVATION INGESTION & PROCESSING
   # ----------------------------------------------------------------------------
   # Read raw observations
   tar_target(
@@ -98,7 +118,7 @@ list(
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE C: PHENOLOGY & HAUN PRIORITY
+  # PHASE D: PHENOLOGY & HAUN PRIORITY
   # ----------------------------------------------------------------------------
   # Retrieve measured pheno dates from observations
   tar_target(
@@ -156,7 +176,7 @@ list(
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE D: OBSERVATION FORMATTING & CORRECTIONS
+  # PHASE E: OBSERVATION FORMATTING & CORRECTIONS
   # ----------------------------------------------------------------------------
   # Add HarvestRipe flags at final measurements
   tar_target(
@@ -186,7 +206,7 @@ list(
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE E: EXPORT & VALIDATION
+  # PHASE F: EXPORT & VALIDATION
   # ----------------------------------------------------------------------------
   # Save Haun-prioritized pheno-date input into CSV
   tar_target(
@@ -204,7 +224,7 @@ list(
     name = msg_obs_saved,
     command = save_df_into_excel(
       df        = df_obs_mean_harv_pheno,
-      folder    = config$folder_apsimx,
+      folder    = config$folder_observed,
       filename  = config$file_workData_excel,
       sheetname = config$sheet_name_observed
     ),
@@ -222,13 +242,41 @@ list(
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = config$file_name_met,
+        met_name   = config$file_name_new_met,
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
-  )
+  ),
   
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  tar_target(
+    name = tracked_excel_files,
+    command = {
+      force(msg_obs_saved) # Fix: Force Watcher to wait until Phase F finishes exporting
+      list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE)
+    },
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+    },
+    format = "file"
+  )
 )
