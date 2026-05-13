@@ -1809,6 +1809,42 @@ tar_manifest(fields = name)$name</code></pre>
 <h1>Construct pipeline</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== -->
+<pre class="r"><code>targets::tar_make(callr_function = NULL)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiPT09PSBwY2RzXzNfZW1lcmdQbGFudHMgPT09PVxuIyBBIHRpYmJsZTogNiDDlyAzXG4gIFNpbXVsYXRpb25OYW1lICAgICAgICAgICAgICAgICAgIERhdGUgICAgICAgYFtXaGVhdF0uUGhlbm9sb2d5LkVtZXJnaW5nLkRhdGVUb1Byb2dyZXNzYFxuICA8Y2hyPiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGF0ZT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRibD5cbjEgV2FnZ2FXYWdnYTIwMjVDdkdyZWdvcnlTb3cxMy1NYXkgMjAyNS0wNS0xNiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCAgXG4yIFdhZ2dhV2FnZ2EyMDI1Q3ZHcmVnb3J5U293MTMtTWF5IDIwMjUtMDUtMTkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAgIFxuMyBXYWdnYVdhZ2dhMjAyNUN2R3JlZ29yeVNvdzEzLU1heSAyMDI1LTA1LTIzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDIzLjVcbjQgV2FnZ2FXYWdnYTIwMjVDdkdyZWdvcnlTb3cxMy1NYXkgMjAyNS0wNS0yNyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAzNi41XG41IFdhZ2dhV2FnZ2EyMDI1Q3ZHcmVnb3J5U293MTMtTWF5IDIwMjUtMDUtMzAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMzYuNVxuNiBXYWdnYVdhZ2dhMjAyNUN2R3JlZ29yeVNvdzEzLU1heSAyMDI1LTA2LTAyICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDM3LjVcbj09PT0gcGNkc182X2ZsYWdMZWFmID09PT1cbiMgQSB0aWJibGU6IDYgw5cgM1xuICBTaW11bGF0aW9uTmFtZSAgICAgICAgICAgICAgICAgICBEYXRlICAgICAgIGBbV2hlYXRdLlBoZW5vbG9neS5TdGVtRWxvbmdhdGluZy5EYXRlVG9Qcm9ncmVzc2BcbiAgPGNocj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGRhdGU+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkYmw+XG4xIFdhZ2dhV2FnZ2EyMDI1Q3ZHcmVnb3J5U293MTMtTWF5IDIwMjUtMDgtMTggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwICAgIFxuMiBXYWdnYVdhZ2dhMjAyNUN2R3JlZ29yeVNvdzEzLU1heSAyMDI1LTA5LTExICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC4xNTNcbjMgV2FnZ2FXYWdnYTIwMjVDdkdyZWdvcnlTb3cxMy1NYXkgMjAyNS0wOS0xNSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAuNTM2XG40IFdhZ2dhV2FnZ2EyMDI1Q3ZHcmVnb3J5U293MTMtTWF5IDIwMjUtMDktMTggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjYyN1xuNSBXYWdnYVdhZ2dhMjAyNUN2SWxsYWJvU293MTctQXByICAyMDI1LTA4LTE4ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCAgICBcbjYgV2FnZ2FXYWdnYTIwMjVDdklsbGFib1NvdzE3LUFwciAgMjAyNS0wOS0xMSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAuMjQ0XG49PT09IHBjZHNfOF9hbnRoZXNpcyA9PT09XG4jIEEgdGliYmxlOiA2IMOXIDNcbiAgU2ltdWxhdGlvbk5hbWUgICAgICAgICAgICAgICAgICAgRGF0ZSAgICAgICBgW1doZWF0XS5QaGVub2xvZ3kuRmxvd2VyaW5nLkRhdGVUb1Byb2dyZXNzYFxuICA8Y2hyPiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZGF0ZT4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxkYmw+XG4xIFdhZ2dhV2FnZ2EyMDI1Q3ZHcmVnb3J5U293MTMtTWF5IDIwMjUtMTAtMDYgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjA5NzFcbjIgV2FnZ2FXYWdnYTIwMjVDdkdyZWdvcnlTb3cxMy1NYXkgMjAyNS0xMC0wOSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAuMzc2IFxuMyBXYWdnYVdhZ2dhMjAyNUN2R3JlZ29yeVNvdzEzLU1heSAyMDI1LTEwLTEzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC43MTYgXG40IFdhZ2dhV2FnZ2EyMDI1Q3ZJbGxhYm9Tb3cxNy1BcHIgIDIwMjUtMTAtMDYgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLjEwMCBcbjUgV2FnZ2FXYWdnYTIwMjVDdklsbGFib1NvdzE3LUFwciAgMjAyNS0xMC0wOSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDAuMzk0IFxuNiBXYWdnYVdhZ2dhMjAyNUN2SWxsYWJvU293MTctQXByICAyMDI1LTEwLTEzICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMC42NTUgXG4ifQ== -->
+<pre><code>==== pcds_3_emergPlants ====
+# A tibble: 6 × 3
+  SimulationName                   Date       `[Wheat].Phenology.Emerging.DateToProgress`
+  &lt;chr&gt;                            &lt;date&gt;                                           &lt;dbl&gt;
+1 WaggaWagga2025CvGregorySow13-May 2025-05-16                                         0  
+2 WaggaWagga2025CvGregorySow13-May 2025-05-19                                         0  
+3 WaggaWagga2025CvGregorySow13-May 2025-05-23                                        23.5
+4 WaggaWagga2025CvGregorySow13-May 2025-05-27                                        36.5
+5 WaggaWagga2025CvGregorySow13-May 2025-05-30                                        36.5
+6 WaggaWagga2025CvGregorySow13-May 2025-06-02                                        37.5
+==== pcds_6_flagLeaf ====
+# A tibble: 6 × 3
+  SimulationName                   Date       `[Wheat].Phenology.StemElongating.DateToProgress`
+  &lt;chr&gt;                            &lt;date&gt;                                                 &lt;dbl&gt;
+1 WaggaWagga2025CvGregorySow13-May 2025-08-18                                             0    
+2 WaggaWagga2025CvGregorySow13-May 2025-09-11                                             0.153
+3 WaggaWagga2025CvGregorySow13-May 2025-09-15                                             0.536
+4 WaggaWagga2025CvGregorySow13-May 2025-09-18                                             0.627
+5 WaggaWagga2025CvIllaboSow17-Apr  2025-08-18                                             0    
+6 WaggaWagga2025CvIllaboSow17-Apr  2025-09-11                                             0.244
+==== pcds_8_anthesis ====
+# A tibble: 6 × 3
+  SimulationName                   Date       `[Wheat].Phenology.Flowering.DateToProgress`
+  &lt;chr&gt;                            &lt;date&gt;                                            &lt;dbl&gt;
+1 WaggaWagga2025CvGregorySow13-May 2025-10-06                                       0.0971
+2 WaggaWagga2025CvGregorySow13-May 2025-10-09                                       0.376 
+3 WaggaWagga2025CvGregorySow13-May 2025-10-13                                       0.716 
+4 WaggaWagga2025CvIllaboSow17-Apr  2025-10-06                                       0.100 
+5 WaggaWagga2025CvIllaboSow17-Apr  2025-10-09                                       0.394 
+6 WaggaWagga2025CvIllaboSow17-Apr  2025-10-13                                       0.655 </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>

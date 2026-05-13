@@ -45,7 +45,6 @@ targets::tar_make()
 ```{r, warning=FALSE, eval = FALSE }
 tar_destroy()
 # targets::tar_destroy(ask = FALSE)
-
 ```
 
 
