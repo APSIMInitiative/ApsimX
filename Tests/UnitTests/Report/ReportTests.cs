@@ -112,6 +112,39 @@ namespace UnitTests.Report
         }
 
         /// <summary>
+        /// Ensure that we prioritize our own report variables before the variables of other reports.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariableFindsLocallyFirst()
+        {
+            Models.Report newReport = new()
+            {
+                VariableNames = ["(4) as A"],
+            };
+            simulation.Children.Insert(0, newReport);
+            report.VariableNames =
+            [
+                "(2) as A",
+                "A + 1 as B"
+            ];
+            try
+            {
+                Runner runner = new(simulations);
+                var exceptions = runner.Run();
+                if (exceptions != null && exceptions.Count > 0)
+                    throw exceptions[0];
+                var result = storage.Get<double>("B");
+                double[] expected = [.. Enumerable.Repeat(3.0, 10)];
+                Assert.That(result, Is.EqualTo(expected));
+            }
+            finally
+            {
+                // Get rid of the new report.
+                simulation.Children.Remove(newReport);
+            }
+        }
+
+        /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
         ///
         /// </summary>
