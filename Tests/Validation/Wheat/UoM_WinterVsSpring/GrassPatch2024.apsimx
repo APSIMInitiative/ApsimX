@@ -13,7 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "GrassPatch2024_Observed.xlsx"
+            "Observed/GrassPatch2024_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -2008,7 +2008,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/GrassPatch2024_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/GrassPatch2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
@@ -2018,7 +2018,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "%root%/Tests/Validation/Wheat/inputs/GrassPatch2024_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/GrassPatch2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],
