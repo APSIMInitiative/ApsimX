@@ -13,7 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed\\GrassPatch2025_Observed.xlsx"
+            "Observed/GrassPatch2025_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -581,7 +581,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Met/Grass Patch_-33.20_121.65.met",
+              "FileName": "Met/GrassPatch2025.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,

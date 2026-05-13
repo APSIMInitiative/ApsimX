@@ -36,6 +36,7 @@ source("R/check_project_dependencies.R")
 source("R/add_harv_into_obs.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
+source("R/copy_and_check_met.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -78,8 +79,23 @@ list(
       # Output file names & Metadata
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
-      file_name_met           = "Grass Patch_-33.25_121.60.met"
+      file_name_met           = "Grass Patch_-33.25_121.60.met",
+      file_name_new_met       = paste0(proj_name, ".met")
     )
+  ),
+  
+  # ------------------------------------------------------------------
+  # 2. VALIDATE AND COPY MET FILE
+  # ------------------------------------------------------------------
+  tar_target(
+    name = validated_met_file,
+    command = copy_and_check_met(
+      sourceFolder   = config$folder_rawData,    # Automatically grabs "data/raw_weather"
+      targetFolder   = config$folder_met,        # Where you want it to go
+      orig_file_name = config$file_name_met,     # Automatically grabs "GrassPatch_original.met"
+      new_file_name  = config$file_name_new_met  # Your new clean name
+    ),
+    format = "file" # CRITICAL: Tells targets the output is a physical file, not an R object
   ),
   
   # ----------------------------------------------------------------------------
