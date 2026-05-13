@@ -78,14 +78,26 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
 
         if (range.IsFloatingRange)
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "entryValue entryValue-Other"));
+            htmlWriter.Write(" " + generator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "entryValue entryValue-Other"));
         }
 
         if (range.WholeTimeStepInRange)
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet("where whole time step must be in range", spanClass: "entryValue entryValue-Other"));
+            htmlWriter.Write(generator.DisplaySummaryValueSnippet(" where whole time step must be in range", spanClass: "entryValue entryValue-Other"));
         }
 
-        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem floatLeft");
     }
+
+    ///// <inheritdoc/>
+    //public override void CreateSummaryInnerOpeningBlocks(ChildComponentGroup group)
+    //{
+    //}
+
+    ///// <inheritdoc/>
+    //public override void CreateSummaryInnerClosingBlocks(ChildComponentGroup group)
+    //{
+    //    generator.CloseMostRecentBlock("groupitems");
+    //}
+
 }

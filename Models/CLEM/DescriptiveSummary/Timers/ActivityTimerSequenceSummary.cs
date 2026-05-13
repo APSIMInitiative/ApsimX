@@ -1,7 +1,10 @@
 ﻿using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Groupings;
 using Models.CLEM.Timers;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Models.CLEM.DescriptiveSummary;
 
@@ -13,21 +16,34 @@ public class ActivityTimerSequenceSummary : TimerSummaryBase<ActivityTimerSequen
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        using (generator.OpenBlock("entryValue filterItem"))
+        using StringWriter htmlWriter = new();
+        if (ModelTyped.Sequence is null || ModelTyped.Sequence == "")
         {
-            if (ModelTyped.Sequence is null || ModelTyped.Sequence == "")
+            htmlWriter.Write($"Sequence {generator.DisplayErrorSnippet("Not Set")}");
+        }
+        else
+        {
+            htmlWriter.Write("Use sequence: ");
+            string seqString = ActivityTimerSequence.FormatSequence(ModelTyped.Sequence);
+            for (int i = 0; i < seqString.Length; i++)
             {
-                generator.Append($"Sequence {generator.DisplayErrorSnippet("Not Set")}");
-            }
-            else
-            {
-                generator.DisplaySummaryValueSnippet("Use sequence", spanClass: "filteritemstitle");
-                string seqString = ActivityTimerSequence.FormatSequence(ModelTyped.Sequence);
-                for (int i = 0; i < seqString.Length; i++)
-                {
-                    generator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"));
-                }
+                htmlWriter.Write(generator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"), spanClass: "entryValue filterValue")+" ");
             }
         }
+        generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem floatLeft");
+    }
+
+    /// <inheritdoc/>
+    public override void CreateSummaryOpeningBlocks()
+    {
+        if (!FormatForParentControl)
+            base.CreateSummaryOpeningBlocks();
+    }
+
+    /// <inheritdoc/>
+    public override void CreateSummaryClosingBlocks()
+    {
+        if (!FormatForParentControl)
+            base.CreateSummaryClosingBlocks();
     }
 }
