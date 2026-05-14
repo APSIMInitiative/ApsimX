@@ -74,6 +74,7 @@ namespace Models.CLEM
         /// </summary>
         [Description("Region id")]
         [Core.Display(Order = -9)]
+        [JsonIgnore]
         public int ClimateRegion { get; set; }
 
         /// <summary>

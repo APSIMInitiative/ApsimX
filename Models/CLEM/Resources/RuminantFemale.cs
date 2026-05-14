@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantFemale : Ruminant
     {
-        private List<(DateTime InHeatDate, DateTime OestrusDate)> inHeatDetails = [];
+        private readonly List<(DateTime InHeatDate, DateTime OestrusDate)> inHeatDetails = [];
         private DateTime nextOestrusDate = default;
         private int daysInTimeStepPregnant = 0;
         private int daysInTimeStepLactating = 0;
@@ -392,7 +392,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The sex of each fetus
         /// </summary>
-        private List<Sex> Fetuses { get; set; } = new();
+        private List<Sex> Fetuses { get; set; } = [];
 
         /// <summary>
         /// Add fetus to female conception
@@ -562,7 +562,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // check for start of oestrus cycling after births
-                if (nextOestrusDate == default(DateTime) && !IsBirthDue && !IsPregnant)
+                if (nextOestrusDate == default && !IsBirthDue && !IsPregnant)
                 {
                     int offset = Parameters.Breeding.DaysLastBirthToStartOestrus - (Parameters.Breeding.OestrusCycleLength - Parameters.Breeding.DaysInHeat);
                     daysAgo = DaysSince(RuminantTimeSpanTypes.GaveBirth, offset) - offset;
@@ -854,7 +854,7 @@ namespace Models.CLEM.Resources
             //daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
             //daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
             //daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
-            BirthDueDate = default(DateTime); // null;
+            BirthDueDate = default; // null;
         }
 
 
@@ -891,7 +891,7 @@ namespace Models.CLEM.Resources
         public RuminantFemale(DateTime date, RuminantParameters setParams, int setAge, double setWeight, int? id, RuminantTypeCohort cohortDetails, IEnumerable<ISetAttribute> initialAttributes = null, SetPreviousConception conception = null)
             : base(date, setParams, setAge, setWeight, id, cohortDetails, initialAttributes)
         {
-            SucklingOffspringList = new List<Ruminant>();
+            SucklingOffspringList = [];
 
             //ruminantFemale.WeightAtConception = ruminant.Weight.Live;
             //ruminantFemale.NumberOfBirths = 0;
@@ -922,7 +922,7 @@ namespace Models.CLEM.Resources
             : base(date, id, mother, growActivity)
         {
             // needed for female specific actions
-            SucklingOffspringList = new();
+            SucklingOffspringList = [];
         }
 
         /// <summary>

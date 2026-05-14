@@ -106,14 +106,12 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
 
 
             Ruminant newInd = null;
-            string normWtString = "Unavailable";
 
             if (rumType != null)
             {
                 if (rumType.Parameters.General is not null)
                 {
                     newInd = Ruminant.Create(model.Sex, new(2000, 1, 1), rumType.Parameters, model.AgeDetails.InDays, rumType.Parameters.General.BirthScalar[0], cohortDetails: model);
-                    normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0");
                 }
             }
 
@@ -198,7 +196,9 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                     {
                         RandomNumberGenerator rng = model.Structure.Find<RandomNumberGenerator>();
                         if (rng is not null)
-                            rng.SetForPreSimulation();
+                        {
+                            RandomNumberGenerator.SetForPreSimulation();
+                        }
                         rumtype.Parameters.Initialise(rumtype);
 //                            var generalParams = rumtype.Structure.FindChild<RuminantParametersGeneral>(recurse: true);
 
@@ -218,7 +218,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                             weightstring = $"{generator.DisplaySummaryValueSnippet($"{model.Weight}{((model.WeightSD > 0) ? $" \00B1 {model.WeightSD}" : "")}")}";
 
 
-                        List<(string label, bool fill)> cellValues = new List<(string, bool)>() {
+                        List<(string label, bool fill)> cellValues = [
                             (model.Name, false),
                             (generator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
                             (generator.DisplaySummaryValueSnippet(string.Join(',', model.AgeDetails.Parts)), false),
@@ -227,7 +227,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                             (generator.DisplaySummaryValueSnippet(Convert.ToInt32(model.Number), warnZero:true), false),
                             ("", model.Suckling),
                             ("", model.Sire)
-                        };
+                        ];
 
                         if ((model.Parent as RuminantInitialCohorts).ConceptionsFound)
                         {

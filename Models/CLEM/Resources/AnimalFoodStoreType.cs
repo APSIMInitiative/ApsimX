@@ -23,6 +23,9 @@ namespace Models.CLEM.Resources
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType, IValidatableObject
     {
+        private static readonly string[] memberNamesN = ["UserNitrogenPercent"];
+        private static readonly string[] memberNamesCP = ["UserCrudeProteinPercent"];
+
         /// <inheritdoc/>
         public string Units { get; private set; } = "kg";
 
@@ -245,14 +248,14 @@ namespace Models.CLEM.Resources
             {
                 if (UserNitrogenPercent <= 0)
                 {
-                    yield return new ValidationResult($"Percent nitrogen content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserNitrogenPercent" });
+                    yield return new ValidationResult($"Percent nitrogen content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", memberNamesN);
                 }
             }
             else if (CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent)
             {
                 if (UserCrudeProteinPercent <= 0)
                 {
-                    yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", new string[] { "UserCrudeProteinPercent" });
+                    yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", memberNamesCP);
                 }
             }
 

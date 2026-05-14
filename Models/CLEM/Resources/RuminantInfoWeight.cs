@@ -315,7 +315,7 @@ namespace Models.CLEM.Resources
         /// <returns>Current greasy fleece weight as proportion of</returns>
         public double FleeceWeightAsProportionOfSFW(RuminantParameters parameters, int ageInDays)
         {
-            if (ruminant.Parameters.General.IncludeWool == false)
+            if (parameters.General.IncludeWool == false)
                 return 0;   
             double expectedFleeceWeight = FleeceWeightExpectedByAge();
             if (expectedFleeceWeight == 0)
@@ -326,7 +326,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Calculate the expected fleece weight based on age
         /// </summary>
-        /// <returns>Current greasy fleece weight as proportion of</returns>
+        /// <returns>Current greasy fleece weight</returns>
         public double FleeceWeightExpectedByAge()
         {
             return ruminant.Parameters.GrowPF_CW.StandardFleeceWeight * StandardReferenceWeight * ruminant.Parameters.GrowPF_CW.AgeFactorForWool(ruminant.AgeInDays);

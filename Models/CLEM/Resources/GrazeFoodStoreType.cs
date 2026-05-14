@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrazing)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IValidatableObject, IGrazeFoodStoreType
     {
         [Link(IsOptional = true)]
@@ -831,17 +831,17 @@ namespace Models.CLEM.Resources
 
                 if (insideGrowthWindow) // (month <= 3 | month >= 11)
                 {
-                    GrazeFoodStorePool newPool = new (0, this)
+                    GrazeFoodStorePool newPool = new(0, this)
                     {
                         GrossEnergyContent = this.GrossEnergyContent,
                         MetabolisableEnergyContent = this.MetabolisableEnergyContent,
                         FatPercent = this.FatPercent,
                         GrowthDate = growDate,
                         Age = monthCount,
-                        StartingAmount = propBiomass
+                        StartingAmount = propBiomass,
+                        RumenDegradableProteinPercent = this.RumenDegradableProteinPercent,
+                        NitrogenPercent = currentN
                     };
-                    newPool.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
-                    newPool.NitrogenPercent = currentN;
                     if (DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
                     {
                         newPool.DryMatterDigestibility = currentDMD;
@@ -929,7 +929,7 @@ namespace Models.CLEM.Resources
                     // coming from the advanced PastureActivityManage
                     GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
-                    if (incomingPool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    if (incomingPool.Age == 0 && grazeFoodStoreFertilityLimiter is not null)
                     {
                         pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.AmountAvailable / Manager.Area));
                         pool.DryMatterDigestibility = Math.Min(100, Math.Max(MinimumDMD, pool.NitrogenPercent * NToDMDCoefficient + NToDMDIntercept));
@@ -1281,7 +1281,7 @@ namespace Models.CLEM.Resources
 
             if (StartingAmount > 0 & noGrowSeason)
             {
-                yield return new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={NameWithParent}]", new string[] { "Invalid initial biomass growth season" });
+                yield return new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={NameWithParent}]", ["Invalid initial biomass growth season"]);
             }
         }
         #endregion

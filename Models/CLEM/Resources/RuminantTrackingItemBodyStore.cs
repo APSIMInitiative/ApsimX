@@ -29,12 +29,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Dictionary of mobilisation pools by reason
         /// </summary>
-        protected readonly Dictionary<MobilisationReasonType, MobilisedPool> mobilisationPools = new();
+        protected readonly Dictionary<MobilisationReasonType, MobilisedPool> mobilisationPools = [];
 
         /// <inheritdoc/>
         public double MobiliseAmount(double amount, double efficiency, MobilisationReasonType destination)
         {
-            var destinationPool = mobilisationPools.ContainsKey(destination) ? mobilisationPools[destination] : null;
+            var destinationPool = mobilisationPools.TryGetValue(destination, out MobilisedPool value) ? value : null;
             if (destinationPool == null)
             {
                 destinationPool = new MobilisedPool();

@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class RuminantTrackingItemProtein: RuminantTrackingItemBodyStore
     {
-        private RuminantIntake intake;
+        private readonly RuminantIntake intake;
 
         /// <summary>
         /// The proportion of dry relative to wet protein mass

@@ -1031,7 +1031,7 @@ namespace Models.CLEM.Activities
 
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
 
-            ind.Weight.Protein.ForPregnancy = conceptusProtein;
+            ind.Weight.Protein.ForPregnancy = conceptusProtein; 
             ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
             ind.Weight.ConceptusFat.Adjust(conceptusFat);
 

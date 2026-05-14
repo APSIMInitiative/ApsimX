@@ -35,6 +35,7 @@ namespace Models.CLEM
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, GreaterThanEqualValue(0)]
+        [JsonIgnore]
         public int Iteration { get; set; }
 
         /// <summary>
@@ -74,7 +75,7 @@ namespace Models.CLEM
         /// <summary>
         /// A method to initialise the random number generator needed for UI calculations such as the Descriptive Summary
         /// </summary>
-        public void SetForPreSimulation()
+        public static void SetForPreSimulation()
         {
             generator = new Random(1);
         }
