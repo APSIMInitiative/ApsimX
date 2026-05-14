@@ -130,3 +130,11 @@ message("Total PCDS observations found for Mowhawk: ", nrow(mowhawk_timeline))
 print(mowhawk_timeline)
 ```
 
+
+```{r}
+tar_load(df_apsimStageInput_haunBased)
+
+tar_read(df_apsimStageInput)
+
+```
+

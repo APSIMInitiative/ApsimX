@@ -42,6 +42,7 @@ source("R/check_project_dependencies.R")
 source("R/secure_zip_folder.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
+source("R/add_stages_to_obs.R")
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
 # ------------------------------------------------------------------------------
@@ -227,33 +228,26 @@ list(
     name = df_apsimStageInput_haunBased,
     command = updatePhenoStageInput(
       obsIntPheno    = df_apsimStageInput, 
-      haunPheno      = df_haun_pheno_dates,
-      df_master_sims = df_simNameByCult      # <--- NEW: Feeds the master list
+      haunPheno      = df_haun_pheno_dates
     )
   ),
   
   
   # Create Observed data of pheno-stages to be added to observations (as cross-check)
-  tar_target(
-    name = df_stages_Observ, 
-    command = doStageObsData(
-      df_dateStageTargetReached,
-      "Wheat.Phenology.Stage"
-    )
-  ),
+
   
   # ----------------------------------------------------------------------------
   # PHASE E: FINAL OBSERVATION FORMATTING
   # ----------------------------------------------------------------------------
   # Add stage to list of observed data and clean metadata
-  tar_target(
-    name = list_observed_dfs_clean, 
-    command = add_to_observed(
-      list_observed_dfs_raw_clean,
-      df_stages_Observ,
-      "phenology_stage_raw"
-    )
-  ),
+  # tar_target(
+  #   name = list_observed_dfs_clean, 
+  #   command = add_to_observed(
+  #     list_observed_dfs_raw_clean,
+  #     df_stages_Observ,
+  #     "phenology_stage_raw"
+  #   )
+  # ),
   
   # Prepare the format of an APSIM observation standard file
   tar_target(
@@ -269,6 +263,16 @@ list(
       ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
+    )
+  ),
+  
+  # Re-inject the finalized, Haun-prioritized discrete event dates into the timeline
+  tar_target(
+    name = df_obs_mean_harv_pheno_haun,
+    command = add_stages_to_obs(
+      df_obs       = df_observed_wide_harv, 
+      df_pheno     = df_apsimStageInput_haunBased,
+      new_var_name = "Wheat.Phenology.Stage"
     )
   ),
   
@@ -289,7 +293,7 @@ list(
   tar_target(
     name = msg_param_saved, 
     command = saveInputParam(
-      df_apsimStageInput, 
+      df_apsimStageInput_haunBased,   # <--- THE FIX
       config$folder_inputs, 
       config$file_name_input_pheno
     ),
@@ -300,7 +304,7 @@ list(
   tar_target(
     name = msg_obs_saved, 
     command = save_df_final(
-      df_observed_wide_harv, 
+      df_obs_mean_harv_pheno_haun, 
       config$folder_observed, 
       config$file_saved_obs_excel
     ),
@@ -322,7 +326,7 @@ list(
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
   ),
