@@ -295,6 +295,9 @@ namespace UserInterface.Presenters
             ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
             presenter.CommandHistory.Add(updateModel);
 
+            //update the view components
+            RefreshView(model);
+
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
             ConnectEvents();
