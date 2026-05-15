@@ -223,6 +223,8 @@ namespace Models.GrazPlan.Organs
 
         private PMF.Biomass liveBiomass = new PMF.Biomass();
         private PMF.Biomass deadBiomass = new PMF.Biomass();
+
+        
        
         /// <summary>
         /// Live Biomass
@@ -278,7 +280,7 @@ namespace Models.GrazPlan.Organs
             }
         }
 
-
+        private int part;
 
         /// <summary>
         /// Live digestibility
@@ -352,7 +354,7 @@ namespace Models.GrazPlan.Organs
         double totalBiomass = 0.0;
         double totalBiomassRemoved = 0.0;
         double PostDMTotal = 0.0;
-        int part;
+        
         double totalDM =  PastureModel.GetHerbageMass(stESTAB, TOTAL, TOTAL) +  PastureModel.GetHerbageMass(stDEAD, TOTAL, TOTAL);
         if (totalDM > 0.0)
             {
