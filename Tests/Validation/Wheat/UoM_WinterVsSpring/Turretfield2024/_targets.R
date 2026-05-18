@@ -24,7 +24,11 @@ tar_option_set(
 # ------------------------------------------------------------------------------
 # 2. SOURCE CUSTOM FUNCTIONS
 # ------------------------------------------------------------------------------
+# Load master scripts
 targets::tar_source("../targets_MasterScripts")
+# Load THIS project's specific local scripts (like the fix function)
+targets::tar_source("R")
+
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -54,6 +58,7 @@ list(
       file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       file_SimNameByCultivar  = paste0(proj_name, "_CultivarToSimName.csv"), 
       file_metaData_observed  = paste0(proj_name, "_observed_data_requirements.csv"),
+      ref_date                = "01/01/2024", # reference date to find bad data entries
       
       # Excel sheet names used from raw data
       sheetExcel_weather      = "Weather",
@@ -75,17 +80,6 @@ list(
       # Output file names
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv")
-    )
-  ),
-  
-  # Metadata ingestion
-  tar_target(
-    name = df_simNameByCult,
-    command = read.csv2(
-      file.path(config$folder_rawData, config$file_SimNameByCultivar),
-      header = TRUE, 
-      stringsAsFactors = FALSE, 
-      sep = ","
     )
   ),
   
@@ -160,92 +154,115 @@ list(
       lon         = config$coord_thisLatLon$lon
     ),
     format = "file"
-  )
+  ),
   
- # <--- Closes the main list() for the entire pipeline
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE C: RAW OBSERVATION INGESTION
-  # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = df_obs_info,
-  #   command = read.csv2(
-  #     file.path(config$folder_rawData, config$file_metaData_observed),
-  #     header = TRUE, 
-  #     stringsAsFactors = FALSE, 
-  #     sep = ","
-  #   )
-  # ),
-  # 
-  # tar_target(
-  #   name = list_observed_dfs,
-  #   command = compile_all_observed(
-  #     folder           = config$folder_rawData,
-  #     excel_file       = config$file_rawData_excel,
-  #     df_obs_info      = df_obs_info,
-  #     df_simNameByCult = df_simNameByCult
-  #   )
-  # ),
-  # 
+  # ----------------------------------------------------------------------------
+  # PHASE C: OBSERVATION DATA INGESTION
+  # ----------------------------------------------------------------------------
+  
+  # 1. FILE TRACKING (Force targets to watch the raw Excel files)
+  tar_target(
+    name = tracked_raw_excel,
+    command = file.path(config$folder_rawData, config$file_rawData_excel),
+    format = "file"
+  ),
+  
+  # 2. LOAD OBSERVATION METADATA (The "What to extract" blueprint)
+  tar_target(
+    name = df_obs_meta_data,
+    command = read.csv(
+      file.path(config$folder_rawData, config$file_metaData_observed),
+      header = TRUE, 
+      stringsAsFactors = FALSE, 
+      sep = ","
+    )
+  ),
+  
+  # 3. LOAD CULTIVAR MAPPING (The "SimulationName" dictionary)
+  # (Note: In some of your scripts this is in Phase A, which is perfectly fine too)
+  tar_target(
+    name = df_simNameByCult,
+    command = read.csv2(
+      file.path(config$folder_rawData, config$file_SimNameByCultivar),
+      header = TRUE, 
+      stringsAsFactors = FALSE, 
+      sep = ","
+    )
+  ),
+  
+  # 4. THE UNIVERSAL COMPILER
+  tar_target(
+    name = list_observed_dfs_raw,
+    command = {
+      # Bind the execution to the file tracker so it updates if Excel changes
+      force(tracked_raw_excel) 
+      
+      compile_all_observed(
+        folder      = config$folder_rawData,
+        excel_files = config$file_rawData_excel, # Accepts "file.xlsx" OR c("file1.xlsx", "file2.xlsx")
+        df_obs_info = df_obs_meta_data,
+        df_simNames = df_simNameByCult
+      )
+    }
+  ),
+  
+  # 5. THE LOCAL INTERCEPTOR (Project-Specific Fixes)
+  tar_target(
+    name = list_observed_dfs_clean,
+    command = apply_local_fixes(
+      compiled_obs = list_observed_dfs_raw,
+      df_obs_info  = df_obs_meta_data,
+      ref_date     = config$ref_date
+    )
+  ),
+  
   # # ----------------------------------------------------------------------------
   # # PHASE D: PHENOLOGY STAGE SYNTHESIS
   # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = df_list_PCDS, 
-  #   command = filter_and_extract_pcds(list_observed_dfs)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_PCDS_int, 
-  #   command = interpolate_obs_phenoStages(df_list_PCDS)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_dateStageTargetReached, 
-  #   command = findDateStageTarget(df_PCDS_int, config$target_stagePerc)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_apsimStageInput, 
-  #   command = doAPSIMStageInput(df_dateStageTargetReached, config$target_betwStages)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_maxLeafDate, 
-  #   command = find_max_leaf_date(list_observed_dfs, config$max_leaf_limit)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_haun_pheno_dates, 
-  #   command = derive_haun_pheno_dates(
-  #     compiled_obs   = list_observed_dfs, 
-  #     max_leaf_limit = config$max_leaf_limit
-  #   )
-  # ),
-  # 
-  # tar_target(
-  #   name = df_apsimStageInput_haunBased,
-  #   command = updatePhenoStageInput(
-  #     obsIntPheno = df_apsimStageInput,  # Interpolated observations
-  #     haunPheno   = df_haun_pheno_dates  # Haun stage priority
-  #   )
-  # ),
-  # 
-  # tar_target(
-  #   name = df_stages_Observ, 
-  #   command = doStageObsData(
-  #     df_haunBased = df_apsimStageInput_haunBased, 
-  #     var_name     = config$varName_addedToObserv  
-  #   )
-  # ),
-  # 
+
+  # TO BE ADDED LATER - NO PHENO_STAGE DATA AVAILBLE YET (2026-05-17)
+  
   # # ----------------------------------------------------------------------------
   # # PHASE E: FINAL OBSERVATION FORMATTING
   # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = list_observed_clean, 
-  #   command = apply_corrections(list_observed_dfs, df_stages_Observ)
-  # ),
+  tar_target(
+    name = final_apsim_observed,
+    command = prepare_apsim_observed(
+      compiled_obs = list_observed_dfs_clean,
+      dfs_out      = c("ndvi_raw", "weather_qc_checks") # Add any df_names to exclude here
+    )
+  ),
+  
+  # Flag the final measurement dates as "HarvestRipe"
+  tar_target(
+    name = df_final_observed_harv, 
+    command = add_harv_into_obs(
+      df            = final_apsim_observed,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
+  
+  # 7. THE QC GATEKEEPER
+  tar_target(
+    name = qc_apsim_observed_harv,
+    command = check_obs_health(df_final_observed_harv) # Stops the pipeline if it fails!
+  ),
+  
+  # 8. EXPORT TO EXCEL
+  tar_target(
+    name = export_apsim_file,
+    command = save_obs_to_excel(
+      df_final  = qc_apsim_observed_harv, # Data comes from the QC Gatekeeper!
+      obs_path  = config$folder_observed,
+      file_name = config$file_saved_obs_excel,
+      sheetName = "Observed"
+    ),
+    format = "file" # Tells targets to watch the actual file on disk
+  )
+  
+  
   # 
   # tar_target(
   #   name = list_observed_clean_final, 
@@ -256,20 +273,8 @@ list(
   #   )
   # ),
   # 
-  # tar_target(
-  #   name = df_final_observed, 
-  #   command = prepare_final_observed(list_observed_clean_final)
-  # ), 
-  # 
-  # tar_target(
-  #   name = df_final_observed_harv, 
-  #   command = add_harv_into_obs(
-  #     df            = df_final_observed,
-  #     ref_var       = "Wheat.Grain.Wt", 
-  #     new_col_name  = "Wheat.Phenology.CurrentStageName",
-  #     new_col_value = "HarvestRipe"
-  #   )
-  # ),
+
+
   # 
   # tar_target(
   #   name = haun_input_checked, 

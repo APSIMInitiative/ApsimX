@@ -52,5 +52,42 @@ tar_destroy()
 ```{r}
 tar_load(df_simNameByCult)
 tar_load(df_soil_profile_clean)
+tar_load(df_obs_meta_data)
+tar_load(list_observed_dfs_raw)
+tar_load(list_observed_dfs_clean)
+tar_load(final_apsim_observed)
+tar_load(df_final_observed_harv)
+```
+
+```{r}
+library(dplyr)
+library(purrr)
+library(targets)
+
+# 1. Load the compiled data from the targets cache
+my_raw_data <- tar_read(list_observed_dfs_raw)
+
+# 2. Run the Date QC Test
+date_qc_table <- my_raw_data %>%
+  dplyr::mutate(
+    HasDate = purrr::map_lgl(data, function(df) {
+      # Fallback 1: If the dataframe is completely empty (skipped sheet) -> FALSE
+      if (is.null(df) || nrow(df) == 0) return(FALSE)
+      
+      # Fallback 2: If the 'Date' column doesn't exist -> FALSE
+      if (!"Date" %in% names(df)) return(FALSE)
+      
+      # Final Check: Are there actually valid dates inside, or just NAs?
+      # Returns TRUE if at least one real date exists.
+      any(!is.na(df$Date))
+    })
+  ) %>%
+  # Select only the two columns you want to see
+  dplyr::select(df_name, HasDate)
+
+# Print the final report!
+date_qc_table %>% 
+  as_tibble() %>% 
+  print(n = Inf)
 ```
 
