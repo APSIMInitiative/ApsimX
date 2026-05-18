@@ -26,7 +26,7 @@ tar_option_set(
 # ------------------------------------------------------------------------------
 # Load master scripts
 targets::tar_source("../targets_MasterScripts")
-# Load THIS project's specific local scripts (like the fix function)
+# Load THIS project's specific local scripts (e.g., local fixes)
 targets::tar_source("R")
 
 
@@ -47,78 +47,70 @@ list(
     name = config,
     command = list(
       # Folders and file names
-      proj_name               = proj_name,
-      folder_main             = here::here(),
-      #folder_parent           = dirname(here::here()),
-      folder_rawData          = here::here(proj_name), # Cloud source
-      #folder_apsimx           = here::here(), 
-      folder_met              = here::here("Met"),
-      folder_inputs           = here::here("Inputs"),
-      folder_observed         = file.path(here::here(), "Observed"),
-      file_rawData_excel      = "Turretfield_RawData_2024.xlsx", 
-      file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
-      file_SimNameByCultivar  = paste0(proj_name, "_CultivarToSimName.csv"), 
-      file_metaData_observed  = paste0(proj_name, "_observed_data_requirements.csv"),
-      ref_date                = "01/01/2024", # reference date to find bad data entries
+      proj_name              = proj_name,
+      folder_main            = here::here(),
+      folder_rawData         = here::here(proj_name),
+      folder_met             = here::here("Met"),
+      folder_inputs          = here::here("Inputs"),
+      folder_observed        = file.path(here::here(), "Observed"),
+      
+      file_rawData_excel     = "Turretfield_RawData_2024.xlsx", 
+      file_saved_obs_excel   = paste0(proj_name, "_Observed.xlsx"), 
+      file_SimNameByCultivar = paste0(proj_name, "_CultivarToSimName.csv"), 
+      file_metaData_observed = paste0(proj_name, "_observed_data_requirements.csv"),
+      ref_date               = "01/01/2024", # Target year anchor
       
       # Excel sheet names used from raw data
-      sheetExcel_weather      = "Weather",
-      sheetExcel_haun         = "Haun stage ", # Note: retains raw data typo " "
-      sheetExcel_soilWater    = "Soil sampling",
+      sheetExcel_weather     = "Weather",
+      sheetExcel_haun        = "Haun stage ", # Retains raw data typo
+      sheetExcel_soilWater   = "Soil sampling",
       
       # Security
-      file_zip_out               = file.path(here::here(), "Observed.zip"), 
-      file_pass                  = file.path(here::here(), "secret_pass.txt"),
+      file_zip_out           = file.path(here::here(), "Observed.zip"), 
+      file_pass              = file.path(here::here(), "secret_pass.txt"),
       
       # Model parameters
-      coord_thisLatLon        = data.frame(lat = -34.5435, lon = 138.8444),
-      target_stagePerc        = 50,     # % of stage development when event date is retrieved
-      target_betwStages       = 50,     # % of period between adjacent events for synthetic dates
-      var_name_stage          = "apsim_stage_raw",       # Synthetic var with observed PCSD data
-      varName_addedToObserv   = "Wheat.Phenology.Stage", # Synthetic var added into observations
-      max_leaf_limit          = 0.95,   # Fractional max leaves assumed when terminal spikelet is set
+      coord_thisLatLon       = data.frame(lat = -34.5435, lon = 138.8444),
+      target_stagePerc       = 50,     # % of stage development when event date is retrieved
+      target_betwStages      = 50,     # % of period between adjacent events for synthetic dates
+      var_name_stage         = "apsim_stage_raw",       # Synthetic var with observed PCSD data
+      varName_addedToObserv  = "Wheat.Phenology.Stage", # Synthetic var added into observations
+      max_leaf_limit         = 0.95,   # Fractional max leaves assumed when terminal spikelet is set
       
       # Output file names
-      file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
-      file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv")
+      file_name_input_pheno  = paste0(proj_name, "_PhenoDatesInput.csv"),
+      file_name_input_haun   = paste0(proj_name, "_HaunStagesInput.csv")
     )
   ),
   
-  # ----------------------------------------------------------------------------
-  # PHASE: SOIL PROFILE PROCESSING
-  # ----------------------------------------------------------------------------
-  
-  # 1. SOIL CONFIGURATION
-  # Keeping these parameters in a dedicated list prevents your main config from getting cluttered.
   tar_target(
     name = config_soil,
     command = list(
-      folder_rawData  = config$folder_rawData,       # Inheriting from your main config
-      file_excel      = config$file_rawData_excel, # Update with your actual filename
+      folder_rawData  = config$folder_rawData,       
+      file_excel      = config$file_rawData_excel, 
       sheet_name      = "Soil sampling",
       rep_col         = "Block",
       col_depth_from  = "Depth From",
       col_depth_to    = "Depth To",
-      # The exact columns you want to extract and average for APSIM Soil
-      target_vars     = c("Bulk density",	"LL",	
-                          "Soil moisture",	"Available water", 
-                          "Nitrate Nitrogen","Ammonium Nitrogen") 
+      target_vars     = c("Bulk density", "LL", "Soil moisture", 
+                          "Available water", "Nitrate Nitrogen", "Ammonium Nitrogen") 
     )
   ),
   
-  # 2. TRACK THE RAW SOIL FILE
-  # If someone updates the bulk density in the Excel file, this guarantees the pipeline catches it.
+  # ----------------------------------------------------------------------------
+  # PHASE B: SOIL & WEATHER PROCESSING
+  # ----------------------------------------------------------------------------
+  
+  # Track the raw soil file independently
   tar_target(
     name = raw_soil_tracker,
     command = file.path(config_soil$folder_rawData, config_soil$file_excel),
     format = "file"
   ),
   
-  # 3. EXECUTE THE PROCESSING FUNCTION
   tar_target(
     name = df_soil_profile_clean,
     command = {
-      # Explicitly bind to the file tracker
       force(raw_soil_tracker)
       
       process_soil_profile(
@@ -133,9 +125,6 @@ list(
     }
   ),
   
-  #---------------------
-  # Weather file creation
-  #------------------------
   tar_target(
     name = processed_met_data,
     command = createWeatherFile(
@@ -143,22 +132,20 @@ list(
       thisExcelFile = config$file_rawData_excel,
       thisSheet     = config$sheetExcel_weather
     )
-  ), # <--- THE FIX: Closes the first target and adds a comma for the list!
-  
-
+  ),
   
   # ----------------------------------------------------------------------------
   # PHASE C: OBSERVATION DATA INGESTION
   # ----------------------------------------------------------------------------
   
-  # 1. FILE TRACKING (Force targets to watch the raw Excel files)
+  # 1. FILE TRACKING 
   tar_target(
     name = tracked_raw_excel,
     command = file.path(config$folder_rawData, config$file_rawData_excel),
     format = "file"
   ),
   
-  # 2. LOAD OBSERVATION METADATA (The "What to extract" blueprint)
+  # 2. LOAD METADATA
   tar_target(
     name = df_obs_meta_data,
     command = read.csv(
@@ -169,8 +156,7 @@ list(
     )
   ),
   
-  # 3. LOAD CULTIVAR MAPPING (The "SimulationName" dictionary)
-  # (Note: In some of your scripts this is in Phase A, which is perfectly fine too)
+  # 3. LOAD CULTIVAR MAPPING
   tar_target(
     name = df_simNameByCult,
     command = read.csv2(
@@ -185,12 +171,11 @@ list(
   tar_target(
     name = list_observed_dfs_raw,
     command = {
-      # Bind the execution to the file tracker so it updates if Excel changes
       force(tracked_raw_excel) 
       
       compile_all_observed(
         folder      = config$folder_rawData,
-        excel_files = config$file_rawData_excel, # Accepts "file.xlsx" OR c("file1.xlsx", "file2.xlsx")
+        excel_files = config$file_rawData_excel, 
         df_obs_info = df_obs_meta_data,
         df_simNames = df_simNameByCult
       )
@@ -207,20 +192,19 @@ list(
     )
   ),
   
-  # # ----------------------------------------------------------------------------
-  # # PHASE D: PHENOLOGY STAGE SYNTHESIS
-  # # ----------------------------------------------------------------------------
-
-  # TO BE ADDED LATER - NO PHENO_STAGE DATA AVAILBLE YET (2026-05-17)
+  # ----------------------------------------------------------------------------
+  # PHASE D: PHENOLOGY STAGE SYNTHESIS
+  # ----------------------------------------------------------------------------
+  # TO BE ADDED LATER - NO PHENO_STAGE DATA AVAILABLE YET (2026-05-17)
   
-  # # ----------------------------------------------------------------------------
-  # # PHASE E: FINAL OBSERVATION FORMATTING
-  # # ----------------------------------------------------------------------------
+  # ----------------------------------------------------------------------------
+  # PHASE E: FINAL OBSERVATION FORMATTING
+  # ----------------------------------------------------------------------------
   tar_target(
     name = final_apsim_observed,
     command = prepare_apsim_observed(
       compiled_obs = list_observed_dfs_clean,
-      dfs_out      = c("ndvi_raw", "weather_qc_checks") # Add any df_names to exclude here
+      dfs_out      = c("ndvi_raw", "weather_qc_checks") # Datasets to exclude
     )
   ),
   
@@ -235,17 +219,17 @@ list(
     )
   ),
   
-  # 7. THE QC GATEKEEPER
+  # THE QC GATEKEEPER
   tar_target(
     name = qc_apsim_observed_harv,
     command = check_obs_health(df_final_observed_harv) # Stops the pipeline if it fails!
   ),
   
-  
   # ----------------------------------------------------------------------------
   # PHASE F: OUTPUT GENERATION & VALIDATION
   # ----------------------------------------------------------------------------
-  # 8. EXPORT WEATHER TO MET FOLDER
+  
+  # 1. EXPORT WEATHER TO MET FOLDER
   tar_target(
     name = msg_met_saved,
     command = save_met_file(
@@ -258,21 +242,19 @@ list(
     format = "file"
   ),
   
-  
-  # 8. EXPORT OBSERVATIONS TO EXCEL
+  # 2. EXPORT OBSERVATIONS TO EXCEL
   tar_target(
     name = msg_obs_saved,
     command = save_obs_to_excel(
-      df_final  = qc_apsim_observed_harv, # Data comes from the QC Gatekeeper!
+      df_final  = qc_apsim_observed_harv, 
       obs_path  = config$folder_observed,
       file_name = config$file_saved_obs_excel,
       sheetName = "Observed"
     ),
-    format = "file" # Tells targets to watch the actual file on disk
+    format = "file" 
   ),
   
-  # 8. EXPORT INPUT PARAMERS TO INPUT FOLDER
-  
+  # 3. EXPORT INPUT PARAMETERS
   # TO BE IMPLEMENTED
   
   # ----------------------------------------------------------------------------
@@ -280,7 +262,6 @@ list(
   # ----------------------------------------------------------------------------
   
   # 1. THE WATCHER: Track every Excel file in the folder.
-  # If any file changes, this target invalidates.
   tar_target(
     name = tracked_excel_files,
     command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
@@ -299,40 +280,37 @@ list(
         pass_file    = config$file_pass
       )
       
-      # CRITICAL FIX: Return the file string so targets can hash it!
+      # Return the file string so targets can hash it
       config$file_zip_out
     },
     format = "file"
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE G: DEPENDENCY CHECKS  
+  # PHASE H: PRE-FLIGHT & DEPENDENCY CHECKS  
   # ----------------------------------------------------------------------------
-  # ============================================================================
-  # PHASE 0: PRE-FLIGHT CHECKS
-  # ============================================================================
   
   tar_target(
     name = verify_dependencies,
     command = {
-          # 1. Force dependency tracking
-          msg_obs_saved
-          # msg_param_saved # TO BE IMPLEMENTED
-          msg_met_saved
-          
-          # 2. Execute validation
-          check_project_dependencies(
-          projects   = config$proj_name,
-          dir_met    = config$folder_met,
-          dir_inputs = config$folder_inputs,
-          dir_obs    = config$folder_observed
-    )}
+      # 1. Force dependency tracking
+      msg_obs_saved
+      # msg_param_saved # TO BE IMPLEMENTED
+      msg_met_saved
+      
+      # 2. Execute validation
+      check_project_dependencies(
+        projects   = config$proj_name,
+        dir_met    = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs    = config$folder_observed
+      )
+    }
   ),
   
   tar_target(
     name = verify_data_backup,
     command = {
-      # This forces targets to wait for dependencies to pass first
       force(verify_dependencies) 
       
       check_archive_sync(
@@ -341,116 +319,4 @@ list(
       )
     }
   )
-  
-  # tar_target(
-  #   name = check_depend, 
-  #   command = {
-  #     # 1. Force dependency tracking
-  #     msg_obs_saved
-  #     msg_param_saved
-  #     msg_met_saved
-  #     
-  #     # 2. Execute validation
-  #     check_project_dependencies(
-  #       projects   = config$proj_name,
-  #       dir_met    = config$folder_met,
-  #       dir_inputs = config$folder_inputs,
-  #       dir_obs    = config$folder_observed
-  #     )
-  #   }
-  # )
-  
-  
-  # 
-  # tar_target(
-  #   name = list_observed_clean_final, 
-  #   command = add_to_observed_clean(
-  #     list_observed_clean,
-  #     df_stages_Observ,
-  #     config$var_name_stage
-  #   )
-  # ),
-  # 
-
-
-  # 
-  # tar_target(
-  #   name = haun_input_checked, 
-  #   command = check_manual_params(
-  #     config$folder_inputs,
-  #     config$file_name_input_haun,
-  #     df_final_observed
-  #   )
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE F: OUTPUT GENERATION & VALIDATION
-  # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = msg_obs_saved, 
-  #   command = save_df_final(
-  #     df_final_observed_harv, 
-  #     config$folder_observed, 
-  #     config$file_saved_obs_excel
-  #   )
-  # ),
-  # 
-  # tar_target(
-  #   name = msg_param_saved, 
-  #   command = saveInputParam(
-  #     df_apsimStageInput_haunBased, 
-  #     config$folder_inputs, 
-  #     config$file_name_input_pheno
-  #   ),
-  #   format = "file"
-  # ),
-  # 
-  # tar_target(
-  #   name = check_depend, 
-  #   command = {
-  #     # 1. Force dependency tracking
-  #     msg_obs_saved
-  #     msg_param_saved
-  #     msg_met_saved
-  #     
-  #     # 2. Execute validation
-  #     check_project_dependencies(
-  #       projects   = config$proj_name,
-  #       dir_met    = config$folder_met,
-  #       dir_inputs = config$folder_inputs,
-  #       dir_obs    = config$folder_observed
-  #     )
-  #   }
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE G: SECURITY & ZIPPING 
-  # # ----------------------------------------------------------------------------
-  # 
-  # # 1. THE WATCHER: Track every Excel file in the folder.
-  # # If any file changes, this target invalidates.
-  # tar_target(
-  #   name = tracked_excel_files,
-  #   command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
-  #   format = "file"
-  # ),
-  # 
-  # # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
-  # tar_target(
-  #   name = encrypted_zip_artifact,
-  #   command = {
-  #     force(tracked_excel_files) 
-  #     
-  #     secure_zip_folder(
-  #       input_folder = config$folder_observed, 
-  #       output_zip   = config$file_zip_out, 
-  #       pass_file    = config$file_pass
-  #     )
-  #     
-  #     # CRITICAL FIX: Return the file string so targets can hash it!
-  #     config$file_zip_out
-  #   },
-  #   format = "file"
-  # )
-  # 
 )

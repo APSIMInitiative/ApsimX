@@ -28,8 +28,8 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
     # ------------------------------------------------------------------
     # 1. DEFENSIVE CHECKS
     # ------------------------------------------------------------------
-    if (!all(c("SimulationName", "Cultivar", "Date") %in% names(pcds_df))) {
-      stop(sprintf("CRITICAL: Dataframe '%s' is missing 'SimulationName', 'Cultivar', or 'Date'.", nm))
+    if (!all(c("SimulationName", "Date") %in% names(pcds_df))) {
+      stop(sprintf("CRITICAL: Dataframe '%s' is missing 'SimulationName', or 'Date'.", nm))
     }
     
     cat("====", nm, "====\n")
@@ -50,8 +50,8 @@ interpolate_obs_phenoStages <- function(df_list_PCDS) {
     # isolate each df for daily interpolation
     df_interp <- pcds_df %>%
       # Add SimulationName to the hierarchy
-      dplyr::arrange(SimulationName, Cultivar, Date) %>%
-      dplyr::group_by(SimulationName, Cultivar) %>%
+      dplyr::arrange(SimulationName, Date) %>%
+      dplyr::group_by(SimulationName) %>%
       tidyr::complete(
         Date = seq(min(Date, na.rm = TRUE),
                    max(Date, na.rm = TRUE),

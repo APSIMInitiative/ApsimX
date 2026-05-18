@@ -3,8 +3,8 @@
 #' @description
 #' Performs targeted manual corrections on the raw observation data. Specifically, 
 #' it fixes a known year-offset issue in the NDVI data and patches missing dates 
-#' for biomass sampling at stages 6 (Stem Elongation) and 8 (Flowering) by 
-#' cross-referencing the synthetic phenology dates.
+#' for biomass and chemical sampling (e.g., Nconc, WSC) at stages 6 (Stem Elongation) 
+#' and 8 (Flowering) by cross-referencing the synthetic phenology dates.
 #'
 #' @details
 #' **Structural Integrity:** This function relies strictly on `SimulationName` 
@@ -13,7 +13,7 @@
 #'
 #' @param df_tbl A nested tibble containing the raw `df_name` and `data` (list-column).
 #' @param df_stages_Observ Data frame containing synthetic phenology dates with 
-#'   `SimulationName`, `Date`, and `Wheat.Phenology.Stage`.
+#'   `SimulationName`, `Date`, and a numeric stage column.
 #'
 #' @return The nested tibble with the internal dataframes corrected.
 #'
@@ -50,11 +50,9 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
   # ------------------------------------------------------------------
   date_lookup <- df_stages_Observ %>%
     dplyr::filter(.data[[stage_col]] %in% c(6, 8)) %>%
-    # CRITICAL UPDATE: Use SimulationName instead of Cultivar
     dplyr::select(SimulationName, Date, !!stage_col) %>%
     dplyr::mutate(PhenoDate = paste0("PhenoDate_", .data[[stage_col]])) %>%
     dplyr::select(-!!stage_col) %>%
-    # Modernized to pivot_wider instead of the deprecated spread()
     tidyr::pivot_wider(names_from = PhenoDate, values_from = Date)
   
   if (!all(c("PhenoDate_6", "PhenoDate_8") %in% names(date_lookup))) {
@@ -86,12 +84,17 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
           }
           
           # -----------------------------------------
-          # Fix 2: Biomass missing dates (Group 6)
+          # Fix 2: Missing dates (Group 6)
           # -----------------------------------------
-          if (nm %in% c("stemYield_6_raw", "spikeYield_6_raw", "senescLeafYield_6_raw",
-                        "totalAboveGround_6_raw", "par_6_raw", "greenLeaf_6_raw")) {
-            
-            # Ensure the raw df actually has SimulationName before trying to join
+          target_dfs_6 <- c(
+            "stemYield_6_raw", "spikeYield_6_raw", "senescLeafYield_6_raw", 
+            "totalAboveGround_6_raw", "par_6_raw", "greenLeaf_6_raw",
+            "pcds_6_leaf_Nconc", "pcds_6_leaf_WSC",
+            "pcds_6_stem_Nconc", "pcds_6_stem_WSC",
+            "pcds_6_spike_Nconc", "pcds_6_spike_WSC"
+          )
+          
+          if (nm %in% target_dfs_6) {
             if (!"SimulationName" %in% names(df)) stop(sprintf("Dataframe %s is missing 'SimulationName'", nm))
             
             df <- df %>%
@@ -101,12 +104,17 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
           }
           
           # -----------------------------------------
-          # Fix 3: Biomass missing dates (Group 8)
+          # Fix 3: Missing dates (Group 8)
           # -----------------------------------------
-          if (nm %in% c("stemYield_8_raw", "spikeYield_8_raw", "senescLeafYield_8_raw",
-                        "totalAboveGround_8_raw", "par_8_raw", "greenLeaf_8_raw")) {
-            
-            # Ensure the raw df actually has SimulationName before trying to join
+          target_dfs_8 <- c(
+            "stemYield_8_raw", "spikeYield_8_raw", "senescLeafYield_8_raw", 
+            "totalAboveGround_8_raw", "par_8_raw", "greenLeaf_8_raw",
+            "pcds_8_leaf_Nconc", "pcds_8_leaf_WSC",
+            "pcds_8_stem_Nconc", "pcds_8_stem_WSC",
+            "pcds_8_spike_Nconc", "pcds_8_spike_WSC"
+          )
+          
+          if (nm %in% target_dfs_8) {
             if (!"SimulationName" %in% names(df)) stop(sprintf("Dataframe %s is missing 'SimulationName'", nm))
             
             df <- df %>%
@@ -120,6 +128,6 @@ apply_corrections <- function(df_tbl, df_stages_Observ) {
       )
     )
   
-  message("Successfully applied manual corrections (NDVI years and Biomass missing dates).")
+  message("Successfully applied manual corrections (NDVI years and Biomass/Chemical missing dates).")
   return(df_tbl_corrected)
 }

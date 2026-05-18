@@ -1,9 +1,9 @@
-#' Find Date Reaching a Target Stage Percentage
+#' Find Date Reaching a Target Stage Percentage (Universal Master)
 #'
 #' @description
 #' Scans a list of observation dataframes to find the exact date when a specified 
 #' percentage of the maximum phenological progress (e.g., 'DateToProgress') 
-#' is first reached for each SimulationName and Cultivar.
+#' is first reached for each SimulationName.
 #'
 #' @details
 #' The function isolates the target variable dynamically by searching for 
@@ -11,12 +11,12 @@
 #' first chronological date the threshold was met or exceeded.
 #'
 #' @param df_list_PCDS A named list of data frames. Each data frame must contain 
-#'   `SimulationName`, `Cultivar`, `Date`, and exactly one column with 
+#'   `SimulationName`, `Date`, and exactly one column with 
 #'   "DateToProgress" in its name.
 #' @param StageTargetPerc Numeric. The target percentage (0-100) of the maximum 
 #'   progress value to reach.
 #'
-#' @return A single bound data frame containing `SimulationName`, `Cultivar`, 
+#' @return A single bound data frame containing `SimulationName`, 
 #'   `StageName`, `TargetPerc`, the calculated maximum and target values, 
 #'   and the `DateReached`.
 #'
@@ -42,8 +42,8 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
     # ------------------------------------------------------------------
     # 1. DEFENSIVE CHECKS
     # ------------------------------------------------------------------
-    if (!all(c("SimulationName", "Cultivar", "Date") %in% names(df))) {
-      stop(sprintf("CRITICAL: Dataframe '%s' is missing 'SimulationName', 'Cultivar', or 'Date'.", nm))
+    if (!all(c("SimulationName", "Date") %in% names(df))) {
+      stop(sprintf("CRITICAL: Dataframe '%s' is missing 'SimulationName' or 'Date'.", nm))
     }
     
     # identify the progress variable
@@ -61,8 +61,8 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
     # ------------------------------------------------------------------
     # find first date reaching target
     res <- df %>%
-      dplyr::arrange(SimulationName, Cultivar, Date) %>%
-      dplyr::group_by(SimulationName, Cultivar) %>%
+      dplyr::arrange(SimulationName, Date) %>%
+      dplyr::group_by(SimulationName) %>%
       dplyr::mutate(
         max_value    = max(.data[[value_col]], na.rm = TRUE),
         target_value = max_value * StageTargetPerc / 100
@@ -72,7 +72,6 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
       dplyr::ungroup() %>%
       dplyr::transmute(
         SimulationName  = SimulationName,
-        Cultivar        = Cultivar,
         StageName       = StageName,
         TargetPerc      = StageTargetPerc,
         Maxvalue        = max_value,
@@ -84,5 +83,5 @@ findDateStageTarget <- function(df_list_PCDS, StageTargetPerc) {
   }
   
   # Bind the list of dataframes into a single clean output
-  dplyr::bind_rows(results)
+  return(dplyr::bind_rows(results))
 }

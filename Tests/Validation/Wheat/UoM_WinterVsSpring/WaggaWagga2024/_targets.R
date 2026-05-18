@@ -24,31 +24,36 @@ tar_option_set(
 # ------------------------------------------------------------------------------
 # 2. SOURCE CUSTOM FUNCTIONS
 # ------------------------------------------------------------------------------
-source("R/createWeatherFile.R")
-source("R/compile_all_observed.R")
-source("R/read_observed_func.R")
-source("R/apply_corrections.R")
-source("R/prepare_final_observed.R")
-source("R/save_df_final.R")
-source("R/filter_and_extract_pcds.R")
-source("R/interpolate_obs_phenoStages.R")
-source("R/create_synthetic_pheno_dates.R")
-source("R/findDateStageTarget.R")
-source("R/doAPSIMStageInput.R")
-source("R/saveInputParam.R")
-source("R/doStageObsData.R")
-source("R/add_to_observed_clean.R")
-source("R/read_soil_water.R")
-source("R/soil_water_in_json.R")
-source("R/check_manual_params.R")
-source("R/check_project_dependencies.R")
-source("R/save_met_file.R")
-source("R/add_harv_into_obs.R")
-source("R/find_max_leaf_date.R")
-source("R/derive_haun_pheno_dates.R")
-source("R/updatePhenoStageInput.R")
-source("R/secure_zip_folder.R")
+# source("R/createWeatherFile.R")
+# source("R/compile_all_observed.R")
+# source("R/read_observed_func.R")
+# source("R/apply_corrections.R")
+# source("R/prepare_final_observed.R")
+# source("R/save_df_final.R")
+# source("R/filter_and_extract_pcds.R")
+# source("R/interpolate_obs_phenoStages.R")
+# source("R/create_synthetic_pheno_dates.R")
+# source("R/findDateStageTarget.R")
+# source("R/doAPSIMStageInput.R")
+# source("R/saveInputParam.R")
+# source("R/doStageObsData.R")
+# source("R/add_to_observed_clean.R")
+# source("R/read_soil_water.R")
+# source("R/soil_water_in_json.R")
+# source("R/check_manual_params.R")
+# source("R/check_project_dependencies.R")
+# source("R/save_met_file.R")
+# source("R/add_harv_into_obs.R")
+# source("R/find_max_leaf_date.R")
+# source("R/derive_haun_pheno_dates.R")
+# source("R/updatePhenoStageInput.R")
+# source("R/secure_zip_folder.R")
 
+# Load master scripts
+targets::tar_source("../targets_MasterScripts")
+
+# Load THIS project's specific local scripts (e.g., local fixes)
+targets::tar_source("R")
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
 # ------------------------------------------------------------------------------
@@ -94,6 +99,7 @@ list(
       var_name_stage          = "apsim_stage_raw",       # Synthetic var with observed PCSD data
       varName_addedToObserv   = "Wheat.Phenology.Stage", # Synthetic var added into observations
       max_leaf_limit          = 0.95,   # Fractional max leaves assumed when terminal spikelet is set
+      pcd_stages_to_extract   = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis"),
       
       # Output file names
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
@@ -152,9 +158,17 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE C: RAW OBSERVATION INGESTION
   # ----------------------------------------------------------------------------
+  # 1. FILE TRACKING 
   tar_target(
-    name = df_obs_info,
-    command = read.csv2(
+    name = tracked_raw_excel,
+    command = file.path(config$folder_rawData, config$file_rawData_excel),
+    format = "file"
+  ),
+  
+  # 2. LOAD METADATA
+  tar_target(
+    name = df_obs_meta_data,
+    command = read.csv(
       file.path(config$folder_rawData, config$file_metaData_observed),
       header = TRUE, 
       stringsAsFactors = FALSE, 
@@ -162,27 +176,45 @@ list(
     )
   ),
   
+  # tar_target(
+  #   name = list_observed_dfs,
+  #   command = compile_all_observed(
+  #     folder           = config$folder_rawData,
+  #     excel_file       = config$file_rawData_excel,
+  #     df_obs_info      = df_obs_meta_data,
+  #     df_simNameByCult = df_simNameByCult
+  #   )
+  # ),
+  
+  # 4. THE UNIVERSAL COMPILER
   tar_target(
     name = list_observed_dfs,
-    command = compile_all_observed(
-      folder           = config$folder_rawData,
-      excel_file       = config$file_rawData_excel,
-      df_obs_info      = df_obs_info,
-      df_simNameByCult = df_simNameByCult
-    )
+    command = {
+      force(tracked_raw_excel) 
+      
+      compile_all_observed(
+        folder      = config$folder_rawData,
+        excel_files = config$file_rawData_excel, 
+        df_obs_info = df_obs_meta_data,
+        df_simNames = df_simNameByCult
+      )
+    }
   ),
   
   # ----------------------------------------------------------------------------
   # PHASE D: PHENOLOGY STAGE SYNTHESIS
   # ----------------------------------------------------------------------------
   tar_target(
-    name = df_list_PCDS, 
-    command = filter_and_extract_pcds(list_observed_dfs)
+    name = list_pcds_extracted,
+    command = filter_and_extract_pcds(
+      list_observed_dfs = list_observed_dfs,
+      pcd_stages        = config$pcd_stages_to_extract
+    )
   ),
   
   tar_target(
     name = df_PCDS_int, 
-    command = interpolate_obs_phenoStages(df_list_PCDS)
+    command = interpolate_obs_phenoStages(list_pcds_extracted)
   ),
   
   tar_target(
@@ -241,10 +273,19 @@ list(
     )
   ),
   
+  # tar_target(
+  #   name = df_final_observed, 
+  #   command = prepare_final_observed(list_observed_clean_final)
+  # ), 
+  
+  
   tar_target(
-    name = df_final_observed, 
-    command = prepare_final_observed(list_observed_clean_final)
-  ), 
+    name = df_final_observed,
+    command = prepare_apsim_observed(
+      compiled_obs = list_observed_clean_final,
+      dfs_out      = config$pcd_stages_to_extract # Datasets to exclude
+    )
+  ),
   
   tar_target(
     name = df_final_observed_harv, 
