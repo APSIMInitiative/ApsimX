@@ -206,8 +206,9 @@ namespace Models.CLEM.Activities
             ind.Intake.SolidsDaily.MaximumExpected = Math.Max(0.0, ind.Parameters.GrowPF_CI.RelativeSizeScalar_CI1 * ind.Weight.StandardReferenceWeight * ind.Weight.RelativeSize * (ind.Parameters.GrowPF_CI.RelativeSizeQuadratic_CI2 - ind.Weight.RelativeSize));
 
             // Equation 3 ==================================================
+            // We do not allow condition factor for unweaned individuals (differs to Stock on conceptual standpoint).
             double cf = 1.0;
-            if (ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
+            if (ind.IsWeaned && ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
             {
                 cf = 0;
                 if (ind.Weight.RelativeCondition < ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20)
@@ -222,7 +223,7 @@ namespace Models.CLEM.Activities
             {
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
                 double predictedMilkEnergy = Math.Min(ind.Energy.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.NumberOfSucklings);
-                //yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
+                yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
                 // ToDo: reduce if only unweaned for proportion of time-step.
             }
 
@@ -883,7 +884,7 @@ namespace Models.CLEM.Activities
                 - ind.Parameters.GrowPF_CKCL.PotentialYieldConditionEffect_CL23
                 * ind.Weight.RelativeCondition * (ratioMilkProductionME - ind.Parameters.GrowPF_CKCL.PotentialYieldConditionEffect2_CL24 * ind.Weight.RelativeCondition))));
 
-            double sucklingMJExpected = Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit1_CL12 + (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit3_CL14 * milkTime)));
+            double sucklingMJExpected = ind.Parameters.GrowPF_CKCL.EnergyContentMilk_CL6 * Math.Pow(ind.SucklingOffspringList.Average(a => a.Weight.Live), 0.75) * (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit1_CL12 + (ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit2_CL13 * Math.Exp(-ind.Parameters.GrowPF_CKCL.MilkConsumptionLimit3_CL14 * milkTime)));
             double MP2 = Math.Min(MP1, ind.NumberOfSucklings * sucklingMJExpected);
 
             foreach (var suckling in ind.SucklingOffspringList)
@@ -919,7 +920,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Female individua.l</param>
         /// <returns>Energy required per day for pregnancy</returns>
-        private static double CalculatePregnancyEnergy(RuminantFemale ind)
+        private double CalculatePregnancyEnergy(RuminantFemale ind)
         {
             if (!ind.IsPregnant)
             {
@@ -939,7 +940,7 @@ namespace Models.CLEM.Activities
             int step = Math.Min(ind.Parameters.Details.CurrentTimeStep.Interval, smallestInterval);
             int currentDays = 0;
 
-            while (currentDays < ind.DaysPregnantInTimeStep)
+            while (currentDays <= ind.DaysPregnantInTimeStep)
             {
                 double propOfPregnancy = ind.ProportionOfPregnancy(currentDays);
                 // Equations 57-65   ==================================================
