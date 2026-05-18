@@ -37,6 +37,11 @@ namespace Models.Forestry
         /// </summary>
         internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
 
+        /// <summary>
+        /// Represents one DBH class interval and the estimated number of trees per hectare assigned to it.
+        /// </summary>
+        internal sealed record TreeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa, string StandId);
+
         private double[] _DBH;
 
         /// <summary>
@@ -91,6 +96,100 @@ namespace Models.Forestry
                 if (MeanDBH.Value() <= a.Value()) throw new ArgumentException("Each MeanDBH must be greater than a.");
         }
 
+
+        /// <summary>
+        /// Converts fitted Weibull parameters into DBH classes with expected trees per hectare in each class.
+        /// </summary>
+        /// <param name="n">Trees per hectare to distribute across DBH classes.</param>
+        /// <param name="p">The fitted Weibull parameters used to build the class distribution.</param>
+        /// <param name="maxD">An optional maximum diameter cutoff for the generated classes.</param>
+        /// <param name="classWidth">The DBH class width in centimeters.</param>
+        /// <param name="qUpper">The upper Weibull quantile used when deriving a maximum diameter automatically.</param>
+        /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
+        private static List<TreeClass> GenerateTreeList(double n, WeibullParams p, double? maxD, double classWidth, double qUpper)
+        {
+            var k = p.Shape;
+            var lambda = p.Scale;
+            var a = p.Location;
+
+            if (!double.IsFinite(k) || !double.IsFinite(lambda) || !double.IsFinite(a))
+                throw new ArgumentException("Invalid Weibull parameters.");
+            if (k <= 0 || lambda <= 0)
+                throw new ArgumentException("Shape and scale must be > 0.");
+            if (!double.IsFinite(n) || n <= 0)
+                throw new ArgumentException("N must be finite and > 0.");
+
+            var maxDLocal = maxD ?? (a + WeibullQuantile(qUpper, k, lambda));
+            maxDLocal = Math.Ceiling(maxDLocal / classWidth) * classWidth;
+            maxDLocal = Math.Max(maxDLocal, 80);
+
+            if (maxDLocal <= a + classWidth)
+            {
+                maxDLocal = a + 10 * classWidth;
+            }
+
+            var breaks = new List<double>();
+            for (var b = a; b <= maxDLocal + 1e-9; b += classWidth)
+            {
+                breaks.Add(b);
+            }
+
+            if (breaks[^1] < maxDLocal)
+            {
+                breaks.Add(maxDLocal);
+            }
+
+            var output = new List<TreeClass>(breaks.Count - 1);
+
+            for (var i = 0; i < breaks.Count - 1; i++)
+            {
+                var lower = breaks[i];
+                var upper = breaks[i + 1];
+                var mid = (lower + upper) / 2.0;
+
+                var pLow = Weibull3Cdf(lower, k, lambda, a);
+                var pHigh = Weibull3Cdf(upper, k, lambda, a);
+                var prob = pHigh - pLow;
+
+                if (!double.IsFinite(prob) || prob < 0)
+                {
+                    prob = 0;
+                }
+
+                output.Add(new TreeClass(lower, upper, mid, n * prob, null));
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Computes the quantile of a two-parameter Weibull distribution used for the upper DBH cutoff.
+        /// </summary>
+        /// <param name="p">The cumulative probability to invert.</param>
+        /// <param name="shape">The Weibull shape parameter.</param>
+        /// <param name="scale">The Weibull scale parameter.</param>
+        /// <returns>The diameter corresponding to the requested cumulative probability.</returns>
+        private static double WeibullQuantile(double p, double shape, double scale)
+        {
+            if (p <= 0) return 0;
+            if (p >= 1) return double.PositiveInfinity;
+            return scale * Math.Pow(-Math.Log(1 - p), 1 / shape);
+        }
+
+        /// <summary>
+        /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
+        /// </summary>
+        /// <param name="d">The diameter value at which to evaluate the CDF.</param>
+        /// <param name="shape">The Weibull shape parameter.</param>
+        /// <param name="scale">The Weibull scale parameter.</param>
+        /// <param name="location">The Weibull location parameter.</param>
+        /// <returns>The cumulative probability up to the supplied diameter.</returns>
+        private static double Weibull3Cdf(double d, double shape, double scale, double location)
+        {
+            if (d <= location) return 0;
+            var z = (d - location) / scale;
+            return 1.0 - Math.Exp(-Math.Pow(z, shape));
+        }
 
         /// <summary>
         /// Estimates the Weibull shape and scale that best reproduce the supplied stand density, basal area, and mean diameter.
