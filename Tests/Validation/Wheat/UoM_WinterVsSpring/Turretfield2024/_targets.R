@@ -48,9 +48,10 @@ list(
     command = list(
       # Folders and file names
       proj_name               = proj_name,
-      folder_thisScript       = here::here(),
+      folder_main             = here::here(),
+      #folder_parent           = dirname(here::here()),
       folder_rawData          = here::here(proj_name), # Cloud source
-      folder_apsimx           = here::here(), 
+      #folder_apsimx           = here::here(), 
       folder_met              = here::here("Met"),
       folder_inputs           = here::here("Inputs"),
       folder_observed         = file.path(here::here(), "Observed"),
@@ -144,17 +145,7 @@ list(
     )
   ), # <--- THE FIX: Closes the first target and adds a comma for the list!
   
-  tar_target(
-    name = msg_met_saved,
-    command = save_met_file(
-      met_list    = processed_met_data,
-      folder_path = config$folder_met,
-      file_name   = paste0(config$proj_name, ".met"),
-      lat         = config$coord_thisLatLon$lat,
-      lon         = config$coord_thisLatLon$lon
-    ),
-    format = "file"
-  ),
+
   
   # ----------------------------------------------------------------------------
   # PHASE C: OBSERVATION DATA INGESTION
@@ -250,9 +241,27 @@ list(
     command = check_obs_health(df_final_observed_harv) # Stops the pipeline if it fails!
   ),
   
-  # 8. EXPORT TO EXCEL
+  
+  # ----------------------------------------------------------------------------
+  # PHASE F: OUTPUT GENERATION & VALIDATION
+  # ----------------------------------------------------------------------------
+  # 8. EXPORT WEATHER TO MET FOLDER
   tar_target(
-    name = export_apsim_file,
+    name = msg_met_saved,
+    command = save_met_file(
+      met_list    = processed_met_data,
+      folder_path = config$folder_met,
+      file_name   = paste0(config$proj_name, ".met"),
+      lat         = config$coord_thisLatLon$lat,
+      lon         = config$coord_thisLatLon$lon
+    ),
+    format = "file"
+  ),
+  
+  
+  # 8. EXPORT OBSERVATIONS TO EXCEL
+  tar_target(
+    name = msg_obs_saved,
     command = save_obs_to_excel(
       df_final  = qc_apsim_observed_harv, # Data comes from the QC Gatekeeper!
       obs_path  = config$folder_observed,
@@ -260,7 +269,96 @@ list(
       sheetName = "Observed"
     ),
     format = "file" # Tells targets to watch the actual file on disk
+  ),
+  
+  # 8. EXPORT INPUT PARAMERS TO INPUT FOLDER
+  
+  # TO BE IMPLEMENTED
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING 
+  # ----------------------------------------------------------------------------
+  
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+  
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files) 
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed, 
+        output_zip   = config$file_zip_out, 
+        pass_file    = config$file_pass
+      )
+      
+      # CRITICAL FIX: Return the file string so targets can hash it!
+      config$file_zip_out
+    },
+    format = "file"
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: DEPENDENCY CHECKS  
+  # ----------------------------------------------------------------------------
+  # ============================================================================
+  # PHASE 0: PRE-FLIGHT CHECKS
+  # ============================================================================
+  
+  tar_target(
+    name = verify_dependencies,
+    command = {
+          # 1. Force dependency tracking
+          msg_obs_saved
+          # msg_param_saved # TO BE IMPLEMENTED
+          msg_met_saved
+          
+          # 2. Execute validation
+          check_project_dependencies(
+          projects   = config$proj_name,
+          dir_met    = config$folder_met,
+          dir_inputs = config$folder_inputs,
+          dir_obs    = config$folder_observed
+    )}
+  ),
+  
+  tar_target(
+    name = verify_data_backup,
+    command = {
+      # This forces targets to wait for dependencies to pass first
+      force(verify_dependencies) 
+      
+      check_archive_sync(
+        target_folder = config$folder_observed,
+        zip_file      = config$file_zip_out
+      )
+    }
   )
+  
+  # tar_target(
+  #   name = check_depend, 
+  #   command = {
+  #     # 1. Force dependency tracking
+  #     msg_obs_saved
+  #     msg_param_saved
+  #     msg_met_saved
+  #     
+  #     # 2. Execute validation
+  #     check_project_dependencies(
+  #       projects   = config$proj_name,
+  #       dir_met    = config$folder_met,
+  #       dir_inputs = config$folder_inputs,
+  #       dir_obs    = config$folder_observed
+  #     )
+  #   }
+  # )
   
   
   # 
