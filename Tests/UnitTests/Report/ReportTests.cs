@@ -112,30 +112,26 @@ namespace UnitTests.Report
         }
 
         /// <summary>
-        /// Ensure that we prioritize our own report variables before the variables of other reports.
+        /// Ensure that we don't read values from other reports in scope of us.
         /// </summary>
         [Test]
-        public void ReferenceAnotherReportVariableFindsLocallyFirst()
+        public void ReferenceAnotherReportOnlyUsesThisReport()
         {
             Models.Report newReport = new()
             {
                 VariableNames = ["(4) as A"],
             };
-            simulation.Children.Insert(0, newReport);
+            simulation.Children.Add(newReport);
             report.VariableNames =
             [
-                "(2) as A",
                 "A + 1 as B"
             ];
             try
             {
                 Runner runner = new(simulations);
                 var exceptions = runner.Run();
-                if (exceptions != null && exceptions.Count > 0)
-                    throw exceptions[0];
-                var result = storage.Get<double>("B");
-                double[] expected = [.. Enumerable.Repeat(3.0, 10)];
-                Assert.That(result, Is.EqualTo(expected));
+                Assert.That(exceptions.Count == 1);
+                Assert.That(exceptions[0].InnerException.Message, Does.Contain("unknown model or property specification A"));
             }
             finally
             {

@@ -185,25 +185,11 @@ internal class Locator
         //if it doesn't start with those characters, it might be a report variable, so we need to search for that in the report columns
         else if (includeReportVars)
         {
-            // Try to avoid reading other report's values if we are a report ourselves.
             if (relativeTo.Model is IVariableSupplier supplier && supplier.Get(namePath, out object supplierValue))
             {
                 var comp = new VariableComposite(namePath);
                 comp.AddInstance(supplierValue);
                 return comp;
-            }
-            // Try a variable supplier.
-            foreach (IVariableSupplier variableSupplier in relativeTo.WalkScoped()
-                                                                     .Where(n => n.Model is IVariableSupplier)
-                                                                     .Select(n => n.Model))
-            {
-
-                if (variableSupplier.Get(namePath, out supplierValue))
-                {
-                    var comp = new VariableComposite(namePath);
-                    comp.AddInstance(supplierValue);
-                    return comp;
-                }
             }
         }
 
