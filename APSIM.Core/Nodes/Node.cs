@@ -599,6 +599,7 @@ public class Node : IStructure
         childNode.scope = scope;
         childNode.locator = locator;
         childModel.Node = childNode;
+        childModel.ReadOnly = false;
 
         // Resolves child dependencies.
         ResolvesDependencies(childNode);
