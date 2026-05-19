@@ -2722,14 +2722,29 @@ namespace Models.GrazPlan
         /// <param name="part">Plant part - leaf, stem, root, seed or total</param>
         /// <param name="DMD"></param>
         /// <returns></returns>
+        /// TOTAL = 0
+        /// When comp = TOTAL it is Live + Dead
+        /// when part = TOTAL it is leaf + stem 
+        /// when DMD = TOTAL its sum of mass across all 12 DMD class 
+        
         public double HerbageMassGM2(int comp, int part, int DMD)
         {
             double result = 0.0;
             for (int iCohort = 0; iCohort <= this.CohortCount() - 1; iCohort++)
             {
-                if ((comp == TOTAL) || (this.BelongsIn(iCohort, comp)))
+                if ((comp == TOTAL) || this.BelongsIn(iCohort, comp))
                 {
-                    result += this.FCohorts[iCohort].Herbage[part, DMD].DM;
+                    if(DMD == TOTAL)
+                    {
+                            for(int cls =1; cls <= HerbClassNo; cls++)
+                        {
+                            result += this.FCohorts[iCohort].Herbage[part,cls].DM;
+                        }
+                    
+                    }
+                    else                    
+                        result += this.FCohorts[iCohort].Herbage[part,DMD].DM;
+
                 }
             }
 
