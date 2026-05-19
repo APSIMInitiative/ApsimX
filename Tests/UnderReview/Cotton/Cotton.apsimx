@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 213,
+  "Version": 216,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1280,7 +1280,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
+                              "FixedValue": 1.0,
                               "Units": null,
                               "Name": "Lower",
                               "ResourceName": null,
@@ -1299,6 +1299,24 @@
                               "ReadOnly": false
                             },
                             {
+                              "$type": "Models.Functions.ValueApproachingMovingMaximumFunction, Models",
+                              "Name": "ValueApproachingMovingMaximumFunction",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Boll].Wt",
+                                  "Name": "BollWt",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.SubtractFunction, Models",
                               "Name": "Invert",
                               "ResourceName": null,
@@ -1310,7 +1328,7 @@
                                   "Name": "One",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -1331,7 +1349,7 @@
                                           "Name": "BollWt",
                                           "ResourceName": null,
                                           "Children": [],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         },
                                         {
@@ -1345,15 +1363,15 @@
                                               "Name": "BollWt",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             }
                                           ],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     },
                                     {
@@ -1367,7 +1385,7 @@
                                           "Name": "BollWtDelta",
                                           "ResourceName": null,
                                           "Children": [],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         },
                                         {
@@ -1381,23 +1399,23 @@
                                               "Name": "MaximumBollWtDelta",
                                               "ResourceName": null,
                                               "Children": [],
-                                              "Enabled": true,
+                                              "Enabled": false,
                                               "ReadOnly": false
                                             }
                                           ],
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "ReadOnly": false
                                         }
                                       ],
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
@@ -1419,11 +1437,11 @@
                           "Name": "BollWt",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1437,11 +1455,11 @@
                           "Name": "BollWt",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
@@ -8989,7 +9007,7 @@
       "Children": [
         {
           "$type": "Models.Map, Models",
-          "Zoom": 6.1,
+          "Zoom": 8.1,
           "Center": {
             "$type": "Models.Mapping.Coordinate, Models",
             "Latitude": -26.8152,
@@ -10826,8 +10844,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS1500",
                       "ResourceName": null,
                       "Children": [
@@ -10906,8 +10923,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS1000",
                       "ResourceName": null,
                       "Children": [
@@ -10951,8 +10967,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS500",
                       "ResourceName": null,
                       "Children": [
@@ -10997,7 +11012,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DDRF21Base",
                   "ResourceName": null,
                   "Children": [
@@ -18276,7 +18290,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DouglasDaly20211Base",
                   "ResourceName": null,
                   "Children": [
@@ -27627,8 +27640,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P1",
                       "ResourceName": null,
                       "Children": [
@@ -28350,8 +28362,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P2",
                       "ResourceName": null,
                       "Children": [
@@ -29073,8 +29084,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P3",
                       "ResourceName": null,
                       "Children": [
@@ -29800,7 +29810,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "BDK09Base",
                   "ResourceName": null,
                   "Children": [
@@ -35226,8 +35235,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P1",
                       "ResourceName": null,
                       "Children": [
@@ -35545,8 +35553,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P2",
                       "ResourceName": null,
                       "Children": [
@@ -35864,8 +35871,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P3",
                       "ResourceName": null,
                       "Children": [
@@ -36181,7 +36187,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Emerald2015Base",
                   "ResourceName": null,
                   "Children": [
@@ -41427,8 +41432,7 @@
                       "Specifications": [
                         "[Sowing]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Conventional",
                       "ResourceName": null,
                       "Children": [
@@ -41523,8 +41527,7 @@
                       "Specifications": [
                         "[Sowing]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "UNR",
                       "ResourceName": null,
                       "Children": [
@@ -41620,7 +41623,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Rose0203Base",
                   "ResourceName": null,
                   "Children": [
@@ -49633,8 +49635,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir80",
                       "ResourceName": null,
                       "Children": [
@@ -49764,8 +49765,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir68",
                       "ResourceName": null,
                       "Children": [
@@ -49895,8 +49895,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir55",
                       "ResourceName": null,
                       "Children": [
@@ -50026,8 +50025,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir45",
                       "ResourceName": null,
                       "Children": [
@@ -50158,7 +50156,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "NAR0607Base",
                   "ResourceName": null,
                   "Children": [
@@ -56703,8 +56700,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N0",
                       "ResourceName": null,
                       "Children": [
@@ -56741,8 +56737,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N150",
                       "ResourceName": null,
                       "Children": [
@@ -56779,8 +56774,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N300",
                       "ResourceName": null,
                       "Children": [
@@ -56818,7 +56812,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Narrabri2023Base",
                   "ResourceName": null,
                   "Children": [
@@ -64910,8 +64903,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "IrrigationFull",
                       "ResourceName": null,
                       "Children": [
@@ -65004,8 +64996,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "IrrigationPartial",
                       "ResourceName": null,
                       "Children": [
@@ -65071,7 +65062,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "ForestHill2023Base",
                   "ResourceName": null,
                   "Children": [
@@ -71957,8 +71947,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Double",
                           "ResourceName": null,
                           "Children": [],
@@ -71975,7 +71964,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "WarraBaseSimulation",
                   "ResourceName": null,
                   "Children": [
@@ -73889,7 +73877,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "NResponseBase",
                   "ResourceName": null,
                   "Children": [
@@ -75459,8 +75446,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "IrrigationFull",
                       "ResourceName": null,
                       "Children": [
@@ -75554,7 +75540,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DetailedDynamicsBase",
                   "ResourceName": null,
                   "Children": [
@@ -77821,7 +77806,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "IrrigationResponseBase",
                   "ResourceName": null,
                   "Children": [
@@ -79214,8 +79198,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Double",
                           "ResourceName": null,
                           "Children": [],
@@ -79228,8 +79211,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=1"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Single",
                           "ResourceName": null,
                           "Children": [],
@@ -79242,8 +79224,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=0.01"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Solid",
                           "ResourceName": null,
                           "Children": [],
@@ -79260,7 +79241,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "SkipRowBase",
                   "ResourceName": null,
                   "Children": [
