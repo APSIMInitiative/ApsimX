@@ -1280,7 +1280,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
+                              "FixedValue": 0.5,
                               "Units": null,
                               "Name": "Lower",
                               "ResourceName": null,
@@ -1315,108 +1315,6 @@
                               ],
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "Invert",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                                  "NumeratorErrVal": 0.0,
-                                  "DenominatorErrVal": 1.0,
-                                  "Name": "DeltaOverMax",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "BollWtDelta",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Boll].Wt",
-                                          "Name": "BollWt",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.EndOfDayFunction, Models",
-                                          "Name": "BollWtTwoDaysAgo",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[BollWtOneDayAgo]",
-                                              "Name": "BollWt",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": false,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MaximumFunction, Models",
-                                      "Name": "MaximumBollWtDelta",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[BollWtDelta]",
-                                          "Name": "BollWtDelta",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.EndOfDayFunction, Models",
-                                          "Name": "BollWtDeltaYesterday",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[MaximumBollWtDelta]",
-                                              "Name": "MaximumBollWtDelta",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": false,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": false,
-                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -1424,42 +1322,6 @@
                         }
                       ],
                       "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                      "Name": "BollWtTwoDaysAgo",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[BollWtOneDayAgo]",
-                          "Name": "BollWt",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                      "Name": "BollWtOneDayAgo",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Boll].Wt",
-                          "Name": "BollWt",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
