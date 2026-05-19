@@ -1,0 +1,50 @@
+---
+title: "Dookie2024 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+```
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+```{r}
+tar_visnetwork()
+```
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+# tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+```
+
+
+```{r}
+tar_load(check_depend)
+tar_load(df_all_obs_files)
+tar_load(file_pheno_haun_obs)
+tar_load(df_haun_pheno_dates)
+tar_load(df_pheno_interp)
+```
+
