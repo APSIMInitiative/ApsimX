@@ -23,7 +23,7 @@
 #' @importFrom dplyr filter arrange group_by summarise n
 #' @importFrom rlang .data
 #' @export
-find_max_leaf_date <- function(compiled_obs, max_leaf_limit = 0.95) {
+find_date_max_leaf <- function(compiled_obs, max_leaf_limit = 0.95) {
   
   require(dplyr)
   require(rlang)

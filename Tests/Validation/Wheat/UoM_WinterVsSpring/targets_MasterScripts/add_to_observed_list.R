@@ -20,7 +20,7 @@
 #' @importFrom dplyr bind_rows
 #' @importFrom tibble tibble
 #' @export
-add_to_observed_clean <- function(list_observed_clean, df_new, new_name) {
+add_to_observed_list <- function(list_observed_clean, df_new, new_name) {
   
   require(dplyr)
   require(tibble)

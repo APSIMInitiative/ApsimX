@@ -70,6 +70,22 @@ x<- tar_read(list_observed_dfs)
 names(x)
 targets::tar_invalidate(list_observed_dfs)
 tar_load(df_list_PCDS)
+
+
+```
+
+```{r}
+tar_load(df_stages_Observ)
+tar_load(list_observed_clean_stage)
+tar_load(df_soil_water)
+tar_load(json_soil_water)
+tar_read(json_soil_water)
+tar_load(df_apsimStageInput)
+tar_load(df_haun_pheno_dates)
+tar_load(df_apsimStageInput_haunBased)
+tar_load(df_stages_Observ)
+tar_read(list_observed_clean_stage)
 tar_load(list_observed_clean)
+tar_load(df_final_observed)
 ```
 
