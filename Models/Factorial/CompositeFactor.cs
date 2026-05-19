@@ -59,15 +59,22 @@ namespace Models.Factorial
         public string[] DescriptorNames { 
             get
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = new List<SimulationDescriptor>();
+                try
+                {
+                    List<SimulationDescriptor> generatedDescriptors = GetExperimentDescriptors();
+                    descriptors.AddRange(generatedDescriptors);
+                    descriptors.AddRange(CustomDescriptors);
+                }
+                catch
                 {
                     descriptors.AddRange(CustomDescriptors);
-                    _names = descriptors.Select(d => d.Name).ToArray();
-                    return _names;
                 }
-                else
-                    return [];
+                finally
+                {
+                    _names = descriptors.Select(d => d.Name).ToArray();
+                }
+                return _names;
             }
             set
             {
@@ -84,15 +91,22 @@ namespace Models.Factorial
         public string[] DescriptorValues { 
             get
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = new List<SimulationDescriptor>();
+                try
+                {
+                    List<SimulationDescriptor> generatedDescriptors = GetExperimentDescriptors();
+                    descriptors.AddRange(generatedDescriptors);
+                    descriptors.AddRange(CustomDescriptors);
+                }
+                catch
                 {
                     descriptors.AddRange(CustomDescriptors);
-                    _values = descriptors.Select(d => d.Value).ToArray();
-                    return _values;
                 }
-                else
-                    return [];
+                finally
+                {
+                    _values = descriptors.Select(d => d.Value).ToArray();
+                }
+                return _values;
             }
             set
             {
@@ -345,8 +359,16 @@ namespace Models.Factorial
         {
             if (_names != null && _values != null && _names.Length == _values.Length)
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = null;
+                try
+                {
+                    descriptors = GetExperimentDescriptors();
+                }
+                catch
+                {
+                    descriptors = new List<SimulationDescriptor>();
+                }
+                finally
                 {
                     IEnumerable<string> readOnlyNames = descriptors.Select(d => d.Name);
                     List<SimulationDescriptor> newCustomDescriptors = new List<SimulationDescriptor>();
