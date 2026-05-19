@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 215,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -21,7 +21,8 @@
             "GrainWt.xlsx",
             "TotalSW.xlsx",
             "SoilWater.xlsx",
-            "TillerAppearance.xlsx"
+            "TillerAppearance.xlsx",
+            "LayeredSW.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -1375,8 +1376,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -1391,8 +1391,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -1407,8 +1406,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -1425,7 +1423,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2014IrrigatedBase",
               "ResourceName": null,
               "Children": [
@@ -2106,6 +2103,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -5139,8 +5137,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 4-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -5155,8 +5152,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -5171,8 +5167,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 29-jul-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -5189,7 +5184,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2014Base",
               "ResourceName": null,
               "Children": [
@@ -5886,6 +5880,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -8268,8 +8263,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 24-jul-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -8285,8 +8279,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 25-jul-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -8302,8 +8295,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 31-jul-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 25-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -8320,7 +8312,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2015Base",
               "ResourceName": null,
               "Children": [
@@ -8873,6 +8864,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -11530,8 +11522,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 15-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 11-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -11546,8 +11537,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -11562,8 +11552,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -11580,7 +11569,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Junee2014Base",
               "ResourceName": null,
               "Children": [
@@ -12767,6 +12755,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -14882,8 +14871,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 3-sep-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -14898,8 +14886,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 29-aug-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -14914,8 +14901,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 4-sep-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -14932,7 +14918,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Temora2015Base",
               "ResourceName": null,
               "Children": [
@@ -16087,6 +16072,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -18135,7 +18121,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Minnipa2014Base",
               "ResourceName": null,
               "Children": [
@@ -18916,6 +18901,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -20870,7 +20856,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Minnipa2015Base",
               "ResourceName": null,
               "Children": [
@@ -21626,6 +21611,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],

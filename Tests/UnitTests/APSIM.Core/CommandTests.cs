@@ -323,7 +323,7 @@ public class CommandTests
         Assert.That(cultivar.Command, Is.EqualTo(["b=2", "c=3"]));
     }
 
-    /// <summary>Ensure the set array property to empty string clears the array.</summary>
+        /// <summary>Ensure the set array property to empty string clears the array.</summary>
     [Test]
     public void EnsureSetArrayPropertyToEmptyWorks()
     {
@@ -340,6 +340,56 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyWithNameWhitespaceWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand($"[{modelName}].Command", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyCommandStringParsingWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = SetPropertyCommand.Create($"[{modelName}].Command=", null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
