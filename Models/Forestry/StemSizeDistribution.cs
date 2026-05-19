@@ -42,12 +42,13 @@ namespace Models.Forestry
         /// </summary>
         internal sealed record TreeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa, string StandId);
 
-        private double[] _DBH;
+        private List<double> _DBH;
+        private List<TreeClass> TreeList = new List<TreeClass>();
 
-        /// <summary>
-        /// Number of DBH size classes used in reporting.
-        /// </summary>
-        [Units("")]
+       /// <summary>
+       /// Number of DBH size classes used in reporting.
+       /// </summary>
+       [Units("")]
         [Description("Number of DBH size classes used in reporting")]
         public int NumSizeClasses { get; set; }
 
@@ -68,7 +69,7 @@ namespace Models.Forestry
             get 
             {
                 CalculateDistributions();
-                return _DBH; 
+                return _DBH.ToArray(); 
             } 
         }
 
@@ -78,13 +79,17 @@ namespace Models.Forestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            _DBH = new double[NumSizeClasses];
+            
 
         }
         private void CalculateDistributions()
         {
                 ValidateStandData();
-                EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+                WeibullParams W = EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+                TreeList = GenerateTreeList(StemPopulation.Value(), W, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
+
+                _DBH = new List<double>();
+            foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
         }
 
             private void ValidateStandData()
