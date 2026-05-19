@@ -17,8 +17,8 @@ namespace Models.Functions
         [Link(Type = LinkType.Child)]
         private IFunction child = null;
 
-        private double _today = 0;
         private double _yesterday = 0;
+        private double _day_before_yesterday = 0;
         private double _maximum = 0;
 
         /// <summary>
@@ -27,15 +27,15 @@ namespace Models.Functions
         [EventSubscribe("EndOfDay")]
         private void OnEndOfDay(object sender, EventArgs args)
         {
-            _yesterday = _today;
-            _today = child.Value();
+            _day_before_yesterday = _yesterday;
+            _yesterday = child.Value();
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            double delta = _today - _yesterday;
+            double delta = child.Value() - _day_before_yesterday;
 
             if (delta > _maximum)
                 _maximum = delta;
