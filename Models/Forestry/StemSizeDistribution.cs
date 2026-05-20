@@ -4,6 +4,8 @@ using Models.PMF.Interfaces;
 using Models.PMF;
 using APSIM.Core;
 using System.Collections.Generic;
+using DocumentFormat.OpenXml.Office2019.Drawing.Model3D;
+
 
 
 namespace Models.Forestry
@@ -32,9 +34,26 @@ namespace Models.Forestry
         /// <summary>
         /// Stores the fitted three-parameter Weibull coefficients and fit diagnostics.
         /// </summary>
-        internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
+        //internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
         //NH make a Weibull class and put params as properties
 
+        internal class WeibullModel
+        {
+            public double Shape;
+            public double Scale;
+            public double Location;
+            public int Convergence;
+            public double Objective;
+
+            public WeibullModel (double shape, double scale, double location, int convergence, double objective)
+            { 
+                Shape = shape;
+                Scale = scale;
+                Location = location;
+                Convergence = convergence;
+                Objective = objective;
+            }
+        }
 
         /// <summary>
         /// Represents one DBH class interval and the estimated number of trees per hectare assigned to it.
@@ -84,7 +103,7 @@ namespace Models.Forestry
         private void CalculateDistributions()
         {
                 ValidateStandData();
-                WeibullParams W = EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+                WeibullModel W = EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
                 TreeList = GenerateTreeList(StemPopulation.Value(), W, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
 
                 _DBH = new List<double>();
@@ -110,7 +129,7 @@ namespace Models.Forestry
         /// <param name="classWidth">The DBH class width in centimeters.</param>
         /// <param name="qUpper">The upper Weibull quantile used when deriving a maximum diameter automatically.</param>
         /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
-        private static List<TreeClass> GenerateTreeList(double n, WeibullParams p, double? maxD, double classWidth, double qUpper)
+        private static List<TreeClass> GenerateTreeList(double n, WeibullModel p, double? maxD, double classWidth, double qUpper)
         {
             //NH pass 3 Weibull params not the structure
             //NH rename n to stempopulation
@@ -214,7 +233,7 @@ namespace Models.Forestry
         /// <returns>The fitted Weibull parameters and convergence diagnostics for the stand.</returns>
         /// <summary>Estimates Weibull parameters.</summary>
         /// <returns>The estimated Weibull parameters.</returns>
-        private static WeibullParams EstimateWeibull(double n, double g, double dbar, double a)
+        private static WeibullModel EstimateWeibull(double n, double g, double dbar, double a)
         {
             var lower = new[] { 0.05, 0.01 };
             var upper = new[] { 20.0, 300.0 };
@@ -263,13 +282,8 @@ namespace Models.Forestry
                 }
             }
 
-            return new WeibullParams(
-                x[0],
-                x[1],
-                a,
-                converged ? 0 : 1,
-                best
-            );
+            return new WeibullModel(x[0], x[1], a, converged ? 0 : 1, best);
+            
         }
 
         /// <summary>
@@ -285,10 +299,15 @@ namespace Models.Forestry
         private static double ComputeWeibullFitError(double k, double lambda, double nLocal, double gLocal, double dbarLocal, double aLocal)
         {
 
-            if (!double.IsFinite(k) || !double.IsFinite(lambda) || k <= 0 || lambda <= 0)
-            {
-                return 1e12;
-            }
+            if (!double.IsFinite(k))
+                throw new ArgumentException("Value of K is infinite in method ComputeWeibullFitError");
+            if (!double.IsFinite(lambda))
+                throw new ArgumentException("Value of lambda is infinite in method ComputeWeibullFitError");
+            if (k <= 0)
+                throw new ArgumentException("Value of K is zero or less than zero in method ComputeWeibullFitError");
+            if (lambda <= 0)
+                throw new ArgumentException("Value of lambda is zero or less than zero in method ComputeWeibullFitError");
+
 
             var dPred = aLocal + lambda * Gamma(1 + 1 / k);
             var d2Pred = aLocal * aLocal
