@@ -244,7 +244,7 @@ list(
   tar_target(
     name = df_final_observed,
     command = prepare_apsim_observed(
-      compiled_obs = list_observed_clean_stage,
+      compiled_obs = list_observed_clean,
       dfs_out      = config$pcd_stages_to_extract # Exclude phenology extraction datasets
     )
   ),
@@ -254,7 +254,7 @@ list(
     name = df_final_observed_harv, 
     command = add_harv_into_obs(
       df            = df_final_observed,
-      ref_vars      = c("Wheat.Grain.Wt"), 
+      ref_vars      = c("Wheat.Grain.Wt", "WSCs", "Nconc"), 
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )
@@ -292,7 +292,7 @@ list(
   
   tar_target(
     name = msg_param_saved, 
-    command = saveInputParam(
+    command = save_input_param_csv(
       df_apsimStageInput_haunBased, 
       config$folder_inputs, 
       config$file_name_input_pheno

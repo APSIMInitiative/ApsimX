@@ -45,6 +45,7 @@ targets::tar_make()
 ```{r, warning=FALSE, eval = FALSE }
 tar_destroy()
 # targets::tar_destroy(ask = FALSE)
+# targets::tar_invalidate(list_observed_clean)
 ```
 
 
@@ -87,5 +88,10 @@ tar_load(df_stages_Observ)
 tar_read(list_observed_clean_stage)
 tar_load(list_observed_clean)
 tar_load(df_final_observed)
+tar_load(df_obs_meta_data)
+```
+
+```{r}
+tar_load(list_observed_dfs)
 ```
 
