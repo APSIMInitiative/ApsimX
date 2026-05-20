@@ -1,6 +1,5 @@
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APSIM.Core;
 
@@ -36,12 +35,43 @@ internal class ModelRegistry
     internal static INodeModel CreateModel(string modelNameToCreate)
     {
         DiscoverModels();
-        Type typeToCreate = ModelNameToType(modelNameToCreate)
-                            ?? throw new Exception($"Unknown model type {modelNameToCreate}");
+        Type typeToCreate = ModelNameToType(modelNameToCreate);
+        if (typeToCreate == null)
+        {
+            // Find and return a resource.
+            var resourceName = modelsAssembly.GetManifestResourceNames().
+                FirstOrDefault(r => r.Contains(modelNameToCreate, StringComparison.InvariantCultureIgnoreCase));
+            if (resourceName != null)
+                return CreateResourceModelFromName(modelNameToCreate, resourceName);
+        }
+        if (typeToCreate == null)
+            throw new Exception($"Cannot find a model with name: {modelNameToCreate}");
+                            
+
 
         var model = (INodeModel)Activator.CreateInstance(typeToCreate, true)
                     ?? throw new Exception($"Cannot create a model of type {typeToCreate.Name}");
         return model;
+    }
+
+    /// <summary>
+    /// Create a model from an embedded resource.
+    /// </summary>
+    /// <param name="modelNameToCreate">The name of the model to create.</param>
+    /// <param name="resourceName">The name of the embedded resource.</param>
+    /// <returns>The newly created instance.</returns>
+    private static INodeModel CreateResourceModelFromName(string modelNameToCreate, string resourceName)
+    {
+        using var stream = modelsAssembly.GetManifestResourceStream(resourceName)
+            ?? throw new Exception($"Could not find model or resource with the name: {resourceName}");
+        using var reader = new StreamReader(stream);
+        string json = reader.ReadToEnd();
+        INodeModel resource = FileFormat.ReadFromString<INodeModel>(json).Model.GetChildren().FirstOrDefault();
+        resource.ResourceName = modelNameToCreate;
+        List<INodeModel> children = resource.GetChildren().ToList();
+        foreach (var child in children)
+            resource.RemoveChild(child);
+        return resource;
     }
 
     /// <summary>
