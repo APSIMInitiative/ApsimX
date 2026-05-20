@@ -3,7 +3,7 @@ namespace APSIM.Core;
 public interface INodeModel
 {
     string Name { get; }
-    string ResourceName { get; set; }
+    string ResourceName { get;}
     bool Enabled { get; set; }
     bool ReadOnly { get; set; }
     bool IsHidden { get; set; }

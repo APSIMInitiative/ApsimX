@@ -1,5 +1,6 @@
 using System.Reflection;
 using APSIM.Shared.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace APSIM.Core;
 
@@ -40,15 +41,12 @@ internal class ModelRegistry
         {
             // Find and return a resource.
             var resourceName = modelsAssembly.GetManifestResourceNames().
-                FirstOrDefault(r => r.Contains(modelNameToCreate, StringComparison.InvariantCultureIgnoreCase));
+                FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", StringComparison.InvariantCultureIgnoreCase));
             if (resourceName != null)
                 return CreateResourceModelFromName(modelNameToCreate, resourceName);
         }
         if (typeToCreate == null)
-            throw new Exception($"Cannot find a model with name: {modelNameToCreate}");
-                            
-
-
+            throw new Exception($"Cannot find a model with name: {modelNameToCreate}");              
         var model = (INodeModel)Activator.CreateInstance(typeToCreate, true)
                     ?? throw new Exception($"Cannot create a model of type {typeToCreate.Name}");
         return model;
@@ -66,8 +64,15 @@ internal class ModelRegistry
             ?? throw new Exception($"Could not find model or resource with the name: {resourceName}");
         using var reader = new StreamReader(stream);
         string json = reader.ReadToEnd();
-        INodeModel resource = FileFormat.ReadFromString<INodeModel>(json).Model.GetChildren().FirstOrDefault();
-        resource.ResourceName = modelNameToCreate;
+        
+        // Inject the ResourceName into the JSON before deserializing
+        var jObject = JObject.Parse(json);
+        // Get the first child of the root object and set its ResourceName property.
+        // The actual resource always has a simulations Parent, so the first child of the root object is always the resource.
+        jObject["Children"][0]["ResourceName"] = modelNameToCreate;
+        
+        INodeModel resource = FileFormat.ReadFromString<INodeModel>(jObject.ToString()).Model.GetChildren().FirstOrDefault();
+        
         List<INodeModel> children = resource.GetChildren().ToList();
         foreach (var child in children)
             resource.RemoveChild(child);
