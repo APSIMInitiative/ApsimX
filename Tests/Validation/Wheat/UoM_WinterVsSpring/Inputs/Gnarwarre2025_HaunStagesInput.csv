@@ -1,0 +1,13 @@
+SimulationName,[Wheat].Phenology.Phyllochron.BasePhyllochron.FixedValue,[Wheat].Phenology.PhyllochronPpSensitivity.FixedValue
+FAR VIC W24-50CvSowAprBigRedPGRNo,95,0.3
+FAR VIC W24-50CvSowAprBigRedPGRYes,95,0.3
+FAR VIC W24-50CvSowAprIllaboPGRNo,95,0.3
+FAR VIC W24-50CvSowAprIllaboPGRYes,95,0.3
+FAR VIC W24-50CvSowAprStockadePGRNo,95,0.3
+FAR VIC W24-50CvSowAprStockadePGRYes,95,0.3
+FAR VIC W24-50CvSowMayIllaboPGRNo,95,0.3
+FAR VIC W24-50CvSowMayIllaboPGRYes,95,0.3
+FAR VIC W24-50CvSowMaySunmasterPGRNo,95,0.3
+FAR VIC W24-50CvSowMaySunmasterPGRYes,95,0.3
+FAR VIC W24-50CvSowMayZanzibarPGRNo,95,0.3
+FAR VIC W24-50CvSowMayZanzibarPGRYes,95,0.3
