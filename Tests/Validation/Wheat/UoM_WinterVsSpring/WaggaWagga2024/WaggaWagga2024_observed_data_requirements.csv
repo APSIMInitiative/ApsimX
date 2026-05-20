@@ -27,21 +27,21 @@ pcds_6_flagLeaf,PCDS 6.0,% flag leaves emerged,[Wheat].Phenology.StemElongating.
 pcds_8_anthesis,PCDS 8.0,% anthesis,[Wheat].Phenology.Flowering.DateToProgress,1
 leaf_6_Nconc,PCDS 6.0 harvest,Nitrogen percent green leaf leaf,Wheat.Leaf.Live.NConc,1
 leaf_6_WSCc,PCDS 6.0 harvest,WSC percent green leaf,Wheat.Leaf.Live.WSCc,1
-leaf_6_Nconc,PCDS 6.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
-leaf_6_WSCc,PCDS 6.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
+leafDead_6_Nconc,PCDS 6.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
+leafDead_6_WSCc,PCDS 6.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
 stem_6_Nconc,PCDS 6.0 harvest,nitrogen percent stem,Wheat.Stem.Live.NConc,1
 stem_6_WSCc,PCDS 6.0 harvest,WSC percent stem,Wheat.Stem.Live.WSCc,1
 spike_6_Nconc,PCDS 6.0 harvest,nitrogen percent spike,Wheat.Spike.Live.NConc,1
 spike_6_WSCc,PCDS 6.0 harvest,WSC percent spike,Wheat.Spike.Live.WSCc,1
 leaf_8_Nconc,PCDS 8.0 harvest,Nitrogen percent green leaf leaf,Wheat.Leaf.Live.NConc,1
 leaf_8_WSCc,PCDS 8.0 harvest,WSC percent green leaf,Wheat.Leaf.Live.WSCc,1
-leaf_8_Nconc,PCDS 8.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
-leaf_8_WSCc,PCDS 8.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
+leafDead_8_Nconc,PCDS 8.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
+leafDead_8_WSCc,PCDS 8.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
 stem_8_Nconc,PCDS 8.0 harvest,nitrogen percent stem,Wheat.Stem.Live.NConc,1
 stem_8_WSCc,PCDS 8.0 harvest,WSC percent stem,Wheat.Stem.Live.WSCc,1
 spike_8_Nconc,PCDS 8.0 harvest,nitrogen percent spike,Wheat.Spike.Live.NConc,1
 spike_8_WSCc,PCDS 8.0 harvest,WSC percent spike,Wheat.Spike.Live.WSCc,1
-leaf_10_Nconc,PCDS 10.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
-leaf_10_WSCc,PCDS 10.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
+leafDead_10_Nconc,PCDS 10.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.NConc,1
+leafDead_10_WSCc,PCDS 10.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
 stem_10_Nconc,PCDS 10.0 harvest,nitrogen percent stem,Wheat.Stem.Live.NConc,1
 stem_10_WSCc,PCDS 10.0 harvest,WSC percent stem,Wheat.Stem.Live.WSCc,1

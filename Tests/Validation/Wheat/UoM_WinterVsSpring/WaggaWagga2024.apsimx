@@ -3876,7 +3876,7 @@
                       "LineThickness": 0,
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Wheat.Stem.NConc",
+                      "YFieldName": "Wheat.Stem.Live.NConc",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,

@@ -72,7 +72,8 @@ list(
         "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx"
       ),
       sheetExcel_weather        = "Weather",
-      file_metaData_observed    = "Observed_data_requirements.csv",
+      #file_metaData_observed    = "Observed_data_requirements.csv",
+      file_metaData_observed  = paste0(proj_name, "_observed_data_requirements.csv"),
       file_name_cult_by_sowDate = "CultivarBySowingDatesTemplate.csv",
       varName_addedToObserv     = "Wheat.Phenology.Stage", # Synthetic var added into observations
       
@@ -315,7 +316,7 @@ list(
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_apsimx
+        dir_obs    = config$folder_observed
       )
     }
   ),
