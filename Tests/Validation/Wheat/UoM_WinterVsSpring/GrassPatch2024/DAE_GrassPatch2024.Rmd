@@ -45,5 +45,6 @@ targets::tar_make()
 
 ```{r}
 tar_load(df_new_obs)
+tar_load(df_obs_mean_harv_pheno)
 ```
 

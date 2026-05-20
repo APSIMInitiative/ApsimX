@@ -37,6 +37,9 @@ source("R/add_harv_into_obs.R")
 source("R/derive_haun_pheno_dates.R")
 source("R/updatePhenoStageInput.R")
 source("R/copy_and_check_met.R")
+source("R/secure_zip_folder.R")
+source("R/apply_name_corrections_Grass24.R")
+source("R/apply_corrections_Grass24.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -80,6 +83,7 @@ list(
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
       file_name_met           = "Grass Patch_-33.25_121.60.met",
+      file_name_mapping_csv   = paste0(proj_name, "_obs_var_new_names.csv"),
       file_name_new_met       = paste0(proj_name, ".met")
     )
   ),
@@ -187,6 +191,30 @@ list(
     )
   ),
   
+  # 1. Tell targets to explicitly watch the file on disk for changes
+  tar_target(
+    name = track_mapping_csv,
+    command = file.path(config$folder_rawData, config$file_name_mapping_csv),
+    format = "file" # <- CRITICAL: Tracks the file content hash
+  ),
+  
+  # 2. Pass the tracked file target path into your function
+  tar_target(
+    name = df_final_observed_renamed,
+    command = apply_name_corrections_Grass24(
+      df_obs           = df_obs_mean_harv_pheno,
+      mapping_csv_path = track_mapping_csv
+    )
+  ),
+  
+  # 2. Pass the tracked file target path into your function
+  tar_target(
+    name = df_final_observed_renamed_corrected,
+    command  = apply_corrections_Grass24(
+      df_obs = df_final_observed_renamed
+    )
+  ),
+  
   # Check if Haun manual parameters are correct
   tar_target(
     name = haun_input_checked, 
@@ -215,7 +243,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_df_into_excel(
-      df        = df_obs_mean_harv_pheno, 
+      df        = df_final_observed_renamed_corrected, 
       folder    = config$folder_observed, 
       filename  = config$file_workData_excel,
       sheetname = config$sheet_name_observed
@@ -234,7 +262,7 @@ list(
       
       # 2. Execute validation
       check_project_dependencies(
-        met_name   = config$file_name_met,
+        met_name   = config$file_name_new_met,
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
