@@ -37,7 +37,7 @@ namespace Models.Forestry
         //internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
         //NH make a Weibull class and put params as properties
 
-        private WeibullModel Weibull;
+        private WeibullModel Weibull = null;
 
         internal class WeibullModel
         {
@@ -55,6 +55,98 @@ namespace Models.Forestry
                 Convergence = convergence;
                 Objective = objective;
             }
+            public WeibullModel()
+            {
+                Shape = 0.0;
+                Scale = 0.0;
+                Location = 0.0;
+                Convergence = 0;
+                Objective = 0.0;
+            }
+            /// <summary>
+            /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
+            /// </summary>
+            /// <param name="d">The diameter value at which to evaluate the CDF.</param>
+            /// <param name="shape">The Weibull shape parameter.</param>
+            /// <param name="scale">The Weibull scale parameter.</param>
+            /// <param name="location">The Weibull location parameter.</param>
+            /// <returns>The cumulative probability up to the supplied diameter.</returns>
+            public static double Weibull3Cdf(double d, double shape, double scale, double location)
+            {
+                if (d <= location) return 0;
+                var z = (d - location) / scale;
+                return 1.0 - Math.Exp(-Math.Pow(z, shape));
+            }
+
+            /// <summary>
+            /// Estimates the Weibull shape and scale that best reproduce the supplied stand density, basal area, and mean diameter.
+            /// </summary>
+            /// <param name="n">Trees per hectare for the stand.</param>
+            /// <param name="g">Basal area in square meters per hectare.</param>
+            /// <param name="dbar">Mean diameter at breast height in centimeters.</param>
+            /// <param name="a">Weibull location parameter representing the minimum diameter offset.</param>
+            /// <returns>The fitted Weibull parameters and convergence diagnostics for the stand.</returns>
+            /// <summary>Estimates Weibull parameters.</summary>
+            /// <returns>The estimated Weibull parameters.</returns>
+            public void Estimate(double n, double g, double dbar, double a)
+            {
+                var lower = new[] { 0.05, 0.01 };
+                var upper = new[] { 20.0, 300.0 };
+                var x = new[] { 2.0, Math.Max(dbar - a, 0.1) };
+
+                x[0] = Math.Clamp(x[0], lower[0], upper[0]);
+                x[1] = Math.Clamp(x[1], lower[1], upper[1]);
+
+                var best = ComputeWeibullFitError(x[0], x[1], n, g, dbar, a);
+                var step = new[] { 0.8, Math.Max(1.0, x[1] * 0.2) };
+
+                var maxIters = 4000;
+                var converged = false;
+
+                for (var iter = 0; iter < maxIters; iter++)
+                {
+                    var improved = false;
+
+                    for (var dim = 0; dim < 2; dim++)
+                    {
+                        foreach (var direction in new[] { -1.0, 1.0 })
+                        {
+                            var candidate = new[] { x[0], x[1] };
+                            candidate[dim] = Math.Clamp(candidate[dim] + direction * step[dim], lower[dim], upper[dim]);
+
+                            var value = ComputeWeibullFitError(candidate[0], candidate[1], n, g, dbar, a);
+                            if (value < best)
+                            {
+                                x = candidate;
+                                best = value;
+                                improved = true;
+                            }
+                        }
+                    }
+
+                    if (!improved)
+                    {
+                        step[0] *= 0.6;
+                        step[1] *= 0.6;
+                    }
+
+                    if (step[0] < 1e-6 && step[1] < 1e-6)
+                    {
+                        converged = true;
+                        break;
+                    }
+                }
+
+                
+                Shape = x[0];
+                Scale = x[1];
+                Location = a;
+                Convergence=converged?0:1;
+                Objective = best;
+
+
+            }
+
         }
 
         /// <summary>
@@ -104,11 +196,13 @@ namespace Models.Forestry
         }
         private void CalculateDistributions()
         {
-                ValidateStandData();
-                Weibull= EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
-                TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
+            ValidateStandData();
+            Weibull = new WeibullModel();
 
-                _DBH = new List<double>();
+            Weibull.Estimate(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+            TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
+
+            _DBH = new List<double>();
             foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
         }
 
@@ -181,8 +275,8 @@ namespace Models.Forestry
                 var upper = breaks[i + 1];
                 var mid = (lower + upper) / 2.0;
 
-                var pLow = Weibull3Cdf(lower, k, lambda, a);
-                var pHigh = Weibull3Cdf(upper, k, lambda, a);
+                var pLow = WeibullModel.Weibull3Cdf(lower, k, lambda, a);
+                var pHigh = WeibullModel.Weibull3Cdf(upper, k, lambda, a);
                 var prob = pHigh - pLow;
 
                 if (!double.IsFinite(prob) || prob < 0)
@@ -210,83 +304,7 @@ namespace Models.Forestry
             return scale * Math.Pow(-Math.Log(1 - p), 1 / shape);
         }
 
-        /// <summary>
-        /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
-        /// </summary>
-        /// <param name="d">The diameter value at which to evaluate the CDF.</param>
-        /// <param name="shape">The Weibull shape parameter.</param>
-        /// <param name="scale">The Weibull scale parameter.</param>
-        /// <param name="location">The Weibull location parameter.</param>
-        /// <returns>The cumulative probability up to the supplied diameter.</returns>
-        private static double Weibull3Cdf(double d, double shape, double scale, double location)
-        {
-            if (d <= location) return 0;
-            var z = (d - location) / scale;
-            return 1.0 - Math.Exp(-Math.Pow(z, shape));
-        }
 
-        /// <summary>
-        /// Estimates the Weibull shape and scale that best reproduce the supplied stand density, basal area, and mean diameter.
-        /// </summary>
-        /// <param name="n">Trees per hectare for the stand.</param>
-        /// <param name="g">Basal area in square meters per hectare.</param>
-        /// <param name="dbar">Mean diameter at breast height in centimeters.</param>
-        /// <param name="a">Weibull location parameter representing the minimum diameter offset.</param>
-        /// <returns>The fitted Weibull parameters and convergence diagnostics for the stand.</returns>
-        /// <summary>Estimates Weibull parameters.</summary>
-        /// <returns>The estimated Weibull parameters.</returns>
-        private static WeibullModel EstimateWeibull(double n, double g, double dbar, double a)
-        {
-            var lower = new[] { 0.05, 0.01 };
-            var upper = new[] { 20.0, 300.0 };
-            var x = new[] { 2.0, Math.Max(dbar - a, 0.1) };
-
-            x[0] = Math.Clamp(x[0], lower[0], upper[0]);
-            x[1] = Math.Clamp(x[1], lower[1], upper[1]);
-
-            var best = ComputeWeibullFitError(x[0], x[1], n, g, dbar, a);
-            var step = new[] { 0.8, Math.Max(1.0, x[1] * 0.2) };
-
-            var maxIters = 4000;
-            var converged = false;
-
-            for (var iter = 0; iter < maxIters; iter++)
-            {
-                var improved = false;
-
-                for (var dim = 0; dim < 2; dim++)
-                {
-                    foreach (var direction in new[] { -1.0, 1.0 })
-                    {
-                        var candidate = new[] { x[0], x[1] };
-                        candidate[dim] = Math.Clamp(candidate[dim] + direction * step[dim], lower[dim], upper[dim]);
-
-                        var value = ComputeWeibullFitError(candidate[0], candidate[1], n, g, dbar, a);
-                        if (value < best)
-                        {
-                            x = candidate;
-                            best = value;
-                            improved = true;
-                        }
-                    }
-                }
-
-                if (!improved)
-                {
-                    step[0] *= 0.6;
-                    step[1] *= 0.6;
-                }
-
-                if (step[0] < 1e-6 && step[1] < 1e-6)
-                {
-                    converged = true;
-                    break;
-                }
-            }
-
-            return new WeibullModel(x[0], x[1], a, converged ? 0 : 1, best);
-            
-        }
 
         /// <summary>
         /// Computes the normalized fitting error for a candidate Weibull parameter set against the target stand metrics.
