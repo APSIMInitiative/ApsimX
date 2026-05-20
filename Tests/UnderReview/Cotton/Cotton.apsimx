@@ -1299,16 +1299,35 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.ValueApproachingMovingMaximumFunction, Models",
-                              "Name": "ValueApproachingMovingMaximumFunction",
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "SubtractFunction",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Boll].Wt",
-                                  "Name": "BollWt",
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "One",
                                   "ResourceName": null,
                                   "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ValueApproachingMovingMaximumFunction, Models",
+                                  "Name": "ValueApproachingMovingMaximumFunction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "BollWt",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
