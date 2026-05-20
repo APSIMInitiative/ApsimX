@@ -37,6 +37,8 @@ namespace Models.Forestry
         //internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
         //NH make a Weibull class and put params as properties
 
+        private WeibullModel Weibull;
+
         internal class WeibullModel
         {
             public double Shape;
@@ -103,8 +105,8 @@ namespace Models.Forestry
         private void CalculateDistributions()
         {
                 ValidateStandData();
-                WeibullModel W = EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
-                TreeList = GenerateTreeList(StemPopulation.Value(), W, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
+                Weibull= EstimateWeibull(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+                TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
 
                 _DBH = new List<double>();
             foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
