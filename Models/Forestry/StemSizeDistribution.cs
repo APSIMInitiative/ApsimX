@@ -1,13 +1,10 @@
 using System;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF.Interfaces;
-using Newtonsoft.Json;
 using Models.PMF;
 using APSIM.Core;
 using System.Collections.Generic;
-using MathNet.Numerics;
+
 
 namespace Models.Forestry
 {
@@ -36,6 +33,8 @@ namespace Models.Forestry
         /// Stores the fitted three-parameter Weibull coefficients and fit diagnostics.
         /// </summary>
         internal sealed record WeibullParams(double Shape, double Scale, double Location, int Convergence, double Objective);
+        //NH make a Weibull class and put params as properties
+
 
         /// <summary>
         /// Represents one DBH class interval and the estimated number of trees per hectare assigned to it.
@@ -113,6 +112,15 @@ namespace Models.Forestry
         /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
         private static List<TreeClass> GenerateTreeList(double n, WeibullParams p, double? maxD, double classWidth, double qUpper)
         {
+            //NH pass 3 Weibull params not the structure
+            //NH rename n to stempopulation
+            //NH rename wiebull params to k and lambda or vice versa
+            //Externalise 80 to parameter
+            // do parameter checking when they are calculated? and change ArgumentException to normal exception - CHANGE LEAVE AS NOW TO MAKE METHOD SELF CONTAINED
+            // use double where we know they are doubles (not var)
+            // remove double? for maxD
+            // Change MaxDLocal to use the class width and number and to the calculations once at beginning - if so then Qupper may not be required
+
             var k = p.Shape;
             var lambda = p.Scale;
             var a = p.Location;
@@ -177,7 +185,7 @@ namespace Models.Forestry
         private static double WeibullQuantile(double p, double shape, double scale)
         {
             if (p <= 0) return 0;
-            if (p >= 1) return double.PositiveInfinity;
+            if (p >= 1) return double.PositiveInfinity;  //NH throw instead
             return scale * Math.Pow(-Math.Log(1 - p), 1 / shape);
         }
 
@@ -301,6 +309,7 @@ namespace Models.Forestry
         /// <returns>The gamma function evaluated at the supplied value.</returns>
         private static double Gamma(double z)
         {
+            //NH could this be a math utility call
             var p = new[]
             {
             676.5203681218851,
