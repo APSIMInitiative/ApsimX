@@ -5,6 +5,7 @@ using Models.PMF;
 using APSIM.Core;
 using System.Collections.Generic;
 using DocumentFormat.OpenXml.Office2019.Drawing.Model3D;
+using MathNet.Numerics;
 
 
 
@@ -223,7 +224,7 @@ namespace Models.Forestry
             Weibull = new WeibullModel();
             Weibull.Estimate(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
             
-            TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
+            TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses, SizeClassInterval, 0.9999);
 
             _DBH = new List<double>();
             foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
@@ -246,11 +247,11 @@ namespace Models.Forestry
         /// </summary>
         /// <param name="n">Trees per hectare to distribute across DBH classes.</param>
         /// <param name="p">The fitted Weibull parameters used to build the class distribution.</param>
-        /// <param name="maxD">An optional maximum diameter cutoff for the generated classes.</param>
+        /// <param name="numSizeClasses">The number of generated size classes.</param>
         /// <param name="classWidth">The DBH class width in centimeters.</param>
         /// <param name="qUpper">The upper Weibull quantile used when deriving a maximum diameter automatically.</param>
         /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
-        private static List<TreeClass> GenerateTreeList(double n, WeibullModel p, double? maxD, double classWidth, double qUpper)
+        private static List<TreeClass> GenerateTreeList(double n, WeibullModel p, int numSizeClasses, double classWidth, double qUpper)
         {
             //NH pass 3 Weibull params not the structure
             //NH rename n to stempopulation
@@ -261,55 +262,20 @@ namespace Models.Forestry
             // remove double? for maxD
             // Change MaxDLocal to use the class width and number and to the calculations once at beginning - if so then Qupper may not be required
 
-            var k = p.Shape;
-            var lambda = p.Scale;
-            var a = p.Location;
+            var output = new List<TreeClass>(numSizeClasses);
 
-            if (!double.IsFinite(k) || !double.IsFinite(lambda) || !double.IsFinite(a))
-                throw new ArgumentException("Invalid Weibull parameters.");
-            if (k <= 0 || lambda <= 0)
-                throw new ArgumentException("Shape and scale must be > 0.");
-            if (!double.IsFinite(n) || n <= 0)
-                throw new ArgumentException("N must be finite and > 0.");
-
-            var maxDLocal = maxD ?? (a + p.Quantile(qUpper));
-            maxDLocal = Math.Ceiling(maxDLocal / classWidth) * classWidth;
-            maxDLocal = Math.Max(maxDLocal, 80);
-
-            if (maxDLocal <= a + classWidth)
+            double lower = 0;
+            for (var i = 0; i < numSizeClasses; i++)
             {
-                maxDLocal = a + 10 * classWidth;
-            }
-
-            var breaks = new List<double>();
-            for (var b = a; b <= maxDLocal + 1e-9; b += classWidth)
-            {
-                breaks.Add(b);
-            }
-
-            if (breaks[^1] < maxDLocal)
-            {
-                breaks.Add(maxDLocal);
-            }
-
-            var output = new List<TreeClass>(breaks.Count - 1);
-
-            for (var i = 0; i < breaks.Count - 1; i++)
-            {
-                var lower = breaks[i];
-                var upper = breaks[i + 1];
-                var mid = (lower + upper) / 2.0;
-
-                var pLow = p.CDF(lower);
-                var pHigh = p.CDF(upper);
-                var prob = pHigh - pLow;
+                double upper = lower + classWidth;
+                double mid = (lower + upper) / 2.0;
+                var prob = p.CDF(upper) - p.CDF(lower);
 
                 if (!double.IsFinite(prob) || prob < 0)
-                {
                     prob = 0;
-                }
 
                 output.Add(new TreeClass(lower, upper, mid, n * prob, null));
+                lower += classWidth;
             }
 
             return output;
@@ -342,10 +308,10 @@ namespace Models.Forestry
                 throw new ArgumentException("Value of lambda is zero or less than zero in method ComputeWeibullFitError");
 
 
-            var dPred = aLocal + lambda * Gamma(1 + 1 / k);
+            var dPred = aLocal + lambda * SpecialFunctions.Gamma(1 + 1 / k);
             var d2Pred = aLocal * aLocal
-                            + 2 * aLocal * lambda * Gamma(1 + 1 / k)
-                            + lambda * lambda * Gamma(1 + 2 / k);
+                            + 2 * aLocal * lambda * SpecialFunctions.Gamma(1 + 1 / k)
+                            + lambda * lambda * SpecialFunctions.Gamma(1 + 2 / k);
 
             var gPred = nLocal * (Math.PI / 40000.0) * d2Pred;
 
@@ -353,41 +319,6 @@ namespace Models.Forestry
                     + Math.Pow((gPred - gLocal) / Math.Max(gLocal, 1), 2);
 
             return err;
-        }
-        /// <summary>
-        /// Evaluates the gamma function using the Lanczos approximation for the Weibull moment calculations.
-        /// </summary>
-        /// <param name="z">The input value for the gamma function.</param>
-        /// <returns>The gamma function evaluated at the supplied value.</returns>
-        private static double Gamma(double z)
-        {
-            //NH could this be a math utility call
-            var p = new[]
-            {
-            676.5203681218851,
-            -1259.1392167224028,
-            771.32342877765313,
-            -176.61502916214059,
-            12.507343278686905,
-            -0.13857109526572012,
-            9.9843695780195716e-6,
-            1.5056327351493116e-7
-        };
-
-            if (z < 0.5)
-            {
-                return Math.PI / (Math.Sin(Math.PI * z) * Gamma(1 - z));
-            }
-
-            z -= 1;
-            var x = 0.99999999999980993;
-            for (var i = 0; i < p.Length; i++)
-            {
-                x += p[i] / (z + i + 1);
-            }
-
-            var t = z + p.Length - 0.5;
-            return Math.Sqrt(2 * Math.PI) * Math.Pow(t, z + 0.5) * Math.Exp(-t) * x;
         }
 
     }
