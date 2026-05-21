@@ -192,11 +192,14 @@ namespace UserInterface.Presenters
                 {
                     // Clone the datatable and add an enabled column.
                     var data = view.List.DataSource.Copy();
-                    data.Columns.Add("Enabled?", typeof(bool));
+                    data.Columns.Add("Enabled", typeof(bool));
                     foreach (DataRow row in data.Rows)
                     {
                         var simulationName = row[0].ToString();
-                        row["Enabled"] = !experiment.DisabledSimNames.Contains(simulationName);
+                        if (experiment.DisabledSimNames != null && experiment.DisabledSimNames.Contains(simulationName))
+                            row["Enabled"] = false;
+                        else
+                            row["Enabled"] = true;
                     }
 
                     // Convert datatable to csv and write to path.
