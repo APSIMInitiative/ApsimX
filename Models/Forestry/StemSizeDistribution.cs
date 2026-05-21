@@ -143,7 +143,17 @@ namespace Models.Forestry
 
 
             }
-
+            /// <summary>
+            /// Computes the quantile of a two-parameter Weibull distribution used for the upper DBH cutoff.
+            /// </summary>
+            /// <param name="p">The cumulative probability to invert.</param>
+            /// <returns>The diameter corresponding to the requested cumulative probability.</returns>
+            public double Quantile(double p)
+            {
+                if (p <= 0) return 0;
+                if (p >= 1) return double.PositiveInfinity;  //NH throw instead
+                return Scale * Math.Pow(-Math.Log(1 - p), 1 / Shape);
+            }
         }
 
         /// <summary>
@@ -262,7 +272,7 @@ namespace Models.Forestry
             if (!double.IsFinite(n) || n <= 0)
                 throw new ArgumentException("N must be finite and > 0.");
 
-            var maxDLocal = maxD ?? (a + WeibullQuantile(qUpper, k, lambda));
+            var maxDLocal = maxD ?? (a + p.Quantile(qUpper));
             maxDLocal = Math.Ceiling(maxDLocal / classWidth) * classWidth;
             maxDLocal = Math.Max(maxDLocal, 80);
 
@@ -305,19 +315,7 @@ namespace Models.Forestry
             return output;
         }
 
-        /// <summary>
-        /// Computes the quantile of a two-parameter Weibull distribution used for the upper DBH cutoff.
-        /// </summary>
-        /// <param name="p">The cumulative probability to invert.</param>
-        /// <param name="shape">The Weibull shape parameter.</param>
-        /// <param name="scale">The Weibull scale parameter.</param>
-        /// <returns>The diameter corresponding to the requested cumulative probability.</returns>
-        private static double WeibullQuantile(double p, double shape, double scale)
-        {
-            if (p <= 0) return 0;
-            if (p >= 1) return double.PositiveInfinity;  //NH throw instead
-            return scale * Math.Pow(-Math.Log(1 - p), 1 / shape);
-        }
+
 
 
 
