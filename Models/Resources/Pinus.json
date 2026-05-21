@@ -4024,9 +4024,9 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 9.0,
-                  "Units": null,
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "",
+                  "Expression": "[Pinus].Stem.DBH * 0.66",
                   "Name": "a",
                   "ResourceName": null,
                   "Children": [],
