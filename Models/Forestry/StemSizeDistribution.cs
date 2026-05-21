@@ -67,15 +67,12 @@ namespace Models.Forestry
             /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
             /// </summary>
             /// <param name="d">The diameter value at which to evaluate the CDF.</param>
-            /// <param name="shape">The Weibull shape parameter.</param>
-            /// <param name="scale">The Weibull scale parameter.</param>
-            /// <param name="location">The Weibull location parameter.</param>
             /// <returns>The cumulative probability up to the supplied diameter.</returns>
-            public static double Weibull3Cdf(double d, double shape, double scale, double location)
+            public double CDF(double d)
             {
-                if (d <= location) return 0;
-                var z = (d - location) / scale;
-                return 1.0 - Math.Exp(-Math.Pow(z, shape));
+                if (d <= Location) return 0;
+                var z = (d - Location) / Scale;
+                return 1.0 - Math.Exp(-Math.Pow(z, Shape));
             }
 
             /// <summary>
@@ -155,6 +152,7 @@ namespace Models.Forestry
         internal sealed record TreeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa, string StandId);
 
         private List<double> _DBH;
+        private List<double> _DBHmid;
         private List<TreeClass> TreeList = new List<TreeClass>();
 
        /// <summary>
@@ -185,6 +183,20 @@ namespace Models.Forestry
             } 
         }
 
+        /// <summary>
+        /// Midpoint of each of the DBH size class.
+        /// </summary>
+        [Units("")]
+        [Description("Midpoint of each of the DBH size class")]
+        public double[] DBHmid
+        {
+            get
+            {
+                CalculateDistributions();
+                return _DBHmid.ToArray();
+            }
+        }
+
         /// <summary>Things the model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -197,13 +209,16 @@ namespace Models.Forestry
         private void CalculateDistributions()
         {
             ValidateStandData();
-            Weibull = new WeibullModel();
 
+            Weibull = new WeibullModel();
             Weibull.Estimate(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), a.Value());
+            
             TreeList = GenerateTreeList(StemPopulation.Value(), Weibull, NumSizeClasses * SizeClassInterval, SizeClassInterval, 0.9999);
 
             _DBH = new List<double>();
             foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
+            _DBHmid = new List<double>();
+            foreach (TreeClass treeClass in TreeList) { _DBHmid.Add(treeClass.DBHMid); }
         }
 
             private void ValidateStandData()
@@ -275,8 +290,8 @@ namespace Models.Forestry
                 var upper = breaks[i + 1];
                 var mid = (lower + upper) / 2.0;
 
-                var pLow = WeibullModel.Weibull3Cdf(lower, k, lambda, a);
-                var pHigh = WeibullModel.Weibull3Cdf(upper, k, lambda, a);
+                var pLow = p.CDF(lower);
+                var pHigh = p.CDF(upper);
                 var prob = pHigh - pLow;
 
                 if (!double.IsFinite(prob) || prob < 0)
