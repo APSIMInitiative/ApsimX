@@ -40,15 +40,16 @@ internal class ModelRegistry
         if (typeToCreate == null)
         {
             // Find and return a resource.
-            var resourceName = modelsAssembly.GetManifestResourceNames().
-                FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", StringComparison.InvariantCultureIgnoreCase));
+            string resourceName = modelsAssembly.GetManifestResourceNames().
+                FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", 
+                StringComparison.InvariantCultureIgnoreCase));
             if (resourceName != null)
                 return CreateResourceModelFromName(modelNameToCreate, resourceName);
         }
-        if (typeToCreate == null)
-            throw new Exception($"Cannot find a model with name: {modelNameToCreate}");              
-        var model = (INodeModel)Activator.CreateInstance(typeToCreate, true)
-                    ?? throw new Exception($"Cannot create a model of type {typeToCreate.Name}");
+
+        INodeModel model = (INodeModel)Activator.CreateInstance(typeToCreate, true);
+        if (model == null)
+            throw new Exception($"A {typeToCreate.Name} model could not be found or could not be created.");
         return model;
     }
 
@@ -60,8 +61,9 @@ internal class ModelRegistry
     /// <returns>The newly created instance.</returns>
     private static INodeModel CreateResourceModelFromName(string modelNameToCreate, string resourceName)
     {
-        using var stream = modelsAssembly.GetManifestResourceStream(resourceName)
-            ?? throw new Exception($"Could not find model or resource with the name: {resourceName}");
+        using var stream = modelsAssembly.GetManifestResourceStream(resourceName);
+        if (stream == null)
+            throw new Exception($"Could not find model or resource with the name: {resourceName}");
         using var reader = new StreamReader(stream);
         string json = reader.ReadToEnd();
         
@@ -74,7 +76,7 @@ internal class ModelRegistry
         INodeModel resource = FileFormat.ReadFromString<INodeModel>(jObject.ToString()).Model.GetChildren().FirstOrDefault();
         
         List<INodeModel> children = resource.GetChildren().ToList();
-        foreach (var child in children)
+        foreach (INodeModel child in children)
             resource.RemoveChild(child);
         return resource;
     }
