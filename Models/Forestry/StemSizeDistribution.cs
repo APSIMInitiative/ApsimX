@@ -155,6 +155,43 @@ namespace Models.Forestry
                 if (p >= 1) return double.PositiveInfinity;  //NH throw instead
                 return Scale * Math.Pow(-Math.Log(1 - p), 1 / Shape);
             }
+
+
+            /// <summary>
+            /// Computes the normalized fitting error for a candidate Weibull parameter set against the target stand metrics.
+            /// </summary>
+            /// <param name="k">Candidate Weibull shape parameter.</param>
+            /// <param name="lambda">Candidate Weibull scale parameter.</param>
+            /// <param name="nLocal">Observed trees per hectare for the stand being fitted.</param>
+            /// <param name="gLocal">Observed basal area for the stand being fitted.</param>
+            /// <param name="dbarLocal">Observed mean diameter for the stand being fitted.</param>
+            /// <param name="aLocal">Observed Weibull location parameter for the stand being fitted.</param>
+            /// <returns>Initially called Objective from the original implementation.</returns>
+            private static double ComputeWeibullFitError(double k, double lambda, double nLocal, double gLocal, double dbarLocal, double aLocal)
+            {
+
+                if (!double.IsFinite(k))
+                    throw new ArgumentException("Value of K is infinite in method ComputeWeibullFitError");
+                if (!double.IsFinite(lambda))
+                    throw new ArgumentException("Value of lambda is infinite in method ComputeWeibullFitError");
+                if (k <= 0)
+                    throw new ArgumentException("Value of K is zero or less than zero in method ComputeWeibullFitError");
+                if (lambda <= 0)
+                    throw new ArgumentException("Value of lambda is zero or less than zero in method ComputeWeibullFitError");
+
+
+                var dPred = aLocal + lambda * SpecialFunctions.Gamma(1 + 1 / k);
+                var d2Pred = aLocal * aLocal
+                                + 2 * aLocal * lambda * SpecialFunctions.Gamma(1 + 1 / k)
+                                + lambda * lambda * SpecialFunctions.Gamma(1 + 2 / k);
+
+                var gPred = nLocal * (Math.PI / 40000.0) * d2Pred;
+
+                var err = Math.Pow((dPred - dbarLocal) / Math.Max(dbarLocal, 1), 2)
+                        + Math.Pow((gPred - gLocal) / Math.Max(gLocal, 1), 2);
+
+                return err;
+            }
         }
 
         /// <summary>
@@ -285,41 +322,6 @@ namespace Models.Forestry
 
 
 
-        /// <summary>
-        /// Computes the normalized fitting error for a candidate Weibull parameter set against the target stand metrics.
-        /// </summary>
-        /// <param name="k">Candidate Weibull shape parameter.</param>
-        /// <param name="lambda">Candidate Weibull scale parameter.</param>
-        /// <param name="nLocal">Observed trees per hectare for the stand being fitted.</param>
-        /// <param name="gLocal">Observed basal area for the stand being fitted.</param>
-        /// <param name="dbarLocal">Observed mean diameter for the stand being fitted.</param>
-        /// <param name="aLocal">Observed Weibull location parameter for the stand being fitted.</param>
-        /// <returns>Initially called Objective from the original implementation.</returns>
-        private static double ComputeWeibullFitError(double k, double lambda, double nLocal, double gLocal, double dbarLocal, double aLocal)
-        {
-
-            if (!double.IsFinite(k))
-                throw new ArgumentException("Value of K is infinite in method ComputeWeibullFitError");
-            if (!double.IsFinite(lambda))
-                throw new ArgumentException("Value of lambda is infinite in method ComputeWeibullFitError");
-            if (k <= 0)
-                throw new ArgumentException("Value of K is zero or less than zero in method ComputeWeibullFitError");
-            if (lambda <= 0)
-                throw new ArgumentException("Value of lambda is zero or less than zero in method ComputeWeibullFitError");
-
-
-            var dPred = aLocal + lambda * SpecialFunctions.Gamma(1 + 1 / k);
-            var d2Pred = aLocal * aLocal
-                            + 2 * aLocal * lambda * SpecialFunctions.Gamma(1 + 1 / k)
-                            + lambda * lambda * SpecialFunctions.Gamma(1 + 2 / k);
-
-            var gPred = nLocal * (Math.PI / 40000.0) * d2Pred;
-
-            var err = Math.Pow((dPred - dbarLocal) / Math.Max(dbarLocal, 1), 2)
-                    + Math.Pow((gPred - gLocal) / Math.Max(gLocal, 1), 2);
-
-            return err;
-        }
 
     }
 }
