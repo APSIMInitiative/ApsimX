@@ -1040,10 +1040,10 @@
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
-            "[Cotton].Phenology.Maturing.Progression.MultiplyFunction.LinearInterpolationFunction.XValue as DeltaOverMaximum",
+            "//[MaturingAverageLong]",
+            "//[MaturingAverageShort]",
+            "//[Cotton].DaysAfterSowing",
             "",
-            "[DeltaOverMaximum]._maximum",
-            "[DeltaOverMaximum]._delta",
             "",
             "[Clock].Today",
             "[Clock].Today.DayOfYear",
@@ -2204,90 +2204,68 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "LinearInterpolationFunction",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "LinearInterpolationFunction",
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                -120.0,
+                                -80.0,
+                                -60.0,
+                                -20.0
+                              ],
+                              "Y": [
+                                0.4,
+                                0.9,
+                                0.9,
+                                0.6
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "XValue",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    0.0,
-                                    0.2,
-                                    0.8,
-                                    1.0
-                                  ],
-                                  "Y": [
-                                    3.0,
-                                    1.5,
-                                    0.7,
-                                    0.6
-                                  ],
-                                  "Name": "XYPairs",
+                                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                                  "NumberOfDays": 21,
+                                  "StageToStartMovingAverage": "Cutout",
+                                  "Name": "MaturingAverageLong",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "Integral",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.DeltaOverMaximum, Models",
-                                  "_delta": 0.0,
-                                  "_maximum": 0.0,
-                                  "StageToStartCalculating": "Cutout",
-                                  "Name": "XValue",
+                                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                                  "NumberOfDays": 3,
+                                  "StageToStartMovingAverage": "Cutout",
+                                  "Name": "MaturingAverageShort",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.PhaseLookup, Models",
-                                      "Name": "DeltaPostCutout",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "Integral",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                                          "Start": "Sowing",
-                                          "End": "Cutout",
-                                          "Name": "PreCutout",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.0,
-                                              "Units": null,
-                                              "Name": "Zero",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                                          "Start": "Cutout",
-                                          "End": "Unused",
-                                          "Name": "PostCutout",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Boll].Wt",
-                                              "Name": "BollWt",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -2296,16 +2274,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "ResourceName": null,
-                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -11674,7 +11642,7 @@
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": 0.0,
+                      "Minimum": -100.0,
                       "Maximum": 1.0,
                       "Interval": "NaN"
                     }
@@ -11684,7 +11652,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Delta",
+                  "Name": "ForestH",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -11753,7 +11721,7 @@
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": 0.0,
+                      "Minimum": -100.0,
                       "Maximum": 1.0,
                       "Interval": "NaN"
                     }
@@ -11763,7 +11731,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Delta1",
+                  "Name": "NarDef",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -11832,7 +11800,86 @@
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": 0.0,
+                      "Minimum": -100.0,
+                      "Maximum": 1.0,
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Emerald",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "DeltaOverMaximum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Experiment] = \"Emerald2015\"",
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir45",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
                       "Maximum": "NaN",
                       "Interval": "NaN"
                     }
@@ -11842,7 +11889,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Delta11",
+                  "Name": "Max",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -11860,7 +11907,7 @@
                       "LineThickness": 0,
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "DeltaOverMaximum._delta",
+                      "YFieldName": "MaturingAverage",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -11900,7 +11947,7 @@
                       "LineThickness": 0,
                       "TableName": "DailyReport",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "DeltaOverMaximum._maximum",
+                      "YFieldName": "MaturingMax",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -11909,6 +11956,243 @@
                       "CumulativeX": false,
                       "Filter": "[Experiment] = \"NAR0607\"",
                       "Name": "Series1",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir45",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": -100.0,
+                      "Maximum": 1.0,
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "DDRF21",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "DeltaOverMaximum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Experiment] = \"DDRF21\"",
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir45",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": -100.0,
+                      "Maximum": 1.0,
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "DouglasDaly2021",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "DeltaOverMaximum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Experiment] = \"DouglasDaly2021\"",
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Cotton.Phenology.CurrentStageName",
+                          "SimulationName": "NAR0607Ir45",
+                          "Name": "EventNamesOnGraph",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN"
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": -100.0,
+                      "Maximum": 1.0,
+                      "Interval": "NaN"
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Narrabri0203",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "DeltaOverMaximum",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Experiment] = \"Narrabri0203\"",
+                      "Name": "Series",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -28764,7 +29048,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "BDK09",
               "ResourceName": null,
               "Children": [
