@@ -1,6 +1,7 @@
 ﻿using System;
 using APSIM.Core;
 using Models.Core;
+using Models.PMF.Phen;
 
 namespace Models.Functions
 {
@@ -24,28 +25,59 @@ namespace Models.Functions
 
         private double _yesterday = 0;
         private double _today = 0;
-        private double _delta = 0;
-        private double _maximum = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double _delta {get; set;} = 0;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double _maximum  {get; set;} = 0;
+
+        private bool _initialisedToday = true;
+
+        /// <summary>The stage to start calculating</summary>
+        [Description("The stage to start calculating")]
+        [Display(Type = DisplayType.CropStageName)]
+        public string StageToStartCalculating { get; set; }
 
         /// <summary>
         /// Invoked at the start of each day.
         /// </summary>
-        [EventSubscribe("StartOfDay")]
-        private void OnStartOfDay(object sender, EventArgs args)
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs args)
         {
             _yesterday = _today;
             _today = child.Value();
             _delta = _today - _yesterday;
             if (_delta > _maximum)
                 _maximum = _delta;
+
+            if (_initialisedToday)
+            {
+                _initialisedToday = false;
+                _maximum = 0;
+            }
+        }
+
+        /// <summary>Called when [phase changed].</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == StageToStartCalculating)
+                _initialisedToday = true;
         }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (_maximum == 0)
-                return 0;
+            if (_initialisedToday || _maximum == 0)
+                return 1;
             else
                 return _delta / _maximum;
         }
