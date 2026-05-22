@@ -854,7 +854,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Phenology].ThermalTimePreEmergence",
-                          "Name": "Base",
+                          "Name": "ThermalTimePreEmergence",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -867,13 +867,33 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
+                      "End": "Cutout",
+                      "Name": "Vegetative",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTimePostEmergence",
+                          "Name": "ThermalTimePostEmergence",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Cutout",
                       "End": "Unused",
-                      "Name": "PostEmergence",
+                      "Name": "Maturing",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "To prevent cotton phenology from stalling once the temperature drops too low, and therefore sitting idle all winter, this function caps it at a low value to prevent thermal time going to 0.\n\nThis was tested by running a cotton simulation in a cold environment (Lincoln NZ) and choosing a low enough that it doesn't effect normal cotton growing areas, but high enough that it still reaches maturity by spring.",
+                          "Text": "To prevent cotton phenology from stalling once the temperature drops too low, and therefore sitting idle all winter, this function caps it at a low value to prevent thermal time going to 0.\n\nThis was tested by running a cotton simulation in a cold environment (Wagga Wagga) and choosing a low enough that it doesn't effect normal cotton growing areas, but high enough that it still reaches maturity by spring.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -887,7 +907,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 4.0,
+                              "FixedValue": 5.0,
                               "Units": null,
                               "Name": "Constant",
                               "ResourceName": null,
@@ -898,7 +918,7 @@
                             {
                               "$type": "Models.Functions.VariableReference, Models",
                               "VariableName": "[Phenology].ThermalTimePostEmergence",
-                              "Name": "Base",
+                              "Name": "ThermalTimePostEmergence",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
