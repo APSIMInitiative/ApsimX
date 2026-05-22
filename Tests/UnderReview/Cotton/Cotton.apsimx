@@ -750,7 +750,7 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "PreemergentThermalTime",
+                  "Name": "ThermalTimePreEmergence",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -796,7 +796,7 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "ThermalTime",
+                  "Name": "ThermalTimePostEmergence",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -832,6 +832,83 @@
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "ThermalTime",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Sowing",
+                      "End": "Emergence",
+                      "Name": "PreEmergence",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTimePreEmergence",
+                          "Name": "Base",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "Unused",
+                      "Name": "PostEmergence",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "To prevent cotton phenology from stalling once the temperature drops too low, and therefore sitting idle all winter, this function caps it at a low value to prevent thermal time going to 0.\n\nThis was tested by running a cotton simulation in a cold environment (Lincoln NZ) and choosing a low enough that it doesn't effect normal cotton growing areas, but high enough that it still reaches maturity by spring.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.MaximumFunction, Models",
+                          "Name": "MaximumFunction",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 4.0,
+                              "Units": null,
+                              "Name": "Constant",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTimePostEmergence",
+                              "Name": "Base",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -891,7 +968,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].PreemergentThermalTime",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "ResourceName": null,
                       "Children": [],
@@ -1253,6 +1330,15 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "To implement this stage, two moving averages of the Boll Wt are used as a multipler. The short average (3 Days) over the long average (21 days). When the bolls are growing quickly, the averages will diverge and the modifier goes up, as the growth slows, the long average catches up reducing the modifier.\n\nThis modifier is passed through a bell shaped curve defined, where when growth is low the phenology slows down (such in a slow growing environment), goes up to normal progression when growing normally, then slows drastically if the boll growth is very high. This allows the larger yield areas that put on biomass faster to extend their cutout to maturity phase, while also allowing the slower growing areas to do the same.\n\nThis curve has been hand built based on the validation set, but could be replaced with a curve function at some point in the function to generalise it.",
+                      "Name": "Memo1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 300.0,
                       "Units": null,
@@ -1276,15 +1362,13 @@
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
                                 0.0,
-                                5.0,
                                 10.0,
                                 15.0
                               ],
                               "Y": [
-                                5.0,
-                                5.0,
+                                0.0,
                                 10.0,
-                                5.0
+                                10.0
                               ],
                               "Name": "XYPairs",
                               "ResourceName": null,
@@ -1307,7 +1391,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "LinearInterpolationFunction",
+                          "Name": "GrowthLinearInterpolation",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1319,7 +1403,7 @@
                                 80.0,
                                 100.0,
                                 120.0,
-                                140.0
+                                125.0
                               ],
                               "Y": [
                                 0.6,
