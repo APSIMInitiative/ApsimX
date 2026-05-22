@@ -61,5 +61,7 @@ tar_load(df_pheno_int)
 tar_load(df_pheno_haun)
 tar_load(df_pheno_final)
 tar_load(df_pheno_input_param)
+tar_load(df_obs_plus_pheno)
+tar_load(df_obs_plus_pheno_harv)
 ```
 

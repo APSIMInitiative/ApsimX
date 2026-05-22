@@ -46,6 +46,7 @@ targets::tar_source("../targets_MasterScripts")
 
 # Load THIS project's specific local scripts (Wagga local fixes & legacy pheno)
 source("R/apply_corrections_Grass24.R")
+source("R/apply_name_corrections_Grass24.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -182,171 +183,150 @@ list(
     command = format_apsim_pheno_params(df_pheno_final)
   ),
   
-  # Step 5B: Save the Parameter Data to Disk
+
+ 
+  # ----------------------------------------------------------------------------
+  # PHASE D: OBSERVATION FORMATTING & INTEGRATION
+  # ----------------------------------------------------------------------------
+  
+  # Convert pheno dates into obs file friendly input and add to obs timeline
   tar_target(
-    name = file_pheno_param_csv,
+    name = df_obs_plus_pheno,
+    command = add_new_var_to_obs(
+      df_obs       = df_obs_mean,
+      df_new_data     = df_pheno_final,
+      target_col_name = "Wheat.Phenology.Stage"
+    )
+  ),
+  
+  # Add HarvestRipe flags at final measurements for 1:1 graph analysis
+  tar_target(
+    name = df_obs_plus_pheno_harv,
+    command = add_harv_into_obs(
+      df            = df_obs_plus_pheno,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"),
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
+
+  # 1. Tell targets to explicitly watch the file with name swaps for obs
+  tar_target(
+    name = track_mapping_csv,
+    command = file.path(config$folder_rawData, config$file_name_mapping_csv),
+    format = "file" # <- CRITICAL: Tracks the file content hash
+  ),
+
+  # 2. Pass the tracked file target path into your function
+  tar_target(
+    name = df_obs_plus_pheno_harv_renamed,
+    command = apply_name_corrections_Grass24(
+      df_obs           = df_obs_plus_pheno_harv,
+      mapping_csv_path = track_mapping_csv
+    )
+  ),
+
+  # 2. Pass the tracked file target path into your function
+  tar_target(
+    name = df_obs_plus_pheno_harv_renamed_corrected,
+    command  = apply_corrections_Grass24(
+      df_obs = df_obs_plus_pheno_harv_renamed
+    )
+  ),
+
+
+  # ----------------------------------------------------------------------------
+  # PHASE E: VALIDATION & EXPORT  
+  # ----------------------------------------------------------------------------
+  # Check if Haun manual parameters are correct
+  tar_target(
+    name = haun_input_checked,
+    command = check_manual_params(
+      config$folder_inputs,
+      config$file_name_input_haun,
+      df_obs_plus_pheno_harv_renamed_corrected
+    )
+  ),
+  
+  # Save pheno-date input into CSV
+  tar_target(
+    name = msg_pheno_param_saved,
+    command = save_df_into_csv(
+      df       = df_pheno_input_param,
+      folder   = config$folder_inputs,
+      filename = config$file_name_input_pheno
+    ),
+    format = "file"
+  ),
+
+  # # Step 5B: Save the Parameter Data to Disk
+  # tar_target(
+  #   name = file_pheno_param_csv,
+  #   command = {
+  #     out_path <- file.path(config$folder_inputs, config$file_name_input_pheno)
+  #     readr::write_csv(df_pheno_input_param, out_path, na = "")
+  #     out_path
+  #   },
+  #   format = "file"
+  # ),
+  
+  # Save new mean observed data into Excel
+  tar_target(
+    name = msg_obs_saved,
+    command = save_df_into_excel(
+      df        = df_obs_plus_pheno_harv_renamed_corrected,
+      folder_path    = config$folder_observed,
+      file_name  = config$file_workData_excel,
+      sheet_name = config$sheet_name_observed
+    ),
+    format = "file"
+  ),
+
+  # Post-flight dependency check for APSIM
+  tar_target(
+    name = check_depend,
     command = {
-      out_path <- file.path(config$folder_inputs, config$file_name_input_pheno)
-      readr::write_csv(df_pheno_input_param, out_path, na = "")
-      out_path
+      # 1. Force dependency tracking
+      msg_obs_saved
+      msg_pheno_param_saved
+      haun_input_checked
+
+      # 2. Execute validation
+      check_project_dependencies(
+        met_name   = config$file_name_new_met,
+        projects   = config$proj_name,
+        dir_met    = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs    = config$folder_observed
+      )
+    }
+  ),
+
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING
+  # ----------------------------------------------------------------------------
+
+  # 1. THE WATCHER: Track every Excel file in the folder.
+  # If any file changes, this target invalidates.
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+
+  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files)
+
+      secure_zip_folder(
+        input_folder = config$folder_observed,
+        output_zip   = config$file_zip_out,
+        pass_file    = config$file_pass
+      )
     },
     format = "file"
   )
-  #
-  # 
-  # # # Create and add interpolated pheno-dates not measured in-between
-  # # tar_target(
-  # #   name = df_pheno_dates_paramInput,
-  # #   command = add_interp_pheno_dates(
-  # #     df_obs_pheno_dates,
-  # #     config$btwStgPerc
-  # #   )
-  # # )
-  # 
 
-  # # 
-
-  # 
-  
-  # 
-  # # Join interpolated and haun-based pheno dates (haun has priority)
-  # tar_target(
-  #   name = df_apsimStageInput_haunBased,
-  #   command = updatePhenoStageInput(
-  #     obsIntPheno = df_pheno_dates_paramInput,  # Interpolated observations
-  #     haunPheno   = df_haun_pheno_dates         # Haun stage has priority
-  #   )
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE D: OBSERVATION FORMATTING & INTEGRATION
-  # # ----------------------------------------------------------------------------
-  # # Add HarvestRipe flags at final measurements for 1:1 graph analysis
-  # tar_target(
-  #   name = df_observed_wide_harv, 
-  #   command = add_harv_into_obs(
-  #     df            = df_obs_mean,
-  #     ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
-  #     new_col_name  = "Wheat.Phenology.CurrentStageName",
-  #     new_col_value = "HarvestRipe"
-  #   )
-  # ),
-  # 
-  # # Convert pheno dates into obs file friendly input and add to obs timeline
-  # tar_target(
-  #   name = df_obs_mean_harv_pheno,
-  #   command = add_stages_to_obs(
-  #     df_obs       = df_observed_wide_harv, 
-  #     df_pheno     = df_apsimStageInput_haunBased,
-  #     new_var_name = "Wheat.Phenology.Stage"
-  #   )
-  # ),
-  # 
-  # # 1. Tell targets to explicitly watch the file on disk for changes
-  # tar_target(
-  #   name = track_mapping_csv,
-  #   command = file.path(config$folder_rawData, config$file_name_mapping_csv),
-  #   format = "file" # <- CRITICAL: Tracks the file content hash
-  # ),
-  # 
-  # # 2. Pass the tracked file target path into your function
-  # tar_target(
-  #   name = df_final_observed_renamed,
-  #   command = apply_name_corrections_Grass24(
-  #     df_obs           = df_obs_mean_harv_pheno,
-  #     mapping_csv_path = track_mapping_csv
-  #   )
-  # ),
-  # 
-  # # 2. Pass the tracked file target path into your function
-  # tar_target(
-  #   name = df_final_observed_renamed_corrected,
-  #   command  = apply_corrections_Grass24(
-  #     df_obs = df_final_observed_renamed
-  #   )
-  # ),
-  # 
-  # # Check if Haun manual parameters are correct
-  # tar_target(
-  #   name = haun_input_checked, 
-  #   command = check_manual_params(
-  #     config$folder_inputs,
-  #     config$file_name_input_haun,
-  #     df_obs_mean
-  #   )
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE E: EXPORT & VALIDATION
-  # # ----------------------------------------------------------------------------
-  # # Save pheno-date input into CSV
-  # tar_target(
-  #   name = msg_pheno_param_saved,
-  #   command = save_df_into_csv(
-  #     df       = df_apsimStageInput_haunBased, 
-  #     folder   = config$folder_inputs, 
-  #     filename = config$file_name_input_pheno
-  #   ),
-  #   format = "file"
-  # ),
-  # 
-  # # Save new mean observed data into Excel
-  # tar_target(
-  #   name = msg_obs_saved,
-  #   command = save_df_into_excel(
-  #     df        = df_final_observed_renamed_corrected, 
-  #     folder    = config$folder_observed, 
-  #     filename  = config$file_workData_excel,
-  #     sheetname = config$sheet_name_observed
-  #   ),
-  #   format = "file"
-  # ),
-  # 
-  # # Post-flight dependency check for APSIM
-  # tar_target(
-  #   name = check_depend, 
-  #   command = {
-  #     # 1. Force dependency tracking
-  #     msg_obs_saved
-  #     msg_pheno_param_saved
-  #     haun_input_checked
-  #     
-  #     # 2. Execute validation
-  #     check_project_dependencies(
-  #       met_name   = config$file_name_new_met,
-  #       projects   = config$proj_name,
-  #       dir_met    = config$folder_met,
-  #       dir_inputs = config$folder_inputs,
-  #       dir_obs    = config$folder_observed
-  #     )
-  #   }
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE G: SECURITY & ZIPPING 
-  # # ----------------------------------------------------------------------------
-  # 
-  # # 1. THE WATCHER: Track every Excel file in the folder.
-  # # If any file changes, this target invalidates.
-  # tar_target(
-  #   name = tracked_excel_files,
-  #   command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
-  #   format = "file"
-  # ),
-  # 
-  # # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
-  # tar_target(
-  #   name = encrypted_zip_artifact,
-  #   command = {
-  #     force(tracked_excel_files) 
-  #     
-  #     secure_zip_folder(
-  #       input_folder = config$folder_observed, 
-  #       output_zip   = config$file_zip_out, 
-  #       pass_file    = config$file_pass
-  #     )
-  #   },
-  #   format = "file"
-  # )
-  # 
 )
