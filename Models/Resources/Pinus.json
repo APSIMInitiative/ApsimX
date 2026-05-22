@@ -4018,16 +4018,16 @@
             },
             {
               "$type": "Models.Forestry.StemSizeDistribution, Models",
-              "NumSizeClasses": 10,
+              "SizeClassNumber": 10,
               "SizeClassInterval": 5.0,
-              "Name": "StemSizeDistribution",
+              "Name": "SizeClass",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "",
                   "Expression": "[Pinus].Stem.DBH * 0.66",
-                  "Name": "a",
+                  "Name": "Location",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
