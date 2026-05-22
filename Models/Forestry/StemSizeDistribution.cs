@@ -33,11 +33,11 @@ namespace Models.Forestry
 
         internal class WeibullModel
         {
-            public double Shape;
-            public double Scale;
-            public double Location;
-            public int Convergence;
-            public double Objective;
+            public double Shape = 0.0;
+            public double Scale = 0.0;
+            public double Location = 0.0;
+            public int Convergence = 0;
+            public double Objective = 0.0;
 
             public WeibullModel (double shape, double scale, double location, int convergence, double objective)
             { 
@@ -55,6 +55,17 @@ namespace Models.Forestry
                 Convergence = 0;
                 Objective = 0.0;
             }
+
+            public WeibullModel(double stemPopulation, double basalArea, double meanDBH, double a)
+            {
+                Shape = 0.0;
+                Scale = 0.0;
+                Location = 0.0;
+                Convergence = 0;
+                Objective = 0.0;
+                Estimate(stemPopulation, basalArea, meanDBH, a);
+            }
+
             /// <summary>
             /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
             /// </summary>
@@ -143,7 +154,7 @@ namespace Models.Forestry
                 if (p < 0) throw new ArgumentException("Probability in Weibull Quantile method is less than zero");
                 if (p == 0) return 0;
                 if (p >= 1) throw new ArgumentException("Probability in Weibull Quantile method is equal to or greater than 1.");
-                return Scale * Math.Pow(-Math.Log(1 - p), 1 / Shape);
+                return Location+Scale * Math.Pow(-Math.Log(1 - p), 1 / Shape);
             }
 
 
@@ -222,11 +233,11 @@ namespace Models.Forestry
         }
 
         /// <summary>
-        /// DBH at 50% Quantile.
+        /// DBH at 50th Percentile
         /// </summary>
         [Units("")]
-        [Description("DBH at 50% Quantile")]
-        public double DBHQ50
+        [Description("DBH at 50th Percentile")]
+        public double DBH50thPercentile
         {
             get
             {
@@ -237,11 +248,11 @@ namespace Models.Forestry
         }
 
         /// <summary>
-        /// DBH at 10% Quantile.
+        /// DBH at 10th Percentile
         /// </summary>
         [Units("")]
-        [Description("DBH at 10% Quantile")]
-        public double DBHQ10
+        [Description("DBH at 10th Percentile")]
+        public double DBH10thPercentile
         {
             get
             {
@@ -252,11 +263,11 @@ namespace Models.Forestry
         }
 
         /// <summary>
-        /// DBH at 90% Quantile.
+        /// DBH at 90th Percentile
         /// </summary>
         [Units("")]
-        [Description("DBH at 90% Quantile")]
-        public double DBHQ90
+        [Description("DBH at 90th Percentile")]
+        public double DBH90thPercentile
         {
             get
             {
