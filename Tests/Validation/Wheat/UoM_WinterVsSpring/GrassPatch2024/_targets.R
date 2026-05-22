@@ -60,7 +60,7 @@ list(
       file_pass               = file.path(here::here(), "secret_pass.txt"), 
       
       file_rawData_excel      = "Observed.xlsx",             # Raw observed data
-      file_workData_excel     = paste0(proj_name, "_Observed.xlsx"),
+      file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       sheet_name_observed     = "Observed",
       
       # Model parameters
@@ -239,13 +239,20 @@ list(
     format = "file"
   ),
   
+  # untested
+  # 🚨 NEW: THE QC GATEKEEPER
+  tar_target(
+    name = qc_apsim_observed_harv,
+    command = check_obs_health(df_obs_plus_pheno_harv_renamed_corrected) # Stops the pipeline if bad data is found
+  ),
+  
   # Save new mean observed data into Excel
   tar_target(
     name = msg_obs_saved,
-    command = save_df_into_excel(
-      df          = df_obs_plus_pheno_harv_renamed_corrected,
+    command = save_df_to_excel(
+      df          = qc_apsim_observed_harv,
       folder_path = config$folder_observed,
-      file_name   = config$file_workData_excel,
+      file_name   = config$file_saved_obs_excel,
       sheet_name  = config$sheet_name_observed
     ),
     format = "file"

@@ -39,18 +39,22 @@ add_new_var_to_obs <- function(df_obs, df_new_data, target_col_name) {
                paste(missing_cols, collapse = ", ")))
   }
   
-  # ---- 2. TYPE ALIGNMENT ----
-  # Ensure strict typing on SimulationName and Dates before the bind
+  # ---- 2. TYPE ALIGNMENT & BULLETPROOF DATE PARSING ----
+  # Ensure strict typing on SimulationName and Dates before the bind using lubridate
   df_obs_clean <- df_obs %>%
     dplyr::mutate(
       SimulationName = as.character(SimulationName),
-      Clock.Today    = as.Date(Clock.Today)
+      Clock.Today = as.Date(suppressWarnings(lubridate::parse_date_time(
+        as.character(Clock.Today), orders = c("dmy HMS", "ymd HMS", "dmy", "ymd", "Ymd")
+      )))
     )
   
   df_new_clean <- df_new_data %>%
     dplyr::mutate(
       SimulationName = as.character(SimulationName),
-      Clock.Today    = as.Date(Clock.Today)
+      Clock.Today = as.Date(suppressWarnings(lubridate::parse_date_time(
+        as.character(Clock.Today), orders = c("dmy HMS", "ymd HMS", "dmy", "ymd", "Ymd")
+      )))
     )
   
   # ---- 3. BIND & COLLAPSE (The APSIM-X Crash Prevention Layer) ----

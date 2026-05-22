@@ -104,5 +104,15 @@ tar_load(df_pheno_raw)
 tar_load(df_pheno_int)
 tar_load(df_pheno_haun)
 tar_load(df_pheno_final)
+tar_load(list_observed_clean)
+
+```
+
+```{r}
+tar_load(df_obs_wide)
+tar_load(df_pheno_final)
+tar_load(df_obs_plus_pheno)
+tar_load(df_obs_plus_pheno_harv)
+tar_read(qc_apsim_observed_harv)
 ```
 

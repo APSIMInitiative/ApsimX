@@ -65,6 +65,7 @@ list(
       sheetExcel_weather      = "Weather",
       sheetExcel_haun         = "Haun stage ", # Retains raw data typo
       sheetExcel_soilWater    = "GravimetricMoistureNearSowing",
+      sheet_name_observed     = "Observed",
       
       # Security
       file_zip_out            = file.path(here::here(), "Observed.zip"), 
@@ -169,6 +170,7 @@ list(
     }
   ),
   
+  
   # ----------------------------------------------------------------------------
   # PHASE D: PHENOLOGY STAGE SYNTHESIS (Wagga Specific)
   # ----------------------------------------------------------------------------
@@ -219,7 +221,7 @@ list(
   tar_target(
     name = df_pheno_input_param, 
     command = format_apsim_pheno_params(df_pheno_final)
-  )
+  ),
   
   # tar_target(
   #   name = df_PCDS_int, 
@@ -268,6 +270,43 @@ list(
   # # ----------------------------------------------------------------------------
   # # PHASE E: FINAL OBSERVATION FORMATTING & QC
   # # ----------------------------------------------------------------------------
+  
+  tar_target(
+    name = list_observed_clean,
+    command = apply_corrections_Wagga24(
+      df_tbl=list_observed_dfs, 
+      df_pheno_final=df_pheno_final)
+  ),
+
+  tar_target(
+    name = df_obs_wide,
+    command = prepare_apsim_observed(
+      compiled_obs = list_observed_clean,
+      dfs_out      = config$pcd_stages_to_extract # Exclude phenology extraction datasets
+    )
+  ),
+  
+  # Convert pheno dates into obs file friendly input and add to obs timeline
+  tar_target(
+    name = df_obs_plus_pheno,
+    command = add_new_var_to_obs(
+      df_obs          = df_obs_wide,
+      df_new_data     = df_pheno_final,
+      target_col_name = "Wheat.Phenology.Stage"
+    )
+  ),
+  
+  # Add HarvestRipe flags at final measurements for 1:1 graph analysis
+  tar_target(
+    name = df_obs_plus_pheno_harv,
+    command = add_harv_into_obs(
+      df            = df_obs_plus_pheno,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "WSCs", "Nconc"),
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
+    )
+  ),
+  
   # tar_target(
   #   name = list_observed_stage, 
   #   command = add_to_observed_list(
@@ -277,18 +316,8 @@ list(
   #   )
   # ),
   # 
-  # tar_target(
-  #   name = list_observed_clean, 
-  #   command = apply_corrections_Wagga24(list_observed_stage)
-  # ),
-  # 
-  # tar_target(
-  #   name = df_final_observed,
-  #   command = prepare_apsim_observed(
-  #     compiled_obs = list_observed_clean,
-  #     dfs_out      = config$pcd_stages_to_extract # Exclude phenology extraction datasets
-  #   )
-  # ),
+
+
   # 
   # # 🚨 UPGRADED: Now uses ref_vars (plural) for the Universal Function
   # tar_target(
@@ -301,98 +330,123 @@ list(
   #   )
   # ),
   # 
-  # # 🚨 NEW: THE QC GATEKEEPER
-  # tar_target(
-  #   name = qc_apsim_observed_harv,
-  #   command = check_obs_health(df_final_observed_harv) # Stops the pipeline if bad data is found
-  # ),
+  # 🚨 NEW: THE QC GATEKEEPER
+  tar_target(
+    name = qc_apsim_observed_harv,
+    command = check_obs_health(df_obs_plus_pheno_harv) # Stops the pipeline if bad data is found
+  ),
   # 
-  # tar_target(
-  #   name = haun_input_checked, 
-  #   command = check_manual_params(
-  #     config$folder_inputs,
-  #     config$file_name_input_haun,
-  #     qc_apsim_observed_harv
-  #   )
-  # ),
+  tar_target(
+    name = haun_input_checked,
+    command = check_manual_params(
+      config$folder_inputs,
+      config$file_name_input_haun,
+      qc_apsim_observed_harv
+    )
+  ),
   # 
   # # ----------------------------------------------------------------------------
   # # PHASE F: OUTPUT GENERATION & VALIDATION
   # # ----------------------------------------------------------------------------
-  # # 🚨 UPGRADED: Uses Universal Excel Exporter
+  # 🚨 UPGRADED: Uses Universal Excel Exporter
   # tar_target(
-  #   name = msg_obs_saved, 
-  #   command = save_obs_to_excel(
-  #     df_final  = qc_apsim_observed_harv, 
+  #   name = msg_obs_saved,
+  #   command = save_df_into_excel(
+  #     df_final  = qc_apsim_observed_harv,
   #     obs_path  = config$folder_observed,
   #     file_name = config$file_saved_obs_excel,
-  #     sheetName = "Observed"
+  #     sheetName = config$sheet_name_observed
   #   ),
   #   format = "file"
   # ),
-  # 
+  # Save new mean observed data into Excel
+  tar_target(
+    name = msg_obs_saved,
+    command = save_df_to_excel(
+      df          = qc_apsim_observed_harv,
+      folder_path = config$folder_observed,
+      file_name   = config$file_saved_obs_excel,
+      sheet_name  = config$sheet_name_observed
+    ),
+    format = "file"
+  ),
   # tar_target(
-  #   name = msg_param_saved, 
+  #   name = msg_param_saved,
   #   command = save_input_param_csv(
-  #     df_apsimStageInput_haunBased, 
-  #     config$folder_inputs, 
+  #     df_apsimStageInput_haunBased,
+  #     config$folder_inputs,
   #     config$file_name_input_pheno
   #   ),
   #   format = "file"
   # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE G: SECURITY & ZIPPING 
-  # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = tracked_excel_files,
-  #   command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
-  #   format = "file"
-  # ),
-  # 
-  # tar_target(
-  #   name = encrypted_zip_artifact,
-  #   command = {
-  #     force(tracked_excel_files) 
-  #     
-  #     secure_zip_folder(
-  #       input_folder = config$folder_observed, 
-  #       output_zip   = config$file_zip_out, 
-  #       pass_file    = config$file_pass
-  #     )
-  #     config$file_zip_out
-  #   },
-  #   format = "file"
-  # ),
-  # 
-  # # ----------------------------------------------------------------------------
-  # # PHASE H: PRE-FLIGHT & DEPENDENCY CHECKS  
-  # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = verify_dependencies,
-  #   command = {
-  #     msg_obs_saved
-  #     msg_param_saved
-  #     msg_met_saved
-  #     
-  #     check_project_dependencies(
-  #       projects   = config$proj_name,
-  #       dir_met    = config$folder_met,
-  #       dir_inputs = config$folder_inputs,
-  #       dir_obs    = config$folder_observed
-  #     )
-  #   }
-  # ),
-  # 
-  # tar_target(
-  #   name = verify_data_backup,
-  #   command = {
-  #     force(verify_dependencies) 
-  #     
-  #     check_archive_sync(
-  #       target_folder = config$folder_observed,
-  #       zip_file      = config$file_zip_out
-  #     )
-  #   }
-  # )
+
+  # Save pheno-date input into CSV
+  tar_target(
+    name = msg_pheno_param_saved,
+    command = save_df_into_csv(
+      df       = df_pheno_input_param,
+      folder   = config$folder_inputs,
+      filename = config$file_name_input_pheno
+    ),
+    format = "file"
+  ),
+  
+  
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = tracked_excel_files,
+    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    format = "file"
+  ),
+
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files)
+
+      secure_zip_folder(
+        input_folder = config$folder_observed,
+        output_zip   = config$file_zip_out,
+        pass_file    = config$file_pass
+      )
+      config$file_zip_out
+    },
+    format = "file"
+  ),
+
+  # ----------------------------------------------------------------------------
+  # PHASE H: PRE-FLIGHT & DEPENDENCY CHECKS
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = check_depend,
+    command = {
+      # 1. Force dependency tracking
+      msg_obs_saved
+      msg_pheno_param_saved
+      haun_input_checked
+      
+      # 2. Execute validation
+      check_project_dependencies(
+        met_name   = config$file_name_new_met,
+        projects   = config$proj_name,
+        dir_met    = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs    = config$folder_observed
+      )
+    }
+  ),
+
+  tar_target(
+    name = verify_data_backup,
+    command = {
+      force(check_depend)
+
+      check_archive_sync(
+        target_folder = config$folder_observed,
+        zip_file      = config$file_zip_out
+      )
+    }
+  )
 )
