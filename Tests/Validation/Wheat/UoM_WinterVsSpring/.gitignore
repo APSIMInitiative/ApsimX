@@ -26,6 +26,7 @@ InputFilesFromCloud/
 ~$*.xlsm
 
 # All the metadata folders that have rawdata
+R-Copy/
 #Dookie2024/
 #Dookie2025/
 #WaggaWagga2024/
