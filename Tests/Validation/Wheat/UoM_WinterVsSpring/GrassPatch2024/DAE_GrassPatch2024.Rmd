@@ -48,3 +48,18 @@ tar_load(df_new_obs)
 tar_load(df_obs_mean_harv_pheno)
 ```
 
+```{r}
+tar_load(validated_met_file)
+tar_read(validated_met_file)
+tar_load(df_obs_pheno_dates)
+tar_load(df_pheno_dates_paramInput)
+tar_load(df_haun)
+#tar_invalidate(df_haun)
+tar_load(df_haun_pheno_dates)
+tar_load(df_pheno_raw)
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
+tar_load(df_pheno_final)
+tar_load(df_pheno_input_param)
+```
+
