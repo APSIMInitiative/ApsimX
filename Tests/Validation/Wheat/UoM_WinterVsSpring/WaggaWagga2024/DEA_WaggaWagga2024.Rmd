@@ -96,3 +96,13 @@ tar_load(list_observed_dfs)
 tar_load(list_observed_clean)
 ```
 
+```{r}
+tar_load(list_observed_dfs)
+tar_load(list_pcds_extracted)
+tar_load(df_pheno_input_param)
+tar_load(df_pheno_raw)
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
+tar_load(df_pheno_final)
+```
+
