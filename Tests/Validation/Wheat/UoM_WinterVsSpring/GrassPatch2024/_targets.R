@@ -94,7 +94,6 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE C: RAW OBSERVATION INGESTION & PROCESSING
   # ----------------------------------------------------------------------------
-  # Read raw observations
   tar_target(
     name = df_obs_raw,
     command = read_excel_observed(
@@ -102,17 +101,14 @@ list(
     )
   ),
   
-  # Average the replicates
   tar_target(
     name = df_obs_mean,
     command = do_obs_means(df_obs_raw)
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE D: PHENOLOGY & HAUN STAGES
+  # PHASE D: PHENOLOGY & HAUN STAGES (Universal)
   # ----------------------------------------------------------------------------
-  
-  # Step 1: Retrieve measured pheno dates from DOY observations
   tar_target(
     name = df_pheno_raw,
     command = get_pheno_dates_from_DOY_wide_obs(
@@ -121,7 +117,6 @@ list(
     )
   ),
   
-  # Step 2: Create interpolated pheno-dates not measured in-between
   tar_target(
     name = df_pheno_int,
     command = create_interp_pheno_dates(
@@ -130,7 +125,6 @@ list(
     )
   ),
   
-  # Target Data: Get Haun stage data for enforced parameters
   tar_target(
     name = df_haun,
     command = get_column_var_from_observ(
@@ -140,7 +134,6 @@ list(
     )
   ),
   
-  # Step 3: Derive pheno-stages' dates from Haun counts
   tar_target(
     name = df_pheno_haun,
     command = derive_pheno_stages_from_haun(
@@ -149,7 +142,6 @@ list(
     )
   ),
   
-  # Step 4: Master Merge & Quality Control
   tar_target(
     name = df_pheno_final,
     command = merge_and_qc_pheno(
@@ -159,7 +151,6 @@ list(
     )
   ),
   
-  # Step 5A: Format into APSIM Wide Parameters
   tar_target(
     name = df_pheno_input_param,
     command = format_apsim_pheno_params(df_pheno_final)
@@ -168,8 +159,6 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE E: OBSERVATION FORMATTING & INTEGRATION
   # ----------------------------------------------------------------------------
-  
-  # Convert pheno dates into obs file friendly input and add to obs timeline
   tar_target(
     name = df_obs_plus_pheno,
     command = add_new_var_to_obs(
@@ -179,7 +168,6 @@ list(
     )
   ),
   
-  # Add HarvestRipe flags at final measurements for 1:1 graph analysis
   tar_target(
     name = df_obs_plus_pheno_harv,
     command = add_harv_into_obs(
@@ -190,14 +178,12 @@ list(
     )
   ),
   
-  # File tracking for mapping sheet
   tar_target(
     name = track_mapping_csv,
     command = file.path(config$folder_rawData, config$file_name_mapping_csv),
     format = "file" 
   ),
   
-  # Apply dynamic standard naming conversions
   tar_target(
     name = df_obs_plus_pheno_harv_renamed,
     command = apply_name_corrections_Grass24(
@@ -206,7 +192,6 @@ list(
     )
   ),
   
-  # Apply specific data corrections (outliers, typos)
   tar_target(
     name = df_obs_plus_pheno_harv_renamed_corrected,
     command  = apply_corrections_Grass24(
@@ -217,18 +202,22 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE F: VALIDATION & EXPORT  
   # ----------------------------------------------------------------------------
+  # THE QC GATEKEEPER
+  tar_target(
+    name = qc_apsim_observed_harv,
+    command = check_obs_health(df_obs_plus_pheno_harv_renamed_corrected)
+  ),
   
-  # Check if Haun manual parameters are correct
+  # Haun Check (Enforces DAG dependency on the QC Gate)
   tar_target(
     name = haun_input_checked,
     command = check_manual_params(
       config$folder_inputs,
       config$file_name_input_haun,
-      df_obs_plus_pheno_harv_renamed_corrected
+      qc_apsim_observed_harv
     )
   ),
   
-  # Save pheno-date input into CSV
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
@@ -239,14 +228,6 @@ list(
     format = "file"
   ),
   
-  # untested
-  # 🚨 NEW: THE QC GATEKEEPER
-  tar_target(
-    name = qc_apsim_observed_harv,
-    command = check_obs_health(df_obs_plus_pheno_harv_renamed_corrected) # Stops the pipeline if bad data is found
-  ),
-  
-  # Save new mean observed data into Excel
   tar_target(
     name = msg_obs_saved,
     command = save_df_to_excel(
@@ -258,38 +239,15 @@ list(
     format = "file"
   ),
   
-  # Post-flight dependency check for APSIM
-  tar_target(
-    name = check_depend,
-    command = {
-      # 1. Force dependency tracking
-      msg_obs_saved
-      msg_pheno_param_saved
-      haun_input_checked
-      
-      # 2. Execute validation
-      check_project_dependencies(
-        met_name   = config$file_name_new_met,
-        projects   = config$proj_name,
-        dir_met    = config$folder_met,
-        dir_inputs = config$folder_inputs,
-        dir_obs    = config$folder_observed
-      )
-    }
-  ),
-  
   # ----------------------------------------------------------------------------
   # PHASE G: SECURITY & ZIPPING
   # ----------------------------------------------------------------------------
-  
-  # 1. THE WATCHER: Track every Excel file in the folder.
   tar_target(
     name = tracked_excel_files,
     command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
     format = "file"
   ),
   
-  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
   tar_target(
     name = encrypted_zip_artifact,
     command = {
@@ -300,8 +258,42 @@ list(
         output_zip   = config$file_zip_out,
         pass_file    = config$file_pass
       )
+      
+      config$file_zip_out # Satisfies format = "file"
     },
     format = "file"
-  )
+  ),
   
+  # ----------------------------------------------------------------------------
+  # PHASE H: PRE-FLIGHT & DEPENDENCY CHECKS
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = check_depend,
+    command = {
+      force(validated_met_file) # Ensure met file exists before checking
+      msg_obs_saved
+      msg_pheno_param_saved
+      haun_input_checked
+      
+      check_project_dependencies(
+        met_name   = config$file_name_new_met,
+        projects   = config$proj_name,
+        dir_met    = config$folder_met,
+        dir_inputs = config$folder_inputs,
+        dir_obs    = config$folder_observed
+      )
+    }
+  ),
+  
+  tar_target(
+    name = verify_data_backup,
+    command = {
+      force(check_depend)
+      
+      check_archive_sync(
+        target_folder = config$folder_observed,
+        zip_file      = config$file_zip_out
+      )
+    }
+  )
 )
