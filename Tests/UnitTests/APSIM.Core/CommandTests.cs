@@ -277,6 +277,29 @@ public class CommandTests
         Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
     }
 
+    /// <summary>Ensure the set property += command works with an empty array</summary>
+    [Test]
+    public void EnsureSetPropertyAddToArrayWorksOnEmptyArray()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = new string[] {}
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "a=1", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1"]));
+    }
+
     /// <summary>Ensure the set property += command overwrites existing value when it exists.</summary>
     [Test]
     public void EnsureSetPropertyAddOverwritesExisting()
