@@ -21,7 +21,7 @@ internal class ModelRegistry
     internal static Type ModelNameToType(string modelNameToCreate)
     {
         DiscoverModels();
-        var modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelNameToCreate, modelsAssembly);
+        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelNameToCreate, modelsAssembly);
         if (modelTypes.Length != 1)
             return null;
         Type typeToCreate = modelTypes.First();
@@ -37,20 +37,23 @@ internal class ModelRegistry
     {
         DiscoverModels();
         Type typeToCreate = ModelNameToType(modelNameToCreate);
-        if (typeToCreate == null)
+        if (typeToCreate != null)
         {
-            // Find and return a resource.
-            string resourceName = modelsAssembly.GetManifestResourceNames().
-                FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", 
-                StringComparison.InvariantCultureIgnoreCase));
+            INodeModel model = (INodeModel)Activator.CreateInstance(typeToCreate, true);
+            if (model == null)
+                throw new Exception($"A {typeToCreate.Name} model could not be found or could not be created.");
+            return model;
+        }
+        else
+        {
+            // Try and see if this is a resource.
+            string[] names = modelsAssembly.GetManifestResourceNames();
+            string resourceName = names.FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", StringComparison.InvariantCultureIgnoreCase));
             if (resourceName != null)
                 return CreateResourceModelFromName(modelNameToCreate, resourceName);
+            else
+                throw new Exception($"A {typeToCreate.Name} model or resource could not be found.");
         }
-
-        INodeModel model = (INodeModel)Activator.CreateInstance(typeToCreate, true);
-        if (model == null)
-            throw new Exception($"A {typeToCreate.Name} model could not be found or could not be created.");
-        return model;
     }
 
     /// <summary>
@@ -61,14 +64,15 @@ internal class ModelRegistry
     /// <returns>The newly created instance.</returns>
     private static INodeModel CreateResourceModelFromName(string modelNameToCreate, string resourceName)
     {
-        using var stream = modelsAssembly.GetManifestResourceStream(resourceName);
+        using Stream stream = modelsAssembly.GetManifestResourceStream(resourceName);
         if (stream == null)
             throw new Exception($"Could not find model or resource with the name: {resourceName}");
-        using var reader = new StreamReader(stream);
+        
+        using StreamReader reader = new StreamReader(stream);
         string json = reader.ReadToEnd();
         
         // Inject the ResourceName into the JSON before deserializing
-        var jObject = JObject.Parse(json);
+        JObject jObject = JObject.Parse(json);
         // Get the first child of the root object and set its ResourceName property.
         // The actual resource always has a simulations Parent, so the first child of the root object is always the resource.
         jObject["Children"][0]["ResourceName"] = modelNameToCreate;
