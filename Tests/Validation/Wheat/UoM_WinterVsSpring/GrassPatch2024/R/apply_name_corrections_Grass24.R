@@ -70,6 +70,7 @@ apply_name_corrections_Grass24 <- function(df_obs, mapping_csv_path = NULL) {
       "Wheat.Leaf.Live.WSCc"   = "Wheat.Leaf.Live.WSC",
       "Wheat.Spike.Live.NConc" = "Wheat.Spike.NConc",
       "Wheat.Spike.Live.WSCc"  = "Wheat.Spike.WSC",
+      "Wheat.Stem.Live.Wt"     = "Wheat.Stem.Wt",
       "Wheat.Stem.Live.NConc"  = "Wheat.Stem.NConc",
       "Wheat.Stem.Live.WSCc"   = "Wheat.Stem.WSC"
     )
@@ -91,8 +92,26 @@ apply_name_corrections_Grass24 <- function(df_obs, mapping_csv_path = NULL) {
     dplyr::rename(!!!active_renames)
   
   # ---- 4. PIPELINE COMPLETION AUDIT LOGGING ----
-  message(sprintf("Success [apply_name_corrections_Grass24]: Modified %d operational variable tracks safely.", 
-                  length(active_renames)))
+  # Extract the old names (values) and new names (names) from the active map
+  rename_list <- paste("   [OLD]", unname(active_renames), "--> [NEW]", names(active_renames))
+  
+  log_box <- c(
+    "",
+    "----------------------------------------------------------------------",
+    " 🔄 PIPELINE ACTION: VARIABLE NAMES REMAPPED 🔄",
+    "----------------------------------------------------------------------",
+    sprintf(" Successfully standardized %d columns:", length(active_renames)),
+    "",
+    rename_list,
+    "----------------------------------------------------------------------",
+    ""
+  )
+  
+  # Print the detailed UI box to the console
+  message(paste(log_box, collapse = "\n"))
+  
+  # Throw the formal R warning so it is officially flagged in the targets log
+  warning(sprintf("Remapped %d variable names to APSIM standards. See console for mapping details.", length(active_renames)), call. = FALSE)
   
   return(df_remapped)
 }
