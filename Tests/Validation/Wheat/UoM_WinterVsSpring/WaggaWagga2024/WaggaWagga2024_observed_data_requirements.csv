@@ -45,3 +45,4 @@ leafDead_10_Nconc,PCDS 10.0 harvest,nitrogen percent dead leaf,Wheat.Leaf.Dead.N
 leafDead_10_WSCc,PCDS 10.0 harvest,WSC percent dead leaf,Wheat.Leaf.Dead.WSCc,1
 stem_10_Nconc,PCDS 10.0 harvest,nitrogen percent stem,Wheat.Stem.Live.NConc,1
 stem_10_WSCc,PCDS 10.0 harvest,WSC percent stem,Wheat.Stem.Live.WSCc,1
+hi_10_raw,PCDS 10.0 harvest,Harvest index,HarvestIndex,1

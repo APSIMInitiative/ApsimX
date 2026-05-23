@@ -244,7 +244,7 @@ list(
     name = df_obs_plus_pheno_harv,
     command = add_harv_into_obs(
       df            = df_obs_plus_pheno,
-      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "WSCs", "Nconc"),
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "WSCs", "Nconc","HarvestIndex"),
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )
