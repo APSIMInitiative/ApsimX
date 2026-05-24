@@ -122,3 +122,9 @@ getwd()
 tar_load(list_observed_dfs)
 ```
 
+```{r}
+tar_load(df_pheno_raw)  
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
+```
+
