@@ -750,7 +750,53 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "ThermalTimePreEmergence",
+                  "Name": "ThermalTime",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        15.6,
+                        32.0,
+                        39.0
+                      ],
+                      "Y": [
+                        0.0,
+                        16.4,
+                        0.0
+                      ],
+                      "Name": "Response",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "agregationMethod": 0,
+                  "Name": "ThermalTimePhenologyPreEmergence",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -796,27 +842,20 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "ThermalTimePostEmergence",
+                  "Name": "ThermalTimePhenologyCutout",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         15.6,
+                        22.0,
                         32.0,
                         39.0
                       ],
                       "Y": [
-                        0.0,
+                        6.0,
+                        6.0,
                         16.4,
                         0.0
                       ],
@@ -832,103 +871,6 @@
                       "Name": "InterpolationMethod",
                       "ResourceName": null,
                       "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "ThermalTime",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Sowing",
-                      "End": "Emergence",
-                      "Name": "PreEmergence",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTimePreEmergence",
-                          "Name": "ThermalTimePreEmergence",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "Cutout",
-                      "Name": "Vegetative",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTimePostEmergence",
-                          "Name": "ThermalTimePostEmergence",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Cutout",
-                      "End": "Unused",
-                      "Name": "Maturing",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "To prevent cotton phenology from stalling once the temperature drops too low, and therefore sitting idle all winter, this function caps it at a low value to prevent thermal time going to 0.\n\nThis was tested by running a cotton simulation in a cold environment (Wagga Wagga) and choosing a low enough that it doesn't effect normal cotton growing areas, but high enough that it still reaches maturity by spring.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MaximumFunction, Models",
-                          "Name": "MaximumFunction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 5.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTimePostEmergence",
-                              "Name": "ThermalTimePostEmergence",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1187,7 +1129,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
+                          "VariableName": "[Phenology].ThermalTimePhenologyCutout",
                           "Name": "ThermalTime",
                           "ResourceName": null,
                           "Children": [],
@@ -1398,7 +1340,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTime",
+                              "VariableName": "[Phenology].ThermalTimePhenologyCutout",
                               "Name": "XValue",
                               "ResourceName": null,
                               "Children": [],
