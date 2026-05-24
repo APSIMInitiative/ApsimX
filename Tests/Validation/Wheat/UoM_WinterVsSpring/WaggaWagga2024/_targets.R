@@ -241,9 +241,22 @@ list(
   ),
   
   tar_target(
+    name = df_obs_plus_pheno_with_amounts,
+    command = calc_nutrient_absolute_amounts(
+      df           = df_obs_plus_pheno, 
+      crop_prefix  = "Wheat",
+      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix  = "Wt",
+      ag_name      = "Wheat.AboveGround",
+      divisor      = 1  # Note: Assuming your conc values are already fractions (g/g). If they are %, change to 100!
+    )
+  ),
+  
+  tar_target(
     name = df_obs_plus_pheno_harv,
     command = add_harv_into_obs(
-      df            = df_obs_plus_pheno,
+      df            = df_obs_plus_pheno_with_amounts,
       ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "WSCs", "Nconc","HarvestIndex"),
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
