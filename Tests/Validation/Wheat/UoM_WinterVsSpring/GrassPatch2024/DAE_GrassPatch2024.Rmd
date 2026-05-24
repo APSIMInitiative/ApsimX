@@ -70,5 +70,8 @@ tar_load(qc_apsim_observed_harv)
 tar_load(df_obs_plus_pheno_harv)
 tar_load(df_obs_plus_pheno_harv_renamed)
 tar_load(track_mapping_csv)
+tar_load(qc_apsim_observed)
+tar_load(df_obs_plus_pheno_harv_renamed_corrected_with_amounts)
+tar_load(qc_apsim_observed)
 ```
 

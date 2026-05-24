@@ -83,12 +83,12 @@ list(
   tar_target(
     name = validated_met_file,
     command = copy_and_check_met(
-      sourceFolder   = config$folder_rawData,    # Automatically grabs "data/raw_weather"
-      targetFolder   = config$folder_met,        # Where you want it to go
-      orig_file_name = config$file_name_met,     # Automatically grabs "GrassPatch_original.met"
-      new_file_name  = config$file_name_new_met  # Your new clean name
+      sourceFolder   = config$folder_rawData,    
+      targetFolder   = config$folder_met,        
+      orig_file_name = config$file_name_met,     
+      new_file_name  = config$file_name_new_met  
     ),
-    format = "file" # CRITICAL: Tells targets the output is a physical file
+    format = "file" 
   ),
   
   # ----------------------------------------------------------------------------
@@ -179,33 +179,47 @@ list(
   ),
   
   tar_target(
-    name = df_obs_plus_pheno_harv,
-    command = add_harv_into_obs(
-      df            = df_obs_plus_pheno_plus_hi,
-      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "HarvestIndex"),
-      new_col_name  = "Wheat.Phenology.CurrentStageName",
-      new_col_value = "HarvestRipe"
-    )
-  ),
-  
-  tar_target(
     name = track_mapping_csv,
     command = file.path(config$folder_rawData, config$file_name_mapping_csv),
     format = "file" 
   ),
   
   tar_target(
-    name = df_obs_plus_pheno_harv_renamed,
+    name = df_obs_plus_pheno_hi_renamed,
     command = apply_name_corrections_Grass24(
-      df_obs           = df_obs_plus_pheno_harv,
+      df_obs           = df_obs_plus_pheno_plus_hi,
       mapping_csv_path = track_mapping_csv
     )
   ),
   
   tar_target(
-    name = df_obs_plus_pheno_harv_renamed_corrected,
+    name = df_obs_plus_pheno_hi_renamed_corrected,
     command  = apply_corrections_Grass24(
-      df_obs = df_obs_plus_pheno_harv_renamed
+      df_obs = df_obs_plus_pheno_hi_renamed
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed_corrected_with_amounts,
+    command = calc_nutrient_absolute_amounts(
+      df           = df_obs_plus_pheno_hi_renamed_corrected, 
+      crop_prefix  = "Wheat",
+      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix  = "Wt",
+      ag_name      = "Wheat.AboveGround",
+      divisor      = 1  # Note: Assuming your conc values are already fractions (g/g). If they are %, change to 100!
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed_corrected_with_amounts_plus_harv,
+    command = add_harv_into_obs(
+      df            = df_obs_plus_pheno_hi_renamed_corrected_with_amounts,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", 
+                        "HarvestIndex", "Wheat.Spike.Live.Wt"),
+      new_col_name  = "Wheat.Phenology.CurrentStageName",
+      new_col_value = "HarvestRipe"
     )
   ),
   
@@ -214,8 +228,8 @@ list(
   # ----------------------------------------------------------------------------
   # THE QC GATEKEEPER
   tar_target(
-    name = qc_apsim_observed_harv,
-    command = check_obs_health(df_obs_plus_pheno_harv_renamed_corrected)
+    name = qc_apsim_observed,
+    command = check_obs_health(df_obs_plus_pheno_hi_renamed_corrected_with_amounts_plus_harv)
   ),
   
   # Haun Check (Enforces DAG dependency on the QC Gate)
@@ -224,7 +238,7 @@ list(
     command = check_manual_params(
       config$folder_inputs,
       config$file_name_input_haun,
-      qc_apsim_observed_harv
+      qc_apsim_observed
     )
   ),
   
@@ -241,7 +255,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_df_to_excel(
-      df          = qc_apsim_observed_harv,
+      df          = qc_apsim_observed,
       folder_path = config$folder_observed,
       file_name   = config$file_saved_obs_excel,
       sheet_name  = config$sheet_name_observed
@@ -254,7 +268,10 @@ list(
   # ----------------------------------------------------------------------------
   tar_target(
     name = tracked_excel_files,
-    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
+    command = {
+      force(msg_obs_saved) # <--- THE ZIP FIX IS HERE
+      list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE)
+    },
     format = "file"
   ),
   
@@ -269,7 +286,7 @@ list(
         pass_file    = config$file_pass
       )
       
-      config$file_zip_out # Satisfies format = "file"
+      config$file_zip_out 
     },
     format = "file"
   ),
@@ -280,7 +297,7 @@ list(
   tar_target(
     name = check_depend,
     command = {
-      force(validated_met_file) # Ensure met file exists before checking
+      force(validated_met_file) 
       msg_obs_saved
       msg_pheno_param_saved
       haun_input_checked
