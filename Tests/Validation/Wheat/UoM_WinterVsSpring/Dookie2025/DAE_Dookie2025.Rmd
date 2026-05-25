@@ -138,5 +138,7 @@ tar_read(df_apsimStageInput)
 #install.packages("weatherOz")
 tar_read(soil_data_clean)
 tar_load(df_obs_plus_pheno_hi)
+tar_load(list_observed_clean)
+tar_load(list_observed_dfs_raw)
 ```
 
