@@ -7910,8 +7910,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 116",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 116"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7926,8 +7925,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = BigRed",
-                        "[Sowing].Script.Population = 104",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 104"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7942,8 +7940,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 96",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 96"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7958,8 +7955,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 93",
-                        "[Sowing].Script.EmergeDate = 29-Apr"
+                        "[Sowing].Script.Population = 93"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7974,8 +7970,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Zanzibar",
-                        "[Sowing].Script.Population = 139",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 139"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -7990,8 +7985,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = SunMaster",
-                        "[Sowing].Script.Population = 147",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 147"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8006,8 +8000,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 132",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 132"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8022,8 +8015,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 128",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 128"
                       ],
                       "Paths": null,
                       "Values": null,
