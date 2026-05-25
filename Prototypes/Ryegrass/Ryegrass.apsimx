@@ -67478,8 +67478,8 @@
                                     {
                                       "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                                       "RootWeight": [
-                                        400.0,
-                                        400.0
+                                        0.0,
+                                        0.0
                                       ],
                                       "RootDepth": 650.0,
                                       "EstIndex": 0.0,
@@ -67491,7 +67491,7 @@
                                         0.825
                                       ],
                                       "LeafWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "LeafNConc": [
                                         0.01
@@ -67503,7 +67503,7 @@
                                         0.825
                                       ],
                                       "StemWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "StemNConc": [
                                         0.01
@@ -67524,7 +67524,7 @@
                                         0.825
                                       ],
                                       "LeafWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "LeafNConc": [
                                         0.01
@@ -67536,7 +67536,7 @@
                                         0.825
                                       ],
                                       "StemWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "StemNConc": [
                                         0.01
@@ -70305,8 +70305,8 @@
                                     {
                                       "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                                       "RootWeight": [
-                                        400.0,
-                                        400.0
+                                        0.0,
+                                        0.0
                                       ],
                                       "RootDepth": 650.0,
                                       "EstIndex": 0.0,
@@ -70318,7 +70318,7 @@
                                         0.825
                                       ],
                                       "LeafWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "LeafNConc": [
                                         0.01
@@ -70330,7 +70330,7 @@
                                         0.825
                                       ],
                                       "StemWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "StemNConc": [
                                         0.01
@@ -70351,7 +70351,7 @@
                                         0.825
                                       ],
                                       "LeafWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "LeafNConc": [
                                         0.01
@@ -70363,7 +70363,7 @@
                                         0.825
                                       ],
                                       "StemWeight": [
-                                        800.0
+                                        0.0
                                       ],
                                       "StemNConc": [
                                         0.01
