@@ -116,7 +116,11 @@ namespace Models.AgPasture
                 for (int layer = 0; layer < dmByLayer.Length; layer++)
                 {
                     dmByLayer[layer] -= DMTransferredOut * prevRootFraction[layer];
+                    if (MathUtilities.FloatsAreEqual(dmByLayer[layer], 0, 0.000000000001))
+                        dmByLayer[layer] = 0;
                     nByLayer[layer] -= NTransferredOut * prevRootFraction[layer];
+                    if (MathUtilities.FloatsAreEqual(nByLayer[layer], 0, 0.000000000001))
+                        nByLayer[layer] = 0;
                 }
             }
 

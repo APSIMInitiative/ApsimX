@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Core;
-using Models.Core.ApsimFile;
 
 namespace Models.CLEM
 {

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
-using global::UserInterface.Commands;
-using global::UserInterface.Hotkeys;
+using UserInterface.Commands;
 using Models.Core;
 using Models.Core.Run;
 using Models;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {

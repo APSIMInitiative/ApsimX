@@ -1,10 +1,9 @@
 ﻿using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using OxyPlot;
 using System;
 using System.Drawing;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// Colour Utility methods which do not belong in APSIM.Shared.

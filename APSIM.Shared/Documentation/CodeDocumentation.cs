@@ -30,7 +30,7 @@ namespace APSIM.Shared.Documentation
         {
             string text = GetCustomTag(t, summaryTagName);
             if (text != null)
-                return text.Replace("-", " ");
+                return text;
             else
                 return "";
         }
@@ -43,7 +43,7 @@ namespace APSIM.Shared.Documentation
         {
             string text = GetCustomTag(t, remarksTagName);
             if (text != null)
-                return text.Replace("-", " ");
+                return text;
             else
                 return "";
         }
@@ -228,9 +228,47 @@ namespace APSIM.Shared.Documentation
             XmlNode summaryNode = document.SelectSingleNode(xpath);
             if (summaryNode != null)
             {
-                string raw = summaryNode.InnerXml.Trim();
-                // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(raw, @"\n[ \t]+", "\n");
+                string raw = summaryNode.InnerXml;
+                // Need to fix multiline comments
+
+                //remove carriage returns
+                raw = raw.Replace("\r", "");
+
+                //turn tabs into spaces
+                raw = raw.Replace("\t", "    ");
+
+                bool foundFirstRealLine = false;
+                string whitespaceOffset = "";
+                string output = "";
+                foreach(string line in raw.Split("\n"))
+                {
+                    //skip over blank lines until we have content
+                    if (!foundFirstRealLine)
+                    {
+                        if (line.Trim().Length > 0)
+                        {
+                            foundFirstRealLine = true;
+                            bool wordFound = false;
+                            foreach(char c in line)
+                            {
+                                if (!wordFound)
+                                {
+                                    if (c == ' ')
+                                        whitespaceOffset += " ";
+                                    else
+                                        wordFound = true;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (foundFirstRealLine && whitespaceOffset.Length > 0)
+                    {
+                        output += line.Replace(whitespaceOffset, "") + "\n";
+                    }
+                }
+
+                return output;
             }
             return null;
         }

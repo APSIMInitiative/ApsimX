@@ -1,9 +1,9 @@
-﻿using Models.Climate;
+﻿using APSIM.Core;
 using NUnit.Framework;
 using System;
 using System.Linq;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class CommandLanguageTests
@@ -48,6 +48,16 @@ public class CommandLanguageTests
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
         Assert.That(commands.Any(), Is.False);
+    }
+
+    [TestCase("[Soil].Latitude=42", ExpectedResult = "42")]
+    [TestCase("[Soil].Latitude=-42", ExpectedResult = "-42")]
+    public string EnsureValuesAreParsedCorrectly(string commandString)
+    {
+        var setPropertyCommand = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null)
+                                                .First() as SetPropertyCommand;
+
+        return setPropertyCommand.Value.ToString();
     }
 
     // Ensure inline commented lines are ignored.

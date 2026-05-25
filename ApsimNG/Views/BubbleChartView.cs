@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UserInterface.Interfaces;
 using Gtk;
-using Utility;
+using APSIMNG.Utility;
 using APSIM.Shared.Graphing;
 using Node = APSIM.Shared.Graphing.Node;
 using APSIM.Shared.Utilities;

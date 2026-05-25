@@ -369,6 +369,9 @@ namespace Models.PMF.Organs
         public double FractionNextleafExpanded = 0;
         /// <summary>The dead nodes yesterday</summary>
         public double DeadNodesYesterday = 0;//Fixme This needs to be set somewhere
+
+        /// <summary>The potential size of leaves at each leaf position</summary>
+        private double[] PotentialSize { get; set; }
         #endregion
 
         #region Outputs
@@ -997,7 +1000,12 @@ namespace Models.PMF.Organs
         {
             get
             {
+                //if CohortParameters have not been initialised, return no stress
                 if (CohortParameters == null)
+                    return 1;
+
+                //If there is no demand or Metabolic N, return no stress
+                if (NDemand.Total == 0 && Live.MetabolicNConc == 0)
                     return 1;
 
                 double f;
@@ -1051,6 +1059,21 @@ namespace Models.PMF.Organs
                     return Leaves.Last().Apex.GroupAge;
             }
         }
+
+        /// <summary>The position of the most recently fully expanded leaf</summary>
+        [Description("The position of the most recently fully expanded leaf")]
+        [Units("rank")]
+        public int MostRecentlyExpandedPosition { get; set; }
+
+        /// <summary>The size of the most recently fully expanded leaf</summary>
+        [Description("The size of the most recently fully expanded leaf")]
+        [Units("mm^2")]
+        public double MostRecentlyExpandedSize { get; set; }
+
+        /// <summary>The potential size of the most recently fully expanded leaf</summary>
+        [Description("The potential size of the most recently fully expanded leaf")]
+        [Units("mm^2")]
+        public double MostRecentlyExpandedPotentialSize { get; set; }
 
         #endregion
 
@@ -1200,6 +1223,8 @@ namespace Models.PMF.Organs
             needToRecalculateLiveDead = true;
             if (NewLeaf != null)
                 NewLeaf.Invoke(this, new EventArgs());
+
+            PotentialSize[i] = Leaves[i].MaxArea;
         }
 
         /// <summary>Does the nutrient allocations.</summary>
@@ -1227,6 +1252,13 @@ namespace Models.PMF.Organs
                     double deltaDeadLeaves = DeadCohortNo - DeadNodesYesterday; //Fixme.  DeadNodesYesterday is never given a value as far as I can see.
                     FractionDied = deltaDeadLeaves / GreenCohortNo;
                     DeadNodesYesterday = DeadCohortNo;
+                }
+
+                if (ExpandedCohortNo > 0)
+                {
+                    MostRecentlyExpandedPosition = ExpandedCohortNo;
+                    MostRecentlyExpandedPotentialSize = PotentialSize[ExpandedCohortNo - 1];
+                    MostRecentlyExpandedSize = CohortSize[ExpandedCohortNo - 1];
                 }
             }
         }
@@ -1258,8 +1290,9 @@ namespace Models.PMF.Organs
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue)
+        public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue, double fractionStanding = 0)
         {
             bool writeToSummary = false;
             double totalBiomass = Live.Wt + Dead.Wt;
@@ -1270,7 +1303,7 @@ namespace Models.PMF.Organs
                 {
                     double remainingLiveFraction = 1.0 - (liveToResidue + liveToRemove);
                     amountRemoved += biomassRemovalModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue,
-                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, writeToSummary);
+                                                                       leaf.Live, leaf.Dead, leaf.Removed, leaf.Detached, fractionStanding, writeToSummary);
                     leaf.LiveArea *= remainingLiveFraction;
                     Detached.Add(leaf.Detached);
                     Removed.Add(leaf.Removed);
@@ -1815,6 +1848,7 @@ namespace Models.PMF.Organs
                 if (data.MaxCover <= 0.0)
                     throw new Exception("MaxCover must exceed zero in a Sow event.");
                 MaxCover = data.MaxCover;
+                PotentialSize = new double[MaximumMainStemLeafNumber];
             }
         }
 

@@ -14,8 +14,8 @@ using APSIM.Core;
 namespace Models.PMF
 {
     /// <summary>
-    /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
-    /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
+    /// The model has been developed using the Plant Modelling Framework (PMF) of [#brown_plant_2014]. This
+    /// framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
     /// model in much the same way that models can be coupled to construct a simulation.This means that dynamic composition
     /// of lower level process and organ classes(e.g.photosynthesis, leaf) into larger constructions(e.g.maize, wheat,
     /// sorghum) can be achieved by the model developer without additional coding.
@@ -27,6 +27,11 @@ namespace Models.PMF
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
+
+        /// <summary> The parent simulation </summary>
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor)]
+        private Simulation simulation = null;
 
 
         /// <summary>The summary</summary>
@@ -116,7 +121,7 @@ namespace Models.PMF
             set
             {
                 double InitialPopn = plantPopulation;
-                if (IsAlive && value <= 0.01)
+                if (IsAlive && value <= 0.001)
                     EndCrop();  // the plant is dying due to population decline
                 else
                 {
@@ -219,6 +224,10 @@ namespace Models.PMF
             }
         }
 
+        /// <summary>List of zones with conditions to specify if roots grow there or not</summary>
+        [JsonIgnore]
+        public Dictionary<string, bool> ZonesToGrowRootsIn = null;
+
         /// <summary>The sw uptake</summary>
         public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
 
@@ -250,6 +259,10 @@ namespace Models.PMF
             IEnumerable<string> duplicates = CultivarNames.GroupBy(x => x).Where(g => g.Count() > 1).Select(x => x.Key);
             if (duplicates.Count() > 0)
                 throw new Exception("Duplicate Names in " + this.Name + " has duplicate cultivar names " + string.Join(",", duplicates));
+            List<Zone> zones = Structure.FindAll<Zone>(relativeTo: simulation).ToList();
+            ZonesToGrowRootsIn = new Dictionary<string, bool>();
+            foreach (Zone z in zones)
+                ZonesToGrowRootsIn[z.Name] = true;
         }
 
         /// <summary>Called when [phase changed].</summary>
@@ -354,7 +367,9 @@ namespace Models.PMF
             // Find cultivar and apply cultivar overrides.
             cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(SowingData.Cultivar));
             if (cultivarDefinition == null)
-                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'");
+                throw new ApsimXException(this, $"Cannot find a cultivar definition for '{SowingData.Cultivar}'." + 
+                " Check that the cultivar name is correct and that the cultivar definition is included " +
+                "in the simulation and is enabled.");
 
             cultivarDefinition.Apply(this);
 

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 215,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -21,7 +21,8 @@
             "GrainWt.xlsx",
             "TotalSW.xlsx",
             "SoilWater.xlsx",
-            "TillerAppearance.xlsx"
+            "TillerAppearance.xlsx",
+            "LayeredSW.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -1231,7 +1232,7 @@
             "[Wheat].Grain.Number",
             "[Wheat].Grain.Size",
             "[Wheat].Grain.Wt",
-            "[Wheat].Grain.NperKernal",
+            "[Wheat].Grain.NperKernel",
             "[Wheat].Leaf.Tips",
             "[Wheat].Leaf.CoverGreen",
             "[Wheat].Leaf.CoverTotal",
@@ -1287,7 +1288,7 @@
             "[Wheat].Phenology.AccumulatedTT",
             "([Wheat].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception)",
             "[Wheat].Leaf.Photosynthesis.FT",
-            "[NDVIModel].Script.NDVI",
+            "[Spectral].NDVI",
             "",
             "[Wheat].Root.WaterTensionFactor"
           ],
@@ -1306,7 +1307,7 @@
           "VariableNames": [
             "[Simulation].Name",
             "[Clock].Today",
-            "[NDVIModel].Script.NDVI"
+            "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -1375,8 +1376,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -1391,8 +1391,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -1407,8 +1406,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 9-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -1425,7 +1423,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2014IrrigatedBase",
               "ResourceName": null,
               "Children": [
@@ -2106,6 +2103,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -2327,91 +2325,6 @@
                         }
                       ],
                       "Name": "Operations",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.16"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.2"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2643,6 +2556,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.16,
+                      "WetSoilNDVI": 0.2,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2984,7 +2909,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -3024,7 +2949,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -5212,8 +5137,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 4-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -5228,8 +5152,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 7-aug-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 1-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -5244,8 +5167,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 29-jul-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-sep-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -5262,7 +5184,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2014Base",
               "ResourceName": null,
               "Children": [
@@ -5959,6 +5880,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -6134,91 +6056,6 @@
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "SowingReport",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6450,6 +6287,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.17,
+                      "WetSoilNDVI": 0.17,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6769,7 +6618,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -6809,7 +6658,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -8412,10 +8261,9 @@
                         "[Sowing].Script.CultivarName = Hartog",
                         "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
                         "[SetPhaseCompletionDates].Script.FlagDate = 24-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 7-oct-2015"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -8429,10 +8277,9 @@
                         "[Sowing].Script.Population = 60",
                         "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
                         "[SetPhaseCompletionDates].Script.FlagDate = 25-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 13-oct-2015"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 18-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -8446,10 +8293,9 @@
                         "[Sowing].Script.Population = 90",
                         "[SetPhaseCompletionDates].Script.EmergDate = 25-may-2015",
                         "[SetPhaseCompletionDates].Script.FlagDate = 31-jul-2015",
-                        "[SetPhaseCompletionDates].Script.AnthDate = 13-oct-2015"
+                        "[SetPhaseCompletionDates].Script.AnthDate = 25-aug-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -8466,7 +8312,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Gatton2015Base",
               "ResourceName": null,
               "Children": [
@@ -9019,6 +8864,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -9199,91 +9045,6 @@
                         }
                       ],
                       "Name": "Sowing",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.17"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9526,6 +9287,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.17,
+                      "WetSoilNDVI": 0.17,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -9867,7 +9640,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -9907,7 +9680,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -11749,8 +11522,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 15-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 11-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -11765,8 +11537,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -11781,8 +11552,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 12-sep-2014",
                         "[SetPhaseCompletionDates].Script.AnthDate = 6-oct-2014"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -11799,7 +11569,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Junee2014Base",
               "ResourceName": null,
               "Children": [
@@ -12986,6 +12755,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -13059,91 +12829,6 @@
                         }
                       ],
                       "Name": "Harvesting",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.15"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.2"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -13307,6 +12992,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.15,
+                      "WetSoilNDVI": 0.2,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -13626,7 +13323,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -13666,7 +13363,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -15174,8 +14871,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 3-sep-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 9-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hartog",
                       "ResourceName": null,
                       "Children": [],
@@ -15190,8 +14886,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 29-aug-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 4-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Corack",
                       "ResourceName": null,
                       "Children": [],
@@ -15206,8 +14901,7 @@
                         "[SetPhaseCompletionDates].Script.FlagDate = 4-sep-2015",
                         "[SetPhaseCompletionDates].Script.AnthDate = 5-oct-2015"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Mace",
                       "ResourceName": null,
                       "Children": [],
@@ -15224,7 +14918,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Temora2015Base",
               "ResourceName": null,
               "Children": [
@@ -16379,6 +16072,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -16386,91 +16080,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.9"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -16700,6 +16309,18 @@
                         }
                       ],
                       "Name": "SetPhaseCompletionDates",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.1,
+                      "WetSoilNDVI": 0.1,
+                      "GreenCropNDVI": 0.9,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -17019,7 +16640,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -17059,7 +16680,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -18500,7 +18121,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Minnipa2014Base",
               "ResourceName": null,
               "Children": [
@@ -19281,6 +18901,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -19288,91 +18909,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -19537,6 +19073,18 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.13,
+                      "WetSoilNDVI": 0.13,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -19856,7 +19404,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -19896,7 +19444,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -21308,7 +20856,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Minnipa2015Base",
               "ResourceName": null,
               "Children": [
@@ -22064,6 +21611,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -22109,91 +21657,6 @@
                         }
                       ],
                       "Name": "Set Emergence Date",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Manager, Models",
-                      "CodeArray": [
-                        "using System;",
-                        "using Models.Core;",
-                        "using Models.Interfaces;",
-                        "using Models.PMF;",
-                        "using APSIM.Shared.Utilities;",
-                        "using Models.WaterModel;",
-                        "",
-                        "namespace Models",
-                        "{",
-                        "    [Serializable]",
-                        "    public class Script : Model",
-                        "    {",
-                        "        [Link] IClock Clock;",
-                        "        [Link] ISummary Summary;",
-                        "        [Link] ICanopy WheatCanopy;",
-                        "        [Link] EvaporationModel EvapModel;",
-                        "        ",
-                        "        [Description(\"Dry soil NDVI\")]",
-                        "        public double DrySoilNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Wet soil NDVI\")]",
-                        "        public double WetSoilNDVI { get; set; }",
-                        "",
-                        "        [Description(\"Green Crop NDVI\")]",
-                        "        public double GreenCropNDVI { get; set; }",
-                        "        ",
-                        "        [Description(\"Dead Crop NDVI\")]",
-                        "        public double DeadCropNDVI { get; set; }",
-                        "                ",
-                        "        [Description(\"Daily Estimated NDVI\")]",
-                        "        public double NDVI { get; set; }",
-                        "",
-                        "        [EventSubscribe(\"DoManagement\")]",
-                        "        private void DoDailyCalculations(object sender, EventArgs e)",
-                        "        {",
-                        "            double SoilNDVI = WetSoilNDVI;",
-                        "            if (EvapModel.t > 1)",
-                        "               SoilNDVI = DrySoilNDVI;",
-                        "",
-                        "            //NDVI = GreenCropNDVI * WheatCanopy.CoverGreen;",
-                        "            //NDVI += DeadCropNDVI * (WheatCanopy.CoverTotal - WheatCanopy.CoverGreen);",
-                        "            //NDVI += SoilNDVI * (1 - WheatCanopy.CoverTotal);",
-                        "            ",
-                        "            double CropNDVI = 0;",
-                        "            if (WheatCanopy.CoverTotal > 0)",
-                        "                CropNDVI = (WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * GreenCropNDVI + (1.0 - WheatCanopy.CoverGreen/WheatCanopy.CoverTotal) * DeadCropNDVI; ",
-                        "            ",
-                        "            NDVI = SoilNDVI + (CropNDVI - SoilNDVI)*Math.Pow(WheatCanopy.CoverTotal, (1.0 - SoilNDVI));",
-                        "            ",
-                        "        }",
-                        "    }",
-                        "}",
-                        ""
-                      ],
-                      "Parameters": [
-                        {
-                          "Key": "DrySoilNDVI",
-                          "Value": "0.11"
-                        },
-                        {
-                          "Key": "WetSoilNDVI",
-                          "Value": "0.13"
-                        },
-                        {
-                          "Key": "GreenCropNDVI",
-                          "Value": "0.85"
-                        },
-                        {
-                          "Key": "DeadCropNDVI",
-                          "Value": "0.1"
-                        },
-                        {
-                          "Key": "NDVI",
-                          "Value": "0"
-                        }
-                      ],
-                      "Name": "NDVIModel",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -22344,6 +21807,18 @@
                         }
                       ],
                       "Name": "SoilWaterCalculation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Sensor.Spectral, Models",
+                      "DrySoilNDVI": 0.11,
+                      "WetSoilNDVI": 0.13,
+                      "GreenCropNDVI": 0.85,
+                      "DeadCropNDVI": 0.1,
+                      "Name": "Spectral",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -22663,7 +22138,7 @@
                           "LineThickness": 0,
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": false,
@@ -22703,7 +22178,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -23903,8 +23378,8 @@
                       "Line": 4,
                       "LineThickness": 0,
                       "TableName": "DailyObsPred",
-                      "XFieldName": "Observed.NDVIModel.Script.NDVI",
-                      "YFieldName": "Predicted.NDVIModel.Script.NDVI",
+                      "XFieldName": "Observed.Spectral.NDVI",
+                      "YFieldName": "Predicted.Spectral.NDVI",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -24978,7 +24453,7 @@
                   "LineThickness": 0,
                   "TableName": "DailyReport",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "NDVIModel.Script.NDVI",
+                  "YFieldName": "Spectral.NDVI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": false,
@@ -25018,7 +24493,7 @@
                   "LineThickness": 0,
                   "TableName": "Observed",
                   "XFieldName": "Clock.Today",
-                  "YFieldName": "NDVIModel.Script.NDVI",
+                  "YFieldName": "Spectral.NDVI",
                   "X2FieldName": null,
                   "Y2FieldName": null,
                   "ShowInLegend": true,

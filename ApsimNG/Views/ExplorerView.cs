@@ -22,7 +22,6 @@ namespace UserInterface.Views
     {
         private Box rightHandView;
         private Gtk.TreeView treeviewWidget;
-        private MarkdownView descriptionView;
         private Paned hpaned;
 
         /// <summary>Default constructor for ExplorerView</summary>
@@ -75,47 +74,6 @@ namespace UserInterface.Views
                 CurrentRightHandView = view;
                 rightHandView.PackEnd(view.MainWidget, true, true, 0);
                 rightHandView.ShowAll();
-            }
-        }
-
-        /// <summary>
-        /// Add a description to the right hand view.
-        /// </summary>
-        /// <param name="description">The description to show.</param>
-        public void AddDescriptionToRightHandView(string description)
-        {
-            if (description == null)
-            {
-                if (descriptionView != null)
-                {
-                    descriptionView.Dispose();
-                    //Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
-                    //rightHandView.Remove(descriptionWidget);
-                    //descriptionWidget.Dispose();
-                }
-                descriptionView = null;
-            }
-            else
-            {
-                if (descriptionView == null)
-                {
-                    descriptionView = new MarkdownView(this);
-                    // Set PropagateNaturalHeight to true, to ensure that the
-                    // scrolled window requests enough space to not require a
-                    // scrollbar by default. We could change MarkdownView to
-                    // always do this, but it's used in lots of other places, so
-                    // that may have unintended consequences and would require
-                    // more extensive testing.
-                    if (descriptionView.MainWidget is ScrolledWindow scroller)
-                        scroller.PropagateNaturalHeight = true;
-                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
-                    // Let Gtk catch up with things; otherwise too much space
-                    // is allocated to the new description view. Is there a better way?
-
-                    while (!descriptionView.SizeIsAllocated)
-                        Gtk.Application.RunIteration();
-                }
-                descriptionView.Text = description;
             }
         }
 

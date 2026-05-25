@@ -17,6 +17,7 @@ using Models.Surface;
 using Models.Soils;
 
 using Models.Utilities;
+using Models.AgPasture;
 namespace UserInterface.Classes
 {
     public enum PropertyType
@@ -30,10 +31,10 @@ namespace UserInterface.Classes
         File,
         Files,
         Directory,
-        //Directories,
         Font,
         Numeric,
-        Code
+        Code,
+        Button
     }
 
     /// <summary>
@@ -410,7 +411,8 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.PlantName:
                     DisplayMethod = PropertyType.DropDown;
-                    var plantModels = model.Node.FindAll<Plant>();
+                    IEnumerable<IPlant> plantModels = model.Node.FindAll<Plant>().ToList();
+                    plantModels = plantModels.Concat(model.Node.FindAll<PastureSpecies>()).ToList();
                     if (plantModels != null)
                         DropDownOptions = plantModels.Select(plant => plant.Name).ToArray();
                     break;
@@ -422,11 +424,14 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = new string[2] { "Ever green", "Deciduous" };
+                    DropDownOptions = new string[2] { "Evergreen", "Deciduous" };
                     break;
                 case DisplayType.CanopyTypes:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[4] { "BroadAcre", "TreeRow", "CropRow", "VineRow" };
+                    break;
+                case DisplayType.Button:
+                    DisplayMethod = PropertyType.Button;
                     break;
 
                 // Should never happen - presenter should handle this(?)

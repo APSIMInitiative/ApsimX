@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -41,7 +40,7 @@ namespace Models.WaterModel
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(WaterBalance))]
-    public class EvaporationModel : Model
+    public class EvaporationModel : Model, IWaterCalculation
     {
         /// <summary>The water movement model.</summary>
         [Link]
@@ -49,7 +48,7 @@ namespace Models.WaterModel
 
         /// <summary>Access the soil physical properties.</summary>
         [Link]
-        private IPhysical soilPhysical = null;
+        private IPhysical physical = null;
 
         [Link]
         private IClock clock = null;
@@ -139,8 +138,8 @@ namespace Models.WaterModel
             UYesterday = u;
 
             //! set up evaporation stage
-            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]),
-                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]),
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - physical.LL15mm[0]),
+                                            (physical.DULmm[0] - physical.LL15mm[0]),
                                             0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 
@@ -163,7 +162,7 @@ namespace Models.WaterModel
 
         /// <summary>Calculate soil evaporation.</summary>
         /// <returns></returns>
-        public double Calculate()
+        public void Calculate(double[] swmm)
         {
             // Done like this to speed up runtime. Using DateUtilities.WithinDates is slow.
             if (clock.Today.Day == summerStartDate.Day && clock.Today.Month == summerStartDate.Month)
@@ -173,9 +172,8 @@ namespace Models.WaterModel
 
             //CalcEo();  // Use EO from MicroClimate
             CalcEoReducedDueToShading();
-            CalcEs();
+            CalcEs(swmm);
             UYesterday = U;
-            return Es;
         }
 
         /// <summary>Return true if simulation is in summer.</summary>
@@ -236,7 +234,7 @@ namespace Models.WaterModel
         }
 
         /// <summary>calculate actual evaporation from soil surface (es)</summary>
-        public void CalcEs()
+        public void CalcEs(double[] swmm)
         {
 
             //es          -> ! (output) actual evaporation (mm)
@@ -258,8 +256,8 @@ namespace Models.WaterModel
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            var airdryMM = soilPhysical.AirDry[0] * soilPhysical.Thickness[0];
-            double avail_sw_top = waterBalance.Water[0] - airdryMM;
+            var airdryMM = physical.AirDry[0] * physical.Thickness[0];
+            double avail_sw_top = swmm[0] - airdryMM;
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 
             // Calculate actual soil water evaporation

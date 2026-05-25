@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 
-namespace ApsimNG.Utility
+namespace APSIMNG.Utility
 {
     // This code copied from https://weblog.west-wind.com/posts/2016/may/13/creating-single-instance-wpf-applications-that-open-multiple-files
     // It is simple and provides exactly what we need

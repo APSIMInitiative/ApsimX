@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using UserInterface.Commands;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -548,6 +548,15 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
+
+                // When a Series model is moved up or down it can change the way it is displayed
+                // in the right hand panel, so we need to refresh that display.
+                // Do any other Models require this?
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
@@ -563,6 +572,11 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
@@ -771,19 +785,13 @@ namespace UserInterface.Presenters
                 {
                     ViewNameAttribute viewName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
-                    DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-                    if (descriptionName != null && model.GetType().Namespace.Contains("CLEM"))
+                    if (model.GetType().Namespace.Contains("CLEM"))
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
-
-                    // if a clem model ignore the newly added description box that is handled by CLEM wrapper
-                    if (!model.GetType().Namespace.Contains("CLEM"))
-                    {
-                        ShowDescriptionInRightHandPanel(descriptionName?.ToString());
-                    }
+                    
                     if (viewName != null && viewName.ToString().Contains(".glade"))
                         ShowInRightHandPanel(model,
                                              newView: new ViewBase(view as ViewBase, viewName.ToString()),
@@ -794,6 +802,7 @@ namespace UserInterface.Presenters
                     else
                     {
                         var view = new MarkdownView(this.view as ViewBase);
+                        view.Refresh();
                         var presenter = new DocumentationPresenter();
                         ShowInRightHandPanel(model, view, presenter);
                     }
@@ -821,15 +830,6 @@ namespace UserInterface.Presenters
             ShowInRightHandPanel(model,
                                  newView: new ViewBase(view as ViewBase, gladeResourceName),
                                  presenter: presenter);
-        }
-
-        /// <summary>
-        /// Show a description in the right hand view.
-        /// </summary>
-        /// <param name="description">The description to show (Markdown).</param>
-        public void ShowDescriptionInRightHandPanel(string description)
-        {
-            view.AddDescriptionToRightHandView(description);
         }
 
         /// <summary>Show a view in the right hand panel.</summary>
@@ -902,7 +902,7 @@ namespace UserInterface.Presenters
             Model model = this.ApsimXFile.Node.Get(this.CurrentNodePath, LocatorFlags.ModelsOnly) as Model;
             if (model != null)
             {
-                Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
+                WeatherDownloadDialog dlg = new WeatherDownloadDialog();
                 IModel currentNode = ApsimXFile.Node.Get(CurrentNodePath, LocatorFlags.ModelsOnly) as IModel;
                 dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }

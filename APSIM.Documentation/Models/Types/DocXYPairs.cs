@@ -5,6 +5,8 @@ using APSIM.Shared.Utilities;
 using Models.Functions;
 using System.Data;
 using System;
+using Markdig;
+using SkiaSharp;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -24,17 +26,22 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public override List<ITag> Document(int none = 0)
         {
-            Section section = GetSummaryAndRemarksSection(model);
-            
             XYPairs xyPairs = model as XYPairs;
 
             DataTable table = new DataTable(model.Name);
-            string parentName = "Y";
+            string xName = "X";
+            string yName = "Y";
             if (model.Parent != null)
-                parentName = model.Parent.Name;
+            {
+                yName = model.Parent.Name;
+                List<IModel> siblings = model.Parent.Children;
+                foreach(IModel child in siblings)
+                    if (child is VariableReference)
+                        xName = (child as VariableReference).VariableName;
+            }
 
-            table.Columns.Add("X", typeof(string));
-            table.Columns.Add(parentName, typeof(string));
+            table.Columns.Add(xName, typeof(string));
+            table.Columns.Add(yName, typeof(string));
             for (int i = 0; i < Math.Max(xyPairs.X.Length, xyPairs.Y.Length); i++)
             {
                 DataRow row = table.NewRow();
@@ -65,18 +72,35 @@ namespace APSIM.Documentation.Models.Types
                 table.Rows.Add(row);
             }
 
-            section.Add(new Table(table));
-            section.Add(CreateGraph());
+            Table tableTag = new Table(table);
+            string tableMarkdown = WebDocs.ConvertToMarkdown(new List<ITag> {tableTag}, "", xyPairs);
 
-            return new List<ITag>() {section};
+            SKImage graphImage = WebDocs.GetGraphImage(CreateGraph(), 600, 600, 192);
+            string imgMarkdown = WebDocs.GetMarkdownImageFromSKImage(graphImage);
+
+            string markdown = imgMarkdown + "\n" + tableMarkdown;
+
+            MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            string html = Markdown.ToHtml(markdown, pipeline);
+            html = html.Replace("<p>", "");
+            html = html.Replace("</p>", "");
+
+            html = WebDocs.AddCSSClasses(html);
+            html = html.Replace("<img ", "<img style=\"width:40%;float:left;padding:0px;padding-left:6%;padding-right:4%\" ");
+            html = html.Replace("<table ", "<table style=\"width:40%;float:left;margin-top:60px\" ");
+
+            html = $"<div class=\"docs-table-container\" style=\"margin-top:-50px\">\n{html}</div>\n";
+
+            return new List<ITag> {new Paragraph(html)};
         }
 
         private Graph CreateGraph()
         {
             XYPairs xyPairs = model as XYPairs;
             var series = new APSIM.Shared.Graphing.Series[1];
-            string xName = "X";
-            string yName = "Y";
+            VariableReference XVariable = (VariableReference) xyPairs.Parent.Children.Find(m => m.Name == "XValue");
+            string xName = XVariable.VariableName;
+            string yName = xyPairs.Parent.Name;
             string parentName = "";
 
             if (model.Parent != null)
@@ -95,7 +119,7 @@ namespace APSIM.Documentation.Models.Types
             var xAxis = new APSIM.Shared.Graphing.Axis(xName, APSIM.Shared.Graphing.AxisPosition.Bottom, false, false);
             var yAxis = new APSIM.Shared.Graphing.Axis(yName, APSIM.Shared.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Shared.Graphing.LegendConfiguration(APSIM.Shared.Graphing.LegendOrientation.Vertical, APSIM.Shared.Graphing.LegendPosition.TopLeft, true);
-            return new Graph(xyPairs.Name, xyPairs.FullPath, series, xAxis, yAxis, legend);
+            return new Graph("", xyPairs.FullPath, series, xAxis, yAxis, legend);
         }
     }
 }

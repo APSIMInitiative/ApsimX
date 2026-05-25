@@ -20,8 +20,8 @@ namespace UnitTests.Functions
         [Test]
         public void TestFrostHeatFunctionRuns()
         {
-            string[] crops = { "Wheat", "Canola", "Barley" };
-            FrostHeatDamageFunctions.CropTypes[] types = { FrostHeatDamageFunctions.CropTypes.Wheat, FrostHeatDamageFunctions.CropTypes.Canola, FrostHeatDamageFunctions.CropTypes.Wheat };
+            string[] crops = { "Wheat", "Canola", "Barley"};
+            FrostHeatDamageFunctions.CropTypes[] types = { FrostHeatDamageFunctions.CropTypes.Wheat, FrostHeatDamageFunctions.CropTypes.Canola, FrostHeatDamageFunctions.CropTypes.Wheat};
 
             for(int i = 0; i < crops.Length; i++)
             {

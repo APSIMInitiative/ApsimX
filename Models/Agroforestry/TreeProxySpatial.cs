@@ -105,7 +105,7 @@ namespace Models.Agroforestry
             if (Node != null)   // Can be null during deserialisation.
             {
                 // Get the first soil. For now we're assuming all soils have the same structure.
-                var physical = Structure.Find<Physical>(relativeTo: TreeProxyInstance);
+                var physical = Structure.Find<Physical>();
                 if (physical != null)
                 {
                     _parameters = new()
