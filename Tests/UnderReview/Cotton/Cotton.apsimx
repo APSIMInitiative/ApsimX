@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 213,
+  "Version": 216,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -115,6 +115,9 @@
         {
           "$type": "Models.Report, Models",
           "VariableNames": [
+            "[Cotton].Phenology.Maturing.FractionComplete",
+            "[Cotton].DaysAfterSowing",
+            "",
             "[Clock].Today",
             "[Clock].Today.DayOfYear",
             "[Weather].Rain",
@@ -747,7 +750,53 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "PreemergentThermalTime",
+                  "Name": "ThermalTime",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        15.6,
+                        32.0,
+                        39.0
+                      ],
+                      "Y": [
+                        0.0,
+                        16.4,
+                        0.0
+                      ],
+                      "Name": "Response",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                      "TempRangeFactors": null,
+                      "Name": "InterpolationMethod",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.SubDailyInterpolation, Models",
+                  "agregationMethod": 0,
+                  "Name": "ThermalTimePhenologyPreEmergence",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -793,27 +842,20 @@
                 {
                   "$type": "Models.Functions.SubDailyInterpolation, Models",
                   "agregationMethod": 0,
-                  "Name": "ThermalTime",
+                  "Name": "ThermalTimePhenologyCutout",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "7/11/2023: Add stress factor to phenology based on temperature? See .Simulations.Canola Example.Zone.Canola.Phenology.EarlyPodDevelopment.Stress\n\nSo, make the model work for NAR0607Ir80, and add stress to make it work for DDRF21RS1000\n\n\n\n7/11/2023: other examples:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n45|0   (or 43, 40?)\n\nX|Y\n-|-\n15.6|0\n32|16.4\n35|16.4\n45|0\n\n7/11/2023: Luo, Bange, Clancy 2014: Tmax 35oC --> heat stress\n\n===================================================================================\n\nSee Bange et al., 2002: Approach two DD calculation where Tmax <35oC and Tmx >=35oC\n\nOn 4/07/2023:\n\nX|Y\n-|-\n15.6|0\n32|16.4\n43|16.4\n45|0\n\nBase temperature of 15.6 oC and optimum temperature of 32 oC taken from:\n\n* *Bange, M. et al., 2022. Improving temperature‐based predictions of the timing of flowering in cotton. Agron. J., 114(5): 2728-2742.*\n\nU.S. Approach with:\n\nSquaring target - 343 DD (from planting)\n\nFlowering target - 584 DD (from planting)\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         15.6,
+                        22.0,
                         32.0,
                         39.0
                       ],
                       "Y": [
-                        0.0,
+                        6.0,
+                        6.0,
                         16.4,
                         0.0
                       ],
@@ -888,7 +930,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].PreemergentThermalTime",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "ResourceName": null,
                       "Children": [],
@@ -1087,7 +1129,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
+                          "VariableName": "[Phenology].ThermalTimePhenologyCutout",
                           "Name": "ThermalTime",
                           "ResourceName": null,
                           "Children": [],
@@ -1250,6 +1292,15 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "To implement this stage, two moving averages of the Boll Wt are used as a multipler. The short average (3 Days) over the long average (21 days). When the bolls are growing quickly, the averages will diverge and the modifier goes up, as the growth slows, the long average catches up reducing the modifier.\n\nThis modifier is passed through a bell shaped curve defined, where when growth is low the phenology slows down (such in a slow growing environment), goes up to normal progression when growing normally, then slows drastically if the boll growth is very high. This allows the larger yield areas that put on biomass faster to extend their cutout to maturity phase, while also allowing the slower growing areas to do the same.\n\nThis curve has been hand built based on the validation set, but could be replaced with a curve function at some point in the function to generalise it.",
+                      "Name": "Memo1",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 300.0,
                       "Units": null,
@@ -1265,34 +1316,67 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ThermalTime",
-                          "Name": "ThermalTime",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.BoundFunction, Models",
-                          "Name": "MaturityModifier",
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "ThermalTimeLinearInterpolation",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": null,
-                              "Name": "Lower",
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                10.0,
+                                15.0
+                              ],
+                              "Y": [
+                                0.0,
+                                10.0,
+                                10.0
+                              ],
+                              "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.0,
-                              "Units": null,
-                              "Name": "Upper",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ThermalTimePhenologyCutout",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "GrowthLinearInterpolation",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                20.0,
+                                40.0,
+                                60.0,
+                                80.0,
+                                100.0,
+                                120.0,
+                                125.0
+                              ],
+                              "Y": [
+                                0.6,
+                                0.8,
+                                0.9,
+                                1.0,
+                                0.8,
+                                0.3,
+                                0.1
+                              ],
+                              "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -1300,95 +1384,42 @@
                             },
                             {
                               "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "Invert",
+                              "Name": "XValue",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
+                                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                                  "NumberOfDays": 3,
+                                  "StageToStartMovingAverage": "Cutout",
+                                  "Name": "MaturingAverageShort",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "Integral",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                                  "NumeratorErrVal": 0.0,
-                                  "DenominatorErrVal": 1.0,
-                                  "Name": "DeltaOverMax",
+                                  "$type": "Models.Functions.MovingAverageFunction, Models",
+                                  "NumberOfDays": 21,
+                                  "StageToStartMovingAverage": "Cutout",
+                                  "Name": "MaturingAverageLong",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "BollWtDelta",
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Boll].Wt",
+                                      "Name": "Integral",
                                       "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Boll].Wt",
-                                          "Name": "BollWt",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.EndOfDayFunction, Models",
-                                          "Name": "BollWtTwoDaysAgo",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[BollWtOneDayAgo]",
-                                              "Name": "BollWt",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.MaximumFunction, Models",
-                                      "Name": "MaximumBollWtDelta",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[BollWtDelta]",
-                                          "Name": "BollWtDelta",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.EndOfDayFunction, Models",
-                                          "Name": "BollWtDeltaYesterday",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[MaximumBollWtDelta]",
-                                              "Name": "MaximumBollWtDelta",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -1401,42 +1432,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                      "Name": "BollWtTwoDaysAgo",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[BollWtOneDayAgo]",
-                          "Name": "BollWt",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.EndOfDayFunction, Models",
-                      "Name": "BollWtOneDayAgo",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Boll].Wt",
-                          "Name": "BollWt",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -8989,7 +8984,7 @@
       "Children": [
         {
           "$type": "Models.Map, Models",
-          "Zoom": 6.1,
+          "Zoom": 8.1,
           "Center": {
             "$type": "Models.Mapping.Coordinate, Models",
             "Latitude": -26.8152,
@@ -10826,8 +10821,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS1500",
                       "ResourceName": null,
                       "Children": [
@@ -10906,8 +10900,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS1000",
                       "ResourceName": null,
                       "Children": [
@@ -10951,8 +10944,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "RS500",
                       "ResourceName": null,
                       "Children": [
@@ -10997,7 +10989,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DDRF21Base",
                   "ResourceName": null,
                   "Children": [
@@ -18276,7 +18267,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DouglasDaly20211Base",
                   "ResourceName": null,
                   "Children": [
@@ -27609,7 +27599,7 @@
             },
             {
               "$type": "Models.Factorial.Experiment, Models",
-              "DisabledSimNames": null,
+              "DisabledSimNames": [],
               "Name": "BDK09",
               "ResourceName": null,
               "Children": [
@@ -27627,8 +27617,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P1",
                       "ResourceName": null,
                       "Children": [
@@ -28350,8 +28339,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P2",
                       "ResourceName": null,
                       "Children": [
@@ -29073,8 +29061,7 @@
                         "[Reset on date]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P3",
                       "ResourceName": null,
                       "Children": [
@@ -29800,7 +29787,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "BDK09Base",
                   "ResourceName": null,
                   "Children": [
@@ -35226,8 +35212,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P1",
                       "ResourceName": null,
                       "Children": [
@@ -35545,8 +35530,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P2",
                       "ResourceName": null,
                       "Children": [
@@ -35864,8 +35848,7 @@
                         "[FurrowIrrigation]",
                         "[HarvestAfterDate]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "P3",
                       "ResourceName": null,
                       "Children": [
@@ -36181,7 +36164,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Emerald2015Base",
                   "ResourceName": null,
                   "Children": [
@@ -41427,8 +41409,7 @@
                       "Specifications": [
                         "[Sowing]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Conventional",
                       "ResourceName": null,
                       "Children": [
@@ -41523,8 +41504,7 @@
                       "Specifications": [
                         "[Sowing]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "UNR",
                       "ResourceName": null,
                       "Children": [
@@ -41620,7 +41600,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Rose0203Base",
                   "ResourceName": null,
                   "Children": [
@@ -49633,8 +49612,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir80",
                       "ResourceName": null,
                       "Children": [
@@ -49764,8 +49742,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir68",
                       "ResourceName": null,
                       "Children": [
@@ -49895,8 +49872,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir55",
                       "ResourceName": null,
                       "Children": [
@@ -50026,8 +50002,7 @@
                       "Specifications": [
                         "[FurrowIrrigation]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Ir45",
                       "ResourceName": null,
                       "Children": [
@@ -50158,7 +50133,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "NAR0607Base",
                   "ResourceName": null,
                   "Children": [
@@ -52695,7 +52669,7 @@
                             {
                               "$type": "Models.EventNamesOnGraph, Models",
                               "ColumnName": "Cotton.Phenology.CurrentStageName",
-                              "SimulationName": "NAR0607Ir80",
+                              "SimulationName": "NAR0607Ir45",
                               "Name": "EventNamesOnGraph",
                               "ResourceName": null,
                               "Children": [],
@@ -56703,8 +56677,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N0",
                       "ResourceName": null,
                       "Children": [
@@ -56741,8 +56714,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N150",
                       "ResourceName": null,
                       "Children": [
@@ -56779,8 +56751,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "N300",
                       "ResourceName": null,
                       "Children": [
@@ -56818,7 +56789,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Narrabri2023Base",
                   "ResourceName": null,
                   "Children": [
@@ -64910,8 +64880,13 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [
+                        {
+                          "$type": "Models.Core.Run.SimulationDescriptor, Models",
+                          "Name": "Irrigation",
+                          "Value": "Full"
+                        }
+                      ],
                       "Name": "IrrigationFull",
                       "ResourceName": null,
                       "Children": [
@@ -65004,8 +64979,13 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [
+                        {
+                          "$type": "Models.Core.Run.SimulationDescriptor, Models",
+                          "Name": "Irrigation",
+                          "Value": "Partial"
+                        }
+                      ],
                       "Name": "IrrigationPartial",
                       "ResourceName": null,
                       "Children": [
@@ -65071,7 +65051,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "ForestHill2023Base",
                   "ResourceName": null,
                   "Children": [
@@ -71957,8 +71936,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Double",
                           "ResourceName": null,
                           "Children": [],
@@ -71975,7 +71953,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "WarraBaseSimulation",
                   "ResourceName": null,
                   "Children": [
@@ -73889,7 +73866,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "NResponseBase",
                   "ResourceName": null,
                   "Children": [
@@ -75459,8 +75435,7 @@
                       "Specifications": [
                         "[Operations]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "IrrigationFull",
                       "ResourceName": null,
                       "Children": [
@@ -75554,7 +75529,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "DetailedDynamicsBase",
                   "ResourceName": null,
                   "Children": [
@@ -77821,7 +77795,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "IrrigationResponseBase",
                   "ResourceName": null,
                   "Children": [
@@ -79214,8 +79187,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Double",
                           "ResourceName": null,
                           "Children": [],
@@ -79228,8 +79200,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=1"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Single",
                           "ResourceName": null,
                           "Children": [],
@@ -79242,8 +79213,7 @@
                             "[CottonZone].Width=2",
                             "[SkipZone].Width=0.01"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Solid",
                           "ResourceName": null,
                           "Children": [],
@@ -79260,7 +79230,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "SkipRowBase",
                   "ResourceName": null,
                   "Children": [
