@@ -262,20 +262,20 @@ namespace Models.GrazPlan.Organs
                 if (Name == "Leaf")
                 {
  
-                    liveBiomass.StructuralWt =  PastureModel.GetHerbageMass(sgGREEN, ptLEAF, TOTAL);
-                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(sgGREEN,ptLEAF, TOTAL,TPlantElement.N);
+                    liveBiomass.StructuralWt =  PastureModel.GetHerbageMass(stESTAB, ptLEAF, TOTAL);
+                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(stESTAB,ptLEAF, TOTAL,TPlantElement.N);
 
-                    deadBiomass.StructuralWt = PastureModel.GetHerbageMass(sgDRY,ptLEAF,TOTAL); 
-                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(sgDRY,ptLEAF,TOTAL,TPlantElement.N);
+                    deadBiomass.StructuralWt = PastureModel.GetHerbageMass(stDEAD,ptLEAF,TOTAL); 
+                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(stDEAD,ptLEAF,TOTAL,TPlantElement.N);
                 }
                 if (Name == "Stem")
                 {
                     
-                    liveBiomass.StructuralWt =  PastureModel.GetHerbageMass(sgGREEN, ptSTEM, TOTAL);
-                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(sgGREEN,ptSTEM, TOTAL,TPlantElement.N);
+                    liveBiomass.StructuralWt =  PastureModel.GetHerbageMass(stESTAB, ptSTEM, TOTAL);
+                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(stESTAB,ptSTEM, TOTAL,TPlantElement.N);
 
-                    deadBiomass.StructuralWt = PastureModel.GetHerbageMass(sgDRY,ptSTEM,TOTAL); 
-                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(sgDRY,ptSTEM,TOTAL,TPlantElement.N);
+                    deadBiomass.StructuralWt = PastureModel.GetHerbageMass(stDEAD,ptSTEM,TOTAL); 
+                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(stDEAD,ptSTEM,TOTAL,TPlantElement.N);
                 }
             }
         }
