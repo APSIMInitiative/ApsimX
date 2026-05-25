@@ -45,6 +45,7 @@ targets::tar_make()
 ```{r, warning=FALSE, eval = FALSE }
 tar_destroy()
 # targets::tar_destroy(ask = FALSE)
+# targets::tar_invalidate(list_observed_clean)
 ```
 
 
@@ -68,6 +69,62 @@ tar_load(df_stages_Observ)
 tar_load(list_observed_clean_final)
 x<- tar_read(list_observed_dfs)
 names(x)
+targets::tar_invalidate(list_observed_dfs)
+tar_load(df_list_PCDS)
 
+
+```
+
+```{r}
+tar_load(df_stages_Observ)
+tar_load(list_observed_clean_stage)
+tar_load(df_soil_water)
+tar_load(json_soil_water)
+tar_read(json_soil_water)
+tar_load(df_apsimStageInput)
+tar_load(df_haun_pheno_dates)
+tar_load(df_apsimStageInput_haunBased)
+tar_load(df_stages_Observ)
+tar_read(list_observed_clean_stage)
+tar_load(list_observed_clean)
+tar_load(df_final_observed)
+tar_load(df_obs_meta_data)
+```
+
+```{r}
+tar_load(list_observed_dfs)
+tar_load(list_observed_clean)
+```
+
+```{r}
+tar_load(list_observed_dfs)
+tar_load(list_pcds_extracted)
+tar_load(df_pheno_input_param)
+tar_load(df_pheno_raw)
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
+tar_load(df_pheno_final)
+tar_load(list_observed_clean)
+
+```
+
+```{r}
+tar_load(df_obs_wide)
+tar_load(df_pheno_final)
+tar_load(df_obs_plus_pheno)
+tar_load(df_obs_plus_pheno_harv)
+tar_read(qc_apsim_observed_harv)
+dput(names(readxl::read_excel("2024_WaggaWagga_PHDA24WARI2.xlsx", sheet = "PCDS 10.0 harvest")))
+getwd()
+```
+
+```{r}
+tar_load(list_observed_dfs)
+```
+
+```{r}
+tar_load(df_pheno_raw)  
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
 ```
 

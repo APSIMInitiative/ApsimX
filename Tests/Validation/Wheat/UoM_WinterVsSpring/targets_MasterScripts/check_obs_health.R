@@ -14,9 +14,6 @@
 #' @export
 check_obs_health <- function(df, numeric_lower_bound = 0) {
   
-  require(dplyr)
-  require(stringr)
-  
   # ====================================================================
   # 1. CORE COLUMN INTEGRITY
   # ====================================================================
@@ -33,15 +30,25 @@ check_obs_health <- function(df, numeric_lower_bound = 0) {
   }
   
   # ====================================================================
-  # 2. THE APSIM TIMESTAMP FORMAT CHECK
+  # 2. DATE FORMAT & VALIDITY CHECK
   # ====================================================================
-  # APSIM strictly expects: DD/MM/YYYY 00:00:00 (or similar time). 
-  # This regex ensures it didn't accidentally stay as YYYY-MM-DD.
-  valid_format <- stringr::str_detect(df$Clock.Today, "^\\d{2}/\\d{2}/\\d{4} \\d{2}:\\d{2}:\\d{2}$")
+  # APSIM accepts DD/MM/YYYY. R natively prints Dates as YYYY-MM-DD.
+  # If it is a native Date object, openxlsx translates it perfectly.
+  if (inherits(df$Clock.Today, c("Date", "POSIXt"))) {
+    valid_format <- rep(TRUE, nrow(df))
+  } else {
+    # If it's a string, accept DD/MM/YYYY or YYYY-MM-DD (with or without HMS)
+    pattern_dmy <- "^\\d{2}/\\d{2}/\\d{4}( \\d{2}:\\d{2}:\\d{2})?$"
+    pattern_ymd <- "^\\d{4}-\\d{2}-\\d{2}( \\d{2}:\\d{2}:\\d{2})?$"
+    
+    valid_format <- stringr::str_detect(df$Clock.Today, pattern_dmy) | 
+      stringr::str_detect(df$Clock.Today, pattern_ymd)
+  }
+  
   if (!all(valid_format)) {
     bad_dates <- head(df$Clock.Today[!valid_format], 3)
     stop(sprintf(
-      "QC FAILED: 'Clock.Today' is not in the correct APSIM format (DD/MM/YYYY HH:MM:SS).\n  -> Example of bad format found: %s", 
+      "QC FAILED: 'Clock.Today' is not in a recognized date format (DD/MM/YYYY or YYYY-MM-DD).\n  -> Example of bad format found: %s", 
       paste(bad_dates, collapse = ", ")
     ))
   }
@@ -88,7 +95,7 @@ check_obs_health <- function(df, numeric_lower_bound = 0) {
     }
   }
   
-  message("\u2705 QC PASSED: Observation dataframe is structurally sound and ready for APSIM.")
+  message("✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.")
   
   # Return the data unaltered so it can pass through the pipeline
   return(df)

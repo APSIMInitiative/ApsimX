@@ -16,27 +16,19 @@ library(here)
 # ------------------------------------------------------------------------------
 tar_option_set(
   packages = c(
-    "here", "tidyverse", "lubridate", "readxl"
+    "here", "tidyverse", "lubridate", "readxl", "openxlsx"
   )
 )
 
 # ------------------------------------------------------------------------------
 # 2. SOURCE CUSTOM FUNCTIONS
 # ------------------------------------------------------------------------------
-source("R/read_excel_observed.R")
-source("R/do_obs_means.R")
-source("R/save_df_into_excel.R")
-source("R/get_pheno_dates.R")
-source("R/add_interp_pheno_dates.R")
-source("R/save_df_into_csv.R")
-source("R/add_stages_to_obs.R")
-source("R/get_column_var_from_observ.R")
-source("R/check_manual_params.R")
-source("R/check_project_dependencies.R")
-source("R/add_harv_into_obs.R")
-source("R/derive_haun_pheno_dates.R")
-source("R/updatePhenoStageInput.R")
-source("R/copy_and_check_met.R")
+# Load master scripts (Universal Functions)
+targets::tar_source("../targets_MasterScripts")
+
+# Load THIS project's specific local scripts (Local fixes & mapping)
+source("R/apply_corrections_Grass24.R")
+source("R/apply_name_corrections_Grass24.R")
 
 # ------------------------------------------------------------------------------
 # 3. PROJECT DEFINITION
@@ -64,11 +56,11 @@ list(
       folder_observed         = file.path(here::here(), "Observed"),
       
       # Security
-      file_zip_out               = file.path(here::here(), "Observed.zip"), 
-      file_pass                  = file.path(here::here(), "secret_pass.txt"), 
+      file_zip_out            = file.path(here::here(), "Observed.zip"), 
+      file_pass               = file.path(here::here(), "secret_pass.txt"), 
       
       file_rawData_excel      = "Observed.xlsx",             # Raw observed data
-      file_workData_excel     = paste0(proj_name, "_Observed.xlsx"),
+      file_saved_obs_excel    = paste0(proj_name, "_Observed.xlsx"), 
       sheet_name_observed     = "Observed",
       
       # Model parameters
@@ -80,161 +72,238 @@ list(
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
       file_name_input_haun    = paste0(proj_name, "_HaunStagesInput.csv"),
       file_name_met           = "Grass Patch_-33.25_121.60.met",
+      file_name_mapping_csv   = paste0(proj_name, "_obs_var_new_names.csv"),
       file_name_new_met       = paste0(proj_name, ".met")
     )
   ),
   
   # ------------------------------------------------------------------
-  # 2. VALIDATE AND COPY MET FILE
+  # PHASE B: VALIDATE AND COPY MET FILE
   # ------------------------------------------------------------------
   tar_target(
     name = validated_met_file,
     command = copy_and_check_met(
-      sourceFolder   = config$folder_rawData,    # Automatically grabs "data/raw_weather"
-      targetFolder   = config$folder_met,        # Where you want it to go
-      orig_file_name = config$file_name_met,     # Automatically grabs "GrassPatch_original.met"
-      new_file_name  = config$file_name_new_met  # Your new clean name
+      sourceFolder   = config$folder_rawData,    
+      targetFolder   = config$folder_met,        
+      orig_file_name = config$file_name_met,     
+      new_file_name  = config$file_name_new_met  
     ),
-    format = "file" # CRITICAL: Tells targets the output is a physical file, not an R object
+    format = "file" 
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE B: RAW OBSERVATION INGESTION & PROCESSING
+  # PHASE C: RAW OBSERVATION INGESTION & PROCESSING
   # ----------------------------------------------------------------------------
-  # Read raw observations
   tar_target(
-    name = df_obs_raw, 
+    name = df_obs_raw,
     command = read_excel_observed(
       file.path(config$folder_rawData, config$file_rawData_excel)
     )
   ),
   
-  # Average the replicates
   tar_target(
-    name = df_obs_mean, 
+    name = df_obs_mean,
     command = do_obs_means(df_obs_raw)
   ),
   
   # ----------------------------------------------------------------------------
-  # PHASE C: PHENOLOGY & HAUN STAGES
+  # PHASE D: PHENOLOGY & HAUN STAGES (Universal)
   # ----------------------------------------------------------------------------
-  # Retrieve measured pheno dates from observations
   tar_target(
-    name = df_obs_pheno_dates, 
-    command = get_pheno_dates(
-      df_obs_mean, 
+    name = df_pheno_raw,
+    command = get_pheno_dates_from_DOY_wide_obs(
+      df_obs_mean,
       config$date_DOY_ref
     )
   ),
   
-  # Create and add interpolated pheno-dates not measured in-between
   tar_target(
-    name = df_pheno_dates_paramInput, 
-    command = add_interp_pheno_dates(
-      df_obs_pheno_dates, 
+    name = df_pheno_int,
+    command = create_interp_pheno_dates(
+      df_pheno_raw,
       config$btwStgPerc
     )
   ),
   
-  # Get Haun stage data for enforced parameters
   tar_target(
-    name = df_haun, 
+    name = df_haun,
     command = get_column_var_from_observ(
-      df_obs_mean, 
-      "Wheat.Phenology.HaunStage"
+      df       = df_obs_mean,
+      std_cols = c("SimulationName", "Clock.Today"),
+      col_name = "Wheat.Phenology.HaunStage"
     )
   ),
   
-  # Derive pheno-stages' dates from haun
   tar_target(
-    name = df_haun_pheno_dates,
-    command = derive_haun_pheno_dates(
-      df             = df_haun,
+    name = df_pheno_haun,
+    command = derive_pheno_stages_from_haun(
+      df_input       = df_haun,
       max_leaf_limit = config$max_leaf_limit
     )
   ),
   
-  # Join interpolated and haun-based pheno dates (haun has priority)
   tar_target(
-    name = df_apsimStageInput_haunBased,
-    command = updatePhenoStageInput(
-      obsIntPheno = df_pheno_dates_paramInput,  # Interpolated observations
-      haunPheno   = df_haun_pheno_dates         # Haun stage has priority
+    name = df_pheno_final,
+    command = merge_and_qc_pheno(
+      df_raw  = df_pheno_raw,
+      df_haun = df_pheno_haun,
+      df_int  = df_pheno_int
     )
   ),
   
-  # ----------------------------------------------------------------------------
-  # PHASE D: OBSERVATION FORMATTING & INTEGRATION
-  # ----------------------------------------------------------------------------
-  # Add HarvestRipe flags at final measurements for 1:1 graph analysis
   tar_target(
-    name = df_observed_wide_harv, 
+    name = df_pheno_input_param,
+    command = format_apsim_pheno_params(df_pheno_final)
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE E: OBSERVATION FORMATTING & INTEGRATION
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = df_obs_plus_pheno,
+    command = add_new_var_to_obs(
+      df_obs          = df_obs_mean,
+      df_new_data     = df_pheno_final,
+      target_col_name = "Wheat.Phenology.Stage"
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_plus_hi,
+    command = calc_harvest_index(
+      df          = df_obs_plus_pheno,
+      grain_col   = "Wheat.Grain.Wt",
+      agb_col     = "Wheat.AboveGround.Wt",
+      hi_col_name = "HarvestIndex"
+    )
+  ),
+  
+  tar_target(
+    name = track_mapping_csv,
+    command = file.path(config$folder_rawData, config$file_name_mapping_csv),
+    format = "file" 
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed,
+    command = apply_name_corrections_Grass24(
+      df_obs           = df_obs_plus_pheno_plus_hi,
+      mapping_csv_path = track_mapping_csv
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed_corrected,
+    command  = apply_corrections_Grass24(
+      df_obs = df_obs_plus_pheno_hi_renamed
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed_corrected_with_amounts,
+    command = calc_nutrient_absolute_amounts(
+      df           = df_obs_plus_pheno_hi_renamed_corrected, 
+      crop_prefix  = "Wheat",
+      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix  = "Wt",
+      ag_name      = "Wheat.AboveGround",
+      divisor      = 1  # Note: Assuming your conc values are already fractions (g/g). If they are %, change to 100!
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_pheno_hi_renamed_corrected_with_amounts_plus_harv,
     command = add_harv_into_obs(
-      df            = df_obs_mean,
-      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
+      df            = df_obs_plus_pheno_hi_renamed_corrected_with_amounts,
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", 
+                        "HarvestIndex", "Wheat.Spike.Live.Wt"),
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )
   ),
   
-  # Convert pheno dates into obs file friendly input and add to obs timeline
+  # ----------------------------------------------------------------------------
+  # PHASE F: VALIDATION & EXPORT  
+  # ----------------------------------------------------------------------------
+  # THE QC GATEKEEPER
   tar_target(
-    name = df_obs_mean_harv_pheno,
-    command = add_stages_to_obs(
-      df_obs       = df_observed_wide_harv, 
-      df_pheno     = df_apsimStageInput_haunBased,
-      new_var_name = "Wheat.Phenology.Stage"
-    )
+    name = qc_apsim_observed,
+    command = check_obs_health(df_obs_plus_pheno_hi_renamed_corrected_with_amounts_plus_harv)
   ),
   
-  # Check if Haun manual parameters are correct
+  # Haun Check (Enforces DAG dependency on the QC Gate)
   tar_target(
-    name = haun_input_checked, 
+    name = haun_input_checked,
     command = check_manual_params(
       config$folder_inputs,
       config$file_name_input_haun,
-      df_obs_mean
+      qc_apsim_observed
     )
   ),
   
-  # ----------------------------------------------------------------------------
-  # PHASE E: EXPORT & VALIDATION
-  # ----------------------------------------------------------------------------
-  # Save pheno-date input into CSV
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
-      df       = df_apsimStageInput_haunBased, 
-      folder   = config$folder_inputs, 
+      df       = df_pheno_input_param,
+      folder   = config$folder_inputs,
       filename = config$file_name_input_pheno
     ),
     format = "file"
   ),
   
-  # Save new mean observed data into Excel
   tar_target(
     name = msg_obs_saved,
-    command = save_df_into_excel(
-      df        = df_obs_mean_harv_pheno, 
-      folder    = config$folder_observed, 
-      filename  = config$file_workData_excel,
-      sheetname = config$sheet_name_observed
+    command = save_df_to_excel(
+      df          = qc_apsim_observed,
+      folder_path = config$folder_observed,
+      file_name   = config$file_saved_obs_excel,
+      sheet_name  = config$sheet_name_observed
     ),
     format = "file"
   ),
   
-  # Post-flight dependency check for APSIM
+  # ----------------------------------------------------------------------------
+  # PHASE G: SECURITY & ZIPPING
+  # ----------------------------------------------------------------------------
   tar_target(
-    name = check_depend, 
+    name = tracked_excel_files,
     command = {
-      # 1. Force dependency tracking
+      force(msg_obs_saved) # <--- THE ZIP FIX IS HERE
+      list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE)
+    },
+    format = "file"
+  ),
+  
+  tar_target(
+    name = encrypted_zip_artifact,
+    command = {
+      force(tracked_excel_files)
+      
+      secure_zip_folder(
+        input_folder = config$folder_observed,
+        output_zip   = config$file_zip_out,
+        pass_file    = config$file_pass
+      )
+      
+      config$file_zip_out 
+    },
+    format = "file"
+  ),
+  
+  # ----------------------------------------------------------------------------
+  # PHASE H: PRE-FLIGHT & DEPENDENCY CHECKS
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = check_depend,
+    command = {
+      force(validated_met_file) 
       msg_obs_saved
       msg_pheno_param_saved
       haun_input_checked
       
-      # 2. Execute validation
       check_project_dependencies(
-        met_name   = config$file_name_met,
+        met_name   = config$file_name_new_met,
         projects   = config$proj_name,
         dir_met    = config$folder_met,
         dir_inputs = config$folder_inputs,
@@ -243,31 +312,15 @@ list(
     }
   ),
   
-  # ----------------------------------------------------------------------------
-  # PHASE G: SECURITY & ZIPPING 
-  # ----------------------------------------------------------------------------
-  
-  # 1. THE WATCHER: Track every Excel file in the folder.
-  # If any file changes, this target invalidates.
   tar_target(
-    name = tracked_excel_files,
-    command = list.files(config$folder_observed, pattern = "\\.xls[mx]?$", full.names = TRUE),
-    format = "file"
-  ),
-  
-  # 2. THE ZIPPER: Only runs if 'tracked_excel_files' detects a change.
-  tar_target(
-    name = encrypted_zip_artifact,
+    name = verify_data_backup,
     command = {
-      force(tracked_excel_files) 
+      force(check_depend)
       
-      secure_zip_folder(
-        input_folder = config$folder_observed, 
-        output_zip   = config$file_zip_out, 
-        pass_file    = config$file_pass
+      check_archive_sync(
+        target_folder = config$folder_observed,
+        zip_file      = config$file_zip_out
       )
-    },
-    format = "file"
+    }
   )
-  
 )

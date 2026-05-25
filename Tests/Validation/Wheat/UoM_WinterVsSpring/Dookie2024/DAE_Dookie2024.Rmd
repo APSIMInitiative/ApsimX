@@ -12,6 +12,7 @@ library(visNetwork)
 ```{r}
 #setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd(this.path::this.dir())
+getwd()
 ```
 
 # Check pipeline status
@@ -149,5 +150,9 @@ bigred_search <- raw_flat %>%
 print(bigred_search, n = Inf)
 
 
+```
+
+```{r}
+targets::tar_invalidate(list_observed_clean)
 ```
 
