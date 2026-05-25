@@ -6,12 +6,12 @@ grainSize_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Individual grain weigh
 grainNumber_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Grain number (grains/m²),Wheat.Grain.Number,1
 earYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Spike dry matter (g/m²),Wheat.Ear.Wt,1
 grainYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Grain dry matter (g/m²),Wheat.Grain.Wt,1
-stemYield_6_raw,PCDS 6.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Wt,1
-stemYield_8_raw,PCDS 8.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Wt,1
-stemYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Stem dry matter (g/m²),Wheat.Stem.Wt,1
-spikeYield_6_raw,PCDS 6.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Wt,1
-spikeYield_8_raw,PCDS 8.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Wt,1
-spikeYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Spike dry matter (g/m²),Wheat.Spike.Wt,1
+stemYield_6_raw,PCDS 6.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Live.Wt,1
+stemYield_8_raw,PCDS 8.0 harvest,Stem dry matter (g/m²),Wheat.Stem.Live.Wt,1
+stemYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Stem dry matter (g/m²),Wheat.Stem.Live.Wt,1
+spikeYield_6_raw,PCDS 6.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Live.Wt,1
+spikeYield_8_raw,PCDS 8.0 harvest,Spike dry matter (g/m²),Wheat.Spike.Live.Wt,1
+spikeYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Spike dry matter (g/m²),Wheat.Spike.Live.Wt,1
 senescLeafYield_6_raw,PCDS 6.0 harvest,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1
 senescLeafYield_8_raw,PCDS 8.0 harvest,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1
 senescLeafYield_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Dead leaf dry matter (g/m²),Wheat.Leaf.Dead.Wt,1

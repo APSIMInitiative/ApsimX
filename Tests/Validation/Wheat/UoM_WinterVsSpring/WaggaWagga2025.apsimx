@@ -398,7 +398,8 @@
             "1.0 * [Wheat].Leaf.Live.StorageWt / ([Wheat].Leaf.Live.Wt + 0.00001) as Wheat.Leaf.Live.WSCc",
             "1.0 * [Wheat].Stem.Live.StorageWt / ([Wheat].Stem.Live.Wt + 0.00001) as Wheat.Stem.Live.WSCc",
             "1.0 * [Wheat].Spike.Live.StorageWt / ([Wheat].Spike.Live.Wt + 0.00001) as Wheat.Spike.Live.WSCc",
-            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc"
+            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc",
+            "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
