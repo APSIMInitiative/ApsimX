@@ -849,13 +849,13 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         15.6,
-                        22.0,
+                        20.6,
                         32.0,
                         39.0
                       ],
                       "Y": [
-                        6.0,
-                        6.0,
+                        5.0,
+                        5.0,
                         16.4,
                         0.0
                       ],
@@ -1130,7 +1130,7 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Phenology].ThermalTimePhenologyCutout",
-                          "Name": "ThermalTime",
+                          "Name": "ThermalTimePhenologyCutout",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1293,7 +1293,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "To implement this stage, two moving averages of the Boll Wt are used as a multipler. The short average (3 Days) over the long average (21 days). When the bolls are growing quickly, the averages will diverge and the modifier goes up, as the growth slows, the long average catches up reducing the modifier.\n\nThis modifier is passed through a bell shaped curve defined, where when growth is low the phenology slows down (such in a slow growing environment), goes up to normal progression when growing normally, then slows drastically if the boll growth is very high. This allows the larger yield areas that put on biomass faster to extend their cutout to maturity phase, while also allowing the slower growing areas to do the same.\n\nThis curve has been hand built based on the validation set, but could be replaced with a curve function at some point in the function to generalise it.",
+                      "Text": "To implement this stage, two moving averages of the Above Ground Wt are used as a multipler. The short average (3 Days) over the long average (21 days). When the plant is growing quickly, the averages will diverge and the modifier goes up, and when the growth slows, the long average catches up reducing the modifier.\n\nThis modifier is passed through a curve where when growth is low the phenology slows down (such in a slow growing environment), goes up to normal progression when growing at an average speed, then slows drastically if the boll growth is very high. This allows the larger yield areas that put on biomass faster to extend their cutout to maturity phase, while also allowing the slower growing areas to do the same.\n\nThis curve has been hand built based on the validation set, but could be replaced with a curve function at some point in the function to generalise it.",
                       "Name": "Memo1",
                       "ResourceName": null,
                       "Children": [],
@@ -1316,38 +1316,11 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "ThermalTimeLinearInterpolation",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].ThermalTimePhenologyCutout",
+                          "Name": "ThermalTimePhenologyCutout",
                           "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                10.0,
-                                15.0
-                              ],
-                              "Y": [
-                                0.0,
-                                10.0,
-                                10.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].ThermalTimePhenologyCutout",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1359,22 +1332,18 @@
                             {
                               "$type": "Models.Functions.XYPairs, Models",
                               "X": [
-                                20.0,
-                                40.0,
-                                60.0,
                                 80.0,
                                 100.0,
+                                110.0,
                                 120.0,
-                                125.0
+                                140.0
                               ],
                               "Y": [
                                 0.6,
-                                0.8,
-                                0.9,
                                 1.0,
-                                0.8,
-                                0.3,
-                                0.1
+                                1.0,
+                                0.9,
+                                0.4
                               ],
                               "Name": "XYPairs",
                               "ResourceName": null,
@@ -1396,7 +1365,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].Wt",
+                                      "VariableName": "[AboveGround].Wt",
                                       "Name": "Integral",
                                       "ResourceName": null,
                                       "Children": [],
@@ -1416,7 +1385,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Boll].Wt",
+                                      "VariableName": "[AboveGround].Wt",
                                       "Name": "Integral",
                                       "ResourceName": null,
                                       "Children": [],
