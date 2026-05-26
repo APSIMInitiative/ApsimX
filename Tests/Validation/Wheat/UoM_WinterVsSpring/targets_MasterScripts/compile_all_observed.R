@@ -1,7 +1,7 @@
 #' Compile and Format All Observed Data (Universal Master)
 #'
 #' @export
-compile_all_observed <- function(folder, excel_files, exp_keys, df_obs_info, df_simNames) {
+compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, exp_keys = NULL) {
   
   if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
   if (!requireNamespace("purrr", quietly = TRUE)) stop("Package 'purrr' required.")
@@ -20,12 +20,18 @@ compile_all_observed <- function(folder, excel_files, exp_keys, df_obs_info, df_
     ))
   }
   
-  # Ensure the keys match the number of files
-  if (length(excel_files) != length(exp_keys)) {
+  # Determine if we are using the multi-experiment tie-breaker
+  use_keys <- !is.null(exp_keys)
+  
+  # Ensure the keys match the number of files IF keys are provided
+  if (use_keys && (length(excel_files) != length(exp_keys))) {
     stop("CRITICAL: The number of 'excel_files' must exactly match the number of 'exp_keys'.")
   }
   
   full_paths <- file.path(folder, excel_files)
+  
+  # Setup an iterator for the map function (safely uses NA if no keys are provided)
+  iter_keys <- if (use_keys) exp_keys else rep(NA, length(full_paths))
   
   # ------------------------------------------------------------------
   # 2. READ, STACK, AND INJECT
@@ -36,8 +42,8 @@ compile_all_observed <- function(folder, excel_files, exp_keys, df_obs_info, df_
         list(df_name, sheet_name, column_name, apsim_var_name, corr_fact),
         function(name_val, sh, col, new_col, corr) {
           
-          # Use map2_dfr to iterate over BOTH the paths and the experiment keys
-          raw_df <- purrr::map2_dfr(full_paths, exp_keys, function(path, key) {
+          # Use map2_dfr to iterate over BOTH the paths and the experiment keys (if any)
+          raw_df <- purrr::map2_dfr(full_paths, iter_keys, function(path, key) {
             
             # ---------------------------------------------------------
             # THE SHIELD: tryCatch prevents missing sheets from crashing the pipeline
@@ -75,8 +81,10 @@ compile_all_observed <- function(folder, excel_files, exp_keys, df_obs_info, df_
               return(dplyr::tibble())
             }
             
-            # Dynamically stamp the Experiment Key onto the raw data
-            temp_df <- temp_df %>% dplyr::mutate(Exp_key_name = key)
+            # Dynamically stamp the Experiment Key ONLY if they were provided
+            if (use_keys) {
+              temp_df <- temp_df %>% dplyr::mutate(Exp_key_name = key)
+            }
             
             return(temp_df)
           })
