@@ -70,5 +70,16 @@ tar_load(df_obs_mean_harv_pheno)
 tar_load(df_obs_corrected)
 tar_load(df_pheno_input_param)
 tar_load(df_obs_hi_amounts)
+tar_load(df_obs_final)
+```
+
+```{r}
+names(tar_read(df_obs_final))
+
+df<- tar_read(df_obs_final)
+df %>% dplyr::select(SimulationName,Clock.Today, Wheat.Phenology.CurrentStageName, HarvestIndex) %>%
+  filter(HarvestIndex >0)
+
+ # filter(Wheat.Phenology.CurrentStageName == "HarvestRipe")
 ```
 

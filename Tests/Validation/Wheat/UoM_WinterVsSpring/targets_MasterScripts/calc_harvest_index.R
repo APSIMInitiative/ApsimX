@@ -1,64 +1,75 @@
-#' Calculate and Append Harvest Index (Universal Engine)
+#' Calculate and Append Harvest Index (Universal Asynchronous Engine)
 #'
 #' @description
 #' Safely calculates the Harvest Index (HI) from Grain Weight and Total Above-Ground 
-#' Biomass (AGB), appending it as a new column. It strictly aligns the calculation 
-#' row-by-row, ensuring HI only populates when both biological components are present.
+#' Biomass (AGB), appending it as a new column. It handles asynchronous lab data by 
+#' finding the maximum values for Grain and AGB across the entire simulation timeline.
 #'
-#' @details
-#' **Zero-Division Protection:** The function evaluates the denominator (AGB) before 
-#' calculation. If AGB is zero, NA, or negative, the function safely bypasses the math 
-#' and inserts an NA, preventing pipeline crashes or Inf values.
-#'
-#' @param df Data frame. The continuous observation timeline.
-#' @param grain_col Character. The name of the grain weight column (default: "Wheat.Grain.Wt").
-#' @param agb_col Character. The name of the total biomass column (default: "Wheat.AboveGround.Wt").
-#' @param hi_col_name Character. The desired name for the output column (default: "HarvestIndex").
-#'
-#' @return A data frame with the new Harvest Index column appended.
 #' @export
 calc_harvest_index <- function(df, grain_col = "Wheat.Grain.Wt", agb_col = "Wheat.AboveGround.Wt", hi_col_name = "HarvestIndex") {
   
+  if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
+  
   # ---- 1. DEFENSIVE INTEGRITY CHECKS ----
   if (missing(df) || !is.data.frame(df) || nrow(df) == 0) {
-    stop("Error [calc_harvest_index]: Main observation dataframe is missing or empty.")
+    stop("CRITICAL [calc_harvest_index]: Main observation dataframe is missing or empty.")
   }
   
   if (!all(c(grain_col, agb_col) %in% names(df))) {
-    stop(sprintf(
-      "Error [calc_harvest_index]: Required biological columns '%s' or '%s' not found in dataframe.", 
+    warning(sprintf(
+      "Warning [calc_harvest_index]: Required biological columns '%s' or '%s' not found. Returning df unmodified.", 
       grain_col, agb_col
     ))
+    return(df)
   }
   
-  # ---- 2. SECURE ROW-BY-ROW CALCULATION ----
+  # ---- 2. ASYNCHRONOUS CALCULATION ENGINE ----
   df_out <- df %>%
+    dplyr::group_by(SimulationName) %>%
     dplyr::mutate(
+      temp_max_grain = suppressWarnings(max(.data[[grain_col]], na.rm = TRUE)),
+      temp_max_agb   = suppressWarnings(max(.data[[agb_col]], na.rm = TRUE))
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      temp_max_grain = ifelse(is.infinite(temp_max_grain), NA, temp_max_grain),
+      temp_max_agb   = ifelse(is.infinite(temp_max_agb), NA, temp_max_agb),
+      
       !!hi_col_name := dplyr::if_else(
-        # CONDITION: AGB must exist and be strictly greater than 0. Grain must exist.
-        !is.na(.data[[agb_col]]) & .data[[agb_col]] > 0 & !is.na(.data[[grain_col]]),
-        
-        # TRUE: Calculate HI
-        .data[[grain_col]] / .data[[agb_col]],
-        
-        # FALSE: Safely pad with NA
+        !is.na(.data[[grain_col]]) & !is.na(temp_max_agb) & temp_max_agb > 0,
+        temp_max_grain / temp_max_agb,
         NA_real_
       )
-    )
+    ) %>%
+    dplyr::select(-temp_max_grain, -temp_max_agb)
   
-  # ---- 3. BIOLOGICAL PLAUSIBILITY WARNING ----
-  # HI should never be > 1.0 (Grain cannot weigh more than the whole plant)
-  if (any(df_out[[hi_col_name]] > 1, na.rm = TRUE)) {
-    warning(sprintf(
-      "QC WARNING [calc_harvest_index]: Found Harvest Index > 1.0. Check '%s' and '%s' for data entry errors.", 
-      grain_col, agb_col
-    ), call. = FALSE)
+  # ---- 3. THE DIAGNOSTIC ALARM & QC CHECK ----
+  # Isolate only the valid numbers to calculate the range safely
+  valid_hi <- df_out[[hi_col_name]][!is.na(df_out[[hi_col_name]])]
+  
+  message("\n", strrep("=", 60))
+  message(" \u26A0\uFE0F  CALCULATION COMPLETE: HARVEST INDEX \u26A0\uFE0F ")
+  message(strrep("=", 60))
+  
+  if (length(valid_hi) > 0) {
+    min_hi <- round(min(valid_hi), 3)
+    max_hi <- round(max(valid_hi), 3)
+    
+    message(sprintf(" -> SUCCESS      : %d valid HI values generated.", length(valid_hi)))
+    message(sprintf(" -> VALUE RANGE  : %.3f to %.3f", min_hi, max_hi))
+    
+    # Biological Plausibility Warning
+    if (max_hi > 1.0) {
+      message(" -> QC ALARM     : CRITICAL - HI values > 1.0 detected!")
+      message(sprintf("                  Check '%s' and '%s' for lab data entry errors.", grain_col, agb_col))
+    } else {
+      message(" -> QC STATUS    : PASS (All HI values <= 1.0)")
+    }
+  } else {
+    message(" -> STATUS       : No valid Harvest Index values could be calculated.")
+    message(sprintf("                  Check if '%s' or '%s' are entirely NA.", grain_col, agb_col))
   }
-  
-  # ---- 4. COMPLETION NOTIFICATION ----
-  valid_hi_count <- sum(!is.na(df_out[[hi_col_name]]))
-  message(sprintf("Success [calc_harvest_index]: Calculated %d Harvest Index values under column '%s'.", 
-                  valid_hi_count, hi_col_name))
+  message(strrep("-", 60), "\n")
   
   return(df_out)
 }
