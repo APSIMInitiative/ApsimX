@@ -1,67 +1,80 @@
-#' Flag Final Harvest Dates in Observation Data
+#' Flag Final Harvest Dates in Observation Data (Asynchronous Logic)
 #'
 #' @description
-#' Identifies the final observation date for each simulation based on the presence 
-#' of key reference variables (e.g., Grain Wt, AboveGround Wt) and flags that 
-#' specific row with a target string (e.g., "HarvestRipe").
+#' Finds the most recent measurement date for EACH reference variable independently. 
+#' It then flags ANY row where the date matches one of these final measurement dates 
+#' across the entire dataset.
 #'
-#' @details
-#' **Strict Type Preservation:** Safely calculates the maximum date without stripping 
-#' the POSIXct/Date class attributes, ensuring compatibility with downstream APSIM QC gates.
-#'
-#' @param df Data frame. The continuous observation timeline.
-#' @param ref_vars Character vector. Columns to check for final physical measurements.
-#' @param new_col_name Character. The column where the flag should be written.
-#' @param new_col_value Character. The string flag to insert (e.g., "HarvestRipe").
-#'
-#' @return A data frame with the harvest flag appended to the correct dates.
 #' @export
 add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
+  if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
+  if (!requireNamespace("tidyr", quietly = TRUE)) stop("Package 'tidyr' required.")
+  
   # ---- 1. DEFENSIVE CHECKS & TYPE LOCKING ----
   if (!"SimulationName" %in% names(df) || !"Clock.Today" %in% names(df)) {
-    stop("Error [add_harv_into_obs]: Missing 'SimulationName' or 'Clock.Today'.")
+    stop("CRITICAL [add_harv_into_obs]: Missing 'SimulationName' or 'Clock.Today'.")
   }
   
-  # Force Date class to prevent numeric coercion
-  df_clean <- df %>%
-    dplyr::mutate(Clock.Today = as.Date(Clock.Today))
+  df_clean <- df %>% dplyr::mutate(Clock.Today = as.Date(Clock.Today))
   
-  # Ensure the target column exists and is a character vector
   if (!new_col_name %in% names(df_clean)) {
     df_clean[[new_col_name]] <- NA_character_
   } else {
     df_clean[[new_col_name]] <- as.character(df_clean[[new_col_name]])
   }
   
-  # ---- 2. ISOLATE THE FINAL MEASUREMENT DATES ----
-  # Find the maximum date per simulation where ANY of the ref_vars actually have data
+  # ---- 2. INDEPENDENT MAX DATE SEARCH ----
+  # Pivot the data to look at every variable individually, remove NAs, and find the max date
   harv_dates <- df_clean %>%
-    dplyr::select(SimulationName, Clock.Today, dplyr::any_of(ref_vars)) %>%
-    # RowSums checks if there is at least one non-NA value in the reference columns
-    dplyr::mutate(has_data = rowSums(!is.na(dplyr::select(., dplyr::any_of(ref_vars)))) > 0) %>%
-    dplyr::filter(has_data == TRUE) %>%
-    dplyr::group_by(SimulationName) %>%
-    # Keep the max date and explicitly tell R it is a Date
-    dplyr::summarise(HarvestDate = as.Date(max(Clock.Today, na.rm = TRUE)), .groups = "drop")
+    dplyr::select(SimulationName, Clock.Today, dplyr::all_of(ref_vars)) %>%
+    tidyr::pivot_longer(cols = dplyr::all_of(ref_vars), names_to = "Variable", values_to = "Value") %>%
+    dplyr::filter(!is.na(Value)) %>%
+    dplyr::group_by(SimulationName, Variable) %>%
+    dplyr::summarise(MaxDate = as.Date(max(Clock.Today, na.rm = TRUE)), .groups = "drop")
+  
+  # If the data is completely empty, escape gracefully
+  if (nrow(harv_dates) == 0) {
+    warning("No data found for any of the provided reference variables. Returning original data.")
+    return(df_clean)
+  }
+  
+  # Isolate just the unique harvest dates per simulation
+  unique_harv_dates <- harv_dates %>%
+    dplyr::distinct(SimulationName, MaxDate) %>%
+    dplyr::mutate(IsHarvestFlag = TRUE)
   
   # ---- 3. MERGE AND FLAG ----
+  # Join the flag to ANY row that matches the simulation and one of the max dates
   df_final <- df_clean %>%
-    dplyr::left_join(harv_dates, by = "SimulationName") %>%
+    dplyr::left_join(unique_harv_dates, by = c("SimulationName" = "SimulationName", "Clock.Today" = "MaxDate")) %>%
     dplyr::mutate(
-      # If the row's date matches the simulation's max data date, flag it!
       !!new_col_name := dplyr::if_else(
-        Clock.Today == HarvestDate & !is.na(HarvestDate),
+        IsHarvestFlag == TRUE & !is.na(IsHarvestFlag),
         new_col_value,
         .data[[new_col_name]]
       )
     ) %>%
-    # Clean up the temporary calculation column
-    dplyr::select(-HarvestDate) %>%
+    dplyr::select(-IsHarvestFlag) %>%
     dplyr::arrange(SimulationName, Clock.Today)
   
-  message(sprintf("Success [add_harv_into_obs]: Inserted '%s' flag into column '%s' for %d simulations.", 
-                  new_col_value, new_col_name, nrow(harv_dates)))
+  # ---- 4. THE DIAGNOSTIC ALARM ----
+  min_date <- min(harv_dates$MaxDate, na.rm = TRUE)
+  max_date <- max(harv_dates$MaxDate, na.rm = TRUE)
+  spread_days <- as.numeric(difftime(max_date, min_date, units = "days"))
+  
+  message("\n", strrep("=", 60))
+  message(sprintf(" \u26A0\uFE0F  HARVEST DATES ASSIGNED: %s \u26A0\uFE0F ", toupper(new_col_value)))
+  message(strrep("=", 60))
+  message(" -> STRATEGY     : Asynchronous Max Date Search")
+  message(sprintf(" -> DATE SPREAD  : %s to %s", min_date, max_date))
+  
+  if (spread_days > 0) {
+    message(sprintf(" -> WARNING      : Max difference between harvest variables is %d days.", spread_days))
+  } else {
+    message(" -> STATUS       : All reference variables share the exact same harvest date.")
+  }
+  message(strrep("-", 60), "\n")
   
   return(df_final)
 }
