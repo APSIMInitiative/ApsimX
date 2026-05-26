@@ -24,28 +24,33 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
     df_clean[[new_col_name]] <- as.character(df_clean[[new_col_name]])
   }
   
-  # ---- 2. INDEPENDENT MAX DATE SEARCH ----
-  # Pivot the data to look at every variable individually, remove NAs, and find the max date
+  # THE SHIELD: Only search for variables that actually exist in the dataframe
+  actual_ref_vars <- base::intersect(ref_vars, names(df_clean))
+  
+  if (length(actual_ref_vars) == 0) {
+    warning("None of the requested reference variables exist in the data. Returning original df.")
+    return(df_clean)
+  }
+  
+  # ---- 2. INDEPENDENT MAX DATE SEARCH (Bug Patched) ----
   harv_dates <- df_clean %>%
-    dplyr::select(SimulationName, Clock.Today, dplyr::all_of(ref_vars)) %>%
-    tidyr::pivot_longer(cols = dplyr::all_of(ref_vars), names_to = "Variable", values_to = "Value") %>%
+    # Notice we are now using any_of(actual_ref_vars) here!
+    dplyr::select(SimulationName, Clock.Today, dplyr::any_of(actual_ref_vars)) %>%
+    tidyr::pivot_longer(cols = dplyr::any_of(actual_ref_vars), names_to = "Variable", values_to = "Value") %>%
     dplyr::filter(!is.na(Value)) %>%
     dplyr::group_by(SimulationName, Variable) %>%
     dplyr::summarise(MaxDate = as.Date(max(Clock.Today, na.rm = TRUE)), .groups = "drop")
   
-  # If the data is completely empty, escape gracefully
   if (nrow(harv_dates) == 0) {
     warning("No data found for any of the provided reference variables. Returning original data.")
     return(df_clean)
   }
   
-  # Isolate just the unique harvest dates per simulation
   unique_harv_dates <- harv_dates %>%
     dplyr::distinct(SimulationName, MaxDate) %>%
     dplyr::mutate(IsHarvestFlag = TRUE)
   
   # ---- 3. MERGE AND FLAG ----
-  # Join the flag to ANY row that matches the simulation and one of the max dates
   df_final <- df_clean %>%
     dplyr::left_join(unique_harv_dates, by = c("SimulationName" = "SimulationName", "Clock.Today" = "MaxDate")) %>%
     dplyr::mutate(
@@ -67,10 +72,19 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   message(sprintf(" \u26A0\uFE0F  HARVEST DATES ASSIGNED: %s \u26A0\uFE0F ", toupper(new_col_value)))
   message(strrep("=", 60))
   message(" -> STRATEGY     : Asynchronous Max Date Search")
-  message(sprintf(" -> DATE SPREAD  : %s to %s", min_date, max_date))
+  message(sprintf(" -> OVERALL SPAN : %s to %s", min_date, max_date))
   
   if (spread_days > 0) {
     message(sprintf(" -> WARNING      : Max difference between harvest variables is %d days.", spread_days))
+    message(" -> BREAKDOWN    : Latest recorded date per variable across the trial:")
+    
+    var_breakdown <- harv_dates %>%
+      dplyr::group_by(Variable) %>%
+      dplyr::summarise(OverallMax = max(MaxDate, na.rm = TRUE))
+    
+    for (i in 1:nrow(var_breakdown)) {
+      message(sprintf("      - %-25s : %s", var_breakdown$Variable[i], var_breakdown$OverallMax[i]))
+    }
   } else {
     message(" -> STATUS       : All reference variables share the exact same harvest date.")
   }
