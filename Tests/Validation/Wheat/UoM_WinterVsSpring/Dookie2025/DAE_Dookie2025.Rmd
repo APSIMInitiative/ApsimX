@@ -139,6 +139,11 @@ tar_read(df_apsimStageInput)
 tar_read(soil_data_clean)
 tar_load(df_obs_plus_pheno_hi)
 tar_load(list_observed_clean)
+
+```
+
+```{r}
 tar_load(list_observed_dfs_raw)
+tar_load(df_pheno_input_param_filled)
 ```
 

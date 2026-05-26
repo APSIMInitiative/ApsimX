@@ -57,6 +57,7 @@ list(
         "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx" # original 
         #"Dookie_2025_RawData_JordanUploaded.xlsx" # new as per email Jordan
       ),
+      exp_key_by_rawData_file      = c("EVA","WWHI"),
       sheetExcel_weather         = "Met Data",
       #sheetExcel_weather         = "Weather",
       coord_thisLatLon           = data.frame(lat = -36.39, lon = 145.70), 
@@ -100,8 +101,9 @@ list(
     name = soil_data_clean,
     command = read_soil_data(
       folder          = config$folder_rawData,
-      file            = "Dookie_2025_RawData_JordanUploaded.xlsx",#WWHI
-      sheet           = "Soil sample",
+      file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
+     # sheet           = "Soil sample",
+      sheet          = "Presowing soil test results",
       vars_to_extract = c("Nitrate Nitrogen",	"Ammonium Nitrogen"),
       col_depth_from  = "Depth From", # Optional if this matches the default
       col_depth_to    = "Depth To"    # Optional if this matches the default
@@ -153,16 +155,30 @@ list(
     format = "file"
   ),
   
+  # tar_target(
+  #   name = list_observed_dfs_raw,
+  #   command = {
+  #     force(tracked_raw_excel)
+  #     compile_all_observed(
+  #       folder      = config$folder_rawData,
+  #       excel_files = config$file_rawData_excel,
+  #       df_obs_info = df_obs_meta_data,
+  #       df_simNames = df_simNameByCult 
+  #     )
+  #   }
+  # ),
+  
   tar_target(
     name = list_observed_dfs_raw,
     command = {
       force(tracked_raw_excel)
       compile_all_observed(
-        folder      = config$folder_rawData,
-        excel_files = config$file_rawData_excel,
-        df_obs_info = df_obs_meta_data,
-        df_simNames = df_simNameByCult 
-      )
+      folder      = config$folder_rawData,
+      excel_files = config$file_rawData_excel,
+      exp_keys    = config$exp_key_by_rawData_file, # <--- The new vector is injected here
+      df_obs_info = df_obs_meta_data,
+      df_simNames = df_simNameByCult
+     )
     }
   ),
   
@@ -226,7 +242,8 @@ list(
     name = df_pheno_input_param_filled,
     command = do_averages_for_missing_pheno(
       df         = df_pheno_input_param,
-      group_keys = c("EVA","WWHI")
+      #group_keys = c("EVA","WWHI")
+      group_keys = c("Dookie")
     )
   ),
   
