@@ -8,24 +8,31 @@ compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, 
   if (!requireNamespace("stringr", quietly = TRUE)) stop("Package 'stringr' required.")
   
   # ------------------------------------------------------------------
-  # 1. DEFENSIVE CHECKS
+  # 1. DEFENSIVE CHECKS: MISSING COLUMNS
   # ------------------------------------------------------------------
   req_cols <- c("df_name", "sheet_name", "column_name", "apsim_var_name", "corr_fact")
   missing_cols <- setdiff(req_cols, names(df_obs_info))
   if (length(missing_cols) > 0) {
     stop(sprintf(
-      "CRITICAL: 'df_obs_info' missing columns: %s \n   -> Found columns instead: [%s]", 
+      "\n🚨 CRITICAL ERROR: 'df_obs_info' missing required columns: [%s]\n -> Found columns instead: [%s]", 
       paste(missing_cols, collapse=", "),
       paste(names(df_obs_info), collapse=", ")
-    ))
+    ), call. = FALSE)
   }
   
-  # Determine if we are using the multi-experiment tie-breaker
+  # Determine if the user explicitly provided multi-experiment tie-breakers
   use_keys <- !is.null(exp_keys)
   
-  # Ensure the keys match the number of files IF keys are provided
-  if (use_keys && (length(excel_files) != length(exp_keys))) {
-    stop("CRITICAL: The number of 'excel_files' must exactly match the number of 'exp_keys'.")
+  if (use_keys) {
+    # Ensure the keys match the number of files
+    if (length(excel_files) != length(exp_keys)) {
+      stop("\n🚨 CRITICAL ERROR: The number of 'excel_files' must exactly match the number of 'exp_keys'.", call. = FALSE)
+    }
+    
+    # Ensure the mapping table has the required column to utilize the keys
+    if (!"Exp_key_name" %in% names(df_simNames)) {
+      stop("\n🚨 CRITICAL ERROR: You provided 'exp_keys' to split experiments, but your mapping CSV ('df_simNames') is missing the 'Exp_key_name' column to join them on!", call. = FALSE)
+    }
   }
   
   full_paths <- file.path(folder, excel_files)
@@ -45,9 +52,7 @@ compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, 
           # Use map2_dfr to iterate over BOTH the paths and the experiment keys (if any)
           raw_df <- purrr::map2_dfr(full_paths, iter_keys, function(path, key) {
             
-            # ---------------------------------------------------------
             # THE SHIELD: tryCatch prevents missing sheets from crashing the pipeline
-            # ---------------------------------------------------------
             temp_df <- tryCatch({
               read_observed_func(
                 file_path   = path,
@@ -57,9 +62,6 @@ compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, 
                 UnitCorrect = as.numeric(corr)
               )
             }, error = function(e) {
-              # =========================================================
-              # ⚠️ THE BIG WARNING ALARM ⚠️
-              # =========================================================
               message("\n", strrep("=", 60))
               message(" \u26A0\uFE0F  MISSING DATA ALARM: SKIPPING EXTRACTION \u26A0\uFE0F ")
               message(strrep("=", 60))
@@ -70,13 +72,10 @@ compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, 
               message(" -> ACTION      : Pipeline bypassed error and is continuing...")
               message(strrep("-", 60), "\n")
               
-              return(NULL) # Safely pass NULL to the safeguard below
+              return(NULL) 
             })
             
-            # =========================================================
-            # 🛡️ THE NULL SAFEGUARD 
-            # =========================================================
-            # Prevent the "length zero" crash if data was missing
+            # THE NULL SAFEGUARD 
             if (is.null(temp_df) || !is.data.frame(temp_df) || nrow(temp_df) == 0) {
               return(dplyr::tibble())
             }
@@ -117,9 +116,40 @@ compile_all_observed <- function(folder, excel_files, df_obs_info, df_simNames, 
                 }
               }
               
-              # THE SAFE MULTI-KEY JOIN
+              # DEFINE JOIN KEYS
               join_keys <- base::intersect(names(raw_df), names(df_simNames))
               
+              # ---------------------------------------------------------
+              # 🚨 THE DUPLICATE KEY DEFENDER 🚨
+              # ---------------------------------------------------------
+              dup_check <- df_simNames %>%
+                dplyr::group_by(dplyr::across(dplyr::all_of(join_keys))) %>%
+                dplyr::tally() %>%
+                dplyr::filter(n > 1)
+              
+              if (nrow(dup_check) > 0) {
+                dup_str <- paste(capture.output(print(dup_check)), collapse = "\n")
+                
+                stop_msg <- c(
+                  "",
+                  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+                  " \U0001F6A8 FATAL ALARM: DUPLICATE LOOKUP KEYS IN MAPPING TABLE \U0001F6A8 ",
+                  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+                  " The pipeline is trying to map SimulationNames to your raw data, but",
+                  " your mapping CSV contains duplicate entries for the exact same keys.",
+                  sprintf(" -> Join Keys Used: [%s]", paste(join_keys, collapse = ", ")),
+                  "",
+                  " -> DUPLICATES FOUND:",
+                  dup_str,
+                  "",
+                  " ACTION: Fix the mapping CSV so each combination only appears once!",
+                  "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+                  ""
+                )
+                stop(paste(stop_msg, collapse = "\n"), call. = FALSE)
+              }
+              
+              # THE SAFE MULTI-KEY JOIN
               raw_df <- raw_df %>%
                 dplyr::left_join(df_simNames, by = join_keys, relationship = "many-to-one") %>%
                 dplyr::relocate(SimulationName, .after = Cultivar) 

@@ -493,8 +493,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 101",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 101"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -508,8 +507,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 108",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 108"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -523,8 +521,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 92",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 92"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -538,8 +535,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 105",
-                        "[Sowing].Script.EmergeDate = 26-Apr"
+                        "[Sowing].Script.Population = 105"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -553,8 +549,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 103",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 103"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -568,8 +563,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 103",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 103"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -583,8 +577,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 119",
-                        "[Sowing].Script.EmergeDate = 27-Apr"
+                        "[Sowing].Script.Population = 119"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -598,8 +591,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 86",
-                        "[Sowing].Script.EmergeDate = 28-Apr"
+                        "[Sowing].Script.Population = 86"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -613,8 +605,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 127",
-                        "[Sowing].Script.EmergeDate = 25-May"
+                        "[Sowing].Script.Population = 127"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -628,8 +619,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 138",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 138"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -643,8 +633,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 135",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 135"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -658,8 +647,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 130",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 130"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -673,8 +661,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 123",
-                        "[Sowing].Script.EmergeDate = 26-May"
+                        "[Sowing].Script.Population = 123"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -688,8 +675,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 140",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 140"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -703,8 +689,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 146",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 146"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -718,8 +703,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 131",
-                        "[Sowing].Script.EmergeDate = 27-May"
+                        "[Sowing].Script.Population = 131"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -736,9 +720,45 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[Sowing].Script.SowDate = 17-Apr,14-May",
-                  "Name": "Sow",
+                  "Name": "SowOLD",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "Sow",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 17-Apr"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "17-Apr",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Sowing].Script.SowDate = 14-May"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "14-May",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -769,7 +789,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2024-04-17T00:00:00",
+              "Start": "2024-04-10T00:00:00",
               "End": "2024-11-17T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
@@ -2080,6 +2100,81 @@
                   "Name": "SetHaunStageExternally",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-24",
+                      "Action": "[Irrigation].Apply(5)",
+                      "Line": "2024-05-24 [Irrigation].Apply(5)"
+                    }
+                  ],
+                  "Name": "IrrigationAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-17",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-14",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-05-14 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-07-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    }
+                  ],
+                  "Name": "FertiliserAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "2. Fertilizer management\nYear\tSite\tDate\tHabit\tFertilizer type\tAmount (kg/ha)\n2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -9367,6 +9462,81 @@
                   "Name": "SetHaunStageExternally",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-24",
+                      "Action": "[Irrigation].Apply(5)",
+                      "Line": "2024-05-24 [Irrigation].Apply(5)"
+                    }
+                  ],
+                  "Name": "IrrigationAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-17",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-14",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-05-14 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-07-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    }
+                  ],
+                  "Name": "FertiliserAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "2. Fertilizer management\nYear\tSite\tDate\tHabit\tFertilizer type\tAmount (kg/ha)\n2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }

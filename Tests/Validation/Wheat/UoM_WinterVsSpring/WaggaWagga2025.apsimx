@@ -1904,28 +1904,31 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-04-01",
+                      "Date": "2024-05-02",
                       "Action": "[Irrigation].Apply (15);",
-                      "Line": "2024-04-01 [Irrigation].Apply (15);"
+                      "Line": "2024-05-02 [Irrigation].Apply (15);"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-05-04",
-                      "Action": "[Irrigation].Apply (15);",
-                      "Line": "2024-05-04 [Irrigation].Apply (15);"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-05-09",
+                      "Date": "2024-05-20",
                       "Action": "[Irrigation].Apply (6);",
-                      "Line": "2024-05-09 [Irrigation].Apply (6);"
+                      "Line": "2024-05-20 [Irrigation].Apply (6);"
                     }
                   ],
                   "Name": "IrrigationAppliedAmounts",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Wagga2025\t\nIRRIGATION\t\n2025-05-02 [Irrigation].Apply(20)\t       applied to whole trial area (same day)\n2025-05-20 [Irrigation].Apply(6)\t        applied to whole trial area (same day)",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1935,16 +1938,23 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-04-22",
+                      "Date": "2025-04-17",
                       "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2024-04-22 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Line": "2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-05-13",
+                      "Date": "2025-05-13",
                       "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2024-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-07-25",
+                      "Action": "[Fertiliser].Apply(amount: 60, type: \"UreaN\");",
+                      "Line": "2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");"
                     }
                   ],
                   "Name": "FertiliserAppliedAmounts",
@@ -1952,7 +1962,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "FIXME: These are conditional to cv instead (not for both) ... i.e., at sowing",
+                      "Text": "FERTILISER\t\n2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Winter treatment  (100 is kg/ha of Mono-Ammonium Phosphate) \t\n2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Spring treatment  (100 is kg/ha of Mono-Ammonium Phosphate) \t\n2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");    applied to all treatments (60 is kg/ha of Urea)\t\n",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],

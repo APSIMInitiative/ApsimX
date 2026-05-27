@@ -156,3 +156,68 @@ print(bigred_search, n = Inf)
 targets::tar_invalidate(list_observed_clean)
 ```
 
+```{r}
+library(dplyr)
+library(readxl)
+
+# Point this to your Dookie24 raw Excel file
+raw_file <- "Dookie24/Observed.xlsx"
+
+# Read the sheet that you suspect has the duplicates (e.g., "Biomass", "Phenology", or "Observed")
+df_suspect <- read_excel(raw_file, sheet = "Observed")
+
+# Find the exact duplicate join keys!
+duplicates <- df_suspect %>%
+  group_by(SimulationName, Clock.Today) %>% # Add 'Plot' here if you join by Plot too
+  tally() %>%
+  filter(n > 1)
+
+print(duplicates)
+```
+
+```{r}
+library(dplyr)
+
+# 1. Pull the metadata targets out of the pipeline cache
+meta_data <- targets::tar_read(df_obs_meta_data)
+sim_names <- targets::tar_read(df_simNameByCult)
+
+# 2. Hunt for duplicates in the Simulation Names dataframe
+# (Assuming the join key is something like 'Cultivar' or 'SimulationName')
+sim_names %>%
+  count(SimulationName) %>% # Swap 'Cultivar' with whatever column you join by!
+  filter(n > 1)
+
+# 3. Hunt for duplicates in the Metadata dataframe
+meta_data %>%
+  count(df_name) %>% # Swap with your actual join keys
+  filter(n > 1)
+```
+```{r}
+library(dplyr)
+
+# Pull the mapping table
+sim_names <- targets::tar_read(df_simNameByCult)
+
+# Look at the column names so we know exactly what it uses to join
+print("Columns in mapping table:")
+print(colnames(sim_names))
+
+# Find the duplicated lookup key
+duplicates <- sim_names %>%
+  # Group by all columns EXCEPT SimulationName
+  group_by(across(-SimulationName)) %>% 
+  tally() %>%
+  filter(n > 1)
+
+print("Duplicate Lookup Keys Found:")
+print(duplicates)
+```
+
+```{r}
+x<-tar_read(df_pheno_raw)
+
+x%>%
+  filter(Wheat.Phenology.Stage == 6)
+```
+

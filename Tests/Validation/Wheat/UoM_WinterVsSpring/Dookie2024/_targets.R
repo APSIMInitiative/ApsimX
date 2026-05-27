@@ -57,6 +57,7 @@ list(
         "UOM2312-001RTX 24 DOO JH EVA WHT.xlsx", 
         "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx"
       ),
+      exp_key_by_rawData_file   = c("EVA","WWHI"),
       sheetExcel_weather        = "Weather",
       file_metaData_observed    = paste0(proj_name, "_observed_data_requirements.csv"),
       file_SimNameByCultivar    = paste0(proj_name, "_CultivarToSimName.csv"),
@@ -146,8 +147,9 @@ list(
       compile_all_observed(
         folder      = config$folder_rawData,
         excel_files = config$file_rawData_excel,
+        exp_keys    = config$exp_key_by_rawData_file, # <--- The new vector is injected here
         df_obs_info = df_obs_meta_data,
-        df_simNames = df_simNameByCult 
+        df_simNames = df_simNameByCult
       )
     }
   ),
@@ -246,7 +248,7 @@ list(
       conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
       mass_suffix  = "Wt",
       ag_name      = "Wheat.AboveGround",
-      divisor      = 100 
+      divisor      = 1 
     )
   ),
   
@@ -254,7 +256,7 @@ list(
     name = df_obs_plus_pheno_harv,
     command = add_harv_into_obs(
       df            = df_obs_plus_pheno_hi_with_amounts,
-      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "HarvestIndex"),
+      ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt", "HarvestIndex","Wheat.Leaf.Live.NConc"),
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
     )

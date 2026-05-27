@@ -30,21 +30,21 @@ shoot_6_N,PCDS 6.0 harvest,N_Shoot_mg_g,Wheat.AboveGround.Live.NConc,0.001
 shoot_6_WSCc,PCDS 6.0 harvest,WSC_Shoot_mg_g,Wheat.AboveGround.Live.WSCc,0.001
 leaf_6_Nconc,PCDS 6.0 harvest,N_Green leaves_mg_g,Wheat.Leaf.Live.NConc,0.001
 leaf_6_WSCc,PCDS 6.0 harvest,WSC_Green leaves_mg_g,Wheat.Leaf.Live.WSCc,0.001
-leaf_6_Nconc,PCDS 6.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
-leaf_6_WSCc,PCDS 6.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
+leafDead_6_Nconc,PCDS 6.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
+leafDead_6_WSCc,PCDS 6.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
 stem_6_Nconc,PCDS 6.0 harvest,N_Stem_mg_g,Wheat.Stem.Live.NConc,0.001
 stem_6_WSCc,PCDS 6.0 harvest,WSC_Stem_mg_g,Wheat.Stem.Live.WSCc,0.001
 spike_6_Nconc,PCDS 6.0 harvest,N_Spike_mg_g,Wheat.Spike.Live.NConc,0.001
 spike_6_WSCc,PCDS 6.0 harvest,WSC_Spike_mg_g,Wheat.Spike.Live.WSCc,0.001
 leaf_8_Nconc,PCDS 8.0 harvest,N_Green leaves_mg_g,Wheat.Leaf.Live.NConc,0.001
 leaf_8_WSCc,PCDS 8.0 harvest,WSC_Green leaves_mg_g,Wheat.Leaf.Live.WSCc,0.001
-leaf_8_Nconc,PCDS 8.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
-leaf_8_WSCc,PCDS 8.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
+leafDead_8_Nconc,PCDS 8.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
+leafDead_8_WSCc,PCDS 8.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
 stem_8_Nconc,PCDS 8.0 harvest,N_Stem_mg_g,Wheat.Stem.Live.NConc,0.001
 stem_8_WSCc,PCDS 8.0 harvest,WSC_Stem_mg_g,Wheat.Stem.Live.WSCc,0.001
 spike_8_Nconc,PCDS 8.0 harvest,N_Spike_mg_g,Wheat.Spike.Live.NConc,0.001
 spike_8_WSCc,PCDS 8.0 harvest,WSC_Spike_mg_g,Wheat.Spike.Live.WSCc,0.001
-leaf_10_Nconc,PCDS 10.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
-leaf_10_WSCc,PCDS 10.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
+leafDead_10_Nconc,PCDS 10.0 harvest,N_Dead leaves_mg_g,Wheat.Leaf.Dead.NConc,0.001
+leafDead_10_WSCc,PCDS 10.0 harvest,WSC_Dead leaves_mg_g,Wheat.Leaf.Dead.WSCc,0.001
 stem_10_Nconc,PCDS 10.0 harvest,N_Stem_mg_g,Wheat.Stem.Live.NConc,0.001
 stem_10_WSCc,PCDS 10.0 harvest,WSC_Stem_mg_g,Wheat.Stem.Live.WSCc,0.001
