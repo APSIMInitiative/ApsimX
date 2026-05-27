@@ -221,3 +221,7 @@ x%>%
   filter(Wheat.Phenology.Stage == 6)
 ```
 
+```{r}
+tar_load(df_obs_plus_pheno_hi_with_amounts)
+```
+
