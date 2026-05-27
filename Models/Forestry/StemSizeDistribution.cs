@@ -177,8 +177,8 @@ namespace Models.Forestry
         /// <summary>
         /// Represents one DBH class interval and the estimated number of trees per hectare assigned to it.
         /// </summary>
-        internal sealed record TreeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa);
-        private List<TreeClass> TreeList = new List<TreeClass>();
+        internal sealed record TreeSizeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa);  
+        private List<TreeSizeClass> TreeSizeClassList = new List<TreeSizeClass>();  
 
        /// <summary>
        /// Number of DBH size classes used in reporting.
@@ -205,7 +205,7 @@ namespace Models.Forestry
             {
                 CalculateDistributions();
                 List<double> _DBH = new List<double>();
-                foreach (TreeClass treeClass in TreeList) { _DBH.Add(treeClass.TreesPerHa); }
+                foreach (TreeSizeClass sizeClass in TreeSizeClassList) { _DBH.Add(sizeClass.TreesPerHa); }
                 return _DBH.ToArray(); 
             } 
         }
@@ -263,7 +263,7 @@ namespace Models.Forestry
             {
                 CalculateDistributions();
                 List<double> _DBHmid = new List<double>();
-                foreach (TreeClass treeClass in TreeList) { _DBHmid.Add(treeClass.DBHMid); }
+                foreach (TreeSizeClass treeClass in TreeSizeClassList) { _DBHmid.Add(treeClass.DBHMid); }
                 return _DBHmid.ToArray();
             }
         }
@@ -274,19 +274,20 @@ namespace Models.Forestry
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            TreeList.Clear();
+            TreeSizeClassList.Clear();
         }
 
         private void CalculateDistributions()  
         {
-            if (TreeList.Count == 0)
+            //Only recalculate tree list if it hasn't already been done for today (it is numerically expensive)
+            if (TreeSizeClassList.Count == 0)
             {
                 _weibull = new WeibullModel(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), Location.Value());
-                TreeList = GenerateTreeList(StemPopulation.Value(), _weibull);
+                TreeSizeClassList = GenerateSizeClassList(StemPopulation.Value(), _weibull);
             }
         }
 
-        private void ValidateStandData()  //NH more to calcdistn and handle small stands
+        private void ValidateStandData()  //NH move to calcdistn and handle small stands
         {
                 if (!double.IsFinite(StemPopulation.Value()) || StemPopulation.Value() <= 0) throw new ArgumentException("All StemPopulation values must be finite and > 0.");
                 if (!double.IsFinite(BasalArea.Value()) || BasalArea.Value() <= 0) throw new ArgumentException("All BasalArea values must be finite and > 0.");
@@ -302,9 +303,9 @@ namespace Models.Forestry
         /// <param name="stemPopulation">Trees per hectare to distribute across DBH classes.</param>
         /// <param name="wiebull">The fitted Weibull parameters used to build the class distribution.</param>
         /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
-        private List<TreeClass> GenerateTreeList(double stemPopulation, WeibullModel wiebull)
-        {
-            List<TreeClass> output = new List<TreeClass>(SizeClassNumber);
+        private List<TreeSizeClass> GenerateSizeClassList(double stemPopulation, WeibullModel wiebull)
+        {   
+            List<TreeSizeClass> output = new List<TreeSizeClass>(SizeClassNumber);
 
             double lower = 0;
             for (var i = 0; i < SizeClassNumber; i++)
@@ -316,7 +317,7 @@ namespace Models.Forestry
                 if (!double.IsFinite(prob) || prob < 0)
                     prob = 0;
 
-                output.Add(new TreeClass(lower, upper, mid, stemPopulation * prob));
+                output.Add(new TreeSizeClass(lower, upper, mid, stemPopulation * prob));
                 lower += SizeClassInterval;
             }
 
