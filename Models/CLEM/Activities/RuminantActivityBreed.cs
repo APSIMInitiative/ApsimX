@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.Globalization;
-using System.IO;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -278,12 +277,14 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.Success;
             }
 
-            // identify "not ready" for reporting and tracking
-            foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => !a.IsAbleToBreed & !a.IsPregnant))
-            {
-                conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
-                female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-            }
+            // TODO: this conflicts with tracking the breeding status and causes some outcomes where pregnancy is skipped in a year
+            // It is needed for full accounting in the breed status report as it sets the initial status for breeders but approach needs to be reconsidered given the implications identified.
+            //identify "not ready" for reporting and tracking
+            //foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => !a.IsAbleToBreed & !a.IsPregnant & a.LastConceptionStatus != ConceptionStatus.NotReady))
+            //{
+            //    conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
+            //    female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
+            //}
 
             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersAvailable");
 
