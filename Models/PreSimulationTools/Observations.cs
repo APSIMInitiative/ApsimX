@@ -170,6 +170,20 @@ namespace Models.PreSimulationTools
 
             //Clear the tables at the start, since we need to read into them again
             storage.Reader.Refresh();
+
+            // Check for conflicts between sheet names and Report model names.
+            // A Report model's table name equals its model name, so importing an observed
+            // sheet with the same name would overwrite the predicted (report) table.
+            Simulations sims = Node.FindParent<Simulations>(recurse: true);
+            var reportNames = Node.FindAll<Models.Report>(relativeTo: sims).Select(r => r.Name).ToList();
+            foreach (string sheet in SheetNames)
+            {
+                if (reportNames.Any(r => string.Equals(r, sheet, StringComparison.OrdinalIgnoreCase)))
+                    throw new Exception($"Error in '{Name}' located at {FullPath}: The observed sheet name '{sheet}' conflicts with an "+
+                    $"APSIM Report model with the same name. Rename either the Excel sheet or the Report model to " +
+                    $"avoid overwriting predicted data with observed data.");
+            }
+
             foreach (string sheet in SheetNames)
                 if (storage.Reader.TableNames.Contains(sheet))
                     storage.Writer.DeleteTable(sheet);
