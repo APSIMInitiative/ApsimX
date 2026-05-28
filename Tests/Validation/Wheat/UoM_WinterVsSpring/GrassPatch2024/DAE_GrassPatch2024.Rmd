@@ -1,0 +1,77 @@
+---
+title: "GrassPatch2024 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+getwd()
+```
+
+
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+```{r}
+tar_visnetwork()
+```
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+# tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+```
+
+```{r}
+tar_load(df_new_obs)
+tar_load(df_obs_mean_harv_pheno)
+```
+
+```{r}
+tar_load(validated_met_file)
+tar_read(validated_met_file)
+tar_load(df_obs_pheno_dates)
+tar_load(df_pheno_dates_paramInput)
+tar_load(df_haun)
+#tar_invalidate(df_haun)
+tar_load(df_haun_pheno_dates)
+tar_load(df_pheno_raw)
+tar_load(df_pheno_int)
+tar_load(df_pheno_haun)
+tar_load(df_pheno_final)
+tar_load(df_pheno_input_param)
+tar_load(df_obs_plus_pheno)
+tar_load(df_obs_plus_pheno_harv)
+tar_load(qc_apsim_observed_harv)
+```
+
+```{r}
+tar_load(df_obs_plus_pheno_harv)
+tar_load(df_obs_plus_pheno_harv_renamed)
+tar_load(track_mapping_csv)
+tar_load(qc_apsim_observed)
+tar_load(df_obs_plus_pheno_harv_renamed_corrected_with_amounts)
+tar_load(qc_apsim_observed)
+```
+
