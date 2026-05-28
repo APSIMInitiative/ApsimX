@@ -20,19 +20,19 @@
 #' @examples
 #' \dontrun{
 #' # Method A: Dynamic CSV Execution (Recommended for targets)
-#' df_clean_names <- apply_name_corrections_Grass24(
+#' df_clean_names <- apply_name_corrections_Grass25(
 #'   df_obs = df_final_observed, 
-#'   mapping_csv_path = "Grass24/Grass24_NameMapping.csv"
+#'   mapping_csv_path = "Grass25/Grass25_NameMapping.csv"
 #' )
 #' 
 #' # Method B: Hardcoded internal fallback execution
-#' df_clean_names <- apply_name_corrections_Grass24(df_final_observed)
+#' df_clean_names <- apply_name_corrections_Grass25(df_final_observed)
 #' }
-apply_name_corrections_Grass24 <- function(df_obs, mapping_csv_path = NULL) {
+apply_name_corrections_Grass25 <- function(df_obs, mapping_csv_path = NULL) {
   
   # ---- 1. DEFENSIVE INTEGRITY CHECKS ----
   if (missing(df_obs) || is.null(df_obs) || nrow(df_obs) == 0) {
-    stop("Error [apply_name_corrections_Grass24]: Incoming data frame asset 'df_obs' is missing or empty.")
+    stop("Error [apply_name_corrections_Grass25]: Incoming data frame asset 'df_obs' is missing or empty.")
   }
   
   # ---- 2. ESTABLISH THE TRANSLATION MATRIX MAP ----
@@ -51,12 +51,12 @@ apply_name_corrections_Grass24 <- function(df_obs, mapping_csv_path = NULL) {
           stringr::str_trim(df_map_cfg$RawDataName), 
           names = stringr::str_trim(df_map_cfg$ObservedFileName)
         )
-        message("Success [apply_name_corrections_Grass24]: Loaded translation matrix from CSV.")
+        message("Success [apply_name_corrections_Grass25]: Loaded translation matrix from CSV.")
       } else {
-        warning("Warning [apply_name_corrections_Grass24]: CSV missing required columns. Using hardcoded fallback.", call. = FALSE)
+        warning("Warning [apply_name_corrections_Grass25]: CSV missing required columns. Using hardcoded fallback.", call. = FALSE)
       }
     }, error = function(e) {
-      warning(paste("Warning [apply_name_corrections_Grass24]: Failed to parse CSV. Reason:", e$message, "- Using hardcoded fallback."), call. = FALSE)
+      warning(paste("Warning [apply_name_corrections_Grass25]: Failed to parse CSV. Reason:", e$message, "- Using hardcoded fallback."), call. = FALSE)
     })
   }
   
@@ -74,44 +74,67 @@ apply_name_corrections_Grass24 <- function(df_obs, mapping_csv_path = NULL) {
       "Wheat.Stem.Live.NConc"  = "Wheat.Stem.NConc",
       "Wheat.Stem.Live.WSCc"   = "Wheat.Stem.WSC"
     )
-    message("Notice [apply_name_corrections_Grass24]: Utilizing built-in hardcoded dictionary mappings.")
+    message("Notice [apply_name_corrections_Grass25]: Utilizing built-in hardcoded dictionary mappings.")
   }
   
   # ---- 3. EXECUTE SAFE DYNAMIC ROW/COLUMN REMAPPING ----
   # Intercept and isolate only the translation elements that are actively present inside this data frame slice
   active_renames <- lookup_map[lookup_map %in% names(df_obs)]
   
-  if (length(active_renames) == 0) {
-    message("Warning [apply_name_corrections_Grass24]: No matching raw headers located inside input table. Columns left as-is.")
-    return(df_obs)
+  if (length(active_renames) > 0) {
+    # In dplyr::rename(), the syntax is: rename(new_name = old_name)
+    # Passing our named vector using !!! (triple-bang) evaluates the whole mapping array concurrently
+    df_remapped <- df_obs %>%
+      dplyr::rename(!!!active_renames)
+    
+    # ---- 4. PIPELINE COMPLETION AUDIT LOGGING ----
+    # Extract the old names (values) and new names (names) from the active map
+    rename_list <- paste("   [OLD]", unname(active_renames), "--> [NEW]", names(active_renames))
+    
+    log_box <- c(
+      "",
+      "----------------------------------------------------------------------",
+      " 🔄 PIPELINE ACTION: VARIABLE NAMES REMAPPED 🔄",
+      "----------------------------------------------------------------------",
+      sprintf(" Successfully standardized %d columns:", length(active_renames)),
+      "",
+      rename_list,
+      "----------------------------------------------------------------------",
+      ""
+    )
+    
+    message(paste(log_box, collapse = "\n"))
+    warning(sprintf("Remapped %d variable names to APSIM standards. See console for mapping details.", length(active_renames)), call. = FALSE)
+  } else {
+    message("Warning [apply_name_corrections_Grass25]: No matching raw headers located inside input table. Columns left as-is.")
+    df_remapped <- df_obs
   }
   
-  # In dplyr::rename(), the syntax is: rename(new_name = old_name)
-  # Passing our named vector using !!! (triple-bang) evaluates the whole mapping array concurrently
-  df_remapped <- df_obs %>%
-    dplyr::rename(!!!active_renames)
-  
-  # ---- 4. PIPELINE COMPLETION AUDIT LOGGING ----
-  # Extract the old names (values) and new names (names) from the active map
-  rename_list <- paste("   [OLD]", unname(active_renames), "--> [NEW]", names(active_renames))
-  
-  log_box <- c(
-    "",
-    "----------------------------------------------------------------------",
-    " 🔄 PIPELINE ACTION: VARIABLE NAMES REMAPPED 🔄",
-    "----------------------------------------------------------------------",
-    sprintf(" Successfully standardized %d columns:", length(active_renames)),
-    "",
-    rename_list,
-    "----------------------------------------------------------------------",
-    ""
-  )
-  
-  # Print the detailed UI box to the console
-  message(paste(log_box, collapse = "\n"))
-  
-  # Throw the formal R warning so it is officially flagged in the targets log
-  warning(sprintf("Remapped %d variable names to APSIM standards. See console for mapping details.", length(active_renames)), call. = FALSE)
+  # ---- 5. SPECIFIC DATA SCALING CORRECTIONS ----
+  if ("Wheat.Leaf.Height" %in% names(df_remapped)) {
+    # Safety gate to ensure we don't multiply strings
+    if (is.numeric(df_remapped$Wheat.Leaf.Height)) {
+      df_remapped <- df_remapped %>%
+        dplyr::mutate(Wheat.Leaf.Height = Wheat.Leaf.Height * 10)
+      
+      height_log_box <- c(
+        "",
+        "----------------------------------------------------------------------",
+        " 📏 PIPELINE ACTION: DATA SCALED 📏",
+        "----------------------------------------------------------------------",
+        " -> Variable : 'Wheat.Leaf.Height'",
+        " -> Action   : Multiplied by 10 (Unit conversion to mm)",
+        "----------------------------------------------------------------------",
+        ""
+      )
+      
+      message(paste(height_log_box, collapse = "\n"))
+      warning("Wheat.Leaf.Height was multiplied by 10 for unit conversion.", call. = FALSE)
+      
+    } else {
+      warning("Warning [apply_name_corrections_Grass25]: 'Wheat.Leaf.Height' exists but is not numeric. Scaling by 10 was SKIPPED.", call. = FALSE)
+    }
+  }
   
   return(df_remapped)
 }

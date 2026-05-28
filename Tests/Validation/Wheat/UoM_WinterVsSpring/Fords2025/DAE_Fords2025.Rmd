@@ -51,6 +51,7 @@ tar_load(df_obs_plus_pheno_hi_with_amounts)
 tar_load(df_obs_plus_pheno_harv)
 tar_load(df_pheno_input_param)
 tar_load(df_pheno_input_param)
+tar_read(df_obs_plus_pheno)
 ```
 
 ```{r}
