@@ -585,11 +585,9 @@ namespace Models.CLEM.Resources
                 }
                 return;
             }
-            else
-            {
-                // check if natural weaning occurs and updtate suckling days and mother's lactation days accordlingly.
-                CheckWeanedStatus();
-            }
+
+            // check if natural weaning occurs and updtate suckling days and mother's lactation days accordlingly.
+            CheckWeanedStatus();
 
             // check for maturity conditions being met and start oestrus cycle
             daysAgo = 0;
@@ -600,7 +598,7 @@ namespace Models.CLEM.Resources
                 // calculate proportion of timestep where weight was below minimum size
                 if (Weight.Previous > 0 && Weight.Previous < Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)
                 {
-                    daysAgo = Math.Min(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
+                    daysAgo = Math.Max(daysAgo, (int)Math.Floor((Weight.Live - (Parameters.General.MinimumSizeForMaturityFemale * Weight.StandardReferenceWeight)) / (Weight.Live - Weight.Previous) * Parameters.Details.CurrentTimeStep.Interval));
                 }
                 SetMature();
                 if (!IsPregnant)
