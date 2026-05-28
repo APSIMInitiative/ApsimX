@@ -11,9 +11,6 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
   file_id <- basename(file_path)
   possible_sheets <- trimws(unlist(strsplit(as.character(SheetName), "\\|")))
   
-  # ==================================================================
-  # 🚨 THE UNIVERSAL ALARM FUNCTION 🚨
-  # ==================================================================
   print_missing_alarm <- function(issue_type, detail, target_sheet = possible_sheets[1]) {
     warning_box <- c(
       "",
@@ -31,14 +28,10 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
     message(paste(warning_box, collapse = "\n"))
   }
   
-  # 🛡️ THE INVISIBLE ASSASSIN FIX: Default to 1 if metadata corr_fact was left blank
   if (is.na(UnitCorrect) || is.null(UnitCorrect) || trimws(as.character(UnitCorrect)) == "") {
     UnitCorrect <- 1
   }
   
-  # ------------------------------------------------------------------
-  # 1. SHEET RESOLUTION
-  # ------------------------------------------------------------------
   if (is.null(SheetName) || is.na(SheetName) || SheetName == "") {
     print_missing_alarm("SHEET NAME", "Invalid or empty sheet name requested in metadata.")
     return(NULL)
@@ -55,18 +48,11 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
   
   active_sheet <- valid_sheets[1]
   
-  # ------------------------------------------------------------------
-  # 2. READ RAW DATA
-  # ------------------------------------------------------------------
   df <- suppressMessages(readxl::read_excel(path = file_path, sheet = active_sheet, col_types = "text"))
   names(df) <- trimws(names(df)) 
   
-  # ------------------------------------------------------------------
-  # 3. DYNAMIC COLUMN DETECTION (Simplified for Keys)
-  # ------------------------------------------------------------------
   date_col <- names(df)[grepl("date", names(df), ignore.case = TRUE)][1]
   
-  # Find the unique key exactly (case-insensitive)
   key_match <- grep(paste0("^", unique_key, "$"), names(df), ignore.case = TRUE, value = TRUE)
   key_col <- if (length(key_match) > 0) key_match[1] else NA
   
@@ -77,7 +63,6 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
     return(NULL)
   }
   
-  # Target Variable Detection
   actual_var_name <- VarName
   if (!actual_var_name %in% names(df)) {
     fuzzy_match <- grep(paste0("^", VarName, "$"), names(df), ignore.case = TRUE, value = TRUE)
@@ -90,7 +75,7 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
   }
   
   # ------------------------------------------------------------------
-  # 4. SWISS CHEESE DATE PARSER
+  # 4. SWISS CHEESE DATE PARSER (Upgraded to prevent year truncation)
   # ------------------------------------------------------------------
   parse_any_date <- function(x) {
     final_dates <- as.Date(rep(NA_character_, length(x)))
@@ -104,7 +89,8 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
     rem_idx <- which(is.na(final_dates) & !is.na(x) & trimws(as.character(x)) != "")
     if (length(rem_idx) > 0) {
       x_rem <- as.character(x[rem_idx])
-      for (fmt in c("%d/%m/%y", "%d/%m/%Y", "%Y-%m-%d", "%Y/%m/%d")) {
+      # NEW SAFE ORDER: Day-Month formats go first!
+      for (fmt in c("%d/%m/%Y", "%d-%m-%Y", "%d/%m/%y", "%d-%m-%y", "%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y")) {
         temp_dates <- suppressWarnings(as.Date(x_rem, format = fmt))
         success_idx <- which(!is.na(temp_dates))
         if (length(success_idx) > 0) {
@@ -118,9 +104,6 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
     return(final_dates)
   }
   
-  # ------------------------------------------------------------------
-  # 5. STANDARDIZATION & CLEANING
-  # ------------------------------------------------------------------
   df_mapped <- df %>%
     dplyr::mutate(
       !!unique_key := trimws(as.character(.data[[key_col]])),
@@ -132,11 +115,6 @@ read_observed_one_key <- function(file_path, SheetName, VarName, NewVarName, Uni
     warning(sprintf("CRITICAL in '%s': All values in '%s' evaluated to NA. Check raw data.", file_id, actual_var_name), call. = FALSE)
   }
   
-  # ------------------------------------------------------------------
-  # 6. SAFETY AGGREGATION (Plot Level)
-  # ------------------------------------------------------------------
-  # We group by the unique key and Date. If there are accidental duplicate 
-  # measurements for the exact same Plot on the exact same Date, this safely averages them.
   df_clean <- df_mapped %>%
     dplyr::filter(!is.na(.data[[unique_key]]) & .data[[unique_key]] != "") %>%
     dplyr::group_by(.data[[unique_key]], Date) %>%

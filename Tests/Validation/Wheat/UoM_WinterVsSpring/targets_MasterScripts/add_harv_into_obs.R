@@ -11,13 +11,37 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
   if (!requireNamespace("tidyr", quietly = TRUE)) stop("Package 'tidyr' required.")
   
-  # ---- 1. DEFENSIVE CHECKS & TYPE LOCKING ----
+  # ---- 1. DEFENSIVE CHECKS & DATE PARSING ----
   if (!"SimulationName" %in% names(df) || !"Clock.Today" %in% names(df)) {
     stop("CRITICAL [add_harv_into_obs]: Missing 'SimulationName' or 'Clock.Today'.")
   }
   
-  # Temporarily cast to Date for max() math
-  df_clean <- df %>% dplyr::mutate(Clock.Today = as.Date(Clock.Today))
+  # THE SWISS CHEESE DATE PARSER (Protects against DD/MM/YYYY mangling)
+  parse_any_date <- function(x) {
+    final_dates <- as.Date(rep(NA_character_, length(x)))
+    nums <- suppressWarnings(as.numeric(x))
+    num_idx <- which(!is.na(nums))
+    if (length(num_idx) > 0) final_dates[num_idx] <- as.Date(nums[num_idx], origin = "1899-12-30")
+    
+    rem_idx <- which(is.na(final_dates) & !is.na(x) & trimws(as.character(x)) != "")
+    if (length(rem_idx) > 0) {
+      x_rem <- as.character(x[rem_idx])
+      for (fmt in c("%d/%m/%Y", "%d-%m-%Y", "%d/%m/%y", "%d-%m-%y", "%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y")) {
+        temp_dates <- suppressWarnings(as.Date(x_rem, format = fmt))
+        success_idx <- which(!is.na(temp_dates))
+        if (length(success_idx) > 0) {
+          final_dates[rem_idx[success_idx]] <- temp_dates[success_idx]
+          x_rem <- x_rem[-success_idx]       
+          rem_idx <- rem_idx[-success_idx]   
+        }
+        if (length(rem_idx) == 0) break
+      }
+    }
+    return(final_dates)
+  }
+  
+  # Safely parse the dates instead of blindly using as.Date()
+  df_clean <- df %>% dplyr::mutate(Clock.Today = parse_any_date(Clock.Today))
   
   if (!new_col_name %in% names(df_clean)) {
     df_clean[[new_col_name]] <- NA_character_
@@ -30,10 +54,10 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
   if (length(actual_ref_vars) == 0) {
     warning("None of the requested reference variables exist in the data. Returning original df.")
-    return(df_clean %>% dplyr::mutate(Clock.Today = as.character(Clock.Today)))
+    return(df_clean %>% dplyr::mutate(Clock.Today = format(Clock.Today, "%Y-%m-%d")))
   }
   
-  # ---- 2. INDEPENDENT MAX DATE SEARCH (Bug Patched) ----
+  # ---- 2. INDEPENDENT MAX DATE SEARCH ----
   harv_dates <- df_clean %>%
     dplyr::select(SimulationName, Clock.Today, dplyr::any_of(actual_ref_vars)) %>%
     tidyr::pivot_longer(cols = dplyr::any_of(actual_ref_vars), names_to = "Variable", values_to = "Value") %>%
@@ -43,7 +67,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
   if (nrow(harv_dates) == 0) {
     warning("No data found for any of the provided reference variables. Returning original data.")
-    return(df_clean %>% dplyr::mutate(Clock.Today = as.character(Clock.Today)))
+    return(df_clean %>% dplyr::mutate(Clock.Today = format(Clock.Today, "%Y-%m-%d")))
   }
   
   unique_harv_dates <- harv_dates %>%
@@ -63,7 +87,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
     dplyr::select(-IsHarvestFlag) %>%
     dplyr::arrange(SimulationName, Clock.Today) %>%
     # APSIM SAFETY LOCK: Convert the date back to a clean string before export
-    dplyr::mutate(Clock.Today = as.character(Clock.Today))
+    dplyr::mutate(Clock.Today = format(Clock.Today, "%Y-%m-%d"))
   
   # ---- 4. THE DIAGNOSTIC ALARM ----
   min_date <- min(harv_dates$MaxDate, na.rm = TRUE)
@@ -74,7 +98,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   message(sprintf(" \u26A0\uFE0F  HARVEST DATES ASSIGNED: %s \u26A0\uFE0F ", toupper(new_col_value)))
   message(strrep("=", 60))
   message(" -> STRATEGY     : Asynchronous Max Date Search")
-  message(sprintf(" -> OVERALL SPAN : %s to %s", min_date, max_date))
+  message(sprintf(" -> OVERALL SPAN : %s to %s", format(min_date, "%Y-%m-%d"), format(max_date, "%Y-%m-%d")))
   
   if (spread_days > 0) {
     message(sprintf(" -> WARNING      : Max difference between harvest variables is %d days.", spread_days))
@@ -85,7 +109,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
       dplyr::summarise(OverallMax = max(MaxDate, na.rm = TRUE))
     
     for (i in 1:nrow(var_breakdown)) {
-      message(sprintf("      - %-25s : %s", var_breakdown$Variable[i], var_breakdown$OverallMax[i]))
+      message(sprintf("      - %-25s : %s", var_breakdown$Variable[i], format(var_breakdown$OverallMax[i], "%Y-%m-%d")))
     }
   } else {
     message(" -> STATUS       : All reference variables share the exact same harvest date.")

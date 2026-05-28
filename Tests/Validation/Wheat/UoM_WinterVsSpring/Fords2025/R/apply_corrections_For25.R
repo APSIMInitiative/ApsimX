@@ -3,8 +3,9 @@
 #' @param df_tbl The compiled list of observed dataframes (output of Phase C)
 #' @param folder_path The directory where dates_to_correct.csv should be stored
 #' @param ref_date A reference date (like sowing date) to enforce the correct year
+#' @param file_name_newDates The name of the CSV file to generate/read (Defaults to "dates_to_correct.csv")
 #' @export
-apply_corrections_For25 <- function(df_tbl, folder_path, ref_date) {
+apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, file_name_newDates = "dates_to_correct.csv") {
   
   if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
   if (!requireNamespace("purrr", quietly = TRUE)) stop("Package 'purrr' required.")
@@ -13,7 +14,8 @@ apply_corrections_For25 <- function(df_tbl, folder_path, ref_date) {
   cat(" \U0001F6E0\U000FE0F  PHASE C.2: APPLYING FOR25-SPECIFIC CORRECTIONS \n")
   cat("======================================================================\n")
   
-  csv_path <- file.path(folder_path, "dates_to_correct.csv")
+  # Externalized file name
+  csv_path <- file.path(folder_path, file_name_newDates)
   
   # ------------------------------------------------------------------
   # 0. THE SWISS CHEESE DATE PARSER (Global to this function)
@@ -124,13 +126,13 @@ apply_corrections_For25 <- function(df_tbl, folder_path, ref_date) {
     corrections <- read.csv(csv_path, stringsAsFactors = FALSE)
     
     if (!all(c("df_name", "new_date") %in% names(corrections))) {
-      stop("\n🚨 CRITICAL ERROR: 'dates_to_correct.csv' must contain exactly two columns: 'df_name' and 'new_date'.", call. = FALSE)
+      stop(sprintf("\n🚨 CRITICAL ERROR: '%s' must contain exactly two columns: 'df_name' and 'new_date'.", file_name_newDates), call. = FALSE)
     }
     
     corrections <- corrections %>% dplyr::filter(trimws(df_name) != "" & trimws(new_date) != "")
     
     if (nrow(corrections) == 0) {
-      stop(sprintf("\n🚨 CRITICAL ERROR: 'dates_to_correct.csv' has no dates filled in!\n -> Please provide the dates for the following dataframes and run again:\n -> %s\n\n File: %s", missing_list, csv_path), call. = FALSE)
+      stop(sprintf("\n🚨 CRITICAL ERROR: '%s' has no dates filled in!\n -> Please provide the dates for the following dataframes and run again:\n -> %s\n\n File: %s", file_name_newDates, missing_list, csv_path), call. = FALSE)
     }
     
     corrections$parsed_date <- parse_any_date(corrections$new_date)
