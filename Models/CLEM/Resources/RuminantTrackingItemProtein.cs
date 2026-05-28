@@ -31,9 +31,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double PreviousWet { get { return Previous / ProportionDry; } }
 
-        // Time step pools
-
-        // todo: this needs to be completed, checked and tested
         /// <inheritdoc/>
         public new double Net { get { return FromIntakeAvailable - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
 
@@ -206,7 +203,6 @@ namespace Models.CLEM.Resources
         {
             Amount = 0;
             Change = 0;
-            //Net = 0;
         }
 
         /// <inheritdoc/>
@@ -215,7 +211,7 @@ namespace Models.CLEM.Resources
             ForEndogenousFaecal = 0;
             ForEndogenousUrinary = 0;
             ForDermal = 0;
-            ForPregnancy = 0;
+        //    ForPregnancy = 0;
             ForGain = 0;
             AvailableForGain = 0;
             ForWool = 0;

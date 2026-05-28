@@ -98,7 +98,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to calculate pregnancy energy for the time step to ensure done before births in CLEMAnimalBreeding.
+        /// Method to calculate pregnancy energy for the time step (MJ/day) to ensure done before births in
+        /// CLEMAnimalBreeding.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
         public void CalculateHerdPregnancyEnergy(IEnumerable<Ruminant> herd)
@@ -106,7 +107,7 @@ namespace Models.CLEM.Activities
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsMature))
             {
                 // 0 returned if not pregnant and Energy.Fetus is reset here rather than in Energy.Reset as this needs to be available for energy use later this time step after potential intake resets all stores.
-                female.Energy.ForFetus = CalculatePregnancyEnergy(female) * ((double)female.DaysPregnantInTimeStep/ events.Interval);
+                female.Energy.ForFetus = CalculatePregnancyEnergy(female);// Now returns E in MJ/Day so no need for * ((double)female.DaysPregnantInTimeStep/ events.Interval);
             }
         }
 
@@ -918,10 +919,12 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine the energy required for pregnancy.
         /// </summary>
-        /// <param name="ind">Female individua.l</param>
+        /// <param name="ind">Female individua.</param>
         /// <returns>Energy required per day for pregnancy</returns>
         private double CalculatePregnancyEnergy(RuminantFemale ind)
         {
+            ind.Weight.Protein.ForPregnancy = 0;
+
             if (!ind.IsPregnant)
             {
                 if (ind.IsLactating)
@@ -931,9 +934,9 @@ namespace Models.CLEM.Activities
                 return 0;
             }
 
-            double totalMERequired = 0;
-            double conceptusFat = 0;
-            double conceptusProtein = 0;
+            double MERequiredTimeStep = 0;
+            double conceptusFatTimeStep = 0;
+            double conceptusProteinTimeStep = 0;
 
             // smallest allowed interval is 7 days for representative calculations
             const int smallestInterval = 7;
@@ -1016,27 +1019,27 @@ namespace Models.CLEM.Activities
                 (ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 / (ind.Parameters.General.GestationLength.InDays)) *
                 Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - ind.DaysPregnant / ind.Parameters.General.GestationLength.InDays) + ind.Parameters.GrowPF_CP.ConceptusEnergyParameter_CP9 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusEnergyParameter2_CP10 * (1 - propOfPregnancy))))) / 0.13;
 
-                totalMERequired += conceptusME * daysToEnd;
+                MERequiredTimeStep += conceptusME * daysToEnd;
 
                 // kg protein per day
                 double conceptusProteinReq = ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11 * (ind.NumberOfFetuses * ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight) * relativeConditionFetus *
                     (ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 / (ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - propOfPregnancy) + ind.Parameters.GrowPF_CP.ConceptusProteinParameter_CP12 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusProteinParameter2_CP13 * (1 - ind.ProportionOfPregnancy(currentDays)))));
 
                 // protein for time-step (kg)
-                conceptusProtein += conceptusProteinReq * daysToEnd;
+                conceptusProteinTimeStep += conceptusProteinReq * daysToEnd;
                 // fat for time-step (kg)
-                conceptusFat += ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3 * daysToEnd;
+                conceptusFatTimeStep += ((conceptusME * 0.13) - (conceptusProteinReq * 23.6)) / 39.3 * daysToEnd;
 
                 currentDays += step;
             }
 
             //fetal fat is conceptus fat. per individual. Assumes minimal (0) fat in placenta
 
-            ind.Weight.Protein.ForPregnancy = conceptusProtein; 
-            ind.Weight.ConceptusProtein.Adjust(conceptusProtein);
-            ind.Weight.ConceptusFat.Adjust(conceptusFat);
+            ind.Weight.Protein.ForPregnancy = conceptusProteinTimeStep / ind.Parameters.Details.CurrentTimeStep.Interval; 
+            ind.Weight.ConceptusProtein.Adjust(conceptusProteinTimeStep);
+            ind.Weight.ConceptusFat.Adjust(conceptusFatTimeStep);
 
-            return totalMERequired/ind.DaysPregnantInTimeStep;
+            return MERequiredTimeStep/ ind.Parameters.Details.CurrentTimeStep.Interval;
         }
 
         /// <inheritdoc/>
