@@ -16,6 +16,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
     stop("CRITICAL [add_harv_into_obs]: Missing 'SimulationName' or 'Clock.Today'.")
   }
   
+  # Temporarily cast to Date for max() math
   df_clean <- df %>% dplyr::mutate(Clock.Today = as.Date(Clock.Today))
   
   if (!new_col_name %in% names(df_clean)) {
@@ -29,12 +30,11 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
   if (length(actual_ref_vars) == 0) {
     warning("None of the requested reference variables exist in the data. Returning original df.")
-    return(df_clean)
+    return(df_clean %>% dplyr::mutate(Clock.Today = as.character(Clock.Today)))
   }
   
   # ---- 2. INDEPENDENT MAX DATE SEARCH (Bug Patched) ----
   harv_dates <- df_clean %>%
-    # Notice we are now using any_of(actual_ref_vars) here!
     dplyr::select(SimulationName, Clock.Today, dplyr::any_of(actual_ref_vars)) %>%
     tidyr::pivot_longer(cols = dplyr::any_of(actual_ref_vars), names_to = "Variable", values_to = "Value") %>%
     dplyr::filter(!is.na(Value)) %>%
@@ -43,7 +43,7 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
   if (nrow(harv_dates) == 0) {
     warning("No data found for any of the provided reference variables. Returning original data.")
-    return(df_clean)
+    return(df_clean %>% dplyr::mutate(Clock.Today = as.character(Clock.Today)))
   }
   
   unique_harv_dates <- harv_dates %>%
@@ -61,7 +61,9 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
       )
     ) %>%
     dplyr::select(-IsHarvestFlag) %>%
-    dplyr::arrange(SimulationName, Clock.Today)
+    dplyr::arrange(SimulationName, Clock.Today) %>%
+    # APSIM SAFETY LOCK: Convert the date back to a clean string before export
+    dplyr::mutate(Clock.Today = as.character(Clock.Today))
   
   # ---- 4. THE DIAGNOSTIC ALARM ----
   min_date <- min(harv_dates$MaxDate, na.rm = TRUE)
