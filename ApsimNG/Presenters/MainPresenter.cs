@@ -73,7 +73,7 @@ namespace UserInterface.Presenters
             Configuration.Settings.CleanMruList();
 
             // Populate the 2 start pages.
-            PopulateStartPage(this.view.MenuList);
+            PopulateStartPage(this.view.StartPage1);
             PopulateStartPage(this.view.StartPage2);
             PopulateMRUList();
 
@@ -1026,7 +1026,11 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("APSIM files (*.apsimx, *.json)|*.apsimx;*.json");
+                string defaultFileSpec = "APSIM files (*.apsimx, *.json)|*.apsimx;*.json";
+                string linuxFileSpec = "APSIM files (*.apsimx)|*.apsimx";
+                if (ProcessUtilities.CurrentOS.IsUnix)
+                    defaultFileSpec = linuxFileSpec;
+                string fileName = this.AskUserForOpenFileName(defaultFileSpec);
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);

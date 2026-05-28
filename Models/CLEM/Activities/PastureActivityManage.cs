@@ -166,7 +166,8 @@ namespace Models.CLEM.Activities
                 GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
             }
 
-            filePasture = Structure.FindAll<CLEMModel>().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            ZoneCLEM clemModel = Structure.FindParent<ZoneCLEM>(recurse: true);
+            filePasture = Structure.FindChildren<IModel>(recurse: true, relativeTo: clemModel).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
             {

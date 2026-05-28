@@ -78,10 +78,15 @@ namespace Models.Functions
 
             double ActiveCppm = ActiveC / (soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
 
-            double CarbonModifier = DenitrificationCarbonSlopeFactor * ActiveCppm + DenitrificationCarbonOffsetFactor;
+            double CarbonModifier = (DenitrificationCarbonSlopeFactor * ActiveCppm) + DenitrificationCarbonOffsetFactor;
             double PotentialRate = DenitrificationRateModifier * CarbonModifier;
 
-            return PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);
+            double result = PotentialRate * CERESDenitrificationTemperatureFactor.Value(arrayIndex) * CERESDenitrificationWaterFactor.Value(arrayIndex);
+
+            if (result < 0 || result > 1)
+                throw new Exception($"CERESDenitrificationModel should return a value between 0 and 1, but was calculated to be {result} instead.");
+
+            return result;
         }
 
         /// <summary>

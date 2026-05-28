@@ -112,6 +112,35 @@ namespace UnitTests.Report
         }
 
         /// <summary>
+        /// Ensure that we don't read values from other reports in scope of us.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportOnlyUsesThisReport()
+        {
+            Models.Report newReport = new()
+            {
+                VariableNames = ["(4) as A"],
+            };
+            simulation.Children.Add(newReport);
+            report.VariableNames =
+            [
+                "A + 1 as B"
+            ];
+            try
+            {
+                Runner runner = new(simulations);
+                var exceptions = runner.Run();
+                Assert.That(exceptions.Count == 1);
+                Assert.That(exceptions[0].InnerException.Message, Does.Contain("unknown model or property specification A"));
+            }
+            finally
+            {
+                // Get rid of the new report.
+                simulation.Children.Remove(newReport);
+            }
+        }
+
+        /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
         ///
         /// </summary>
@@ -401,13 +430,13 @@ namespace UnitTests.Report
         {
             // When report gets an oncommencing it should write a _Factors table to storage.
             var sim = new Simulation();
-            sim.Descriptors = new List<SimulationDescription.Descriptor>();
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Experiment", "exp1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", "sim1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("FolderName", "F"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Zone", "z"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("Cultivar", "cult1"));
-            sim.Descriptors.Add(new SimulationDescription.Descriptor("N", "0"));
+            sim.Descriptors = new List<SimulationDescriptor>();
+            sim.Descriptors.Add(new SimulationDescriptor("Experiment", "exp1"));
+            sim.Descriptors.Add(new SimulationDescriptor("SimulationName", "sim1"));
+            sim.Descriptors.Add(new SimulationDescriptor("FolderName", "F"));
+            sim.Descriptors.Add(new SimulationDescriptor("Zone", "z"));
+            sim.Descriptors.Add(new SimulationDescriptor("Cultivar", "cult1"));
+            sim.Descriptors.Add(new SimulationDescriptor("N", "0"));
 
             var report = new Models.Report()
             {

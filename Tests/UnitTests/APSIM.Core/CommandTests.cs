@@ -277,6 +277,29 @@ public class CommandTests
         Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
     }
 
+    /// <summary>Ensure the set property += command works with an empty array</summary>
+    [Test]
+    public void EnsureSetPropertyAddToArrayWorksOnEmptyArray()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = new string[] {}
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "a=1", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1"]));
+    }
+
     /// <summary>Ensure the set property += command overwrites existing value when it exists.</summary>
     [Test]
     public void EnsureSetPropertyAddOverwritesExisting()
@@ -323,7 +346,7 @@ public class CommandTests
         Assert.That(cultivar.Command, Is.EqualTo(["b=2", "c=3"]));
     }
 
-    /// <summary>Ensure the set array property to empty string clears the array.</summary>
+        /// <summary>Ensure the set array property to empty string clears the array.</summary>
     [Test]
     public void EnsureSetArrayPropertyToEmptyWorks()
     {
@@ -340,6 +363,56 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyWithNameWhitespaceWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand($"[{modelName}].Command", "=", "", fileName: null);
+        cmd.Run(simulation, runner: null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyCommandStringParsingWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = SetPropertyCommand.Create($"[{modelName}].Command=", null);
         cmd.Run(simulation, runner: null);
 
         var cultivar = simulation.Children.First() as Cultivar;
@@ -687,5 +760,22 @@ public class CommandTests
         Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
         Assert.That(reports[1].VariableNames, Is.EqualTo([ "1" ]));
+    }
+
+        /// <summary>Ensure the add command works.</summary>
+    [Test]
+    [TestCase("Wheat")]
+    [TestCase("Canola")]
+    public void EnsureAddFromResourceWorks(string modelName)
+    {
+        Simulation simulation = new();
+        Node.Create(simulation);
+
+        IModelCommand cmd = new AddCommand(modelReference: new NewModelReference(modelName),
+                                           toPath: "[Simulation]",
+                                           multiple: false);
+        cmd.Run(simulation, runner: null);
+
+        Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Plant)));
     }
 }

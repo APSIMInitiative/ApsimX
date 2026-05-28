@@ -724,7 +724,10 @@ namespace Models.CLEM
                 }
             }
 
-            results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
+            if (results.Columns.Contains(YearColumnName))
+            {
+                results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
+            }
 
             foreach (DataRowView row in results.DefaultView)
             {
