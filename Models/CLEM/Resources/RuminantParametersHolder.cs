@@ -19,6 +19,7 @@ namespace Models.CLEM.Resources
         /// Switch to determine if summary ruminant parameters are displayed in the descriptive summary
         /// </summary>
         [Description("Display summary parameters in descriptive summary")]
+        [Category("Summary", "General")]
         public bool DisplaySummaryParameters { get; set; } = true;
 
     }
