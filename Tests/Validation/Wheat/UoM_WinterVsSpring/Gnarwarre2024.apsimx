@@ -78,70 +78,6 @@
             "using Models;",
             "using System.Xml.Serialization;",
             "using APSIM.Shared.Utilities;",
-            "using Models.PMF.Phen;",
-            "",
-            "namespace Models",
-            "{",
-            "    [Serializable] ",
-            "    public class Script : Model, IStructureDependency",
-            "    {",
-            "        [Link] private Plant Wheat;",
-            "        [Link] private Simulation sim;",
-            "        [Link] private Clock clock;",
-            "        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]",
-            "        private Phenology phenology;",
-            "        public IStructure Structure { private get; set; }",
-            "",
-            "",
-            "        ",
-            "",
-            "        [EventSubscribe(\"DoManagement\")]",
-            "        private void OnDoManagement(object sender, EventArgs e)",
-            "        {",
-            "            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")",
-            "            {",
-            "                Wheat.Harvest();",
-            "                Wheat.EndCrop();",
-            "                Structure.Set(\"Clock.EndDate\", clock.Today, relativeTo: sim);  ",
-            "            }",
-            "        }",
-            "",
-            "        [EventSubscribe(\"EndOfDay\")]",
-            "        private void OnEndOfDay(object sender, EventArgs e)",
-            "        {",
-            "            if ((clock.Today.Equals(clock.EndDate))&&(Wheat.IsAlive))",
-            "            {",
-            "                Wheat.Harvest();",
-            "                Wheat.EndCrop();",
-            "                Structure.Set(\"Clock.EndDate\", clock.Today, relativeTo: sim);  ",
-            "            }",
-            "        }",
-            "",
-            "    }",
-            "}",
-            "       "
-          ],
-          "Parameters": [],
-          "Name": "Harvesting_old",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Manager, Models",
-          "CodeArray": [
-            "using APSIM.Core;",
-            "using Models.Soils.Nutrients;",
-            "using System;",
-            "using Models.Core;",
-            "using System.Collections.Generic;",
-            "using System.Text;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models;",
-            "using System.Xml.Serialization;",
-            "using APSIM.Shared.Utilities;",
             "",
             "namespace Models",
             "{",
@@ -404,7 +340,9 @@
                         "[Sowing].Script.SowDate = 24-Apr",
                         "[Clock].StartDate = 2024-04-23",
                         "[Sowing].Script.EmergeDate = 10-May",
-                        "[Sowing].Script.CultivarName = Illabo"
+                        "[Sowing].Script.CultivarName = Illabo",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -420,7 +358,9 @@
                         "[Sowing].Script.SowDate = 24-Apr",
                         "[Clock].StartDate = 2024-04-23",
                         "[Sowing].Script.EmergeDate = 10-May",
-                        "[Sowing].Script.CultivarName = BigRed"
+                        "[Sowing].Script.CultivarName = BigRed",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -436,7 +376,9 @@
                         "[Sowing].Script.SowDate = 20-May",
                         "[Clock].StartDate = 2024-04-23",
                         "[Sowing].Script.EmergeDate = 7-Jun",
-                        "[Sowing].Script.CultivarName = Sunmaster"
+                        "[Sowing].Script.CultivarName = Sunmaster",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -452,7 +394,9 @@
                         "[Sowing].Script.SowDate = 20-May",
                         "[Clock].StartDate = 2024-04-23",
                         "[Sowing].Script.EmergeDate = 7-Jun",
-                        "[Sowing].Script.CultivarName = Zanzibar"
+                        "[Sowing].Script.CultivarName = Zanzibar",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -869,7 +813,7 @@
                   "Name": "SowingFertiliser",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -879,23 +823,6 @@
                   ],
                   "Parameters": [],
                   "Name": "Harvesting",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2004-12-10",
-                      "Action": "[Wheat].Harvesting",
-                      "Line": "10-12-2004 [Wheat].Harvesting"
-                    }
-                  ],
-                  "Name": "Management",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1670,6 +1597,102 @@
                   "Name": "Spectral",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-04-24",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-10-24",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-18",
+                      "Action": "[Fertiliser].Apply(amount: 109, type: \"UreaGranular\");",
+                      "Line": "2024-07-18 [Fertiliser].Apply(amount: 109, type: \"UreaGranular\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-14",
+                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Line": "2024-08-14 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
+                    }
+                  ],
+                  "Name": "ManagementWinter",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Gnarwarre 2024\n\nFERTILISER\n{this was done by the \"Sowing Fertiliser\" script; first for TOS 1, second for TOS 2, but in your format}\n\n2024-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2024-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n{this is done by the \"Fertiliser on a date\" script; same for each TOS}\n\n2024-07-18 [Fertiliser].Apply(amount: 109, type: \"UreaGranular\");\n\n2024-08-14 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-20",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-05-20 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-10-24",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-18",
+                      "Action": "[Fertiliser].Apply(amount: 109, type: \"UreaGranular\");",
+                      "Line": "2024-07-18 [Fertiliser].Apply(amount: 109, type: \"UreaGranular\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-14",
+                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Line": "2024-08-14 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
+                    }
+                  ],
+                  "Name": "ManagementSpring",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Gnarwarre 2024\n\nFERTILISER\n{this was done by the \"Sowing Fertiliser\" script; first for TOS 1, second for TOS 2, but in your format}\n\n2024-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2024-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n{this is done by the \"Fertiliser on a date\" script; same for each TOS}\n\n2024-07-18 [Fertiliser].Apply(amount: 109, type: \"UreaGranular\");\n\n2024-08-14 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }

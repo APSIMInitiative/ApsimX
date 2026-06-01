@@ -981,60 +981,6 @@
                 {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
-                    "using Models.Soils;",
-                    "using System;",
-                    "using Models.Core;",
-                    "using Models.PMF;",
-                    "namespace Models",
-                    "{",
-                    "    [Serializable]",
-                    "    public class Script : Model",
-                    "    {",
-                    "        [Link] Clock Clock;",
-                    "        [Link] Fertiliser Fertiliser;",
-                    "        [Link] Summary Summary;",
-                    "        ",
-                    "        ",
-                    "        [Description(\"Amount of fertiliser to be applied (50:50 Urea:MAP, kg/ha)\")]",
-                    "        public double Amount { get; set;}",
-                    "        ",
-                    "        [Description(\"Crop to be fertilised\")]",
-                    "        public string CropName { get; set;}",
-                    "        ",
-                    "        ",
-                    "        ",
-                    "",
-                    "        [EventSubscribe(\"Sowing\")]",
-                    "        private void OnSowing(object sender, EventArgs e)",
-                    "        {",
-                    "            Model crop = sender as Model;",
-                    "            if (crop.Name.ToLower()==CropName.ToLower())",
-                    "                Fertiliser.Apply(amount: Amount*0.5, type: \"MAP\");",
-                    "                Fertiliser.Apply(amount: Amount*0.5, type: \"UreaGranular\");",
-                    "        }",
-                    "        ",
-                    "    }",
-                    "}"
-                  ],
-                  "Parameters": [
-                    {
-                      "Key": "Amount",
-                      "Value": "120"
-                    },
-                    {
-                      "Key": "CropName",
-                      "Value": "wheat"
-                    }
-                  ],
-                  "Name": "SowingFertiliser",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Manager, Models",
-                  "CodeArray": [
                     "using APSIM.Core;",
                     "using System;",
                     "using Models.Core;",
@@ -1968,7 +1914,7 @@
                   "Name": "IrrDate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2031,7 +1977,7 @@
                   "Name": "FertDate0",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2072,12 +2018,83 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
+                      "Date": "2025-07-12",
+                      "Action": "[Fertiliser].Apply(amount: 75, type: \"UreaGranular\");",
+                      "Line": "2025-07-12 [Fertiliser].Apply(amount: 75, type: \"UreaGranular\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2025-08-11",
                       "Action": "[Fertiliser].Apply(amount: 125, type: \"UreaGranular\");",
                       "Line": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\");"
                     }
                   ],
                   "Name": "FertiliserAppliedAmounts",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\");",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "CodeArray": [
+                    "using Models.Soils;",
+                    "using System;",
+                    "using Models.Core;",
+                    "using Models.PMF;",
+                    "namespace Models",
+                    "{",
+                    "    [Serializable]",
+                    "    public class Script : Model",
+                    "    {",
+                    "        [Link] Clock Clock;",
+                    "        [Link] Fertiliser Fertiliser;",
+                    "        [Link] Summary Summary;",
+                    "        ",
+                    "        ",
+                    "        [Description(\"Amount of fertiliser to be applied (50:50 Urea:MAP, kg/ha)\")]",
+                    "        public double Amount { get; set;}",
+                    "        ",
+                    "        [Description(\"Crop to be fertilised\")]",
+                    "        public string CropName { get; set;}",
+                    "        ",
+                    "        ",
+                    "        ",
+                    "",
+                    "        [EventSubscribe(\"Sowing\")]",
+                    "        private void OnSowing(object sender, EventArgs e)",
+                    "        {",
+                    "            Model crop = sender as Model;",
+                    "            if (crop.Name.ToLower()==CropName.ToLower())",
+                    "                Fertiliser.Apply(amount: Amount*0.5, type: \"MAP\");",
+                    "                Fertiliser.Apply(amount: Amount*0.5, type: \"UreaGranular\");",
+                    "        }",
+                    "        ",
+                    "    }",
+                    "}"
+                  ],
+                  "Parameters": [
+                    {
+                      "Key": "Amount",
+                      "Value": "120"
+                    },
+                    {
+                      "Key": "CropName",
+                      "Value": "wheat"
+                    }
+                  ],
+                  "Name": "SowingFertiliser",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -2096,17 +2113,7 @@
                   ],
                   "Name": "IrrigationAppliedAmounts",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }

@@ -339,7 +339,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 30-Apr",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = Illabo"
+                        "[Sowing].Script.CultivarName = Illabo",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -354,7 +356,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 30-Apr",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = BigRed"
+                        "[Sowing].Script.CultivarName = BigRed",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -369,7 +373,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 30-Apr",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = Stockade"
+                        "[Sowing].Script.CultivarName = Stockade",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -384,7 +390,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 21-May",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = Sunmaster"
+                        "[Sowing].Script.CultivarName = Sunmaster",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -399,7 +407,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 21-May",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = Zanzibar"
+                        "[Sowing].Script.CultivarName = Zanzibar",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -414,7 +424,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 21-May",
                         "[Clock].StartDate = 2025-04-23",
-                        "[Sowing].Script.CultivarName = Illabo"
+                        "[Sowing].Script.CultivarName = Illabo",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -808,7 +820,7 @@
                   "Name": "SowingFertiliser",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -865,23 +877,6 @@
                   ],
                   "Parameters": [],
                   "Name": "Harvesting",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": false,
-                      "Date": null,
-                      "Action": null,
-                      "Line": ""
-                    }
-                  ],
-                  "Name": "Management",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -1664,37 +1659,10 @@
                   "OperationsList": [
                     {
                       "$type": "Models.Operation, Models",
-                      "Enabled": false,
-                      "Date": null,
-                      "Action": null,
-                      "Line": ""
-                    }
-                  ],
-                  "Name": "IrrigationAppliedAmounts",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-05-24",
+                      "Date": "2025-04-30",
                       "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Line": "2025-04-30 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -1718,12 +1686,60 @@
                       "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
                     }
                   ],
-                  "Name": "FertiliserAppliedAmounts",
+                  "Name": "ManagementWinter",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2025-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");\n2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Text": "Gnarwarre 2025\n\n\nFERTILISER\n\n2025-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");\n\n2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "OperationsList": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-05-21",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2025-05-21 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-10-24",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-07-16",
+                      "Action": "[Fertiliser].Apply(amount: 108, type: \"UreaGranular\");",
+                      "Line": "2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-08-22",
+                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
+                      "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
+                    }
+                  ],
+                  "Name": "ManagementSpring",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Gnarwarre 2025\n\n\nFERTILISER\n\n2025-05-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");\n\n2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");\n\n2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
