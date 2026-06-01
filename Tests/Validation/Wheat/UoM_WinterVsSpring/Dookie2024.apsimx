@@ -9414,7 +9414,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -9556,7 +9556,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15559,7 +15559,7 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryColours": "Sow",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": "Sow",
                       "Marker": 11,
@@ -15627,9 +15627,9 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryColours": "Sow",
                       "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": "Cv",
+                      "FactorToVaryLines": "Sow",
                       "Marker": 11,
                       "MarkerSize": 0,
                       "Line": 4,

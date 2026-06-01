@@ -2047,7 +2047,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2121,7 +2121,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {

@@ -470,7 +470,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -485,7 +487,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -500,7 +504,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -515,7 +521,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -530,7 +538,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -545,7 +555,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName =  Kittyhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -560,7 +572,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -575,7 +589,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-Apr",
                         "[Sowing].Script.CultivarName =  Mowhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -590,7 +606,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -605,7 +623,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -620,7 +640,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -635,7 +657,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -650,7 +674,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -665,7 +691,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -680,7 +708,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -695,7 +725,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 15-May",
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 200",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1824,7 +1856,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1966,7 +1998,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2057,6 +2089,13 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-15",
+                      "Action": "[Fertiliser].Apply(amount: 9, type: \"UreaN\");",
+                      "Line": "2025-04-15 [Fertiliser].Apply(amount: 9, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-04-15",
                       "Action": "[Irrigation].Apply(20)",
                       "Line": "2025-04-15 [Irrigation].Apply(20)"
                     },
@@ -2065,7 +2104,7 @@
                       "Enabled": true,
                       "Date": "2025-05-03",
                       "Action": "[Irrigation].Apply(17)",
-                      "Line": "2025-05-3 [Irrigation].Apply(17)"
+                      "Line": "2025-05-03 [Irrigation].Apply(17)"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -2073,9 +2112,16 @@
                       "Date": "2025-05-14",
                       "Action": "[Irrigation].Apply(20)",
                       "Line": "2025-05-14 [Irrigation].Apply(20)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-07-07",
+                      "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\");",
+                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\");"
                     }
                   ],
-                  "Name": "IrrigationAppliedAmounts",
+                  "Name": "ManagementWinter",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -2097,24 +2143,31 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-04-15",
-                      "Action": "[Fertiliser].Apply(amount: 9, type: \"UreaN\");",
-                      "Line": "2024-04-15 [Fertiliser].Apply(amount: 9, type: \"UreaN\");"
+                      "Date": "2025-05-15",
+                      "Action": "[Fertiliser].Apply(amount: 9, type: \"UreaN\")",
+                      "Line": "2025-05-15 [Fertiliser].Apply(amount: 9, type: \"UreaN\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-07-07",
+                      "Date": "2025-05-15",
+                      "Action": "[Irrigation].Apply(20)",
+                      "Line": "2025-05-15 [Irrigation].Apply(20)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-07-07",
                       "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\");",
-                      "Line": "2024-07-7 [Fertiliser].Apply(amount: 86, type: \"UreaN\");"
+                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\");"
                     }
                   ],
-                  "Name": "FertiliserAppliedAmounts",
+                  "Name": "ManagementSpring",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2. Fertilizer management\nYear\tSite\tDate\tHabit\tFertilizer type\tAmount (kg/ha)\n2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150",
+                      "Text": "",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
