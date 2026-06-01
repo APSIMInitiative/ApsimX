@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The graze food store pools included in this group
         /// </summary>
-        public List<GrazeFoodStorePool> Pools { get; private set; }
+        public List<IGrazeIntakePool> Pools { get; private set; }
 
         /// <summary>
         /// The proportion of the total biomass from each pool
@@ -131,12 +131,12 @@ namespace Models.CLEM.Resources
         /// Constructor to create a FoodResourceStore for pasture pool group given pasure pools, green age and the
         /// number of time steps
         /// </summary>
-        /// <param name="pools">Graze food store pools included</param>
+        /// <param name="pools">All Graze intake pools included</param>
         /// <param name="greenAge">The age (months) below which considered green</param>
         /// <param name="numberOfTimesteps">
         /// The number of timesteps to convert from daily rates to toal for intake to total
         /// </param>
-        public FoodResourceStore(List<GrazeFoodStorePool> pools, int greenAge, int numberOfTimesteps)
+        public FoodResourceStore(List<IGrazeIntakePool> pools, int greenAge, int numberOfTimesteps)
         {
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;

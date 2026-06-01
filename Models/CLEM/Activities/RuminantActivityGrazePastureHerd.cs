@@ -383,7 +383,7 @@ namespace Models.CLEM.Activities
 
             if (DigestiblePasturePoolGroups is null)
             {
-                DigestiblePasturePoolGroups = RuminantActivityGrazePasture.GeneratePoolsGroups(GrazeFoodStoreModel, events.Interval, greenAge);
+                DigestiblePasturePoolGroups = GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
             }
 
             // TODO: check when SetCurrentBiomass needs to be called

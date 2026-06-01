@@ -164,36 +164,36 @@ namespace Models.CLEM.Activities
 
             //totalPastureAvailable = GrazeFoodStoreModel.AmountAvailable;
             int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
-            var poolGroups = GeneratePoolsGroups(GrazeFoodStoreModel, events.Interval, greenAge);
+            var intakeGroups = GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
 
             int cnt = 0;
             foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
             {
-                grazeHerd.DigestiblePasturePoolGroups = poolGroups;
+                grazeHerd.DigestiblePasturePoolGroups = intakeGroups;
                 grazeHerd.ResourceRequestList.Clear();
                 totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement(greenAge);
                 cnt++;
             }
 
             // fill all animals by calculating relative fill for each pool group 
-            for (int i = 0; i < poolGroups.Count; i++)
+            for (int i = 0; i < intakeGroups.Count; i++)
             {
                 // fill pool by desired by each herd
                 cnt = 0;
                 double intakeSum = 0;
                 foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
                 {
-                    totalRequestedTimeStep[cnt] = grazeHerd.PrepareTakeFromGrazingPoolGroup(poolGroups[i], i) * totalNeededDaily[cnt] * events.Interval;
+                    totalRequestedTimeStep[cnt] = grazeHerd.PrepareTakeFromGrazingPoolGroup(intakeGroups[i], i) * totalNeededDaily[cnt] * events.Interval;
                     intakeSum += totalRequestedTimeStep[cnt];
                     cnt++;
                 }
 
                 // shortfall limiter
-                double shortfallMultiplier = CalculateShortfallMultiplier(poolGroups[i].Pools.Sum(a => a.AmountAvailable), totalRequestedTimeStep);
+                double shortfallMultiplier = CalculateShortfallMultiplier(intakeGroups[i].Pools.Sum(a => a.AmountAvailable), totalRequestedTimeStep);
 
                 foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
                 {
-                    grazeHerd.TakeFromGrazingPoolGroup(poolGroups[i], i, shortfallMultiplier);
+                    grazeHerd.TakeFromGrazingPoolGroup(intakeGroups[i], i, shortfallMultiplier);
                 }
             }
 
@@ -230,48 +230,48 @@ namespace Models.CLEM.Activities
             return ResourceRequestList;
         }
 
-        /// <summary>
-        /// Method to create mixed pasture pool groups for feeding.
-        /// </summary>
-        /// <param name="grazeFoodStore">The graze food store type for the pasture.</param>
-        /// <param name="numberOfTimesteps">Number of timesteps to convert daily to total intake</param>
-        /// <param name="greenAge">
-        /// The age (in months) for pasture to be considered green. (-1 ignore green details)
-        /// </param>
-        /// <param name="dmdStep">The step size for Dry Matter Digestibility (DMD) categories (100 no groups).</param>
-        public static List<FoodResourceStore> GeneratePoolsGroups(IGrazeFoodStoreType grazeFoodStore, int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
-        {
-            IEnumerable<GrazeFoodStorePool> pasturePools;
-            if (grazeFoodStore is GrazeFoodStoreType grazeFoodStoreType)
-            {
-                pasturePools = grazeFoodStoreType.Pools;
-            }
-            else
-            {
-                // Handled in GrazeFoodStoreAPSIMLink. Could move code here out of resource
-                return null;
-            }
+        ///// <summary>
+        ///// Method to create mixed pasture pool groups for feeding.
+        ///// </summary>
+        ///// <param name="grazeFoodStore">The graze food store type for the pasture.</param>
+        ///// <param name="numberOfTimesteps">Number of timesteps to convert daily to total intake</param>
+        ///// <param name="greenAge">
+        ///// The age (in months) for pasture to be considered green. (-1 ignore green details)
+        ///// </param>
+        ///// <param name="dmdStep">The step size for Dry Matter Digestibility (DMD) categories (100 no groups).</param>
+        //public static List<FoodResourceStore> GeneratePoolsGroups(IGrazeFoodStoreType grazeFoodStore, int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
+        //{
+        //    IEnumerable<GrazeFoodStorePool> pasturePools;
+        //    if (grazeFoodStore is GrazeFoodStoreType grazeFoodStoreType)
+        //    {
+        //        pasturePools = grazeFoodStoreType.Pools;
+        //    }
+        //    else
+        //    {
+        //        // Handled in GrazeFoodStoreAPSIMLink. Could move code here out of resource
+        //        return null;
+        //    }
 
-            // think about different approaches
-            // 1. whole avearge pasture pool (DMD step = 100)
-            // 2. select by DMD - current DMD step (e.g. 10)
-            // 3. proportional with weighting toward green
-            // 4. CLEM green biomass limit - implemented
-            // 5. CLEM low biomass intake limited - implemented
+        //    // think about different approaches
+        //    // 1. whole avearge pasture pool (DMD step = 100)
+        //    // 2. select by DMD - current DMD step (e.g. 10)
+        //    // 3. proportional with weighting toward green
+        //    // 4. CLEM green biomass limit - implemented
+        //    // 5. CLEM low biomass intake limited - implemented
 
-            // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
+        //    // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
 
-            var nestedGroups = pasturePools
-                .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-                .Select(groups => new FoodResourceStore(
-                    groups.ToList(),
-                    greenAge,
-                    numberOfTimesteps
-                    )
-                ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+        //    var nestedGroups = pasturePools
+        //        .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+        //        .Select(groups => new FoodResourceStore(
+        //            groups.ToList(),
+        //            greenAge,
+        //            numberOfTimesteps
+        //            )
+        //        ).OrderByDescending(a => a.Details.DryMatterDigestibility);
 
-            return nestedGroups.ToList();
-        }
+        //    return nestedGroups.ToList();
+        //}
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)

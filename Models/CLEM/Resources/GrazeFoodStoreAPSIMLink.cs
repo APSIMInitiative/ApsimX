@@ -1,3 +1,4 @@
+using APSIM.Shared.Documentation.Extensions;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -31,16 +32,12 @@ namespace Models.CLEM.Resources
         private Forages forages;
         private ForageProviders forageProviders = new();
         private PaddockInfo paddockInfo;
-        private GrazType.GrazingInputs[] grazingInputs = new GrazType.GrazingInputs[0];
+        private GrazType.GrazingInputs[] grazingInputs = [];
         private Zone paddock;
         private double[] dailyRemovalByClass = new double[0];           // kg per DMD class (1..DigClassNo)
         private double[,] dailyRemovalSeed = new double[0, 0];          // kg per seed [species, ripe]
         private FoodResourcePacket dailyPaddockPacket = null;
         private FoodResourcePacket timeStepPaddockPacket = null;
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public ResourceRequest CurrentGrazingRequest { get; set; } = null;
 
         /// <inheritdoc/>
         [Description("Type of pasture or forage")]
@@ -172,15 +169,15 @@ namespace Models.CLEM.Resources
         }
 
 
-        /// <summary>
-        /// Forage consumed in current time step
-        /// </summary>
-        public FoodResourcePacket TimeStepForageConsumed { get { return timeStepPaddockPacket;  } }
+        ///// <summary>
+        ///// Forage consumed in current time step
+        ///// </summary>
+        //public FoodResourcePacket TimeStepForageConsumed { get { return timeStepPaddockPacket;  } }
 
-        /// <summary>
-        /// Forage consumed in current time step
-        /// </summary>
-        public FoodResourcePacket DailyTimeStepForageConsumed { get { return dailyPaddockPacket; } }
+        ///// <summary>
+        ///// Forage consumed in current time step
+        ///// </summary>
+        //public FoodResourcePacket DailyTimeStepForageConsumed { get { return dailyPaddockPacket; } }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -302,7 +299,9 @@ namespace Models.CLEM.Resources
             forages = Node.Find<Forages>();
             paddock = Node.Find<Zone>(name: PaddockName);
             if (forages is null || paddock is null)
-                return;
+            {
+                throw new ApsimXException(this, $"Cannot find Forages or the paddock named {PaddockName} in the simulation tree.");
+            }
 
             // set up the ForageProviders for this paddock
             paddockInfo = new PaddockInfo(zone: paddock, structure: Structure) { zone = paddock };
@@ -358,7 +357,7 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            // ToDo: check units. Consumable says iit is kg/ha not g/m^2 as in Stock code.
+            // ToDo: check units. Consumable says it is kg/ha not g/m^2 as in Stock code.
             amount *= paddockInfo.Area;
 
             // do not return zero as there is always something there and zero affects calculations.
@@ -394,12 +393,12 @@ namespace Models.CLEM.Resources
             }
 
             double shortfall = (Amount > 0) ? 1.0 : 0.0;
-            CurrentGrazingRequest.Provided = request.Required;
-            if (Amount > 0 && request.Required < Amount)
-            {
-                CurrentGrazingRequest.Provided = Amount;
-                shortfall = request.Required / Amount;
-            }
+            //CurrentGrazingRequest.Provided = request.Required;
+            //if (Amount > 0 && request.Required < Amount)
+            //{
+            //    CurrentGrazingRequest.Provided = Amount;
+            //    shortfall = request.Required / Amount;
+            //}
 
             // build snapshot of grazing inputs (kg/ha units)
             Array.Resize(ref grazingInputs, paddockInfo.Forages.Count());
@@ -585,31 +584,31 @@ namespace Models.CLEM.Resources
 
             //request.Provided = totalRemoved * events.Interval;
 
-            if (AggregationMode == FeedAggregationMode.CombineByForageType)
-            {
-                // todo: still to implement as list of FoodStorePackets
-                // build individual packets per provider if requested
-                // (not currently used as the grazing activity does not take advantage of per-provider details, but could be in future or for reporting)
-            }
-            else
-            {
-                // combine into single paddock level food store
-                dailyPaddockPacket = new FoodResourcePacket();
-                dailyPaddockPacket.TypeOfFeed = this.TypeOfFeed;
-                dailyPaddockPacket.AddAmount(totalRemoved);
-                double avgDMD = sumDMDTimesAmt / totalRemoved; // fraction
-                double avgCP = sumCPTimesAmt / totalRemoved;   // percent
-                dailyPaddockPacket.DryMatterDigestibility = avgDMD * 100.0;
-                dailyPaddockPacket.CrudeProteinPercent = avgCP * 100.0;
-                dailyPaddockPacket.NitrogenPercent = dailyPaddockPacket.CrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
-                dailyPaddockPacket.FatPercent = this.FatPercent;
-                dailyPaddockPacket.MetabolisableEnergyContent = this.MetabolisableEnergyContent;
-                dailyPaddockPacket.GrossEnergyContent = this.GrossEnergyContent;
-                dailyPaddockPacket.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
-                dailyPaddockPacket.AcidDetergentInsolubleProtein = this.AcidDetergentInsolubleProtein;
-                dailyPaddockPacket.GutFill = this.GutFill;
-                //todo: calculate gutfill somehow. We don't know the range from min to max dmd here!
-            }
+            //if (AggregationMode == FeedAggregationMode.CombineByForageType)
+            //{
+            //    // todo: still to implement as list of FoodStorePackets
+            //    // build individual packets per provider if requested
+            //    // (not currently used as the grazing activity does not take advantage of per-provider details, but could be in future or for reporting)
+            //}
+            //else
+            //{
+            //    // combine into single paddock level food store
+            //    dailyPaddockPacket = new FoodResourcePacket();
+            //    dailyPaddockPacket.TypeOfFeed = this.TypeOfFeed;
+            //    dailyPaddockPacket.AddAmount(totalRemoved);
+            //    double avgDMD = sumDMDTimesAmt / totalRemoved; // fraction
+            //    double avgCP = sumCPTimesAmt / totalRemoved;   // percent
+            //    dailyPaddockPacket.DryMatterDigestibility = avgDMD * 100.0;
+            //    dailyPaddockPacket.CrudeProteinPercent = avgCP * 100.0;
+            //    dailyPaddockPacket.NitrogenPercent = dailyPaddockPacket.CrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
+            //    dailyPaddockPacket.FatPercent = this.FatPercent;
+            //    dailyPaddockPacket.MetabolisableEnergyContent = this.MetabolisableEnergyContent;
+            //    dailyPaddockPacket.GrossEnergyContent = this.GrossEnergyContent;
+            //    dailyPaddockPacket.RumenDegradableProteinPercent = this.RumenDegradableProteinPercent;
+            //    dailyPaddockPacket.AcidDetergentInsolubleProtein = this.AcidDetergentInsolubleProtein;
+            //    dailyPaddockPacket.GutFill = this.GutFill;
+            //    //todo: calculate gutfill somehow. We don't know the range from min to max dmd here!
+            //}
 
             timeStepPaddockPacket = dailyPaddockPacket.Clone((request.AdditionalDetails as RuminantActivityGrazePastureHerd).DailyPastureRequired);
         }
@@ -695,31 +694,47 @@ namespace Models.CLEM.Resources
             }
         }
 
-        // Aggregation options for how CLEM will present forage to ruminants
-        /// <summary>
-        /// The style of aggregating forage take from the APSIM paddock before providing to ruminants. Options are:
-        /// </summary>
-        public enum FeedAggregationMode
+        /// <inheritdoc/>
+        public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
         {
-            /// <summary>
-            /// Feed ruminants by combined biomass for each forage type present
-            /// </summary>
-            CombineByForageType,    // combine removals per forage provider into a single packet per provider
-            /// <summary>
-            /// Feed ruminants by combined biomass for the paddock
-            /// </summary>
-            CombinePaddock          // combine all removals into a single paddock-level packet
+            var nestedGroups = forageProviders.Items.Select(a => new GrazeAPSIMForagePool(a))
+                .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+                .Select(groups => new FoodResourceStore(
+                    [..groups],
+                    greenAge,
+                    numberOfTimesteps
+                    )
+                ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+
+            return nestedGroups.ToList();
+
+            //IEnumerable<GrazeFoodStorePool> pasturePools;
+            //pasturePools = Pools;
+
+            // think about different approaches
+            // 1. whole avearge pasture pool (DMD step = 100)
+            // 2. select by DMD - current DMD step (e.g. 10)
+            // 3. proportional with weighting toward green
+            // 4. CLEM green biomass limit - implemented
+            // 5. CLEM low biomass intake limited - implemented
+
+            // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
+
+            //var nestedGroups = pasturePools
+            //    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+            //    .Select(groups => new FoodResourceStore(
+            //        groups.ToList(),
+            //        greenAge,
+            //        numberOfTimesteps
+            //        )
+            //    ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+
+            //return nestedGroups.ToList();
+
         }
 
-        /// <summary>
-        /// How to aggregate the daily forage take before handing packets to ruminants.
-        /// </summary>
-        [Category("Advanced", "Intake")]
-        [Description("Method of combining consumption for reporting")]
-        public FeedAggregationMode AggregationMode { get; set; } = FeedAggregationMode.CombinePaddock;
-
-        /// <inheritdoc/>
-        public IEnumerable<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
+        ///// <inheritdoc/>
+        //public IEnumerable<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
 
         /// <summary>
         /// Apply the prepared forage removals for the daily intake request
@@ -834,40 +849,40 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>>
         public void ApplyDailyIntakeReduction(double fractionReduced)
         {
-            // Adjust intake amounts due to a reduction identified elsewhere
-            double fractionRemaining = 1.0 - fractionReduced;
+            //// Adjust intake amounts due to a reduction identified elsewhere
+            //double fractionRemaining = 1.0 - fractionReduced;
 
-            if (fractionRemaining >= 1.0)
-                return;
+            //if (fractionRemaining >= 1.0)
+            //    return;
 
-            if (fractionRemaining < 0.0)
-                throw new ArgumentOutOfRangeException(nameof(fractionRemaining), "Fraction must be between 0 and 1.");
+            //if (fractionRemaining < 0.0)
+            //    throw new ArgumentOutOfRangeException(nameof(fractionRemaining), "Fraction must be between 0 and 1.");
 
-            if (CurrentGrazingRequest != null)
-                CurrentGrazingRequest.Provided *= fractionRemaining;
+            //if (CurrentGrazingRequest != null)
+            //    CurrentGrazingRequest.Provided *= fractionRemaining;
 
-            if (timeStepPaddockPacket != null)
-                timeStepPaddockPacket.SetAmount(timeStepPaddockPacket.Amount * fractionRemaining);
+            //if (timeStepPaddockPacket != null)
+            //    timeStepPaddockPacket.SetAmount(timeStepPaddockPacket.Amount * fractionRemaining);
 
-            if (dailyPaddockPacket != null)
-                dailyPaddockPacket.SetAmount(dailyPaddockPacket.Amount * fractionRemaining);
+            //if (dailyPaddockPacket != null)
+            //    dailyPaddockPacket.SetAmount(dailyPaddockPacket.Amount * fractionRemaining);
 
-            // Scale per-class removal array (kg)
-            if (dailyRemovalByClass != null && dailyRemovalByClass.Length > 0)
-            {
-                for (int i = 0; i < dailyRemovalByClass.Length; i++)
-                    dailyRemovalByClass[i] *= fractionRemaining;
-            }
+            //// Scale per-class removal array (kg)
+            //if (dailyRemovalByClass != null && dailyRemovalByClass.Length > 0)
+            //{
+            //    for (int i = 0; i < dailyRemovalByClass.Length; i++)
+            //        dailyRemovalByClass[i] *= fractionRemaining;
+            //}
 
-            // Scale per-seed removal 2D array (kg)
-            if (dailyRemovalSeed != null && dailyRemovalSeed.Length > 0)
-            {
-                int dim0 = dailyRemovalSeed.GetLength(0);
-                int dim1 = dailyRemovalSeed.GetLength(1);
-                for (int i = 0; i < dim0; i++)
-                    for (int j = 0; j < dim1; j++)
-                        dailyRemovalSeed[i, j] *= fractionRemaining;
-            }
+            //// Scale per-seed removal 2D array (kg)
+            //if (dailyRemovalSeed != null && dailyRemovalSeed.Length > 0)
+            //{
+            //    int dim0 = dailyRemovalSeed.GetLength(0);
+            //    int dim1 = dailyRemovalSeed.GetLength(1);
+            //    for (int i = 0; i < dim0; i++)
+            //        for (int j = 0; j < dim1; j++)
+            //            dailyRemovalSeed[i, j] *= fractionRemaining;
+            //}
         }
 
         #region transactions
@@ -876,10 +891,14 @@ namespace Models.CLEM.Resources
         public new void RemoveFromResource(ResourceRequest request)
         {
             if (request == null)
+            {
                 throw new ArgumentNullException(nameof(request));
+            }
 
             if (request.AdditionalDetails is null && request.Required > 0)
+            {
                 throw new Exception("Removing biomass from APSIM.Paddock requires AdditionalDetails property provided in resource request");
+            }
 
             switch (request.ActivityModel)
             {
@@ -922,11 +941,11 @@ namespace Models.CLEM.Resources
         {
             if (forages is null)
             {
-                yield return new ValidationResult($"Could not find a Forages component in scope.", new string[] { "APSIM Forages component not found" });
+                yield return new ValidationResult($"Could not find a Forages component in scope.", ["APSIM Forages component not found"]);
             }
             if (paddock is null)
             {
-                yield return new ValidationResult($"Could not find a Paddock (Zone) component named [{PaddockName}] in scope.", new string[] { "APSIM Paddock component not found" });
+                yield return new ValidationResult($"Could not find a Paddock (Zone) component named [{PaddockName}] in scope.", ["APSIM Paddock component not found"]);
             }
         }
     }

@@ -11,12 +11,12 @@ using System.ServiceModel.Channels;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// A food pool of given age
+    /// A pasture pool of given age as used by CLEM pasture
     /// </summary>
     [Serializable]
-    public class GrazeFoodStorePool : IFeed
+    public class GrazeFoodStorePool : IGrazeIntakePool
     {
-        private GrazeFoodStoreType grazeStore;
+        private IGrazeFoodStoreType grazeStore;
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;

@@ -322,6 +322,12 @@ namespace Models.CLEM.Resources
         {
         }
 
+        /// <inheritdoc/>
+        public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

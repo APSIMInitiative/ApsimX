@@ -38,10 +38,6 @@ namespace Models.CLEM.Resources
         private double biomassConsumed;
 
         /// <inheritdoc/>
-        [JsonIgnore]
-        public ResourceRequest CurrentGrazingRequest { get; set; } = null;
-
-        /// <inheritdoc/>
         [Description("Units (nominal)")]
         [Category("Simulation", "Details")]
         public string Units { get; private set; } = "kg";
@@ -894,10 +890,32 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///// <inheritdoc/>
-        //public void ApplyDailyIntakeReduction(double fractionReduced)
-        //{
-        //}
+        /// <inheritdoc/>
+        public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
+        {
+            IEnumerable<GrazeFoodStorePool> pasturePools;
+            pasturePools = Pools;
+
+            // think about different approaches
+            // 1. whole avearge pasture pool (DMD step = 100)
+            // 2. select by DMD - current DMD step (e.g. 10)
+            // 3. proportional with weighting toward green
+            // 4. CLEM green biomass limit - implemented
+            // 5. CLEM low biomass intake limited - implemented
+
+            // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
+
+            var nestedGroups = pasturePools
+                .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+                .Select(groups => new FoodResourceStore(
+                    [.. groups],
+                    greenAge,
+                    numberOfTimesteps
+                    )
+                ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+
+            return nestedGroups.ToList();
+        }
 
         #region transactions
 
