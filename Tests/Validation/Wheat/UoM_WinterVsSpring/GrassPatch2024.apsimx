@@ -212,7 +212,8 @@
             "1.0 * [Wheat].Leaf.Live.StorageWt / ([Wheat].Leaf.Live.Wt + 0.00001) as Wheat.Leaf.Live.WSCc",
             "1.0 * [Wheat].Stem.Live.StorageWt / ([Wheat].Stem.Live.Wt + 0.00001) as Wheat.Stem.Live.WSCc",
             "1.0 * [Wheat].Spike.Live.StorageWt / ([Wheat].Spike.Live.Wt + 0.00001) as Wheat.Spike.Live.WSCc",
-            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc"
+            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc",
+            "[Spectral].NDVI"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -306,7 +307,7 @@
     {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": null,
-      "Name": "FAR WAE W24-49",
+      "Name": "GrassPatch2024",
       "ResourceName": null,
       "Children": [
         {
@@ -2523,7 +2524,7 @@
                           "LineThickness": 0,
                           "TableName": "Observed",
                           "XFieldName": "Clock.Today",
-                          "YFieldName": "NDVIModel.Script.NDVI",
+                          "YFieldName": "Spectral.NDVI",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,

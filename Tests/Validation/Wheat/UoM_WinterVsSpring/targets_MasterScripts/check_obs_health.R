@@ -30,27 +30,56 @@ check_obs_health <- function(df, numeric_lower_bound = 0) {
   }
   
   # ====================================================================
-  # 2. DATE FORMAT & VALIDITY CHECK
+  # 2. DATE FORMAT & VALIDITY CHECK (Upgraded to Auto-Fix)
   # ====================================================================
-  # APSIM accepts DD/MM/YYYY. R natively prints Dates as YYYY-MM-DD.
-  # If it is a native Date object, openxlsx translates it perfectly.
-  if (inherits(df$Clock.Today, c("Date", "POSIXt"))) {
-    valid_format <- rep(TRUE, nrow(df))
-  } else {
-    # If it's a string, accept DD/MM/YYYY or YYYY-MM-DD (with or without HMS)
-    pattern_dmy <- "^\\d{2}/\\d{2}/\\d{4}( \\d{2}:\\d{2}:\\d{2})?$"
-    pattern_ymd <- "^\\d{4}-\\d{2}-\\d{2}( \\d{2}:\\d{2}:\\d{2})?$"
+  if (!inherits(df$Clock.Today, c("Date", "POSIXt"))) {
     
-    valid_format <- stringr::str_detect(df$Clock.Today, pattern_dmy) | 
-      stringr::str_detect(df$Clock.Today, pattern_ymd)
-  }
-  
-  if (!all(valid_format)) {
-    bad_dates <- head(df$Clock.Today[!valid_format], 3)
-    stop(sprintf(
-      "QC FAILED: 'Clock.Today' is not in a recognized date format (DD/MM/YYYY or YYYY-MM-DD).\n  -> Example of bad format found: %s", 
-      paste(bad_dates, collapse = ", ")
-    ))
+    # The Swiss Cheese Parser: Attempts to rescue any messy string or Excel number
+    parse_any_date <- function(x) {
+      final_dates <- as.Date(rep(NA_character_, length(x)))
+      
+      nums <- suppressWarnings(as.numeric(x))
+      num_idx <- which(!is.na(nums))
+      if (length(num_idx) > 0) {
+        final_dates[num_idx] <- as.Date(nums[num_idx], origin = "1899-12-30")
+      }
+      
+      rem_idx <- which(is.na(final_dates) & !is.na(x) & trimws(as.character(x)) != "")
+      if (length(rem_idx) > 0) {
+        x_rem <- as.character(x[rem_idx])
+        for (fmt in c("%Y-%m-%d", "%d/%m/%Y", "%d/%m/%y", "%Y/%m/%d", "%m/%d/%Y", "%Y-%m-%d %H:%M:%S")) {
+          temp_dates <- suppressWarnings(as.Date(x_rem, format = fmt))
+          success_idx <- which(!is.na(temp_dates))
+          if (length(success_idx) > 0) {
+            final_dates[rem_idx[success_idx]] <- temp_dates[success_idx]
+            x_rem <- x_rem[-success_idx]       
+            rem_idx <- rem_idx[-success_idx]   
+          }
+          if (length(rem_idx) == 0) break
+        }
+      }
+      return(final_dates)
+    }
+    
+    parsed_dates <- parse_any_date(df$Clock.Today)
+    
+    # Check if any dates completely failed to parse (pure gibberish)
+    unparsed_idx <- is.na(parsed_dates) & !is.na(df$Clock.Today) & trimws(as.character(df$Clock.Today)) != ""
+    
+    if (any(unparsed_idx)) {
+      bad_dates <- head(df$Clock.Today[unparsed_idx], 3)
+      stop(sprintf(
+        "QC FAILED: 'Clock.Today' contains completely unreadable dates.\n  -> Example of bad format found: %s", 
+        paste(bad_dates, collapse = ", ")
+      ))
+    }
+    
+    # Auto-fix: Overwrite the messy strings with standard YYYY-MM-DD
+    df$Clock.Today <- as.character(parsed_dates)
+    
+  } else {
+    # If it is already a Date object, just lock it into a clean YYYY-MM-DD string for APSIM
+    df$Clock.Today <- as.character(as.Date(df$Clock.Today))
   }
   
   # ====================================================================
@@ -97,6 +126,6 @@ check_obs_health <- function(df, numeric_lower_bound = 0) {
   
   message("✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.")
   
-  # Return the data unaltered so it can pass through the pipeline
+  # Return the clean, standard-formatted data
   return(df)
 }
