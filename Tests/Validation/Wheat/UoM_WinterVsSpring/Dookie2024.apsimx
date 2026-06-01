@@ -1876,7 +1876,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2018,7 +2018,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -9653,6 +9653,13 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
+                      "Date": "2024-05-24",
+                      "Action": "[Irrigation].Apply(5)",
+                      "Line": "2024-05-24 [Irrigation].Apply(5)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2024-07-26",
                       "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
                       "Line": "2024-07-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
@@ -9663,13 +9670,6 @@
                       "Date": "2024-08-26",
                       "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
                       "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-05-24",
-                      "Action": "[Irrigation].Apply(5)",
-                      "Line": "2024-05-24 [Irrigation].Apply(5)"
                     }
                   ],
                   "Name": "ManagementWinter",

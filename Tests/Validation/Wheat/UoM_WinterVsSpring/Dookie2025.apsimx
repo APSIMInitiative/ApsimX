@@ -2511,7 +2511,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2653,7 +2653,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2750,16 +2750,16 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-07",
-                      "Action": "[Irrigation].Apply(40);",
-                      "Line": "2025-05-7 [Irrigation].Apply(40);"
+                      "Date": "2025-04-16",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2025-04-16 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-04-16",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-04-16 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Date": "2025-05-07",
+                      "Action": "[Irrigation].Apply(40);",
+                      "Line": "2025-05-07 [Irrigation].Apply(40);"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -10064,7 +10064,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10206,7 +10206,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10297,29 +10297,29 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-15",
-                      "Action": "[Irrigation].Apply(25);",
-                      "Line": "2025-04-15 [Irrigation].Apply(25);"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-05-07",
-                      "Action": "[Irrigation].Apply(40);",
-                      "Line": "2025-05-7 [Irrigation].Apply(40);"
+                      "Action": "[Irrigation].Apply(25)",
+                      "Line": "2025-04-15 [Irrigation].Apply(25)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-16",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-04-16 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-04-16 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-05-07",
+                      "Action": "[Irrigation].Apply(40)",
+                      "Line": "2025-05-07 [Irrigation].Apply(40)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2024-08-05",
-                      "Action": "[Fertiliser].Apply(amount: 90, type: \"UreaN\");",
-                      "Line": "2024-08-05 [Fertiliser].Apply(amount: 90, type: \"UreaN\");"
+                      "Action": "[Fertiliser].Apply(amount: 90, type: \"UreaN\")",
+                      "Line": "2024-08-05 [Fertiliser].Apply(amount: 90, type: \"UreaN\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -10344,23 +10344,23 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-15",
-                      "Action": "[Irrigation].Apply(25);",
-                      "Line": "2025-05-15 [Irrigation].Apply(25);"
+                      "Date": "2025-05-07",
+                      "Action": "[Irrigation].Apply(40)",
+                      "Line": "2025-05-07 [Irrigation].Apply(40)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-07",
-                      "Action": "[Irrigation].Apply(40);",
-                      "Line": "2025-05-7 [Irrigation].Apply(40);"
+                      "Date": "2025-05-15",
+                      "Action": "[Irrigation].Apply(25)",
+                      "Line": "2025-05-15 [Irrigation].Apply(25)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-05-13",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     }
                   ],
                   "Name": "ManagementSpring",
