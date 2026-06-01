@@ -34,7 +34,7 @@ namespace Models.PMF.Phen
         public IFunction thermalTime = null;
 
         [Link(IsOptional = true)]
-        private ZadokPMFWheat zadok = null; // This is here so that manager scripts can access it easily.
+        private Zadok zadok = null; // This is here so that manager scripts can access it easily.
 
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private Age age = null;
@@ -591,34 +591,6 @@ namespace Models.PMF.Phen
                 propOfDayToUse = 1;
             }
             return proceedToNextPhase;
-        }
-
-        /// <summary>
-        /// Returns a DataTable with each Phase listed
-        /// </summary>
-        public DataTable GetPhaseTable()
-        {
-            DataTable phaseTable = new DataTable();
-            phaseTable.Columns.Add("Number", typeof(int));
-            phaseTable.Columns.Add("Name", typeof(string));
-            phaseTable.Columns.Add("Type", typeof(string));
-            phaseTable.Columns.Add("Start Stage", typeof(string));
-            phaseTable.Columns.Add("End Stage", typeof(string));
-
-            int n = 1;
-            foreach (IPhase child in Structure.FindChildren<IPhase>())
-            {
-                string phasetype = child.GetType().ToString();
-                DataRow row = phaseTable.NewRow();
-                row[0] = n;
-                row[1] = child.Name;
-                row[2] = "[" + child.Name + "](https://github.com/APSIMInitiative/ApsimX/blob/master/" + phasetype.Replace(".", "/") + ".cs)";
-                row[3] = (child as IPhase).Start;
-                row[4] = (child as IPhase).End;
-                phaseTable.Rows.Add(row);
-                n++;
-            }
-            return phaseTable;
         }
 
         /// <summary>Called when [simulation commencing].</summary>

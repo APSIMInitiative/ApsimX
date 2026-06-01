@@ -1,0 +1,25 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Pinus-Temperate",
+			"Folders":["Temperate"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Pinus-Tropical and SubTropical",
+			"Folders":["Tropical and SubTropical"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Pinus-Sensibility",
+			"Folders":["Sensibility"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}

@@ -8,7 +8,7 @@ using UserInterface.Classes;
 using UserInterface.EventArguments;
 using Gtk;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -383,8 +383,6 @@ namespace UserInterface.Views
                     filenamesContainer.PackStart(filenamesOutline, true, true, 0);
                     filenamesContainer.PackStart(filesChooserButton, false, false, 0);
                     component = filenamesContainer;
-
-
                     break;
                 case PropertyType.Colour:
                     ColourDropDownView colourChooser = new ColourDropDownView(this);
@@ -421,6 +419,14 @@ namespace UserInterface.Views
                     btnFont.FontSet += OnFontChanged;
                     component = btnFont;
                     break;
+                case PropertyType.Button:
+                    Button clickableButton = new Button();
+                    clickableButton.Label = "Refresh";
+                    clickableButton.Name = property.ID.ToString();
+                    clickableButton.ActionName = property.Value?.ToString();
+                    clickableButton.Clicked += OnButtonClicked;
+                    component = clickableButton;
+                    break;
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
@@ -443,6 +449,25 @@ namespace UserInterface.Views
                     StoreScrollerPosition();
                     Guid id = Guid.Parse(btnFont.Name);
                     PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, btnFont.FontName);
+                    PropertyChanged?.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        private void OnButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is Button btn)
+                {
+                    StoreScrollerPosition();
+                    Guid id = Guid.Parse(btn.Name);
+                    bool value = bool.Parse(btn.ActionName);
+                    PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, !value);
                     PropertyChanged?.Invoke(this, args);
                 }
             }
@@ -642,7 +667,7 @@ namespace UserInterface.Views
             try
             {
                 var gtkcolour = (sender as ColorButton).Rgba.ToColour().ToGdk();
-                var colour = Utility.Colour.FromGtk(gtkcolour);
+                var colour = Colour.FromGtk(gtkcolour);
                 Guid id = Guid.Parse((sender as ColorButton).Name);
                 var args = new PropertyChangedEventArgs(id, colour);
                 PropertyChanged?.Invoke(this, args);

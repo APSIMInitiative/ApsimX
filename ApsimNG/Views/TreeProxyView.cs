@@ -12,6 +12,7 @@ using UserInterface.EventArguments;
 using APSIM.Interop.Graphing.Extensions;
 using Models.Agroforestry;
 using System.Globalization;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -119,7 +120,7 @@ namespace UserInterface.Views
                 agyAxis.Title = "%";
                 agyAxis.AxislineStyle = LineStyle.Solid;
                 agyAxis.AxisDistance = 2;
-                Utility.LineSeriesWithTracker seriesShade = new Utility.LineSeriesWithTracker();
+                LineSeriesWithTracker seriesShade = new LineSeriesWithTracker();
                 List<DataPoint> pointsShade = new List<DataPoint>();
 
                 aboveGroundGraph.Model.Axes.Add(agxAxis);
@@ -172,7 +173,7 @@ namespace UserInterface.Views
 
                 foreach (var thCutoff in spatialData.THCutoffs)
                 {
-                    Utility.LineSeriesWithTracker series = new Utility.LineSeriesWithTracker();
+                    LineSeriesWithTracker series = new LineSeriesWithTracker();
                     series.Title = thCutoff.ToString();
                     double[] data = spatialData.Rld(thCutoff);
 
@@ -205,12 +206,12 @@ namespace UserInterface.Views
 
         private void SetBackgroundColour(PlotView graph, Color colour)
         {
-            graph.Model.Background = Utility.Colour.ToOxy(colour);
+            graph.Model.Background = Colour.ToOxy(colour);
         }
 
         private void SetForegroundColour(PlotView graph, Color colour)
         {
-            OxyColor foregroundColour = Utility.Colour.ToOxy(colour);
+            OxyColor foregroundColour = Colour.ToOxy(colour);
             foreach (Axis oxyAxis in graph.Model.Axes)
             {
                 oxyAxis.AxislineColor = foregroundColour;
@@ -263,21 +264,21 @@ namespace UserInterface.Views
             Color returnColor = Color.FromArgb(255, 48, 48, 48);
             if (isForegroundColor)
             {
-                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                if (Configuration.Settings.ThemeRestartRequired)
                 {
-                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                    returnColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
                 }
-                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else returnColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
 
                 return returnColor;
             }
             else
             {
-                if (Utility.Configuration.Settings.ThemeRestartRequired)
+                if (Configuration.Settings.ThemeRestartRequired)
                 {
-                    returnColor = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                    returnColor = Configuration.Settings.DarkTheme ? Color.White : Color.Black;
                 }
-                else returnColor = Utility.Configuration.Settings.DarkTheme ? Color.Black : Color.White;
+                else returnColor = Configuration.Settings.DarkTheme ? Color.Black : Color.White;
 
                 return returnColor;
             }

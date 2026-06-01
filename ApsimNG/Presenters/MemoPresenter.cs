@@ -4,6 +4,10 @@ using UserInterface.Views;
 using System;
 using APSIM.Shared.Utilities;
 using UserInterface.Commands;
+using APSIM.Documentation;
+using APSIM.Documentation.Bibliography;
+using System.Collections.Generic;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -59,11 +63,11 @@ namespace UserInterface.Presenters
             editorBox = (view as ViewBase).GetControl<ContainerView>("editorBox");
             helpButton.Clicked += HelpBtnClicked;
             textView.WrapText = true;
-            textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
-            textView.Text = this.model.Text;
+            textView.ModifyFont(Configuration.Settings.EditorFontName);
             textView.Changed += OnTextHasChanged;
+            textView.Text = this.model.Text;
+            markdownView.Refresh();
             markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            markdownView.Text = this.model.Text;
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
             previewBox.Show();
@@ -90,7 +94,13 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments.</param>
         private void OnTextHasChanged(object sender, EventArgs e)
         {
-            markdownView.Text = textView.Text;
+            List<ICitation> cites = WebDocs.ProcessCitations(textView.Text, out string text);
+            if (cites.Count > 0)
+            {
+                text += "\n\n# References\n.";
+                text += WebDocs.WriteBibliography(cites);
+            }
+            markdownView.Text = text;
         }
 
         /// <summary>User has clicked the edit button.</summary>

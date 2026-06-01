@@ -209,7 +209,8 @@ namespace Models.CLEM.Activities
             if (relationshipGBA != null)
                 GrassBasalArea = Structure.FindChild<RelationshipRunningValue>(relativeTo: relationshipGBA);
 
-            filePasture = Structure.FindChildren<IModel>(recurse: true).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            ZoneCLEM clemModel = Structure.FindParent<ZoneCLEM>(recurse: true);
+            filePasture = Structure.FindChildren<IModel>(recurse: true, relativeTo: clemModel).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
                 return;
@@ -476,7 +477,7 @@ namespace Models.CLEM.Activities
             // every so many months (specified by user, not every month.
             // And the month they are updated on each year is whatever the starting month was for the run.
 
-            pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
+            pastureDataList = filePasture?.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clock.Today.AddDays(1), zoneCLEM.EcologicalIndicatorsCalculationInterval);
         }
 

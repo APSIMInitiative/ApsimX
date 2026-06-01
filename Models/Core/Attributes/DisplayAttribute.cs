@@ -152,7 +152,12 @@ namespace Models.Core
         /// <summary>
         /// Provides CropSoil names for a dropdown
         /// </summary>
-        SoilCrop
+        SoilCrop,
+
+        /// <summary>
+        /// Provides a clickable button for a boolean used for refreshing with a ModelChanged event.
+        /// </summary>
+        Button
     }
 
     /// <summary>
