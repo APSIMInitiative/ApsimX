@@ -54,7 +54,13 @@ tar_destroy()
 # Get soil parameters in json format
 ```{r}
 tar_read(json_soil_water)
-
+x<-tar_read(df_obs_renamed)
+names(x)
+x<-tar_read(df_obs_mean)
+names(x)
+x<-tar_read(df_obs_plus_pheno_hi_amounts)
+names(x)
+x %>% dplyr::select("Wheat.Stem.N", "Wheat.Spike.N") %>% summary()
 ```
 
 ```{r}

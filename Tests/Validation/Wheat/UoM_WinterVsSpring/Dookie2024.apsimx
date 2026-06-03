@@ -244,7 +244,9 @@
           "VariableNames": [
             "[Simulation].Name",
             "[Clock].Today",
-            "[Spectral].NDVI"
+            "[Spectral].NDVI",
+            "[Irrigation].IrrigationApplied",
+            "[Fertiliser].NitrogenApplied"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -416,7 +418,9 @@
             "1.0 * [Wheat].Stem.Live.StorageWt / ([Wheat].Stem.Live.Wt + 0.00001) as Wheat.Stem.Live.WSCc",
             "1.0 * [Wheat].Spike.Live.StorageWt / ([Wheat].Spike.Live.Wt + 0.00001) as Wheat.Spike.Live.WSCc",
             "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc",
-            "[Spectral].NDVI"
+            "[Spectral].NDVI",
+            "[Irrigation].IrrigationApplied",
+            "[Fertiliser].NitrogenApplied"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -719,15 +723,6 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Sowing].Script.SowDate = 17-Apr,14-May",
-                  "Name": "SowOLD",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
                   "Name": "Sow",
                   "ResourceName": null,
@@ -735,7 +730,9 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr"
+                        "[Sowing].Script.SowDate = 17-Apr",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -748,7 +745,9 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 14-May"
+                        "[Sowing].Script.SowDate = 14-May",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1877,7 +1876,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2019,7 +2018,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2109,17 +2108,38 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-05-24",
+                      "Date": "2024-04-17",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-07-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-01",
                       "Action": "[Irrigation].Apply(5)",
-                      "Line": "2024-05-24 [Irrigation].Apply(5)"
+                      "Line": "2024-05-1 [Irrigation].Apply(5)"
                     }
                   ],
-                  "Name": "IrrigationAppliedAmounts",
+                  "Name": "ManagementWinter",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -2133,13 +2153,6 @@
                 {
                   "$type": "Models.Operations, Models",
                   "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-04-17",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
-                    },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
@@ -2162,12 +2175,12 @@
                       "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
                     }
                   ],
-                  "Name": "FertiliserAppliedAmounts",
+                  "Name": "ManagementSpring",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2. Fertilizer management\nYear\tSite\tDate\tHabit\tFertilizer type\tAmount (kg/ha)\n2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150",
+                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -7960,6 +7973,152 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "ManagChecks",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "CheckIrrig",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Sow",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Irrigation.IrrigationApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "IrrigW",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "CheckN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Cv",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Fertiliser.NitrogenApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FertN",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -8005,7 +8164,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 116"
+                        "[Sowing].Script.Population = 116",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8020,7 +8181,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = BigRed",
-                        "[Sowing].Script.Population = 104"
+                        "[Sowing].Script.Population = 104",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8035,7 +8198,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 96"
+                        "[Sowing].Script.Population = 96",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8050,7 +8215,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 93"
+                        "[Sowing].Script.Population = 93",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8065,7 +8232,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = Zanzibar",
-                        "[Sowing].Script.Population = 139"
+                        "[Sowing].Script.Population = 139",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8079,8 +8248,10 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
-                        "[Sowing].Script.CultivarName = SunMaster",
-                        "[Sowing].Script.Population = 147"
+                        "[Sowing].Script.CultivarName = Sunmaster",
+                        "[Sowing].Script.Population = 147",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8095,7 +8266,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 132"
+                        "[Sowing].Script.Population = 132",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8110,7 +8283,9 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 14-May",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 128"
+                        "[Sowing].Script.Population = 128",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -9239,7 +9414,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -9381,7 +9556,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -9471,17 +9646,38 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
+                      "Date": "2024-04-17",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
+                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2024-05-24",
                       "Action": "[Irrigation].Apply(5)",
                       "Line": "2024-05-24 [Irrigation].Apply(5)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-07-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-07-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-08-26",
+                      "Action": "[Fertiliser].Apply(amount: 68, type: \"UreaN\");",
+                      "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
                     }
                   ],
-                  "Name": "IrrigationAppliedAmounts",
+                  "Name": "ManagementWinter",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -9495,13 +9691,6 @@
                 {
                   "$type": "Models.Operations, Models",
                   "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-04-17",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2024-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
-                    },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
@@ -9524,12 +9713,12 @@
                       "Line": "2024-08-26 [Fertiliser].Apply(amount: 68, type: \"UreaN\");"
                     }
                   ],
-                  "Name": "FertiliserAppliedAmounts",
+                  "Name": "ManagementSpring",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2. Fertilizer management\nYear\tSite\tDate\tHabit\tFertilizer type\tAmount (kg/ha)\n2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150",
+                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -15312,6 +15501,152 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "ManagChecks",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "CheckIrrig",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Sow",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Sow",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Irrigation.IrrigationApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "IrrigW",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "CheckN",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "Sow",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Sow",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Fertiliser.NitrogenApplied",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "",
+                      "Name": "FertN",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
