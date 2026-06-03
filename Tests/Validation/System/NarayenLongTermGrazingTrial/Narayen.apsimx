@@ -28,8 +28,8 @@
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "Report",
           "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "Clock.Today",
-          "FieldName2UsedForMatch": null,
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Clock.Today",
           "FieldName3UsedForMatch": null,
           "FieldName4UsedForMatch": null,
           "AllColumns": false,
@@ -231,13 +231,16 @@
                 },
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[StockManagement]",
+                  "Specification": "",
                   "Name": "Stocking",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Operations, Models",
-                      "OperationsList": null,
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Paddock].Area=3"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "1_0",
                       "ResourceName": null,
                       "Children": [],
@@ -245,8 +248,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operations, Models",
-                      "OperationsList": null,
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Paddock].Area=2.143"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "1_4",
                       "ResourceName": null,
                       "Children": [],
@@ -254,8 +260,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operations, Models",
-                      "OperationsList": null,
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Paddock].Area=1.666"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "1_8",
                       "ResourceName": null,
                       "Children": [],
@@ -263,8 +272,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operations, Models",
-                      "OperationsList": null,
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Paddock].Area=1.5"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "2_0",
                       "ResourceName": null,
                       "Children": [],
@@ -272,8 +284,11 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operations, Models",
-                      "OperationsList": null,
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Paddock].Area=1.3636"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "2_2",
                       "ResourceName": null,
                       "Children": [],
@@ -319,7 +334,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Mundubbera.met",
+              "FileName": "AU_Narayen.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -444,6 +459,170 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Operations, Models",
+              "OperationsList": [
+                {
+                  "$type": "Models.Operation, Models",
+                  "Enabled": true,
+                  "Date": "1980-05-15",
+                  "Action": "[StockManagement].Script.AddStock()",
+                  "Line": "1980-05-15 [StockManagement].Script.AddStock()"
+                }
+              ],
+              "Name": "StockOperations",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "CodeArray": [
+                "using Models.PMF.Interfaces;",
+                "using System.Diagnostics;",
+                "using Models.AgPasture;",
+                "using System.Linq;",
+                "using System.Collections.Generic;",
+                "using System.Collections;",
+                "using Models.Soils;",
+                "using Models.PMF;",
+                "using System.Xml.Serialization;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.GrazPlan;",
+                "using Models.Utilities;",
+                "using Models.Core;",
+                "using Models;",
+                "using System;",
+                "",
+                "namespace Models",
+                "{",
+                "",
+                "    [Serializable]",
+                "    public class Script : Model",
+                "    {",
+                "        [Link] Clock clock;",
+                "        [Link] Stock stock;",
+                "        //[Link] Supplement supplement;",
+                "        [Link] List<Zone> paddocks;",
+                "        [Link] ISummary summary;",
+                "        [Link] Simulation farm;",
+                "        [Link] List<IPlantDamage> forages = null;",
+                "",
+                "        private int CurrentGroupNum = 1;    // animal group number",
+                "        private int CurrentLocationNum { get; set; }",
+                "",
+                "        [Separator(\"Stock type info - these stock are bought at the start of the simulation\")]",
+                "",
+                "        [Description(\"Number of stock added to the simulation (head): \")] ",
+                "        public int StockNumber { get; set; } ",
+                "",
+                "        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] ",
+                "        [Display(Values=\"GetGenotypes\")]",
+                "        public string Genotype { get; set; }",
+                "",
+                "        [Description(\"Stock: sex (Female, Male, Castrate):\")] ",
+                "        public ReproductiveType Sex { get; set; }",
+                "",
+                "        [Description(\"Stock: age (months):\")] ",
+                "        public double Age { get; set; }",
+                "",
+                "        [Description(\"Stock: weight (kg liveweight /head):\")] ",
+                "        public double Weight { get; set; }",
+                "",
+                "        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] ",
+                "        public int Pregnant { get; set; }",
+                "",
+                "        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]",
+                "        public int Lactating { get; set; }",
+                "",
+                "        [Description(\"Stock: number of unweaned young:\")]",
+                "        public int YoungNumber { get; set; }",
+                "",
+                "        [Description(\"Stock: weight of unweaned young:\")] ",
+                "        public double YoungWt { get; set; }",
+                "",
+                "        public int NumStock { get; set; }",
+                "",
+                "        // Return a list of genotypes to the properties tab.",
+                "        public string[] GetGenotypes()",
+                "        {",
+                "            if (stock != null)",
+                "                return stock.Genotypes.Names.ToArray();",
+                "            return null;",
+                "        }",
+                "",
+                "        ",
+                "",
+                "        public void AddStock()",
+                "        {",
+                "            summary.WriteMessage(this, \"Adding livestock to the simulation\", MessageType.Diagnostic);",
+                "",
+                "            CurrentGroupNum = stock.NoGroups + 1;",
+                "            StockBuy purchase = new StockBuy();",
+                "            purchase.Genotype = Genotype;",
+                "            purchase.Number = StockNumber;",
+                "            purchase.Sex = Sex;",
+                "            purchase.Age = Age;       // age in months",
+                "            purchase.Weight = Weight;  // live weight in kg",
+                "            purchase.UseTag = CurrentGroupNum + 1;",
+                "            purchase.MatedTo = purchase.Genotype;",
+                "            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant",
+                "            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating",
+                "            purchase.NumYoung = YoungNumber;",
+                "            purchase.YoungWt = YoungWt;",
+                "",
+                "            stock.Buy(purchase);",
+                "            stock.Move(\"Paddock\");",
+                "        }",
+                "",
+                "    }",
+                "}"
+              ],
+              "Parameters": [
+                {
+                  "Key": "StockNumber",
+                  "Value": "3"
+                },
+                {
+                  "Key": "Genotype",
+                  "Value": "Angus"
+                },
+                {
+                  "Key": "Sex",
+                  "Value": "Castrate"
+                },
+                {
+                  "Key": "Age",
+                  "Value": "12"
+                },
+                {
+                  "Key": "Weight",
+                  "Value": "100"
+                },
+                {
+                  "Key": "Pregnant",
+                  "Value": "0"
+                },
+                {
+                  "Key": "Lactating",
+                  "Value": "0"
+                },
+                {
+                  "Key": "YoungNumber",
+                  "Value": "0"
+                },
+                {
+                  "Key": "YoungWt",
+                  "Value": "0"
+                }
+              ],
+              "Name": "StockManagement",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
@@ -472,7 +651,9 @@
                     "([Rhodes].AboveGround.Wt + [Panicum].AboveGround.Wt) as Total.AboveGround.Wt",
                     "([Rhodes].AboveGround.N + [Panicum].AboveGround.N) as Total.AboveGround.N",
                     "",
-                    "",
+                    "[Stock].NumberAll",
+                    "[Stock].CondScoreAll",
+                    "[Stock].WeightAll",
                     "[Rhodes].Root.Depth"
                   ],
                   "EventNames": [
@@ -1044,15 +1225,6 @@
                   "InitialCNR": 100.0,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": null,
-                  "Name": "StockManagement",
-                  "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2049,7 +2221,7 @@
                       "YFieldName": "Total.AboveGround.Wt",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -2540,6 +2712,142 @@
                       "CumulativeX": false,
                       "Filter": "Stocking = \"1_0\"",
                       "Name": "Observed",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "StockNumber",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Stocking",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Stock.NumberAll",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "Stocking = \"1_0\"",
+                      "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "StockWtAll",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Stocking",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Stock.WeightAll",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "Stocking = \"1_0\"",
+                      "Name": "Predicted",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
