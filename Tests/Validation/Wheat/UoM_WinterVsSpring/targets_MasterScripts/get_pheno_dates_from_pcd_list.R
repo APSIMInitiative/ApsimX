@@ -6,17 +6,18 @@
 #' development threshold, and maps it to the universal schema.
 #'
 #' @details
-#' **Threshold Failure Warning:** If a crop's continuous scoring ends before it actually 
-#' reaches the target percentage (e.g., stops at 42% on Nov 10th), the script intercepts 
-#' the failure and prints a detailed console warning containing the simulation name, 
-#' the stage, the peak percentage reached, and the final observation date.
+#' **Threshold Fallback Logic:** If a crop's continuous scoring ends before it actually 
+#' reaches the target percentage:
+#'   - If progress peaked at > 0%: The absolute final observation date is forced as the milestone date.
+#'   - If progress remained at 0%: The date evaluates to NA and the record is dropped.
+#' Both scenarios trigger explicit console warnings detailing the fallback actions taken.
 #'
 #' @param list_pcds List of data frames. The output from \code{filter_and_extract_pcds}.
-#' @param target_perc Numeric. The fractional progress score (e.g., 0.5) representing stage achievement.
+#' @param target_perc Numeric. The target percentage score (e.g., 50) representing stage achievement.
 #'
 #' @return A validated tidy data frame matching the intermediate interface standard.
 #' @export
-get_pheno_dates_from_pcd_list <- function(list_pcds, target_perc = 0.5) {
+get_pheno_dates_from_pcd_list <- function(list_pcds, target_perc = 50) {
   
   if (missing(list_pcds) || !is.list(list_pcds) || length(list_pcds) == 0) {
     stop("Error [get_pheno_dates_from_pcd_list]: Input must be a populated list of data frames.")
@@ -55,12 +56,23 @@ get_pheno_dates_from_pcd_list <- function(list_pcds, target_perc = 0.5) {
       MaxDate     = max(Clock.Today, na.rm = TRUE),
       
       Date_Num = if (dplyr::n() >= 2 && MaxProgress >= target_perc && MinProgress <= target_perc) {
+        # Primary: Standard mathematical interpolation
         approx(x = ProgressValue, y = as.numeric(Clock.Today), xout = target_perc, ties = "mean")$y
+        
       } else if (MaxProgress >= target_perc && MinProgress > target_perc) {
+        # Fallback: Data started too late. Lock to the very first observation.
         as.numeric(min(Clock.Today, na.rm = TRUE))
+        
       } else if (dplyr::n() == 1 && ProgressValue[1] >= target_perc) {
+        # Fallback: Only 1 valid data point, but it passed the threshold.
         as.numeric(Clock.Today[1])
+        
+      } else if (MaxProgress > 0 && MaxProgress < target_perc) {
+        # THE NEW FALLBACK: Partial progress achieved. Lock to the absolute final observation date.
+        as.numeric(max(Clock.Today, na.rm = TRUE))
+        
       } else {
+        # Total Failure: Peaked at 0%. Assign NA so it is safely dropped.
         NA_real_
       },
       .groups = "drop"
@@ -74,29 +86,35 @@ get_pheno_dates_from_pcd_list <- function(list_pcds, target_perc = 0.5) {
     warning_box <- c(
       "",
       "======================================================================",
-      "  ⚠️  WARNING: PHENOLOGY STAGE DID NOT REACH TARGET THRESHOLD  ⚠️",
+      "  ⚠️  WARNING: PHENOLOGY STAGES DID NOT REACH TARGET THRESHOLD  ⚠️",
       "======================================================================",
-      sprintf(" Target Threshold Required: %.0f%%", target_perc * 100),
+      sprintf(" Target Threshold Required: %.0f%%", target_perc),
       " The following simulations ended before the stage was fully reached:\n"
     )
     
     for (i in seq_len(nrow(df_failures))) {
-      msg <- sprintf("   -> Simulation '%s': Stage '%s' peaked at %.1f%% on %s",
-                     df_failures$SimulationName[i],
-                     df_failures$PCD_Source[i],
-                     df_failures$MaxProgress[i] * 100,
-                     format(df_failures$MaxDate[i], "%Y-%m-%d"))
+      sim <- df_failures$SimulationName[i]
+      src <- df_failures$PCD_Source[i]
+      max_p <- df_failures$MaxProgress[i]
+      max_d <- format(df_failures$MaxDate[i], "%Y-%m-%d")
+      
+      if (max_p == 0) {
+        msg <- sprintf("   -> [FAILED - NA]    '%s' | Stage: '%s' | Peaked at 0%%. Dropped from output.", sim, src)
+      } else {
+        msg <- sprintf("   -> [FORCED - LATE]  '%s' | Stage: '%s' | Peaked at %.1f%%. Forced to final date (%s).", 
+                       sim, src, max_p, max_d)
+      }
       warning_box <- c(warning_box, msg)
     }
     
     warning_box <- c(warning_box, "======================================================================", "")
     message(paste(warning_box, collapse = "\n"))
-    warning("Some phenology stages failed to reach the target threshold. See console.", call. = FALSE)
+    warning("Some phenology stages failed to reach the target threshold and required fallback assumptions. See console.", call. = FALSE)
   }
   
   # ---- 4. ALIGN TO UNIVERSAL 3-COLUMN SCHEMA ----
   df_final <- df_interpolated %>%
-    dplyr::filter(!is.na(Clock.Today)) %>% # Drop the failures from the actual timeline
+    dplyr::filter(!is.na(Clock.Today)) %>% # Drop the 0% failures from the actual timeline
     dplyr::mutate(
       Wheat.Phenology.Stage = dplyr::case_when(
         grepl("Emerg|3", PCD_Source, ignore.case = TRUE) ~ 3,
@@ -112,8 +130,8 @@ get_pheno_dates_from_pcd_list <- function(list_pcds, target_perc = 0.5) {
     dplyr::distinct() %>%
     dplyr::arrange(SimulationName, Clock.Today)
   
-  message(sprintf("Success [get_pheno_dates_from_pcd_list]: Interpolated %d standardized raw records at %.0f%% progress.", 
-                  nrow(df_final), target_perc * 100))
+  message(sprintf("Success [get_pheno_dates_from_pcd_list]: Standardized %d raw records at %.0f%% progress.", 
+                  nrow(df_final), target_perc))
   
   return(df_final)
 }
