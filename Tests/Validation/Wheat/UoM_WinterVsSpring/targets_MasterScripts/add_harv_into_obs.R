@@ -18,8 +18,13 @@ add_harv_into_obs <- function(df, ref_vars, new_col_name, new_col_value) {
   
   # THE SWISS CHEESE DATE PARSER (Protects against DD/MM/YYYY mangling)
   parse_any_date <- function(x) {
+    # 🛑 BYPASS VALVE: If it is already a clean Date object, leave it alone!
+    if (inherits(x, c("Date", "POSIXt"))) return(as.Date(x))
+    
     final_dates <- as.Date(rep(NA_character_, length(x)))
-    nums <- suppressWarnings(as.numeric(x))
+    
+    # Safely check for Excel numbers without accidentally coercing R dates
+    nums <- suppressWarnings(as.numeric(as.character(x)))
     num_idx <- which(!is.na(nums))
     if (length(num_idx) > 0) final_dates[num_idx] <- as.Date(nums[num_idx], origin = "1899-12-30")
     

@@ -1,5 +1,5 @@
 # ==============================================================================
-# APSIM-X DATA PIPELINE: Dookie2024
+# APSIM-X DATA PIPELINE: Fords2025
 # ==============================================================================
 # Description: Pipeline to process Wheat phenology, Haun stages, and weather.
 # Goal: Interpolate missing stages, enforce parameters, format for APSIM,
@@ -79,7 +79,8 @@ list(
       target_stagePerc          = 0.5,          # % of phenological-stage development
       target_betwStages         = 0.5,          # fraction of time in-between two pheno-stages
       max_leaf_limit            = 0.95,
-      pcd_stages_to_extract     = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis")
+      pcd_stages_to_extract     = c("pcds_3_emergPlants")
+      #pcd_stages_to_extract     = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis")
     )
   ),
   
@@ -167,20 +168,20 @@ list(
   
 
   # ----------------------------------------------------------------------------
-  # # PHASE D: PHENOLOGY STAGE SYNTHESIS (Universal)
-  # # ----------------------------------------------------------------------------
-  # tar_target(
-  #   name = list_pcds_extracted,
-  #   command = filter_and_extract_pcds(
-  #     list_observed_dfs = list_observed_clean, # Using scrubbed data
-  #     pcd_stages        = config$pcd_stages_to_extract
-  #   )
-  # ),
+  # PHASE D: PHENOLOGY STAGE SYNTHESIS (Universal)
+  # ----------------------------------------------------------------------------
+  tar_target(
+    name = list_pcds_extracted,
+    command = filter_and_extract_pcds(
+      list_observed_dfs = list_observed_clean, # Using scrubbed data
+      pcd_stages        = config$pcd_stages_to_extract
+    )
+  ),
   # 
-  # tar_target(
-  #   name = df_pheno_raw,
-  #   command = get_pheno_dates_from_pcd_list(list_pcds_extracted, config$target_stagePerc)
-  # ),
+  tar_target(
+    name = df_pheno_raw,
+    command = get_pheno_dates_from_pcd_list(list_pcds_extracted, config$target_stagePerc)
+  ),
   # 
   # tar_target(
   #   name = df_pheno_int, 
@@ -206,11 +207,12 @@ list(
   #     df_int  = df_pheno_int
   #   )
   # ),
-  # 
-  # tar_target(
-  #   name = df_pheno_input_param, 
-  #   command = format_apsim_pheno_params(df_pheno_final)
-  # ),
+  
+  tar_target(
+    name = df_pheno_input_param,
+    #command = format_apsim_pheno_params(df_pheno_final) # TODO: swap: Fords has only emerg so far
+    command = format_apsim_pheno_params(df_pheno_raw)
+  ),
    
   # # ----------------------------------------------------------------------------
   # # PHASE E: FINAL OBSERVATION FORMATTING & QC
@@ -222,20 +224,21 @@ list(
       dfs_out      = config$pcd_stages_to_extract
     )
   ),
-  # 
-  # tar_target(
-  #   name = df_obs_plus_pheno,
-  #   command = add_new_var_to_obs(
-  #     df_obs          = df_obs_wide,
-  #     df_new_data     = df_pheno_final,
-  #     target_col_name = "Wheat.Phenology.Stage"
-  #   )
-  # ),
+
+  tar_target(
+    name = df_obs_plus_pheno,
+    command = add_new_var_to_obs(
+      df_obs          = df_obs_wide,
+      #df_new_data     = df_pheno_final, # TODO: swap: Fords has only emerg so far
+      df_new_data     = df_pheno_raw,
+      target_col_name = "Wheat.Phenology.Stage"
+    )
+  ),
   # 
   tar_target(
     name = df_obs_plus_pheno_hi,
     command = calc_harvest_index(
-      df          = df_obs_wide,
+      df          = df_obs_plus_pheno,
       grain_col   = "Wheat.Grain.Wt",
       agb_col     = "Wheat.AboveGround.Wt",
       hi_col_name = "HarvestIndex"
@@ -293,15 +296,15 @@ list(
     format = "file"
   ),
   # 
-  # tar_target(
-  #   name = msg_pheno_param_saved,
-  #   command = save_df_into_csv(
-  #     df       = df_pheno_input_param,
-  #     folder   = config$folder_inputs,
-  #     filename = config$file_name_input_pheno
-  #   ),
-  #   format = "file"
-  # ),
+  tar_target(
+    name = msg_pheno_param_saved,
+    command = save_df_into_csv(
+      df       = df_pheno_input_param,
+      folder   = config$folder_inputs,
+      filename = config$file_name_input_pheno
+    ),
+    format = "file"
+  ),
 
   # ----------------------------------------------------------------------------
   # PHASE G: SECURITY & ZIPPING
@@ -337,7 +340,7 @@ list(
     command = {
       force(msg_met_saved)
       msg_obs_saved
-      # msg_pheno_param_saved
+       msg_pheno_param_saved
       haun_input_checked
 
       check_project_dependencies(
