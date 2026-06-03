@@ -2135,7 +2135,7 @@
                   "Name": "Fertilize",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2277,7 +2277,7 @@
                   "Name": "Irrigate",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2368,6 +2368,13 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
+                      "Date": "2025-04-17",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2025-05-02",
                       "Action": "[Irrigation].Apply(20)",
                       "Line": "2025-05-02 [Irrigation].Apply(20)"
@@ -2378,13 +2385,6 @@
                       "Date": "2025-05-20",
                       "Action": "[Irrigation].Apply(6)",
                       "Line": "2025-05-20 [Irrigation].Apply(6)"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-04-17",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
-                      "Line": "2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
