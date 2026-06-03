@@ -171,13 +171,15 @@ list(
   tar_target(
     name = list_observed_dfs_raw,
     command = {
+      # The force() command ensures {targets} rebuilds this if the raw Excel file changes on your computer
       force(tracked_raw_excel) 
       
-      compile_all_observed(
+      compile_all_obs_by_one_key(
         folder      = config$folder_rawData,
-        excel_files = config$file_rawData_excel, 
+        excel_files = config$file_rawData_excel,
         df_obs_info = df_obs_meta_data,
-        df_simNames = df_simNameByCult
+        df_simNames = df_simNameByCult,
+        unique_key  = "Plot"  # <--- Change this to "Plot" if running Fords2025!
       )
     }
   ),

@@ -2113,15 +2113,15 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-12",
-                      "Action": "[Fertiliser].Apply(amount: 75, type: \"UreaGranular\");",
-                      "Line": "2025-07-12 [Fertiliser].Apply(amount: 75, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 75, type: \"UreaGranular\")",
+                      "Line": "2025-07-12 [Fertiliser].Apply(amount: 75, type: \"UreaGranular\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-08-11",
-                      "Action": "[Fertiliser].Apply(amount: 125, type: \"UreaGranular\");",
-                      "Line": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 125, type: \"UreaGranular\")",
+                      "Line": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -2161,15 +2161,15 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-12",
-                      "Action": "[Fertiliser].Apply(amount: 75, type: \"UreaGranular\");",
-                      "Line": "2025-07-12 [Fertiliser].Apply(amount: 75, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 75, type: \"UreaGranular\")",
+                      "Line": "2025-07-12 [Fertiliser].Apply(amount: 75, type: \"UreaGranular\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-08-11",
-                      "Action": "[Fertiliser].Apply(amount: 125, type: \"UreaGranular\");",
-                      "Line": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 125, type: \"UreaGranular\")",
+                      "Line": "2025-08-11 [Fertiliser].Apply(amount: 125, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementSpring",

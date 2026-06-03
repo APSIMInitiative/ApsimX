@@ -1,5 +1,33 @@
 #' Compile and Format All Observed Data (Explicit Single-Key Version)
 #'
+#' @description
+#' A robust data-ingestion engine that reads raw field observations from multiple Excel files, 
+#' extracts specific variables based on a metadata dictionary, and perfectly aligns them to 
+#' APSIM-X `SimulationName`s using a strictly defined unique key (e.g., "Cultivar" or "Plot").
+#'
+#' @details
+#' **Replicate Aggregation:** If the raw data contains multiple replicates for the same 
+#' `SimulationName` on the same `Date`, this function automatically groups them and calculates 
+#' the mathematical mean, stripping out `NA`s, to provide a single, clean daily value for APSIM.
+#' 
+#' **Duplicate Key Defense:** Before attempting any joins, the function aggressively scans 
+#' the mapping dictionary (`df_simNames`). If it detects that a single unique key maps to 
+#' multiple different SimulationNames, it will trigger a fatal alarm to prevent silent data duplication.
+#'
+#' @param folder Character string. The directory path where the raw Excel files are stored.
+#' @param excel_files Character vector. A list of specific Excel file names to read and compile.
+#' @param df_obs_info Data frame. The metadata dictionary dictating which sheets and columns to extract. 
+#'   Must contain: \code{df_name}, \code{sheet_name}, \code{column_name}, \code{apsim_var_name}, and \code{corr_fact}.
+#' @param df_simNames Data frame. The lookup table that maps your raw data keys to actual APSIM 
+#'   \code{SimulationName}s.
+#' @param unique_key Character string. The exact column name present in BOTH the raw data and 
+#'   \code{df_simNames} used to link the data (e.g., \code{"Cultivar"} or \code{"Plot"}).
+#' @param exp_keys Character vector, optional. A list of experiment identifiers matching the exact 
+#'   length and order of \code{excel_files}. Used to separate duplicate keys across different trials. 
+#'   Defaults to \code{NULL}.
+#'
+#' @return A nested tibble containing two columns: \code{df_name} (the assigned APSIM variable group) 
+#'   and \code{data} (the compiled, joined, and aggregated data frame for that variable).
 #' @export
 compile_all_obs_by_one_key <- function(folder, excel_files, df_obs_info, df_simNames, unique_key, exp_keys = NULL) {
   

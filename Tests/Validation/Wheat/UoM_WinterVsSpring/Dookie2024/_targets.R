@@ -78,10 +78,10 @@ list(
       
       # Model parameters
       date_DOY_ref              = "01-01-2024", # Transform DOY output into ddmmyy
-      target_stagePerc          = 0.5,          # % of phenological-stage development
+      target_stagePerc          = 50,          # % of phenological-stage development
       target_betwStages         = 0.5,          # fraction of time in-between two pheno-stages
       max_leaf_limit            = 0.95,
-      pcd_stages_to_extract     = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis")
+      pcd_stages_to_extract     = c("pcds_3_emergPlants_Perc","pcds_6_flagLeaf", "pcds_8_anthesis")
     )
   ),
   
@@ -154,11 +154,20 @@ list(
     }
   ),
   
+  tar_target(
+    name = list_observed_dfs_raw_plus_emergPerc,
+    command = calc_emerg_perc(
+      df_tbl            = list_observed_dfs_raw,  # <--- Change this from df_list to df_tbl
+      df_input_var_name = "pcds_3_emergPlants",
+      df_new_var_name   = "pcds_3_emergPlants_Perc"
+    )
+  ),
+  
   # Dookie-specific fix: scrub broken dates before phenology synthesis
   tar_target(
     name = list_observed_clean,
     command = apply_corrections_Dookie24(
-      df_tbl   = list_observed_dfs_raw,
+      df_tbl   = list_observed_dfs_raw_plus_emergPerc,
       ref_date = config$date_DOY_ref
     )
   ),
@@ -209,6 +218,21 @@ list(
     command = format_apsim_pheno_params(df_pheno_final)
   ),
   
+  # # 1. THE FIXER: Impute missing phenology dates for the APSIM Input file
+  # tar_target(
+  #   name = df_pheno_input_param_filled,
+  #   command = do_averages_for_missing_pheno(
+  #     df         = df_pheno_input_param,
+  #     group_keys = c("EVA","WWHI")
+  #     # group_keys = c("Dookie")
+  #   )
+  # ),
+  
+  # 2. THE GATEKEEPER (The new Universal script)
+  tar_target(
+    name = qc_pheno_integrity,
+    command = check_pheno_integrity(df_pheno_input_param)
+  ),
   # ----------------------------------------------------------------------------
   # PHASE E: FINAL OBSERVATION FORMATTING & QC
   # ----------------------------------------------------------------------------
@@ -293,7 +317,7 @@ list(
   tar_target(
     name = msg_pheno_param_saved,
     command = save_df_into_csv(
-      df       = df_pheno_input_param,
+      df       = qc_pheno_integrity,
       folder   = config$folder_inputs,
       filename = config$file_name_input_pheno
     ),

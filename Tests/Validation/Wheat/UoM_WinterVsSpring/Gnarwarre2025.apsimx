@@ -1663,29 +1663,29 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-30",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-04-30 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-10-24",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-04-30 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-16",
-                      "Action": "[Fertiliser].Apply(amount: 108, type: \"UreaGranular\");",
-                      "Line": "2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 108, type: \"UreaGranular\")",
+                      "Line": "2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-08-22",
-                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
-                      "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\")",
+                      "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-10-24",
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -1711,29 +1711,29 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-05-21",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-05-21 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-05-21 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-10-24",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
+                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
+                      "Line": "2025-10-24 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-16",
-                      "Action": "[Fertiliser].Apply(amount: 108, type: \"UreaGranular\");",
-                      "Line": "2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 108, type: \"UreaGranular\")",
+                      "Line": "2025-07-16 [Fertiliser].Apply(amount: 108, type: \"UreaGranular\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-08-22",
-                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\");",
-                      "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\");"
+                      "Action": "[Fertiliser].Apply(amount: 217, type: \"UreaGranular\")",
+                      "Line": "2025-08-22 [Fertiliser].Apply(amount: 217, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementSpring",

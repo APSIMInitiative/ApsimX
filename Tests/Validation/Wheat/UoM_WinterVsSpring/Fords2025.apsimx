@@ -2089,8 +2089,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-15",
-                      "Action": "[Fertiliser].Apply(amount: 9, type: \"UreaN\");",
-                      "Line": "2025-04-15 [Fertiliser].Apply(amount: 9, type: \"UreaN\");"
+                      "Action": "[Fertiliser].Apply(amount: 9, type: \"UreaN\")",
+                      "Line": "2025-04-15 [Fertiliser].Apply(amount: 9, type: \"UreaN\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -2117,8 +2117,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-07",
-                      "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\");",
-                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\");"
+                      "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\")",
+                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -2158,8 +2158,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-07-07",
-                      "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\");",
-                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\");"
+                      "Action": "[Fertiliser].Apply(amount: 86, type: \"UreaN\")",
+                      "Line": "2025-07-07 [Fertiliser].Apply(amount: 86, type: \"UreaN\")"
                     }
                   ],
                   "Name": "ManagementSpring",

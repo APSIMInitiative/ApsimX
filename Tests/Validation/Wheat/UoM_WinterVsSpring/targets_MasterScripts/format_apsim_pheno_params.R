@@ -5,6 +5,9 @@
 #' long-format phenology data, runs a fail-safe chronological sequence check, translates 
 #' numeric stages into explicit APSIM-X bracketed parameter strings, pivots the dataset 
 #' wide, and strictly formats dates to locale-safe characters ("dd-MMM-yyyy").
+#' 
+#' Empty Column Pruning: Automatically detects and removes any phenology stage columns 
+#' that contain 100% NA values across all simulations, preventing downstream APSIM crashes.
 #'
 #' @param df_pheno_final Data frame. The unified 3-column output from Step 4.
 #'
@@ -25,7 +28,6 @@ format_apsim_pheno_params <- function(df_pheno_final) {
   }
   
   # ---- 2. ULTIMATE FAIL-SAFE CHRONOLOGY CHECK ----
-  # Step 4 should guarantee chronology, but this acts as the final gatekeeper before export.
   chrono_check <- df_pheno_final %>%
     dplyr::arrange(SimulationName, Wheat.Phenology.Stage) %>%
     dplyr::group_by(SimulationName) %>%
@@ -55,7 +57,6 @@ format_apsim_pheno_params <- function(df_pheno_final) {
   }
   
   # ---- 3. APSIM STRING MAPPING ----
-  # Translate numeric codes to precise text identifiers
   df_mapped <- df_pheno_final %>%
     dplyr::mutate(
       Stage_Name = dplyr::case_when(
@@ -71,12 +72,10 @@ format_apsim_pheno_params <- function(df_pheno_final) {
     ) %>%
     dplyr::filter(!is.na(Stage_Name)) %>%
     dplyr::mutate(
-      # Construct the literal APSIM parameter header strings
       Apsim_Param = paste0("[Wheat].Phenology.", Stage_Name, ".DateToProgress")
     )
   
   # ---- 4. PIVOT WIDE & ORDER COLUMNS ----
-  # Define the strict physiological ordering for the final spreadsheet
   ordered_cols <- c(
     "SimulationName",
     "[Wheat].Phenology.Emerging.DateToProgress",
@@ -95,16 +94,39 @@ format_apsim_pheno_params <- function(df_pheno_final) {
       values_from = Clock.Today
     )
   
-  # Ensure all standard columns exist even if no simulation reached them, then order strictly
+  # Ensure all standard columns exist initially
   missing_ap_cols <- setdiff(ordered_cols, names(df_wide))
   for (col in missing_ap_cols) {
     df_wide[[col]] <- as.Date(NA)
   }
   
-  df_wide <- df_wide %>% dplyr::select(dplyr::all_of(ordered_cols))
+  # ---- 4.5 EMPTY COLUMN PRUNING ----
+  # Identify columns that are 100% NA
+  empty_cols <- names(df_wide)[purrr::map_lgl(df_wide, ~all(is.na(.x)))]
+  empty_cols <- setdiff(empty_cols, "SimulationName") # Shield the ID column
   
-  # ---- 5. LOCALE-SAFE TEXT STRING FORMATTING (The Fix) ----
-  # Hardcode English months to completely bypass OS language settings
+  if (length(empty_cols) > 0) {
+    df_wide <- df_wide %>% dplyr::select(-dplyr::all_of(empty_cols))
+    
+    log_box <- c(
+      "",
+      "----------------------------------------------------------------------",
+      " 🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹",
+      "----------------------------------------------------------------------",
+      " The following phenology stages contained no data (100% NA) across all",
+      " simulations and were safely removed from the final APSIM output:",
+      paste("   -", empty_cols),
+      "----------------------------------------------------------------------",
+      ""
+    )
+    message(paste(log_box, collapse = "\n"))
+  }
+  
+  # Sort the remaining columns back into strict physiological order
+  remaining_ordered_cols <- intersect(ordered_cols, names(df_wide))
+  df_wide <- df_wide %>% dplyr::select(dplyr::all_of(remaining_ordered_cols))
+  
+  # ---- 5. LOCALE-SAFE TEXT STRING FORMATTING ----
   eng_months <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
   
   format_apsim_date <- function(dates) {
