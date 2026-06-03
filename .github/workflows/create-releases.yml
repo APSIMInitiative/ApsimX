@@ -71,7 +71,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Set script permissions
         run: chmod +x -R ./.github/workflows/scripts/
@@ -97,7 +97,7 @@ jobs:
         uses: actions/upload-artifact@v6.0.0
         with:
           name: windows-installer
-          path: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
+          path: /__w/ApsimX/ApsimX/Setup/net10.0/windows/Output/APSIMSetup.exe
 
 
     # Performs code signing for the Windows installer using the Software Trust Manager. 

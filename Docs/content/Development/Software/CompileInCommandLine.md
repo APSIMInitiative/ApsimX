@@ -23,24 +23,24 @@ Run following commands under the ApsimX directory
 Publish for windows
 
 ```bash
-dotnet publish -c Release -f net8.0 -r win-x64   --self-contained ApsimX.sln
+dotnet publish -c Release -f net10.0 -r win-x64   --self-contained ApsimX.sln
 ```
 
 Publish for Ubuntu
 
 ```bash
-dotnet publish -c Release -f net8.0 -r ubuntu.20.04-x64 --self-contained ApsimX.sln
+dotnet publish -c Release -f net10.0 -r ubuntu.20.04-x64 --self-contained ApsimX.sln
 ```
 
 Publish for SLES (e.g. CSIRO cluster):
 
 ```bash
-dotnet publish -c Release -f net8.0 -r sles.15-x64 --self-contained ApsimX.sln
+dotnet publish -c Release -f net10.0 -r sles.15-x64 --self-contained ApsimX.sln
 ```
 
 All runtime identify for other operating system can be found from [github](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json)
 
-Copy the contents `bin/Release/net8.0/<runtime-identify>/publish/` to your operating system.
+Copy the contents `bin/Release/net10.0/<runtime-identify>/publish/` to your operating system.
 
 ## .NET runtime
 
@@ -51,7 +51,7 @@ Apsim NG has been updated to run using .NET 8.0. This can be downloaded [from do
 Sqlite has been included as a nuget package in the ApsimNG project and is no longer installed seperately.
 However if you are using an older version of the source code this may be required.
 
-On Windows, check whether `sqlite3.dll` is under `bin\Release\net8.0\win-x64\publish` folder. If not, copy from `bin\Release\net8.0\win-x64\` to `publish` folder.
+On Windows, check whether `sqlite3.dll` is under `bin\Release\net10.0\win-x64\publish` folder. If not, copy from `bin\Release\net10.0\win-x64\` to `publish` folder.
 
 On Linux, sqlite3 should be installed into system with following command
 

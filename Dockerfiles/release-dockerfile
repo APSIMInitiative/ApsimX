@@ -27,7 +27,7 @@ RUN echo version=$version && sed -i -e "s/0\.0\.0\.0/$version/g" \
     /apsim/Models/Properties/AssemblyVersion.cs
 
 # Build apsim.
-RUN dotnet publish --nologo -c Release -f net8.0 -r linux-x64 --no-self-contained /apsim/Models/Models.csproj
+RUN dotnet publish --nologo -c Release -f net10.0 -r linux-x64 --no-self-contained /apsim/Models/Models.csproj
 
 
 # The actual image is based on dotnet/runtime.
@@ -39,7 +39,7 @@ RUN apt update -q --silent && \
     apt install -yq libsqlite3-dev
 
 # Copy build artifacts from the intermediate container to /apsim
-COPY --from=build /apsim/bin/Release/net8.0/linux-x64/publish /opt/apsim/
+COPY --from=build /apsim/bin/Release/net10.0/linux-x64/publish /opt/apsim/
 
 # Add apsim to path
 ENV PATH=$PATH:/opt/apsim
@@ -61,7 +61,7 @@ RUN apt update -q --silent && \
     apt install -yq libsqlite3-dev
 
 # Copy build artifacts from the intermediate container to /apsim
-COPY --from=build /apsim/bin/Release/net8.0/linux-x64/publish /opt/apsim/
+COPY --from=build /apsim/bin/Release/net10.0/linux-x64/publish /opt/apsim/
 
 # Add apsim to path
 ENV PATH=$PATH:/opt/apsim
@@ -76,7 +76,7 @@ ENTRYPOINT ["Models"]
 # Build the GUI in another intermediate image
 FROM build AS build-apsimng-gui
 
-RUN dotnet publish -c Release -f net8.0 -r linux-x64 --no-self-contained /apsim/ApsimNG/ApsimNG.csproj
+RUN dotnet publish -c Release -f net10.0 -r linux-x64 --no-self-contained /apsim/ApsimNG/ApsimNG.csproj
 
 
 # GUI image uses apsimng as base image
@@ -84,7 +84,7 @@ RUN dotnet publish -c Release -f net8.0 -r linux-x64 --no-self-contained /apsim/
 FROM apsimng AS apsimng-gui
 
 # Copy build artifacts from the intermediate container to /opt/apsim
-COPY --from=build-apsimng-gui /apsim/bin/Release/net8.0/linux-x64/publish/ /opt/apsim/
+COPY --from=build-apsimng-gui /apsim/bin/Release/net10.0/linux-x64/publish/ /opt/apsim/
 
 # Install graphical libraries.
 RUN apt update -q --silent &&                                                  \

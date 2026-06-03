@@ -66,7 +66,7 @@ jobs:
 
       - name: Build Models and APSIM.Workflow projects
         run: |
-          cd Models && dotnet publish -f net8.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net8.0
+          cd Models && dotnet publish -f net10.0 -o ../app && cd ../APSIM.Workflow && dotnet publish -f net10.0
 
       - name: Split Large Validation Files
         run: ./.github/workflows/scripts/split-large-files.sh
