@@ -69,7 +69,7 @@ list(
       
       # Model parameters
       date_DOY_ref               = "01-01-2025", # Transform DOY output into ddmmyy
-      target_stagePerc           = 0.5,          # % of phenological-stage development
+      target_stagePerc           = 50,          # % of phenological-stage development
       target_betwStages          = 0.5,          # % of time in-between two pheno-stages
       max_leaf_limit             = 0.95,
       pcd_stages_to_extract      = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis"),
