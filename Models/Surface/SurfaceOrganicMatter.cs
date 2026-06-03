@@ -11,6 +11,7 @@ using Models.PMF.Interfaces;
 using Models.Soils;
 using Models.Soils.Nutrients;
 
+
 namespace Models.Surface
 {
     /// <summary>
@@ -173,11 +174,25 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double InitialResidueMass { get; set; }
 
+        private double initialStandingFraction;
+
         /// <summary>Gets or sets the standing fraction of initial residue pool</summary>
         [Summary]
         [Description("Standing fraction (0-1)")]
         [Units("0-1")]
-        public double InitialStandingFraction { get; set; }
+        public double InitialStandingFraction
+        {
+            get => initialStandingFraction;
+            set
+            {
+                if (double.IsNaN(value) || value < 0.0 || value > 1.0)
+                    throw new ArgumentOutOfRangeException(
+                        nameof(InitialStandingFraction), 
+                        "Initial standing fraction must be between 0.0 and 1.0");
+
+                initialStandingFraction = value;
+            }
+        }
 
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
         [Summary]
