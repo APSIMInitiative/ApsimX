@@ -4,7 +4,7 @@
 #' The final phenology pipeline component. It ingests the unified, quality-checked 
 #' long-format phenology data, runs a fail-safe chronological sequence check, translates 
 #' numeric stages into explicit APSIM-X bracketed parameter strings, pivots the dataset 
-#' wide, and strictly formats dates to locale-safe characters ("dd-mm-yyyy").
+#' wide, and strictly formats dates to locale-safe characters ("dd-MMM-yyyy").
 #'
 #' @param df_pheno_final Data frame. The unified 3-column output from Step 4.
 #'
@@ -103,13 +103,24 @@ format_apsim_pheno_params <- function(df_pheno_final) {
   
   df_wide <- df_wide %>% dplyr::select(dplyr::all_of(ordered_cols))
   
-  # ---- 5. LOCALE-SAFE TEXT STRING FORMATTING ----
+  # ---- 5. LOCALE-SAFE TEXT STRING FORMATTING (The Fix) ----
+  # Hardcode English months to completely bypass OS language settings
+  eng_months <- c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+  
+  format_apsim_date <- function(dates) {
+    dplyr::if_else(
+      is.na(dates), 
+      NA_character_, 
+      sprintf("%02d-%s-%04d", 
+              as.numeric(format(dates, "%d")), 
+              eng_months[as.numeric(format(dates, "%m"))], 
+              as.numeric(format(dates, "%Y")))
+    )
+  }
+  
   df_export <- df_wide %>%
     dplyr::mutate(
-      dplyr::across(
-        -SimulationName,
-        ~ dplyr::if_else(is.na(.x), NA_character_, format(.x, "%d-%m-%Y"))
-      )
+      dplyr::across(-SimulationName, format_apsim_date)
     )
   
   # ---- 6. PIPELINE COMPLETION NOTIFICATION ----
