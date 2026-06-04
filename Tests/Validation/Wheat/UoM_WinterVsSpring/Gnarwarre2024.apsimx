@@ -341,7 +341,6 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 24-Apr",
                         "[Clock].StartDate = 2024-04-23",
-                        "[Sowing].Script.EmergeDate = 10-May",
                         "[Sowing].Script.CultivarName = Illabo",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
@@ -359,7 +358,6 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 24-Apr",
                         "[Clock].StartDate = 2024-04-23",
-                        "[Sowing].Script.EmergeDate = 10-May",
                         "[Sowing].Script.CultivarName = BigRed",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
@@ -377,7 +375,6 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 20-May",
                         "[Clock].StartDate = 2024-04-23",
-                        "[Sowing].Script.EmergeDate = 7-Jun",
                         "[Sowing].Script.CultivarName = Sunmaster",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
@@ -395,7 +392,6 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 20-May",
                         "[Clock].StartDate = 2024-04-23",
-                        "[Sowing].Script.EmergeDate = 7-Jun",
                         "[Sowing].Script.CultivarName = Zanzibar",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
@@ -718,8 +714,8 @@
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
                     "        ",
-                    "        [Description(\"Emergence Date (d-MMM)\")]",
-                    "        public string EmergeDate {get; set;}",
+                    "     //   [Description(\"Emergence Date (d-MMM)\")]",
+                    "     //   public string EmergeDate {get; set;}",
                     "",
                     "        [EventSubscribe(\"DoManagement\")]",
                     "        private void OnDoManagement(object sender, EventArgs e)",
@@ -727,7 +723,7 @@
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
                     "                wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                    "                wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\");",
+                    "            //    wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\");",
                     "            }",
                     "        }",
                     "    }",
@@ -753,10 +749,6 @@
                     {
                       "Key": "Population",
                       "Value": "150"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
@@ -1567,6 +1559,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/Gnarwarre2024_ConstantPhenology.csv",
+                  "Name": "ConstantBaseCv",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },

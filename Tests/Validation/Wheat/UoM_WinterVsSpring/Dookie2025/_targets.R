@@ -72,7 +72,7 @@ list(
       target_stagePerc           = 50,          # % of phenological-stage development
       target_betwStages          = 0.5,          # % of time in-between two pheno-stages
       max_leaf_limit             = 0.95,
-      pcd_stages_to_extract      = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis"),
+      pcd_stages_to_extract      = c("pcds_3_emergPlants_Perc","pcds_6_flagLeaf", "pcds_8_anthesis"),
       
       # Security
       file_zip_out               = file.path(here::here(), "Observed.zip"), 
@@ -98,7 +98,7 @@ list(
   
   # Soil data
   tar_target(
-    name = soil_data_clean,
+    name = soilN_data_clean,
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
@@ -110,7 +110,18 @@ list(
     )
   ),
   
-  
+  tar_target(
+    name = soilWater_data_clean,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
+      # sheet           = "Soil sample",
+      sheet          = "CLL and DUL",
+      vars_to_extract = c("CLL (g/g)",	"DUL (g/g)","Bulk density (g/cm3)", "Sowing moisture (g/g)" ),
+      col_depth_from  = "Start depth (m)", # Optional if this matches the default
+      col_depth_to    = "Start depth (m)"    # Optional if this matches the default
+    )
+  ),
   # ----------------------------------------------------------------------------
   # PHASE B: WEATHER PROCESSING
   # ----------------------------------------------------------------------------
@@ -182,11 +193,21 @@ list(
     }
   ),
   
+  
+  tar_target(
+    name = list_observed_dfs_raw_plus_emergPerc,
+    command = calc_emerg_perc(
+      df_tbl            = list_observed_dfs_raw,  # <--- Change this from df_list to df_tbl
+      df_input_var_name = "pcds_3_emergPlants",
+      df_new_var_name   = "pcds_3_emergPlants_Perc"
+    )
+  ),
+  
   # Dookie-specific fix: scrub broken dates before phenology synthesis
   tar_target(
     name = list_observed_clean,
     command = apply_corrections_Dookie25(
-      df_tbl   = list_observed_dfs_raw,
+      df_tbl   = list_observed_dfs_raw_plus_emergPerc,
       ref_date = config$date_DOY_ref
     )
   ),
@@ -250,7 +271,7 @@ list(
   # 2. THE GATEKEEPER (The new Universal script)
   tar_target(
     name = qc_pheno_integrity,
-    command = check_pheno_integrity(df_pheno_input_param_filled)
+    command = check_pheno_integrity(df_pheno_input_param)
   ),
   
   # ----------------------------------------------------------------------------
