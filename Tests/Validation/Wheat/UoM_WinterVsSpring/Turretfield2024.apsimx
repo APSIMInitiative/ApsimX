@@ -2000,10 +2000,6 @@
                     {
                       "Key": "Population",
                       "Value": "180"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
@@ -6951,7 +6947,7 @@
                       "MarkerSize": 0,
                       "Line": 4,
                       "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
+                      "TableName": "DailyObsPred",
                       "XFieldName": "Observed.Wheat.Stem.Live.NConc",
                       "YFieldName": "Predicted.Wheat.Stem.Live.NConc",
                       "X2FieldName": null,
