@@ -8,7 +8,7 @@
 #    docker run -i --rm -v "$PWD:/apsim" apsiminitiative/apsimng path/to/my/file.apsimx
 
 # Build apsim in an intermediate container
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 # Builder of this image may specify an commit (commit hash) and version number of the build.
 # These are optional, but if set, the specified commit will be built, and stamped with the
@@ -32,7 +32,7 @@ RUN dotnet publish --nologo -c Release -f net10.0 -r linux-x64 --no-self-contain
 
 # The actual image is based on dotnet/runtime.
 # docker build <build args> --target apsimng -t apsiminitiative/apsimng:latest .
-FROM mcr.microsoft.com/dotnet/runtime:8.0-bookworm-slim AS apsimng
+FROM mcr.microsoft.com/dotnet/runtime:10.0-noble AS apsimng
 
 # Install sqlite3
 RUN apt update -q --silent && \
