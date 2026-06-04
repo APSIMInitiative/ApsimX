@@ -761,4 +761,21 @@ public class CommandTests
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
         Assert.That(reports[1].VariableNames, Is.EqualTo([ "1" ]));
     }
+
+        /// <summary>Ensure the add command works.</summary>
+    [Test]
+    [TestCase("Wheat")]
+    [TestCase("Canola")]
+    public void EnsureAddFromResourceWorks(string modelName)
+    {
+        Simulation simulation = new();
+        Node.Create(simulation);
+
+        IModelCommand cmd = new AddCommand(modelReference: new NewModelReference(modelName),
+                                           toPath: "[Simulation]",
+                                           multiple: false);
+        cmd.Run(simulation, runner: null);
+
+        Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Plant)));
+    }
 }
