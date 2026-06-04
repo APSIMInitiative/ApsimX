@@ -132,5 +132,6 @@ tar_load(list_observed_dfs)
 ```{r}
 tar_load(df_soil_water)
 tar_load(soilN_data_clean)
+tar_load(soil_DUL)
 ```
 
