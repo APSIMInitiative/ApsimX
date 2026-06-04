@@ -31,7 +31,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed/WaggaWagga2025_Observed.xlsx"
+            "Observed/Turretfield2024_Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -154,70 +154,6 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Manager, Models",
-          "CodeArray": [
-            "using APSIM.Core;",
-            "using Models.Soils.Nutrients;",
-            "using System;",
-            "using Models.Core;",
-            "using System.Collections.Generic;",
-            "using System.Text;",
-            "using Models.Soils;",
-            "using Models.PMF;",
-            "using Models;",
-            "using System.Xml.Serialization;",
-            "using APSIM.Shared.Utilities;",
-            "using Models.PMF.Phen;",
-            "",
-            "namespace Models",
-            "{",
-            "    [Serializable] ",
-            "    public class Script : Model, IStructureDependency",
-            "    {",
-            "        [Link] private Plant Wheat;",
-            "        [Link] private Simulation sim;",
-            "        [Link] private Clock clock;",
-            "        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]",
-            "        private Phenology phenology;",
-            "        public IStructure Structure { private get; set; }",
-            "",
-            "",
-            "        ",
-            "",
-            "        [EventSubscribe(\"DoManagement\")]",
-            "        private void OnDoManagement(object sender, EventArgs e)",
-            "        {",
-            "            if (phenology.CurrentPhase.Name == \"GrainRipening\")",
-            "            {",
-            "                Wheat.Harvest();",
-            "                Wheat.EndCrop();",
-            "                Structure.Set(\"Clock.EndDate\", clock.Today, relativeTo: sim);  ",
-            "            }",
-            "        }",
-            "",
-            "        [EventSubscribe(\"EndOfDay\")]",
-            "        private void OnEndOfDay(object sender, EventArgs e)",
-            "        {",
-            "            if ((clock.Today.Equals(clock.EndDate))&&(Wheat.IsAlive))",
-            "            {",
-            "                Wheat.Harvest();",
-            "                Wheat.EndCrop();",
-            "                Structure.Set(\"Clock.EndDate\", clock.Today, relativeTo: sim);  ",
-            "            }",
-            "        }",
-            "",
-            "    }",
-            "}",
-            "       "
-          ],
-          "Parameters": [],
-          "Name": "Harvesting",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Simulation].Name",
@@ -240,75 +176,72 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today",
-            "[Clock].StartDate",
-            "[Wheat].SowingDate",
-            "[Wheat].SowingData.Cultivar",
-            "[Wheat].SowingDate.DayOfYear",
-            "[IWeather].Latitude",
-            "[IWeather].Longitude",
-            "[IWeather].FileName",
-            "[LocationInfo].Script.Country",
-            "[LocationInfo].Script.State",
-            "[LocationInfo].Script.Region",
-            "[Wheat].AboveGround.N",
-            "[Wheat].AboveGround.NConc",
-            "[Wheat].AboveGround.Wt",
-            "[Wheat].AboveGround.StorageWt as Wheat.AboveGround.WSC",
-            "[Wheat].Ear.N",
-            "[Wheat].Ear.NConc",
-            "[Wheat].Ear.Wt",
-            "[Wheat].Grain.N",
-            "[Wheat].Grain.Live.NConc",
-            "[Wheat].Grain.Number",
-            "[Wheat].Grain.Protein",
-            "[Wheat].Grain.Size",
-            "[Wheat].Grain.Wt",
-            "[Wheat].Leaf.Dead.Wt",
-            "[Wheat].Leaf.Dead.N",
-            "[Wheat].Leaf.Dead.Nconc",
-            "[Wheat].Leaf.Wt",
-            "[Wheat].Leaf.Live.N",
-            "[Wheat].Leaf.Live.NConc",
-            "[Wheat].Leaf.Live.Wt",
-            "[Wheat].Leaf.Live.NConc",
-            "[Wheat].Leaf.Live.StructuralWt",
-            "[Wheat].Leaf.Live.StorageWt as Wheat.Leaf.Live.WSC",
-            "[Wheat].Leaf.Dead.StorageWt as Wheat.Leaf.Dead.WSC ",
-            "[Wheat].Phenology.CAMP.TSHS",
-            "[Wheat].Phenology.CurrentStageName",
-            "[Wheat].Phenology.EmergenceDAS",
-            "[Wheat].Phenology.FinalLeafNumber",
-            "[Wheat].Phenology.FlagLeafDAS",
-            "[Wheat].Phenology.FloweringDAS",
-            "[Wheat].Phenology.HeadingDAS",
-            "[Wheat].Phenology.MaturityDAS",
-            "[Wheat].Phenology.TerminalSpikeletDAS",
-            "[Wheat].Spike.HeadNumber",
-            "[Wheat].Spike.Wt",
-            "[Wheat].Spike.Live.Wt",
-            "[Wheat].Spike.Live.N",
-            "[Wheat].Spike.Live.NConc",
-            "[Wheat].Spike.Live.StorageWt as Wheat.Spike.Live.WSC",
-            "[Wheat].Stem.Live.Wt",
-            "[Wheat].Stem.Wt",
-            "[Wheat].Stem.Live.Wt",
-            "[Wheat].Stem.Live.N",
-            "[Wheat].Stem.Live.NConc",
-            "[Wheat].Stem.Live.StorageWt as Wheat.Stem.Live.WSC",
-            "1.0 * [Wheat].Grain.Wt / ([Wheat].AboveGround.Wt + 0.00001) as HarvestIndex",
-            "1.0 * [Wheat].Leaf.Live.StorageWt / ([Wheat].Leaf.Live.Wt + 0.00001) as Wheat.Leaf.Live.WSCc",
-            "1.0 * [Wheat].Stem.Live.StorageWt / ([Wheat].Stem.Live.Wt + 0.00001) as Wheat.Stem.Live.WSCc",
-            "1.0 * [Wheat].Spike.Live.StorageWt / ([Wheat].Spike.Live.Wt + 0.00001) as Wheat.Spike.Live.WSCc",
-            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc"
+          "$type": "Models.Manager, Models",
+          "CodeArray": [
+            "using APSIM.Core;",
+            "using Models.Soils.Nutrients;",
+            "using System;",
+            "using Models.Core;",
+            "using System.Collections.Generic;",
+            "using System.Text;",
+            "using Models.Soils;",
+            "using Models.PMF;",
+            "using Models;",
+            "using System.Xml.Serialization;",
+            "using APSIM.Shared.Utilities;",
+            "",
+            "namespace Models",
+            "{",
+            "    [Serializable] ",
+            "    public class Script : Model, IStructureDependency",
+            "    {",
+            "        [Link] private Plant Wheat;",
+            "        [Link] private Simulation sim;",
+            "        [Link] private Clock clock;",
+            "",
+            "        // 1. Expose the date to the APSIM UI. ",
+            "        // This will create a clean input box in the interface.",
+            "        [Description(\"Target Harvest Date (e.g., 2025-11-27):\")]",
+            "        public DateTime TargetHarvestDate { get; set; }",
+            "",
+            "        public IStructure Structure { private get; set; }",
+            "",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            // 2. Trigger harvest ONLY when the calendar date matches exactly, ",
+            "            // AND ensure the crop is actually growing to prevent errors.",
+            "            if (clock.Today == TargetHarvestDate && Wheat.IsAlive)",
+            "            {",
+            "                Wheat.Harvest();",
+            "                Wheat.EndCrop();",
+            "                ",
+            "                // Forces the simulation to end on this harvest date",
+            "                Structure.Set(\"Clock.EndDate\", clock.Today, relativeTo: sim);  ",
+            "            }",
+            "        }",
+            "",
+            "        [EventSubscribe(\"EndOfDay\")]",
+            "        private void OnEndOfDay(object sender, EventArgs e)",
+            "        {",
+            "            // 3. Fallback safety net: if the simulation reaches its set EndDate ",
+            "            // for any other reason before the TargetHarvestDate, clean up the crop.",
+            "            if ((clock.Today.Equals(clock.EndDate)) && (Wheat.IsAlive))",
+            "            {",
+            "                Wheat.Harvest();",
+            "                Wheat.EndCrop();",
+            "            }",
+            "        }",
+            "    }",
+            "}"
           ],
-          "EventNames": [
-            "[Wheat].Harvesting"
+          "Parameters": [
+            {
+              "Key": "TargetHarvestDate",
+              "Value": "11/15/2024 00:00:00"
+            }
           ],
-          "GroupByVariableName": null,
-          "Name": "HarvestReport",
+          "Name": "Harvesting",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -401,13 +334,89 @@
             "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc",
             "[Spectral].NDVI",
             "[Irrigation].IrrigationApplied",
-            "[Fertiliser].NitrogenApplied"
+            "[Fertiliser].NitrogenApplied",
+            "[Wheat].Spike.HeadNumber"
           ],
           "EventNames": [
             "[Clock].DoReport"
           ],
           "GroupByVariableName": null,
           "Name": "DailyReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].StartDate",
+            "[Wheat].SowingDate",
+            "[Wheat].SowingData.Cultivar",
+            "[Wheat].SowingDate.DayOfYear",
+            "[IWeather].Latitude",
+            "[IWeather].Longitude",
+            "[IWeather].FileName",
+            "[LocationInfo].Script.Country",
+            "[LocationInfo].Script.State",
+            "[LocationInfo].Script.Region",
+            "[Wheat].AboveGround.N",
+            "[Wheat].AboveGround.NConc",
+            "[Wheat].AboveGround.Wt",
+            "[Wheat].AboveGround.StorageWt as Wheat.AboveGround.WSC",
+            "[Wheat].Ear.N",
+            "[Wheat].Ear.NConc",
+            "[Wheat].Ear.Wt",
+            "[Wheat].Grain.N",
+            "[Wheat].Grain.Live.NConc",
+            "[Wheat].Grain.Number",
+            "[Wheat].Grain.Protein",
+            "[Wheat].Grain.Size",
+            "[Wheat].Grain.Wt",
+            "[Wheat].Leaf.Dead.Wt",
+            "[Wheat].Leaf.Dead.N",
+            "[Wheat].Leaf.Dead.Nconc",
+            "[Wheat].Leaf.Wt",
+            "[Wheat].Leaf.Live.N",
+            "[Wheat].Leaf.Live.NConc",
+            "[Wheat].Leaf.Live.Wt",
+            "[Wheat].Leaf.Live.NConc",
+            "[Wheat].Leaf.Live.StructuralWt",
+            "[Wheat].Leaf.Live.StorageWt as Wheat.Leaf.Live.WSC",
+            "[Wheat].Leaf.Dead.StorageWt as Wheat.Leaf.Dead.WSC ",
+            "[Wheat].Phenology.CAMP.TSHS",
+            "[Wheat].Phenology.CurrentStageName",
+            "[Wheat].Phenology.EmergenceDAS",
+            "[Wheat].Phenology.FinalLeafNumber",
+            "[Wheat].Phenology.FlagLeafDAS",
+            "[Wheat].Phenology.FloweringDAS",
+            "[Wheat].Phenology.HeadingDAS",
+            "[Wheat].Phenology.MaturityDAS",
+            "[Wheat].Phenology.TerminalSpikeletDAS",
+            "[Wheat].Spike.HeadNumber",
+            "[Wheat].Spike.Wt",
+            "[Wheat].Spike.Live.Wt",
+            "[Wheat].Spike.Live.N",
+            "[Wheat].Spike.Live.NConc",
+            "[Wheat].Spike.Live.StorageWt as Wheat.Spike.Live.WSC",
+            "[Wheat].Stem.Live.Wt",
+            "[Wheat].Stem.Wt",
+            "[Wheat].Stem.Live.Wt",
+            "[Wheat].Stem.Live.N",
+            "[Wheat].Stem.Live.NConc",
+            "[Wheat].Stem.Live.StorageWt as Wheat.Stem.Live.WSC",
+            "1.0 * [Wheat].Grain.Wt / ([Wheat].AboveGround.Wt + 0.00001) as HarvestIndex",
+            "1.0 * [Wheat].Leaf.Live.StorageWt / ([Wheat].Leaf.Live.Wt + 0.00001) as Wheat.Leaf.Live.WSCc",
+            "1.0 * [Wheat].Stem.Live.StorageWt / ([Wheat].Stem.Live.Wt + 0.00001) as Wheat.Stem.Live.WSCc",
+            "1.0 * [Wheat].Spike.Live.StorageWt / ([Wheat].Spike.Live.Wt + 0.00001) as Wheat.Spike.Live.WSCc",
+            "1.0 * [Wheat].Leaf.Dead.StorageWt/([Wheat].Leaf.Dead.Wt + 0.00001) as Wheat.Leaf.Dead.WSCc"
+          ],
+          "EventNames": [
+            "[Wheat].Harvesting"
+          ],
+          "GroupByVariableName": null,
+          "Name": "HarvestReport",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -420,22 +429,38 @@
     {
       "$type": "Models.Factorial.Experiment, Models",
       "DisabledSimNames": [
-        "WaggaWagga2025CvKittyhawkSow13-May",
-        "WaggaWagga2025CvWedgetailSow13-May",
-        "WaggaWagga2025CvWylahSow13-May",
-        "WaggaWagga2025CvWhistlerSow13-May",
-        "WaggaWagga2025CvRosellaSow13-May",
-        "WaggaWagga2025CvOspreySow13-May",
-        "WaggaWagga2025CvIllaboSow13-May",
-        "WaggaWagga2025CvMowhawkSow13-May",
-        "WaggaWagga2025CvSunmasterSow17-Apr",
-        "WaggaWagga2025CvScepterSow17-Apr",
-        "WaggaWagga2025CvMaceSow17-Apr",
-        "WaggaWagga2025CvGregorySow17-Apr",
-        "WaggaWagga2025CvWyalkatchemSow17-Apr",
-        "WaggaWagga2025CvYitpiSow17-Apr",
-        "WaggaWagga2025CvJanzSow17-Apr",
-        "WaggaWagga2025CvMeeringSow17-Apr",
+        "Turretfield2024CvOspreySow15-May",
+        "Turretfield2024CvRosellaSow15-May",
+        "Turretfield2024CvWhistlerSow15-May",
+        "Turretfield2024CvWylahSow15-May",
+        "Turretfield2024CvWedgetailSow15-May",
+        "Turretfield2024CvKittyhawkSow15-May",
+        "Turretfield2024CvIllaboSow15-May",
+        "Turretfield2024CvMowhawkSow15-May",
+        "Turretfield2024CvJanzSow16-Apr",
+        "Turretfield2024CvYitpiSow16-Apr",
+        "Turretfield2024CvWyalkatchemSow16-Apr",
+        "Turretfield2024CvGregorySow16-Apr",
+        "Turretfield2024CvMaceSow16-Apr",
+        "Turretfield2024CvScepterSow16-Apr",
+        "Turretfield2024CvSunmasterSow16-Apr",
+        "Turretfield2024CvMeeringSow16-Apr",
+        "Turretfield2024CvIllaboSow11-May",
+        "Turretfield2024CvMowhawkSow11-May",
+        "Turretfield2024CvOspreySow11-May",
+        "Turretfield2024CvRosellaSow11-May",
+        "Turretfield2024CvWhistlerSow11-May",
+        "Turretfield2024CvWylahSow11-May",
+        "Turretfield2024CvWedgetailSow11-May",
+        "Turretfield2024CvKittyhawkSow11-May",
+        "Turretfield2024CvSunmasterSow10-Apr",
+        "Turretfield2024CvMeeringSow10-Apr",
+        "Turretfield2024CvJanzSow10-Apr",
+        "Turretfield2024CvYitpiSow10-Apr",
+        "Turretfield2024CvWyalkatchemSow10-Apr",
+        "Turretfield2024CvGregorySow10-Apr",
+        "Turretfield2024CvMaceSow10-Apr",
+        "Turretfield2024CvScepterSow10-Apr",
         "WaggaWagga2024CvMeeringSow22-Apr",
         "WaggaWagga2024CvJanzSow22-Apr",
         "WaggaWagga2024CvYitpiSow22-Apr",
@@ -485,7 +510,7 @@
         "DookieWWHI2024CvJanzSow17-Apr",
         "DookieWWHI2024CvMeeringSow17-Apr"
       ],
-      "Name": "WaggaWagga2025",
+      "Name": "Turretfield2024",
       "ResourceName": null,
       "Children": [
         {
@@ -759,11 +784,13 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 17-Apr"
+                        "[Sowing].Script.SowDate = 16-Apr",
+                        "[ManagementSpring].Enabled = false",
+                        "[ManagementWinter].Enabled = true"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "17-Apr",
+                      "Name": "16-Apr",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -772,11 +799,13 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Sowing].Script.SowDate = 13-May"
+                        "[Sowing].Script.SowDate = 15-May",
+                        "[ManagementSpring].Enabled = true",
+                        "[ManagementWinter].Enabled = false"
                       ],
                       "Paths": null,
                       "Values": null,
-                      "Name": "13-May",
+                      "Name": "15-May",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -797,13 +826,13 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "Descriptors": null,
-          "Name": "Wagga",
+          "Name": "Turret",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Met/WaggaWagga2025.met",
+              "FileName": "Met/Turretfield2024.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -813,8 +842,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "2025-04-01T00:00:00",
-              "End": "2025-12-03T00:00:00",
+              "Start": "2024-04-01T00:00:00",
+              "End": "2024-11-22T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -1885,81 +1914,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-05-02",
-                      "Action": "[Irrigation].Apply (15);",
-                      "Line": "2024-05-02 [Irrigation].Apply (15);"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2024-05-20",
-                      "Action": "[Irrigation].Apply (6);",
-                      "Line": "2024-05-20 [Irrigation].Apply (6);"
-                    }
-                  ],
-                  "Name": "IrrigationAppliedAmounts",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Wagga2025\t\nIRRIGATION\t\n2025-05-02 [Irrigation].Apply(20)\t       applied to whole trial area (same day)\n2025-05-20 [Irrigation].Apply(6)\t        applied to whole trial area (same day)",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "OperationsList": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-04-17",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-05-13",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\");",
-                      "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-07-25",
-                      "Action": "[Fertiliser].Apply(amount: 60, type: \"UreaN\");",
-                      "Line": "2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");"
-                    }
-                  ],
-                  "Name": "FertiliserAppliedAmounts",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "FERTILISER\t\n2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Winter treatment  (100 is kg/ha of Mono-Ammonium Phosphate) \t\n2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Spring treatment  (100 is kg/ha of Mono-Ammonium Phosphate) \t\n2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");    applied to all treatments (60 is kg/ha of Urea)\t\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Manager, Models",
                   "CodeArray": [
                     "using Newtonsoft.Json;",
@@ -2014,7 +1968,7 @@
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
                     "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);   ",
-                    "               // Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
+                    "              // Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
                     "            }            ",
                     "        ",
                     "        }",
@@ -2316,17 +2270,6 @@
                 },
                 {
                   "$type": "Models.Report, Models",
-                  "VariableNames": null,
-                  "EventNames": null,
-                  "GroupByVariableName": null,
-                  "Name": "NDVIDailyReport",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Wheat].Phenology.Stage",
@@ -2345,7 +2288,7 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "Inputs/WaggaWagga2025_ConstantPhenology.csv",
+                  "ParameterFile": "Inputs/Turretfield2024_ConstantPhenology.csv",
                   "Name": "ConstantBaseCv",
                   "ResourceName": null,
                   "Children": [],
@@ -2355,21 +2298,21 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "Inputs/WaggaWagga2025_PhenoDatesInput.csv",
+                  "ParameterFile": "Inputs/Turretfield2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
-                  "ParameterFile": "Inputs/WaggaWagga2025_HaunStagesInput.csv",
+                  "ParameterFile": "Inputs/Turretfield2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2378,30 +2321,30 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-04-17",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
-                      "Line": "2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
+                      "Date": "2024-04-16",
+                      "Action": "[Fertiliser].Apply(amount: 11, type: \"UreaN\")",
+                      "Line": "2024-04-16 [Fertiliser].Apply(amount: 11, type: \"UreaN\")"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-02",
+                      "Date": "2024-04-16",
                       "Action": "[Irrigation].Apply(20)",
-                      "Line": "2025-05-02 [Irrigation].Apply(20)"
+                      "Line": "2024-04-16 [Irrigation].Apply(20)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-20",
-                      "Action": "[Irrigation].Apply(6)",
-                      "Line": "2025-05-20 [Irrigation].Apply(6)"
+                      "Date": "2024-05-03",
+                      "Action": "[Irrigation].Apply(10)",
+                      "Line": "2024-05-03 [Irrigation].Apply(10)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-07-25",
-                      "Action": "[Fertiliser].Apply(amount: 60, type: \"UreaN\")",
-                      "Line": "2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\")"
+                      "Date": "2024-07-25",
+                      "Action": "[Fertiliser].Apply(amount: 70, type: \"UreaN\")",
+                      "Line": "2024-07-25 [Fertiliser].Apply(amount: 70, type: \"UreaN\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -2409,7 +2352,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Wagga2025\n\t\nIRRIGATION\n\t\n2025-05-02 [Irrigation].Apply(20)\t       applied to whole trial area (same day)\n\n2025-05-20 [Irrigation].Apply(6)\t        applied to whole trial area (same day)\n\n\t\nFERTILISER\n\t\n2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Winter treatment  (100 is kg/ha of Mono-Ammonium Phosphate)\n \t\n2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Spring treatment  (100 is kg/ha of Mono-Ammonium Phosphate)\n \t\n2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");    applied to all treatments (60 is kg/ha of Urea)\t\n",
+                      "Text": "Date\tStaff\tOperations\n\n16/04/2024\tMC\tSowing TOS 1 and irrigation\n\n16/04/2024\tMC\tFertiliser used was Granuloc Z at 80kg/ha with an analysis of 11-21.8-4-1 (NPKS) \n\n3/05/2024\tMC\tirrigation tos 1 extra\n\n15/05/2024\tMC\tSowing and irrigation TOS2\n\n25/07/2024\tMC\tApplied 70Kg N ha to both TOS\n\nAssumed sowing fertiliser and irrigation amounts - check\n\n\n",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -2426,30 +2369,23 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-02",
+                      "Date": "2024-05-15",
+                      "Action": "[Fertiliser].Apply(amount: 11, type: \"UreaN\")",
+                      "Line": "2024-05-15 [Fertiliser].Apply(amount: 11, type: \"UreaN\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2024-05-15",
                       "Action": "[Irrigation].Apply(20)",
-                      "Line": "2025-05-02 [Irrigation].Apply(20)"
+                      "Line": "2024-05-15 [Irrigation].Apply(20)"
                     },
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-20",
-                      "Action": "[Irrigation].Apply(6)",
-                      "Line": "2025-05-20 [Irrigation].Apply(6)"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-05-13",
-                      "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
-                      "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Enabled": true,
-                      "Date": "2025-07-25",
-                      "Action": "[Fertiliser].Apply(amount: 60, type: \"UreaN\")",
-                      "Line": "2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\")"
+                      "Date": "2024-07-25",
+                      "Action": "[Fertiliser].Apply(amount: 70, type: \"UreaN\")",
+                      "Line": "2024-07-25 [Fertiliser].Apply(amount: 70, type: \"UreaN\")"
                     }
                   ],
                   "Name": "ManagementSpring",
@@ -2457,7 +2393,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Wagga2025\n\t\nIRRIGATION\n\t\n2025-05-02 [Irrigation].Apply(20)\t       applied to whole trial area (same day)\n\n2025-05-20 [Irrigation].Apply(6)\t        applied to whole trial area (same day)\n\n\t\nFERTILISER\n\t\n2025-04-17 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Winter treatment  (100 is kg/ha of Mono-Ammonium Phosphate)\n \t\n2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\");     applied to Spring treatment  (100 is kg/ha of Mono-Ammonium Phosphate)\n \t\n2025-07-25 [Fertiliser].Apply(amount: 60, type: \"UreaN\");    applied to all treatments (60 is kg/ha of Urea)\t\n",
+                      "Text": "Date\tStaff\tOperations\n\n16/04/2024\tMC\tSowing TOS 1 and irrigation\n\n16/04/2024\tMC\tFertiliser used was Granuloc Z at 80kg/ha with an analysis of 11-21.8-4-1 (NPKS) \n\n3/05/2024\tMC\tirrigation tos 1 extra\n\n15/05/2024\tMC\tSowing and irrigation TOS2\n\n25/07/2024\tMC\tApplied 70Kg N ha to both TOS\n\nAssumed sowing fertiliser and irrigation amounts - check",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],

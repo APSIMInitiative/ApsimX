@@ -1735,7 +1735,7 @@
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
                     "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);   ",
-                    "               Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
+                    "               // Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
                     "            }            ",
                     "        ",
                     "        }",
