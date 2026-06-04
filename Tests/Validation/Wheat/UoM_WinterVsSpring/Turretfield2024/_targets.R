@@ -206,15 +206,39 @@ list(
     name = final_apsim_observed,
     command = prepare_apsim_observed(
       compiled_obs = list_observed_dfs_clean,
-      dfs_out      = c("ndvi_raw", "weather_qc_checks") # Datasets to exclude
+      dfs_out      = c("weather_qc_checks") # Datasets to exclude
     )
   ),
   
+  tar_target(
+    name = df_obs_plus_hi,
+    command = calc_harvest_index(
+      df          = final_apsim_observed,
+      grain_col   = "Wheat.Grain.Wt",
+      agb_col     = "Wheat.AboveGround.Wt",
+      hi_col_name = "HarvestIndex"
+    )
+  ),
+  
+  tar_target(
+    name = df_obs_plus_hi_amounts,
+    command = calc_nutrient_absolute_amounts(
+      df           = df_obs_plus_hi,
+      crop_prefix  = "Wheat",
+      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"),
+      conc_targets = c("N" = "NConc", "WSC" = "WSCc"),
+      mass_suffix  = "Wt",
+      ag_name      = "Wheat.AboveGround",
+      divisor      = 1
+    )
+  ),
+
+  
   # Flag the final measurement dates as "HarvestRipe"
   tar_target(
-    name = df_final_observed_harv, 
+    name = df_obs_plus_hi_amounts_harv, 
     command = add_harv_into_obs(
-      df            = final_apsim_observed,
+      df            = df_obs_plus_hi_amounts,
       ref_vars      = c("Wheat.AboveGround.Wt", "Wheat.Grain.Wt"), 
       new_col_name  = "Wheat.Phenology.CurrentStageName",
       new_col_value = "HarvestRipe"
@@ -223,8 +247,8 @@ list(
   
   # THE QC GATEKEEPER
   tar_target(
-    name = qc_apsim_observed_harv,
-    command = check_obs_health(df_final_observed_harv) # Stops the pipeline if it fails!
+    name = qc_apsim_observed,
+    command = check_obs_health(df_obs_plus_hi_amounts_harv) # Stops the pipeline if it fails!
   ),
   
   # ----------------------------------------------------------------------------
@@ -248,7 +272,7 @@ list(
   tar_target(
     name = msg_obs_saved,
     command = save_obs_to_excel(
-      df_final  = qc_apsim_observed_harv, 
+      df_final  = qc_apsim_observed, 
       obs_path  = config$folder_observed,
       file_name = config$file_saved_obs_excel,
       sheetName = "Observed"
