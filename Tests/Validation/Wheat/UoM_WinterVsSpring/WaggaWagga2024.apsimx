@@ -1914,8 +1914,8 @@
                     "        public double RowSpacing { get; set; }",
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
-                    "        [Description(\"Emergence Date (d-MMM)\")]",
-                    "        public string EmergeDate {get; set;}",
+                    "        //[Description(\"Emergence Date (d-MMM)\")]",
+                    "        //public string EmergeDate {get; set;}",
                     "",
                     "",
                     "",
@@ -1926,7 +1926,7 @@
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
                     "               Wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);   ",
-                    "               Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
+                    "               // Wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\"); ",
                     "            }            ",
                     "        ",
                     "        }",
@@ -1958,10 +1958,6 @@
                     {
                       "Key": "Population",
                       "Value": "180"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
@@ -2170,6 +2166,16 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "ReportPhenoDates",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/WaggaWagga2024_ConstantPhenology.csv",
+                  "Name": "ConstantBaseCv",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

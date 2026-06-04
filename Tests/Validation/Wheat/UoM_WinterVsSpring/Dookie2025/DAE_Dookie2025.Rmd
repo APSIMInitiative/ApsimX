@@ -151,3 +151,7 @@ tar_load(df_pheno_input_param_filled)
 tar_load(df_pheno_raw)
 ```
 
+```{r}
+tar_load(soil_data_clean)
+```
+
