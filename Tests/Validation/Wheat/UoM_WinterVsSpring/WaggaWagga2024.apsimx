@@ -1958,10 +1958,6 @@
                     {
                       "Key": "Population",
                       "Value": "180"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",

@@ -73,11 +73,11 @@ list(
       
       # Model parameters
       coord_thisLatLon        = data.frame(lat = -35.041, lon = 147.319),
-      target_stagePerc        = 0.5,     # % of stage development when event date is retrieved
+      target_stagePerc        = 50,     # % of stage development when event date is retrieved
       target_betwStages       = 0.5,     # fraction of period between adjacent events for synthetic dates
       var_df_name_stage       = "apsim_stage_raw",       # Synthetic var with observed PCSD data
       max_leaf_limit          = 0.95,   # Fractional max leaves assumed when terminal spikelet is set
-      pcd_stages_to_extract   = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis"),
+      pcd_stages_to_extract   = c("pcds_3_emergPlants_Perc","pcds_6_flagLeaf", "pcds_8_anthesis"),
       
       # Output file names
       file_name_input_pheno   = paste0(proj_name, "_PhenoDatesInput.csv"),
@@ -154,7 +154,7 @@ list(
   ),
   
   tar_target(
-    name = list_observed_dfs,
+    name = list_observed_dfs_raw,
     command = {
       force(tracked_raw_excel) 
       compile_all_observed(
@@ -165,6 +165,16 @@ list(
       )
     }
   ),
+  
+  tar_target(
+    name = list_observed_dfs,
+    command = calc_emerg_perc(
+      df_tbl            = list_observed_dfs_raw,  # <--- Change this from df_list to df_tbl
+      df_input_var_name = "pcds_3_emergPlants",
+      df_new_var_name   = "pcds_3_emergPlants_Perc"
+    )
+  ),
+  
   
   # ----------------------------------------------------------------------------
   # PHASE D: PHENOLOGY STAGE SYNTHESIS (Universal)
