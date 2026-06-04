@@ -79,8 +79,8 @@ list(
       target_stagePerc          = 50,          # % of phenological-stage development
       target_betwStages         = 0.5,          # fraction of time in-between two pheno-stages
       max_leaf_limit            = 0.95,
-      pcd_stages_to_extract     = c("pcds_3_emergPlants")
-      #pcd_stages_to_extract     = c("pcds_3_emergPlants","pcds_6_flagLeaf", "pcds_8_anthesis")
+      pcd_stages_to_extract     = c("pcds_3_emergPlants_Perc")
+      #pcd_stages_to_extract     = c("pcds_3_emergPlants_Perc","pcds_6_flagLeaf", "pcds_8_anthesis")
     )
   ),
   
@@ -157,13 +157,22 @@ list(
   
   # For25-specific fix: scrub broken dates using human-in-the-loop CSV
   tar_target(
-    name = list_observed_clean,
+    name = list_observed_raw_clean,
     command = apply_corrections_For25(
       df_tbl      = list_observed_dfs_raw,
       folder_path = config$folder_rawData,  # <--- Pass the config folder here!
       ref_date    = config$date_DOY_ref,
       file_name_newDates = config$file_name_to_hold_fix_dates
       )
+  ),
+  
+  tar_target(
+    name = list_observed_clean,
+    command = calc_emerg_perc(
+      df_tbl            = list_observed_raw_clean,  # <--- Change this from df_list to df_tbl
+      df_input_var_name = "pcds_3_emergPlants",
+      df_new_var_name   = "pcds_3_emergPlants_Perc"
+    )
   ),
   
 

@@ -23,8 +23,8 @@ totalAboveGround_10_raw,PCDS 10.0 harvest | PCDS 10.0 harvest Final,Estimated dr
 par_6_raw,PCDS 6.0 harvest,PARi at ground level,Wheat.Leaf.CoverTotal,1
 par_8_raw,PCDS 8.0 harvest,PARi at ground level,Wheat.Leaf.CoverTotal,1
 pcds_3_emergPlants,Emergence,Plants emerged (plants/1 m of row),[Wheat].Phenology.Emerging.DateToProgress,1
-pcds_6_flagLeaf,PCDS 6.0,% flag leaves emerged,[Wheat].Phenology.StemElongating.DateToProgress,1
-pcds_8_anthesis,PCDS 8.0,% anthesis,[Wheat].Phenology.Flowering.DateToProgress,1
+pcds_6_flagLeaf,PCDS 6.0,% flag leaves emerged,[Wheat].Phenology.StemElongating.DateToProgress,100
+pcds_8_anthesis,PCDS 8.0,% anthesis,[Wheat].Phenology.Flowering.DateToProgress,100
 plant_population_m2,Population,Plant population density (plants/m2),[Wheat].Leaf.StemPopulation,1
 shoot_6_N,PCDS 6.0 harvest,Nitrogen percent shoot,Wheat.AboveGround.Live.NConc,1
 shoot_6_WSCc,PCDS 6.0 harvest,WSC percent shoot,Wheat.AboveGround.Live.WSCc,1
