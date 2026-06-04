@@ -2345,6 +2345,16 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/WaggaWagga2025_ConstantPhenology.csv",
+                  "Name": "ConstantBaseCv",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "Inputs/WaggaWagga2025_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
