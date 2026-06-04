@@ -1744,8 +1744,8 @@
                     "        public double RowSpacing { get; set; }",
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
-                    "        [Description(\"Emergence Date (d-MMM)\")]",
-                    "        public string EmergeDate {get; set;}",
+                    "        //[Description(\"Emergence Date (d-MMM)\")]",
+                    "        // public string EmergeDate {get; set;}",
                     "",
                     "",
                     "",
@@ -1788,10 +1788,6 @@
                     {
                       "Key": "Population",
                       "Value": "180"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
@@ -9292,8 +9288,8 @@
                     "        public double RowSpacing { get; set; }",
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
-                    "        [Description(\"Emergence Date (d-MMM)\")]",
-                    "        public string EmergeDate {get; set;}",
+                    "        //[Description(\"Emergence Date (d-MMM)\")]",
+                    "        // public string EmergeDate {get; set;}",
                     "",
                     "",
                     "",
@@ -9336,10 +9332,6 @@
                     {
                       "Key": "Population",
                       "Value": "180"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",

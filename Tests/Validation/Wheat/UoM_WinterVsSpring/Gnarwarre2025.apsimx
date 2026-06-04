@@ -725,8 +725,8 @@
                     "        [Description(\"Plant population (/m2)\")]",
                     "        public double Population { get; set; }",
                     "        ",
-                    "        [Description(\"Emergence Date (d-MMM)\")]",
-                    "        public string EmergeDate {get; set;}",
+                    "      //  [Description(\"Emergence Date (d-MMM)\")]",
+                    "      //  public string EmergeDate {get; set;}",
                     "",
                     "        [EventSubscribe(\"DoManagement\")]",
                     "        private void OnDoManagement(object sender, EventArgs e)",
@@ -734,7 +734,7 @@
                     "            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))",
                     "            {",
                     "                wheat.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    ",
-                    "                wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\");",
+                    "               // wheat.Phenology.SetPhaseCompletionDate(EmergeDate,\"Emerging\");",
                     "            }",
                     "        }",
                     "    }",
@@ -760,10 +760,6 @@
                     {
                       "Key": "Population",
                       "Value": "150"
-                    },
-                    {
-                      "Key": "EmergeDate",
-                      "Value": ""
                     }
                   ],
                   "Name": "Sowing",
