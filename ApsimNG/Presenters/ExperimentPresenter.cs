@@ -227,8 +227,10 @@ namespace UserInterface.Presenters
                 if (path != null)
                 {
                     textFile.Open(path);
-                    var disabledSimsTable = new DataView(textFile.ToTable());
-                    disabledSimsTable.RowFilter = "Enabled = False";
+                    DataView disabledSimsTable = new(textFile.ToTable())
+                    {
+                        RowFilter = "Enabled = False"
+                    };
                     experiment.DisabledSimNames = DataTableUtilities.GetColumnAsStrings(disabledSimsTable, "SimulationName").ToList();
                 }
                 PopulateView();
