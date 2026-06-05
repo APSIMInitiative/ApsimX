@@ -2733,16 +2733,7 @@ namespace Models.GrazPlan
             {
                 if ((comp == TOTAL) || (this.BelongsIn(iCohort, comp)))
                 {
-                    if(DMD == TOTAL)
-                    {
-                        for(int cls = 1; cls <= HerbClassNo ; cls++)
-                        {
-                            
-                            result += this.FCohorts[iCohort].Herbage[part, cls].DM;
-                        }
-                    }
-                    else
-                        result += this.FCohorts[iCohort].Herbage[part, DMD].DM;
+                    result += this.FCohorts[iCohort].Herbage[part, DMD].DM;
                 }
             }
 
