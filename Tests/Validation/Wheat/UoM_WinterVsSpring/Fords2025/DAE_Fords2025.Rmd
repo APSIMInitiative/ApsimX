@@ -68,3 +68,12 @@ df_suspect %>%
 ```
 
 
+```{r}
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
