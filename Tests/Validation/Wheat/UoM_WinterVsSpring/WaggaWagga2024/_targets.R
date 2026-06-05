@@ -113,6 +113,38 @@ list(
     command = soil_water_into_json(df_soil_water)
   ),
   
+  
+  # Soil data
+  tar_target(
+    name = soilN_data_clean,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = config$file_rawData_excel,
+      # sheet           = "Soil sampling",
+      sheet          = "Soil sampling",
+      vars_to_extract = c("Nitrate Nitrogen",	"Ammonium Nitrogen"),
+      col_depth_from  = "Depth From", # Optional if this matches the default
+      col_depth_to    = "Depth To"    # Optional if this matches the default
+    )
+  ),
+  
+  tar_target(
+    name = soil_DUL,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = "PAW estimates Wagga 2024 JRH.xlsx",
+      # sheet           = "PAW estimates",
+      sheet          = "PAW estimates",
+      vars_to_extract = c("Bulk density (g/cm2)",	"CLL_wheat",	"DUL_wheat",	
+                          "Volumetric water content"),
+      col_depth_from  = "Depth From (cm)", # Optional if this matches the default
+      col_depth_to    = "Depth To (cm)"   # Optional if this matches the default
+    )
+  ),
+  
+  	
+  
+  
   tar_target(
     name = processed_met_data, 
     command = createWeatherFile(
