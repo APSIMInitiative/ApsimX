@@ -78,3 +78,13 @@ df3<-tar_read(df_stages_Observ)
 names(targets::tar_read(df_pheno_final))
 ```
 
+Create template to parameterise soils
+```{r}
+tar_load(df_soil_water)
+readr::write_csv(df_soil_water, "soilW_data_clean.csv", na = "")
+tar_load(soilN_data_clean)
+readr::write_csv(soilN_data_clean, "soilN_data_clean.csv", na = "")
+tar_load(soil_DUL)
+readr::write_csv(soil_DUL, "soilCaract_data_clean.csv", na = "")
+```
+

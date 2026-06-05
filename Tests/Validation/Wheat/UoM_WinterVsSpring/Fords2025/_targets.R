@@ -106,6 +106,27 @@ list(
     )
   ),
   
+  
+  #--------------------------------------------
+  # SOIL 
+  #--------------------------------------------
+  
+  tar_target(
+    name = soil_profile,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = config$file_rawData_excel,
+      sheet          = "Soil sampling",
+      vars_to_extract = c("Bulk density",	"LL",	"Soil moisture",	"Nitrate Nitrogen",
+                            "Ammonium Nitrogen","Available water",	
+                          "C:N Ratio",	"Soil Bulk Density",
+                            "Total Carbon (Combustion)"),
+      col_depth_from  = "Depth From", # Optional if this matches the default
+      col_depth_to    = "Depth To"   # Optional if this matches the default
+    )
+  ),
+  	
+  
   # ----------------------------------------------------------------------------
   # PHASE B: WEATHER PROCESSING
   # ----------------------------------------------------------------------------
