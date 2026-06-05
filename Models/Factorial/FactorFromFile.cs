@@ -24,7 +24,7 @@ namespace Models.Factorial
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
         /// </summary>
-        private enum CommandType { Replacement, Set, SetDate, Label, None };
+        private enum CommandType { None, Label, Replacement, Set, SetDate, Descriptor };
 
         private string _filename { get; set; } = null;
 
@@ -243,9 +243,17 @@ namespace Models.Factorial
                 {
                     VariableComposite variable = Node.GetObject(header, LocatorFlags.None, simulation);
                     if (variable == null)
-                        columnCommandType.Add(CommandType.None);
+                    {
+                        bool hasSymbols = header.Any(c => !char.IsLetterOrDigit(c));
+                        if (hasSymbols)
+                            columnCommandType.Add(CommandType.None);
+                        else
+                            columnCommandType.Add(CommandType.Descriptor);
+                    }
                     else if (typeof(IModel).IsAssignableFrom(variable.DataType))
+                    {
                         columnCommandType.Add(CommandType.Replacement);
+                    }
                     else
                     {
                         if (variable.DataType == typeof(DateTime))
@@ -303,6 +311,11 @@ namespace Models.Factorial
                         else if (commandType == CommandType.Set)
                         {
                             commands.Add($"[{parent.Name}].{Name}.{label}.Specifications += {column}={value}");
+                        }
+                        else if (commandType == CommandType.Descriptor)
+                        {
+                            commands.Add($"[{parent.Name}].{Name}.{label}.DescriptorNames += {column}");
+                            commands.Add($"[{parent.Name}].{Name}.{label}.DescriptorValues += {value}");
                         }
                     }
                 }
