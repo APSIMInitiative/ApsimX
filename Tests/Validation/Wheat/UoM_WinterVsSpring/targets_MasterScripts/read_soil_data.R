@@ -7,7 +7,9 @@
 #' @details
 #' **Defensive Column Resolution:** Automatically handles messy Excel formatting, 
 #' trailing spaces, and duplicate column names. If a requested column appears multiple 
-#' times in the raw file, the function safely isolates the first instance and logs a warning.
+#' times, the function actively scans them and isolates the FIRST instance that actually 
+#' contains valid data (bypassing empty columns or columns containing only a unit row), 
+#' logging the intervention.
 #'
 #' @param folder Character. Path to the folder containing the file.
 #' @param file Character. Name of the Excel file.
@@ -54,16 +56,48 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
     
     if (length(matches) == 0) {
       missing_cols <- c(missing_cols, tgt)
+      
     } else if (length(matches) == 1) {
       resolved_indices[i] <- matches[1]
+      
     } else {
-      # THE DUPLICATE SHIELD: Grab the first match and log the intervention
-      resolved_indices[i] <- matches[1]
-      duplicate_logs <- c(
-        duplicate_logs,
-        sprintf("   -> Column '%s' was found %d times. We safely extracted the FIRST instance (Index %d).", 
-                tgt, length(matches), matches[1])
-      )
+      # THE DUPLICATE SHIELD: Find the first instance that ACTUALLY contains data
+      best_match <- matches[1] # Default fallback
+      data_found <- FALSE
+      
+      for (m in matches) {
+        col_data <- df_raw[[m]]
+        
+        # Strip NAs and empty whitespace
+        valid_vals <- col_data[!is.na(col_data)]
+        valid_vals <- trimws(as.character(valid_vals))
+        valid_vals <- valid_vals[valid_vals != ""]
+        
+        # THE FIX: Require > 1 valid entry to bypass isolated unit strings (e.g., "mg/kg")
+        # An empty duplicate with just a unit will have length == 1. 
+        # A real column will have length > 1 (Units + Data).
+        if (length(valid_vals) > 1) {
+          best_match <- m
+          data_found <- TRUE
+          break # Stop searching once we find the populated bulk column
+        }
+      }
+      
+      resolved_indices[i] <- best_match
+      
+      if (data_found) {
+        duplicate_logs <- c(
+          duplicate_logs,
+          sprintf("   -> Column '%s' found %d times. Safely extracted Index %d (bypassed empty/unit-only duplicates).", 
+                  tgt, length(matches), best_match)
+        )
+      } else {
+        duplicate_logs <- c(
+          duplicate_logs,
+          sprintf("   -> Column '%s' found %d times, but ALL instances appear empty. Defaulted to Index %d.", 
+                  tgt, length(matches), best_match)
+        )
+      }
     }
   }
   

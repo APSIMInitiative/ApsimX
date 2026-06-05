@@ -42,3 +42,7 @@ Observed/
 
 #Super secret passwords
 secret_pass.txt
+
+#logs
+pipeline_log.txt
+soil_profile.csv
