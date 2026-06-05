@@ -72,7 +72,7 @@ list(
       # Model parameters
       coord_thisLatLon       = data.frame(lat = -34.5435, lon = 138.8444),
       target_stagePerc       = 50,     # % of stage development when event date is retrieved
-      target_betwStages      = 50,     # % of period between adjacent events for synthetic dates
+      target_betwStages      = 0.5,     # fraction of time in-between two pheno-stages
       var_name_stage         = "apsim_stage_raw",       # Synthetic var with observed PCSD data
       varName_addedToObserv  = "Wheat.Phenology.Stage", # Synthetic var added into observations
       max_leaf_limit         = 0.95,   # Fractional max leaves assumed when terminal spikelet is set

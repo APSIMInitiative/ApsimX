@@ -152,6 +152,7 @@ tar_load(df_pheno_raw)
 ```
 
 ```{r}
-tar_load(soil_data_clean)
+tar_load(soilN_data_clean)
+tar_load(soilWater_data_clean)
 ```
 
