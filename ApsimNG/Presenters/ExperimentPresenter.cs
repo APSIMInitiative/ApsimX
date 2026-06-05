@@ -187,7 +187,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("*.csv", null);
+                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("Comma-Separated Values|*.csv", null);
                 if (path != null)
                 {
                     // Clone the datatable and add an enabled column.
@@ -223,7 +223,7 @@ namespace UserInterface.Presenters
             ApsimTextFile textFile = new ApsimTextFile();
             try
             {
-                var path = explorerPresenter.MainPresenter.AskUserForOpenFileName("*.csv");
+                var path = explorerPresenter.MainPresenter.AskUserForOpenFileName("Comma-Separated Values|*.csv");
                 if (path != null)
                 {
                     textFile.Open(path);
