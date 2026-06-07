@@ -107,6 +107,45 @@ list(
     )
   ),
   
+  #----
+  # SOIL PARAMETERS FOR MODEL SET UP
+  #---
+  # Note: soil water was set in sim previous to raw data set up
+  tar_target(
+    name = soil_profile,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx",
+      sheet          = "Soil sample",
+      vars_to_extract = c("pH (1:5 Water)",	"Nitrate Nitrogen",
+                          "Ammonium Nitrogen","C:N Ratio",	
+                          "Soil Bulk Density",
+                          "Total Carbon (Combustion)", "Gravel (>2mm) of whole sample", 
+                          "Silt", "Clay", "Sand"),
+      col_depth_from  = "Start depth (m)", # Optional if this matches the default
+      col_depth_to    = "End depth (m)",   # Optional if this matches the default
+      log_file_name   =  paste0(config$proj_name,"_soil_profile.csv")
+    )
+  ),
+  
+  tar_target(
+    name = soil_water,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx",
+      sheet          = "McPoyles 1 APSIM",
+      vars_to_extract = c("layer_thickness_mm","BD_Mg_m3",
+                          "CLL_wheat_m3_m3","DUL_m3_m3","Sat","pH_CaCl2","OC_%","NO3_mg_kg"
+                          ,"NH4_mg_kg","SW_20240425_m3_m3","PAW_20240425_mm"
+      ),
+      col_depth_from  = "start_depth_m", # Optional if this matches the default
+      col_depth_to    = "end_depth_m",   # Optional if this matches the default
+      log_file_name   =  paste0(config$proj_name,"_soil_water.csv")
+    )
+  ),
+  
+  
+  
   # ----------------------------------------------------------------------------
   # PHASE B: WEATHER PROCESSING
   # ----------------------------------------------------------------------------
