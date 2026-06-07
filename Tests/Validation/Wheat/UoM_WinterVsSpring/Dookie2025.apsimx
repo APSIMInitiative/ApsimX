@@ -8896,7 +8896,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
-                        "[Sowing].Script.CultivarName = SunMaster",
+                        "[Sowing].Script.CultivarName = Sunmaster",
                         "[Sowing].Script.Population = 200",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"

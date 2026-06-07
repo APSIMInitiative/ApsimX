@@ -183,7 +183,8 @@ list(
       df_tbl      = list_observed_dfs_raw,
       folder_path = config$folder_rawData,  # <--- Pass the config folder here!
       ref_date    = config$date_DOY_ref,
-      file_name_newDates = config$file_name_to_hold_fix_dates
+      file_name_newDates = config$file_name_to_hold_fix_dates,
+      first_sow_date = "15/04/2025"
       )
   ),
   

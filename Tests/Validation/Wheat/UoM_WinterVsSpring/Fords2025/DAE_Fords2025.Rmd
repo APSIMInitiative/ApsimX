@@ -68,3 +68,17 @@ df_suspect %>%
 ```
 
 
+```{r}
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+```{r}
+tar_load(soil_profile)
+readr::write_csv(soil_profile, "soil_profile.csv", na = "")
+```
+
