@@ -4,8 +4,10 @@
 #' @param folder_path The directory where dates_to_correct.csv should be stored
 #' @param ref_date A reference date (like sowing date) to enforce the correct year
 #' @param file_name_newDates The name of the CSV file to generate/read (Defaults to "dates_to_correct.csv")
+#' @param first_sow_date The absolute earliest sowing date. Any data recorded before this date is excluded.
 #' @export
-apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, file_name_newDates = "dates_to_correct.csv") {
+apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, 
+                                    file_name_newDates = "dates_to_correct.csv", first_sow_date) {
   
   if (!requireNamespace("dplyr", quietly = TRUE)) stop("Package 'dplyr' required.")
   if (!requireNamespace("purrr", quietly = TRUE)) stop("Package 'purrr' required.")
@@ -47,13 +49,12 @@ apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, file_name_new
   }
   
   # ------------------------------------------------------------------
-  # 0.5 SAFE TARGET YEAR EXTRACTION
+  # 0.5 SAFE TARGET YEAR & SOW DATE EXTRACTION
   # ------------------------------------------------------------------
-  # Check if the user just passed a pure 4-digit year (e.g., 2025 or "2025")
+  # Parse Target Year
   if (suppressWarnings(!is.na(as.numeric(ref_date))) && nchar(trimws(as.character(ref_date))) == 4) {
     target_year <- as.numeric(ref_date)
   } else {
-    # Otherwise, parse the complex date string
     safe_ref <- parse_any_date(as.character(ref_date))
     if (any(is.na(safe_ref))) {
       stop(sprintf("CRITICAL ERROR: 'ref_date' (%s) could not be parsed into a valid date.", ref_date))
@@ -61,7 +62,15 @@ apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, file_name_new
     target_year <- as.numeric(format(safe_ref[1], "%Y"))
   }
   
+  # Parse First Sowing Date
+  safe_sow_date <- parse_any_date(as.character(first_sow_date))
+  if (any(is.na(safe_sow_date))) {
+    stop(sprintf("CRITICAL ERROR: 'first_sow_date' (%s) could not be parsed into a valid date.", first_sow_date))
+  }
+  sow_date_val <- safe_sow_date[1]
+  
   cat(sprintf("   [\U0001F4C5 REFERENCE] Target Year securely locked as: %d\n", target_year))
+  cat(sprintf("   [\u23F3 THRESHOLD] Earliest Sowing Date locked as: %s\n", sow_date_val))
   
   # ------------------------------------------------------------------
   # 1. THE PRE-AUDIT: Who is actually missing dates?
@@ -198,6 +207,38 @@ apply_corrections_For25 <- function(df_tbl, folder_path, ref_date, file_name_new
                       name_val, original_dates_disp, corrected_dates_disp, 
                       paste(head(affected_sims, 5), collapse = ", ")))
         }
+        return(raw_df)
+      })
+    )
+  
+  # ------------------------------------------------------------------
+  # 4.7 PRE-SOWING DATA PRUNING
+  # ------------------------------------------------------------------
+  df_corrected <- df_corrected %>%
+    dplyr::mutate(
+      data = purrr::pmap(list(df_name, data), function(name_val, raw_df) {
+        if (is.null(raw_df) || nrow(raw_df) == 0) return(raw_df)
+        
+        # Identify rows where the date is strictly BEFORE the earliest sow date
+        early_idx <- which(!is.na(raw_df$Date) & raw_df$Date < sow_date_val)
+        
+        if (length(early_idx) > 0) {
+          dropped_sims <- unique(raw_df$SimulationName[early_idx])
+          dropped_count <- length(early_idx)
+          
+          cat(sprintf("   [\u2702\uFE0F  PRUNED] '%s' | Removed %d row(s) recorded before %s\n      -> Affected Sims: %s", 
+                      name_val, dropped_count, as.character(sow_date_val), 
+                      paste(head(dropped_sims, 5), collapse = ", ")))
+          if (length(dropped_sims) > 5) {
+            cat(sprintf(" (...and %d more)\n", length(dropped_sims) - 5))
+          } else {
+            cat("\n")
+          }
+          
+          # Remove the early rows
+          raw_df <- raw_df[-early_idx, ]
+        }
+        
         return(raw_df)
       })
     )
