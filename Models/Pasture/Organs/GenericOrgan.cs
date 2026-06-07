@@ -376,7 +376,7 @@ namespace Models.GrazPlan.Organs
         }
 
     /// <summary>
-    /// Removes biomass from organs - leaf and stem across all DMD classes proportionally and sets the herbage in each class 
+    /// Removes biomass from organs - leaf and stem across all DMD classes proportionally, sets the herbage in each class and returns the biomass
     /// </summary>
     /// <param name="liveToRemove"></param>
     /// <param name="deadToRemove"></param>

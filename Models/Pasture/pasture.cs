@@ -786,9 +786,8 @@ namespace Models.GrazPlan
 
 
         /// <summary>
-        /// Remove a specified amount of above-ground biomass (kg/ha),
-        /// proportionally across leaf and stem.
-        /// </summary>
+        /// Remove a specified amount of above-ground biomass (kg/ha)proportionally across leaf and stem.
+       /// </summary>
         public void RemoveBiomass(string type, double amount)
         {
             double totalBiomass =0.0;
