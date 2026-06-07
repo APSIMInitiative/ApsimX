@@ -250,38 +250,6 @@ namespace Models.GrazPlan.Organs
         }
 
 
-
-
-        /// <summary>Calculate the values for calculated states.</summary>
-        private void CalculateLiveDead()
-        {
-
-
-           if (PastureModel != null)
-            {
-              
-                if (Name == "Leaf")
-                {
-                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptLEAF)/10.0;  // to g/m2
-                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); // to g/m2
-                
-                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptLEAF)/10.0;  // to g/m2
-                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptLEAF)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptLEAF, TPlantElement.N); 
-                } 
-
-                if(Name=="Stem")
-                {
-                    liveBiomass.StructuralWt = GetDM(sgGREEN,GrazType.ptSTEM)/10.0;  // to g/m2
-                    liveBiomass.StructuralN = GetDM(sgGREEN,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); // to g/m2
-                
-                    deadBiomass.StructuralWt = GetDM(sgDRY,GrazType.ptSTEM)/10.0;  // to g/m2
-                    deadBiomass.StructuralN = GetDM(sgDRY,GrazType.ptSTEM)/10.0 * GetPlantNutr(sgGREEN,GrazType.ptSTEM, TPlantElement.N); 
-                }
-            }
-
-   
-        } 
-
         /// <summary>
         /// Live digestibility
         /// </summary>
@@ -340,9 +308,71 @@ namespace Models.GrazPlan.Organs
             }
         }
 
+    /// <summary>
+    /// Calculate the values for live and dead biomasses from Established and Dead cohorts.
+    /// </summary>
+    private void CalculateLiveDead()
+        {
+           if (PastureModel != null)
+            {
+           
+                if (Name == "Leaf")
+                {
+ 
+                    liveBiomass.StructuralWt =  HerbageMassTotalDMD(stESTAB, ptLEAF, TOTAL);
+                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(stESTAB,ptLEAF, TOTAL,TPlantElement.N);
+
+                    deadBiomass.StructuralWt = HerbageMassTotalDMD(stDEAD,ptLEAF,TOTAL); 
+                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(stDEAD, ptLEAF,TOTAL,TPlantElement.N);
+                    
+                }
+                if (Name == "Stem")
+                {
+                    
+                    liveBiomass.StructuralWt = HerbageMassTotalDMD(stESTAB, ptSTEM,TOTAL);
+                    liveBiomass.StructuralN = PastureModel.GetHerbageNutr(stESTAB, ptSTEM, TOTAL,TPlantElement.N);
+                                        
+                    deadBiomass.StructuralWt = HerbageMassTotalDMD(stDEAD,ptSTEM,TOTAL); 
+                    deadBiomass.StructuralN = PastureModel.GetHerbageNutr(stDEAD, ptSTEM,TOTAL,TPlantElement.N);
+                }
+            }
+        }
 
 
-
+        /// /// <summary>
+        /// This method computes live and dead dry matter totals by explicitly summing across all digestibility classes (DMD classes 1..HerbClassNo.) 
+        ///This is a refactor of HerbageMassGM2 in grazpastpopn.cs where the GrazPlan engine drives total from the digestibilty class (index 0).
+        /// TOTAL is only refreshed during the daily update cycle inside the pasture population model.          
+        /// Because GenericOrgan requires an up‑to‑date view of biomass immediately when biomass is removed from an organ and mass balance checks need to be performed
+        /// relying on TOTAL (cls = 0) produces inconsistent results.  
+        /// This method therefore bypasses the TOTAL pool entirely and reconstructs totals directly ensuring that live and dead
+        /// biomass values reflect the current state of the pasture after removal.
+        /// </summary>
+        /// <param name="comp"></param>
+        /// <param name="part"></param>
+        /// <param name="DMD"></param>
+        /// <returns></returns>
+        private double HerbageMassTotalDMD(int comp, int part, int DMD)
+        {
+            double result = 0.0;
+            for (int iCohort = 0; iCohort <= PastureModel.CohortCount() - 1; iCohort++)
+            {
+                if ((comp == TOTAL) || PastureModel.BelongsIn(iCohort, comp))
+                {
+                    if(DMD == TOTAL)
+                    {
+                            for(int cls =1; cls <= HerbClassNo; cls++)
+                        {
+                            result +=PastureModel.FCohorts[iCohort].Herbage[part,cls].DM;
+                        }
+                    
+                    }
+                    else                    
+                        result += PastureModel.FCohorts[iCohort].Herbage[part,DMD].DM;
+                }
+            }
+            return result;
+        }
 
     }
 }
