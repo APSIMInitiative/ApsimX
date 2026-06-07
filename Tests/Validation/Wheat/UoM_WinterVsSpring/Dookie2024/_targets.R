@@ -85,6 +85,22 @@ list(
     )
   ),
   
+  # THE PIPELINE TRACEABILITY TARGET
+  tar_target(
+    name = log_active_config,
+    command = {
+      cat("\n======================================================================\n")
+      cat(" ⚙️ ACTIVE PIPELINE CONFIGURATION \n")
+      cat("======================================================================\n")
+      
+      print(config)
+      
+      cat("======================================================================\n\n")
+      invisible(config)
+    },
+    cue = tar_cue(mode = "always")
+  ),
+  
   # Map simulations per treatment from APSIM file
   tar_target(
     name = df_simNameByCult,
@@ -116,7 +132,7 @@ list(
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx",
-      sheet          = "Soil sample",
+      sheet           = "Soil sample",
       vars_to_extract = c("pH (1:5 Water)",	"Nitrate Nitrogen",
                           "Ammonium Nitrogen","C:N Ratio",	
                           "Soil Bulk Density",
@@ -124,7 +140,7 @@ list(
                           "Silt", "Clay", "Sand"),
       col_depth_from  = "Start depth (m)", # Optional if this matches the default
       col_depth_to    = "End depth (m)",   # Optional if this matches the default
-      log_file_name   =  paste0(config$proj_name,"_soil_profile.csv")
+      log_file_name   = paste0(config$proj_name,"_soil_profile.csv")
     )
   ),
   
@@ -133,14 +149,14 @@ list(
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx",
-      sheet          = "McPoyles 1 APSIM",
+      sheet           = "McPoyles 1 APSIM",
       vars_to_extract = c("layer_thickness_mm","BD_Mg_m3",
                           "CLL_wheat_m3_m3","DUL_m3_m3","Sat","pH_CaCl2","OC_%","NO3_mg_kg"
                           ,"NH4_mg_kg","SW_20240425_m3_m3","PAW_20240425_mm"
       ),
       col_depth_from  = "start_depth_m", # Optional if this matches the default
       col_depth_to    = "end_depth_m",   # Optional if this matches the default
-      log_file_name   =  paste0(config$proj_name,"_soil_water.csv")
+      log_file_name   = paste0(config$proj_name,"_soil_water.csv")
     )
   ),
   
@@ -186,7 +202,7 @@ list(
       compile_all_observed(
         folder      = config$folder_rawData,
         excel_files = config$file_rawData_excel,
-        exp_keys    = config$exp_key_by_rawData_file, # <--- The new vector is injected here
+        exp_keys    = config$exp_key_by_rawData_file, 
         df_obs_info = df_obs_meta_data,
         df_simNames = df_simNameByCult
       )
@@ -196,7 +212,7 @@ list(
   tar_target(
     name = list_observed_dfs_raw_plus_emergPerc,
     command = calc_emerg_perc(
-      df_tbl            = list_observed_dfs_raw,  # <--- Change this from df_list to df_tbl
+      df_tbl            = list_observed_dfs_raw,  
       df_input_var_name = "pcds_3_emergPlants",
       df_new_var_name   = "pcds_3_emergPlants_Perc"
     )
@@ -217,7 +233,7 @@ list(
   tar_target(
     name = list_pcds_extracted,
     command = filter_and_extract_pcds(
-      list_observed_dfs = list_observed_clean, # Using scrubbed data
+      list_observed_dfs = list_observed_clean, 
       pcd_stages        = config$pcd_stages_to_extract
     )
   ),
@@ -238,7 +254,7 @@ list(
   tar_target(
     name = df_pheno_haun, 
     command = derive_pheno_stages_from_haun(
-      df_input       = list_observed_clean,    # Using scrubbed data
+      df_input       = list_observed_clean,    
       max_leaf_limit = config$max_leaf_limit
     )
   ),
@@ -257,28 +273,19 @@ list(
     command = format_apsim_pheno_params(df_pheno_final)
   ),
   
-  # # 1. THE FIXER: Impute missing phenology dates for the APSIM Input file
-  # tar_target(
-  #   name = df_pheno_input_param_filled,
-  #   command = do_averages_for_missing_pheno(
-  #     df         = df_pheno_input_param,
-  #     group_keys = c("EVA","WWHI")
-  #     # group_keys = c("Dookie")
-  #   )
-  # ),
-  
   # 2. THE GATEKEEPER (The new Universal script)
   tar_target(
     name = qc_pheno_integrity,
     command = check_pheno_integrity(df_pheno_input_param)
   ),
+  
   # ----------------------------------------------------------------------------
   # PHASE E: FINAL OBSERVATION FORMATTING & QC
   # ----------------------------------------------------------------------------
   tar_target(
     name = df_obs_wide,
     command = prepare_apsim_observed(
-      compiled_obs = list_observed_clean,      # Using scrubbed data
+      compiled_obs = list_observed_clean,      
       dfs_out      = config$pcd_stages_to_extract
     )
   ),

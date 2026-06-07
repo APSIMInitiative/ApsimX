@@ -9666,9 +9666,9 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2024-05-24",
+                      "Date": "2024-05-01",
                       "Action": "[Irrigation].Apply(5)",
-                      "Line": "2024-05-24 [Irrigation].Apply(5)"
+                      "Line": "2024-05-1 [Irrigation].Apply(5)"
                     },
                     {
                       "$type": "Models.Operation, Models",
