@@ -1801,18 +1801,10 @@ getwd()</code></pre>
 <h1>Construct pipeline</h1>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoY2FsbHJfZnVuY3Rpb24gPSBOVUxMKVxuXG5gYGAifQ== -->
-<pre class="r"><code>targets::tar_make(callr_function = NULL)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZ1xudGFyZ2V0czo6dGFyX21ha2UoKVxuYGBgIn0= -->
+<pre class="r"><code># targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6XG4hIEVycm9yIHJ1bm5pbmcgdGFyZ2V0czo6dGFyX21ha2UoKVxuICBFcnJvciBtZXNzYWdlczogdGFyZ2V0czo6dGFyX21ldGEoZmllbGRzID0gZXJyb3IsIGNvbXBsZXRlX29ubHkgPSBUUlVFKVxuICBEZWJ1Z2dpbmcgZ3VpZGU6IGh0dHBzOi8vYm9va3Mucm9wZW5zY2kub3JnL3RhcmdldHMvZGVidWdnaW5nLmh0bWxcbiAgSG93IHRvIGFzayBmb3IgaGVscDogaHR0cHM6Ly9ib29rcy5yb3BlbnNjaS5vcmcvdGFyZ2V0cy9oZWxwLmh0bWxcbiAgTGFzdCBlcnJvcjogQ1JJVElDQUw6IFRoZSBmb2xsb3dpbmcgcmVxdWVzdGVkIGNvbHVtbnMgYXJlIG1pc3NpbmcgZnJvbSB0aGUgc2hlZXQ6IERlcHRoIEZyb20sIERlcHRoIFRvLCBUb3RhbCBDYXJib24gKENvbWJ1c3Rpb24pXG4ifQ== -->
-<pre><code>Error:
-! Error running targets::tar_make()
-  Error messages: targets::tar_meta(fields = error, complete_only = TRUE)
-  Debugging guide: https://books.ropensci.org/targets/debugging.html
-  How to ask for help: https://books.ropensci.org/targets/help.html
-  Last error: CRITICAL: The following requested columns are missing from the sheet: Depth From, Depth To, Total Carbon (Combustion)</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -1860,9 +1852,455 @@ df_suspect %&gt;%
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoXG4gIGNhbGxyX2FyZ3VtZW50cyA9IGxpc3QoXG4gICAgc3Rkb3V0ID0gXCJwaXBlbGluZV9sb2cudHh0XCIsXG4gICAgc3RkZXJyID0gXCJwaXBlbGluZV9sb2cudHh0XCJcbiAgKVxuKVxuYGBgIn0= -->
+<pre class="r"><code>targets::tar_make(
+  callr_arguments = list(
+    stdout = &quot;pipeline_log.txt&quot;,
+    stderr = &quot;pipeline_log.txt&quot;
+  )
+)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4tXG5cblxcXG5cbnxcbmhlcmUoKSBzdGFydHMgYXQgQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZ1xuXG4vXG5cbkF0dGFjaGluZyBwYWNrYWdlOiAnZHBseXInXG5cblxuLVxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSAncGFja2FnZTpzdGF0cyc6XG5cbiAgICBmaWx0ZXIsIGxhZ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tICdwYWNrYWdlOmJhc2UnOlxuXG4gICAgaW50ZXJzZWN0LCBzZXRkaWZmLCBzZXRlcXVhbCwgdW5pb25cblxuXG5cXFxu4pa2IHN0YXJ0IHRhcmdldCBjb25maWdcblxufFxu4pePIGJ1aWx0IHRhcmdldCBjb25maWcgWzAuODUgc2Vjb25kc11cbuKWtiBzdGFydCB0YXJnZXQgc29pbF9wcm9maWxlXG7wn5OWIFJlYWRpbmcgc29pbCBkYXRhIGZyb206IEZvcmRzX1Jhd0RhdGFfMjAyNS54bHN4IChTaGVldDogU29pbCBzYW1wbGluZylcblxuL1xuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPIFBJUEVMSU5FIElOVEVSVkVOVElPTjogRFVQTElDQVRFIENPTFVNTlMgREVURUNURUQg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAtPiBDb2x1bW4gJ0RlcHRoIEZyb20nIGZvdW5kIDIgdGltZXMuIFNhZmVseSBleHRyYWN0ZWQgSW5kZXggMyAoYnlwYXNzZWQgZW1wdHkvdW5pdC1vbmx5IGR1cGxpY2F0ZXMpLlxuICAgLT4gQ29sdW1uICdEZXB0aCBUbycgZm91bmQgMiB0aW1lcy4gU2FmZWx5IGV4dHJhY3RlZCBJbmRleCA0IChieXBhc3NlZCBlbXB0eS91bml0LW9ubHkgZHVwbGljYXRlcykuXG4gICAtPiBDb2x1bW4gJ1RvdGFsIENhcmJvbiAoQ29tYnVzdGlvbiknIGZvdW5kIDQgdGltZXMuIFNhZmVseSBleHRyYWN0ZWQgSW5kZXggMTgxIChieXBhc3NlZCBlbXB0eS91bml0LW9ubHkgZHVwbGljYXRlcykuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cblxuLVxu4pqg77iPIE5vdGU6IDE1IE5BcyBnZW5lcmF0ZWQvZGV0ZWN0ZWQgaW4gdGhlIHJlcXVlc3RlZCB2YXJpYWJsZXMuXG7il48gYnVpbHQgdGFyZ2V0IHNvaWxfcHJvZmlsZSBbMC42NiBzZWNvbmRzXVxuTG9hZGluZyByZXF1aXJlZCBwYWNrYWdlOiBybGFuZ1xuXG5BdHRhY2hpbmcgcGFja2FnZTogJ3JsYW5nJ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tICdwYWNrYWdlOnB1cnJyJzpcblxuICAgICVAJSwgZmxhdHRlbiwgZmxhdHRlbl9jaHIsIGZsYXR0ZW5fZGJsLCBmbGF0dGVuX2ludCwgZmxhdHRlbl9sZ2wsXG4gICAgZmxhdHRlbl9yYXcsIGludm9rZSwgc3BsaWNlXG5cblxuXFxcbuKWtiBzdGFydCB0YXJnZXQgcHJvY2Vzc2VkX21ldF9kYXRhXG7il48gYnVpbHQgdGFyZ2V0IHByb2Nlc3NlZF9tZXRfZGF0YSBbMC4xNSBzZWNvbmRzXVxuXG58XG7ilrYgc3RhcnQgdGFyZ2V0IGRmX29ic19tZXRhX2RhdGFcbuKXjyBidWlsdCB0YXJnZXQgZGZfb2JzX21ldGFfZGF0YSBbMCBzZWNvbmRzXVxuXG4vXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX3NpbU5hbWVCeUN1bHRcbuKXjyBidWlsdCB0YXJnZXQgZGZfc2ltTmFtZUJ5Q3VsdCBbMCBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCB0cmFja2VkX3Jhd19leGNlbFxuXG4tXG7il48gYnVpbHQgdGFyZ2V0IHRyYWNrZWRfcmF3X2V4Y2VsIFswIHNlY29uZHNdXG7ilrYgc3RhcnQgdGFyZ2V0IG1zZ19tZXRfc2F2ZWRcblxuXFxcbuKXjyBidWlsdCB0YXJnZXQgbXNnX21ldF9zYXZlZCBbMCBzZWNvbmRzXVxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG7ilrYgc3RhcnQgdGFyZ2V0IGxpc3Rfb2JzZXJ2ZWRfZGZzX3Jhd1xu4pePIGJ1aWx0IHRhcmdldCBsaXN0X29ic2VydmVkX2Rmc19yYXcgWzYuNjQgc2Vjb25kc11cblxuL1xuXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5cbi1cbiDwn5ug77iPICBQSEFTRSBDLjI6IEFQUExZSU5HIEZPUjI1LVNQRUNJRklDIENPUlJFQ1RJT05TIFxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuICAgW/Cfk4UgUkVGRVJFTkNFXSBUYXJnZXQgWWVhciBzZWN1cmVseSBsb2NrZWQgYXM6IDIwMjVcbiAgIFvij7MgVEhSRVNIT0xEXSBFYXJsaWVzdCBTb3dpbmcgRGF0ZSBsb2NrZWQgYXM6IDIwMjUtMDQtMTVcblxuXFxcblxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIOKaoO+4jyAgTUlTU0lORyBEQVRFIEFMQVJNOiAnc3RlbVlpZWxkXzhfcmF3JyDimqDvuI9cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAtPiBWYXJpYWJsZShzKSAgICA6IFtXaGVhdC5TdGVtLkxpdmUuV3RdXG4gLT4gTWlzc2luZyBEYXRlcyAgOiAxNiByb3dzIGZvdW5kIHdpdGhvdXQgYSB2YWxpZCBEYXRlIVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxufFxuIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzcGlrZVlpZWxkXzhfcmF3JyDimqDvuI9cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAtPiBWYXJpYWJsZShzKSAgICA6IFtXaGVhdC5TcGlrZS5MaXZlLld0XVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqDvuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ3NlbmVzY0xlYWZZaWVsZF84X3Jhdycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuTGVhZi5EZWFkLld0XVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqDvuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ2dyZWVuTGVhZl84X3Jhdycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuTGVhZi5MaXZlLld0XVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqDvuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ3RvdGFsQWJvdmVHcm91bmRfOF9yYXcnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LkFib3ZlR3JvdW5kLld0XVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqDvuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ3BsYW50X3BvcHVsYXRpb25fbTInIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1tXaGVhdF0uTGVhZi5TdGVtUG9wdWxhdGlvbl1cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzaG9vdF84X04nIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS1cbi9cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuQWJvdmVHcm91bmQuTGl2ZS5OQ29uY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzaG9vdF84X1dTQ2MnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LkFib3ZlR3JvdW5kLkxpdmUuV1NDY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdsZWFmXzhfTmNvbmMnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LkxlYWYuTGl2ZS5OQ29uY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdsZWFmXzhfV1NDYycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuTGVhZi5MaXZlLldTQ2NdXG4gLT4gTWlzc2luZyBEYXRlcyAgOiAxNiByb3dzIGZvdW5kIHdpdGhvdXQgYSB2YWxpZCBEYXRlIVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSBcblxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIOKaoO+4jyAgTUlTU0lORyBEQVRFIEFMQVJNOiAnbGVhZkRlYWRfOF9OY29uYycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuTGVhZi5EZWFkLk5Db25jXVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqDvuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ2xlYWZEZWFkXzhfV1NDYycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuTGVhZi5EZWFkLldTQ2NdXG4gLT4gTWlzc2luZyBEYXRlcyAgOiAxNiByb3dzIGZvdW5kIHdpdGhvdXQgYSB2YVxuLVxubGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzdGVtXzhfTmNvbmMnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LlN0ZW0uTGl2ZS5OQ29uY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzdGVtXzhfV1NDYycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuU3RlbS5MaXZlLldTQ2NdXG4gLT4gTWlzc2luZyBEYXRlcyAgOiAxNiByb3dzIGZvdW5kIHdpdGhvdXQgYSB2YWxpZCBEYXRlIVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSBcblxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIOKaoO+4jyAgTUlTU0lORyBEQVRFIEFMQVJNOiAnc3Bpa2VfOF9OY29uYycg4pqg77iPXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gLT4gVmFyaWFibGUocykgICAgOiBbV2hlYXQuU3Bpa2UuTGl2ZS5OQ29uY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzcGlrZV84X1dTQ2MnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LlNwaWtlLkxpdmUuV1NDY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g4pqg77iPICBNSVNTSU5HIERBVEUgQUxBUk06ICdzaG9vdF8xMF9OJyDimqDvuI9cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAtPiBWYXJpYWJsZShzKSAgICA6IFtXaGVhdC5BYm92ZUdyb3VuZC5MaXZlLk5Db25jXVxuIC0+IE1pc3NpbmcgRGF0ZXMgIDogMTYgcm93cyBmb3VuZCB3aXRob3V0IGEgdmFsaWQgRGF0ZSFcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDimqBcblxcXG7vuI8gIE1JU1NJTkcgREFURSBBTEFSTTogJ3Nob290XzEwX1dTQ2MnIOKaoO+4j1xuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IFZhcmlhYmxlKHMpICAgIDogW1doZWF0LkFib3ZlR3JvdW5kLkxpdmUuV1NDY11cbiAtPiBNaXNzaW5nIERhdGVzICA6IDE2IHJvd3MgZm91bmQgd2l0aG91dCBhIHZhbGlkIERhdGUhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIFxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzdGVtWWllbGRfOF9yYXcnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnc3Bpa2VZaWVsZF84X3JhdycgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMC0xNVxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzZW5lc2NMZWFmWWllbGRfOF9yYXcnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnZ3JlZW5MZWFmXzhfcmF3JyB8IE9yaWdpbmFsOiBOQSAoMTYgcm93cykgLT4gQ29ycmVjdGVkOiAyMDI1LTEwLTE1XG4gICBb4pyU77iPIEZJWEVEIE5Bc10gJ3RvdGFsQWJvdmVHcm91bmRfOF9yYXcnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAncGxhbnRfcG9wdWxhdGlvbl9tMicgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMS0yMFxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzaG9vdF84X04nIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnc2hvb3RfOF9XU0NjJyB8IE9yaWdpbmFsOiBOQSAoMTYgcm93cykgLT4gQ29ycmVjdGVkOiAyMDI1LTEwLTE1XG4gICBb4pyU77iPIEZJWEVEIE5Bc10gJ2xlYWZfOF9OY29uYycgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMC0xNVxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdsZWFmXzhfV1NDYycgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMC0xNVxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdsZWFmRGVhZF84X05jb25jJyB8IE9yaWdpbmFsOiBOQSAoMTYgcm93cykgLT4gQ29ycmVjdGVkOiAyMDI1LTA1LTE1XG4gICBb4pyU77iPIEZJWEVEIE5Bc10gJ2xlYWZEZWFkXzhfV1NDYycgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0wNS0xNVxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzdGVtXzhfTmNvbmMnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnc3RlbV84X1dTQ2MnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnc3Bpa2VfOF9OY29uYycgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMC0xNVxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzcGlrZV84X1dTQ2MnIHwgT3JpZ2luYWw6IE5BICgxNiByb3dzKSAtPiBDb3JyZWN0ZWQ6IDIwMjUtMTAtMTVcbiAgIFvinJTvuI8gRklYRUQgTkFzXSAnc2hvb3RfMTBfTicgfCBPcmlnaW5hbDogTkEgKDE2IHJvd3MpIC0+IENvcnJlY3RlZDogMjAyNS0xMS0yMFxuICAgW+KclO+4jyBGSVhFRCBOQXNdICdzaG9vdF8xMF9XU0NjJyB8IE9yaWdpbmFsOiBOQSAoMTYgcm93cykgLT4gQ29ycmVjdGVkOiAyMDI1LTExLTIwXG4gICBb8J+UhCBZRUFSIFNXQVBdICdoYXVuX3JhdycgfCBPcmlnaW5hbDogWzIwMjQtMDUtMDMsIDIwMjQtMDUtMjcsIDIwMjQtMDYtMjcsIDIwMjQtMDctMDMsIDIwMjQtMDctMTAsIDIwMjQtMDctMTgsIDIwMjQtMDctMjYsIDIwMjQtMDctMzAsIDIwMjQtMDgtMTAsIDIwMlxufFxuNC0wOC0yNF0gLT4gQ29ycmVjdGVkOiBbMjAyNS0wNS0wMywgMjAyNS0wNS0yNywgMjAyNS0wNi0yNywgMjAyNS0wNy0wMywgMjAyNS0wNy0xMCwgMjAyNS0wNy0xOCwgMjAyNS0wNy0yNiwgMjAyNS0wNy0zMCwgMjAyNS0wOC0xMCwgMjAyNS0wOC0yNF1cbiAgICAgIC0+IEFmZmVjdGVkIFNpbXM6IEZvcmRzMjAyNVNvd0FwcmlsX0lsbGFibywgRm9yZHMyMDI1U293QXByaWxfS2l0dHloYXdrLCBGb3JkczIwMjVTb3dBcHJpbF9Nb3doYXdrLCBGb3JkczIwMjVTb3dBcHJpbF9Pc3ByZXksIEZvcmRzMjAyNVNvd0FwcmlsX1Jvc2VsbGFcbiAgIFvinILvuI8gIFBSVU5FRF0gJ2hlaWdodF9yYXcnIHwgUmVtb3ZlZCAzMiByb3cocykgcmVjb3JkZWQgYmVmb3JlIDIwMjUtMDQtMTVcbiAgICAgIC0+IEFmZmVjdGVkIFNpbXM6IEZvcmRzMjAyNVNvd0FwcmlsX0lsbGFibywgRm9yZHMyMDI1U293QXByaWxfS2l0dHloYXdrLCBGb3JkczIwMjVTb3dBcHJpbF9Nb3doYXdrLCBGb3JkczIwMjVTb3dBcHJpbF9Pc3ByZXksIEZvcmRzMjAyNVNvd0FwcmlsX1Jvc2VsbGEgKC4uLmFuZCAxMSBtb3JlKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG7ilrYgc3RhcnQgdGFyZ2V0IGxpc3Rfb2JzZXJ2ZWRfcmF3X2NsZWFuXG7il48gYnVpbHQgdGFyZ2V0IGxpc3Rfb2JzZXJ2ZWRfcmF3X2NsZWFuIFswLjUzIHNlY29uZHNdXG5cbi9cblxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIPCfk4ggUElQRUxJTkUgQUNUSU9OOiBFTUVSR0VOQ0UgUEVSQ0VOVEFHRSBDQUxDVUxBVEVEIPCfk4hcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiAtPiBJbnB1dCBTb3VyY2UgIDogJ3BjZHNfM19lbWVyZ1BsYW50cydcbiAtPiBUYXJnZXQgQ29sdW1uIDogJ1tXaGVhdF0uUGhlbm9sb2d5LkVtZXJnaW5nLkRhdGVUb1Byb2dyZXNzJyAoSW50ZXJuYWwgdmFyaWFibGUgcHJlc2VydmVkKVxuIC0+IE91dHB1dCBUYXJnZXQgOiAncGNkc18zX2VtZXJnUGxhbnRzX1BlcmMnIChBcHBlbmRlZCBhcyBuZXcgcm93KVxuIC0+IEFjdGlvbiAgICAgICAgOiBDb252ZXJ0ZWQgcmF3IGNvdW50cyB0byAwLTEwMCUgc2NhbGUgcGVyIFNpbXVsYXRpb25OYW1lXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbuKWtiBzdGFydCB0YXJnZXQgbGlzdF9vYnNlcnZlZF9jbGVhblxu4pePIGJ1aWx0IHRhcmdldCBsaXN0X29ic2VydmVkX2NsZWFuIFswLjA3IHNlY29uZHNdXG4gICAtPiBOb3RpY2U6IEV4Y2x1ZGluZyBkYXRhc2V0cyBmcm9tIGZpbmFsIG91dHB1dDogW3BjZHNfM19lbWVyZ1BsYW50c19QZXJjXVxuU3VjY2Vzc2Z1bGx5IGNvbXBpbGVkLCBjb2xsYXBzZWQsIGFuZCBmb3JtYXR0ZWQgdGhlIGZpbmFsIEFQU0lNIG9ic2VydmF0aW9uIGRhdGFmcmFtZS5cbuKWtiBzdGFydCB0YXJnZXQgZGZfb2JzX3dpZGVcbuKXjyBidWlsdCB0YXJnZXQgZGZfb2JzX3dpZGUgWzAuMzQgc2Vjb25kc11cbuKchSBTdWNjZXNzZnVsbHkgZXh0cmFjdGVkIDEgdGFyZ2V0IGRhdGFmcmFtZXMuXG7ilrYgc3RhcnQgdGFyZ2V0IGxpc3RfcGNkc19leHRyYWN0ZWRcbuKXjyBidWlsdCB0YXJnZXQgbGlzdF9wY2RzX2V4dHJhY3RlZCBbMC4wMyBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBkZl9waGVub19yYXdcblxuLVxuU3VjY2VzcyBbZ2V0X3BoZW5vX2RhdGVzX2Zyb21fcGNkX2xpc3RdOiBTdGFuZGFyZGl6ZWQgMTYgcmF3IHJlY29yZHMgYXQgNTAlIHByb2dyZXNzLlxu4pePIGJ1aWx0IHRhcmdldCBkZl9waGVub19yYXcgWzAuMTQgc2Vjb25kc11cblN1Y2Nlc3MgW2FkZF9uZXdfdmFyX3RvX29ic106IEFwcGVuZGVkIGFuZCBjb2xsYXBzZWQgMTYgZXZlbnRzIGludG8gbWFzdGVyIG9ic2VydmF0aW9ucyB1bmRlciBjb2x1bW4gJ1doZWF0LlBoZW5vbG9neS5TdGFnZScuXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vXG7il48gYnVpbHQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vIFswLjUzIHNlY29uZHNdXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX3BoZW5vX2lucHV0X3BhcmFtXG5cblxcXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDwn6e5IFBJUEVMSU5FIEFDVElPTjogRU1QVFkgU1RBR0UgQ09MVU1OUyBQUlVORUQg8J+nuVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIFRoZSBmb2xsb3dpbmcgcGhlbm9sb2d5IHN0YWdlcyBjb250YWluZWQgbm8gZGF0YSAoMTAwJSBOQSkgYWNyb3NzIGFsbFxuIHNpbXVsYXRpb25zIGFuZCB3ZXJlIHNhZmVseSByZW1vdmVkIGZyb20gdGhlIGZpbmFsIEFQU0lNIG91dHB1dDpcbiAgIC0gW1doZWF0XS5QaGVub2xvZ3kuTGVhdmVzSW5pdGlhdGluZy5EYXRlVG9Qcm9ncmVzc1xuICAgLSBbV2hlYXRdLlBoZW5vbG9neS5TcGlrZWxldHNEaWZmZXJlbnRpYXRpbmcuRGF0ZVRvUHJvZ3Jlc3NcbiAgIC0gW1doZWF0XS5QaGVub2xvZ3kuU3RlbUVsb25nYXRpbmcuRGF0ZVRvUHJvZ3Jlc3NcbiAgIC0gW1doZWF0XS5QaGVub2xvZ3kuSGVhZGluZy5EYXRlVG9Qcm9ncmVzc1xuICAgLSBbV2hlYXRdLlBoZW5vbG9neS5GbG93ZXJpbmcuRGF0ZVRvUHJvZ3Jlc3NcbiAgIC0gW1doZWF0XS5QaGVub2xvZ3kuR3JhaW5GaWxsaW5nLkRhdGVUb1Byb2dyZXNzXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cblxufFxuU3VjY2VzcyBbZm9ybWF0X2Fwc2ltX3BoZW5vX3BhcmFtc106IFRyYW5zbGF0ZWQgMTYgc2ltdWxhdGlvbnMgaW50byB3aWRlIEFQU0lNIHBhcmFtZXRlciBmb3JtYXQuXG7il48gYnVpbHQgdGFyZ2V0IGRmX3BoZW5vX2lucHV0X3BhcmFtIFswLjA5IHNlY29uZHNdXG5cbi9cblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5cbi1cbiDimqDvuI8gIENBTENVTEFUSU9OIENPTVBMRVRFOiBIQVJWRVNUIElOREVYIOKaoO+4jyBcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuIC0+IFNVQ0NFU1MgICAgICA6IDE2IHZhbGlkIEhJIHZhbHVlcyBnZW5lcmF0ZWQuXG4gLT4gVkFMVUUgUkFOR0UgIDogMC4yMzggdG8gMC4zOTRcbiAtPiBRQyBTVEFUVVMgICAgOiBQQVNTIChBbGwgSEkgdmFsdWVzIDw9IDEuMClcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuXG5cblxcXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX2hpXG7il48gYnVpbHQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX2hpIFswLjA0IHNlY29uZHNdXG5cbnxcbuKWtiBzdGFydCB0YXJnZXQgbXNnX3BoZW5vX3BhcmFtX3NhdmVkXG7il48gYnVpbHQgdGFyZ2V0IG1zZ19waGVub19wYXJhbV9zYXZlZCBbMC4xNSBzZWNvbmRzXVxuXG4vXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX2hpX3dpdGhfYW1vdW50c1xuU3VjY2VzcyBbY2FsY19udXRyaWVudF9hYnNvbHV0ZV9hbW91bnRzXTogRGVyaXZlZCA4IGV4cGxpY2l0IG9yZ2FuIHBvb2xzIGFuZCBhZ2dyZWdhdGVkIHRvICdXaGVhdC5BYm92ZUdyb3VuZCcuXG7il48gYnVpbHQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX2hpX3dpdGhfYW1vdW50cyBbMC4wOSBzZWNvbmRzXVxuXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiDimqDvuI8gIEhBUlZFU1QgREFURVMgQVNTSUdORUQ6IEhBUlZFU1RSSVBFIOKaoO+4jyBcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuIC0+IFNUUkFURUdZICAgICA6IEFzeW5jaHJvbm91cyBNYXggRGF0ZSBTZWFyY2hcbiAtPiBPVkVSQUxMIFNQQU4gOiAyMDI1LTEwLTE1IHRvIDIwMjUtMTEtMjBcbiAtPiBXQVJOSU5HICAgICAgOiBNYXggZGlmZmVyZW5jZSBiZXR3ZWVuIGhhcnZlc3QgdmFyaWFibGVzIGlzIDM2IGRheXMuXG4gLT4gQlJFQUtET1dOICAgIDogTGF0ZXN0IHJlY29yZGVkIGRhdGUgcGVyIHZhcmlhYmxlIGFjcm9zcyB0aGUgdHJpYWw6XG4gICAgICAtIEhhcnZlc3RJbmRleCAgICAgICAgICAgICAgOiAyMDI1LTExLTIwXG4gICAgICAtIFdoZWF0LkFib3ZlR3JvdW5kLld0ICAgICAgOiAyMDI1LTExLTIwXG4gICAgICAtIFdoZWF0LkdyYWluLld0ICAgICAgICAgICAgOiAyMDI1LTExLTIwXG4gICAgICAtIFdoZWF0LkxlYWYuTGl2ZS5OQ29uYyAgICAgOiAyMDI1LTEwLTE1XG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxu4pa2IHN0YXJ0IHRhcmdldCBkZl9vYnNfcGx1c19waGVub19oYXJ2XG7il48gYnVpbHQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX2hhcnYgWzAuMTYgc2Vjb25kc11cbuKWtiBzdGFydCB0YXJnZXQgcWNfYXBzaW1fb2JzZXJ2ZWRfaGFydlxu4pyFIFFDIFBBU1NFRDogT2JzZXJ2YXRpb24gZGF0YWZyYW1lIGlzIHN0cnVjdHVyYWxseSBzb3VuZCBhbmQgcmVhZHkgZm9yIEFQU0lNLlxu4pePIGJ1aWx0IHRhcmdldCBxY19hcHNpbV9vYnNlcnZlZF9oYXJ2IFswLjA5IHNlY29uZHNdXG5TdWNjZXNzIFtzYXZlX2RmX3RvX2V4Y2VsXTogRXhwb3J0ZWQgNjA3IHJvd3MgdG8gJ0M6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmcvT2JzZXJ2ZWQvRm9yZHMyMDI1X09ic2VydmVkLnhsc3gnIChTaGVldDogJ09ic2VydmVkJykuXG7ilrYgc3RhcnQgdGFyZ2V0IG1zZ19vYnNfc2F2ZWRcbuKXjyBidWlsdCB0YXJnZXQgbXNnX29ic19zYXZlZCBbMC4yNSBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBoYXVuX2lucHV0X2NoZWNrZWRcbuKXjyBidWlsdCB0YXJnZXQgaGF1bl9pbnB1dF9jaGVja2VkIFswLjA5IHNlY29uZHNdXG7ilrYgc3RhcnQgdGFyZ2V0IHRyYWNrZWRfZXhjZWxfZmlsZXNcbuKXjyBidWlsdCB0YXJnZXQgdHJhY2tlZF9leGNlbF9maWxlcyBbMCBzZWNvbmRzXVxu4pyFIFByZS1mbGlnaHQgY2hlY2sgcGFzc2VkOiBBbGwgcmVxdWlyZWQgQVBTSU0gZGVwZW5kZW5jaWVzIGZvdW5kLlxu4pa2IHN0YXJ0IHRhcmdldCBjaGVja19kZXBlbmRcbuKXjyBidWlsdCB0YXJnZXQgY2hlY2tfZGVwZW5kIFswLjAzIHNlY29uZHNdXG5FbmNyeXB0aW5nIGFyY2hpdmUuLi5cbuKchSBTdWNjZXNzZnVsbHkgY3JlYXRlZCBwYXNzd29yZC1wcm90ZWN0ZWQgYXJjaGl2ZTogT2JzZXJ2ZWQuemlwXG7ilrYgc3RhcnQgdGFyZ2V0IGVuY3J5cHRlZF96aXBfYXJ0aWZhY3RcbuKXjyBidWlsdCB0YXJnZXQgZW5jcnlwdGVkX3ppcF9hcnRpZmFjdCBbMC4zIHNlY29uZHNdXG7ilrYgc3RhcnQgdGFyZ2V0IHZlcmlmeV9kYXRhX2JhY2t1cFxu4pyFIEFyY2hpdmUgU3luYyBQYXNzZWQ6IExpdmUgZm9sZGVyIGFuZCBaaXAgYmFja3VwIHBlcmZlY3RseSBtYXRjaC5cbuKXjyBidWlsdCB0YXJnZXQgdmVyaWZ5X2RhdGFfYmFja3VwIFswLjA0IHNlY29uZHNdXG7ilrYgZW5kIHBpcGVsaW5lIFsxMi41IHNlY29uZHNdXG5UaGVyZSB3ZXJlIDExIHdhcm5pbmdzICh1c2Ugd2FybmluZ3MoKSB0byBzZWUgdGhlbSlcblxuIFxuIn0= -->
+<pre><code>
+-
+
+\
+
+|
+here() starts at C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
+
+/
+
+Attaching package: &#39;dplyr&#39;
+
+
+-
+The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag
+
+The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union
+
+
+\
+▶ start target config
+
+|
+● built target config [0.85 seconds]
+▶ start target soil_profile
+📖 Reading soil data from: Fords_RawData_2025.xlsx (Sheet: Soil sampling)
+
+/
+
+----------------------------------------------------------------------
+ ⚠️ PIPELINE INTERVENTION: DUPLICATE COLUMNS DETECTED ⚠️
+----------------------------------------------------------------------
+   -&gt; Column &#39;Depth From&#39; found 2 times. Safely extracted Index 3 (bypassed empty/unit-only duplicates).
+   -&gt; Column &#39;Depth To&#39; found 2 times. Safely extracted Index 4 (bypassed empty/unit-only duplicates).
+   -&gt; Column &#39;Total Carbon (Combustion)&#39; found 4 times. Safely extracted Index 181 (bypassed empty/unit-only duplicates).
+----------------------------------------------------------------------
+
+
+-
+⚠️ Note: 15 NAs generated/detected in the requested variables.
+● built target soil_profile [0.66 seconds]
+Loading required package: rlang
+
+Attaching package: &#39;rlang&#39;
+
+The following objects are masked from &#39;package:purrr&#39;:
+
+    %@%, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice
+
+
+\
+▶ start target processed_met_data
+● built target processed_met_data [0.15 seconds]
+
+|
+▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0 seconds]
+
+/
+▶ start target df_simNameByCult
+● built target df_simNameByCult [0 seconds]
+▶ start target tracked_raw_excel
+
+-
+● built target tracked_raw_excel [0 seconds]
+▶ start target msg_met_saved
+
+\
+● built target msg_met_saved [0 seconds]
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+▶ start target list_observed_dfs_raw
+● built target list_observed_dfs_raw [6.64 seconds]
+
+/
+
+======================================================================
+
+-
+ 🛠️  PHASE C.2: APPLYING FOR25-SPECIFIC CORRECTIONS 
+======================================================================
+   [📅 REFERENCE] Target Year securely locked as: 2025
+   [⏳ THRESHOLD] Earliest Sowing Date locked as: 2025-04-15
+
+\
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;stemYield_8_raw&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Stem.Live.Wt]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+----------------------------------------------------------------------
+|
+ 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;spikeYield_8_raw&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Spike.Live.Wt]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;senescLeafYield_8_raw&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Dead.Wt]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;greenLeaf_8_raw&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Live.Wt]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;totalAboveGround_8_raw&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.AboveGround.Wt]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;plant_population_m2&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [[Wheat].Leaf.StemPopulation]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;shoot_8_N&#39; ⚠️
+-----------------
+/
+-----------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.AboveGround.Live.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;shoot_8_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.AboveGround.Live.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;leaf_8_Nconc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Live.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;leaf_8_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Live.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;leafDead_8_Nconc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Dead.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;leafDead_8_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Leaf.Dead.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a va
+-
+lid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;stem_8_Nconc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Stem.Live.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;stem_8_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Stem.Live.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;spike_8_Nconc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Spike.Live.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;spike_8_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.Spike.Live.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠️  MISSING DATE ALARM: &#39;shoot_10_N&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.AboveGround.Live.NConc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+
+----------------------------------------------------------------------
+ ⚠
+\
+️  MISSING DATE ALARM: &#39;shoot_10_WSCc&#39; ⚠️
+----------------------------------------------------------------------
+ -&gt; Variable(s)    : [Wheat.AboveGround.Live.WSCc]
+ -&gt; Missing Dates  : 16 rows found without a valid Date!
+---------------------------------------------------------------------- 
+   [✔️ FIXED NAs] &#39;stemYield_8_raw&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;spikeYield_8_raw&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;senescLeafYield_8_raw&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;greenLeaf_8_raw&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;totalAboveGround_8_raw&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;plant_population_m2&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-11-20
+   [✔️ FIXED NAs] &#39;shoot_8_N&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;shoot_8_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;leaf_8_Nconc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;leaf_8_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;leafDead_8_Nconc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-05-15
+   [✔️ FIXED NAs] &#39;leafDead_8_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-05-15
+   [✔️ FIXED NAs] &#39;stem_8_Nconc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;stem_8_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;spike_8_Nconc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;spike_8_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-10-15
+   [✔️ FIXED NAs] &#39;shoot_10_N&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-11-20
+   [✔️ FIXED NAs] &#39;shoot_10_WSCc&#39; | Original: NA (16 rows) -&gt; Corrected: 2025-11-20
+   [🔄 YEAR SWAP] &#39;haun_raw&#39; | Original: [2024-05-03, 2024-05-27, 2024-06-27, 2024-07-03, 2024-07-10, 2024-07-18, 2024-07-26, 2024-07-30, 2024-08-10, 202
+|
+4-08-24] -&gt; Corrected: [2025-05-03, 2025-05-27, 2025-06-27, 2025-07-03, 2025-07-10, 2025-07-18, 2025-07-26, 2025-07-30, 2025-08-10, 2025-08-24]
+      -&gt; Affected Sims: Fords2025SowApril_Illabo, Fords2025SowApril_Kittyhawk, Fords2025SowApril_Mowhawk, Fords2025SowApril_Osprey, Fords2025SowApril_Rosella
+   [✂️  PRUNED] &#39;height_raw&#39; | Removed 32 row(s) recorded before 2025-04-15
+      -&gt; Affected Sims: Fords2025SowApril_Illabo, Fords2025SowApril_Kittyhawk, Fords2025SowApril_Mowhawk, Fords2025SowApril_Osprey, Fords2025SowApril_Rosella (...and 11 more)
+======================================================================
+
+▶ start target list_observed_raw_clean
+● built target list_observed_raw_clean [0.53 seconds]
+
+/
+
+----------------------------------------------------------------------
+ 📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
+----------------------------------------------------------------------
+ -&gt; Input Source  : &#39;pcds_3_emergPlants&#39;
+ -&gt; Target Column : &#39;[Wheat].Phenology.Emerging.DateToProgress&#39; (Internal variable preserved)
+ -&gt; Output Target : &#39;pcds_3_emergPlants_Perc&#39; (Appended as new row)
+ -&gt; Action        : Converted raw counts to 0-100% scale per SimulationName
+----------------------------------------------------------------------
+
+▶ start target list_observed_clean
+● built target list_observed_clean [0.07 seconds]
+   -&gt; Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc]
+Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
+▶ start target df_obs_wide
+● built target df_obs_wide [0.34 seconds]
+✅ Successfully extracted 1 target dataframes.
+▶ start target list_pcds_extracted
+● built target list_pcds_extracted [0.03 seconds]
+▶ start target df_pheno_raw
+
+-
+Success [get_pheno_dates_from_pcd_list]: Standardized 16 raw records at 50% progress.
+● built target df_pheno_raw [0.14 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 16 events into master observations under column &#39;Wheat.Phenology.Stage&#39;.
+▶ start target df_obs_plus_pheno
+● built target df_obs_plus_pheno [0.53 seconds]
+▶ start target df_pheno_input_param
+
+\
+
+----------------------------------------------------------------------
+ 🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
+----------------------------------------------------------------------
+ The following phenology stages contained no data (100% NA) across all
+ simulations and were safely removed from the final APSIM output:
+   - [Wheat].Phenology.LeavesInitiating.DateToProgress
+   - [Wheat].Phenology.SpikeletsDifferentiating.DateToProgress
+   - [Wheat].Phenology.StemElongating.DateToProgress
+   - [Wheat].Phenology.Heading.DateToProgress
+   - [Wheat].Phenology.Flowering.DateToProgress
+   - [Wheat].Phenology.GrainFilling.DateToProgress
+----------------------------------------------------------------------
+
+
+|
+Success [format_apsim_pheno_params]: Translated 16 simulations into wide APSIM parameter format.
+● built target df_pheno_input_param [0.09 seconds]
+
+/
+
+============================================================
+
+-
+ ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
+============================================================
+ -&gt; SUCCESS      : 16 valid HI values generated.
+ -&gt; VALUE RANGE  : 0.238 to 0.394
+ -&gt; QC STATUS    : PASS (All HI values &lt;= 1.0)
+------------------------------------------------------------
+
+
+\
+▶ start target df_obs_plus_pheno_hi
+● built target df_obs_plus_pheno_hi [0.04 seconds]
+
+|
+▶ start target msg_pheno_param_saved
+● built target msg_pheno_param_saved [0.15 seconds]
+
+/
+▶ start target df_obs_plus_pheno_hi_with_amounts
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to &#39;Wheat.AboveGround&#39;.
+● built target df_obs_plus_pheno_hi_with_amounts [0.09 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -&gt; STRATEGY     : Asynchronous Max Date Search
+ -&gt; OVERALL SPAN : 2025-10-15 to 2025-11-20
+ -&gt; WARNING      : Max difference between harvest variables is 36 days.
+ -&gt; BREAKDOWN    : Latest recorded date per variable across the trial:
+      - HarvestIndex              : 2025-11-20
+      - Wheat.AboveGround.Wt      : 2025-11-20
+      - Wheat.Grain.Wt            : 2025-11-20
+      - Wheat.Leaf.Live.NConc     : 2025-10-15
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_harv
+● built target df_obs_plus_pheno_harv [0.16 seconds]
+▶ start target qc_apsim_observed_harv
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+● built target qc_apsim_observed_harv [0.09 seconds]
+Success [save_df_to_excel]: Exported 607 rows to &#39;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Fords2025_Observed.xlsx&#39; (Sheet: &#39;Observed&#39;).
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.25 seconds]
+▶ start target haun_input_checked
+● built target haun_input_checked [0.09 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target check_depend
+● built target check_depend [0.03 seconds]
+Encrypting archive...
+✅ Successfully created password-protected archive: Observed.zip
+▶ start target encrypted_zip_artifact
+● built target encrypted_zip_artifact [0.3 seconds]
+▶ start target verify_data_backup
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+● built target verify_data_backup [0.04 seconds]
+▶ end pipeline [12.5 seconds]
+There were 11 warnings (use warnings() to see them)
+
+ </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyX2xvYWQoc29pbF9wcm9maWxlKVxucmVhZHI6OndyaXRlX2Nzdihzb2lsX3Byb2ZpbGUsIFwic29pbF9wcm9maWxlLmNzdlwiLCBuYSA9IFwiXCIpXG5gYGAifQ== -->
+<pre class="r"><code>tar_load(soil_profile)
+readr::write_csv(soil_profile, &quot;soil_profile.csv&quot;, na = &quot;&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkZvcmRzMjAyNSBOb3RlYm9vayINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQojIExpYnJhcmllcw0KYGBge3IsIHdhcm5pbmc9RkFMU0V9DQpsaWJyYXJ5KHRhcmdldHMpDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkodmlzTmV0d29yaykNCmBgYA0KDQpgYGB7cn0NCiNzZXR3ZChkaXJuYW1lKHJzdHVkaW9hcGk6OmdldEFjdGl2ZURvY3VtZW50Q29udGV4dCgpJHBhdGgpKQ0Kc2V0d2QodGhpcy5wYXRoOjp0aGlzLmRpcigpKQ0KZ2V0d2QoKQ0KYGBgDQoNCiMgQ2hlY2sgcGlwZWxpbmUgc3RhdHVzDQpgYGB7cn0NCnRhcl9nbGltcHNlKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KIyBDb25zdHJ1Y3QgcGlwZWxpbmUNCmBgYHtyfQ0KIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZw0KdGFyZ2V0czo6dGFyX21ha2UoKQ0KYGBgDQoNCiMgRGVzdHJveSBwaXBlbGluZSAob2ZmIGJ5IGRlZmF1bHQpDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgZXZhbCA9IEZBTFNFIH0NCiMgdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCmBgYA0KDQpgYGB7cn0NCnRhcl9sb2FkKGRmX3NpbU5hbWVCeUN1bHQpDQp0YXJfbG9hZChkZl9waGVub19yYXcpDQp0YXJfbG9hZChkZl9vYnNfbWV0YV9kYXRhKQ0KdGFyX2xvYWQocHJvY2Vzc2VkX21ldF9kYXRhKQ0KdGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnNfcmF3KQ0KdGFyX2xvYWQoZGZfb2JzX3dpZGUpDQp0YXJfbG9hZChkZl9vYnNfcGx1c19waGVub19oaV93aXRoX2Ftb3VudHMpDQp0YXJfbG9hZChkZl9vYnNfcGx1c19waGVub19oYXJ2KQ0KdGFyX2xvYWQoZGZfcGhlbm9faW5wdXRfcGFyYW0pDQp0YXJfbG9hZChkZl9waGVub19pbnB1dF9wYXJhbSkNCnRhcl9yZWFkKGRmX29ic19wbHVzX3BoZW5vKQ0KYGBgDQoNCmBgYHtyfQ0KIyBSZXBsYWNlICd5b3VyX3ByZXZpb3VzX3RhcmdldF9uYW1lJyB3aXRoIHRoZSBhY3R1YWwgbmFtZSBmcm9tIF90YXJnZXRzLlINCmRmX3N1c3BlY3QgPC0gdGFyZ2V0czo6dGFyX3JlYWQoZGZfb2JzX3BsdXNfcGhlbm9faGFydikNCg0KbGlicmFyeShkcGx5cikNCg0KZGZfc3VzcGVjdCAlPiUNCiAgZmlsdGVyKFNpbXVsYXRpb25OYW1lID09ICJGb3JkczIwMjVTb3dBcHJpbF9JbGxhYm8iLCANCiAgICAgICAgIHN0cmluZ3I6OnN0cl9kZXRlY3QoQ2xvY2suVG9kYXksICIxNC0wNSIpKSAlPiUNCiAgYXJyYW5nZShDbG9jay5Ub2RheSkgJT4lDQogIHByaW50KHdpZHRoID0gSW5mKQ0KYGBgDQoNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkZvcmRzMjAyNSBOb3RlYm9vayINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQojIExpYnJhcmllcw0KYGBge3IsIHdhcm5pbmc9RkFMU0V9DQpsaWJyYXJ5KHRhcmdldHMpDQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCmxpYnJhcnkodmlzTmV0d29yaykNCmBgYA0KDQpgYGB7cn0NCiNzZXR3ZChkaXJuYW1lKHJzdHVkaW9hcGk6OmdldEFjdGl2ZURvY3VtZW50Q29udGV4dCgpJHBhdGgpKQ0Kc2V0d2QodGhpcy5wYXRoOjp0aGlzLmRpcigpKQ0KZ2V0d2QoKQ0KYGBgDQoNCiMgQ2hlY2sgcGlwZWxpbmUgc3RhdHVzDQpgYGB7cn0NCnRhcl9nbGltcHNlKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKCkNCmBgYA0KDQpgYGB7cn0NCnRhcl92aXNuZXR3b3JrKHRhcmdldHNfb25seSA9IFRSVUUpDQpgYGANCg0KIyBDb25zdHJ1Y3QgcGlwZWxpbmUNCmBgYHtyfQ0KIyB0YXJnZXRzOjp0YXJfbWFrZShjYWxscl9mdW5jdGlvbiA9IE5VTEwpICMgZm9yIGRlYnVnZ2luZw0KdGFyZ2V0czo6dGFyX21ha2UoKQ0KYGBgDQoNCiMgRGVzdHJveSBwaXBlbGluZSAob2ZmIGJ5IGRlZmF1bHQpDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgZXZhbCA9IEZBTFNFIH0NCiMgdGFyX2Rlc3Ryb3koKQ0KIyB0YXJnZXRzOjp0YXJfZGVzdHJveShhc2sgPSBGQUxTRSkNCmBgYA0KDQpgYGB7cn0NCnRhcl9sb2FkKGRmX3NpbU5hbWVCeUN1bHQpDQp0YXJfbG9hZChkZl9waGVub19yYXcpDQp0YXJfbG9hZChkZl9vYnNfbWV0YV9kYXRhKQ0KdGFyX2xvYWQocHJvY2Vzc2VkX21ldF9kYXRhKQ0KdGFyX2xvYWQobGlzdF9vYnNlcnZlZF9kZnNfcmF3KQ0KdGFyX2xvYWQoZGZfb2JzX3dpZGUpDQp0YXJfbG9hZChkZl9vYnNfcGx1c19waGVub19oaV93aXRoX2Ftb3VudHMpDQp0YXJfbG9hZChkZl9vYnNfcGx1c19waGVub19oYXJ2KQ0KdGFyX2xvYWQoZGZfcGhlbm9faW5wdXRfcGFyYW0pDQp0YXJfbG9hZChkZl9waGVub19pbnB1dF9wYXJhbSkNCnRhcl9yZWFkKGRmX29ic19wbHVzX3BoZW5vKQ0KYGBgDQoNCmBgYHtyfQ0KIyBSZXBsYWNlICd5b3VyX3ByZXZpb3VzX3RhcmdldF9uYW1lJyB3aXRoIHRoZSBhY3R1YWwgbmFtZSBmcm9tIF90YXJnZXRzLlINCmRmX3N1c3BlY3QgPC0gdGFyZ2V0czo6dGFyX3JlYWQoZGZfb2JzX3BsdXNfcGhlbm9faGFydikNCg0KbGlicmFyeShkcGx5cikNCg0KZGZfc3VzcGVjdCAlPiUNCiAgZmlsdGVyKFNpbXVsYXRpb25OYW1lID09ICJGb3JkczIwMjVTb3dBcHJpbF9JbGxhYm8iLCANCiAgICAgICAgIHN0cmluZ3I6OnN0cl9kZXRlY3QoQ2xvY2suVG9kYXksICIxNC0wNSIpKSAlPiUNCiAgYXJyYW5nZShDbG9jay5Ub2RheSkgJT4lDQogIHByaW50KHdpZHRoID0gSW5mKQ0KYGBgDQoNCg0KYGBge3J9DQp0YXJnZXRzOjp0YXJfbWFrZSgNCiAgY2FsbHJfYXJndW1lbnRzID0gbGlzdCgNCiAgICBzdGRvdXQgPSAicGlwZWxpbmVfbG9nLnR4dCIsDQogICAgc3RkZXJyID0gInBpcGVsaW5lX2xvZy50eHQiDQogICkNCikNCmBgYA0KDQpgYGB7cn0NCnRhcl9sb2FkKHNvaWxfcHJvZmlsZSkNCnJlYWRyOjp3cml0ZV9jc3Yoc29pbF9wcm9maWxlLCAic29pbF9wcm9maWxlLmNzdiIsIG5hID0gIiIpDQpgYGANCg0K</div>
 
 
 
