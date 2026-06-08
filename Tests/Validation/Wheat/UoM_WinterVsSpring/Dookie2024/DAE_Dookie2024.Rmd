@@ -28,7 +28,7 @@ tar_visnetwork()
 tar_visnetwork(targets_only = TRUE)
 ```
 
-# Construct pipeline
+# Construct pipeline (good for dev stage)
 ```{r}
 # targets::tar_make(callr_function = NULL) # for debugging
 targets::tar_make()
@@ -39,6 +39,25 @@ targets::tar_make()
 # tar_destroy()
 # targets::tar_destroy(ask = FALSE)
 ```
+
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
 
 
 ```{r}
