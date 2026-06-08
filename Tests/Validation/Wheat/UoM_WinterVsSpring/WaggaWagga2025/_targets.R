@@ -127,47 +127,118 @@ list(
   # ----------------------------------------------------------------------------
   # PHASE B: SOIL & WEATHER PROCESSING
   # ----------------------------------------------------------------------------
-  tar_target(
-    name = df_soil_water, 
-    command = read_soil_water_data(
-      config$folder_rawData, 
-      config$file_rawData_excel, 
-      config$sheetExcel_soilWater
-    )
-  ),
+  
+  #-------------
+  # SOIL
+  #------------
+  
+  # tar_target(
+  #   name = df_soil_water, 
+  #   command = read_soil_water_data(
+  #     config$folder_rawData, 
+  #     config$file_rawData_excel, 
+  #     config$sheetExcel_soilWater
+  #   )
+  # ),
+  
+  # # Soil data
+  # tar_target(
+  #   name = soilN_data_clean,
+  #   command = read_soil_data(
+  #     folder          = config$folder_rawData,
+  #     file            = config$file_rawData_excel,
+  #     # sheet           = "Soil sampling",
+  #     sheet          = "Soil sampling",
+  #     vars_to_extract = c("Nitrate Nitrogen",	"Ammonium Nitrogen"),
+  #     col_depth_from  = "Depth From", # Optional if this matches the default
+  #     col_depth_to    = "Depth To"    # Optional if this matches the default
+  #   )
+  # ),
+  # 
+  # tar_target(
+  #   name = soil_DUL,
+  #   command = read_soil_data(
+  #     folder          = config$folder_rawData,
+  #     file            = config$file_rawData_excel,
+  #     sheet          = "Soil Characterisation",
+  #     vars_to_extract = c("Bulk density (g/cm2)",	"CLL_wheat (mm/mm)",	"DUL_wheat (mm/mm)",	
+  #                         "Volumetric water content", "Saturation"),
+  #     col_depth_from  = "Depth From (cm)", # Optional if this matches the default
+  #     col_depth_to    = "Depth To (cm)"   # Optional if this matches the default
+  #   )
+  # ),
+  # 		
+  # 
+  # tar_target(
+  #   name = json_soil_water, 
+  #   command = soil_water_into_json(df_soil_water)
+  # ),
+  
   
   # Soil data
   tar_target(
-    name = soilN_data_clean,
+    name = soil_profile_data,
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = config$file_rawData_excel,
-      # sheet           = "Soil sampling",
       sheet          = "Soil sampling",
-      vars_to_extract = c("Nitrate Nitrogen",	"Ammonium Nitrogen"),
+      vars_to_extract =   c(
+        "Electrical C",
+        "EC Saturat",
+        "Nitrate Nit",
+        "Ammoniu",
+        "Silt",
+        "Clay",
+        "Sand Coar",
+        "Sand Fine",
+        "Total Carb",
+        "Gravel (>2m",
+        "Silt",
+        "Clay",
+        "Sand"
+      ),
       col_depth_from  = "Depth From", # Optional if this matches the default
-      col_depth_to    = "Depth To"    # Optional if this matches the default
+      col_depth_to    = "Depth To",    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_profile_data.csv")
     )
-  ),
+  ),	
   
+  
+  # Soil water data
   tar_target(
-    name = soil_DUL,
+    name = soil_water_data,
     command = read_soil_data(
       folder          = config$folder_rawData,
-      file            = config$file_rawData_excel,
+      file            = config$file_rawData_excel, # separate water info file
       sheet          = "Soil Characterisation",
-      vars_to_extract = c("Bulk density (g/cm2)",	"CLL_wheat (mm/mm)",	"DUL_wheat (mm/mm)",	
-                          "Volumetric water content", "Saturation"),
+      vars_to_extract =    
+        c("Depth From (cm)",
+        "Depth To (cm)",
+        "layer_thickness_mm",
+        "pH (1:5 Water)",
+        "Organic Carbon %",
+        "pH (1:5 CaCl2)",
+        "Nitrate Nitrogen (mg/kg)",
+        "Ammonium Nitrogen (mg/kg)",
+        "Gravimetric_Water_Content %",
+        "Bulk density (g/cm2)",
+        "CLL_wheat (mm/mm)",
+        "DUL_wheat (mm/mm)",
+        "Volumetric water content",
+        "PAW_2025_04_17",
+        "PAWC",
+        "Porosity",
+        "Saturation"
+      ),
       col_depth_from  = "Depth From (cm)", # Optional if this matches the default
-      col_depth_to    = "Depth To (cm)"   # Optional if this matches the default
+      col_depth_to    = "Depth To (cm)",    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_water_data.csv")
     )
-  ),
-  		
+  ),	
   
-  tar_target(
-    name = json_soil_water, 
-    command = soil_water_into_json(df_soil_water)
-  ),
+  #-------------
+  # MET
+  #------------
   
   tar_target(
     name = processed_met_data, 

@@ -223,6 +223,19 @@ list(
     )
   ),	
   
+  tar_target(
+    name = soil_gravWaterContent_data,
+    command = read_soil_data(
+      folder          = config$folder_rawData,
+      file            = config$file_rawData_excel, # separate water info file
+      sheet          = "GravimetricMoistureNearSowing",
+      vars_to_extract =  c("Gravimetric_Water_Content %"),
+      col_depth_from  = "Depth", # Optional if this matches the default
+      col_depth_to    = NULL,    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_gravWaterContent_data.csv")
+    )
+  ),	
+  
   #------------
   # MET DATA
   #------------
