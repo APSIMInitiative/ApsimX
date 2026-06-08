@@ -47,6 +47,27 @@ tar_destroy()
 
 ```
 
+
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
+
+
 # Get soil parameters in json format
 ```{r}
 tar_load(df_apsimStageInput)
@@ -74,6 +95,7 @@ tar_load(df_stages_Observ)
 df2<-tar_read(list_observed_dfs_raw)
 df3<-tar_read(df_stages_Observ)
 ```
+
 ```{r}
 names(targets::tar_read(df_pheno_final))
 ```

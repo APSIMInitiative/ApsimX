@@ -74,6 +74,23 @@ list(
     )
   ),
   
+  # THE PIPELINE TRACEABILITY TARGET
+  tar_target(
+    name = log_active_config,
+    command = {
+      cat("\n======================================================================\n")
+      cat(" ⚙️ ACTIVE PIPELINE CONFIGURATION \n")
+      cat("======================================================================\n")
+      
+      print(config)
+      
+      cat("======================================================================\n\n")
+      invisible(config)
+    },
+    cue = tar_cue(mode = "always")
+  ),
+  
+  
   # ------------------------------------------------------------------
   # PHASE B: VALIDATE AND COPY MET FILE
   # ------------------------------------------------------------------
@@ -223,6 +240,15 @@ list(
       sheet_name  = config$sheet_name_observed
     ),
     format = "file"
+  ),
+  
+  tar_target(
+    name = manual_pheno_params,
+    command = check_pheno_manual_parameters(
+      folder_name  = config$folder_inputs,
+      proj_name    = config$proj_name,
+      sim_names_df = qc_apsim_observed
+    )
   ),
   
   # ----------------------------------------------------------------------------
