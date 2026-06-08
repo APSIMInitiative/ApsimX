@@ -5,16 +5,16 @@
 #' rounds them to 3 decimals, and exports a clean CSV. 
 #' 
 #' @details
-#' **Data Gap Handling:** If requested variables are missing from the file or contain 
-#' completely empty data, the script will safely bypass them and trigger a detailed 
-#' warning alarm at the end of the run instead of crashing the pipeline.
+#' **Single-Depth Mode:** If your dataset only has one depth column, pass 
+#' `col_depth_to = NULL`. The script will gracefully use the single column 
+#' for both sorting and layer identification.
 #'
 #' @param folder Character. Path to the folder containing the file.
 #' @param file Character. Name of the Excel file.
 #' @param sheet Character. Name of the sheet to read.
 #' @param vars_to_extract Character vector of column names to process.
-#' @param col_depth_from Character. Exact name of the 'Depth From' column.
-#' @param col_depth_to Character. Exact name of the 'Depth To' column.
+#' @param col_depth_from Character. Exact name of the primary depth column.
+#' @param col_depth_to Character or NULL. Name of the secondary depth column. Set to NULL if unavailable.
 #' @param log_file_name Character. The name of the CSV file to export.
 #'
 #' @return A clean dataframe sorted top-to-bottom by depth.
@@ -63,7 +63,10 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
   base_names <- stringr::str_replace(raw_names, "___DUP[0-9]+$", "")
   base_names <- trimws(base_names)
   
-  target_cols <- c(col_depth_from, col_depth_to, vars_to_extract)
+  # Safely construct the target columns list based on whether col_depth_to is NULL
+  req_cols <- c(col_depth_from, vars_to_extract)
+  if (!is.null(col_depth_to) && col_depth_to != "") req_cols <- c(req_cols, col_depth_to)
+  target_cols <- unique(trimws(req_cols))
   
   resolved_indices <- integer()
   found_targets <- character()
@@ -72,26 +75,25 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
   missing_var_cols <- character()
   duplicate_logs <- c()
   
+  depth_reqs <- c(col_depth_from)
+  if (!is.null(col_depth_to) && col_depth_to != "") depth_reqs <- c(depth_reqs, col_depth_to)
+  
   for (tgt in target_cols) {
     tgt_clean <- trimws(tgt)
-    
-    # 1. Exact match
     matches <- which(base_names == tgt_clean)
     
-    # 2. Prefix fallback (ignores appended row 2 units)
     if (length(matches) == 0) {
       matches <- which(stringr::str_starts(base_names, stringr::fixed(tgt_clean)))
     }
     
     if (length(matches) == 0) {
-      if (tgt_clean %in% c(col_depth_from, col_depth_to)) {
+      if (tgt_clean %in% depth_reqs) {
         missing_depth_cols <- c(missing_depth_cols, tgt_clean)
       } else {
         missing_var_cols <- c(missing_var_cols, tgt_clean)
       }
     } else {
       best_match <- matches[1]
-      
       if (length(matches) > 1) {
         data_found <- FALSE
         for (m in matches) {
@@ -106,14 +108,12 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
             break 
           }
         }
-        
         if (data_found) {
           duplicate_logs <- c(duplicate_logs, sprintf("   -> Column '%s' found %d times. Safely extracted Index %d.", tgt_clean, length(matches), best_match))
         } else {
           duplicate_logs <- c(duplicate_logs, sprintf("   -> Column '%s' found %d times, but ALL instances appear empty. Defaulted to Index %d.", tgt_clean, length(matches), best_match))
         }
       }
-      
       resolved_indices <- c(resolved_indices, best_match)
       found_targets <- c(found_targets, tgt_clean)
     }
@@ -138,11 +138,23 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
   
   vars_actually_found <- intersect(vars_to_extract, found_targets)
   
+  # Phase 1: Build the SortKey
   df_processed <- df_processed %>%
     dplyr::mutate(
-      Depth = paste0(.data[[col_depth_from]], "-", .data[[col_depth_to]]),
       SortKey = suppressWarnings(as.numeric(gsub("[^0-9.]", "", .data[[col_depth_from]])))
-    ) %>%
+    )
+  
+  # Phase 2: Build the Depth column dynamically based on available columns
+  if (!is.null(col_depth_to) && col_depth_to != "") {
+    df_processed <- df_processed %>%
+      dplyr::mutate(Depth = paste0(.data[[col_depth_from]], "-", .data[[col_depth_to]]))
+  } else {
+    df_processed <- df_processed %>%
+      dplyr::mutate(Depth = as.character(.data[[col_depth_from]]))
+  }
+  
+  # Phase 3: Group, Summarise, Sort, and Round
+  df_processed <- df_processed %>%
     dplyr::mutate(
       dplyr::across(dplyr::all_of(vars_actually_found), ~ suppressWarnings(as.numeric(.)))
     ) %>%
@@ -156,7 +168,6 @@ read_soil_data <- function(folder, file, sheet, vars_to_extract,
     ) %>%
     dplyr::arrange(SortKey) %>%
     dplyr::select(-SortKey) %>%
-    # ROUND ALL FOUND VARIABLES TO 3 DECIMAL PLACES
     dplyr::mutate(
       dplyr::across(dplyr::all_of(vars_actually_found), ~ round(., 3))
     )

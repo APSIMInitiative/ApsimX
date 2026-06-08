@@ -1562,40 +1562,40 @@
                         200.0
                       ],
                       "ParticleSizeSand": [
-                        87.81,
-                        86.18,
-                        86.18,
-                        88.29,
-                        88.29,
-                        88.29,
-                        84.27,
-                        84.27,
-                        84.27,
-                        84.27
+                        52.675,
+                        29.1,
+                        50.5,
+                        47.525,
+                        46.75,
+                        43.025,
+                        36.825,
+                        35.375,
+                        34.467,
+                        32.95
                       ],
                       "ParticleSizeSilt": [
-                        6.15,
-                        4.95,
-                        4.95,
-                        3.92,
-                        3.92,
-                        3.92,
-                        2.96,
-                        2.96,
-                        2.96,
-                        2.96
+                        21.575,
+                        10.0,
+                        18.45,
+                        17.85,
+                        17.175,
+                        13.3,
+                        11.275,
+                        11.9,
+                        13.767,
+                        12.8
                       ],
                       "ParticleSizeClay": [
-                        6.05,
-                        8.86,
-                        8.86,
-                        7.79,
-                        7.79,
-                        7.79,
-                        12.77,
-                        12.77,
-                        12.77,
-                        12.77
+                        25.75,
+                        60.9,
+                        31.05,
+                        34.625,
+                        36.075,
+                        43.675,
+                        51.9,
+                        52.725,
+                        51.767,
+                        54.25
                       ],
                       "Rocks": [
                         0.0,
@@ -1635,16 +1635,16 @@
                         0.05
                       ],
                       "LL15": [
-                        0.18,
-                        0.11,
-                        0.27,
-                        0.27,
-                        0.274,
-                        0.297,
-                        0.275,
-                        0.258,
-                        0.193,
-                        0.252
+                        0.083,
+                        0.106,
+                        0.146,
+                        0.151,
+                        0.19,
+                        0.223,
+                        0.222,
+                        0.218,
+                        0.22,
+                        0.15
                       ],
                       "DUL": [
                         0.31,
@@ -1787,15 +1787,15 @@
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
-                            0.18,
-                            0.11,
-                            0.27,
-                            0.27,
-                            0.274,
-                            0.297,
-                            0.275,
-                            0.258,
-                            0.193,
+                            0.083,
+                            0.106,
+                            0.146,
+                            0.151,
+                            0.19,
+                            0.223,
+                            0.222,
+                            0.218,
+                            0.22,
                             0.252
                           ],
                           "KL": [
@@ -1926,29 +1926,29 @@
                         200.0
                       ],
                       "Carbon": [
-                        1.48,
-                        0.64,
-                        0.4,
-                        0.35,
-                        0.25,
-                        0.21,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
+                        1.825,
+                        0.63,
+                        0.61,
+                        0.315,
+                        0.218,
+                        0.212,
+                        0.232,
+                        0.218,
+                        0.503,
+                        0.485
                       ],
                       "CarbonUnits": 0,
                       "SoilCNRatio": [
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0
+                        11.75,
+                        13.0,
+                        8.275,
+                        5.75,
+                        4.35,
+                        4.25,
+                        4.35,
+                        4.35,
+                        10.067,
+                        9.9
                       ],
                       "FBiom": [
                         0.035,
@@ -2028,29 +2028,29 @@
                         200.0
                       ],
                       "PH": [
-                        5.1,
-                        5.2,
-                        6.3,
-                        7.2,
-                        7.6,
-                        7.9,
-                        7.9,
-                        7.9,
+                        6.1,
+                        9.0,
+                        6.15,
+                        7.0,
+                        7.225,
+                        7.55,
                         8.0,
-                        8.1
+                        8.45,
+                        8.733,
+                        8.975
                       ],
                       "PHUnits": 0,
                       "EC": [
-                        0.132,
                         0.085,
-                        0.085,
-                        0.065,
-                        0.065,
-                        0.065,
-                        0.064,
-                        0.064,
-                        0.087,
-                        0.098
+                        0.29,
+                        0.038,
+                        0.04,
+                        0.045,
+                        0.05,
+                        0.055,
+                        0.117,
+                        0.18,
+                        0.208
                       ],
                       "ESP": [
                         0.026,
@@ -2077,6 +2077,9 @@
                         4.533
                       ],
                       "ECMetadata": [
+                        null,
+                        null,
+                        null,
                         null,
                         null,
                         null,
@@ -2263,14 +2266,14 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.07,
-                        0.08,
-                        0.11,
-                        0.15,
-                        0.15,
+                        0.083,
+                        0.106,
+                        0.146,
+                        0.151,
                         0.19,
-                        0.22,
-                        0.22,
+                        0.223,
+                        0.222,
+                        0.218,
                         0.22,
                         0.22
                       ],
@@ -2317,10 +2320,10 @@
                   "Canopies": [],
                   "InitialResidueName": "Canola stubble",
                   "InitialResidueType": "canola",
-                  "InitialResidueMass": 3000.0,
-                  "InitialStandingFraction": 0.7,
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
-                  "InitialCNR": 70.0,
+                  "InitialCNR": 0.0,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
@@ -2750,8 +2753,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-15",
-                      "Action": "[Irrigation].Apply(25)",
-                      "Line": "2025-04-15 [Irrigation].Apply(25)"
+                      "Action": "[Irrigation].Apply(10)",
+                      "Line": "2025-04-15 [Irrigation].Apply(10)"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -2770,9 +2773,16 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
+                      "Date": "2025-05-16",
+                      "Action": "[Irrigation].Apply(25)",
+                      "Line": "2025-05-16 [Irrigation].Apply(25)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
                       "Date": "2025-08-05",
-                      "Action": "[Fertiliser].Apply(amount: 90, type: \"UreaN\")",
-                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 90, type: \"UreaN\")"
+                      "Action": "[Fertiliser].Apply(amount: 200, type: \"UreaGranular\")",
+                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 200, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -2798,8 +2808,15 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-05-15",
+                      "Action": "[Irrigation].Apply(10)",
+                      "Line": "2025-05-15 [Irrigation].Apply(10)"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-05-16",
                       "Action": "[Irrigation].Apply(25)",
-                      "Line": "2025-05-15 [Irrigation].Apply(25)"
+                      "Line": "2025-05-16 [Irrigation].Apply(25)"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -2814,6 +2831,13 @@
                       "Date": "2025-05-13",
                       "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
                       "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-08-05",
+                      "Action": "[Fertiliser].Apply(amount: 200, type: \"UreaGranular\")",
+                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 200, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementSpring",
@@ -9113,40 +9137,40 @@
                         200.0
                       ],
                       "ParticleSizeSand": [
-                        87.81,
-                        86.18,
-                        86.18,
-                        88.29,
-                        88.29,
-                        88.29,
-                        84.27,
-                        84.27,
-                        84.27,
-                        84.27
+                        52.675,
+                        29.1,
+                        50.5,
+                        47.525,
+                        46.75,
+                        43.025,
+                        36.825,
+                        35.375,
+                        34.467,
+                        32.95
                       ],
                       "ParticleSizeSilt": [
-                        6.15,
-                        4.95,
-                        4.95,
-                        3.92,
-                        3.92,
-                        3.92,
-                        2.96,
-                        2.96,
-                        2.96,
-                        2.96
+                        21.575,
+                        10.0,
+                        18.45,
+                        17.85,
+                        17.175,
+                        13.3,
+                        11.275,
+                        11.9,
+                        13.767,
+                        12.8
                       ],
                       "ParticleSizeClay": [
-                        6.05,
-                        8.86,
-                        8.86,
-                        7.79,
-                        7.79,
-                        7.79,
-                        12.77,
-                        12.77,
-                        12.77,
-                        12.77
+                        25.75,
+                        60.9,
+                        31.05,
+                        34.625,
+                        36.075,
+                        43.675,
+                        51.9,
+                        52.725,
+                        51.767,
+                        54.25
                       ],
                       "Rocks": [
                         0.0,
@@ -9186,16 +9210,16 @@
                         0.05
                       ],
                       "LL15": [
-                        0.18,
-                        0.11,
-                        0.27,
-                        0.27,
-                        0.274,
-                        0.297,
-                        0.275,
-                        0.258,
-                        0.193,
-                        0.252
+                        0.083,
+                        0.106,
+                        0.146,
+                        0.151,
+                        0.19,
+                        0.223,
+                        0.222,
+                        0.218,
+                        0.22,
+                        0.15
                       ],
                       "DUL": [
                         0.31,
@@ -9338,15 +9362,15 @@
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
-                            0.18,
-                            0.11,
-                            0.27,
-                            0.27,
-                            0.274,
-                            0.297,
-                            0.275,
-                            0.258,
-                            0.193,
+                            0.083,
+                            0.106,
+                            0.146,
+                            0.151,
+                            0.19,
+                            0.223,
+                            0.222,
+                            0.218,
+                            0.22,
                             0.252
                           ],
                           "KL": [
@@ -9477,29 +9501,29 @@
                         200.0
                       ],
                       "Carbon": [
-                        1.48,
-                        0.64,
-                        0.4,
-                        0.35,
-                        0.25,
-                        0.21,
-                        0.1,
-                        0.1,
-                        0.1,
-                        0.1
+                        1.825,
+                        0.63,
+                        0.61,
+                        0.315,
+                        0.218,
+                        0.212,
+                        0.232,
+                        0.218,
+                        0.503,
+                        0.485
                       ],
                       "CarbonUnits": 0,
                       "SoilCNRatio": [
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0,
-                        12.0
+                        11.75,
+                        13.0,
+                        8.275,
+                        5.75,
+                        4.35,
+                        4.25,
+                        4.35,
+                        4.35,
+                        10.067,
+                        9.9
                       ],
                       "FBiom": [
                         0.035,
@@ -9579,29 +9603,29 @@
                         200.0
                       ],
                       "PH": [
-                        5.1,
-                        5.2,
-                        6.3,
-                        7.2,
-                        7.6,
-                        7.9,
-                        7.9,
-                        7.9,
+                        6.1,
+                        9.0,
+                        6.15,
+                        7.0,
+                        7.225,
+                        7.55,
                         8.0,
-                        8.1
+                        8.45,
+                        8.733,
+                        8.975
                       ],
                       "PHUnits": 0,
                       "EC": [
-                        0.132,
                         0.085,
-                        0.085,
-                        0.065,
-                        0.065,
-                        0.065,
-                        0.064,
-                        0.064,
-                        0.087,
-                        0.098
+                        0.29,
+                        0.038,
+                        0.04,
+                        0.045,
+                        0.05,
+                        0.055,
+                        0.117,
+                        0.18,
+                        0.208
                       ],
                       "ESP": [
                         0.026,
@@ -9628,6 +9652,9 @@
                         4.533
                       ],
                       "ECMetadata": [
+                        null,
+                        null,
+                        null,
                         null,
                         null,
                         null,
@@ -9814,14 +9841,14 @@
                         200.0
                       ],
                       "InitialValues": [
-                        0.07,
-                        0.08,
-                        0.11,
-                        0.15,
-                        0.15,
+                        0.083,
+                        0.106,
+                        0.146,
+                        0.151,
                         0.19,
-                        0.22,
-                        0.22,
+                        0.223,
+                        0.222,
+                        0.218,
                         0.22,
                         0.22
                       ],
@@ -9876,10 +9903,10 @@
                   "Canopies": [],
                   "InitialResidueName": "Canola stubble",
                   "InitialResidueType": "canola",
-                  "InitialResidueMass": 3000.0,
-                  "InitialStandingFraction": 0.7,
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
-                  "InitialCNR": 70.0,
+                  "InitialCNR": 0.0,
                   "Name": "SurfaceOrganicMatter",
                   "ResourceName": "SurfaceOrganicMatter",
                   "Children": [],
@@ -10309,8 +10336,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-04-15",
-                      "Action": "[Irrigation].Apply(25)",
-                      "Line": "2025-04-15 [Irrigation].Apply(25)"
+                      "Action": "[Irrigation].Apply(10)",
+                      "Line": "2025-04-15 [Irrigation].Apply(10)"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -10330,8 +10357,8 @@
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
                       "Date": "2025-08-05",
-                      "Action": "[Fertiliser].Apply(amount: 90, type: \"UreaN\")",
-                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 90, type: \"UreaN\")"
+                      "Action": "[Fertiliser].Apply(amount: 200, type: \"UreaGranular\")",
+                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 200, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementWinter",
@@ -10339,7 +10366,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
+                      "Text": "Year\tSite\tDate\tHabit\tAmount (mm)\tNotes\n\n2025\tDookie\t17/4\tWinter and Spring\t13\t \n\n2025\tDookie\t7/5\tWinter and Spring\t0 to 40 mm???\t\n\n2025\tDookie\t16/05\tWinter and Spring\t25\tThis was done with drippers \n\n2025\tDookie\t16-Apr-25\tWinter\tMAP\t100\n\n2025\tDookie\t13-May-25\tSpring\tMAP\t100\n\n2025\tDookie\t05-Aug-25\tWinter & Spring\tUrea\t200\n\n2025\tDookie\t15/04-09/05\tWinter\t25\t \n\n2025\tDookie\t15/05-22/05\tSpring\t25\t",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -10363,9 +10390,9 @@
                     {
                       "$type": "Models.Operation, Models",
                       "Enabled": true,
-                      "Date": "2025-05-15",
+                      "Date": "2025-05-16",
                       "Action": "[Irrigation].Apply(25)",
-                      "Line": "2025-05-15 [Irrigation].Apply(25)"
+                      "Line": "2025-05-16 [Irrigation].Apply(25)"
                     },
                     {
                       "$type": "Models.Operation, Models",
@@ -10373,6 +10400,13 @@
                       "Date": "2025-05-13",
                       "Action": "[Fertiliser].Apply(amount: 100, type: \"MAP\")",
                       "Line": "2025-05-13 [Fertiliser].Apply(amount: 100, type: \"MAP\")"
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Enabled": true,
+                      "Date": "2025-08-05",
+                      "Action": "[Fertiliser].Apply(amount: 200, type: \"UreaGranular\")",
+                      "Line": "2025-08-05 [Fertiliser].Apply(amount: 200, type: \"UreaGranular\")"
                     }
                   ],
                   "Name": "ManagementSpring",
@@ -10380,7 +10414,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "2024\tDookie\t17-Apr-24\tWinter\tMAP\t100\n\n2024\tDookie\t14-May-24\tSpring\tMAP\t100\n\n2024\tDookie\t26-Jul-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t26-Aug-24\tWinter & Spring\tUrea\t150\n\n2024\tDookie\t01-May-24\tWinter\t5\tEstablishment irrigation (winter wheat only)",
+                      "Text": "Year\tSite\tDate\tHabit\tAmount (mm)\tNotes\n\n2025\tDookie\t17/4\tWinter and Spring\t13\t \n\n2025\tDookie\t7/5\tWinter and Spring\t0 to 40 mm???\t\n\n2025\tDookie\t16/05\tWinter and Spring\t25\tThis was done with drippers \n\n2025\tDookie\t16-Apr-25\tWinter\tMAP\t100\n\n2025\tDookie\t13-May-25\tSpring\tMAP\t100\n\n2025\tDookie\t05-Aug-25\tWinter & Spring\tUrea\t200\n\n2025\tDookie\t15/04-09/05\tWinter\t25\t \n\n2025\tDookie\t15/05-22/05\tSpring\t25\t",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -14799,15 +14833,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -14879,15 +14913,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -14959,15 +14993,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15039,15 +15073,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15119,15 +15153,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15199,15 +15233,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15279,15 +15313,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15439,15 +15473,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15519,15 +15553,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15599,15 +15633,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15679,15 +15713,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15759,15 +15793,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15839,15 +15873,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15919,15 +15953,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -15999,15 +16033,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -16079,15 +16113,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -16159,19 +16193,19 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
