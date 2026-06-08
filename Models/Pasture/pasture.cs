@@ -819,9 +819,7 @@ namespace Models.GrazPlan
                 else
                 {
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
-                
                 }
-              
                 fracToRemove= MathUtilities.Divide(amountToRemove, totalBiomass, 0.0);                
             }
             // Loop through leaf and stem  classes (Live and Dead) to remove fraction of biomass and N in the each DMD
@@ -847,7 +845,7 @@ namespace Models.GrazPlan
                     if(deadDM > 0.0)
                     {
                         double setmass = deadDM - deadDM * fracToRemove;   
-                        PastureModel.SetHerbageMass(stDEAD, part, cls,setmass);                        
+                        PastureModel.SetHerbageMass(stDEAD, part, cls,setmass);                      
                     }
                     else
                     PastureModel.SetHerbageMass(stDEAD, part, cls,0.0);
@@ -870,11 +868,11 @@ namespace Models.GrazPlan
                   }
             }
             //Total biomass post defoliation across all DMD classes across Leaf and Stem   
-             for (int part = ptLEAF; part <= ptSTEM; part++)
+             for(int part = ptLEAF; part <= ptSTEM; part++)
             {
                 for (int cls = 1; cls <= HerbClassNo; cls++)
                 {
-                     totalBiomassPost += PastureModel.GetHerbageMass(stESTAB,part,cls) + PastureModel.GetHerbageMass(stDEAD,part,cls);
+                    totalBiomassPost += PastureModel.GetHerbageMass(stESTAB,part,cls) + PastureModel.GetHerbageMass(stDEAD,part,cls);
                 }
             }
             //Check mass balance 
@@ -884,7 +882,6 @@ namespace Models.GrazPlan
                 throw new Exception("Removal of DM resulted in loss of mass balance");
             }  
         }
-
 
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
@@ -3802,8 +3799,6 @@ namespace Models.GrazPlan
                 return 0.75 * svp(locWtr.MaxT) + 0.25 * svp(locWtr.MinT) - locWtr.VP;
             }
         }
-
-    
 
         /// <summary>SVPs the specified temp_c.</summary>
         /// <param name="temp_c">The temp_c.</param>
