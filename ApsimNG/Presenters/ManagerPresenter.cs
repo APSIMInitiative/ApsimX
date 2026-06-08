@@ -97,6 +97,8 @@ namespace UserInterface.Presenters
             manager.Cursor.TabIndex = managerView.TabIndex;
             manager.Cursor = managerView.CursorLocation;
 
+            // Ensure in-flight edits in the parameters tab are committed before recompiling.
+            managerView.PropertyEditor?.SaveChanges();
             BuildScript();  // compiles and saves the script
             propertyPresenter.Detach();
 

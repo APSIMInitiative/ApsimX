@@ -548,6 +548,15 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
+
+                // When a Series model is moved up or down it can change the way it is displayed
+                // in the right hand panel, so we need to refresh that display.
+                // Do any other Models require this?
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
@@ -563,6 +572,11 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
