@@ -124,17 +124,29 @@ read_observed_func <- function(file_path, SheetName, VarName, NewVarName, UnitCo
   }
   
   # ------------------------------------------------------------------
-  # 3.5 MISSING TARGET VARIABLE
+  # 3.5 TARGET VARIABLE RESOLVER (MULTI-COLUMN & FUZZY MATCHER)
   # ------------------------------------------------------------------
-  actual_var_name <- VarName
-  if (!actual_var_name %in% names(df)) {
-    fuzzy_match <- grep(paste0("^", VarName, "$"), names(df), ignore.case = TRUE, value = TRUE)
-    if (length(fuzzy_match) == 1) {
-      actual_var_name <- fuzzy_match[1]
-    } else {
-      print_missing_alarm("VARIABLE", sprintf("Column '%s' was not found in the sheet.", VarName), active_sheet)
-      return(NULL)
+  possible_vars <- trimws(unlist(strsplit(as.character(VarName), "\\|")))
+  actual_var_name <- NA_character_
+  
+  for (p_var in possible_vars) {
+    # 1. Try Exact Match
+    if (p_var %in% names(df)) {
+      actual_var_name <- p_var
+      break
     }
+    
+    # 2. Try Case-Insensitive Exact Match Fallback
+    fuzzy_match <- grep(paste0("^", p_var, "$"), names(df), ignore.case = TRUE, value = TRUE)
+    if (length(fuzzy_match) > 0) {
+      actual_var_name <- fuzzy_match[1]
+      break
+    }
+  }
+  
+  if (is.na(actual_var_name)) {
+    print_missing_alarm("VARIABLE", sprintf("None of the requested columns ('%s') were found in the sheet.", VarName), active_sheet)
+    return(NULL)
   }
   
   # ------------------------------------------------------------------
