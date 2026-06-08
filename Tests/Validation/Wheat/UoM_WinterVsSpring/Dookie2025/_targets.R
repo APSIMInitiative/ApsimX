@@ -374,6 +374,15 @@ list(
     )
   ),
   
+  tar_target(
+    name = manual_pheno_params,
+    command = check_pheno_manual_parameters(
+      folder_name  = config$folder_inputs,
+      proj_name    = config$proj_name,
+      sim_names_df = df_simNameByCult
+    )
+  ),
+  
   # ----------------------------------------------------------------------------
   # PHASE F: EXPORT & VALIDATION
   # ----------------------------------------------------------------------------

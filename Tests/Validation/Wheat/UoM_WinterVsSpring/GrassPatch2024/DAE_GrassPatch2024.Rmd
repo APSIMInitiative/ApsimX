@@ -43,6 +43,28 @@ targets::tar_make()
 # targets::tar_destroy(ask = FALSE)
 ```
 
+
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
+
+
+
 ```{r}
 tar_load(df_new_obs)
 tar_load(df_obs_mean_harv_pheno)

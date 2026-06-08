@@ -1575,6 +1575,16 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/Gnarwarre2024_GermDatesInput.csv",
+                  "Name": "SetGermDatesExternally",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "Inputs/Gnarwarre2024_HaunStagesInput.csv",
                   "Name": "SetHaunRelatedExternally",
                   "ResourceName": null,
