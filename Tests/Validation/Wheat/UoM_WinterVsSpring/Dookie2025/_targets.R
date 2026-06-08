@@ -85,6 +85,22 @@ list(
     )
   ),
   
+  # THE PIPELINE TRACEABILITY TARGET
+  tar_target(
+    name = log_active_config,
+    command = {
+      cat("\n======================================================================\n")
+      cat(" ⚙️ ACTIVE PIPELINE CONFIGURATION \n")
+      cat("======================================================================\n")
+      
+      print(config)
+      
+      cat("======================================================================\n\n")
+      invisible(config)
+    },
+    cue = tar_cue(mode = "always")
+  ),
+  
   # Map simulations per treatment from APSIM file
   tar_target(
     name = df_simNameByCult,
@@ -96,17 +112,31 @@ list(
     )
   ),
   
+  #-------------------
+  # SOIL PARAMETER EXTRACTION
+  # -----------------
+  
   # Soil data
   tar_target(
     name = soilN_data_clean,
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
-     # sheet           = "Soil sample",
       sheet          = "Presowing soil test results",
-      vars_to_extract = c("Nitrate Nitrogen",	"Ammonium Nitrogen"),
+      vars_to_extract = c( "pH (1:5 Water)",
+                           "Electrical Conductivity",
+                           "Nitrate Nitrogen",
+                           "Ammonium Nitrogen",
+                           "As received Moisture Content (2B1)",
+                           "Gravel (>2mm) of whole sample",
+                           "Silt",
+                           "Clay",
+                           "Sand",
+                           "Total Carbon (Combustion)",
+                           "C:N Ratio"),
       col_depth_from  = "Depth From", # Optional if this matches the default
-      col_depth_to    = "Depth To"    # Optional if this matches the default
+      col_depth_to    = "Depth To",    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_N_profile.csv")
     )
   ),
   
@@ -115,11 +145,14 @@ list(
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
-      # sheet           = "Soil sample",
       sheet          = "CLL and DUL",
-      vars_to_extract = c("CLL (g/g)",	"DUL (g/g)","Bulk density (g/cm3)", "Sowing moisture (g/g)" ),
+      vars_to_extract = c("CLL (g/g)",	
+                          "DUL (g/g)",
+                          "Bulk density (g/cm3)", 
+                          "Sowing moisture (g/g)" ),
       col_depth_from  = "Start depth (m)", # Optional if this matches the default
-      col_depth_to    = "Start depth (m)"    # Optional if this matches the default
+      col_depth_to    = NULL,    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_Water_profile.csv")
     )
   ),
   # ----------------------------------------------------------------------------
