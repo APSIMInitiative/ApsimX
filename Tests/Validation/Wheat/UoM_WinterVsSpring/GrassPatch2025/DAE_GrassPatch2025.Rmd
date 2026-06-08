@@ -1,0 +1,103 @@
+---
+title: "GrassPatch2025 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+getwd()
+```
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+
+```{r}
+tar_visnetwork()
+```
+
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+```{r}
+tar_manifest()
+tar_manifest(fields = name)$name
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+
+```
+
+
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
+# Get soil parameters in json format
+```{r}
+tar_read(json_soil_water)
+tar_load(df_new_obs)
+tar_load(df_final_observed_harv)
+tar_load(file_obs)
+tar_load(file_obs_mean)
+
+tar_load(df_obs_pheno)
+df <- tar_read(df_obs_pheno)
+```
+
+
+```{r}
+tar_load(df_obs_mean_harv)
+tar_load(df_apsimStageInput_haunBased)
+tar_load(df_obs_mean_harv_pheno)
+tar_load(df_obs_corrected)
+tar_load(df_pheno_input_param)
+tar_load(df_obs_hi_amounts)
+tar_load(df_obs_final)
+```
+
+```{r}
+names(tar_read(df_obs_final))
+
+df<- tar_read(df_obs_final)
+df %>% dplyr::select(SimulationName,Clock.Today, Wheat.Phenology.CurrentStageName, HarvestIndex) %>%
+  filter(HarvestIndex >0)
+
+ # filter(Wheat.Phenology.CurrentStageName == "HarvestRipe")
+```
+
