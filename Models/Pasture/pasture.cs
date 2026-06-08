@@ -784,6 +784,105 @@ namespace Models.GrazPlan
         
         #endregion IPlant
 
+
+        /// <summary>
+        /// Remove a specified amount of above-ground biomass (kg/ha)proportionally across leaf and stem.
+       /// </summary>
+        public void RemoveBiomass(string type, double amount)
+        {
+            double totalBiomass =0.0;
+            double totalBiomassPost = 0.0;
+            double amountToRemove = 0.0;  
+            double defoliatedDM  = 0.0;
+         
+            // Calculate leaf and stem live and dead biomass across classes before defoliating 
+            for(int part = ptLEAF; part <= ptSTEM; part++)
+            {
+                for (int cls=1; cls <= HerbClassNo; cls++)
+                {
+                    double totalBiomasslive = PastureModel.GetHerbageMass(stESTAB,part,cls) ;
+                    double totalBiomassdead = PastureModel.GetHerbageMass(stDEAD,part,cls);
+                    totalBiomass += totalBiomasslive+totalBiomassdead;
+                }
+            }
+            // Determine fraction of biomass to be defoliated based on set amount or set residue
+            if(totalBiomass > 0.0)
+            {
+                 if(type.ToLower() == "setresidueamount")
+                {
+                    amountToRemove = Math.Max(0.0, totalBiomass - amount);
+                }
+                else if (type.ToLower() == "setremoveamount")
+                {
+                    amountToRemove = Math.Max(0.0,amount);
+                }
+                else
+                {
+                    throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
+                }
+                fracToRemove= MathUtilities.Divide(amountToRemove, totalBiomass, 0.0);                
+            }
+            // Loop through leaf and stem  classes (Live and Dead) to remove fraction of biomass and N in the each DMD
+            //There are 12 digestive class (HerbClassNo = 12)
+            for (int part = ptLEAF; part <= ptSTEM; part++)
+            {
+                for (int cls = 1; cls <= HerbClassNo; cls++)
+                {
+                    double liveDM = PastureModel.GetHerbageMass(stESTAB, part, cls);
+                    double liveN = PastureModel.GetHerbageNutr(stESTAB,part,cls, TPlantElement.N);
+
+                    double deadDM = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                    double deadN = PastureModel.GetHerbageNutr(stDEAD,part,cls, TPlantElement.N);
+
+                    if(liveDM > 0.0)
+                    {
+                        double setmass = liveDM - liveDM * fracToRemove;
+                        PastureModel.SetHerbageMass(stESTAB, part, cls, setmass); 
+                    }
+                    else
+                    PastureModel.SetHerbageMass(stESTAB, part, cls, 0.0);
+                                      
+                    if(deadDM > 0.0)
+                    {
+                        double setmass = deadDM - deadDM * fracToRemove;   
+                        PastureModel.SetHerbageMass(stDEAD, part, cls,setmass);                      
+                    }
+                    else
+                    PastureModel.SetHerbageMass(stDEAD, part, cls,0.0);
+                   
+                    if(liveN > 0.0)
+                    {
+                        double setN = liveN - liveN * fracToRemove;
+                        PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N,setN);
+                    }
+                    else
+                    PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N,0.0);
+
+                     if(deadN > 0.0)
+                    {
+                        double setN = deadN - deadN * fracToRemove;
+                        PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N, setN);
+                    }
+                    else
+                    PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N, 0.0);
+                  }
+            }
+            //Total biomass post defoliation across all DMD classes across Leaf and Stem   
+             for(int part = ptLEAF; part <= ptSTEM; part++)
+            {
+                for (int cls = 1; cls <= HerbClassNo; cls++)
+                {
+                    totalBiomassPost += PastureModel.GetHerbageMass(stESTAB,part,cls) + PastureModel.GetHerbageMass(stDEAD,part,cls);
+                }
+            }
+            //Check mass balance 
+             defoliatedDM = totalBiomass - totalBiomassPost;
+            if(!MathUtilities.FloatsAreEqual(defoliatedDM , amountToRemove, 0.000001))
+            {
+                throw new Exception("Removal of DM resulted in loss of mass balance");
+            }  
+        }
+
         /// <summary>Radiation intercepted by the plant's canopy (MJ/m^2/day).</summary>
         [JsonIgnore]
         [Units("MJ/m^2/day")]
@@ -3330,6 +3429,8 @@ namespace Models.GrazPlan
 
         /// <summary>Amount of soil NO3-N available to be taken up by the plant (kg/ha).</summary>
         private double[] no3Uptake;
+      
+        private double fracToRemove;
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
         /// <param name="availableWater">Available water (mm)</param>
