@@ -2724,8 +2724,8 @@ namespace Models.GrazPlan
         /// <returns></returns>
         /// TOTAL = 0.0
         /// When Comp is TOTAL it is biomass live and dead of a organ
-       /// When part is TOTAL it is biomass of leaf and stem organs
-       /// When DMD is TOTAL it is biomass across all digestibilty classes (12 DMD)
+        /// When part is TOTAL it is biomass of leaf and stem organs
+        /// When DMD is TOTAL it is biomass across all digestibilty classes (12 DMD)
         public double HerbageMassGM2(int comp, int part, int DMD)
         {
             double result = 0.0;
@@ -2733,12 +2733,9 @@ namespace Models.GrazPlan
             {
                 if ((comp == TOTAL) || this.BelongsIn(iCohort, comp))
                 {
-                                   
                     result += this.FCohorts[iCohort].Herbage[part,DMD].DM;
-
                 }
             }
-
             return result;
         }
 

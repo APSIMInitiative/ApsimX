@@ -795,7 +795,6 @@ namespace Models.GrazPlan
             double amountToRemove = 0.0;  
             double defoliatedDM  = 0.0;
          
-
             // Calculate leaf and stem live and dead biomass across classes before defoliating 
             for(int part = ptLEAF; part <= ptSTEM; part++)
             {
@@ -806,9 +805,7 @@ namespace Models.GrazPlan
                     totalBiomass += totalBiomasslive+totalBiomassdead;
                 }
             }
-
             // Determine fraction of biomass to be defoliated based on set amount or set residue
-
             if(totalBiomass > 0.0)
             {
                  if(type.ToLower() == "setresidueamount")
@@ -824,9 +821,8 @@ namespace Models.GrazPlan
                     throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
                 
                 }
-                
-                fracToRemove= MathUtilities.Divide(amountToRemove, totalBiomass, 0.0);
-                
+              
+                fracToRemove= MathUtilities.Divide(amountToRemove, totalBiomass, 0.0);                
             }
             // Loop through leaf and stem  classes (Live and Dead) to remove fraction of biomass and N in the each DMD
             //There are 12 digestive class (HerbClassNo = 12)
@@ -871,11 +867,8 @@ namespace Models.GrazPlan
                     }
                     else
                     PastureModel.SetHerbageNutr(stESTAB, part, cls, TPlantElement.N, 0.0);
-  
-                }
-    
+                  }
             }
-
             //Total biomass post defoliation across all DMD classes across Leaf and Stem   
              for (int part = ptLEAF; part <= ptSTEM; part++)
             {
@@ -889,8 +882,7 @@ namespace Models.GrazPlan
             if(!MathUtilities.FloatsAreEqual(defoliatedDM , amountToRemove, 0.000001))
             {
                 throw new Exception("Removal of DM resulted in loss of mass balance");
-            }
-    
+            }  
         }
 
 

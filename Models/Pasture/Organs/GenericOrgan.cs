@@ -1,27 +1,14 @@
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-
-using Models.Interfaces;
-using Models.Soils;
-using Models.Soils.Arbitrator;
-using Models.Soils.Nutrients;
-using Models.Surface;
 using Newtonsoft.Json;
-using StdUnits;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
 using static Models.GrazPlan.GrazType;
-using static Models.GrazPlan.PastureUtil;
 using APSIM.Core;
-
 using Models.PMF.Interfaces;
 using Models.PMF;
 using Models.PMF.Organs;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Models.GrazPlan.Organs
 {
@@ -379,7 +366,7 @@ namespace Models.GrazPlan.Organs
         }
 
 
-         /// <summary>
+    /// <summary>
     /// Removes biomass from organs - leaf and stem across all DMD classes proportionally, sets the herbage in each class and returns the biomass
     /// </summary>
     /// <param name="liveToRemove"></param>
@@ -409,7 +396,7 @@ namespace Models.GrazPlan.Organs
                         double totalBiomassdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
                         totalBiomass += totalBiomasslive+totalBiomassdead;
                     }
-        
+      
                 for (int cls = 1; cls <= HerbClassNo; cls++)
                     {
                         double liveDM = PastureModel.GetHerbageMass(stESTAB, part, cls);
@@ -449,17 +436,17 @@ namespace Models.GrazPlan.Organs
                         }
                         else
                         PastureModel.SetHerbageNutr(stDEAD, part, cls, TPlantElement.N, 0.0);
-
                     }
-                    for (int cls=1; cls <= HerbClassNo; cls++)
+               
+                for (int cls=1; cls <= HerbClassNo; cls++)
                     {
                         double PostDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
                         double PostDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
                         PostDMTotal += PostDMlive + PostDMdead;
-                    }               
-
-                    //update live and dead biomasses
-                    CalculateLiveDead();
+                    }   
+                                
+                //update live and dead biomasses
+                CalculateLiveDead();
                 double RemoveDM = totalBiomass - totalBiomassRemoved;
                 return RemoveDM;    
             }
@@ -468,6 +455,4 @@ namespace Models.GrazPlan.Organs
     }
 
     }
-
-
 }
