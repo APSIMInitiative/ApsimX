@@ -50,6 +50,24 @@ tar_destroy()
 
 ```
 
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
 
 # Get soil parameters in json format
 ```{r}
