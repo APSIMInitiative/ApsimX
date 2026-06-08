@@ -1,0 +1,17 @@
+SimulationName,[Grain].MaximumPotentialGrainSize.FixedValue,[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue,[Phenology].PhyllochronPpSensitivity.FixedValue,[Phenology].CAMP.FLNparams.MinLN,[Phenology].CAMP.FLNparams.PpLN,[Phenology].CAMP.FLNparams.VrnLN,[Phenology].CAMP.FLNparams.VxPLN,[Phenology].HeadEmergenceLongDayBase.FixedValue,[Phenology].HeadEmergencePpSensitivity.FixedValue,[Phenology].CAMP.EnvData.VrnTreatTemp,[Phenology].CAMP.EnvData.VrnTreatDuration
+GrassPatch2025CvGregory,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvIllabo,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvJanz,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvKittyhawk,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvMace,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvMeering,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvMowhawk,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvOsprey,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvRosella,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvScepter,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvSunmaster,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvWedgetail,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvWhistler,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvWyalkatchem,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvWylah,0.041,22,0.247,7,4,2,0,50,5,6,60
+GrassPatch2025CvYitpi,0.041,22,0.247,7,4,2,0,50,5,6,60

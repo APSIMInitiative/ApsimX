@@ -2010,6 +2010,16 @@
                 {
                   "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
                   "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/Dookie2024_GermDatesInput.csv",
+                  "Name": "SetGermDatesExternally",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "Inputs/Dookie2024_PhenoDatesInput.csv",
                   "Name": "SetPhenoDatesExternally",
                   "ResourceName": null,
@@ -9538,6 +9548,16 @@
                   "SetEventName": "[Plant].PlantSowing",
                   "ParameterFile": "Inputs/Dookie2024_ConstantPhenology.csv",
                   "Name": "ConstantBaseCv",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Utilities.SetModelParamsBySimulation, Models",
+                  "SetEventName": "[Plant].PlantSowing",
+                  "ParameterFile": "Inputs/Dookie2024_GermDatesInput.csv",
+                  "Name": "SetGermDatesExternally",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
