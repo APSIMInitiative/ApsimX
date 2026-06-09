@@ -44,7 +44,10 @@ namespace Models.Functions
     /// </para>
     /// </remarks>
     [Serializable]
-    [Description("Damage functions of frost and heat stresses are developed for canola and wheat by the GRDC Frost and Heat Management Analytics (FAHMA) project.")]
+    [Description("Damage functions of frost and heat stresses are developed for canola and wheat by the GRDC Frost and Heat Management Analytics (FAHMA) project.\n" +
+        "Hu, P., He, D., Zheng, B., Whish, J., Kirkegaard, J., Bell, L., Leske, B., Chen, S., Uppal, R., Biddulph, B., Trethowan, R., Beletse, Y., Lilley, J., 2026." + 
+        " Event-based frost and heat damage functions improve yield predictions of APSIM canola and wheat: formulation, calibration, and evaluation." + 
+        " Agricultural and Forest Meteorology 386, 111239. https://doi.org/10.1016/j.agrformet.2026.111239tions.")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
