@@ -118,7 +118,7 @@ list(
   
   # Soil data
   tar_target(
-    name = soilN_data_clean,
+    name = soil_pre_sow,
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
@@ -136,25 +136,53 @@ list(
                            "C:N Ratio"),
       col_depth_from  = "Depth From", # Optional if this matches the default
       col_depth_to    = "Depth To",    # Optional if this matches the default
-      log_file_name   = paste0(config$proj_name,"_soil_N_profile.csv")
+      log_file_name   = paste0(config$proj_name,"_soil_pre_sow.csv")
     )
   ),
   
+  # tar_target(
+  #   name = soilWater_data_clean,
+  #   command = read_soil_data(
+  #     folder          = config$folder_rawData,
+  #     file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
+  #     sheet          = "CLL and DUL",
+  #     vars_to_extract = c("CLL (g/g)",	
+  #                         "DUL (g/g)",
+  #                         "Bulk density (g/cm3)", 
+  #                         "Sowing moisture (g/g)" ),
+  #     col_depth_from  = "Start depth (m)", # Optional if this matches the default
+  #     col_depth_to    = NULL,    # Optional if this matches the default
+  #     log_file_name   = paste0(config$proj_name,"_soil_Water_profile.csv")
+  #   )
+  # ),
+  
+  # Soil data
+  # revised data from Juan 10-Jun-26
   tar_target(
-    name = soilWater_data_clean,
+    name = soil_water_cond,
     command = read_soil_data(
       folder          = config$folder_rawData,
-      file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",#WWHI
-      sheet          = "CLL and DUL",
-      vars_to_extract = c("CLL (g/g)",	
-                          "DUL (g/g)",
-                          "Bulk density (g/cm3)", 
-                          "Sowing moisture (g/g)" ),
-      col_depth_from  = "Start depth (m)", # Optional if this matches the default
-      col_depth_to    = NULL,    # Optional if this matches the default
-      log_file_name   = paste0(config$proj_name,"_soil_Water_profile.csv")
+      file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",
+      sheet          = "McPoyles 3 APSIM",
+      vars_to_extract = c(
+        "layer_thickness_mm",
+        "BD_Mg_m3",
+        "CLL_wheat_m3_m3",
+        "DUL_m3_m3",
+        "Sat",
+        "pH_CaCl2",
+        "OC_%",
+        "NO3_mg_kg",
+        "NH4_mg_kg",
+        "SW_20250317_m3_m3",
+        "PAW_20240317_mm"
+      ),
+      col_depth_from  = "start_depth_m", # Optional if this matches the default
+      col_depth_to    = "end_depth_m",    # Optional if this matches the default
+      log_file_name   = paste0(config$proj_name,"_soil_water_cond.csv")
     )
   ),
+  
   # ----------------------------------------------------------------------------
   # PHASE B: WEATHER PROCESSING
   # ----------------------------------------------------------------------------
@@ -381,6 +409,17 @@ list(
       proj_name    = config$proj_name,
       sim_names_df = df_simNameByCult
     )
+  ),
+  
+  tar_target(
+    name = exported_pop_csv,
+    command = print_csv_with_select_obs(
+      df_in         = qc_apsim_observed_harv, # Simulated dependency: replace with your actual final df
+      file_name_out = file.path(paste0(config$proj_name, "_population.csv")),
+      select_vars   = c("[Wheat].Leaf.StemPopulation"),
+      primary_key   = "SimulationName" # Explicitly utilizing the default we set up
+    ),
+    format = "file" # <--- Crucial: Tells {targets} to watch the physical CSV file!
   ),
   
   # ----------------------------------------------------------------------------

@@ -1,0 +1,690 @@
+here() starts at C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+▶ start target config
+● built target config [0.79 seconds]
+▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0 seconds]
+Loading required package: rlang
+
+Attaching package: 'rlang'
+
+The following objects are masked from 'package:purrr':
+
+    %@%, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice
+
+[1m[22mNew names:
+[36m•[39m `` -> `...10`
+[36m•[39m `` -> `...12`
+▶ start target processed_met_data
+● built target processed_met_data [0.26 seconds]
+
+======================================================================
+ ⚙️ ACTIVE PIPELINE CONFIGURATION 
+======================================================================
+$proj_name
+[1] "Dookie2024"
+
+$folder_thisScript
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_met
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Met"
+
+$folder_inputs
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Inputs"
+
+$folder_observed
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed"
+
+$folder_apsimx
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_rawData
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Dookie2024"
+
+$file_rawData_excel
+[1] "UOM2312-001RTX 24 DOO JH EVA WHT.xlsx" 
+[2] "UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx"
+
+$exp_key_by_rawData_file
+[1] "EVA"  "WWHI"
+
+$sheetExcel_weather
+[1] "Weather"
+
+$file_metaData_observed
+[1] "Dookie2024_observed_data_requirements.csv"
+
+$file_SimNameByCultivar
+[1] "Dookie2024_CultivarToSimName.csv"
+
+$coord_thisLatLon
+     lat   lon
+1 -36.39 145.7
+
+$file_saved_obs_excel
+[1] "Dookie2024_Observed.xlsx"
+
+$sheet_name_observed
+[1] "Observed"
+
+$file_name_input_pheno
+[1] "Dookie2024_PhenoDatesInput.csv"
+
+$file_name_input_haun
+[1] "Dookie2024_HaunStagesInput.csv"
+
+$file_name_new_met
+[1] "Dookie2024.met"
+
+$file_zip_out
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed.zip"
+
+$file_pass
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/secret_pass.txt"
+
+$date_DOY_ref
+[1] "01-01-2024"
+
+$target_stagePerc
+[1] 50
+
+$target_betwStages
+[1] 0.5
+
+$max_leaf_limit
+[1] 0.95
+
+$pcd_stages_to_extract
+[1] "pcds_3_emergPlants_Perc" "pcds_6_flagLeaf"        
+[3] "pcds_8_anthesis"        
+
+======================================================================
+
+▶ start target log_active_config
+● built target log_active_config [0 seconds]
+▶ start target soil_profile
+📖 Reading soil data from: UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx (Sheet: Soil sample)
+💾 Success: Exported cleaned soil profile to 'Dookie2024_soil_profile.csv'
+● built target soil_profile [0.67 seconds]
+▶ start target tracked_raw_excel
+● built target tracked_raw_excel [0 seconds]
+▶ start target df_simNameByCult
+📖 Reading soil data from: UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx (Sheet: McPoyles 1 APSIM)
+💾 Success: Exported cleaned soil profile to 'Dookie2024_soil_water.csv'
+● built target df_simNameByCult [0 seconds]
+▶ start target soil_water
+● built target soil_water [0.27 seconds]
+▶ start target msg_met_saved
+● built target msg_met_saved [0 seconds]
+▶ start target list_observed_dfs_raw
+● built target list_observed_dfs_raw [37.18 seconds]
+
+======================================================================
+ 🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
+======================================================================
+ -> Checking: Dookie2024_ConstantPhenology.csv 
+ -> Checking: Dookie2024_GermDatesInput.csv 
+======================================================================
+
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.27 seconds]
+▶ start target list_observed_dfs_raw_plus_emergPerc
+
+----------------------------------------------------------------------
+ 📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
+----------------------------------------------------------------------
+ -> Input Source  : 'pcds_3_emergPlants'
+ -> Target Column : '[Wheat].Phenology.Emerging.DateToProgress' (Internal variable preserved)
+ -> Output Target : 'pcds_3_emergPlants_Perc' (Appended as new row)
+ -> Action        : Converted raw counts to 0-100% scale per SimulationName
+----------------------------------------------------------------------
+
+● built target list_observed_dfs_raw_plus_emergPerc [0.05 seconds]
+▶ start target list_observed_clean
+
+======================================================================
+ ⚠️  CRITICAL WARNING: RAW DATE TYPOS AUTO-CORRECTED ⚠️ 
+======================================================================
+ The following dates fell before the reference date (2024-01-01)
+ and had their year automatically forced to 2024:
+ -> [grainSize_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainSize_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainNumber_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [earYield_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [grainYield_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stemYield_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [spikeYield_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [senescLeafYield_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [totalAboveGround_10_raw] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_Nconc] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [leafDead_10_WSCc] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_Nconc] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowApril_BigRed' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowApril_Illabo' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowMay_Zanzibar' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowMay_Sunmaster' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowApril_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowMay_UOM001_3_47' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowApril_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieEVA2024SowMay_UOM001_9_1' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvGregorySow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvWedgetailSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvIllaboSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvJanzSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvKittyhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvMowhawkSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvMaceSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvMeeringSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvOspreySow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvRosellaSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvScepterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvSunmasterSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvWhistlerSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvWyalkatchemSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvWylahSow17-Apr' | RAW: 2020-11-14 | FIXED: 2024-11-14
+ -> [stem_10_WSCc] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
+======================================================================
+
+● built target list_observed_clean [0.14 seconds]
+▶ start target df_obs_wide
+   -> Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc, pcds_6_flagLeaf, pcds_8_anthesis]
+Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
+● built target df_obs_wide [0.38 seconds]
+▶ start target df_pheno_haun
+
+===========================================================
+           HAUN DERIVATION INTERNAL TRACE LOGIC            
+===========================================================
+                         SimulationName LeafNumberMaximum FLN LeafNumberLimit
+1          DookieEVA2024SowApril_BigRed         13.875000  14       13.181250
+2          DookieEVA2024SowApril_Illabo         12.583333  13       11.954167
+3     DookieEVA2024SowApril_UOM001_3_47         12.166667  12       11.558333
+4      DookieEVA2024SowApril_UOM001_9_1         13.250000  13       12.587500
+5         DookieEVA2024SowMay_Sunmaster         10.083333  10        9.579167
+6       DookieEVA2024SowMay_UOM001_3_47         10.666667  11       10.133333
+7        DookieEVA2024SowMay_UOM001_9_1         11.666667  12       11.083333
+8          DookieEVA2024SowMay_Zanzibar         11.583333  12       11.004167
+9      DookieWWHI2024CvGregorySow14-May         10.416667  10        9.895833
+10      DookieWWHI2024CvIllaboSow17-Apr         12.833333  13       12.191667
+11        DookieWWHI2024CvJanzSow14-May         10.500000  10        9.975000
+12   DookieWWHI2024CvKittyhawkSow17-Apr         13.250000  13       12.587500
+13        DookieWWHI2024CvMaceSow14-May          9.833333  10        9.341667
+14     DookieWWHI2024CvMeeringSow14-May         10.916667  11       10.370833
+15     DookieWWHI2024CvMowhawkSow17-Apr         12.916667  13       12.270833
+16      DookieWWHI2024CvOspreySow17-Apr         13.500000  14       12.825000
+17     DookieWWHI2024CvRosellaSow17-Apr         13.000000  13       12.350000
+18     DookieWWHI2024CvScepterSow14-May          9.750000  10        9.262500
+19   DookieWWHI2024CvSunmasterSow14-May         10.083333  10        9.579167
+20   DookieWWHI2024CvWedgetailSow17-Apr         12.333333  12       11.716667
+21    DookieWWHI2024CvWhistlerSow17-Apr         12.416667  12       11.795833
+22 DookieWWHI2024CvWyalkatchemSow14-May         10.000000  10        9.500000
+23       DookieWWHI2024CvWylahSow17-Apr         13.458333  13       12.785417
+24       DookieWWHI2024CvYitpiSow14-May          9.916667  10        9.420833
+   Date_MaxLeafLimit Date_Stage4_DR Date_Stage5_TS
+1         2024-09-13     2024-07-17     2024-08-23
+2         2024-08-30     2024-06-29     2024-08-10
+3         2024-08-25     2024-06-11     2024-07-26
+4         2024-08-30     2024-06-25     2024-08-05
+5         2024-09-07     2024-07-06     2024-08-12
+6         2024-09-08     2024-07-16     2024-08-18
+7         2024-09-13     2024-07-25     2024-08-24
+8         2024-09-12     2024-07-22     2024-08-23
+9         2024-09-06     2024-07-05     2024-08-09
+10        2024-08-30     2024-06-27     2024-08-07
+11        2024-09-02     2024-07-02     2024-08-04
+12        2024-09-07     2024-06-25     2024-08-09
+13        2024-08-30     2024-07-03     2024-08-08
+14        2024-09-06     2024-07-13     2024-08-15
+15        2024-08-27     2024-06-25     2024-08-04
+16        2024-09-03     2024-07-11     2024-08-17
+17        2024-09-04     2024-06-28     2024-08-10
+18        2024-09-02     2024-07-04     2024-08-10
+19        2024-09-07     2024-07-04     2024-08-11
+20        2024-09-03     2024-06-13     2024-08-02
+21        2024-08-26     2024-06-10     2024-07-24
+22        2024-09-08     2024-07-04     2024-08-11
+23        2024-09-11     2024-06-28     2024-08-10
+24        2024-09-05     2024-07-02     2024-08-10
+===========================================================
+
+Success [derive_pheno_stages_from_haun]: Morphologically generated milestone rows from Haun counts. (Mode: list_dfs)
+ -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 24 simulations.
+ -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 24 simulations.
+● built target df_pheno_haun [0.18 seconds]
+▶ start target list_pcds_extracted
+✅ Successfully extracted 3 target dataframes.
+● built target list_pcds_extracted [0.03 seconds]
+
+======================================================================
+  ⚠️  WARNING: PHENOLOGY STAGES DID NOT REACH TARGET THRESHOLD  ⚠️
+======================================================================
+ Target Threshold Required: 50%
+ The following simulations ended before the stage was fully reached:
+
+   -> [FORCED - LATE]  'DookieEVA2024SowApril_BigRed' | Stage: 'pcds_6_flagLeaf' | Peaked at 46.7%. Forced to final date (2024-09-23).
+   -> [FORCED - LATE]  'DookieEVA2024SowApril_Illabo' | Stage: 'pcds_8_anthesis' | Peaked at 43.7%. Forced to final date (2024-09-30).
+   -> [FORCED - LATE]  'DookieEVA2024SowMay_Sunmaster' | Stage: 'pcds_8_anthesis' | Peaked at 28.7%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieEVA2024SowMay_UOM001_3_47' | Stage: 'pcds_8_anthesis' | Peaked at 31.6%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieEVA2024SowMay_Zanzibar' | Stage: 'pcds_6_flagLeaf' | Peaked at 44.7%. Forced to final date (2024-09-16).
+   -> [FORCED - LATE]  'DookieWWHI2024CvGregorySow14-May' | Stage: 'pcds_6_flagLeaf' | Peaked at 36.7%. Forced to final date (2024-09-11).
+   -> [FORCED - LATE]  'DookieWWHI2024CvGregorySow14-May' | Stage: 'pcds_8_anthesis' | Peaked at 39.4%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieWWHI2024CvIllaboSow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 47.5%. Forced to final date (2024-09-30).
+   -> [FORCED - LATE]  'DookieWWHI2024CvJanzSow14-May' | Stage: 'pcds_8_anthesis' | Peaked at 44.5%. Forced to final date (2024-09-30).
+   -> [FORCED - LATE]  'DookieWWHI2024CvKittyhawkSow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 39.7%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieWWHI2024CvMeeringSow14-May' | Stage: 'pcds_6_flagLeaf' | Peaked at 44.6%. Forced to final date (2024-09-13).
+   -> [FORCED - LATE]  'DookieWWHI2024CvMeeringSow14-May' | Stage: 'pcds_8_anthesis' | Peaked at 48.8%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieWWHI2024CvMowhawkSow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 49.6%. Forced to final date (2024-09-25).
+   -> [FORCED - LATE]  'DookieWWHI2024CvOspreySow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 44.4%. Forced to final date (2024-09-30).
+   -> [FORCED - LATE]  'DookieWWHI2024CvRosellaSow17-Apr' | Stage: 'pcds_6_flagLeaf' | Peaked at 38.0%. Forced to final date (2024-09-11).
+   -> [FORCED - LATE]  'DookieWWHI2024CvWedgetailSow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 42.0%. Forced to final date (2024-09-30).
+   -> [FORCED - LATE]  'DookieWWHI2024CvWylahSow17-Apr' | Stage: 'pcds_8_anthesis' | Peaked at 49.8%. Forced to final date (2024-10-02).
+   -> [FORCED - LATE]  'DookieWWHI2024CvYitpiSow14-May' | Stage: 'pcds_8_anthesis' | Peaked at 48.6%. Forced to final date (2024-10-02).
+======================================================================
+
+Success [get_pheno_dates_from_pcd_list]: Standardized 72 raw records at 50% progress.
+▶ start target df_pheno_raw
+● built target df_pheno_raw [0.17 seconds]
+Success [create_interp_pheno_dates]: Linearly generated 48 missing micro-milestone rows (Stages 4/7).
+▶ start target df_pheno_int
+● built target df_pheno_int [0.08 seconds]
+
+[!] NOTICE: Contrasting Dates Detected for Identical Stages
+    Applying Truth Hierarchy (Raw > Haun > Int) to resolve. Affected simulations:
+                         SimulationName Wheat.Phenology.Stage
+1          DookieEVA2024SowApril_BigRed                     4
+2          DookieEVA2024SowApril_Illabo                     4
+3     DookieEVA2024SowApril_UOM001_3_47                     4
+4      DookieEVA2024SowApril_UOM001_9_1                     4
+5         DookieEVA2024SowMay_Sunmaster                     4
+6       DookieEVA2024SowMay_UOM001_3_47                     4
+7        DookieEVA2024SowMay_UOM001_9_1                     4
+8          DookieEVA2024SowMay_Zanzibar                     4
+9      DookieWWHI2024CvGregorySow14-May                     4
+10      DookieWWHI2024CvIllaboSow17-Apr                     4
+11        DookieWWHI2024CvJanzSow14-May                     4
+12   DookieWWHI2024CvKittyhawkSow17-Apr                     4
+13        DookieWWHI2024CvMaceSow14-May                     4
+14     DookieWWHI2024CvMeeringSow14-May                     4
+15     DookieWWHI2024CvMowhawkSow17-Apr                     4
+16      DookieWWHI2024CvOspreySow17-Apr                     4
+17     DookieWWHI2024CvRosellaSow17-Apr                     4
+18     DookieWWHI2024CvScepterSow14-May                     4
+19   DookieWWHI2024CvSunmasterSow14-May                     4
+20   DookieWWHI2024CvWedgetailSow17-Apr                     4
+21    DookieWWHI2024CvWhistlerSow17-Apr                     4
+22 DookieWWHI2024CvWyalkatchemSow14-May                     4
+23       DookieWWHI2024CvWylahSow17-Apr                     4
+24       DookieWWHI2024CvYitpiSow14-May                     4
+                 Date_Clash Source_Clash
+1  2024-07-17 vs 2024-07-10  Haun vs Int
+2  2024-06-29 vs 2024-07-03  Haun vs Int
+3  2024-06-11 vs 2024-06-30  Haun vs Int
+4  2024-06-25 vs 2024-07-03  Haun vs Int
+5  2024-07-06 vs 2024-07-19  Haun vs Int
+6  2024-07-16 vs 2024-07-21  Haun vs Int
+7  2024-07-25 vs 2024-07-21  Haun vs Int
+8  2024-07-22 vs 2024-07-21  Haun vs Int
+9  2024-07-05 vs 2024-07-19  Haun vs Int
+10 2024-06-27 vs 2024-07-03  Haun vs Int
+11 2024-07-02 vs 2024-07-18  Haun vs Int
+12 2024-06-25 vs 2024-07-04  Haun vs Int
+13 2024-07-03 vs 2024-07-17  Haun vs Int
+14 2024-07-13 vs 2024-07-19  Haun vs Int
+15 2024-06-25 vs 2024-06-30  Haun vs Int
+16 2024-07-11 vs 2024-07-07  Haun vs Int
+17 2024-06-28 vs 2024-07-07  Haun vs Int
+18 2024-07-04 vs 2024-07-17  Haun vs Int
+19 2024-07-04 vs 2024-07-19  Haun vs Int
+20 2024-06-13 vs 2024-07-03  Haun vs Int
+21 2024-06-10 vs 2024-07-03  Haun vs Int
+22 2024-07-04 vs 2024-07-19  Haun vs Int
+23 2024-06-28 vs 2024-07-06  Haun vs Int
+24 2024-07-02 vs 2024-07-19  Haun vs Int
+Success [merge_and_qc_pheno]: Master timeline assembled. Retained 144 strictly chronological stage events.
+▶ start target df_pheno_final
+● built target df_pheno_final [0.19 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 144 events into master observations under column 'Wheat.Phenology.Stage'.
+▶ start target df_obs_plus_pheno
+● built target df_obs_plus_pheno [0.84 seconds]
+
+----------------------------------------------------------------------
+ 🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
+----------------------------------------------------------------------
+ The following phenology stages contained no data (100% NA) across all
+ simulations and were safely removed from the final APSIM output:
+   - [Wheat].Phenology.GrainFilling.DateToProgress
+----------------------------------------------------------------------
+
+Success [format_apsim_pheno_params]: Translated 24 simulations into wide APSIM parameter format.
+▶ start target df_pheno_input_param
+● built target df_pheno_input_param [0.11 seconds]
+
+============================================================
+ ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
+============================================================
+ -> SUCCESS      : 24 valid HI values generated.
+ -> VALUE RANGE  : 0.312 to 0.492
+ -> QC STATUS    : PASS (All HI values <= 1.0)
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_hi
+● built target df_obs_plus_pheno_hi [0.06 seconds]
+✅ SUCCESS: Phenology Input Matrix passed integrity check. No missing dates.
+▶ start target qc_pheno_integrity
+● built target qc_pheno_integrity [0.02 seconds]
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+▶ start target df_obs_plus_pheno_hi_with_amounts
+● built target df_obs_plus_pheno_hi_with_amounts [0.07 seconds]
+▶ start target msg_pheno_param_saved
+● built target msg_pheno_param_saved [0.02 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -> STRATEGY     : Asynchronous Max Date Search
+ -> OVERALL SPAN : 2024-09-25 to 2024-11-14
+ -> WARNING      : Max difference between harvest variables is 50 days.
+ -> BREAKDOWN    : Latest recorded date per variable across the trial:
+      - HarvestIndex              : 2024-11-14
+      - Wheat.AboveGround.Wt      : 2024-11-14
+      - Wheat.Grain.Wt            : 2024-11-14
+      - Wheat.Leaf.Live.NConc     : 2024-10-08
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_harv
+● built target df_obs_plus_pheno_harv [0.14 seconds]
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+▶ start target qc_apsim_observed_harv
+● built target qc_apsim_observed_harv [0.11 seconds]
+Success [save_df_to_excel]: Exported 826 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Dookie2024_Observed.xlsx' (Sheet: 'Observed').
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.28 seconds]
+▶ start target haun_input_checked
+● built target haun_input_checked [0.04 seconds]
+
+----------------------------------------------------------------------
+ 📋 EXTRACTION SUMMARY: Dookie2024_population.csv
+----------------------------------------------------------------------
+   -> '[Wheat].Leaf.StemPopulation': range [86.2 to 147.333]
+----------------------------------------------------------------------
+💾 Success: Exported 24 valid rows and 2 columns.
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.07 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target check_depend
+● built target check_depend [0.03 seconds]
+Encrypting archive...
+✅ Successfully created password-protected archive: Observed.zip
+▶ start target encrypted_zip_artifact
+● built target encrypted_zip_artifact [0.29 seconds]
+▶ start target verify_data_backup
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+● built target verify_data_backup [0.03 seconds]
+▶ end pipeline [44.08 seconds]
+There were 12 warnings (use warnings() to see them)

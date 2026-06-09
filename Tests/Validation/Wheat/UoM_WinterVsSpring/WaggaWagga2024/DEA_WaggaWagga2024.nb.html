@@ -1836,16 +1836,16 @@ targets::tar_make()</code></pre>
 </ul>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX21ha2UoXG4gIGNhbGxyX2FyZ3VtZW50cyA9IGxpc3QoXG4gICAgc3Rkb3V0ID0gXCJwaXBlbGluZV9sb2cudHh0XCIsXG4gICAgc3RkZXJyID0gXCJwaXBlbGluZV9sb2cudHh0XCJcbiAgKVxuKVxuXG5gYGAifQ== -->
-<pre class="r"><code>targets::tar_make(
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFyZ2V0czo6dGFyX2Rlc3Ryb3koYXNrID0gRkFMU0UpXG50YXJnZXRzOjp0YXJfbWFrZShcbiAgY2FsbHJfYXJndW1lbnRzID0gbGlzdChcbiAgICBzdGRvdXQgPSBcInBpcGVsaW5lX2xvZy50eHRcIixcbiAgICBzdGRlcnIgPSBcInBpcGVsaW5lX2xvZy50eHRcIlxuICApXG4pXG5gYGAifQ== -->
+<pre class="r"><code>targets::tar_destroy(ask = FALSE)
+targets::tar_make(
   callr_arguments = list(
     stdout = &quot;pipeline_log.txt&quot;,
     stderr = &quot;pipeline_log.txt&quot;
   )
-)
-</code></pre>
+)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG4tXG5cblxcXG5cbnxcbmhlcmUoKSBzdGFydHMgYXQgQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZ1xuXG4vXG5cbkF0dGFjaGluZyBwYWNrYWdlOiAnZHBseXInXG5cblxuLVxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSAncGFja2FnZTpzdGF0cyc6XG5cbiAgICBmaWx0ZXIsIGxhZ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tICdwYWNrYWdlOmJhc2UnOlxuXG4gICAgaW50ZXJzZWN0LCBzZXRkaWZmLCBzZXRlcXVhbCwgdW5pb25cblxuXG5cXFxu4pyUIHNraXAgdGFyZ2V0IGNvbmZpZ1xuXG58XG7inJQgc2tpcCB0YXJnZXQgZGZfb2JzX21ldGFfZGF0YVxu4pyUIHNraXAgdGFyZ2V0IHNvaWxfd2F0ZXJfZGF0YVxu4pa2IHN0YXJ0IHRhcmdldCB0cmFja2VkX2V4Y2VsX2ZpbGVzXG7il48gYnVpbHQgdGFyZ2V0IHRyYWNrZWRfZXhjZWxfZmlsZXMgWzAgc2Vjb25kc11cbuKclCBza2lwIHRhcmdldCBkZl9zaW1OYW1lQnlDdWx0XG7inJQgc2tpcCB0YXJnZXQgcHJvY2Vzc2VkX21ldF9kYXRhXG7inJQgc2tpcCB0YXJnZXQgdHJhY2tlZF9yYXdfZXhjZWxcblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuIOKame+4jyBBQ1RJVkUgUElQRUxJTkUgQ09ORklHVVJBVElPTiBcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiRwcm9qX25hbWVcblsxXSBcIldhZ2dhV2FnZ2EyMDI0XCJcblxuJGZvbGRlcl90aGlzU2NyaXB0XG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nXCJcblxuJGZvbGRlcl9yYXdEYXRhXG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL1dhZ2dhV2FnZ2EyMDI0XCJcblxuJGZvbGRlcl9hcHNpbXhcblsxXSBcIkM6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmdcIlxuXG4kZm9sZGVyX21ldFxuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZy9NZXRcIlxuXG4kZm9sZGVyX2lucHV0c1xuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZy9JbnB1dHNcIlxuXG4kZm9sZGVyX29ic2VydmVkXG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL09ic2VydmVkXCJcblxuJGZpbGVfcmF3RGF0YV9leGNlbFxuWzFdIFwiMjAyNF9XYWdnYVdhZ2dhX1BIREEyNFdBUkkyLnhsc3hcIlxuXG4kZmlsZV9zYXZlZF9vYnNfZXhjZWxcblsxXSBcIldhZ2dhV2FnZ2EyMDI0X09ic2VydmVkLnhsc3hcIlxuXG4kZmlsZV9TaW1OYW1lQnlDdWx0aXZhclxuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfQ3VsdGl2YXJUb1NpbU5hbWUuY3N2XCJcblxuJGZpbGVfbWV0YURhdGFfb2JzZXJ2ZWRcblsxXSBcIldhZ2dhV2FnZ2EyMDI0X29ic2VydmVkX2RhdGFfcmVxdWlyZW1lbnRzLmNzdlwiXG5cbiRyZWZfZGF0ZVxuWzFdIFwiMDEvMDEvMjAyNFwiXG5cbiRzaGVldEV4Y2VsX3dlYXRoZXJcblsxXSBcIldlYXRoZXJcIlxuXG4kc2hlZXRFeGNlbF9oYXVuXG5bMV0gXCJIYXVuIHN0YWdlIFwiXG5cbiRzaGVldEV4Y2VsX3NvaWxXYXRlclxuWzFdIFwiR3JhdmltZXRyaWNNb2lzdHVyZU5lYXJTb3dpbmdcIlxuXG4kc2hlZXRfbmFtZV9vYnNlcnZlZFxuWzFdIFwiT2JzZXJ2ZWRcIlxuXG4kZmlsZV96aXBfb3V0XG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL09ic2VydmVkLnppcFwiXG5cbiRmaWxlX3Bhc3NcblsxXSBcIkM6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmcvc2VjcmV0X3Bhc3MudHh0XCJcblxuJGNvb3JkX3RoaXNMYXRMb25cbiAgICAgIGxhdCAgICAgbG9uXG4xIC0zNS4wNDEgMTQ3LjMxOVxuXG4kdGFyZ2V0X3N0YWdlUGVyY1xuWzFdIDUwXG5cbiR0YXJnZXRfYmV0d1N0YWdlc1xuWzFdIDAuNVxuXG4kdmFyX2RmX25hbWVfc3RhZ2VcblsxXSBcImFwc2ltX3N0YWdlX3Jhd1wiXG5cbiRtYXhfbGVhZl9saW1pdFxuWzFdIDAuOTVcblxuJHBjZF9zdGFnZXNfdG9fZXh0cmFjdFxuWzFdIFwicGNkc18zX2VtZXJnUGxhbnRzX1BlcmNcIiBcInBjZHNfNl9mbGFnTGVhZlwiICAgICAgICBcblszXSBcInBjZHNfOF9hbnRoZXNpc1wiICAgICAgICBcblxuJGZpbGVfbmFtZV9pbnB1dF9waGVub1xuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfUGhlbm9EYXRlc0lucHV0LmNzdlwiXG5cbiRmaWxlX25hbWVfaW5wdXRfaGF1blxuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfSGF1blN0YWdlc0lucHV0LmNzdlwiXG5cbiRmaWxlX25hbWVfbmV3X21ldFxuWzFdIFwiV2FnZ2FXYWdnYTIwMjQubWV0XCJcblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG7ilrYgc3RhcnQgdGFyZ2V0IGxvZ19hY3RpdmVfY29uZmlnXG7il48gYnVpbHQgdGFyZ2V0IGxvZ19hY3RpdmVfY29uZmlnIFswIHNlY29uZHNdXG7wn5OWIFJlYWRpbmcgc29pbCBkYXRhIGZyb206IDIwMjRfV2FnZ2FXYWdnYV9QSERBMjRXQVJJMi54bHN4IChTaGVldDogR3JhdmltZXRyaWNNb2lzdHVyZU5lYXJTb3dpbmcpXG7wn5K+IFN1Y2Nlc3M6IEV4cG9ydGVkIGNsZWFuZWQgc29pbCBwcm9maWxlIHRvICdXYWdnYVdhZ2dhMjAyNF9zb2lsX2dyYXZXYXRlckNvbnRlbnRfZGF0YS5jc3YnXG7ilrYgc3RhcnQgdGFyZ2V0IHNvaWxfZ3JhdldhdGVyQ29udGVudF9kYXRhXG7il48gYnVpbHQgdGFyZ2V0IHNvaWxfZ3JhdldhdGVyQ29udGVudF9kYXRhIFswLjI5IHNlY29uZHNdXG5FbmNyeXB0aW5nIGFyY2hpdmUuLi5cbuKchSBTdWNjZXNzZnVsbHkgY3JlYXRlZCBwYXNzd29yZC1wcm90ZWN0ZWQgYXJjaGl2ZTogT2JzZXJ2ZWQuemlwXG7inJQgc2tpcCB0YXJnZXQgc29pbF9wcm9maWxlX2RhdGFcbuKWtiBzdGFydCB0YXJnZXQgZW5jcnlwdGVkX3ppcF9hcnRpZmFjdFxu4pePIGJ1aWx0IHRhcmdldCBlbmNyeXB0ZWRfemlwX2FydGlmYWN0IFswLjI4IHNlY29uZHNdXG7inJQgc2tpcCB0YXJnZXQgbWFudWFsX3BoZW5vX3BhcmFtc1xu4pyUIHNraXAgdGFyZ2V0IG1zZ19tZXRfc2F2ZWRcbuKclCBza2lwIHRhcmdldCBsaXN0X29ic2VydmVkX2Rmc19yYXdcbuKclCBza2lwIHRhcmdldCBsaXN0X29ic2VydmVkX2Rmc1xu4pyUIHNraXAgdGFyZ2V0IGxpc3RfcGNkc19leHRyYWN0ZWRcbuKclCBza2lwIHRhcmdldCBkZl9waGVub19oYXVuXG7inJQgc2tpcCB0YXJnZXQgZGZfcGhlbm9fcmF3XG7inJQgc2tpcCB0YXJnZXQgZGZfcGhlbm9faW50XG7inJQgc2tpcCB0YXJnZXQgZGZfcGhlbm9fZmluYWxcbuKclCBza2lwIHRhcmdldCBsaXN0X29ic2VydmVkX2NsZWFuXG7inJQgc2tpcCB0YXJnZXQgZGZfcGhlbm9faW5wdXRfcGFyYW1cbuKclCBza2lwIHRhcmdldCBkZl9vYnNfd2lkZVxu4pyUIHNraXAgdGFyZ2V0IG1zZ19waGVub19wYXJhbV9zYXZlZFxu4pyUIHNraXAgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vXG7inJQgc2tpcCB0YXJnZXQgZGZfb2JzX3BsdXNfcGhlbm9fd2l0aF9hbW91bnRzXG7inJQgc2tpcCB0YXJnZXQgZGZfb2JzX3BsdXNfcGhlbm9faGFydlxu4pyUIHNraXAgdGFyZ2V0IHFjX2Fwc2ltX29ic2VydmVkX2hhcnZcbuKclCBza2lwIHRhcmdldCBtc2dfb2JzX3NhdmVkXG7inJQgc2tpcCB0YXJnZXQgaGF1bl9pbnB1dF9jaGVja2VkXG7inJQgc2tpcCB0YXJnZXQgY2hlY2tfZGVwZW5kXG7inJQgc2tpcCB0YXJnZXQgdmVyaWZ5X2RhdGFfYmFja3VwXG7ilrYgZW5kIHBpcGVsaW5lIFsyLjQyIHNlY29uZHNdXG5XYXJuaW5nIG1lc3NhZ2VzOlxuMTogcGFja2FnZSAndGFyZ2V0cycgd2FzIGJ1aWx0IHVuZGVyIFIgdmVyc2lvbiA0LjMuMiBcbjI6IHBhY2thZ2UgJ3JzdHVkaW9hcGknIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4zLjIgXG4zOiBwYWNrYWdlICdyZWFkeGwnIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4zLjIgXG40OiBwYWNrYWdlICdnZ3Bsb3QyJyB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMy4yIFxuNTogcGFja2FnZSAncHVycnInIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4zLjIgXG42OiBwYWNrYWdlICdzdHJpbmdyJyB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMy4yIFxuNzogcGFja2FnZSAnbHVicmlkYXRlJyB3YXMgYnVpbHQgdW5kZXIgUiB2ZXJzaW9uIDQuMy4yIFxuODogcGFja2FnZSAnanNvbmxpdGUnIHdhcyBidWlsdCB1bmRlciBSIHZlcnNpb24gNC4zLjMgXG5cbiBcbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4tXG5cblxcXG5cbnxcbmhlcmUoKSBzdGFydHMgYXQgQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZ1xuXG4vXG5cbkF0dGFjaGluZyBwYWNrYWdlOiAnZHBseXInXG5cblxuLVxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSAncGFja2FnZTpzdGF0cyc6XG5cbiAgICBmaWx0ZXIsIGxhZ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tICdwYWNrYWdlOmJhc2UnOlxuXG4gICAgaW50ZXJzZWN0LCBzZXRkaWZmLCBzZXRlcXVhbCwgdW5pb25cblxuXG5cXFxu4pa2IHN0YXJ0IHRhcmdldCBjb25maWdcblxufFxu4pePIGJ1aWx0IHRhcmdldCBjb25maWcgWzAuODQgc2Vjb25kc11cbuKWtiBzdGFydCB0YXJnZXQgZGZfb2JzX21ldGFfZGF0YVxu4pePIGJ1aWx0IHRhcmdldCBkZl9vYnNfbWV0YV9kYXRhIFswLjAxIHNlY29uZHNdXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX3NpbU5hbWVCeUN1bHRcbuKXjyBidWlsdCB0YXJnZXQgZGZfc2ltTmFtZUJ5Q3VsdCBbMC4wMiBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCB0cmFja2VkX3Jhd19leGNlbFxu4pePIGJ1aWx0IHRhcmdldCB0cmFja2VkX3Jhd19leGNlbCBbMCBzZWNvbmRzXVxu8J+TliBSZWFkaW5nIHNvaWwgZGF0YSBmcm9tOiAyMDI0X1dhZ2dhV2FnZ2FfUEhEQTI0V0FSSTIueGxzeCAoU2hlZXQ6IEdyYXZpbWV0cmljTW9pc3R1cmVOZWFyU293aW5nKVxu8J+SviBTdWNjZXNzOiBFeHBvcnRlZCBjbGVhbmVkIHNvaWwgcHJvZmlsZSB0byAnV2FnZ2FXYWdnYTIwMjRfc29pbF9ncmF2V2F0ZXJDb250ZW50X2RhdGEuY3N2J1xu4pa2IHN0YXJ0IHRhcmdldCBzb2lsX2dyYXZXYXRlckNvbnRlbnRfZGF0YVxu4pePIGJ1aWx0IHRhcmdldCBzb2lsX2dyYXZXYXRlckNvbnRlbnRfZGF0YSBbMC4zIHNlY29uZHNdXG5Mb2FkaW5nIHJlcXVpcmVkIHBhY2thZ2U6IHJsYW5nXG5cbkF0dGFjaGluZyBwYWNrYWdlOiAncmxhbmcnXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIGZyb20gJ3BhY2thZ2U6anNvbmxpdGUnOlxuXG4gICAgZmxhdHRlbiwgdW5ib3hcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSAncGFja2FnZTpwdXJycic6XG5cbiAgICAlQCUsIGZsYXR0ZW4sIGZsYXR0ZW5fY2hyLCBmbGF0dGVuX2RibCwgZmxhdHRlbl9pbnQsIGZsYXR0ZW5fbGdsLFxuICAgIGZsYXR0ZW5fcmF3LCBpbnZva2UsIHNwbGljZVxuXG7ilrYgc3RhcnQgdGFyZ2V0IHByb2Nlc3NlZF9tZXRfZGF0YVxu4pePIGJ1aWx0IHRhcmdldCBwcm9jZXNzZWRfbWV0X2RhdGEgWzAuMTEgc2Vjb25kc11cbvCfk5YgUmVhZGluZyBzb2lsIGRhdGEgZnJvbTogMjAyNF9XYWdnYVdhZ2dhX1BIREEyNFdBUkkyLnhsc3ggKFNoZWV0OiBTb2lsIHNhbXBsaW5nKVxuXG4vXG5cbi0tLSBQSVBFTElORSBJTlRFUlZFTlRJT046IERVUExJQ0FURSBDT0xVTU5TIC0tLVxuICAgLT4gQ29sdW1uICdTaWx0JyBmb3VuZCAyIHRpbWVzLCBidXQgQUxMIGluc3RhbmNlcyBhcHBlYXIgZW1wdHkuIERlZmF1bHRlZCB0byBJbmRleCA2MC5cbiAgIC0+IENvbHVtbiAnQ2xheScgZm91bmQgMiB0aW1lcywgYnV0IEFMTCBpbnN0YW5jZXMgYXBwZWFyIGVtcHR5LiBEZWZhdWx0ZWQgdG8gSW5kZXggNjEuXG4gICAtPiBDb2x1bW4gJ1RvdGFsIENhcmJvbiAoQ29tYnVzdGlvbiknIGZvdW5kIDQgdGltZXMuIFNhZmVseSBleHRyYWN0ZWQgSW5kZXggMTY5LlxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbi1cbvCfkr4gU3VjY2VzczogRXhwb3J0ZWQgY2xlYW5lZCBzb2lsIHByb2ZpbGUgdG8gJ1dhZ2dhV2FnZ2EyMDI0X3NvaWxfcHJvZmlsZV9kYXRhLmNzdidcbuKWtiBzdGFydCB0YXJnZXQgc29pbF9wcm9maWxlX2RhdGFcbuKXjyBidWlsdCB0YXJnZXQgc29pbF9wcm9maWxlX2RhdGEgWzEuNzggc2Vjb25kc11cblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuIOKame+4jyBBQ1RJVkUgUElQRUxJTkUgQ09ORklHVVJBVElPTiBcbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiRwcm9qX25hbWVcblsxXSBcIldhZ2dhV2FnZ2EyMDI0XCJcblxuJGZvbGRlcl90aGlzU2NyaXB0XG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nXCJcblxuJGZvbGRlcl9yYXdEYXRhXG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL1dhZ2dhV2FnZ2EyMDI0XCJcblxuJGZvbGRlcl9hcHNpbXhcblsxXSBcIkM6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmdcIlxuXG4kZm9sZGVyX21ldFxuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZy9NZXRcIlxuXG4kZm9sZGVyX2lucHV0c1xuWzFdIFwiQzovZ2l0aHViL0Fwc2ltWC9UZXN0cy9WYWxpZGF0aW9uL1doZWF0L1VvTV9XaW50ZXJWc1NwcmluZy9JbnB1dHNcIlxuXG4kZm9sZGVyX29ic2VydmVkXG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL09ic2VydmVkXCJcblxuJGZpbGVfcmF3RGF0YV9leGNlbFxuWzFdIFwiMjAyNF9XYWdnYVdhZ2dhX1BIREEyNFdBUkkyLnhsc3hcIlxuXG4kZmlsZV9zYXZlZF9vYnNfZXhjZWxcblsxXSBcIldhZ2dhV2FnZ2EyMDI0X09ic2VydmVkLnhsc3hcIlxuXG4kZmlsZV9TaW1OYW1lQnlDdWx0aXZhclxuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfQ3VsdGl2YXJUb1NpbU5hbWUuY3N2XCJcblxuJGZpbGVfbWV0YURhdGFfb2JzZXJ2ZWRcblsxXSBcIldhZ2dhV2FnZ2EyMDI0X29ic2VydmVkX2RhdGFfcmVxdWlyZW1lbnRzLmNzdlwiXG5cbiRyZWZfZGF0ZVxuWzFdIFwiMDEvMDEvMjAyNFwiXG5cbiRzaGVldEV4Y2VsX3dlYXRoZXJcblsxXSBcIldlYXRoZXJcIlxuXG4kc2hlZXRFeGNlbF9oYXVuXG5bMV0gXCJIYXVuIHN0YWdlIFwiXG5cbiRzaGVldEV4Y2VsX3NvaWxXYXRlclxuWzFdIFwiR3JhdmltZXRyaWNNb2lzdHVyZU5lYXJTb3dpbmdcIlxuXG4kc2hlZXRfbmFtZV9vYnNlcnZlZFxuWzFdIFwiT2JzZXJ2ZWRcIlxuXG4kZmlsZV96aXBfb3V0XG5bMV0gXCJDOi9naXRodWIvQXBzaW1YL1Rlc3RzL1ZhbGlkYXRpb24vV2hlYXQvVW9NX1dpbnRlclZzU3ByaW5nL09ic2VydmVkLnppcFwiXG5cbiRmaWxlX3Bhc3NcblsxXSBcIkM6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmcvc2VjcmV0X3Bhc3MudHh0XCJcblxuJGNvb3JkX3RoaXNMYXRMb25cbiAgICAgIGxhdCAgICAgbG9uXG4xIC0zNS4wNDEgMTQ3LjMxOVxuXG4kdGFyZ2V0X3N0YWdlUGVyY1xuWzFdIDUwXG5cbiR0YXJnZXRfYmV0d1N0YWdlc1xuWzFdIDAuNVxuXG4kdmFyX2RmX25hbWVfc3RhZ2VcblsxXSBcImFwc2ltX3N0YWdlX3Jhd1wiXG5cbiRtYXhfbGVhZl9saW1pdFxuWzFdIDAuOTVcblxuJHBjZF9zdGFnZXNfdG9fZXh0cmFjdFxuWzFdIFwicGNkc18zX2VtZXJnUGxhbnRzX1BlcmNcIiBcInBjZHNfNl9mbGFnTGVhZlwiICAgICAgICBcblszXSBcInBjZHNfOF9hbnRoZXNpc1wiICAgICAgICBcblxuJGZpbGVfbmFtZV9pbnB1dF9waGVub1xuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfUGhlbm9EYXRlc0lucHV0LmNzdlwiXG5cbiRmaWxlX25hbWVfaW5wdXRfaGF1XG5cXFxublxuWzFdIFwiV2FnZ2FXYWdnYTIwMjRfSGF1blN0YWdlc0lucHV0LmNzdlwiXG5cbiRmaWxlX25hbWVfbmV3X21ldFxuWzFdIFwiV2FnZ2FXYWdnYTIwMjQubWV0XCJcblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG5cbnxcbuKWtiBzdGFydCB0YXJnZXQgbG9nX2FjdGl2ZV9jb25maWdcbuKXjyBidWlsdCB0YXJnZXQgbG9nX2FjdGl2ZV9jb25maWcgWzAgc2Vjb25kc11cbuKWtiBzdGFydCB0YXJnZXQgdHJhY2tlZF9leGNlbF9maWxlc1xu4pePIGJ1aWx0IHRhcmdldCB0cmFja2VkX2V4Y2VsX2ZpbGVzIFswIHNlY29uZHNdXG7wn5OWIFJlYWRpbmcgc29pbCBkYXRhIGZyb206IFBBVyBlc3RpbWF0ZXMgV2FnZ2EgMjAyNCBKUkgueGxzeCAoU2hlZXQ6IFBBVyBlc3RpbWF0ZXMpXG5cbi9cbvCfkr4gU3VjY2VzczogRXhwb3J0ZWQgY2xlYW5lZCBzb2lsIHByb2ZpbGUgdG8gJ1dhZ2dhV2FnZ2EyMDI0X3NvaWxfd2F0ZXJfZGF0YS5jc3YnXG5cbi1cbuKWtiBzdGFydCB0YXJnZXQgc29pbF93YXRlcl9kYXRhXG7il48gYnVpbHQgdGFyZ2V0IHNvaWxfd2F0ZXJfZGF0YSBbMC4yNCBzZWNvbmRzXVxuXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4g8J+nqiAgQVVESVRJTkcgTUFOVUFMIFBIRU5PTE9HWSAmIEdFUk1JTkFUSU9OIFBBUkFNRVRFUlMgXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gLT4gQ2hlY2tpbmc6IFdhZ2dhV2FnZ2EyMDI0X0NvbnN0YW50UGhlbm9sb2d5LmNzdiBcbiAtPiBDaGVja2luZzogV2FnZ2FXYWdnYTIwMjRfR2VybURhdGVzSW5wdXQuY3N2IFxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG7ilrYgc3RhcnQgdGFyZ2V0IG1hbnVhbF9waGVub19wYXJhbXNcbuKXjyBidWlsdCB0YXJnZXQgbWFudWFsX3BoZW5vX3BhcmFtcyBbMC4yNSBzZWNvbmRzXVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG58XG5cbi9cblxuLVxuXG5cXFxuXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4g4pqg77iPICBEQVRBIE5PVCBGT1VORDogTUlTU0lORyBWQVJJQUJMRSDimqDvuI9cbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiBGaWxlICA6IDIwMjRfV2FnZ2FXYWdnYV9QSERBMjRXQVJJMi54bHN4XG4gU2hlZXQgOiAnUENEUyAxMC4wIGhhcnZlc3QnXG4gVGFyZ2V0OiAnSGFydmVzdCBpbmRleCcgLT4gJ0hhcnZlc3RJbmRleCdcbiBFcnJvciA6IE5vbmUgb2YgdGhlIHJlcXVlc3RlZCBjb2x1bW5zICgnSGFydmVzdCBpbmRleCcpIHdlcmUgZm91bmQgaW4gdGhlIHNoZWV0LlxuIEFjdGlvbjogU2tpcHBpbmcgdGhpcyBleHRyYWN0aW9uLiBUaGUgcGlwZWxpbmUgd2lsbCBjb250aW51ZS5cbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cblxuXG58XG7ilrYgc3RhcnQgdGFyZ2V0IGxpc3Rfb2JzZXJ2ZWRfZGZzX3Jhd1xu4pePIGJ1aWx0IHRhcmdldCBsaXN0X29ic2VydmVkX2Rmc19yYXcgWzYuMDIgc2Vjb25kc11cblxuL1xu4pa2IHN0YXJ0IHRhcmdldCBtc2dfbWV0X3NhdmVkXG7il48gYnVpbHQgdGFyZ2V0IG1zZ19tZXRfc2F2ZWQgWzAgc2Vjb25kc11cblxuLVxuRW5jcnlwdGluZyBhcmNoaXZlLi4uXG5cblxcXG7inIUgU3VjY2Vzc2Z1bGx5IGNyZWF0ZWQgcGFzc3dvcmQtcHJvdGVjdGVkIGFyY2hpdmU6IE9ic2VydmVkLnppcFxuXG58XG7ilrYgc3RhcnQgdGFyZ2V0IGVuY3J5cHRlZF96aXBfYXJ0aWZhY3RcbuKXjyBidWlsdCB0YXJnZXQgZW5jcnlwdGVkX3ppcF9hcnRpZmFjdCBbMC4zMSBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBsaXN0X29ic2VydmVkX2Rmc1xuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g8J+TiCBQSVBFTElORSBBQ1RJT046IEVNRVJHRU5DRSBQRVJDRU5UQUdFIENBTENVTEFURUQg8J+TiFxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIC0+IElucHV0IFNvdXJjZSAgOiAncGNkc18zX2VtZXJnUGxhbnRzJ1xuIC0+IFRhcmdldCBDb2x1bW4gOiAnW1doZWF0XS5QaGVub2xvZ3kuRW1lcmdpbmcuRGF0ZVRvUHJvZ3Jlc3MnIChJbnRlcm5hbCB2YXJpYWJsZSBwcmVzZXJ2ZWQpXG4gLT4gT3V0cHV0IFRhcmdldCA6ICdwY2RzXzNfZW1lcmdQbGFudHNfUGVyYycgKEFwcGVuZGVkIGFzIG5ldyByb3cpXG4gLT4gQWN0aW9uICAgICAgICA6IENvbnZlcnRlZCByYXcgY291bnRzIHRvIDAtMTAwJSBzY2FsZSBwZXIgU2ltdWxhdGlvbk5hbWVcbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cblxu4pePIGJ1aWx0IHRhcmdldCBsaXN0X29ic2VydmVkX2RmcyBbMC4xMyBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBkZl9waGVub19oYXVuXG5cbj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gICAgICAgICAgIEhBVU4gREVSSVZBVElPTiBJTlRFUk5BTCBUUkFDRSBMT0dJQyAgICAgICAgICAgIFxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiAgICAgICAgICAgICAgICAgICAgICAgICBTaW11bGF0aW9uTmFtZSBMZWFmTnVtYmVyTWF4aW11bSBGTE4gTGVhZk51bWJlckxpbWl0XG4xICAgICAgV2FnZ2FXYWdnYTIwMjRDdkdyZWdvcnlTb3cxMy1NYXkgICAgICAgICAgMTAuNjM2MzYgIDExICAgICAgIDEwLjEwNDU0NVxuMiAgICAgICBXYWdnYVdhZ2dhMjAyNEN2SWxsYWJvU293MjItQXByICAgICAgICAgIDExLjM5MTY3ICAxMSAgICAgICAxMC44MjIwODNcbjMgICAgICAgICBXYWdnYVdhZ2dhMjAyNEN2SmFuelNvdzEzLU1heSAgICAgICAgICAxMS4wMDAwMCAgMTEgICAgICAgMTAuNDUwMDAwXG40ICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZLaXR0eWhhd2tTb3cyMi1BcHIgICAgICAgICAgMTEuODc1MDAgIDEyICAgICAgIDExLjI4MTI1MFxuNSAgICAgICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZNYWNlU293MTMtTWF5ICAgICAgICAgIDEwLjAwMDAwICAxMCAgICAgICAgOS41MDAwMDBcbjYgICAgICBXYWdnYVdhZ2dhMjAyNEN2TWVlcmluZ1NvdzEzLU1heSAgICAgICAgICAxMC44OTE2NyAgMTEgICAgICAgMTAuMzQ3MDgzXG43ICAgICAgV2FnZ2FXYWdnYTIwMjRDdk1vd2hhd2tTb3cyMi1BcHIgICAgICAgICAgMTEuNTAwMDAgIDEyICAgICAgIDEwLjkyNTAwMFxuOCAgICAgICBXYWdnYVdhZ2dhMjAyNEN2T3NwcmV5U293MjItQXByICAgICAgICAgIDEyLjI1MDAwICAxMiAgICAgICAxMS42Mzc1MDBcbjkgICAgICBXYWdnYVdhZ2dhMjAyNEN2Um9zZWxsYVNvdzIyLUFwciAgICAgICAgICAxMS44NjAwMCAgMTIgICAgICAgMTEuMjY3MDAwXG4xMCAgICAgV2FnZ2FXYWdnYTIwMjRDdlNjZXB0ZXJTb3cxMy1NYXkgICAgICAgICAgMTAuMTAwMDAgIDEwICAgICAgICA5LjU5NTAwMFxuMTEgICBXYWdnYVdhZ2dhMjAyNEN2U3VubWFzdGVyU293MTMtTWF5ICAgICAgICAgIDEwLjAwMDAwICAxMCAgICAgICAgOS41MDAwMDBcbjEyICAgV2FnZ2FXYWdnYTIwMjRDdldlZGdldGFpbFNvdzIyLUFwciAgICAgICAgICAxMS4zMzMzMyAgMTEgICAgICAgMTAuNzY2NjY3XG4xMyAgICBXYWdnYVdhZ2dhMjAyNEN2V2hpc3RsZXJTb3cyMi1BcHIgICAgICAgICAgMTEuNjM2MzYgIDEyICAgICAgIDExLjA1NDU0NVxuMTQgV2FnZ2FXYWdnYTIwMjRDdld5YWxrYXRjaGVtU293MTMtTWF5ICAgICAgICAgIDEwLjI1MDAwICAxMCAgICAgICAgOS43Mzc1MDBcbjE1ICAgICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZXeWxhaFNvdzIyLUFwciAgICAgICAgICAxMi4wMDAwMCAgMTIgICAgICAgMTEuNDAwMDAwXG4xNiAgICAgICBXYWdnYVdhZ2dhMjAyNEN2WWl0cGlTb3cxMy1NYXkgICAgICAgICAgMTAuMDkwOTEgIDEwICAgICAgICA5LjU4NjM2NFxuICAgRGF0ZV9NYXhMZWFmTGltaXQgRGF0ZV9TdGFnZTRfRFIgRGF0ZV9TdGFnZTVfVFNcbjEgICAgICAgICAyMDI0LTA4LTMwICAgICAyMDI0LTA3LTA3ICAgICAyMDI0LTA4LTExXG4yICAgICAgICAgMjAyNC0wOC0zMSAgICAgMjAyNC0wNi0wMiAgICAgMjAyNC0wOC0wMlxuMyAgICAgICAgIDIwMjQtMDktMDQgICAgIDIwMjQtMDctMDggICAgIDIwMjQtMDgtMTFcbjQgICAgICAgICAyMDI0LTA5LTA1ICAgICAyMDI0LTA2LTI2ICAgICAyMDI0LTA4LTE0XG41ICAgICAgICAgMjAyNC0wOC0yOSAgICAgMjAyNC0wNi0yNyAgICAgMjAyNC0wOC0wMVxuNiAgICAgICAgIDIwMjQtMDktMDEgICAgIDIwMjQtMDctMDcgICAgIDIwMjQtMDgtMTFcbjcgICAgICAgICAyMDI0LTA4LTI2ICAgICAyMDI0LTA2LTI3ICAgICAyMDI0LTA4LTA3XG44ICAgICAgICAgMjAyNC0wOS0wNyAgICAgMjAyNC0wNi0yOCAgICAgMjAyNC0wOC0xMlxuOSAgICAgICAgIDIwMjQtMDktMTAgICAgIDIwMjQtMDYtMTcgICAgIDIwMjQtMDgtMTFcbjEwICAgICAgICAyMDI0LTA4LTMwICAgICAyMDI0LTA2LTI4ICAgICAyMDI0LTA4LTA0XG4xMSAgICAgICAgMjAyNC0wOC0zMSAgICAgMjAyNC0wNi0yOCAgICAgMjAyNC0wOC0wNVxuMTIgICAgICAgIDIwMjQtMDktMDYgICAgIDIwMjQtMDYtMDIgICAgIDIwMjQtMDgtMDhcbjEzICAgICAgICAyMDI0LTA4LTMxICAgICAyMDI0LTA2LTI1ICAgICAyMDI0LTA4LTEwXG4xNCAgICAgICAgMjAyNC0wOC0zMCAgICAgMjAyNC0wNi0yNiAgICAgMjAyNC0wOC0wM1xuMTUgICAgICAgIDIwMjQtMDktMDIgICAgIDIwMjQtMDYtMjggICAgIDIwMjQtMDgtMTNcbjE2ICAgICAgICAyMDI0LTA5LTAxICAgICAyMDI0LTA2LTI1ICAgICAyMDI0LTA4LTA0XG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuXG5TdWNjZXNzIFtkZXJpdmVfcGhlbm9fc3RhZ2VzX2Zyb21faGF1bl06IE1vcnBob2xvZ2ljYWxseSBnZW5lcmF0ZWQgbWlsZXN0b25lIHJvd3MgZnJvbSBIYXVuIGNvdW50cy4gKE1vZGU6IGxpc3RfZGZzKVxuIC0+IGBbV2hlYXRdLlBoZW5vbG9neS5MZWF2ZXNJbml0aWF0aW5nLkRhdGVUb1Byb2dyZXNzYCBhcyBTdGFnZSA0IGdlbmVyYXRlZCBmb3IgMTYgc2ltdWxhdGlvbnMuXG4gLT4gYFtXaGVhdF0uUGhlbm9sb2d5LlNwaWtlbGV0c0RpZmZlcmVudGlhdGluZy5EYXRlVG9Qcm9ncmVzc2AgYXMgU3RhZ2UgNSBnZW5lcmF0ZWQgZm9yIDE2IHNpbXVsYXRpb25zLlxu4pePIGJ1aWx0IHRhcmdldCBkZl9waGVub19oYXVuIFswLjE2IHNlY29uZHNdXG7inIUgU3VjY2Vzc2Z1bGx5IGV4dHJhY3RlZCAzIHRhcmdldCBkYXRhZnJhbWVzLlxu4pa2IHN0YXJ0IHRhcmdldCBsaXN0X3BjZHNfZXh0cmFjdGVkXG7il48gYnVpbHQgdGFyZ2V0IGxpc3RfcGNkc19leHRyYWN0ZWQgWzAuMDEgc2Vjb25kc11cblN1Y2Nlc3MgW2dldF9waGVub19kYXRlc19mcm9tX3BjZF9saXN0XTogU3RhbmRhcmRpemVkIDQ4IHJhdyByZWNvcmRzIGF0IDUwJSBwcm9ncmVzcy5cbuKWtiBzdGFydCB0YXJnZXQgZGZfcGhlbm9fcmF3XG7il48gYnVpbHQgdGFyZ2V0IGRmX3BoZW5vX3JhdyBbMC4xNCBzZWNvbmRzXVxuU3VjY2VzcyBbY3JlYXRlX2ludGVycF9waGVub19kYXRlc106IExpbmVhcmx5IGdlbmVyYXRlZCAzMiBtaXNzaW5nIG1pY3JvLW1pbGVzdG9uZSByb3dzIChTdGFnZXMgNC83KS5cbuKWtiBzdGFydCB0YXJnZXQgZGZfcGhlbm9faW50XG7il48gYnVpbHQgdGFyZ2V0IGRmX3BoZW5vX2ludCBbMC4wOCBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBkZl9waGVub19maW5hbFxuXG5bIV0gTk9USUNFOiBDb250cmFzdGluZyBEYXRlcyBEZXRlY3RlZCBmb3IgSWRlbnRpY2FsIFN0YWdlc1xuICAgIEFwcGx5aW5nIFRydXRoIEhpZXJhcmNoeSAoUmF3ID4gSGF1biA+IEludCkgdG8gcmVzb2x2ZS4gQWZmZWN0ZWQgc2ltdWxhdGlvbnM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgU2ltdWxhdGlvbk5hbWUgV2hlYXQuUGhlbm9sb2d5LlN0YWdlXG4xICAgICAgV2FnZ2FXYWdnYTIwMjRDdkdyZWdvcnlTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG4yICAgICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZJbGxhYm9Tb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG4zICAgICAgICAgV2FnZ2FXYWdnYTIwMjRDdkphbnpTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG40ICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZLaXR0eWhhd2tTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG41ICAgICAgICAgV2FnZ2FXYWdnYTIwMjRDdk1hY2VTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG42ICAgICAgV2FnZ2FXYWdnYTIwMjRDdk1lZXJpbmdTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG43ICAgICAgV2FnZ2FXYWdnYTIwMjRDdk1vd2hhd2tTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG44ICAgICAgIFdhZ2dhV2FnZ2EyMDI0Q3ZPc3ByZXlTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG45ICAgICAgV2FnZ2FXYWdnYTIwMjRDdlJvc2VsbGFTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG4xMCAgICAgV2FnZ2FXYWdnYTIwMjRDdlNjZXB0ZXJTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG4xMSAgIFdhZ2dhV2FnZ2EyMDI0Q3ZTdW5tYXN0ZXJTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG4xMiAgIFdhZ2dhV2FnZ2EyMDI0Q3ZXZWRnZXRhaWxTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG4xMyAgICBXYWdnYVdhZ2dhMjAyNEN2V2hpc3RsZXJTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG4xNCBXYWdnYVdhZ2dhMjAyNEN2V3lhbGthdGNoZW1Tb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG4xNSAgICAgICBXYWdnYVdhZ2dhMjAyNEN2V3lsYWhTb3cyMi1BcHIgICAgICAgICAgICAgICAgICAgICA0XG4xNiAgICAgICBXYWdnYVdhZ2dhMjAyNEN2WWl0cGlTb3cxMy1NYXkgICAgICAgICAgICAgICAgICAgICA0XG4gICAgICAgICAgICAgICAgIERhdGVfQ2xhc2ggU291cmNlX0NsYXNoXG4xICAyMDI0LTA3LTA3IHZzIDIwMjQtMDctMTggIEhhdW4gdnMgSW50XG4yICAyMDI0LTA2LTAyIHZzIDIwMjQtMDctMDQgIEhhdW4gdnMgSW50XG4zICAyMDI0LTA3LTA4IHZzIDIwMjQtMDctMTggIEhhdW4gdnMgSW50XG40ICAyMDI0LTA2LTI2IHZzIDIwMjQtMDctMDcgIEhhdW4gdnMgSW50XG41ICAyMDI0LTA2LTI3IHZzIDIwMjQtMDctMTUgIEhhdW4gdnMgSW50XG42ICAyMDI0LTA3LTA3IHZzIDIwMjQtMDctMTkgIEhhdW4gdnMgSW50XG43ICAyMDI0LTA2LTI3IHZzIDIwMjQtMDctMDIgIEhhdW4gdnMgSW50XG44ICAyMDI0LTA2LTI4IHZzIDIwMjQtMDctMDUgIEhhdW4gdnMgSW50XG45ICAyMDI0LTA2LTE3IHZzIDIwMjQtMDctMDYgIEhhdW4gdnMgSW50XG4xMCAyMDI0LTA2LTI4IHZzIDIwMjQtMDctMTYgIEhhdW4gdnMgSW50XG4xMSAyMDI0LTA2LTI4IHZzIDIwMjQtMDctMTggIEhhdW4gdnMgSW50XG4xMiAyMDI0LTA2LTAyIHZzIDIwMjQtMDctMDYgIEhhdW4gdnMgSW50XG4xMyAyMDI0LTA2LTI1IHZzIDIwMjQtMDctMDMgIEhhdW4gdnMgSW50XG4xNCAyMDI0LTA2LTI2IHZzIDIwMjQtMDctMTYgIEhhdW4gdnMgSW50XG4xNSAyMDI0LTA2LTI4IHZzIDIwMjQtMDctMDUgIEhhdW4gdnMgSW50XG4xNiAyMDI0LTA2LTI1IHZzIDIwMjQtMDctMTkgIEhhdW4gdnMgSW50XG5TdWNjZXNzIFttZXJnZV9hbmRfcWNfcGhlbm9dOiBNYXN0ZXIgdGltZWxpbmUgYXNzZW1ibGVkLiBSZXRhaW5lZCA5NiBzdHJpY3RseSBjaHJvbm9sb2dpY2FsIHN0YWdlIGV2ZW50cy5cbuKXjyBidWlsdCB0YXJnZXQgZGZfcGhlbm9fZmluYWwgWzAuMTcgc2Vjb25kc11cblN1Y2Nlc3MgW2FwcGx5X2NvcnJlY3Rpb25zX1dhZ2dhMjRdOiBQcm9jZXNzZWQgTkRWSSBjYWxlbmRhciB5ZWFycyBhbmQgYmFjay1maWxsZWQgU3RhZ2UgNi84IHRpbWVsaW5lcy5cbuKWtiBzdGFydCB0YXJnZXQgbGlzdF9vYnNlcnZlZF9jbGVhblxu4pePIGJ1aWx0IHRhcmdldCBsaXN0X29ic2VydmVkX2NsZWFuIFswLjI4IHNlY29uZHNdXG5cbi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiDwn6e5IFBJUEVMSU5FIEFDVElPTjogRU1QVFkgU1RBR0UgQ09MVU1OUyBQUlVORUQg8J+nuVxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuIFRoZSBmb2xsb3dpbmcgcGhlbm9sb2d5IHN0YWdlcyBjb250YWluZWQgbm8gZGF0YSAoMTAwJSBOQSkgYWNyb3NzIGFsbFxuIHNpbXVsYXRpb25zIGFuZCB3ZXJlIHNhZmVseSByZW1vdmVkIGZyb20gdGhlIGZpbmFsIEFQU0lNIG91dHB1dDpcbiAgIC0gW1doZWF0XS5QaGVub2xvZ3kuR3JhaW5GaWxsaW5nLkRhdGVUb1Byb2dyZXNzXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cblN1Y2Nlc3MgW2Zvcm1hdF9hcHNpbV9waGVub19wYXJhbXNdOiBUcmFuc2xhdGVkIDE2IHNpbXVsYXRpb25zIGludG8gd2lkZSBBUFNJTSBwYXJhbWV0ZXIgZm9ybWF0Llxu4pa2IHN0YXJ0IHRhcmdldCBkZl9waGVub19pbnB1dF9wYXJhbVxu4pePIGJ1aWx0IHRhcmdldCBkZl9waGVub19pbnB1dF9wYXJhbSBbMC4xMSBzZWNvbmRzXVxuICAgLT4gTm90aWNlOiBFeGNsdWRpbmcgZGF0YXNldHMgZnJvbSBmaW5hbCBvdXRwdXQ6IFtwY2RzXzNfZW1lcmdQbGFudHNfUGVyYywgcGNkc182X2ZsYWdMZWFmLCBwY2RzXzhfYW50aGVzaXNdXG5TdWNjZXNzZnVsbHkgY29tcGlsZWQsIGNvbGxhcHNlZCwgYW5kIGZvcm1hdHRlZCB0aGUgZmluYWwgQVBTSU0gb2JzZXJ2YXRpb24gZGF0YWZyYW1lLlxu4pa2IHN0YXJ0IHRhcmdldCBkZl9vYnNfd2lkZVxu4pePIGJ1aWx0IHRhcmdldCBkZl9vYnNfd2lkZSBbMC4zOCBzZWNvbmRzXVxu4pa2IHN0YXJ0IHRhcmdldCBtc2dfcGhlbm9fcGFyYW1fc2F2ZWRcbuKXjyBidWlsdCB0YXJnZXQgbXNnX3BoZW5vX3BhcmFtX3NhdmVkIFswLjAyIHNlY29uZHNdXG5TdWNjZXNzIFthZGRfbmV3X3Zhcl90b19vYnNdOiBBcHBlbmRlZCBhbmQgY29sbGFwc2VkIDk2IGV2ZW50cyBpbnRvIG1hc3RlciBvYnNlcnZhdGlvbnMgdW5kZXIgY29sdW1uICdXaGVhdC5QaGVub2xvZ3kuU3RhZ2UnLlxu4pa2IHN0YXJ0IHRhcmdldCBkZl9vYnNfcGx1c19waGVub1xu4pePIGJ1aWx0IHRhcmdldCBkZl9vYnNfcGx1c19waGVubyBbMC4zNyBzZWNvbmRzXVxuU3VjY2VzcyBbY2FsY19udXRyaWVudF9hYnNvbHV0ZV9hbW91bnRzXTogRGVyaXZlZCA4IGV4cGxpY2l0IG9yZ2FuIHBvb2xzIGFuZCBhZ2dyZWdhdGVkIHRvICdXaGVhdC5BYm92ZUdyb3VuZCcuXG7ilrYgc3RhcnQgdGFyZ2V0IGRmX29ic19wbHVzX3BoZW5vX3dpdGhfYW1vdW50c1xu4pePIGJ1aWx0IHRhcmdldCBkZl9vYnNfcGx1c19waGVub193aXRoX2Ftb3VudHMgWzAuMDcgc2Vjb25kc11cblxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4g4pqg77iPICBIQVJWRVNUIERBVEVTIEFTU0lHTkVEOiBIQVJWRVNUUklQRSDimqDvuI8gXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiAtPiBTVFJBVEVHWSAgICAgOiBBc3luY2hyb25vdXMgTWF4IERhdGUgU2VhcmNoXG4gLT4gT1ZFUkFMTCBTUEFOIDogMjAyNC0xMS0yMCB0byAyMDI0LTExLTIwXG4gLT4gU1RBVFVTICAgICAgIDogQWxsIHJlZmVyZW5jZSB2YXJpYWJsZXMgc2hhcmUgdGhlIGV4YWN0IHNhbWUgaGFydmVzdCBkYXRlLlxuLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbuKWtiBzdGFydCB0YXJnZXQgZGZfb2JzX3BsdXNfcGhlbm9faGFydlxu4pePIGJ1aWx0IHRhcmdldCBkZl9vYnNfcGx1c19waGVub19oYXJ2IFswLjEzIHNlY29uZHNdXG7inIUgUUMgUEFTU0VEOiBPYnNlcnZhdGlvbiBkYXRhZnJhbWUgaXMgc3RydWN0dXJhbGx5IHNvdW5kIGFuZCByZWFkeSBmb3IgQVBTSU0uXG7ilrYgc3RhcnQgdGFyZ2V0IHFjX2Fwc2ltX29ic2VydmVkX2hhcnZcbuKXjyBidWlsdCB0YXJnZXQgcWNfYXBzaW1fb2JzZXJ2ZWRfaGFydiBbMC4xIHNlY29uZHNdXG5TdWNjZXNzIFtzYXZlX2RmX3RvX2V4Y2VsXTogRXhwb3J0ZWQgNTYzIHJvd3MgdG8gJ0M6L2dpdGh1Yi9BcHNpbVgvVGVzdHMvVmFsaWRhdGlvbi9XaGVhdC9Vb01fV2ludGVyVnNTcHJpbmcvT2JzZXJ2ZWQvV2FnZ2FXYWdnYTIwMjRfT2JzZXJ2ZWQueGxzeCcgKFNoZWV0OiAnT2JzZXJ2ZWQnKS5cbuKWtiBzdGFydCB0YXJnZXQgbXNnX29ic19zYXZlZFxu4pePIGJ1aWx0IHRhcmdldCBtc2dfb2JzX3NhdmVkIFswLjIgc2Vjb25kc11cbuKWtiBzdGFydCB0YXJnZXQgaGF1bl9pbnB1dF9jaGVja2VkXG7il48gYnVpbHQgdGFyZ2V0IGhhdW5faW5wdXRfY2hlY2tlZCBbMC4wNiBzZWNvbmRzXVxuXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4g8J+TiyBFWFRSQUNUSU9OIFNVTU1BUlk6IFdhZ2dhV2FnZ2EyMDI0X3BvcHVsYXRpb24uY3N2XG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAtPiAnW1doZWF0XS5MZWFmLlN0ZW1Qb3B1bGF0aW9uJzogcmFuZ2UgWzk2LjUgdG8gMTUzLjVdXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG7wn5K+IFN1Y2Nlc3M6IEV4cG9ydGVkIDE2IHZhbGlkIHJvd3MgYW5kIDIgY29sdW1ucy5cbuKWtiBzdGFydCB0YXJnZXQgZXhwb3J0ZWRfcG9wX2Nzdlxu4pePIGJ1aWx0IHRhcmdldCBleHBvcnRlZF9wb3BfY3N2IFswLjA3IHNlY29uZHNdXG7inIUgUHJlLWZsaWdodCBjaGVjayBwYXNzZWQ6IEFsbCByZXF1aXJlZCBBUFNJTSBkZXBlbmRlbmNpZXMgZm91bmQuXG7ilrYgc3RhcnQgdGFyZ2V0IGNoZWNrX2RlcGVuZFxu4pePIGJ1aWx0IHRhcmdldCBjaGVja19kZXBlbmQgWzAuMDMgc2Vjb25kc11cbuKchSBBcmNoaXZlIFN5bmMgUGFzc2VkOiBMaXZlIGZvbGRlciBhbmQgWmlwIGJhY2t1cCBwZXJmZWN0bHkgbWF0Y2guXG7ilrYgc3RhcnQgdGFyZ2V0IHZlcmlmeV9kYXRhX2JhY2t1cFxu4pePIGJ1aWx0IHRhcmdldCB2ZXJpZnlfZGF0YV9iYWNrdXAgWzAuMDMgc2Vjb25kc11cbuKWtiBlbmQgcGlwZWxpbmUgWzEzLjY1IHNlY29uZHNdXG5UaGVyZSB3ZXJlIDEyIHdhcm5pbmdzICh1c2Ugd2FybmluZ3MoKSB0byBzZWUgdGhlbSlcblxuIFxuIn0= -->
 <pre><code>
 -
 
@@ -1870,16 +1870,49 @@ The following objects are masked from &#39;package:base&#39;:
 
 
 \
-✔ skip target config
+▶ start target config
 
 |
-✔ skip target df_obs_meta_data
-✔ skip target soil_water_data
-▶ start target tracked_excel_files
-● built target tracked_excel_files [0 seconds]
-✔ skip target df_simNameByCult
-✔ skip target processed_met_data
-✔ skip target tracked_raw_excel
+● built target config [0.84 seconds]
+▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0.01 seconds]
+▶ start target df_simNameByCult
+● built target df_simNameByCult [0.02 seconds]
+▶ start target tracked_raw_excel
+● built target tracked_raw_excel [0 seconds]
+📖 Reading soil data from: 2024_WaggaWagga_PHDA24WARI2.xlsx (Sheet: GravimetricMoistureNearSowing)
+💾 Success: Exported cleaned soil profile to &#39;WaggaWagga2024_soil_gravWaterContent_data.csv&#39;
+▶ start target soil_gravWaterContent_data
+● built target soil_gravWaterContent_data [0.3 seconds]
+Loading required package: rlang
+
+Attaching package: &#39;rlang&#39;
+
+The following objects are masked from &#39;package:jsonlite&#39;:
+
+    flatten, unbox
+
+The following objects are masked from &#39;package:purrr&#39;:
+
+    %@%, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice
+
+▶ start target processed_met_data
+● built target processed_met_data [0.11 seconds]
+📖 Reading soil data from: 2024_WaggaWagga_PHDA24WARI2.xlsx (Sheet: Soil sampling)
+
+/
+
+--- PIPELINE INTERVENTION: DUPLICATE COLUMNS ---
+   -&gt; Column &#39;Silt&#39; found 2 times, but ALL instances appear empty. Defaulted to Index 60.
+   -&gt; Column &#39;Clay&#39; found 2 times, but ALL instances appear empty. Defaulted to Index 61.
+   -&gt; Column &#39;Total Carbon (Combustion)&#39; found 4 times. Safely extracted Index 169.
+------------------------------------------------
+
+-
+💾 Success: Exported cleaned soil profile to &#39;WaggaWagga2024_soil_profile_data.csv&#39;
+▶ start target soil_profile_data
+● built target soil_profile_data [1.78 seconds]
 
 ======================================================================
  ⚙️ ACTIVE PIPELINE CONFIGURATION 
@@ -1961,7 +1994,9 @@ $pcd_stages_to_extract
 $file_name_input_pheno
 [1] &quot;WaggaWagga2024_PhenoDatesInput.csv&quot;
 
-$file_name_input_haun
+$file_name_input_hau
+\
+n
 [1] &quot;WaggaWagga2024_HaunStagesInput.csv&quot;
 
 $file_name_new_met
@@ -1969,48 +2004,278 @@ $file_name_new_met
 
 ======================================================================
 
+
+|
 ▶ start target log_active_config
 ● built target log_active_config [0 seconds]
-📖 Reading soil data from: 2024_WaggaWagga_PHDA24WARI2.xlsx (Sheet: GravimetricMoistureNearSowing)
-💾 Success: Exported cleaned soil profile to &#39;WaggaWagga2024_soil_gravWaterContent_data.csv&#39;
-▶ start target soil_gravWaterContent_data
-● built target soil_gravWaterContent_data [0.29 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+📖 Reading soil data from: PAW estimates Wagga 2024 JRH.xlsx (Sheet: PAW estimates)
+
+/
+💾 Success: Exported cleaned soil profile to &#39;WaggaWagga2024_soil_water_data.csv&#39;
+
+-
+▶ start target soil_water_data
+● built target soil_water_data [0.24 seconds]
+
+======================================================================
+ 🧪  AUDITING MANUAL PHENOLOGY &amp; GERMINATION PARAMETERS 
+======================================================================
+ -&gt; Checking: WaggaWagga2024_ConstantPhenology.csv 
+ -&gt; Checking: WaggaWagga2024_GermDatesInput.csv 
+======================================================================
+
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.25 seconds]
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+|
+
+/
+
+-
+
+\
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : 2024_WaggaWagga_PHDA24WARI2.xlsx
+ Sheet : &#39;PCDS 10.0 harvest&#39;
+ Target: &#39;Harvest index&#39; -&gt; &#39;HarvestIndex&#39;
+ Error : None of the requested columns (&#39;Harvest index&#39;) were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+|
+▶ start target list_observed_dfs_raw
+● built target list_observed_dfs_raw [6.02 seconds]
+
+/
+▶ start target msg_met_saved
+● built target msg_met_saved [0 seconds]
+
+-
 Encrypting archive...
+
+\
 ✅ Successfully created password-protected archive: Observed.zip
-✔ skip target soil_profile_data
+
+|
 ▶ start target encrypted_zip_artifact
-● built target encrypted_zip_artifact [0.28 seconds]
-✔ skip target manual_pheno_params
-✔ skip target msg_met_saved
-✔ skip target list_observed_dfs_raw
-✔ skip target list_observed_dfs
-✔ skip target list_pcds_extracted
-✔ skip target df_pheno_haun
-✔ skip target df_pheno_raw
-✔ skip target df_pheno_int
-✔ skip target df_pheno_final
-✔ skip target list_observed_clean
-✔ skip target df_pheno_input_param
-✔ skip target df_obs_wide
-✔ skip target msg_pheno_param_saved
-✔ skip target df_obs_plus_pheno
-✔ skip target df_obs_plus_pheno_with_amounts
-✔ skip target df_obs_plus_pheno_harv
-✔ skip target qc_apsim_observed_harv
-✔ skip target msg_obs_saved
-✔ skip target haun_input_checked
-✔ skip target check_depend
-✔ skip target verify_data_backup
-▶ end pipeline [2.42 seconds]
-Warning messages:
-1: package &#39;targets&#39; was built under R version 4.3.2 
-2: package &#39;rstudioapi&#39; was built under R version 4.3.2 
-3: package &#39;readxl&#39; was built under R version 4.3.2 
-4: package &#39;ggplot2&#39; was built under R version 4.3.2 
-5: package &#39;purrr&#39; was built under R version 4.3.2 
-6: package &#39;stringr&#39; was built under R version 4.3.2 
-7: package &#39;lubridate&#39; was built under R version 4.3.2 
-8: package &#39;jsonlite&#39; was built under R version 4.3.3 
+● built target encrypted_zip_artifact [0.31 seconds]
+▶ start target list_observed_dfs
+
+----------------------------------------------------------------------
+ 📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
+----------------------------------------------------------------------
+ -&gt; Input Source  : &#39;pcds_3_emergPlants&#39;
+ -&gt; Target Column : &#39;[Wheat].Phenology.Emerging.DateToProgress&#39; (Internal variable preserved)
+ -&gt; Output Target : &#39;pcds_3_emergPlants_Perc&#39; (Appended as new row)
+ -&gt; Action        : Converted raw counts to 0-100% scale per SimulationName
+----------------------------------------------------------------------
+
+● built target list_observed_dfs [0.13 seconds]
+▶ start target df_pheno_haun
+
+===========================================================
+           HAUN DERIVATION INTERNAL TRACE LOGIC            
+===========================================================
+                         SimulationName LeafNumberMaximum FLN LeafNumberLimit
+1      WaggaWagga2024CvGregorySow13-May          10.63636  11       10.104545
+2       WaggaWagga2024CvIllaboSow22-Apr          11.39167  11       10.822083
+3         WaggaWagga2024CvJanzSow13-May          11.00000  11       10.450000
+4    WaggaWagga2024CvKittyhawkSow22-Apr          11.87500  12       11.281250
+5         WaggaWagga2024CvMaceSow13-May          10.00000  10        9.500000
+6      WaggaWagga2024CvMeeringSow13-May          10.89167  11       10.347083
+7      WaggaWagga2024CvMowhawkSow22-Apr          11.50000  12       10.925000
+8       WaggaWagga2024CvOspreySow22-Apr          12.25000  12       11.637500
+9      WaggaWagga2024CvRosellaSow22-Apr          11.86000  12       11.267000
+10     WaggaWagga2024CvScepterSow13-May          10.10000  10        9.595000
+11   WaggaWagga2024CvSunmasterSow13-May          10.00000  10        9.500000
+12   WaggaWagga2024CvWedgetailSow22-Apr          11.33333  11       10.766667
+13    WaggaWagga2024CvWhistlerSow22-Apr          11.63636  12       11.054545
+14 WaggaWagga2024CvWyalkatchemSow13-May          10.25000  10        9.737500
+15       WaggaWagga2024CvWylahSow22-Apr          12.00000  12       11.400000
+16       WaggaWagga2024CvYitpiSow13-May          10.09091  10        9.586364
+   Date_MaxLeafLimit Date_Stage4_DR Date_Stage5_TS
+1         2024-08-30     2024-07-07     2024-08-11
+2         2024-08-31     2024-06-02     2024-08-02
+3         2024-09-04     2024-07-08     2024-08-11
+4         2024-09-05     2024-06-26     2024-08-14
+5         2024-08-29     2024-06-27     2024-08-01
+6         2024-09-01     2024-07-07     2024-08-11
+7         2024-08-26     2024-06-27     2024-08-07
+8         2024-09-07     2024-06-28     2024-08-12
+9         2024-09-10     2024-06-17     2024-08-11
+10        2024-08-30     2024-06-28     2024-08-04
+11        2024-08-31     2024-06-28     2024-08-05
+12        2024-09-06     2024-06-02     2024-08-08
+13        2024-08-31     2024-06-25     2024-08-10
+14        2024-08-30     2024-06-26     2024-08-03
+15        2024-09-02     2024-06-28     2024-08-13
+16        2024-09-01     2024-06-25     2024-08-04
+===========================================================
+
+Success [derive_pheno_stages_from_haun]: Morphologically generated milestone rows from Haun counts. (Mode: list_dfs)
+ -&gt; `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 16 simulations.
+ -&gt; `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 16 simulations.
+● built target df_pheno_haun [0.16 seconds]
+✅ Successfully extracted 3 target dataframes.
+▶ start target list_pcds_extracted
+● built target list_pcds_extracted [0.01 seconds]
+Success [get_pheno_dates_from_pcd_list]: Standardized 48 raw records at 50% progress.
+▶ start target df_pheno_raw
+● built target df_pheno_raw [0.14 seconds]
+Success [create_interp_pheno_dates]: Linearly generated 32 missing micro-milestone rows (Stages 4/7).
+▶ start target df_pheno_int
+● built target df_pheno_int [0.08 seconds]
+▶ start target df_pheno_final
+
+[!] NOTICE: Contrasting Dates Detected for Identical Stages
+    Applying Truth Hierarchy (Raw &gt; Haun &gt; Int) to resolve. Affected simulations:
+                         SimulationName Wheat.Phenology.Stage
+1      WaggaWagga2024CvGregorySow13-May                     4
+2       WaggaWagga2024CvIllaboSow22-Apr                     4
+3         WaggaWagga2024CvJanzSow13-May                     4
+4    WaggaWagga2024CvKittyhawkSow22-Apr                     4
+5         WaggaWagga2024CvMaceSow13-May                     4
+6      WaggaWagga2024CvMeeringSow13-May                     4
+7      WaggaWagga2024CvMowhawkSow22-Apr                     4
+8       WaggaWagga2024CvOspreySow22-Apr                     4
+9      WaggaWagga2024CvRosellaSow22-Apr                     4
+10     WaggaWagga2024CvScepterSow13-May                     4
+11   WaggaWagga2024CvSunmasterSow13-May                     4
+12   WaggaWagga2024CvWedgetailSow22-Apr                     4
+13    WaggaWagga2024CvWhistlerSow22-Apr                     4
+14 WaggaWagga2024CvWyalkatchemSow13-May                     4
+15       WaggaWagga2024CvWylahSow22-Apr                     4
+16       WaggaWagga2024CvYitpiSow13-May                     4
+                 Date_Clash Source_Clash
+1  2024-07-07 vs 2024-07-18  Haun vs Int
+2  2024-06-02 vs 2024-07-04  Haun vs Int
+3  2024-07-08 vs 2024-07-18  Haun vs Int
+4  2024-06-26 vs 2024-07-07  Haun vs Int
+5  2024-06-27 vs 2024-07-15  Haun vs Int
+6  2024-07-07 vs 2024-07-19  Haun vs Int
+7  2024-06-27 vs 2024-07-02  Haun vs Int
+8  2024-06-28 vs 2024-07-05  Haun vs Int
+9  2024-06-17 vs 2024-07-06  Haun vs Int
+10 2024-06-28 vs 2024-07-16  Haun vs Int
+11 2024-06-28 vs 2024-07-18  Haun vs Int
+12 2024-06-02 vs 2024-07-06  Haun vs Int
+13 2024-06-25 vs 2024-07-03  Haun vs Int
+14 2024-06-26 vs 2024-07-16  Haun vs Int
+15 2024-06-28 vs 2024-07-05  Haun vs Int
+16 2024-06-25 vs 2024-07-19  Haun vs Int
+Success [merge_and_qc_pheno]: Master timeline assembled. Retained 96 strictly chronological stage events.
+● built target df_pheno_final [0.17 seconds]
+Success [apply_corrections_Wagga24]: Processed NDVI calendar years and back-filled Stage 6/8 timelines.
+▶ start target list_observed_clean
+● built target list_observed_clean [0.28 seconds]
+
+----------------------------------------------------------------------
+ 🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
+----------------------------------------------------------------------
+ The following phenology stages contained no data (100% NA) across all
+ simulations and were safely removed from the final APSIM output:
+   - [Wheat].Phenology.GrainFilling.DateToProgress
+----------------------------------------------------------------------
+
+Success [format_apsim_pheno_params]: Translated 16 simulations into wide APSIM parameter format.
+▶ start target df_pheno_input_param
+● built target df_pheno_input_param [0.11 seconds]
+   -&gt; Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc, pcds_6_flagLeaf, pcds_8_anthesis]
+Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
+▶ start target df_obs_wide
+● built target df_obs_wide [0.38 seconds]
+▶ start target msg_pheno_param_saved
+● built target msg_pheno_param_saved [0.02 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 96 events into master observations under column &#39;Wheat.Phenology.Stage&#39;.
+▶ start target df_obs_plus_pheno
+● built target df_obs_plus_pheno [0.37 seconds]
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to &#39;Wheat.AboveGround&#39;.
+▶ start target df_obs_plus_pheno_with_amounts
+● built target df_obs_plus_pheno_with_amounts [0.07 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -&gt; STRATEGY     : Asynchronous Max Date Search
+ -&gt; OVERALL SPAN : 2024-11-20 to 2024-11-20
+ -&gt; STATUS       : All reference variables share the exact same harvest date.
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_harv
+● built target df_obs_plus_pheno_harv [0.13 seconds]
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+▶ start target qc_apsim_observed_harv
+● built target qc_apsim_observed_harv [0.1 seconds]
+Success [save_df_to_excel]: Exported 563 rows to &#39;C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/WaggaWagga2024_Observed.xlsx&#39; (Sheet: &#39;Observed&#39;).
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.2 seconds]
+▶ start target haun_input_checked
+● built target haun_input_checked [0.06 seconds]
+
+----------------------------------------------------------------------
+ 📋 EXTRACTION SUMMARY: WaggaWagga2024_population.csv
+----------------------------------------------------------------------
+   -&gt; &#39;[Wheat].Leaf.StemPopulation&#39;: range [96.5 to 153.5]
+----------------------------------------------------------------------
+💾 Success: Exported 16 valid rows and 2 columns.
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.07 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target check_depend
+● built target check_depend [0.03 seconds]
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+▶ start target verify_data_backup
+● built target verify_data_backup [0.03 seconds]
+▶ end pipeline [13.65 seconds]
+There were 12 warnings (use warnings() to see them)
 
  </code></pre>
 <!-- rnb-output-end -->
