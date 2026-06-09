@@ -1,0 +1,11 @@
+RawDataName,ObservedFileName
+Wheat.Leaf.Dead.NConc,Wheat.Leaf.Dead.NConc
+Wheat.Leaf.Dead.WSC,Wheat.Leaf.Dead.WSCc
+Wheat.Leaf.Live.NConc,Wheat.Leaf.Live.NConc
+Wheat.Leaf.Live.WSC,Wheat.Leaf.Live.WSCc
+Wheat.Spike.NConc,Wheat.Spike.Live.NConc
+Wheat.Spike.WSC,Wheat.Spike.Live.WSCc
+Wheat.Stem.NConc,Wheat.Stem.Live.NConc
+Wheat.Stem.WSC,Wheat.Stem.Live.WSCc
+Wheat.Stem.Wt,Wheat.Stem.Live.Wt
+Wheat.Spike.Wt,Wheat.Spike.Live.Wt

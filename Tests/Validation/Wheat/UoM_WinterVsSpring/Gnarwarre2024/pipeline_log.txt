@@ -1,0 +1,256 @@
+here() starts at C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+▶ start target config
+● built target config [0.79 seconds]
+▶ start target df_obs_raw
+● built target df_obs_raw [0.07 seconds]
+▶ start target track_mapping_csv
+● built target track_mapping_csv [0 seconds]
+▶ start target raw_met_tracker
+● built target raw_met_tracker [0.02 seconds]
+
+======================================================================
+ ⚙️ ACTIVE PIPELINE CONFIGURATION 
+======================================================================
+$proj_name
+[1] "Gnarwarre2024"
+
+$folder_thisScript
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_rawData
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Gnarwarre2024"
+
+$folder_apsimx
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_met
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Met"
+
+$folder_inputs
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Inputs"
+
+$folder_observed
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed"
+
+$file_rawData_excel
+[1] "Observed.xlsx"
+
+$file_workData_excel
+[1] "Gnarwarre2024_Observed.xlsx"
+
+$sheet_name_observed
+[1] "Observed"
+
+$file_zip_out
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed.zip"
+
+$file_pass
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/secret_pass.txt"
+
+$date_DOY_ref
+[1] "01-01-2024"
+
+$btwStgPerc
+[1] 0.5
+
+$max_leaf_limit
+[1] 0.95
+
+$file_name_input_pheno
+[1] "Gnarwarre2024_PhenoDatesInput.csv"
+
+$file_name_input_haun
+[1] "Gnarwarre2024_HaunStagesInput.csv"
+
+$file_name_new_met
+[1] "Gnarwarre2024.met"
+
+$file_name_met
+[1] "Gnarwarre_-38.20_144.05.met"
+
+$file_name_mapping_csv
+[1] "Gnarwarre2024_obs_var_new_names.csv"
+
+======================================================================
+
+▶ start target log_active_config
+● built target log_active_config [0 seconds]
+Success [apply_name_corrections_Gna24]: Loaded translation matrix from 'Gnarwarre2024_obs_var_new_names.csv'.
+
+----------------------------------------------------------------------
+ 🔄 PIPELINE ACTION: VARIABLE NAMES REMAPPED 🔄
+----------------------------------------------------------------------
+ Successfully standardized 11 columns:
+
+   [OLD] Wheat.Leaf.Dead.NConc --> [NEW] Wheat.Leaf.Dead.NConc
+   [OLD] Wheat.Leaf.Dead.WSC --> [NEW] Wheat.Leaf.Dead.WSCc
+   [OLD] Wheat.Leaf.Live.NConc --> [NEW] Wheat.Leaf.Live.NConc
+   [OLD] Wheat.Leaf.Live.WSC --> [NEW] Wheat.Leaf.Live.WSCc
+   [OLD] Wheat.Spike.NConc --> [NEW] Wheat.Spike.Live.NConc
+   [OLD] Wheat.Spike.WSC --> [NEW] Wheat.Spike.Live.WSCc
+   [OLD] Wheat.Stem.NConc --> [NEW] Wheat.Stem.Live.NConc
+   [OLD] Wheat.Stem.WSC --> [NEW] Wheat.Stem.Live.WSCc
+   [OLD] Wheat.Stem.Wt --> [NEW] Wheat.Stem.Live.Wt
+   [OLD] Wheat.Spike.Wt --> [NEW] Wheat.Spike.Live.Wt
+   [OLD] Wheat.Structure.Height --> [NEW] Wheat.Leaf.Height
+----------------------------------------------------------------------
+
+▶ start target df_obs_renamed
+● built target df_obs_renamed [0.07 seconds]
+✅ MET data passed all quality checks.
+Successfully verified and copied to: Gnarwarre2024.met
+▶ start target validated_met_file
+● built target validated_met_file [0.1 seconds]
+
+======================================================================
+ ⚠️  TAILORED CORRECTIONS APPLIED TO WIDE OBS DATAFRAME ⚠️ 
+======================================================================
+ -> RENAMED   : 'Wheat.Spike.Grain.Size' to 'Wheat.Grain.Size'
+ -> DROPPED   : Redundant 'Yield' column (retained 'Wheat.Grain.Yield')
+ -> CONVERTED : 'Wheat.Leaf.Dead.WSCc' divided by 100 (percentage to fraction)
+ -> CONVERTED : 'Wheat.Leaf.Live.WSCc' divided by 100 (percentage to fraction)
+ -> CONVERTED : 'Wheat.Spike.Live.WSCc' divided by 100 (percentage to fraction)
+ -> CONVERTED : 'Wheat.Stem.Infertile.WSC' divided by 100 (percentage to fraction)
+ -> CONVERTED : 'Wheat.Stem.Live.WSCc' divided by 100 (percentage to fraction)
+ -> CONVERTED : 'Wheat.Leaf.Height' multiplied by 10 (unit scaling)
+======================================================================
+
+▶ start target df_obs_corrected
+● built target df_obs_corrected [0.04 seconds]
+▶ start target df_obs_mean
+● built target df_obs_mean [0.11 seconds]
+Success [get_column_var_from_observ]: Isolated target(s) (Wheat.Phenology.HaunStage) across 48 rows while preserving 2 standard metadata keys.
+▶ start target df_haun
+● built target df_haun [0.03 seconds]
+Success [get_pheno_dates_from_DOY_wide_obs]: Extracted 16 standardized raw records from wide DOY entries.
+▶ start target df_pheno_raw
+● built target df_pheno_raw [0.06 seconds]
+
+===========================================================
+           HAUN DERIVATION INTERNAL TRACE LOGIC            
+===========================================================
+            SimulationName LeafNumberMaximum FLN LeafNumberLimit
+1    Gnarwarre2024CvBigRed         12.350000  12       11.732500
+2    Gnarwarre2024CvIllabo         11.083333  11       10.529167
+3 Gnarwarre2024CvSunmaster          8.666667   9        8.233333
+4  Gnarwarre2024CvZanzibar         10.000000  10        9.500000
+  Date_MaxLeafLimit Date_Stage4_DR Date_Stage5_TS
+1        2024-09-15     2024-07-19     2024-08-25
+2        2024-09-06     2024-07-05     2024-08-08
+3        2024-09-07     2024-07-08     2024-08-13
+4        2024-09-11     2024-07-17     2024-08-18
+===========================================================
+
+Success [derive_pheno_stages_from_haun]: Morphologically generated milestone rows from Haun counts. (Mode: df_wide)
+ -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 4 simulations.
+ -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 4 simulations.
+▶ start target df_pheno_haun
+● built target df_pheno_haun [0.12 seconds]
+Success [create_interp_pheno_dates]: Linearly generated 8 missing micro-milestone rows (Stages 4/7).
+▶ start target df_pheno_int
+● built target df_pheno_int [0.08 seconds]
+
+[!] NOTICE: Contrasting Dates Detected for Identical Stages
+    Applying Truth Hierarchy (Raw > Haun > Int) to resolve. Affected simulations:
+            SimulationName Wheat.Phenology.Stage               Date_Clash
+1    Gnarwarre2024CvBigRed                     4 2024-07-19 vs 2024-07-19
+2    Gnarwarre2024CvIllabo                     4 2024-07-05 vs 2024-07-10
+3 Gnarwarre2024CvSunmaster                     4 2024-07-08 vs 2024-07-26
+4  Gnarwarre2024CvZanzibar                     4 2024-07-17 vs 2024-07-29
+  Source_Clash
+1  Haun vs Int
+2  Haun vs Int
+3  Haun vs Int
+4  Haun vs Int
+Success [merge_and_qc_pheno]: Master timeline assembled. Retained 28 strictly chronological stage events.
+▶ start target df_pheno_final
+● built target df_pheno_final [0.11 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 28 events into master observations under column 'Wheat.Phenology.Stage'.
+▶ start target df_obs_plus_pheno
+● built target df_obs_plus_pheno [0.35 seconds]
+Success [format_apsim_pheno_params]: Translated 4 simulations into wide APSIM parameter format.
+▶ start target df_pheno_input_param
+● built target df_pheno_input_param [0.08 seconds]
+
+============================================================
+ ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
+============================================================
+ -> SUCCESS      : 4 valid HI values generated.
+ -> VALUE RANGE  : 0.389 to 0.449
+ -> QC STATUS    : PASS (All HI values <= 1.0)
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_plus_hi
+● built target df_obs_plus_pheno_plus_hi [0.06 seconds]
+▶ start target msg_pheno_param_saved
+● built target msg_pheno_param_saved [0.13 seconds]
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+▶ start target df_obs_plus_pheno_hi_amounts
+● built target df_obs_plus_pheno_hi_amounts [0.07 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -> STRATEGY     : Asynchronous Max Date Search
+ -> OVERALL SPAN : 2024-11-29 to 2024-12-05
+ -> WARNING      : Max difference between harvest variables is 6 days.
+ -> BREAKDOWN    : Latest recorded date per variable across the trial:
+      - HarvestIndex              : 2024-12-05
+      - Wheat.AboveGround.Wt      : 2024-12-05
+      - Wheat.Grain.Wt            : 2024-12-05
+------------------------------------------------------------
+
+▶ start target df_obs_final
+● built target df_obs_final [0.13 seconds]
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+▶ start target qc_apsim_observed
+● built target qc_apsim_observed [0.1 seconds]
+Success [save_df_to_excel]: Exported 174 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Gnarwarre2024_Observed.xlsx' (Sheet: 'Observed').
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.2 seconds]
+▶ start target haun_input_checked
+● built target haun_input_checked [0.06 seconds]
+
+----------------------------------------------------------------------
+ 📋 EXTRACTION SUMMARY: Gnarwarre2024_population.csv
+----------------------------------------------------------------------
+   -> 'Wheat.SowingData.Population': Extracted 4 records | Range [95 to 152.78]
+----------------------------------------------------------------------
+💾 Success: Exported 4 valid rows and 2 columns.
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.1 seconds]
+
+======================================================================
+ 🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
+======================================================================
+ -> Checking: Gnarwarre2024_ConstantPhenology.csv 
+ -> Checking: Gnarwarre2024_GermDatesInput.csv 
+======================================================================
+
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.12 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+▶ start target check_depend
+✅ Pre-flight check passed: All required APSIM dependencies found.
+● built target check_depend [0.02 seconds]
+▶ start target encrypted_zip_artifact
+Encrypting archive...
+✅ Successfully created password-protected archive: Observed.zip
+● built target encrypted_zip_artifact [0.16 seconds]
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+▶ start target verify_data_backup
+● built target verify_data_backup [0.03 seconds]
+▶ end pipeline [4.32 seconds]
+There were 17 warnings (use warnings() to see them)
