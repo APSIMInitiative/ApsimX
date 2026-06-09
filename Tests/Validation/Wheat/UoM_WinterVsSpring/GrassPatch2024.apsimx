@@ -336,7 +336,7 @@
                         "[Sowing].Script.CultivarName = Osprey",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 92"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -354,7 +354,7 @@
                         "[Sowing].Script.CultivarName = Rosella",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 99"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -372,7 +372,7 @@
                         "[Sowing].Script.CultivarName = Whistler",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 96"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -390,7 +390,7 @@
                         "[Sowing].Script.CultivarName = Wylah",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 89"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -408,7 +408,7 @@
                         "[Sowing].Script.CultivarName = Wedgetail",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 98"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -426,7 +426,7 @@
                         "[Sowing].Script.CultivarName = Kittyhawk",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 94"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -444,7 +444,7 @@
                         "[Sowing].Script.CultivarName = Illabo",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 84"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -462,7 +462,7 @@
                         "[Sowing].Script.CultivarName = Mowhawk",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 91"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -480,7 +480,7 @@
                         "[Sowing].Script.CultivarName = Meering",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 54"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -498,7 +498,7 @@
                         "[Sowing].Script.CultivarName = Janz",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 56"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -516,7 +516,7 @@
                         "[Sowing].Script.CultivarName = Yitpi",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 61"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -534,7 +534,7 @@
                         "[Sowing].Script.CultivarName = Wyalkatchem",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 54"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -552,7 +552,7 @@
                         "[Sowing].Script.CultivarName = Gregory",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 54"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -570,7 +570,7 @@
                         "[Sowing].Script.CultivarName = Mace",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 63"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -588,7 +588,7 @@
                         "[Sowing].Script.CultivarName = Scepter",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 71"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -606,7 +606,7 @@
                         "[Sowing].Script.CultivarName = Sunmaster",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false",
-                        "[Sowing].Script.Population = 111"
+                        "[Sowing].Script.Population = 58"
                       ],
                       "Paths": null,
                       "Values": null,
