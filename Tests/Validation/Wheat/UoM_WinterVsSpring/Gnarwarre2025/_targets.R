@@ -251,6 +251,18 @@ list(
     ),
     format = "file"
   ),
+  
+  tar_target(
+    name = exported_pop_csv,
+    command = print_csv_with_select_obs(
+      df_in         = qc_apsim_observed, # Simulated dependency: replace with your actual final df
+      file_name_out = file.path(paste0(config$proj_name, "_population.csv")),
+      select_vars   = c("Wheat.SowingData.Population"),
+      primary_key   = "SimulationName" # Explicitly utilizing the default we set up
+    ),
+    format = "file" # <--- Crucial: Tells {targets} to watch the physical CSV file!
+  ),
+  
   tar_target(
     name = msg_obs_saved,
     command = save_df_to_excel(

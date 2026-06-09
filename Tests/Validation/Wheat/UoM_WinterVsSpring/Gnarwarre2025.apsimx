@@ -343,7 +343,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = Illabo",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 126"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -360,7 +361,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = BigRed",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 130"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -377,7 +379,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = Stockade",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 129"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -394,7 +397,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = Sunmaster",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 159"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -411,7 +415,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = Zanzibar",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 167"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -428,7 +433,8 @@
                         "[Clock].StartDate = 2025-04-23",
                         "[Sowing].Script.CultivarName = Illabo",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 164"
                       ],
                       "Paths": null,
                       "Values": null,
