@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -9,7 +10,7 @@ using System.Linq;
 namespace Models.CLEM.Reporting
 {
     /// <summary>
-    /// A report class for writing output to the data store.
+    /// A report class for writing pasture pool output to the data store.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
@@ -17,10 +18,10 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Description("This report provides pasture details as well as reporting the properties of all pasture pools present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
-    public class ReportPasturePoolDetails : Models.Report
+    public class ReportPasturePoolDetails : Report, ICLEMUI
     {
         /// <summary>
         /// Per ha
@@ -120,11 +121,13 @@ namespace Models.CLEM.Reporting
         [Description("Dry matter digestibility (DMD) of each pool")]
         public bool ReportPoolsDMD { get; set; }
 
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
             List<string> variableNames = new List<string>();
@@ -164,19 +167,18 @@ namespace Models.CLEM.Reporting
                 {
                     for (int j = 0; j <= 12; j++)
                     {
-                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{poolVariable}.{j,0:D2}");
+                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{poolVariable}.{j}");
                     }
                 }
             }
 
-            // sort
             variableNames = variableNames.OrderBy(a => a).ToList();
             variableNames.Insert(0, "[Clock].Today as Date");
             VariableNames = variableNames.ToArray();
 
             if (EventNames == null || EventNames.Count() == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMAnimalSell" }; //CLEMEvents.CLEMHerdSummary
+                EventNames = new string[] { "[Clock].CLEMEvents.CLEMAnimalSell" }; 
             }
 
             SubscribeToEvents();
