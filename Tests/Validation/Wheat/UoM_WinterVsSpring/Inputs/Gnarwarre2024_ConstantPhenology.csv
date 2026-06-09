@@ -1,5 +1,5 @@
 SimulationName,[Grain].MaximumPotentialGrainSize.FixedValue,[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue,[Phenology].PhyllochronPpSensitivity.FixedValue,[Phenology].CAMP.FLNparams.MinLN,[Phenology].CAMP.FLNparams.PpLN,[Phenology].CAMP.FLNparams.VrnLN,[Phenology].CAMP.FLNparams.VxPLN,[Phenology].HeadEmergenceLongDayBase.FixedValue,[Phenology].HeadEmergencePpSensitivity.FixedValue,[Phenology].CAMP.EnvData.VrnTreatTemp,[Phenology].CAMP.EnvData.VrnTreatDuration
-Gnarwarre2024CvBigRed,0.041,22,0.247,7,4,2,0,50,5,6,60
-Gnarwarre2024CvIllabo,0.041,22,0.247,7,4,2,0,50,5,6,60
-Gnarwarre2024CvSunmaster,0.041,22,0.247,7,4,2,0,50,5,6,60
-Gnarwarre2024CvZanzibar,0.041,22,0.247,7,4,2,0,50,5,6,60
+Gnarwarre2024CvBigRed,,,0.247,7,4,2,0,50,5,6,60
+Gnarwarre2024CvIllabo,,,0.247,7,4,2,0,50,5,6,60
+Gnarwarre2024CvSunmaster,,,0.247,7,4,2,0,50,5,6,60
+Gnarwarre2024CvZanzibar,,,0.247,7,4,2,0,50,5,6,60
