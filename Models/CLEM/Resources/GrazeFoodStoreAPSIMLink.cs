@@ -14,7 +14,8 @@ using System.Linq;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// This stores the parameters for a GrazeFoodType that links directly to an APSIM paddock containing forages for grazing
+    /// This stores the parameters for a GrazeFoodType that links directly to an APSIM paddock containing forages for
+    /// grazing
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
@@ -204,19 +205,19 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double StartingAmount { get; set; } = 0;
 
-        private double amount = 0;
+        //private double amount = 0;
 
-        /// <summary>
-        /// Amount (kg total)
-        /// </summary>
-        [JsonIgnore]
-        public double Amount
-        {
-            get
-            {
-                return amount;  // Set in update paddock in PastureReady event
-            }
-        }
+        ///// <summary>
+        ///// Amount (kg total)
+        ///// </summary>
+        //[JsonIgnore]
+        //public double Amount
+        //{
+        //    get
+        //    {
+        //        return amount;  // Set in update paddock in PastureReady event
+        //    }
+        //}
 
         /// <summary>
         /// The biomass per hectare of pasture available
@@ -229,7 +230,7 @@ namespace Models.CLEM.Resources
                 {
                     return 0;
                 }
-                return Amount / paddockInfo.Area;
+                return AmountAvailable / paddockInfo.Area;
             }
         }
 
@@ -321,7 +322,7 @@ namespace Models.CLEM.Resources
             paddockInfo.ZeroRemoval();
 
             // request available to ruminants (modified from Stock.RequestAvailableToAnimal())
-            amount = 0;
+            double amount = 0;
             //double tempDMD = 0;
             //double tempN = 0;
 
@@ -360,6 +361,8 @@ namespace Models.CLEM.Resources
             // ToDo: check units. Consumable says it is kg/ha not g/m^2 as in Stock code.
             amount *= paddockInfo.Area;
 
+            Set(amount);
+
             // do not return zero as there is always something there and zero affects calculations.
             TonnesPerHectareStartOfTimeStep = Math.Max(TonnesPerHectare, 0.01);
 
@@ -370,7 +373,10 @@ namespace Models.CLEM.Resources
 
         }
         
-        /// <summary>Event to remove the current daily intake from forage when CLEM is determining daily consumption for time step</summary>
+        /// <summary>
+        /// Event to remove the current daily intake from forage when CLEM is determining daily consumption for time
+        /// step
+        /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMDailyASPIMForageTake")]
@@ -392,7 +398,7 @@ namespace Models.CLEM.Resources
                 return;
             }
 
-            double shortfall = (Amount > 0) ? 1.0 : 0.0;
+            double shortfall = (AmountAvailable > 0) ? 1.0 : 0.0;
             //CurrentGrazingRequest.Provided = request.Required;
             //if (Amount > 0 && request.Required < Amount)
             //{
@@ -614,8 +620,8 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Compute biomass-weighted paddock quality (DMD and CP) from the forage inputs
-        /// and update the link's quality properties so they reflect current paddock state.
+        /// Compute biomass-weighted paddock quality (DMD and CP) from the forage inputs and update the link's quality
+        /// properties so they reflect current paddock state.
         /// </summary>
         private void UpdatePaddockQuality()
         {
@@ -697,16 +703,47 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
         {
-            var nestedGroups = forageProviders.Items.Select(a => new GrazeAPSIMForagePool(a))
-                .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-                .Select(groups => new FoodResourceStore(
-                    [..groups],
-                    greenAge,
-                    numberOfTimesteps
-                    )
-                ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+            if (paddockInfo?.Forages == null || paddockInfo.Forages.Count() == 0)
+                return [];
 
-            return nestedGroups.ToList();
+            var pools = Enumerable.Range(0, paddockInfo.Forages.Count())
+                .Select(i => forageProviders.ForageProvider(i))
+                .Where(provider => provider?.ForageObj != null)
+                .Where(provider =>
+                {
+                    var material = provider.ForageObj.Material;
+                    if (material == null)
+                        return false;
+
+                    double wt = material.Sum(m => m.Consumable.Wt);
+                    double live = material.Where(m => m.IsLive).Sum(m => m.Total.Wt);
+                    double dead = material.Where(m => !m.IsLive).Sum(m => m.Total.Wt);
+                    //return (live + dead) > 0.0;
+                    return wt > 0.0;
+                });
+
+            var pools2 = pools
+                .Select(provider => new GrazeAPSIMForagePool(provider)); // created a list of pools with their DMD values set from the forage model that had biomass present
+            //.GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
+            //.Select(groups => new FoodResourceStore(
+            //    [.. groups],
+            //    greenAge,
+            //    numberOfTimesteps
+            //    )
+            //).OrderByDescending(a => a.Details.DryMatterDigestibility);
+
+            return []; // pools.ToList();
+
+            //var nestedGroups = forageProviders.Providers.Select(a => new GrazeAPSIMForagePool(a))
+            //    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
+            //    .Select(groups => new FoodResourceStore(
+            //        [.. groups],
+            //        greenAge,
+            //        numberOfTimesteps
+            //        )
+            //    ).OrderByDescending(a => a.Details.DryMatterDigestibility);
+
+            //return nestedGroups.ToList();
 
             //IEnumerable<GrazeFoodStorePool> pasturePools;
             //pasturePools = Pools;
@@ -846,7 +883,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <inheritdoc/>>
+        /// <inheritdoc/>
         public void ApplyDailyIntakeReduction(double fractionReduced)
         {
             //// Adjust intake amounts due to a reduction identified elsewhere
@@ -928,11 +965,11 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException("Biomass cannot be removed from a linked APSIM paddock");
         }
 
-        /// <inheritdoc/>
-        public new void Set(double newAmount)
-        {
-            throw new NotImplementedException("Cannot modify state of linked APSIM paddock");
-        }
+        ///// <inheritdoc/>
+        //public new void Set(double newAmount)
+        //{
+        //    base.Set(newAmount) throw new NotImplementedException("Cannot modify state of linked APSIM paddock");
+        //}
 
         #endregion
 

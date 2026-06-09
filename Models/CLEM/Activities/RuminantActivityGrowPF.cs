@@ -965,6 +965,7 @@ namespace Models.CLEM.Activities
                 {
                     double toxaemiaRate = StdMath.SIG((ind.EBMAt70PctPregnant - ind.Weight.EmptyBodyMass) * 1.09 / ind.Weight.NormalisedForAge,
                                                        ind.Parameters.GrowPF_CP.ToxaemiaCoefficients);
+                    // TODO: calculate days since 0.7 preg
                     if (MathUtilities.IsLessThan(RandomNumberGenerator.Generator.NextDouble(), toxaemiaRate * ind.DaysPregnantInTimeStep))
                     {
                         ind.Died = true;
@@ -974,11 +975,14 @@ namespace Models.CLEM.Activities
 
                 // change in normal fetus weight across time step
                 int daysToEnd = Math.Min(ind.DaysPregnantInTimeStep - currentDays, smallestInterval);
-                double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays + daysToEnd))))) - normalWeightFetus;
+                //double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays + daysToEnd))))) - normalWeightFetus;
+                double deltaChangeNormFetusWeight = ind.ScaledBirthWeight * (ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1.0 / ind.Parameters.General.GestationLength.InDays)) * Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter_CP2 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.FetalNormWeightParameter2_CP3 * (1 - ind.ProportionOfPregnancy(currentDays))))) * daysToEnd;
 
                 // calculated after growth in time step to avoid issue of 0 in first step especially for larger time steps
                 double relativeConditionFetus = ind.Weight.Fetus.Amount / normalWeightFetus;
 
+                // breeder's nutritional levels impact on the fetal normal weight gain.
+                // rel cond and fetal normal weight / expected noremal birth weight
                 double CFPregnant = (ind.Weight.RelativeCondition - 1) * (normalWeightFetus / (ind.Parameters.General.BirthScalar[ind.NumberOfFetuses - 1] * ind.Weight.StandardReferenceWeight));
 
                 if (MathUtilities.IsGreaterThanOrEqual(ind.Weight.RelativeCondition, 1.0))
@@ -991,26 +995,13 @@ namespace Models.CLEM.Activities
                     ind.Weight.Fetus.Adjust(Math.Max(0.0, deltaChangeNormFetusWeight * ((ind.Parameters.GrowPF_CP.FetalGrowthPoorCondition_CP14[ind.NumberOfFetuses - 1] * CFPregnant) + 1)));
                 }
 
-                ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter2_CP7 * (1 - propOfPregnancy))))) + (ind.Weight.Fetus.Amount - normalWeightFetus));
+                ind.Weight.Conceptus.Set(ind.NumberOfFetuses * (ind.Parameters.GrowPF_CP.ConceptusWeightRatio_CP5 * ind.ScaledBirthWeight * Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter_CP6 * (1 - Math.Exp(ind.Parameters.GrowPF_CP.ConceptusWeightParameter2_CP7 * (1 - propOfPregnancy)))) + (ind.Weight.Fetus.Amount - normalWeightFetus)) );
 
                 if (propOfPregnancy > 0 && ind.Weight.ConceptusProtein.Amount == 0) 
                 {
+                    // only perform once when conditions met for first time checked
                     // conceptus fat and protein have not been tracked for this breeder to date, so set as default ensuring the number of fetuses are accounted for by using the expected protein content of the conceptus weight just calculated.
-
-                    //
-                    //
-                    //
-                    //  !!!!!!!!!!!!!!!!  NEEDS TO BE FIXED
-                    //
-                    //
-                    //
-                    //
-                    // ToDo: need to also set the amount of fat and protein of the conceptus at the current date as this is used to determine offspring fat and protein mass
-
                     ind.Weight.ConceptusProtein.Set(ind.Weight.Conceptus.Amount * ind.Parameters.GrowPF_CP.ConceptusProteinContent_CP11);
-                    // ToDo: calculate conceptus energy minus the conceptus protein energy
-                    // convert net energy to fat and update the conceptus fat.
-                    //double fat = ((birthWeight * newborn.Parameters.GrowPF_CP.ConceptusEnergyContent_CP8) - (newborn.Parameters.General.MJEnergyPerKgProtein * newborn.Weight.Protein.Amount)) / newborn.Parameters.General.MJEnergyPerKgFat
                     ind.Weight.ConceptusFat.Set(0);
                 }
 
@@ -1048,8 +1039,9 @@ namespace Models.CLEM.Activities
             if ((newborn.Mother?.Weight?.Fetus?.Amount??0) > 0)
             {
                 // mother has been through pregnancy and has conceptus fat and protein
-                newborn.Weight.Fat = new(newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusFat.Amount);
-                newborn.Weight.Protein = new(newborn, newborn.Mother.Weight.Fetus.Amount / newborn.Mother.Weight.Conceptus.Amount * newborn.Mother.Weight.ConceptusProtein.Amount);
+                newborn.Weight.Fat = new(newborn.Mother.Weight.ConceptusFat.Amount / newborn.Mother.NumberOfFetuses);
+                // Rattray 1974
+                newborn.Weight.Protein = new(newborn, 0.7 * newborn.Mother.Weight.ConceptusProtein.Amount / newborn.Mother.NumberOfFetuses);
             }
             // set fat and protein energy based on initial amounts
             newborn.Energy.Fat = new(newborn.Weight.Fat.Amount * newborn.Parameters.General.MJEnergyPerKgFat);
