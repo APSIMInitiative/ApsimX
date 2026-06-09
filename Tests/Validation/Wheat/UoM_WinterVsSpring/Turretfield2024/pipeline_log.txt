@@ -1,0 +1,355 @@
+here() starts at C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+▶ start target config
+● built target config [0.85 seconds]
+▶ start target tracked_raw_excel
+● built target tracked_raw_excel [0 seconds]
+▶ start target config_soil
+● built target config_soil [0 seconds]
+▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0 seconds]
+▶ start target df_simNameByCult
+● built target df_simNameByCult [0.02 seconds]
+
+======================================================================
+ ⚙️ ACTIVE PIPELINE CONFIGURATION 
+======================================================================
+$proj_name
+[1] "Turretfield2024"
+
+$folder_main
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_rawData
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Turretfield2024"
+
+$folder_met
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Met"
+
+$folder_inputs
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Inputs"
+
+$folder_observed
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed"
+
+$file_rawData_excel
+[1] "Turretfield_RawData_2024.xlsx"
+
+$file_saved_obs_excel
+[1] "Turretfield2024_Observed.xlsx"
+
+$file_SimNameByCultivar
+[1] "Turretfield2024_CultivarToSimName.csv"
+
+$file_metaData_observed
+[1] "Turretfield2024_observed_data_requirements.csv"
+
+$ref_date
+[1] "01/01/2024"
+
+$sheetExcel_weather
+[1] "Weather"
+
+$sheetExcel_haun
+[1] "Haun stage "
+
+$sheetExcel_soilWater
+[1] "Soil sampling"
+
+$file_zip_out
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed.zip"
+
+$file_pass
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/secret_pass.txt"
+
+$coord_thisLatLon
+       lat      lon
+1 -34.5435 138.8444
+
+$target_stagePerc
+[1] 50
+
+$target_betwStages
+[1] 0.5
+
+$var_name_stage
+[1] "apsim_stage_raw"
+
+$varName_addedToObserv
+[1] "Wheat.Phenology.Stage"
+
+$max_leaf_limit
+[1] 0.95
+
+$file_name_input_pheno
+[1] "Turretfield2024_PhenoDatesInput.csv"
+
+$file_name_input_haun
+[1] "Turretfield2024_HaunStagesInput.csv"
+
+======================================================================
+
+▶ start target log_active_config
+● built target log_active_config [0.01 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+Loading required package: rlang
+
+Attaching package: 'rlang'
+
+The following objects are masked from 'package:jsonlite':
+
+    flatten, unbox
+
+The following objects are masked from 'package:purrr':
+
+    %@%, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice
+
+
+======================================================================
+ ⚠️ GHOST ROWS DETECTED AND DELETED IN WEATHER DATA ⚠️ 
+======================================================================
+ File: Turretfield_RawData_2024.xlsx | Sheet: Weather
+ Action: 1 empty/invalid row(s) were scrubbed from the end of the file.
+ Note: APSIM will now run safely, but check the bottom of your raw Excel
+       sheet for stray spaces or accidental keystrokes.
+======================================================================
+
+▶ start target processed_met_data
+● built target processed_met_data [0.18 seconds]
+▶ start target raw_soil_tracker
+● built target raw_soil_tracker [0 seconds]
+▶ start target list_observed_dfs_raw
+● built target list_observed_dfs_raw [6.7 seconds]
+
+======================================================================
+ 🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
+======================================================================
+ -> Checking: Turretfield2024_ConstantPhenology.csv 
+ -> Checking: Turretfield2024_GermDatesInput.csv 
+======================================================================
+
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.22 seconds]
+▶ start target encrypted_zip_artifact
+Encrypting archive...
+✅ Successfully created password-protected archive: Observed.zip
+● built target encrypted_zip_artifact [0.26 seconds]
+▶ start target msg_met_saved
+● built target msg_met_saved [0 seconds]
+▶ start target df_soil_profile_clean
+[1m[22mNew names:
+[36m•[39m `pH (1:5 CaCl2)` -> `pH (1:5 CaCl2)...25`
+[36m•[39m `Total (Kjeldahl) Nitrogen` -> `Total (Kjeldahl) Nitrogen...31`
+[36m•[39m `Total (Kjeldahl) Nitrogen` -> `Total (Kjeldahl) Nitrogen...32`
+[36m•[39m `Total Phosphorus` -> `Total Phosphorus...33`
+[36m•[39m `Total Phosphorus` -> `Total Phosphorus...34`
+[36m•[39m `Phosphorus - Colwell` -> `Phosphorus - Colwell...35`
+[36m•[39m `Phosphorus Buffer Index - Colwell` -> `Phosphorus Buffer Index -
+  Colwell...38`
+[36m•[39m `Aluminium (KCl)` -> `Aluminium (KCl)...47`
+[36m•[39m `As received Moisture Content (2B1)` -> `As received Moisture Content
+  (2B1)...69`
+[36m•[39m `Silt` -> `Silt...70`
+[36m•[39m `Clay` -> `Clay...71`
+[36m•[39m `Hydrometer Texture (Calculated)` -> `Hydrometer Texture (Calculated)...77`
+[36m•[39m `Total (Kjeldahl) Nitrogen` -> `Total (Kjeldahl) Nitrogen...80`
+[36m•[39m `Sodium Adsorption Ratio` -> `Sodium Adsorption Ratio...81`
+[36m•[39m `Phosphorus - Colwell` -> `Phosphorus - Colwell...85`
+[36m•[39m `Phosphorus Buffer Index - Colwell` -> `Phosphorus Buffer Index -
+  Colwell...101`
+[36m•[39m `Sodium Adsorption Ratio` -> `Sodium Adsorption Ratio...107`
+[36m•[39m `Total Carbon (Combustion)` -> `Total Carbon (Combustion)...116`
+[36m•[39m `Total Carbon (Combustion)` -> `Total Carbon (Combustion)...117`
+[36m•[39m `Total Nitrogen (Combustion)` -> `Total Nitrogen (Combustion)...118`
+[36m•[39m `Total Nitrogen (Combustion)` -> `Total Nitrogen (Combustion)...119`
+[36m•[39m `Total Cadmium` -> `Total Cadmium...122`
+[36m•[39m `Total Chromium` -> `Total Chromium...123`
+[36m•[39m `Total Phosphorus` -> `Total Phosphorus...131`
+[36m•[39m `Total Lead` -> `Total Lead...132`
+[36m•[39m `Silt` -> `Silt...156`
+[36m•[39m `Clay` -> `Clay...157`
+[36m•[39m `Hydrometer Texture (Calculated)` -> `Hydrometer Texture (Calculated)...159`
+[36m•[39m `Air Dry Moisture Content (2A1)` -> `Air Dry Moisture Content (2A1)...173`
+[36m•[39m `pH (1:5 CaCl2)` -> `pH (1:5 CaCl2)...175`
+[36m•[39m `Air Dry Moisture Content (2A1)` -> `Air Dry Moisture Content (2A1)...177`
+[36m•[39m `Total Carbon (Combustion)` -> `Total Carbon (Combustion)...178`
+[36m•[39m `Total Carbon (Combustion)` -> `Total Carbon (Combustion)...179`
+[36m•[39m `Total Nitrogen (Combustion)` -> `Total Nitrogen (Combustion)...181`
+[36m•[39m `Total Nitrogen (Combustion)` -> `Total Nitrogen (Combustion)...182`
+[36m•[39m `As received Moisture Content (2B1)` -> `As received Moisture Content
+  (2B1)...188`
+[36m•[39m `Total Cadmium` -> `Total Cadmium...197`
+[36m•[39m `Total Chromium` -> `Total Chromium...198`
+[36m•[39m `Total Lead` -> `Total Lead...201`
+[36m•[39m `Aluminium (KCl)` -> `Aluminium (KCl)...208`
+
+======================================================================
+ ⚠️ NON-NUMERIC SOIL DATA DETECTED ⚠️ 
+======================================================================
+ The following entries could not be processed and were coerced to NA:
+ -> Var: 'Ammonium Nitrogen' | Depth: 40-60 | Rep: 1 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 60-80 | Rep: 1 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 100-120 | Rep: 1 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 60-80 | Rep: 2 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 80-100 | Rep: 2 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 40-60 | Rep: 2 | Found: '<0.60' (Forced to NA)
+ -> Var: 'Ammonium Nitrogen' | Depth: 60-80 | Rep: 2 | Found: '<0.60' (Forced to NA)
+======================================================================
+
+● built target df_soil_profile_clean [0.67 seconds]
+
+======================================================================
+ ⚠️ APPROXIMATE SAMPLE DATES APPLIED ⚠️
+======================================================================
+ Missing dates were patched using the 'SampleDateApprox' column.
+ Variables Affected:
+   -> Individual grain weight (mg)
+   -> Grain number (grains/m²)
+   -> Spike dry matter (g/m²)
+   -> Grain dry matter (g/m²)
+   -> Stem dry matter (g/m²)
+   -> Chaff dry matter (g/m²)
+   -> Dead leaf dry matter (g/m²)
+   -> Grean leaf dry matter (g/m²)
+   -> Estimated dry matter at PCDS 8.0 (g/m²)
+   -> Estimated dry matter at PCDS 10.0 (g/m²)
+   -> Plant population density (plants/m2)
+   -> Nitrogen percent green leaf leaf
+   -> WSC percent green leaf
+   -> nitrogen percent dead leaf
+   -> WSC percent dead leaf
+   -> nitrogen percent stem
+   -> WSC percent stem
+   -> nitrogen percent spike
+   -> WSC percent spike
+   -> Canopy height (cm)
+======================================================================
+
+
+======================================================================
+ ⚠️ YEAR MISMATCHES CORRECTED (Target Year: 2024) ⚠️
+======================================================================
+ Dates with mismatched years were found and forced to the target year:
+   -> Variable 'Stem dry matter (g/m²)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Stem dry matter (g/m²)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Stem dry matter (g/m²)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Stem dry matter (g/m²)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Spike dry matter (g/m²)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Spike dry matter (g/m²)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Spike dry matter (g/m²)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Spike dry matter (g/m²)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Dead leaf dry matter (g/m²)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Dead leaf dry matter (g/m²)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Dead leaf dry matter (g/m²)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Dead leaf dry matter (g/m²)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Grean leaf dry matter (g/m²)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Grean leaf dry matter (g/m²)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Grean leaf dry matter (g/m²)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Grean leaf dry matter (g/m²)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Estimated dry matter at PCDS 6.0 (g/m²)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Estimated dry matter at PCDS 6.0 (g/m²)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Estimated dry matter at PCDS 6.0 (g/m²)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Estimated dry matter at PCDS 6.0 (g/m²)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Nitrogen percent green leaf leaf' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Nitrogen percent green leaf leaf' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Nitrogen percent green leaf leaf' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Nitrogen percent green leaf leaf' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'WSC percent green leaf' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'WSC percent green leaf' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'WSC percent green leaf' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'WSC percent green leaf' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'nitrogen percent dead leaf' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'nitrogen percent dead leaf' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'nitrogen percent dead leaf' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'nitrogen percent dead leaf' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'WSC percent dead leaf' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'WSC percent dead leaf' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'WSC percent dead leaf' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'WSC percent dead leaf' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'nitrogen percent stem' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'nitrogen percent stem' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'nitrogen percent stem' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'nitrogen percent stem' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'WSC percent stem' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'WSC percent stem' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'WSC percent stem' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'WSC percent stem' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'nitrogen percent spike' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'nitrogen percent spike' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'nitrogen percent spike' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'nitrogen percent spike' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'WSC percent spike' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'WSC percent spike' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'WSC percent spike' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'WSC percent spike' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+   -> Variable 'Canopy height (cm)' has an incorrect date 31/08/2026 was corrected to 31/08/2024
+   -> Variable 'Canopy height (cm)' has an incorrect date 09/09/2026 was corrected to 09/09/2024
+   -> Variable 'Canopy height (cm)' has an incorrect date 03/09/2026 was corrected to 03/09/2024
+   -> Variable 'Canopy height (cm)' has an incorrect date 06/09/2026 was corrected to 06/09/2024
+======================================================================
+
+▶ start target list_observed_dfs_clean
+● built target list_observed_dfs_clean [0.33 seconds]
+Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
+▶ start target final_apsim_observed
+● built target final_apsim_observed [0.22 seconds]
+
+============================================================
+ ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
+============================================================
+ -> SUCCESS      : 16 valid HI values generated.
+ -> VALUE RANGE  : 0.322 to 0.425
+ -> QC STATUS    : PASS (All HI values <= 1.0)
+------------------------------------------------------------
+
+▶ start target df_obs_plus_hi
+● built target df_obs_plus_hi [0.07 seconds]
+▶ start target df_obs_plus_hi_amounts
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+● built target df_obs_plus_hi_amounts [0.06 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -> STRATEGY     : Asynchronous Max Date Search
+ -> OVERALL SPAN : 2024-11-13 to 2024-11-13
+ -> STATUS       : All reference variables share the exact same harvest date.
+------------------------------------------------------------
+
+▶ start target df_obs_plus_hi_amounts_harv
+● built target df_obs_plus_hi_amounts_harv [0.13 seconds]
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+▶ start target qc_apsim_observed
+● built target qc_apsim_observed [0.09 seconds]
+▶ start target msg_obs_saved
+✅ Successfully saved formatted observed data to: C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Turretfield2024_Observed.xlsx
+● built target msg_obs_saved [0.16 seconds]
+
+----------------------------------------------------------------------
+ 📋 EXTRACTION SUMMARY: Turretfield2024_population.csv
+----------------------------------------------------------------------
+   -> '[Wheat].Leaf.StemPopulation': Extracted 16 records | Range [104.33 to 141.73]
+----------------------------------------------------------------------
+💾 Success: Exported 16 valid rows and 2 columns.
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.06 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target verify_dependencies
+● built target verify_dependencies [0.02 seconds]
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+▶ start target verify_data_backup
+● built target verify_data_backup [0.02 seconds]
+▶ end pipeline [11.4 seconds]
+There were 15 warnings (use warnings() to see them)
