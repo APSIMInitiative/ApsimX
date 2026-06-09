@@ -8854,7 +8854,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 122",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8871,7 +8871,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = BigRed",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 99",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8888,7 +8888,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 96",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8905,7 +8905,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 116",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8922,7 +8922,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = Zanzibar",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 127",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8939,7 +8939,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 119",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8956,7 +8956,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 130",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8973,7 +8973,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 128",
+                        "[Sowing].Script.Population = 131",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],

@@ -412,7 +412,7 @@ list(
   ),
   
   tar_target(
-    name = exported_pheno_csv,
+    name = exported_pop_csv,
     command = print_csv_with_select_obs(
       df_in         = qc_apsim_observed_harv, # Simulated dependency: replace with your actual final df
       file_name_out = file.path(paste0(config$proj_name, "_population.csv")),

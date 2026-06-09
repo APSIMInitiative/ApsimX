@@ -355,6 +355,17 @@ list(
     )
   ),
   
+  tar_target(
+    name = exported_pop_csv,
+    command = print_csv_with_select_obs(
+      df_in         = qc_apsim_observed_harv, # Simulated dependency: replace with your actual final df
+      file_name_out = file.path(paste0(config$proj_name, "_population.csv")),
+      select_vars   = c("[Wheat].Leaf.StemPopulation"),
+      primary_key   = "SimulationName" # Explicitly utilizing the default we set up
+    ),
+    format = "file" # <--- Crucial: Tells {targets} to watch the physical CSV file!
+  ),
+  
   # ----------------------------------------------------------------------------
   # PHASE F: EXPORT & VALIDATION
   # ----------------------------------------------------------------------------
