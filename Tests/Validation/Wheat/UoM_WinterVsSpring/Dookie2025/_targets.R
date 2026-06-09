@@ -159,7 +159,7 @@ list(
   # Soil data
   # revised data from Juan 10-Jun-26
   tar_target(
-    name = soil_initial_cond,
+    name = soil_water_cond,
     command = read_soil_data(
       folder          = config$folder_rawData,
       file            = "UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx",
@@ -179,7 +179,7 @@ list(
       ),
       col_depth_from  = "start_depth_m", # Optional if this matches the default
       col_depth_to    = "end_depth_m",    # Optional if this matches the default
-      log_file_name   = paste0(config$proj_name,"_soil_initial_cond.csv")
+      log_file_name   = paste0(config$proj_name,"_soil_water_cond.csv")
     )
   ),
   
