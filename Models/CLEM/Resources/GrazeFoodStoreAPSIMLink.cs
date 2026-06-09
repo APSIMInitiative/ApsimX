@@ -417,7 +417,7 @@ namespace Models.CLEM.Resources
 
             // quick exit if nothing required
             double required = (request.AdditionalDetails as RuminantActivityGrazePastureHerd).DailyPastureRequired * shortfall;
-            if (required <= 0.0)
+            if (required <= 1.0e-9)
             {
                 // clear stored daily removals
                 dailyRemovalByClass = new double[0];
