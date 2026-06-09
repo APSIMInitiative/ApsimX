@@ -335,7 +335,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Osprey",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -352,7 +353,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Rosella",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -369,7 +371,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Whistler",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -386,7 +389,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Wylah",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -403,7 +407,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Wedgetail",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -420,7 +425,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Kittyhawk",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -437,7 +443,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Illabo",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -454,7 +461,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Mowhawk",
                         "[ManagementSpring].Enabled = false",
-                        "[ManagementWinter].Enabled = true"
+                        "[ManagementWinter].Enabled = true",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -471,7 +479,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Meering",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -488,7 +497,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Janz",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -505,7 +515,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Yitpi",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -522,7 +533,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Wyalkatchem",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -539,7 +551,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Gregory",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -556,7 +569,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Mace",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -573,7 +587,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Scepter",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -590,7 +605,8 @@
                         "[Clock].StartDate = 2024-04-01",
                         "[Sowing].Script.CultivarName = Sunmaster",
                         "[ManagementSpring].Enabled = true",
-                        "[ManagementWinter].Enabled = false"
+                        "[ManagementWinter].Enabled = false",
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1661,7 +1677,15 @@
                         44.4647758462946,
                         49.7681607418856
                       ],
-                      "CEC": null,
+                      "CEC": [
+                        12.5775,
+                        14.905080000000002,
+                        13.786550000000002,
+                        13.570900000000002,
+                        13.1841,
+                        12.820720000000001,
+                        14.48319
+                      ],
                       "ECMetadata": [
                         "Measured",
                         "Measured",
@@ -1672,7 +1696,15 @@
                         "Measured"
                       ],
                       "CLMetadata": null,
-                      "CECMetadata": null,
+                      "CECMetadata": [
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated",
+                        "Calculated"
+                      ],
                       "ESPMetadata": [
                         "C",
                         "C",
