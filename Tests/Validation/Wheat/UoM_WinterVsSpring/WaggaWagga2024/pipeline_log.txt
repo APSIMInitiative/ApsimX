@@ -1,0 +1,344 @@
+here() starts at C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+▶ start target config
+● built target config [0.84 seconds]
+▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0.01 seconds]
+▶ start target df_simNameByCult
+● built target df_simNameByCult [0.02 seconds]
+▶ start target tracked_raw_excel
+● built target tracked_raw_excel [0 seconds]
+📖 Reading soil data from: 2024_WaggaWagga_PHDA24WARI2.xlsx (Sheet: GravimetricMoistureNearSowing)
+💾 Success: Exported cleaned soil profile to 'WaggaWagga2024_soil_gravWaterContent_data.csv'
+▶ start target soil_gravWaterContent_data
+● built target soil_gravWaterContent_data [0.3 seconds]
+Loading required package: rlang
+
+Attaching package: 'rlang'
+
+The following objects are masked from 'package:jsonlite':
+
+    flatten, unbox
+
+The following objects are masked from 'package:purrr':
+
+    %@%, flatten, flatten_chr, flatten_dbl, flatten_int, flatten_lgl,
+    flatten_raw, invoke, splice
+
+▶ start target processed_met_data
+● built target processed_met_data [0.11 seconds]
+📖 Reading soil data from: 2024_WaggaWagga_PHDA24WARI2.xlsx (Sheet: Soil sampling)
+
+--- PIPELINE INTERVENTION: DUPLICATE COLUMNS ---
+   -> Column 'Silt' found 2 times, but ALL instances appear empty. Defaulted to Index 60.
+   -> Column 'Clay' found 2 times, but ALL instances appear empty. Defaulted to Index 61.
+   -> Column 'Total Carbon (Combustion)' found 4 times. Safely extracted Index 169.
+------------------------------------------------
+💾 Success: Exported cleaned soil profile to 'WaggaWagga2024_soil_profile_data.csv'
+▶ start target soil_profile_data
+● built target soil_profile_data [1.78 seconds]
+
+======================================================================
+ ⚙️ ACTIVE PIPELINE CONFIGURATION 
+======================================================================
+$proj_name
+[1] "WaggaWagga2024"
+
+$folder_thisScript
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_rawData
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/WaggaWagga2024"
+
+$folder_apsimx
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring"
+
+$folder_met
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Met"
+
+$folder_inputs
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Inputs"
+
+$folder_observed
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed"
+
+$file_rawData_excel
+[1] "2024_WaggaWagga_PHDA24WARI2.xlsx"
+
+$file_saved_obs_excel
+[1] "WaggaWagga2024_Observed.xlsx"
+
+$file_SimNameByCultivar
+[1] "WaggaWagga2024_CultivarToSimName.csv"
+
+$file_metaData_observed
+[1] "WaggaWagga2024_observed_data_requirements.csv"
+
+$ref_date
+[1] "01/01/2024"
+
+$sheetExcel_weather
+[1] "Weather"
+
+$sheetExcel_haun
+[1] "Haun stage "
+
+$sheetExcel_soilWater
+[1] "GravimetricMoistureNearSowing"
+
+$sheet_name_observed
+[1] "Observed"
+
+$file_zip_out
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed.zip"
+
+$file_pass
+[1] "C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/secret_pass.txt"
+
+$coord_thisLatLon
+      lat     lon
+1 -35.041 147.319
+
+$target_stagePerc
+[1] 50
+
+$target_betwStages
+[1] 0.5
+
+$var_df_name_stage
+[1] "apsim_stage_raw"
+
+$max_leaf_limit
+[1] 0.95
+
+$pcd_stages_to_extract
+[1] "pcds_3_emergPlants_Perc" "pcds_6_flagLeaf"        
+[3] "pcds_8_anthesis"        
+
+$file_name_input_pheno
+[1] "WaggaWagga2024_PhenoDatesInput.csv"
+
+$file_name_input_haun
+[1] "WaggaWagga2024_HaunStagesInput.csv"
+
+$file_name_new_met
+[1] "WaggaWagga2024.met"
+
+======================================================================
+
+▶ start target log_active_config
+● built target log_active_config [0 seconds]
+▶ start target tracked_excel_files
+● built target tracked_excel_files [0 seconds]
+📖 Reading soil data from: PAW estimates Wagga 2024 JRH.xlsx (Sheet: PAW estimates)
+💾 Success: Exported cleaned soil profile to 'WaggaWagga2024_soil_water_data.csv'
+▶ start target soil_water_data
+● built target soil_water_data [0.24 seconds]
+
+======================================================================
+ 🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
+======================================================================
+ -> Checking: WaggaWagga2024_ConstantPhenology.csv 
+ -> Checking: WaggaWagga2024_GermDatesInput.csv 
+======================================================================
+
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.25 seconds]
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : 2024_WaggaWagga_PHDA24WARI2.xlsx
+ Sheet : 'PCDS 10.0 harvest'
+ Target: 'Harvest index' -> 'HarvestIndex'
+ Error : None of the requested columns ('Harvest index') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+▶ start target list_observed_dfs_raw
+● built target list_observed_dfs_raw [6.02 seconds]
+▶ start target msg_met_saved
+● built target msg_met_saved [0 seconds]
+Encrypting archive...
+✅ Successfully created password-protected archive: Observed.zip
+▶ start target encrypted_zip_artifact
+● built target encrypted_zip_artifact [0.31 seconds]
+▶ start target list_observed_dfs
+
+----------------------------------------------------------------------
+ 📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
+----------------------------------------------------------------------
+ -> Input Source  : 'pcds_3_emergPlants'
+ -> Target Column : '[Wheat].Phenology.Emerging.DateToProgress' (Internal variable preserved)
+ -> Output Target : 'pcds_3_emergPlants_Perc' (Appended as new row)
+ -> Action        : Converted raw counts to 0-100% scale per SimulationName
+----------------------------------------------------------------------
+
+● built target list_observed_dfs [0.13 seconds]
+▶ start target df_pheno_haun
+
+===========================================================
+           HAUN DERIVATION INTERNAL TRACE LOGIC            
+===========================================================
+                         SimulationName LeafNumberMaximum FLN LeafNumberLimit
+1      WaggaWagga2024CvGregorySow13-May          10.63636  11       10.104545
+2       WaggaWagga2024CvIllaboSow22-Apr          11.39167  11       10.822083
+3         WaggaWagga2024CvJanzSow13-May          11.00000  11       10.450000
+4    WaggaWagga2024CvKittyhawkSow22-Apr          11.87500  12       11.281250
+5         WaggaWagga2024CvMaceSow13-May          10.00000  10        9.500000
+6      WaggaWagga2024CvMeeringSow13-May          10.89167  11       10.347083
+7      WaggaWagga2024CvMowhawkSow22-Apr          11.50000  12       10.925000
+8       WaggaWagga2024CvOspreySow22-Apr          12.25000  12       11.637500
+9      WaggaWagga2024CvRosellaSow22-Apr          11.86000  12       11.267000
+10     WaggaWagga2024CvScepterSow13-May          10.10000  10        9.595000
+11   WaggaWagga2024CvSunmasterSow13-May          10.00000  10        9.500000
+12   WaggaWagga2024CvWedgetailSow22-Apr          11.33333  11       10.766667
+13    WaggaWagga2024CvWhistlerSow22-Apr          11.63636  12       11.054545
+14 WaggaWagga2024CvWyalkatchemSow13-May          10.25000  10        9.737500
+15       WaggaWagga2024CvWylahSow22-Apr          12.00000  12       11.400000
+16       WaggaWagga2024CvYitpiSow13-May          10.09091  10        9.586364
+   Date_MaxLeafLimit Date_Stage4_DR Date_Stage5_TS
+1         2024-08-30     2024-07-07     2024-08-11
+2         2024-08-31     2024-06-02     2024-08-02
+3         2024-09-04     2024-07-08     2024-08-11
+4         2024-09-05     2024-06-26     2024-08-14
+5         2024-08-29     2024-06-27     2024-08-01
+6         2024-09-01     2024-07-07     2024-08-11
+7         2024-08-26     2024-06-27     2024-08-07
+8         2024-09-07     2024-06-28     2024-08-12
+9         2024-09-10     2024-06-17     2024-08-11
+10        2024-08-30     2024-06-28     2024-08-04
+11        2024-08-31     2024-06-28     2024-08-05
+12        2024-09-06     2024-06-02     2024-08-08
+13        2024-08-31     2024-06-25     2024-08-10
+14        2024-08-30     2024-06-26     2024-08-03
+15        2024-09-02     2024-06-28     2024-08-13
+16        2024-09-01     2024-06-25     2024-08-04
+===========================================================
+
+Success [derive_pheno_stages_from_haun]: Morphologically generated milestone rows from Haun counts. (Mode: list_dfs)
+ -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 16 simulations.
+ -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 16 simulations.
+● built target df_pheno_haun [0.16 seconds]
+✅ Successfully extracted 3 target dataframes.
+▶ start target list_pcds_extracted
+● built target list_pcds_extracted [0.01 seconds]
+Success [get_pheno_dates_from_pcd_list]: Standardized 48 raw records at 50% progress.
+▶ start target df_pheno_raw
+● built target df_pheno_raw [0.14 seconds]
+Success [create_interp_pheno_dates]: Linearly generated 32 missing micro-milestone rows (Stages 4/7).
+▶ start target df_pheno_int
+● built target df_pheno_int [0.08 seconds]
+▶ start target df_pheno_final
+
+[!] NOTICE: Contrasting Dates Detected for Identical Stages
+    Applying Truth Hierarchy (Raw > Haun > Int) to resolve. Affected simulations:
+                         SimulationName Wheat.Phenology.Stage
+1      WaggaWagga2024CvGregorySow13-May                     4
+2       WaggaWagga2024CvIllaboSow22-Apr                     4
+3         WaggaWagga2024CvJanzSow13-May                     4
+4    WaggaWagga2024CvKittyhawkSow22-Apr                     4
+5         WaggaWagga2024CvMaceSow13-May                     4
+6      WaggaWagga2024CvMeeringSow13-May                     4
+7      WaggaWagga2024CvMowhawkSow22-Apr                     4
+8       WaggaWagga2024CvOspreySow22-Apr                     4
+9      WaggaWagga2024CvRosellaSow22-Apr                     4
+10     WaggaWagga2024CvScepterSow13-May                     4
+11   WaggaWagga2024CvSunmasterSow13-May                     4
+12   WaggaWagga2024CvWedgetailSow22-Apr                     4
+13    WaggaWagga2024CvWhistlerSow22-Apr                     4
+14 WaggaWagga2024CvWyalkatchemSow13-May                     4
+15       WaggaWagga2024CvWylahSow22-Apr                     4
+16       WaggaWagga2024CvYitpiSow13-May                     4
+                 Date_Clash Source_Clash
+1  2024-07-07 vs 2024-07-18  Haun vs Int
+2  2024-06-02 vs 2024-07-04  Haun vs Int
+3  2024-07-08 vs 2024-07-18  Haun vs Int
+4  2024-06-26 vs 2024-07-07  Haun vs Int
+5  2024-06-27 vs 2024-07-15  Haun vs Int
+6  2024-07-07 vs 2024-07-19  Haun vs Int
+7  2024-06-27 vs 2024-07-02  Haun vs Int
+8  2024-06-28 vs 2024-07-05  Haun vs Int
+9  2024-06-17 vs 2024-07-06  Haun vs Int
+10 2024-06-28 vs 2024-07-16  Haun vs Int
+11 2024-06-28 vs 2024-07-18  Haun vs Int
+12 2024-06-02 vs 2024-07-06  Haun vs Int
+13 2024-06-25 vs 2024-07-03  Haun vs Int
+14 2024-06-26 vs 2024-07-16  Haun vs Int
+15 2024-06-28 vs 2024-07-05  Haun vs Int
+16 2024-06-25 vs 2024-07-19  Haun vs Int
+Success [merge_and_qc_pheno]: Master timeline assembled. Retained 96 strictly chronological stage events.
+● built target df_pheno_final [0.17 seconds]
+Success [apply_corrections_Wagga24]: Processed NDVI calendar years and back-filled Stage 6/8 timelines.
+▶ start target list_observed_clean
+● built target list_observed_clean [0.28 seconds]
+
+----------------------------------------------------------------------
+ 🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
+----------------------------------------------------------------------
+ The following phenology stages contained no data (100% NA) across all
+ simulations and were safely removed from the final APSIM output:
+   - [Wheat].Phenology.GrainFilling.DateToProgress
+----------------------------------------------------------------------
+
+Success [format_apsim_pheno_params]: Translated 16 simulations into wide APSIM parameter format.
+▶ start target df_pheno_input_param
+● built target df_pheno_input_param [0.11 seconds]
+   -> Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc, pcds_6_flagLeaf, pcds_8_anthesis]
+Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
+▶ start target df_obs_wide
+● built target df_obs_wide [0.38 seconds]
+▶ start target msg_pheno_param_saved
+● built target msg_pheno_param_saved [0.02 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 96 events into master observations under column 'Wheat.Phenology.Stage'.
+▶ start target df_obs_plus_pheno
+● built target df_obs_plus_pheno [0.37 seconds]
+Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+▶ start target df_obs_plus_pheno_with_amounts
+● built target df_obs_plus_pheno_with_amounts [0.07 seconds]
+
+============================================================
+ ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
+============================================================
+ -> STRATEGY     : Asynchronous Max Date Search
+ -> OVERALL SPAN : 2024-11-20 to 2024-11-20
+ -> STATUS       : All reference variables share the exact same harvest date.
+------------------------------------------------------------
+
+▶ start target df_obs_plus_pheno_harv
+● built target df_obs_plus_pheno_harv [0.13 seconds]
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+▶ start target qc_apsim_observed_harv
+● built target qc_apsim_observed_harv [0.1 seconds]
+Success [save_df_to_excel]: Exported 563 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/WaggaWagga2024_Observed.xlsx' (Sheet: 'Observed').
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.2 seconds]
+▶ start target haun_input_checked
+● built target haun_input_checked [0.06 seconds]
+
+----------------------------------------------------------------------
+ 📋 EXTRACTION SUMMARY: WaggaWagga2024_population.csv
+----------------------------------------------------------------------
+   -> '[Wheat].Leaf.StemPopulation': range [96.5 to 153.5]
+----------------------------------------------------------------------
+💾 Success: Exported 16 valid rows and 2 columns.
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.07 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target check_depend
+● built target check_depend [0.03 seconds]
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+▶ start target verify_data_backup
+● built target verify_data_backup [0.03 seconds]
+▶ end pipeline [13.65 seconds]
+There were 12 warnings (use warnings() to see them)
