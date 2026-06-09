@@ -526,7 +526,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 129"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -540,7 +540,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 142"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -554,7 +554,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 126"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -568,7 +568,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 134"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -582,7 +582,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 122"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -596,7 +596,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 142"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -610,7 +610,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 117"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -624,7 +624,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 132"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -638,7 +638,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 146"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -652,7 +652,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 143"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -666,7 +666,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 157"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -680,7 +680,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 148"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -694,7 +694,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 131"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -708,7 +708,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 141"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -722,7 +722,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 150"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -736,7 +736,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 163"
                       ],
                       "Paths": null,
                       "Values": null,

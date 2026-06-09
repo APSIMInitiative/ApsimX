@@ -1132,7 +1132,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Osprey",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 111"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1146,7 +1146,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Rosella",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 106"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1160,7 +1160,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Whistler",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 115"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1174,7 +1174,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wylah",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 128"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1188,7 +1188,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wedgetail",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 105"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1202,7 +1202,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Kittyhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 109"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1216,7 +1216,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 107"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1230,7 +1230,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mowhawk",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 118"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1244,7 +1244,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Meering",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 126"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1258,7 +1258,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Janz",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 113"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1272,7 +1272,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Yitpi",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 140"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1286,7 +1286,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Wyalkatchem",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 127"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1300,7 +1300,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Gregory",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 118"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1314,7 +1314,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Mace",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 135"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1328,7 +1328,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Scepter",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 134"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1342,7 +1342,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 200"
+                        "[Sowing].Script.Population = 105"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -1424,7 +1424,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2025-04-01T00:00:00",
-              "End": "2025-11-24T00:00:00",
+              "End": "2025-11-25T00:00:00",
               "Name": "Clock",
               "ResourceName": null,
               "Children": [],
@@ -1647,27 +1647,27 @@
                         0.15
                       ],
                       "DUL": [
-                        0.31,
-                        0.19,
-                        0.371,
-                        0.465,
-                        0.413,
-                        0.332,
-                        0.328,
-                        0.315,
-                        0.334,
+                        0.303,
+                        0.333,
+                        0.325,
+                        0.482,
+                        0.425,
+                        0.42,
+                        0.46,
+                        0.37,
+                        0.41,
                         0.31
                       ],
                       "SAT": [
-                        0.341,
-                        0.209,
-                        0.408,
-                        0.511,
-                        0.455,
-                        0.365,
-                        0.361,
-                        0.346,
-                        0.367,
+                        0.333,
+                        0.366,
+                        0.357,
+                        0.53,
+                        0.468,
+                        0.42,
+                        0.46,
+                        0.37,
+                        0.41,
                         0.342
                       ],
                       "KS": null,
@@ -1787,15 +1787,15 @@
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
-                            0.083,
-                            0.106,
-                            0.146,
+                            0.13,
                             0.151,
-                            0.19,
-                            0.223,
-                            0.222,
-                            0.218,
-                            0.22,
+                            0.162,
+                            0.233,
+                            0.289,
+                            0.312,
+                            0.32,
+                            0.31,
+                            0.33,
                             0.252
                           ],
                           "KL": [
@@ -2289,6 +2289,14 @@
                       "Thickness": null,
                       "InitialValues": null,
                       "Name": "CERESSoilTemperature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -8846,7 +8854,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = Illabo",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 122",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8863,7 +8871,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = BigRed",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 99",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8880,7 +8888,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 96",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8897,7 +8905,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 16-Apr",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 116",
                         "[ManagementSpring].Enabled = false",
                         "[ManagementWinter].Enabled = true"
                       ],
@@ -8914,7 +8922,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = Zanzibar",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 127",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8931,7 +8939,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = Sunmaster",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 119",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8948,7 +8956,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = UOM001_3_47",
-                        "[Sowing].Script.Population = 200",
+                        "[Sowing].Script.Population = 130",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -8965,7 +8973,7 @@
                       "Specifications": [
                         "[Sowing].Script.SowDate = 13-May",
                         "[Sowing].Script.CultivarName = UOM001_9_1",
-                        "[Sowing].Script.Population = 128",
+                        "[Sowing].Script.Population = 131",
                         "[ManagementSpring].Enabled = true",
                         "[ManagementWinter].Enabled = false"
                       ],
@@ -9232,27 +9240,27 @@
                         0.15
                       ],
                       "DUL": [
-                        0.31,
-                        0.19,
-                        0.371,
-                        0.465,
-                        0.413,
-                        0.332,
-                        0.328,
-                        0.315,
-                        0.334,
+                        0.303,
+                        0.333,
+                        0.325,
+                        0.482,
+                        0.425,
+                        0.42,
+                        0.46,
+                        0.37,
+                        0.41,
                         0.31
                       ],
                       "SAT": [
-                        0.341,
-                        0.209,
-                        0.408,
-                        0.511,
-                        0.455,
-                        0.365,
-                        0.361,
-                        0.346,
-                        0.367,
+                        0.333,
+                        0.366,
+                        0.357,
+                        0.53,
+                        0.468,
+                        0.42,
+                        0.46,
+                        0.37,
+                        0.41,
                         0.342
                       ],
                       "KS": null,
@@ -9372,15 +9380,15 @@
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
                           "LL": [
-                            0.083,
-                            0.106,
-                            0.146,
+                            0.13,
                             0.151,
-                            0.19,
-                            0.223,
-                            0.222,
-                            0.218,
-                            0.22,
+                            0.162,
+                            0.233,
+                            0.289,
+                            0.312,
+                            0.32,
+                            0.31,
+                            0.33,
                             0.252
                           ],
                           "KL": [
@@ -14853,15 +14861,15 @@
                           "Name": "Regression",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
