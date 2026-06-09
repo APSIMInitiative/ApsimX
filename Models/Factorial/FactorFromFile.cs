@@ -250,7 +250,7 @@ namespace Models.Factorial
                         else
                             columnCommandType.Add(CommandType.Descriptor);
                     }
-                    else if (typeof(IModel).IsAssignableFrom(variable.DataType))
+                    else if (typeof(IModel).IsAssignableFrom(variable.DataType) && variable.Object != null)
                     {
                         columnCommandType.Add(CommandType.Replacement);
                     }

@@ -83,9 +83,21 @@ public partial class SetPropertyCommand : IModelCommand
                 // If "null" was specified then set the object value to null. Otherwise convert
                 // the value into correct type.
                 if (propertyValue == "null")
+                {
                     instance.Value = null;
+                }
+                else if (propertyValue.Contains('[') && propertyValue.Contains(']'))
+                {
+                    VariableComposite reference = relativeTo.Node.GetObject(propertyValue);
+                    if (reference != null)
+                        instance.Value = reference.Value;
+                    else
+                        throw new Exception($"Cannot find reference to {propertyValue} in set command {this}");
+                }
                 else
+                {
                     instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                }
             }
             else
             {
