@@ -338,8 +338,7 @@ namespace Models.Functions
             }
             else
             {
-                //throw new ArgumentException($"Unknown crop type: {CropType}");
-                Summary.WriteMessage(this, $"Unknown crop type: {CropType}", Core.MessageType.Error);
+                Summary?.WriteMessage(this, $"Unknown crop type: {CropType}", MessageType.Error);
             }
         }
 
@@ -508,6 +507,10 @@ namespace Models.Functions
             FrostHeatYield = 0;
             FrostEventNumber = 0;
             HeatEventNumber = 0;
+            FrostSensitivePeriodStartDAS = -1;
+            FrostSensitivePeriodEndDAS = -1;
+            HeatSensitivePeriodStartDAS = -1;
+            HeatSensitivePeriodEndDAS = -1;
         }
 
         /// <summary>Does the calculations of multiplers and sensitivities of frost and heat stresses.</summary>
