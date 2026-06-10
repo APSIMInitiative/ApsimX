@@ -11,7 +11,80 @@ using System.Text.Json.Serialization;
 namespace Models.Factorial
 {
     /// <summary>
-    /// This class permutates all child models by each other.
+    /// ## FactorFromFile
+    /// 
+    /// The FactorFromFile model allows the loading of a table of simulation modifications from a csv or excel file. 
+    /// This model is the first of its kind in APSIM and will generate a node structure within your file based on the 
+    /// input it is given. This allows the construction of complex experiment configurations, without needing to build 
+    /// it by hand within the APSIM interface.
+    /// 
+    /// ### Inputs
+    /// - Filepath to your file (.csv or .xlsx)
+    /// - Name of the sheet (if using .xlsx)
+    /// - Name of the column for labelling your simulations
+    /// 
+    /// ### Stucture of File
+    /// 
+    /// The structure of your table can follow the example below. Where one column acts as the name of that simulation 
+    /// ( **SimName** ), and that column name is given to the model in the interface. 
+    /// 
+    /// Columns that are text only are used as Simulation decriptors ( **ColumnLabel** ) and will be saved in the 
+    /// datastore and usable in graphing and other tools as filter options. 
+    /// 
+    /// To do a replacement of a model with another model ( **[ModelToReplace]** ) provide an APSIM link as the column 
+    /// name, and then another model link for each row in that column. This can also be used to copy a model from 
+    /// another apsim file, however that process can be slow if your experiment is very large.
+    /// 
+    /// To set a property on a model (**[Model].Property**), create an apsim link to the property as the column name 
+    /// and add a value in for each row. This value can be a number (with or without decimal places), text or an array 
+    /// of values (seperated by commas). Arrays should be bounded by quotations if using a csv file, as the commas need 
+    /// to be escaped.
+    /// 
+    /// Lastly for properties on a manager script ( **[Manager].Script.Property** ) the additional .Script. entry must 
+    /// be provided to reference the properties in the script. This is similar to other models in APSIM such as reports 
+    /// and operations. References to models can be passed in here as well by providing an APSIM link.
+    /// 
+    /// | SimName | ColumnLabel | [ModelToReplace]                             | [Model].Property | [Manager].Script.Property |
+    /// |---------|-------------|----------------------------------------------|------------------|---------------------------|
+    /// | Sim1    | First       | [Folder].ModelToCopy                         | 10               | 20                        |
+    /// | Sim2    | Second      | [Folder].ModelToCopy from anotherfile.apsimx | 20               | [SomeModelReference]      |
+    /// 
+    /// This table is converted to a list of APSIM commands that describe everything that must be done to the file in 
+    /// order to create the simulation modifications that you've provided. These commands are run whenever the file is 
+    /// loaded, run or the FactorFromFile is refreshed, and the currnetly open file is modified with read-only nodes. 
+    /// These generated nodes are not saved into your file, and are recreated whenever the file is openned again.
+    /// 
+    /// ```
+    /// add new CompositeFactor to [Factors].MyFactor name Sim1
+    /// [Factors].MyFactor.Sim1.DescriptorNames += ColumnLabel
+    /// [Factors].MyFactor.Sim1.DescriptorValues += First
+    /// [Factors].MyFactor.Sim1.Specifications += [ModelToReplace]
+    /// [Factors].MyFactor.Sim1.Specifications += [Model].Property=10
+    /// [Factors].MyFactor.Sim1.Specifications += [Manager].Script.Property=20
+    /// [Factors].MyFactor.Sim1.ReadOnly = true
+    /// add new CompositeFactor to [Factors].MyFactor name Sim2
+    /// [Factors].MyFactor.Sim2.DescriptorNames += ColumnLabel
+    /// [Factors].MyFactor.Sim2.DescriptorValues += Second
+    /// [Factors].MyFactor.Sim2.Specifications += [Folder].ModelToCopy from anotherfile.apsimx
+    /// [Factors].MyFactor.Sim2.Specifications += [Model].Property=20
+    /// [Factors].MyFactor.Sim2.Specifications += [Manager].Script.Property=[SomeModelReference]
+    /// [Factors].MyFactor.Sim2.ReadOnly = true
+    /// ```
+    /// 
+    /// In the end, you would end up with a file that looks something like this:
+    /// 
+    /// ```
+    /// Experiment
+    /// - Folder
+    /// - - ModelToCopy
+    /// - Factors
+    /// - - MyFactor (FactorFromFile)
+    /// - - - Sim1 (CompositeFactor)
+    /// - - - - ModelToCopy
+    /// - - - Sim2 (CompositeFactor)
+    /// - - - - ModelToCopy (from anotherfile.apsimx)
+    /// - Simulation
+    /// ```
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.QuadView")]
@@ -250,7 +323,7 @@ namespace Models.Factorial
                         else
                             columnCommandType.Add(CommandType.Descriptor);
                     }
-                    else if (typeof(IModel).IsAssignableFrom(variable.DataType) && variable.Object != null)
+                    else if (typeof(IModel).IsAssignableFrom(variable.DataType) && variable.Property == null)
                     {
                         columnCommandType.Add(CommandType.Replacement);
                     }
