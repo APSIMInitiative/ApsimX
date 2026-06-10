@@ -79,7 +79,7 @@ namespace Models.Forestry
                 var best = FitError(x[0], x[1], stemPopulation, basalArea, meanDBH, location);
                 var step = new[] { 0.8, Math.Max(1.0, x[1] * 0.2) };
 
-                var maxIters = 4000;
+                var maxIters = 6000;
                 var converged = false;
 
                 for (var iter = 0; iter < maxIters; iter++)
@@ -193,6 +193,20 @@ namespace Models.Forestry
         [Units("cm")]
         [Description("The size class interval for DBH")]
         public double SizeClassInterval { get; set; }
+
+        /// <summary>
+        /// Weibull Shape parameter
+        /// </summary>
+        [Units("")]
+        [Description("The value of the Weibull Shape Parameter for current stem size distribution")]
+        public double WeibullShape { get { return _weibull.Shape; }}
+
+        /// <summary>
+        /// Weibull Scale parameter
+        /// </summary>
+        [Units("")]
+        [Description("The value of the Weibull Scale Parameter for current stem size distribution")]
+        public double WeibullScale { get { return _weibull.Scale; } }
 
         /// <summary>
         /// Population in each of the DBH size classes.
