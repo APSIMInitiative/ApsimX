@@ -1,6 +1,10 @@
 {
   "$type": "Models.Core.Simulations, Models",
+<<<<<<< HEAD
   "Version": 213,
+=======
+  "Version": 216,
+>>>>>>> upstream
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -350,7 +354,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Mutdapilly9294Base",
                   "ResourceName": null,
                   "Children": [
@@ -3595,7 +3598,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Gatton9597Base",
                   "ResourceName": null,
                   "Children": [
@@ -6830,7 +6832,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Kyabram9597",
                   "ResourceName": null,
                   "Children": [
@@ -12312,7 +12313,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase93",
                           "ResourceName": null,
                           "Children": [
@@ -16499,7 +16499,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase94",
                           "ResourceName": null,
                           "Children": [
@@ -20649,7 +20648,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase91",
                           "ResourceName": null,
                           "Children": [
@@ -24788,7 +24786,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "Mutdapillybase93",
                           "ResourceName": null,
                           "Children": [
@@ -29010,7 +29007,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "MutdapillyBase94",
                           "ResourceName": null,
                           "Children": [
@@ -33163,7 +33159,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "MutdapillyBase91",
                           "ResourceName": null,
                           "Children": [
@@ -37300,7 +37295,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase93",
                           "ResourceName": null,
                           "Children": [
@@ -38982,7 +38976,7 @@
                           "Children": [
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Irrigated]",
+                              "Specification": "[FertilisationSchedule]",
                               "Name": "Fertiliser",
                               "ResourceName": null,
                               "Children": [
@@ -41418,7 +41412,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase94",
                           "ResourceName": null,
                           "Children": [
@@ -45676,7 +45669,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase91",
                           "ResourceName": null,
                           "Children": [
@@ -48085,8 +48077,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Weekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -48718,8 +48709,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "SpringDrought",
                                   "ResourceName": null,
                                   "Children": [
@@ -49022,8 +49012,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "AutumnDrought",
                                   "ResourceName": null,
                                   "Children": [
@@ -49389,8 +49378,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "2Weekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -50071,8 +50059,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "2WeeksIn3",
                                   "ResourceName": null,
                                   "Children": [
@@ -50753,8 +50740,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "1WeekIn4",
                                   "ResourceName": null,
                                   "Children": [
@@ -51430,8 +51416,12 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
+<<<<<<< HEAD
                       "Descriptors": null,
                       "Name": "Rainshelter",
+=======
+                      "Name": "RainShelter",
+>>>>>>> upstream
                       "ResourceName": null,
                       "Children": [
                         {
@@ -54532,8 +54522,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "TwoPerWeek",
                                   "ResourceName": null,
                                   "Children": [
@@ -55186,8 +55175,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "OnePerWeek",
                                   "ResourceName": null,
                                   "Children": [
@@ -55483,8 +55471,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "ThreeWeekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -55689,8 +55676,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "None",
                                   "ResourceName": null,
                                   "Children": [
@@ -55734,8 +55720,7 @@
                                     "[FertiliserSchedule]",
                                     "[DefoliationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Ryegrass",
                                   "ResourceName": null,
                                   "Children": [
@@ -56091,8 +56076,7 @@
                                     "[FertiliserSchedule]",
                                     "[DefoliationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Lucerne",
                                   "ResourceName": null,
                                   "Children": [
@@ -56456,7 +56440,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LandPBase",
                       "ResourceName": null,
                       "Children": [

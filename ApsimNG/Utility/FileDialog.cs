@@ -153,7 +153,7 @@ namespace APSIMNG.Utility
             if (!string.IsNullOrEmpty(FileType))
             {
                 specParts = FileType.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
+                for (int i = 0; i + 1 < specParts.Length; i += 2)
                 {
                     FileFilter fileFilter = new FileFilter();
                     fileFilter.Name = specParts[i];

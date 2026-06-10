@@ -98,11 +98,38 @@ public partial class ReplaceCommand : IModelCommand
                 newModel.Rename(modelToReplace.Name);
             else
                 newModel.Rename(newName);
-            newModel.Enabled = modelToReplace.Enabled;
+            CopyEnabledStateRecursively(modelToReplace, newModel);
             modelToReplace.Node.Parent.ReplaceChild(modelToReplace, newModel);
         }
 
         return relativeTo;
+    }
+
+    /// <summary>
+    /// Copy enabled state from an original model tree into a replacement model tree.
+    /// </summary>
+    /// <remarks>Traversal is index-based and only recurses while both models have children.</remarks>
+    private static void CopyEnabledStateRecursively(INodeModel originalModel, INodeModel replacementModel)
+    {
+        if (originalModel is null || replacementModel is null)
+            return;
+
+        var originalChildren = originalModel.GetChildren()?.ToArray();
+        var replacementChildren = replacementModel.GetChildren()?.ToArray();
+
+        replacementModel.Enabled = originalModel.Enabled;
+
+        if (originalChildren is null || replacementChildren is null || originalChildren.Length == 0 || replacementChildren.Length == 0)
+            return;
+
+        foreach(var replacementChild in replacementChildren)
+        {
+            // Finds the first child where the name is the same.
+            // Replacements can differ on type.
+            var originalChild = originalChildren.FirstOrDefault(c => c.Name == replacementChild.Name);
+            if (originalChild != null)
+                CopyEnabledStateRecursively(originalChild, replacementChild);
+        }
     }
 
     /// <summary>

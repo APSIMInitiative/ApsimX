@@ -9,6 +9,7 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text.Json.Nodes;
 
 namespace APSIM.Core;
 
@@ -18,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 213; } }
+    public static int LatestVersion { get { return 216; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -64,7 +65,8 @@ internal class Converter
             int fileVersion = (int)returnData.Root["Version"];
 
             if (fileVersion > LatestVersion)
-                throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
+                throw new Exception(string.Format("Unable to open file '{0}'. This file has a version number of "+ fileVersion.ToString() + " but the version of apsim trying to run it is "+LatestVersion.ToString()+".  " +
+                    "Files can only be run on an equal or greater versions of apsim. Was this file previously opened in a more recent version of Apsim?", fileName));
 
             // Run converters if not at the latest version.
             while (fileVersion < toVersion)
@@ -7246,7 +7248,7 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
-    
+
     /// <summary>
     /// Change manager scripts:
     ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
@@ -7337,7 +7339,6 @@ internal class Converter
         // Change graph variables.
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
-
     }
 
     /// <summary>
@@ -7353,7 +7354,7 @@ internal class Converter
             ["Name"] = "XValue",
             ["VariableName"] = "[Phenology].Stage"
         };
-        
+
         //children for PMF zadok
         JObject VegetativePhasePMF = new JObject()
         {
@@ -7437,13 +7438,13 @@ internal class Converter
     }
 
     /// <summary>
-    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH 
-    /// under a canola plant should use the Canola version, all others should 
+    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH
+    /// under a canola plant should use the Canola version, all others should
     /// use the generic version.
     /// <param name="root">Root json object.</param>
     /// <param name="_">Unused filename.</param>
     private static void UpgradeToVersion212(JObject root, string _)
-    {        
+    {
         //child for Generic BBCH
         JObject bbchCalculation = new JObject()
         {
@@ -7502,19 +7503,283 @@ internal class Converter
         // change biomass removal objects that mention Rachis
         foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
         {
-
             foreach (var fraction in OrganType["BiomassRemovalFractions"])
             {
                 if (fraction["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
                     if (fraction["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
                         fraction["OrganName"] = "Cob";
             }
-
-
         }
-
-
-        }
-
-
     }
+
+    /// Fix some things in STRUM
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion214(JObject root, string _)
+    {
+        // Find all StrumTreeInstance models in the JSON and update values
+        foreach (var model in root
+            .SelectTokens("$..[?(@.$type && @.$type =~ /StrumTreeInstance/i)]")
+            .OfType<JObject>())
+        {
+            // 1) Targeted fix: only the explicit property used to store the tree type.
+            var treeType = model["TreeType"] as JValue;
+            if (treeType != null &&
+                treeType.Type == JTokenType.String &&
+                string.Equals((string)treeType, "Ever green", StringComparison.OrdinalIgnoreCase))
+            {
+                model["TreeType"] = "Evergreen";
+            }
+        }
+
+        // 1) Define your replacements: substring -> replacement (partial matches allowed)
+        //    Examples (replace with your real renames):
+        var map = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "STRUM.Height.CanopyBaseHeight", "STRUM.Height.PrunedCanopyBaseHeight" },
+            { "[STRUM].Height.CanopyBaseHeight", "[STRUM].Height.PrunedCanopyBaseHeight" },
+            { "STRUM.Height.SeasonalGrowth", "STRUM.Height.SeasonalDepthGrowth" },
+            { "[STRUM].Height.SeasonalGrowth", "[STRUM].Height.SeasonalDepthGrowth" },
+            { "STRUM.CanopyBaseHeight", "STRUM.BaseHeight" },
+            { "[STRUM].CanopyBaseHeight", "[STRUM].BaseHeight" },
+            { "STRUM.Trunk.", "STRUM.Wood." },
+            { "[STRUM].Trunk.", "[STRUM].Wood." },
+        };
+
+        // 2) REPORT models (Models.Report.VariableNames, Models)
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, key, map[key], caseSensitive: false);
+            }
+        }
+
+        // 3) GRAPH SERIES models (Models.Graph.Series, Models)
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, key, map[key]);
+            }
+        }
+
+        // 4) rename trunk to wook in biomass removal events
+        foreach (var remove in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+            if (remove["NameOfPlantToRemoveFrom"].ToString() == "STRUM")
+            {
+                JArray organs = remove["BiomassRemovalFractions"] as JArray;
+
+                foreach (JToken organ in organs)
+                {
+                    if (organ["OrganName"].ToString() == "Trunk")
+                    {
+                        organ["OrganName"] = "Wood";
+                    }
+                }
+            }
+        }
+        // 5) Manager script renames
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            foreach (string key in map.Keys)
+            {
+                var changed = manager.Replace(key, map[key]);
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        List<string> toRescale = new List<string> { "MaxRD",
+                                                    "MatureCanopyBaseHeight",
+                                                    "MaturePrunedCanopyBaseHeight",
+                                                    "MatureHeight",
+                                                    "MaturePrunedHeight",
+                                                    "MatureWidth",
+                                                    "MaturePrunedWidth" };
+
+        // 6. convert canopy and root dimensions from mm to m
+        foreach (var ScrumTreeInstance in JsonUtilities.ChildrenOfType(root, "StrumTreeInstance"))
+        {
+            foreach (string param in toRescale)
+            {
+
+                if (!ScrumTreeInstance.TryGetValue(param, out JToken token))
+                    continue;
+
+                if ((double)ScrumTreeInstance[param] > 100)
+                    ScrumTreeInstance[param] = (double)ScrumTreeInstance[param] / 1000;
+            }
+        }
+
+        string paramGroup = string.Join("|", toRescale.Select(Regex.Escape));
+        var regex = new Regex(
+            $@"^(?<prefix>\[Row\]\.[^\.]+\.({paramGroup})\s*=\s*)" +
+            @"(?<value>-?\d+(\.\d+)?)",
+            RegexOptions.Compiled);
+        foreach (var CompositeFactor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+        {
+
+            JArray specs = CompositeFactor["Specifications"] as JArray;
+            if (specs == null || specs.Count == 0)
+                continue;
+
+            for (int i = 0; i < specs.Count; i++)
+            {
+                if (specs[i].Type != JTokenType.String)
+                    continue;
+
+                string specText = specs[i].Value<string>();
+                specs[i] = regex.Replace(specText, match =>
+                {
+                    double value = double.Parse(
+                        match.Groups["value"].Value,
+                        CultureInfo.InvariantCulture);
+
+                    // Same guard as StrumTreeInstance
+                    if (value <= 100)
+                        return match.Value;
+
+                    double scaled = value / 1000.0;
+
+                    return match.Groups["prefix"].Value +
+                           scaled.ToString("G", CultureInfo.InvariantCulture);
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Makes StoreTypes in Stores property of Supplement into children instead.
+    /// Also updates stores report variables as well.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion215(JObject root, string fileName)
+    {
+        foreach(JObject supplement in JsonUtilities.ChildrenOfType(root, "Supplement"))
+        {
+            var stores = supplement["Stores"];
+            if (stores != null)
+            {
+                foreach(JObject store in stores.Cast<JObject>())
+                {
+                    // Fodder StoreTypes have historically been a hidden StoreType property of Supplement.
+                    // Now that they are children and not in a Stores property we only want them to exist
+                    // in memory and not be serialised to the .apsimx file. 
+                    string fodderStoreTypeName = "fodder";
+                    if (!store["Name"].ToString().Equals(fodderStoreTypeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var newChildStore = new JObject
+                        {
+                            ["$type"] = store["$type"],
+                            ["Name"] = store["Name"],
+                            ["Stored"] = store["Stored"],
+                            ["IsRoughage"] = store["IsRoughage"],
+                            ["DMContent"] = store["DMContent"],
+                            ["DMD"] = store["DMD"],
+                            ["MEContent"] = store["MEContent"],
+                            ["CPConc"] = store["CPConc"],
+                            ["ProtDg"] = store["ProtDg"],
+                            ["PConc"] = store["PConc"],
+                            ["SConc"] = store["SConc"],
+                            ["EEConc"] = store["EEConc"],
+                            ["ADIP2CP"] = store["ADIP2CP"],
+                            ["AshAlk"] = store["AshAlk"],
+                            ["MaxPassage"] = store["MaxPassage"]
+                        };
+
+                        if (newChildStore["Name"].ToString().Contains(".5me"))
+                        {
+                            newChildStore["Name"] = newChildStore["Name"].ToString().Replace(".", "");
+                        }
+                        JObject supplementStoreParent = JsonUtilities.Parent(store) as JObject;
+                        JsonUtilities.AddChild(supplementStoreParent, newChildStore);  
+                    }
+                }
+                supplement.Remove("Stores");                
+            }
+        }
+
+        foreach(JObject operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+        {
+            foreach(JObject operation in operations["OperationsList"])
+            {
+                // Remove period from supplement names in the Actions and 
+                // Line properties.
+                // The names of these supplements will be changed to above to a
+                // legal name as periods are not allowed.
+                if (operation["Action"] is JToken actionObject)
+                {
+                    if (actionObject.ToString().Contains(".5me"))
+                    {
+                        operation["Action"] = actionObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+
+                if (operation["Line"] is JToken lineObject)
+                {
+                    if (lineObject.ToString().Contains(".5me"))
+                    {
+                        operation["Line"] = lineObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// The 'address' of various model parameters has changed. User's cultivars should be kept synchronized.
+    /// </summary>
+    /// <param name="root">Root json token.</param>
+    /// <param name="name">File name.</param>
+    private static void UpgradeToVersion216(JObject root, string name)
+    {
+        List<(string, string)> maizeUpadtes =
+        [
+            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+        ];
+        List<(string, string)> soybeanUpdates =
+        [
+            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron")
+        ];
+        List<(string, string)> canolaUpdates =
+        [
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
+        ];
+
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            var plantName = plant["Name"].Value<string>();
+            var updates = plantName switch
+            {
+                "Maize" => maizeUpadtes.Concat(maizeUpadtes.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Soybean" => soybeanUpdates.Concat(soybeanUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Canola" => canolaUpdates.Concat(canolaUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                _ => []
+            };
+            if (updates.Any() && plant["ResourceName"].Value<string>() == plantName)
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    JsonUtilities.UpdateCultivarPaths(cultivar, updates);
+                }
+            }
+        }
+
+        // Not uncommon to see people write a cultivar path like it is a report entry. Want our path updates to hit both.
+        static string ReformatPath(string normalPath, string plant)
+        {
+            var parts = normalPath.Split(".");
+            var organ = parts[0][1..^1];
+            return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
+        }
+    }
+}

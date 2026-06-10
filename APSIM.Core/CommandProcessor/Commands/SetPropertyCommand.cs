@@ -100,8 +100,8 @@ public partial class SetPropertyCommand : IModelCommand
                 // Get the current array as a list of strings.
                 object valueAsObject = instance.Value ?? throw new Exception($" Cannot use += or -= operators on a null array.");
                 List<string> strings = ApsimConvert.ToType(valueAsObject, typeof(List<string>)) as List<string>;
-                if (strings == null || strings.Count == 0)
-                    throw new Exception("Cannot use += or -= operators on a null or empty array.");
+                if (strings == null)
+                    throw new Exception("Cannot use += or -= operators on a null array.");
 
                 string[] tokens = [.. value.Split('=').Select(part => part.Trim())];
 
