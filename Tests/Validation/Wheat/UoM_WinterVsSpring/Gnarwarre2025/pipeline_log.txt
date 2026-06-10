@@ -11,7 +11,7 @@ The following objects are masked from 'package:base':
     intersect, setdiff, setequal, union
 
 ▶ start target config
-● built target config [0.78 seconds]
+● built target config [0.82 seconds]
 ▶ start target track_mapping_csv
 ● built target track_mapping_csv [0 seconds]
 ▶ start target df_obs_raw
@@ -86,6 +86,7 @@ $file_name_mapping_csv
 
 ▶ start target log_active_config
 ● built target log_active_config [0 seconds]
+▶ start target df_obs_renamed
 Success [apply_name_corrections_Gna24]: Loaded translation matrix from 'Gnarwarre2025_obs_var_new_names.csv'.
 
 ----------------------------------------------------------------------
@@ -97,12 +98,11 @@ Success [apply_name_corrections_Gna24]: Loaded translation matrix from 'Gnarwarr
    [OLD] Wheat.Spike.Wt --> [NEW] Wheat.Spike.Live.Wt
 ----------------------------------------------------------------------
 
-▶ start target df_obs_renamed
-● built target df_obs_renamed [0.04 seconds]
+● built target df_obs_renamed [0.05 seconds]
 ✅ MET data passed all quality checks.
 Successfully verified and copied to: Gnarwarre2025.met
 ▶ start target validated_met_file
-● built target validated_met_file [0.08 seconds]
+● built target validated_met_file [0.1 seconds]
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  🚨 CRITICAL ALARM: APSIM-X SIMULATION NAME MISMATCH DETECTED 🚨
@@ -127,7 +127,7 @@ Successfully verified and copied to: Gnarwarre2025.met
 ======================================================================
 
 ▶ start target df_obs_corrected
-● built target df_obs_corrected [0.03 seconds]
+● built target df_obs_corrected [0.04 seconds]
 ▶ start target df_obs_mean
 ● built target df_obs_mean [0.14 seconds]
 Success [get_column_var_from_observ]: Isolated target(s) (Wheat.Phenology.HaunStage) across 96 rows while preserving 2 standard metadata keys.
@@ -135,7 +135,7 @@ Success [get_column_var_from_observ]: Isolated target(s) (Wheat.Phenology.HaunSt
 ● built target df_haun [0.03 seconds]
 Success [get_pheno_dates_from_DOY_wide_obs]: Extracted 36 standardized raw records from wide DOY entries.
 ▶ start target df_pheno_raw
-● built target df_pheno_raw [0.1 seconds]
+● built target df_pheno_raw [0.08 seconds]
 
 ===========================================================
            HAUN DERIVATION INTERNAL TRACE LOGIC            
@@ -164,9 +164,9 @@ Success [derive_pheno_stages_from_haun]: Morphologically generated milestone row
 Success [create_interp_pheno_dates]: Linearly generated 12 missing micro-milestone rows (Stages 4/7).
 ▶ start target df_pheno_int
 ● built target df_pheno_int [0.07 seconds]
-Success [merge_and_qc_pheno]: Master timeline assembled. Retained 60 strictly chronological stage events.
 ▶ start target df_pheno_final
-● built target df_pheno_final [0.15 seconds]
+Success [merge_and_qc_pheno]: Master timeline assembled. Retained 60 strictly chronological stage events.
+● built target df_pheno_final [0.11 seconds]
 
 ----------------------------------------------------------------------
  🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
@@ -181,8 +181,7 @@ Success [format_apsim_pheno_params]: Translated 12 simulations into wide APSIM p
 ● built target df_pheno_input_raw [0.09 seconds]
 Success [add_new_var_to_obs]: Appended and collapsed 60 events into master observations under column 'Wheat.Phenology.Stage'.
 ▶ start target df_obs_plus_pheno
-● built target df_obs_plus_pheno [0.47 seconds]
-▶ start target df_pheno_input_imputed
+● built target df_obs_plus_pheno [0.43 seconds]
 
 === PHENOLOGY MATRIX ADJUSTMENTS ===
 
@@ -201,7 +200,8 @@ Success [add_new_var_to_obs]: Appended and collapsed 60 events into master obser
  -> IMPUTED: [Gnarwarre2025CvSowMayZanzibarPGRYes] filled '[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress' with 25-08-2025 (Group: SowMay)
 ====================================
 
-● built target df_pheno_input_imputed [0.09 seconds]
+▶ start target df_pheno_input_imputed
+● built target df_pheno_input_imputed [0.1 seconds]
 
 ============================================================
  ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
@@ -215,12 +215,37 @@ Success [add_new_var_to_obs]: Appended and collapsed 60 events into master obser
 ● built target df_obs_plus_pheno_plus_hi [0.05 seconds]
 ✅ SUCCESS: Phenology Input Matrix passed integrity check. No missing dates.
 ▶ start target qc_pheno_param
-● built target qc_pheno_param [0.02 seconds]
-Success [calc_nutrient_absolute_amounts]: Derived 0 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+● built target qc_pheno_param [0.03 seconds]
 ▶ start target df_obs_plus_pheno_hi_amounts
-● built target df_obs_plus_pheno_hi_amounts [0.07 seconds]
+
+------------------------------------------------------------
+ 🧪 NUTRIENT AGGREGATION & QC CHECK
+------------------------------------------------------------
+   [!] Notice: 'Wheat.Leaf.Live.NConc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Leaf.Dead.NConc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Stem.Live.NConc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Spike.Live.NConc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Leaf.Live.WSCc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Leaf.Dead.WSCc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Stem.Live.WSCc' is 100% missing/empty in this dataset. Safely bypassing.
+   [!] Notice: 'Wheat.Spike.Live.WSCc' is 100% missing/empty in this dataset. Safely bypassing.
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 🚨 ACTION REQUIRED: FATAL LAB DATA MISMATCH DETECTED 🚨
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 264 instances found where physical organs had Mass but no Conc
+ (or vice versa), corrupting the aggregate totals.
+
+ A detailed diagnostic log has been exported.
+ You MUST review the following file to see exactly what to fix:
+ -> Gnarwarre2025_nutrient_calc_logs.csv
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+● built target df_obs_plus_pheno_hi_amounts [0.32 seconds]
 ▶ start target msg_pheno_param_saved
-● built target msg_pheno_param_saved [0.16 seconds]
+● built target msg_pheno_param_saved [0.01 seconds]
 
 ============================================================
  ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
@@ -235,10 +260,10 @@ Success [calc_nutrient_absolute_amounts]: Derived 0 explicit organ pools and agg
 ------------------------------------------------------------
 
 ▶ start target df_obs_final
-● built target df_obs_final [0.14 seconds]
-▶ start target qc_apsim_observed
+● built target df_obs_final [0.13 seconds]
 ✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
-● built target qc_apsim_observed [0.08 seconds]
+▶ start target qc_apsim_observed
+● built target qc_apsim_observed [0.07 seconds]
 
 ======================================================================
  🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
@@ -257,23 +282,23 @@ Success [calc_nutrient_absolute_amounts]: Derived 0 explicit organ pools and agg
 ----------------------------------------------------------------------
 💾 Success: Exported 6 valid rows and 2 columns.
 ▶ start target exported_pop_csv
-● built target exported_pop_csv [0.05 seconds]
+● built target exported_pop_csv [0.04 seconds]
 ▶ start target haun_input_checked
 ● built target haun_input_checked [0.04 seconds]
-▶ start target msg_obs_saved
 Success [save_df_to_excel]: Exported 461 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Gnarwarre2025_Observed.xlsx' (Sheet: 'Observed').
-● built target msg_obs_saved [0.23 seconds]
-✅ Pre-flight check passed: All required APSIM dependencies found.
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.22 seconds]
 ▶ start target check_depend
-● built target check_depend [0.02 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+● built target check_depend [0.04 seconds]
 ▶ start target tracked_excel_files
 ● built target tracked_excel_files [0 seconds]
 ✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
 ▶ start target verify_data_backup
-● built target verify_data_backup [0.01 seconds]
-▶ start target encrypted_zip_artifact
+● built target verify_data_backup [0.03 seconds]
 Encrypting archive...
 ✅ Successfully created password-protected archive: Observed.zip
-● built target encrypted_zip_artifact [0.28 seconds]
-▶ end pipeline [4.79 seconds]
-There were 12 warnings (use warnings() to see them)
+▶ start target encrypted_zip_artifact
+● built target encrypted_zip_artifact [0.27 seconds]
+▶ end pipeline [5.27 seconds]
+There were 11 warnings (use warnings() to see them)
