@@ -401,8 +401,7 @@ list(
       mass_suffix    = "Wt",
       ag_name        = "Wheat.AboveGround",
       divisor        = 1,
-      error_log_path = file.path("PipelineLogs",
-                                 paste0(config$proj_name, "_nutrient_calc_logs.csv"))
+      error_log_path = file.path(paste0(config$proj_name, "_nutrient_calc_logs.csv"))
     )
   ),
   

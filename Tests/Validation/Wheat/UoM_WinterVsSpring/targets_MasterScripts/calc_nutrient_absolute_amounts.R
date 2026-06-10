@@ -89,7 +89,7 @@ calc_nutrient_absolute_amounts <- function(df,
           Issue = dplyr::case_when(
             is_fatal ~ "FATAL: Has Mass > 0, but Conc is missing",
             is.na(Mass_Value) & !is.na(Conc_Value) ~ "FATAL: Has Conc, but Mass is missing",
-            is.na(Mass_Value) & is.na(Conc_Value) ~ "INFO: Both Mass and Conc are NA (Organ absent/lost)",
+            # If both are NA, it falls through to "OK" and is entirely omitted from the CSV
             TRUE ~ "OK"
           )
         ) %>%
@@ -148,7 +148,7 @@ calc_nutrient_absolute_amounts <- function(df,
       )
       message(paste(big_alert_box, collapse = "\n"))
     } else {
-      message(sprintf("💾 Success: Derived %d pools. (Notice: %d missing organ events safely bypassed and logged to CSV)", total_calcs, nrow(diagnostic_logs)))
+      message(sprintf("💾 Success: Derived %d pools. No FATAL errors detected.", total_calcs))
     }
     
   } else {
