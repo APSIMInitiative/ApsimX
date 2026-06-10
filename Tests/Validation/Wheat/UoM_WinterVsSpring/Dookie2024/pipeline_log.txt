@@ -11,7 +11,7 @@ The following objects are masked from 'package:base':
     intersect, setdiff, setequal, union
 
 ▶ start target config
-● built target config [0.8 seconds]
+● built target config [1 seconds]
 ▶ start target df_obs_meta_data
 ● built target df_obs_meta_data [0 seconds]
 Loading required package: rlang
@@ -27,7 +27,7 @@ The following objects are masked from 'package:purrr':
 [36m•[39m `` -> `...10`
 [36m•[39m `` -> `...12`
 ▶ start target processed_met_data
-● built target processed_met_data [0.39 seconds]
+● built target processed_met_data [0.35 seconds]
 
 ======================================================================
  ⚙️ ACTIVE PIPELINE CONFIGURATION 
@@ -121,16 +121,15 @@ $pcd_stages_to_extract
 ▶ start target tracked_raw_excel
 ● built target tracked_raw_excel [0 seconds]
 ▶ start target df_simNameByCult
-● built target df_simNameByCult [0.02 seconds]
+● built target df_simNameByCult [0 seconds]
+▶ start target soil_water
 📖 Reading soil data from: UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx (Sheet: McPoyles 1 APSIM)
 💾 Success: Exported cleaned soil profile to 'Dookie2024_soil_water.csv'
-▶ start target soil_water
-● built target soil_water [0.31 seconds]
+● built target soil_water [0.28 seconds]
 ▶ start target msg_met_saved
 ● built target msg_met_saved [0.02 seconds]
 ▶ start target list_observed_dfs_raw
-● built target list_observed_dfs_raw [41.69 seconds]
-▶ start target manual_pheno_params
+● built target list_observed_dfs_raw [41.42 seconds]
 
 ======================================================================
  🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
@@ -139,8 +138,8 @@ $pcd_stages_to_extract
  -> Checking: Dookie2024_GermDatesInput.csv 
 ======================================================================
 
-● built target manual_pheno_params [0.51 seconds]
-▶ start target list_observed_dfs_raw_plus_emergPerc
+▶ start target manual_pheno_params
+● built target manual_pheno_params [0.25 seconds]
 
 ----------------------------------------------------------------------
  📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
@@ -151,8 +150,8 @@ $pcd_stages_to_extract
  -> Action        : Converted raw counts to 0-100% scale per SimulationName
 ----------------------------------------------------------------------
 
-● built target list_observed_dfs_raw_plus_emergPerc [0.04 seconds]
-▶ start target list_observed_clean
+▶ start target list_observed_dfs_raw_plus_emergPerc
+● built target list_observed_dfs_raw_plus_emergPerc [0.05 seconds]
 
 ======================================================================
  ⚠️  CRITICAL WARNING: RAW DATE TYPOS AUTO-CORRECTED ⚠️ 
@@ -449,12 +448,12 @@ $pcd_stages_to_extract
  -> [stem_10_WSCc] ID: 'DookieWWHI2024CvYitpiSow14-May' | RAW: 2020-11-14 | FIXED: 2024-11-14
 ======================================================================
 
-● built target list_observed_clean [0.19 seconds]
+▶ start target list_observed_clean
+● built target list_observed_clean [0.14 seconds]
    -> Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc, pcds_6_flagLeaf, pcds_8_anthesis]
 Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
 ▶ start target df_obs_wide
-● built target df_obs_wide [0.36 seconds]
-▶ start target df_pheno_haun
+● built target df_obs_wide [0.39 seconds]
 
 ===========================================================
            HAUN DERIVATION INTERNAL TRACE LOGIC            
@@ -514,7 +513,8 @@ Successfully compiled, collapsed, and formatted the final APSIM observation data
 Success [derive_pheno_stages_from_haun]: Morphologically generated milestone rows from Haun counts. (Mode: list_dfs)
  -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 24 simulations.
  -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 24 simulations.
-● built target df_pheno_haun [0.14 seconds]
+▶ start target df_pheno_haun
+● built target df_pheno_haun [0.16 seconds]
 ✅ Successfully extracted 3 target dataframes.
 ▶ start target list_pcds_extracted
 ● built target list_pcds_extracted [0.03 seconds]
@@ -548,8 +548,8 @@ Success [derive_pheno_stages_from_haun]: Morphologically generated milestone row
 Success [get_pheno_dates_from_pcd_list]: Standardized 72 raw records at 50% progress.
 ▶ start target df_pheno_raw
 ● built target df_pheno_raw [0.16 seconds]
-▶ start target df_pheno_int
 Success [create_interp_pheno_dates]: Linearly generated 48 missing micro-milestone rows (Stages 4/7).
+▶ start target df_pheno_int
 ● built target df_pheno_int [0.08 seconds]
 
 [!] NOTICE: Contrasting Dates Detected for Identical Stages
@@ -606,11 +606,10 @@ Success [create_interp_pheno_dates]: Linearly generated 48 missing micro-milesto
 24 2024-07-02 vs 2024-07-19  Haun vs Int
 Success [merge_and_qc_pheno]: Master timeline assembled. Retained 144 strictly chronological stage events.
 ▶ start target df_pheno_final
-● built target df_pheno_final [0.19 seconds]
-Success [add_new_var_to_obs]: Appended and collapsed 144 events into master observations under column 'Wheat.Phenology.Stage'.
+● built target df_pheno_final [0.17 seconds]
 ▶ start target df_obs_plus_pheno
-● built target df_obs_plus_pheno [0.58 seconds]
-▶ start target df_pheno_input_param
+Success [add_new_var_to_obs]: Appended and collapsed 144 events into master observations under column 'Wheat.Phenology.Stage'.
+● built target df_obs_plus_pheno [0.63 seconds]
 
 ----------------------------------------------------------------------
  🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
@@ -621,7 +620,8 @@ Success [add_new_var_to_obs]: Appended and collapsed 144 events into master obse
 ----------------------------------------------------------------------
 
 Success [format_apsim_pheno_params]: Translated 24 simulations into wide APSIM parameter format.
-● built target df_pheno_input_param [0.24 seconds]
+▶ start target df_pheno_input_param
+● built target df_pheno_input_param [0.13 seconds]
 
 ============================================================
  ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
@@ -633,14 +633,31 @@ Success [format_apsim_pheno_params]: Translated 24 simulations into wide APSIM p
 
 ▶ start target df_obs_plus_pheno_hi
 ● built target df_obs_plus_pheno_hi [0.06 seconds]
-▶ start target qc_pheno_integrity
 ✅ SUCCESS: Phenology Input Matrix passed integrity check. No missing dates.
+▶ start target qc_pheno_integrity
 ● built target qc_pheno_integrity [0.02 seconds]
-Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+
+------------------------------------------------------------
+ 🧪 NUTRIENT AGGREGATION & QC CHECK
+------------------------------------------------------------
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 🚨 ACTION REQUIRED: FATAL LAB DATA MISMATCH DETECTED 🚨
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 48 instances found where physical organs had Mass but no Conc
+ (or vice versa), corrupting the aggregate totals.
+
+ A detailed diagnostic log has been exported.
+ You MUST review the following file to see exactly what to fix:
+ -> Dookie2024_nutrient_calc_logs.csv
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 ▶ start target df_obs_plus_pheno_hi_with_amounts
-● built target df_obs_plus_pheno_hi_with_amounts [0.04 seconds]
+● built target df_obs_plus_pheno_hi_with_amounts [0.19 seconds]
 ▶ start target msg_pheno_param_saved
-● built target msg_pheno_param_saved [0.01 seconds]
+● built target msg_pheno_param_saved [0 seconds]
 
 ============================================================
  ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
@@ -656,15 +673,15 @@ Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and agg
 ------------------------------------------------------------
 
 ▶ start target df_obs_plus_pheno_harv
-● built target df_obs_plus_pheno_harv [0.12 seconds]
-✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
+● built target df_obs_plus_pheno_harv [0.14 seconds]
 ▶ start target qc_apsim_observed_harv
+✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
 ● built target qc_apsim_observed_harv [0.09 seconds]
 Success [save_df_to_excel]: Exported 826 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Dookie2024_Observed.xlsx' (Sheet: 'Observed').
 ▶ start target msg_obs_saved
-● built target msg_obs_saved [0.25 seconds]
+● built target msg_obs_saved [0.31 seconds]
 ▶ start target haun_input_checked
-● built target haun_input_checked [0.04 seconds]
+● built target haun_input_checked [0.07 seconds]
 
 ----------------------------------------------------------------------
  📋 EXTRACTION SUMMARY: Dookie2024_population.csv
@@ -676,15 +693,15 @@ Success [save_df_to_excel]: Exported 826 rows to 'C:/github/ApsimX/Tests/Validat
 ● built target exported_pop_csv [0.06 seconds]
 ▶ start target tracked_excel_files
 ● built target tracked_excel_files [0 seconds]
-▶ start target check_depend
 ✅ Pre-flight check passed: All required APSIM dependencies found.
-● built target check_depend [0.02 seconds]
+▶ start target check_depend
+● built target check_depend [0.17 seconds]
 Encrypting archive...
 ✅ Successfully created password-protected archive: Observed.zip
 ▶ start target encrypted_zip_artifact
 ● built target encrypted_zip_artifact [0.28 seconds]
 ✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
 ▶ start target verify_data_backup
-● built target verify_data_backup [0.03 seconds]
-▶ end pipeline [48.82 seconds]
-There were 12 warnings (use warnings() to see them)
+● built target verify_data_backup [0.01 seconds]
+▶ end pipeline [48.8 seconds]
+There were 11 warnings (use warnings() to see them)
