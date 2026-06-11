@@ -130,7 +130,7 @@ public static class WeatherThirdPartyUtility
             // date, mint, maxt, radn, rh, wind, rain
             // The value from Values with the key that matches local 'date' variable will be selected.
             string newLine = string.Format("{0,-12}{1,-10}{2,-10}{3,-10}{4,-10}{5,-10}{6,-10}",
-                date.ToShortDateString(),
+                date.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
                 allVariables.FirstOrDefault(w => w.Name == variableValues["mint"]).Values[date],
                 allVariables.FirstOrDefault(w => w.Name == variableValues["maxt"]).Values[date],
                 allVariables.FirstOrDefault(w => w.Name == variableValues["radn"]).Values[date],

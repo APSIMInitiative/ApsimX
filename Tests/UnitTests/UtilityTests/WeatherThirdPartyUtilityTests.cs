@@ -56,7 +56,7 @@ namespace UnitTests.UtilityTests
             for (int i = 6; i < lines.Length; i++)
             {
                 string[] tokens = lines[i].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                Assert.That(tokens[0], Is.EqualTo(currentDate.ToShortDateString()));
+                Assert.That(tokens[0], Is.EqualTo(currentDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)));
                 Assert.That(tokens[1], Is.EqualTo((10.1 + i - 6).ToString("0.0"))
                     .Or.EqualTo("10.1")
                     .Or.EqualTo("10.2")
@@ -154,7 +154,7 @@ namespace UnitTests.UtilityTests
             {
                 sb.AppendFormat(
                     "{0,-12}{1,-10}{2,-10}{3,-10}{4,-10}{5,-10}{6,-10}\n",
-                    date.ToShortDateString(),
+                    date.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
                     "1.0",
                     "2.0",
                     "3.0",
