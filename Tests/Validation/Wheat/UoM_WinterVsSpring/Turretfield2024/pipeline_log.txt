@@ -11,15 +11,15 @@ The following objects are masked from 'package:base':
     intersect, setdiff, setequal, union
 
 ▶ start target config
-● built target config [0.85 seconds]
+● built target config [0.84 seconds]
 ▶ start target tracked_raw_excel
 ● built target tracked_raw_excel [0 seconds]
 ▶ start target config_soil
 ● built target config_soil [0 seconds]
 ▶ start target df_obs_meta_data
-● built target df_obs_meta_data [0 seconds]
+● built target df_obs_meta_data [0.02 seconds]
 ▶ start target df_simNameByCult
-● built target df_simNameByCult [0.02 seconds]
+● built target df_simNameByCult [0 seconds]
 
 ======================================================================
  ⚙️ ACTIVE PIPELINE CONFIGURATION 
@@ -100,7 +100,7 @@ $file_name_input_haun
 ======================================================================
 
 ▶ start target log_active_config
-● built target log_active_config [0.01 seconds]
+● built target log_active_config [0 seconds]
 ▶ start target tracked_excel_files
 ● built target tracked_excel_files [0 seconds]
 Loading required package: rlang
@@ -127,11 +127,11 @@ The following objects are masked from 'package:purrr':
 ======================================================================
 
 ▶ start target processed_met_data
-● built target processed_met_data [0.18 seconds]
+● built target processed_met_data [0.2 seconds]
 ▶ start target raw_soil_tracker
 ● built target raw_soil_tracker [0 seconds]
 ▶ start target list_observed_dfs_raw
-● built target list_observed_dfs_raw [6.7 seconds]
+● built target list_observed_dfs_raw [8.02 seconds]
 
 ======================================================================
  🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
@@ -141,14 +141,13 @@ The following objects are masked from 'package:purrr':
 ======================================================================
 
 ▶ start target manual_pheno_params
-● built target manual_pheno_params [0.22 seconds]
-▶ start target encrypted_zip_artifact
+● built target manual_pheno_params [0.25 seconds]
 Encrypting archive...
 ✅ Successfully created password-protected archive: Observed.zip
-● built target encrypted_zip_artifact [0.26 seconds]
+▶ start target encrypted_zip_artifact
+● built target encrypted_zip_artifact [0.3 seconds]
 ▶ start target msg_met_saved
-● built target msg_met_saved [0 seconds]
-▶ start target df_soil_profile_clean
+● built target msg_met_saved [0.01 seconds]
 [1m[22mNew names:
 [36m•[39m `pH (1:5 CaCl2)` -> `pH (1:5 CaCl2)...25`
 [36m•[39m `Total (Kjeldahl) Nitrogen` -> `Total (Kjeldahl) Nitrogen...31`
@@ -208,7 +207,8 @@ Encrypting archive...
  -> Var: 'Ammonium Nitrogen' | Depth: 60-80 | Rep: 2 | Found: '<0.60' (Forced to NA)
 ======================================================================
 
-● built target df_soil_profile_clean [0.67 seconds]
+▶ start target df_soil_profile_clean
+● built target df_soil_profile_clean [0.7 seconds]
 
 ======================================================================
  ⚠️ APPROXIMATE SAMPLE DATES APPLIED ⚠️
@@ -301,10 +301,11 @@ Encrypting archive...
 ======================================================================
 
 ▶ start target list_observed_dfs_clean
-● built target list_observed_dfs_clean [0.33 seconds]
+● built target list_observed_dfs_clean [0.28 seconds]
 Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
 ▶ start target final_apsim_observed
-● built target final_apsim_observed [0.22 seconds]
+● built target final_apsim_observed [0.17 seconds]
+▶ start target df_obs_plus_hi
 
 ============================================================
  ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
@@ -314,11 +315,27 @@ Successfully compiled, collapsed, and formatted the final APSIM observation data
  -> QC STATUS    : PASS (All HI values <= 1.0)
 ------------------------------------------------------------
 
-▶ start target df_obs_plus_hi
-● built target df_obs_plus_hi [0.07 seconds]
+● built target df_obs_plus_hi [0.05 seconds]
+
+------------------------------------------------------------
+ 🧪 NUTRIENT AGGREGATION & QC CHECK
+------------------------------------------------------------
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 🚨 ACTION REQUIRED: FATAL LAB DATA MISMATCH DETECTED 🚨
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 32 instances found where physical organs had Mass but no Conc
+ (or vice versa), corrupting the aggregate totals.
+
+ A detailed diagnostic log has been exported.
+ You MUST review the following file to see exactly what to fix:
+ -> Turretfield2024_nutrient_calc_logs.csv
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 ▶ start target df_obs_plus_hi_amounts
-Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
-● built target df_obs_plus_hi_amounts [0.06 seconds]
+● built target df_obs_plus_hi_amounts [0.17 seconds]
 
 ============================================================
  ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
@@ -333,9 +350,9 @@ Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and agg
 ✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
 ▶ start target qc_apsim_observed
 ● built target qc_apsim_observed [0.09 seconds]
-▶ start target msg_obs_saved
 ✅ Successfully saved formatted observed data to: C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Turretfield2024_Observed.xlsx
-● built target msg_obs_saved [0.16 seconds]
+▶ start target msg_obs_saved
+● built target msg_obs_saved [0.19 seconds]
 
 ----------------------------------------------------------------------
  📋 EXTRACTION SUMMARY: Turretfield2024_population.csv
@@ -347,9 +364,9 @@ Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and agg
 ● built target exported_pop_csv [0.06 seconds]
 ✅ Pre-flight check passed: All required APSIM dependencies found.
 ▶ start target verify_dependencies
-● built target verify_dependencies [0.02 seconds]
+● built target verify_dependencies [0.04 seconds]
 ✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
 ▶ start target verify_data_backup
 ● built target verify_data_backup [0.02 seconds]
-▶ end pipeline [11.4 seconds]
-There were 15 warnings (use warnings() to see them)
+▶ end pipeline [12.65 seconds]
+There were 14 warnings (use warnings() to see them)

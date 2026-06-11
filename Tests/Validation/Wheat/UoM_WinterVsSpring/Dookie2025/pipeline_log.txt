@@ -11,8 +11,10 @@ The following objects are masked from 'package:base':
     intersect, setdiff, setequal, union
 
 ▶ start target config
-● built target config [0.79 seconds]
+● built target config [0.81 seconds]
 ▶ start target df_obs_meta_data
+● built target df_obs_meta_data [0 seconds]
+▶ start target processed_met_data
 Loading required package: rlang
 
 Attaching package: 'rlang'
@@ -28,13 +30,12 @@ The following objects are masked from 'package:purrr':
 [36m•[39m `` -> `...12`
 [36m•[39m `` -> `...13`
 [36m•[39m `` -> `...14`
-● built target df_obs_meta_data [0 seconds]
-▶ start target processed_met_data
-● built target processed_met_data [0.26 seconds]
+● built target processed_met_data [0.25 seconds]
 📖 Reading soil data from: UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx (Sheet: Presowing soil test results)
 💾 Success: Exported cleaned soil profile to 'Dookie2025_soil_pre_sow.csv'
 ▶ start target soil_pre_sow
-● built target soil_pre_sow [0.7 seconds]
+● built target soil_pre_sow [0.8 seconds]
+▶ start target log_active_config
 
 ======================================================================
  ⚙️ ACTIVE PIPELINE CONFIGURATION 
@@ -119,8 +120,7 @@ $file_name_new_met
 
 ======================================================================
 
-▶ start target log_active_config
-● built target log_active_config [0.01 seconds]
+● built target log_active_config [0 seconds]
 ▶ start target tracked_raw_excel
 ● built target tracked_raw_excel [0 seconds]
 ▶ start target df_simNameByCult
@@ -128,231 +128,231 @@ $file_name_new_met
 📖 Reading soil data from: UOM2312-001RTX 25 DOO JH WWHI WHT.xlsx (Sheet: McPoyles 3 APSIM)
 💾 Success: Exported cleaned soil profile to 'Dookie2025_soil_water_cond.csv'
 ▶ start target soil_water_cond
-● built target soil_water_cond [0.25 seconds]
+● built target soil_water_cond [0.29 seconds]
 ▶ start target msg_met_saved
-● built target msg_met_saved [0 seconds]
+● built target msg_met_saved [0.02 seconds]
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'N_Green leaves_mg_g' -> 'Wheat.Leaf.Live.NConc'
+ Error : None of the requested columns ('N_Green leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'WSC_Green leaves_mg_g' -> 'Wheat.Leaf.Live.WSCc'
+ Error : None of the requested columns ('WSC_Green leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
+ Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
+ Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
+ Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
+ Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'N_Spike_mg_g' -> 'Wheat.Spike.Live.NConc'
+ Error : None of the requested columns ('N_Spike_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 6.0 harvest'
+ Target: 'WSC_Spike_mg_g' -> 'Wheat.Spike.Live.WSCc'
+ Error : None of the requested columns ('WSC_Spike_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'N_Green leaves_mg_g' -> 'Wheat.Leaf.Live.NConc'
+ Error : None of the requested columns ('N_Green leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'WSC_Green leaves_mg_g' -> 'Wheat.Leaf.Live.WSCc'
+ Error : None of the requested columns ('WSC_Green leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
+ Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
+ Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
+ Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
+ Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'N_Spike_mg_g' -> 'Wheat.Spike.Live.NConc'
+ Error : None of the requested columns ('N_Spike_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 8.0 harvest'
+ Target: 'WSC_Spike_mg_g' -> 'Wheat.Spike.Live.WSCc'
+ Error : None of the requested columns ('WSC_Spike_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 10.0 harvest'
+ Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
+ Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 10.0 harvest'
+ Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
+ Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 10.0 harvest'
+ Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
+ Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
+
+======================================================================
+ ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
+======================================================================
+ File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
+ Sheet : 'PCDS 10.0 harvest'
+ Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
+ Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
+ Action: Skipping this extraction. The pipeline will continue.
+======================================================================
+
 ▶ start target list_observed_dfs_raw
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'N_Green leaves_mg_g' -> 'Wheat.Leaf.Live.NConc'
- Error : None of the requested columns ('N_Green leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'WSC_Green leaves_mg_g' -> 'Wheat.Leaf.Live.WSCc'
- Error : None of the requested columns ('WSC_Green leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
- Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
- Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
- Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
- Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'N_Spike_mg_g' -> 'Wheat.Spike.Live.NConc'
- Error : None of the requested columns ('N_Spike_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 6.0 harvest'
- Target: 'WSC_Spike_mg_g' -> 'Wheat.Spike.Live.WSCc'
- Error : None of the requested columns ('WSC_Spike_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'N_Green leaves_mg_g' -> 'Wheat.Leaf.Live.NConc'
- Error : None of the requested columns ('N_Green leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'WSC_Green leaves_mg_g' -> 'Wheat.Leaf.Live.WSCc'
- Error : None of the requested columns ('WSC_Green leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
- Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
- Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
- Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
- Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'N_Spike_mg_g' -> 'Wheat.Spike.Live.NConc'
- Error : None of the requested columns ('N_Spike_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 8.0 harvest'
- Target: 'WSC_Spike_mg_g' -> 'Wheat.Spike.Live.WSCc'
- Error : None of the requested columns ('WSC_Spike_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 10.0 harvest'
- Target: 'N_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.NConc'
- Error : None of the requested columns ('N_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 10.0 harvest'
- Target: 'WSC_Dead leaves_mg_g' -> 'Wheat.Leaf.Dead.WSCc'
- Error : None of the requested columns ('WSC_Dead leaves_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 10.0 harvest'
- Target: 'N_Stem_mg_g' -> 'Wheat.Stem.Live.NConc'
- Error : None of the requested columns ('N_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-
-======================================================================
- ⚠️  DATA NOT FOUND: MISSING VARIABLE ⚠️
-======================================================================
- File  : UOM2312-001RTX 25 DOO JH EVA WHT.xlsx
- Sheet : 'PCDS 10.0 harvest'
- Target: 'WSC_Stem_mg_g' -> 'Wheat.Stem.Live.WSCc'
- Error : None of the requested columns ('WSC_Stem_mg_g') were found in the sheet.
- Action: Skipping this extraction. The pipeline will continue.
-======================================================================
-
-● built target list_observed_dfs_raw [29.51 seconds]
+● built target list_observed_dfs_raw [30.61 seconds]
 
 ======================================================================
  🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
@@ -362,8 +362,7 @@ $file_name_new_met
 ======================================================================
 
 ▶ start target manual_pheno_params
-● built target manual_pheno_params [0.29 seconds]
-▶ start target list_observed_dfs_raw_plus_emergPerc
+● built target manual_pheno_params [0.3 seconds]
 
 ----------------------------------------------------------------------
  📈 PIPELINE ACTION: EMERGENCE PERCENTAGE CALCULATED 📈
@@ -374,7 +373,8 @@ $file_name_new_met
  -> Action        : Converted raw counts to 0-100% scale per SimulationName
 ----------------------------------------------------------------------
 
-● built target list_observed_dfs_raw_plus_emergPerc [0.06 seconds]
+▶ start target list_observed_dfs_raw_plus_emergPerc
+● built target list_observed_dfs_raw_plus_emergPerc [0.07 seconds]
 
 ======================================================================
  ⚠️  CRITICAL WARNING: RAW DATE TYPOS AUTO-CORRECTED ⚠️ 
@@ -579,11 +579,11 @@ $file_name_new_met
 ======================================================================
 
 ▶ start target list_observed_clean
-● built target list_observed_clean [0.17 seconds]
+● built target list_observed_clean [0.16 seconds]
    -> Notice: Excluding datasets from final output: [pcds_3_emergPlants_Perc, pcds_6_flagLeaf, pcds_8_anthesis]
 Successfully compiled, collapsed, and formatted the final APSIM observation dataframe.
 ▶ start target df_obs_wide
-● built target df_obs_wide [0.48 seconds]
+● built target df_obs_wide [0.4 seconds]
 
 ===========================================================
            HAUN DERIVATION INTERNAL TRACE LOGIC            
@@ -644,7 +644,7 @@ Success [derive_pheno_stages_from_haun]: Morphologically generated milestone row
  -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 24 simulations.
  -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 24 simulations.
 ▶ start target df_pheno_haun
-● built target df_pheno_haun [0.17 seconds]
+● built target df_pheno_haun [0.16 seconds]
 ✅ Successfully extracted 3 target dataframes.
 ▶ start target list_pcds_extracted
 ● built target list_pcds_extracted [0.03 seconds]
@@ -674,10 +674,10 @@ Success [derive_pheno_stages_from_haun]: Morphologically generated milestone row
 
 Success [get_pheno_dates_from_pcd_list]: Standardized 72 raw records at 50% progress.
 ▶ start target df_pheno_raw
-● built target df_pheno_raw [0.19 seconds]
-▶ start target df_pheno_int
+● built target df_pheno_raw [0.16 seconds]
 Success [create_interp_pheno_dates]: Linearly generated 48 missing micro-milestone rows (Stages 4/7).
-● built target df_pheno_int [0.07 seconds]
+▶ start target df_pheno_int
+● built target df_pheno_int [0.06 seconds]
 
 [!] NOTICE: Contrasting Dates Detected for Identical Stages
     Applying Truth Hierarchy (Raw > Haun > Int) to resolve. Affected simulations:
@@ -734,9 +734,9 @@ Success [create_interp_pheno_dates]: Linearly generated 48 missing micro-milesto
 Success [merge_and_qc_pheno]: Master timeline assembled. Retained 144 strictly chronological stage events.
 ▶ start target df_pheno_final
 ● built target df_pheno_final [0.19 seconds]
-Success [add_new_var_to_obs]: Appended and collapsed 144 events into master observations under column 'Wheat.Phenology.Stage'.
 ▶ start target df_obs_plus_pheno
-● built target df_obs_plus_pheno [0.74 seconds]
+Success [add_new_var_to_obs]: Appended and collapsed 144 events into master observations under column 'Wheat.Phenology.Stage'.
+● built target df_obs_plus_pheno [0.77 seconds]
 
 ----------------------------------------------------------------------
  🧹 PIPELINE ACTION: EMPTY STAGE COLUMNS PRUNED 🧹
@@ -748,7 +748,7 @@ Success [add_new_var_to_obs]: Appended and collapsed 144 events into master obse
 
 Success [format_apsim_pheno_params]: Translated 24 simulations into wide APSIM parameter format.
 ▶ start target df_pheno_input_param
-● built target df_pheno_input_param [0.09 seconds]
+● built target df_pheno_input_param [0.12 seconds]
 
 ============================================================
  ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
@@ -760,14 +760,31 @@ Success [format_apsim_pheno_params]: Translated 24 simulations into wide APSIM p
 
 ▶ start target df_obs_plus_pheno_hi
 ● built target df_obs_plus_pheno_hi [0.06 seconds]
-▶ start target qc_pheno_integrity
 ✅ SUCCESS: Phenology Input Matrix passed integrity check. No missing dates.
-● built target qc_pheno_integrity [0.01 seconds]
-Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+▶ start target qc_pheno_integrity
+● built target qc_pheno_integrity [0.04 seconds]
 ▶ start target df_obs_plus_pheno_hi_with_amounts
-● built target df_obs_plus_pheno_hi_with_amounts [0.07 seconds]
+
+------------------------------------------------------------
+ 🧪 NUTRIENT AGGREGATION & QC CHECK
+------------------------------------------------------------
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 🚨 ACTION REQUIRED: FATAL LAB DATA MISMATCH DETECTED 🚨
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 224 instances found where physical organs had Mass but no Conc
+ (or vice versa), corrupting the aggregate totals.
+
+ A detailed diagnostic log has been exported.
+ You MUST review the following file to see exactly what to fix:
+ -> Dookie2025_nutrient_calc_logs.csv
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+● built target df_obs_plus_pheno_hi_with_amounts [0.2 seconds]
 ▶ start target msg_pheno_param_saved
-● built target msg_pheno_param_saved [0.02 seconds]
+● built target msg_pheno_param_saved [0.03 seconds]
 
 ============================================================
  ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
@@ -778,37 +795,37 @@ Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and agg
 ------------------------------------------------------------
 
 ▶ start target df_obs_plus_pheno_harv
-● built target df_obs_plus_pheno_harv [0.14 seconds]
+● built target df_obs_plus_pheno_harv [0.13 seconds]
 ✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
 ▶ start target qc_apsim_observed_harv
-● built target qc_apsim_observed_harv [0.13 seconds]
-Success [save_df_to_excel]: Exported 907 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Dookie2025_Observed.xlsx' (Sheet: 'Observed').
+● built target qc_apsim_observed_harv [0.11 seconds]
 ▶ start target msg_obs_saved
+Success [save_df_to_excel]: Exported 907 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Dookie2025_Observed.xlsx' (Sheet: 'Observed').
 ● built target msg_obs_saved [0.32 seconds]
 ▶ start target haun_input_checked
 ● built target haun_input_checked [0.05 seconds]
-▶ start target exported_pheno_csv
 
 ----------------------------------------------------------------------
  📋 EXTRACTION SUMMARY: Dookie2025_population.csv
 ----------------------------------------------------------------------
-   -> '[Wheat].Leaf.StemPopulation': range [96 to 140]
+   -> '[Wheat].Leaf.StemPopulation': Extracted 24 records | Range [96 to 140]
 ----------------------------------------------------------------------
 💾 Success: Exported 24 valid rows and 2 columns.
-● built target exported_pheno_csv [0.08 seconds]
+▶ start target exported_pop_csv
+● built target exported_pop_csv [0.06 seconds]
 ▶ start target tracked_excel_files
 ● built target tracked_excel_files [0 seconds]
-✅ Pre-flight check passed: All required APSIM dependencies found.
 ▶ start target check_depend
-● built target check_depend [0.03 seconds]
+✅ Pre-flight check passed: All required APSIM dependencies found.
+● built target check_depend [0.01 seconds]
+▶ start target encrypted_zip_artifact
 Encrypting archive...
 ✅ Successfully created password-protected archive: Observed.zip
-▶ start target encrypted_zip_artifact
-● built target encrypted_zip_artifact [0.47 seconds]
+● built target encrypted_zip_artifact [0.26 seconds]
 ✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
 ▶ start target verify_data_backup
-● built target verify_data_backup [0.07 seconds]
-▶ end pipeline [36.95 seconds]
+● built target verify_data_backup [0.03 seconds]
+▶ end pipeline [37.85 seconds]
 Warning messages:
 1: package 'targets' was built under R version 4.3.2 
 2: package 'readxl' was built under R version 4.3.2 
@@ -818,5 +835,4 @@ Warning messages:
 6: package 'lubridate' was built under R version 4.3.2 
 7: Raw date typos were auto-corrected. See console for exact mapping. 
 8: Some phenology stages failed to reach the target threshold and required fallback assumptions. See console. 
-9: Quality variables created and inserted into Observations: Wheat.Leaf.Live.N, Wheat.Leaf.Dead.N, Wheat.Stem.Live.N, Wheat.Spike.Live.N, Wheat.AboveGround.N, Wheat.Leaf.Live.WSC, Wheat.Leaf.Dead.WSC, Wheat.Stem.Live.WSC, Wheat.Spike.Live.WSC, Wheat.AboveGround.WSC 
-10: 4 targets produced warnings. Run targets::tar_meta(fields = warnings, complete_only = TRUE) for the messages. 
+9: 3 targets produced warnings. Run targets::tar_meta(fields = warnings, complete_only = TRUE) for the messages. 
