@@ -11,13 +11,12 @@ The following objects are masked from 'package:base':
     intersect, setdiff, setequal, union
 
 ▶ start target config
-● built target config [0.79 seconds]
+● built target config [0.91 seconds]
 ▶ start target df_obs_raw
-● built target df_obs_raw [0.07 seconds]
+● built target df_obs_raw [0.08 seconds]
 ▶ start target track_mapping_csv
 ● built target track_mapping_csv [0 seconds]
 ▶ start target raw_met_tracker
-● built target raw_met_tracker [0.02 seconds]
 
 ======================================================================
  ⚙️ ACTIVE PIPELINE CONFIGURATION 
@@ -84,8 +83,10 @@ $file_name_mapping_csv
 
 ======================================================================
 
+● built target raw_met_tracker [0 seconds]
 ▶ start target log_active_config
 ● built target log_active_config [0 seconds]
+▶ start target df_obs_renamed
 Success [apply_name_corrections_Gna24]: Loaded translation matrix from 'Gnarwarre2024_obs_var_new_names.csv'.
 
 ----------------------------------------------------------------------
@@ -106,12 +107,11 @@ Success [apply_name_corrections_Gna24]: Loaded translation matrix from 'Gnarwarr
    [OLD] Wheat.Structure.Height --> [NEW] Wheat.Leaf.Height
 ----------------------------------------------------------------------
 
-▶ start target df_obs_renamed
-● built target df_obs_renamed [0.07 seconds]
+● built target df_obs_renamed [0.05 seconds]
+▶ start target validated_met_file
 ✅ MET data passed all quality checks.
 Successfully verified and copied to: Gnarwarre2024.met
-▶ start target validated_met_file
-● built target validated_met_file [0.1 seconds]
+● built target validated_met_file [0.07 seconds]
 
 ======================================================================
  ⚠️  TAILORED CORRECTIONS APPLIED TO WIDE OBS DATAFRAME ⚠️ 
@@ -127,7 +127,7 @@ Successfully verified and copied to: Gnarwarre2024.met
 ======================================================================
 
 ▶ start target df_obs_corrected
-● built target df_obs_corrected [0.04 seconds]
+● built target df_obs_corrected [0.03 seconds]
 ▶ start target df_obs_mean
 ● built target df_obs_mean [0.11 seconds]
 Success [get_column_var_from_observ]: Isolated target(s) (Wheat.Phenology.HaunStage) across 48 rows while preserving 2 standard metadata keys.
@@ -135,7 +135,7 @@ Success [get_column_var_from_observ]: Isolated target(s) (Wheat.Phenology.HaunSt
 ● built target df_haun [0.03 seconds]
 Success [get_pheno_dates_from_DOY_wide_obs]: Extracted 16 standardized raw records from wide DOY entries.
 ▶ start target df_pheno_raw
-● built target df_pheno_raw [0.06 seconds]
+● built target df_pheno_raw [0.08 seconds]
 
 ===========================================================
            HAUN DERIVATION INTERNAL TRACE LOGIC            
@@ -156,7 +156,7 @@ Success [derive_pheno_stages_from_haun]: Morphologically generated milestone row
  -> `[Wheat].Phenology.LeavesInitiating.DateToProgress` as Stage 4 generated for 4 simulations.
  -> `[Wheat].Phenology.SpikeletsDifferentiating.DateToProgress` as Stage 5 generated for 4 simulations.
 ▶ start target df_pheno_haun
-● built target df_pheno_haun [0.12 seconds]
+● built target df_pheno_haun [0.13 seconds]
 Success [create_interp_pheno_dates]: Linearly generated 8 missing micro-milestone rows (Stages 4/7).
 ▶ start target df_pheno_int
 ● built target df_pheno_int [0.08 seconds]
@@ -178,10 +178,10 @@ Success [merge_and_qc_pheno]: Master timeline assembled. Retained 28 strictly ch
 ● built target df_pheno_final [0.11 seconds]
 Success [add_new_var_to_obs]: Appended and collapsed 28 events into master observations under column 'Wheat.Phenology.Stage'.
 ▶ start target df_obs_plus_pheno
-● built target df_obs_plus_pheno [0.35 seconds]
+● built target df_obs_plus_pheno [0.33 seconds]
 Success [format_apsim_pheno_params]: Translated 4 simulations into wide APSIM parameter format.
 ▶ start target df_pheno_input_param
-● built target df_pheno_input_param [0.08 seconds]
+● built target df_pheno_input_param [0.11 seconds]
 
 ============================================================
  ⚠️  CALCULATION COMPLETE: HARVEST INDEX ⚠️ 
@@ -194,10 +194,28 @@ Success [format_apsim_pheno_params]: Translated 4 simulations into wide APSIM pa
 ▶ start target df_obs_plus_pheno_plus_hi
 ● built target df_obs_plus_pheno_plus_hi [0.06 seconds]
 ▶ start target msg_pheno_param_saved
-● built target msg_pheno_param_saved [0.13 seconds]
-Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and aggregated to 'Wheat.AboveGround'.
+● built target msg_pheno_param_saved [0.12 seconds]
+
+------------------------------------------------------------
+ 🧪 NUTRIENT AGGREGATION & QC CHECK
+------------------------------------------------------------
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 🚨 ACTION REQUIRED: FATAL LAB DATA MISMATCH DETECTED 🚨
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 22 instances found where physical organs had Mass but no Conc
+ (or vice versa), corrupting the aggregate totals.
+
+ A detailed diagnostic log has been exported.
+ You MUST review the following file to see exactly what to fix:
+ -> Gnarwarre2024_nutrient_calc_logs.csv
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 ▶ start target df_obs_plus_pheno_hi_amounts
-● built target df_obs_plus_pheno_hi_amounts [0.07 seconds]
+● built target df_obs_plus_pheno_hi_amounts [0.14 seconds]
+▶ start target df_obs_final
 
 ============================================================
  ⚠️  HARVEST DATES ASSIGNED: HARVESTRIPE ⚠️ 
@@ -211,16 +229,15 @@ Success [calc_nutrient_absolute_amounts]: Derived 8 explicit organ pools and agg
       - Wheat.Grain.Wt            : 2024-12-05
 ------------------------------------------------------------
 
-▶ start target df_obs_final
 ● built target df_obs_final [0.13 seconds]
 ✅ QC PASSED: Observation dataframe is structurally sound and ready for APSIM.
 ▶ start target qc_apsim_observed
-● built target qc_apsim_observed [0.1 seconds]
+● built target qc_apsim_observed [0.09 seconds]
 Success [save_df_to_excel]: Exported 174 rows to 'C:/github/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/Gnarwarre2024_Observed.xlsx' (Sheet: 'Observed').
 ▶ start target msg_obs_saved
-● built target msg_obs_saved [0.2 seconds]
+● built target msg_obs_saved [0.22 seconds]
 ▶ start target haun_input_checked
-● built target haun_input_checked [0.06 seconds]
+● built target haun_input_checked [0.07 seconds]
 
 ----------------------------------------------------------------------
  📋 EXTRACTION SUMMARY: Gnarwarre2024_population.csv
@@ -229,7 +246,7 @@ Success [save_df_to_excel]: Exported 174 rows to 'C:/github/ApsimX/Tests/Validat
 ----------------------------------------------------------------------
 💾 Success: Exported 4 valid rows and 2 columns.
 ▶ start target exported_pop_csv
-● built target exported_pop_csv [0.1 seconds]
+● built target exported_pop_csv [0.06 seconds]
 
 ======================================================================
  🧪  AUDITING MANUAL PHENOLOGY & GERMINATION PARAMETERS 
@@ -239,18 +256,18 @@ Success [save_df_to_excel]: Exported 174 rows to 'C:/github/ApsimX/Tests/Validat
 ======================================================================
 
 ▶ start target manual_pheno_params
-● built target manual_pheno_params [0.12 seconds]
+● built target manual_pheno_params [0.14 seconds]
 ▶ start target tracked_excel_files
 ● built target tracked_excel_files [0 seconds]
-▶ start target check_depend
 ✅ Pre-flight check passed: All required APSIM dependencies found.
-● built target check_depend [0.02 seconds]
+▶ start target check_depend
+● built target check_depend [0.03 seconds]
 ▶ start target encrypted_zip_artifact
 Encrypting archive...
 ✅ Successfully created password-protected archive: Observed.zip
-● built target encrypted_zip_artifact [0.16 seconds]
-✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
+● built target encrypted_zip_artifact [0.26 seconds]
 ▶ start target verify_data_backup
+✅ Archive Sync Passed: Live folder and Zip backup perfectly match.
 ● built target verify_data_backup [0.03 seconds]
-▶ end pipeline [4.32 seconds]
-There were 17 warnings (use warnings() to see them)
+▶ end pipeline [4.69 seconds]
+There were 16 warnings (use warnings() to see them)

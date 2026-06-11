@@ -5234,7 +5234,7 @@
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "LabelOnOneLine": false,
-                      "Minimum": "NaN",
+                      "Minimum": -10.0,
                       "Maximum": "NaN",
                       "Interval": null
                     }

@@ -365,16 +365,30 @@ list(
     )
   ),
   
+  # tar_target(
+  #   name = df_obs_plus_pheno_hi_with_amounts,
+  #   command = calc_nutrient_absolute_amounts(
+  #     df           = df_obs_plus_pheno_hi, 
+  #     crop_prefix  = "Wheat",
+  #     organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+  #     conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+  #     mass_suffix  = "Wt",
+  #     ag_name      = "Wheat.AboveGround",
+  #     divisor      = 1 # Use 100 if Obs data is percentage or 1 if fractional
+  #   )
+  # ),
+  
   tar_target(
     name = df_obs_plus_pheno_hi_with_amounts,
     command = calc_nutrient_absolute_amounts(
-      df           = df_obs_plus_pheno_hi, 
-      crop_prefix  = "Wheat",
-      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
-      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
-      mass_suffix  = "Wt",
-      ag_name      = "Wheat.AboveGround",
-      divisor      = 1 # Use 100 if Obs data is percentage or 1 if fractional
+      df             = df_obs_plus_pheno_hi, 
+      crop_prefix    = "Wheat",
+      organs         = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets   = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix    = "Wt",
+      ag_name        = "Wheat.AboveGround",
+      divisor        = 1,
+      error_log_path = file.path(paste0(config$proj_name, "_nutrient_calc_logs.csv"))
     )
   ),
   

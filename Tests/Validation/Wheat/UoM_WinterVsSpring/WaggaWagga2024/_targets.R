@@ -5,7 +5,7 @@
 # synthetic phenology stages, formatting soil/met inputs, and generating the 
 # final '_Observed.xlsx' file for APSIM-X injection.
 # ==============================================================================
-
+#options(warn = 1)
 library(targets)
 library(rstudioapi)
 library(here)
@@ -377,18 +377,34 @@ list(
     )
   ),
   
+  # tar_target(
+  #   name = df_obs_plus_pheno_with_amounts,
+  #   command = calc_nutrient_absolute_amounts(
+  #     df           = df_obs_plus_pheno, 
+  #     crop_prefix  = "Wheat",
+  #     organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+  #     conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+  #     mass_suffix  = "Wt",
+  #     ag_name      = "Wheat.AboveGround",
+  #     divisor      = 1  # Note: Assuming your conc values are already fractions (g/g). If they are %, change to 100!
+  #   )
+  # ),
+  
+  
   tar_target(
     name = df_obs_plus_pheno_with_amounts,
     command = calc_nutrient_absolute_amounts(
-      df           = df_obs_plus_pheno, 
-      crop_prefix  = "Wheat",
-      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
-      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
-      mass_suffix  = "Wt",
-      ag_name      = "Wheat.AboveGround",
-      divisor      = 1  # Note: Assuming your conc values are already fractions (g/g). If they are %, change to 100!
+      df             = df_obs_plus_pheno, 
+      crop_prefix    = "Wheat",
+      organs         = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets   = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix    = "Wt",
+      ag_name        = "Wheat.AboveGround",
+      divisor        = 1,
+      error_log_path = file.path(paste0(config$proj_name, "_nutrient_calc_logs.csv"))
     )
   ),
+  
   
   tar_target(
     name = df_obs_plus_pheno_harv,
