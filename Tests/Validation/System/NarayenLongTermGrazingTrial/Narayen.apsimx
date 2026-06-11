@@ -16,7 +16,8 @@
             "ObservedPastureBiomass.xlsx",
             "ObservedPastureN.xlsx",
             "ObservedLWG.xlsx",
-            "ObservedDigestibility.xlsx"
+            "ObservedDigestibility.xlsx",
+            "ObservedPercentPaddockN.xlsx"
           ],
           "SheetNames": [
             "Observed"
