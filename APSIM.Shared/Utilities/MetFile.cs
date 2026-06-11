@@ -606,6 +606,19 @@ namespace APSIM.Shared.Utilities
             return true;
         }
 
+        /// <summary>
+        /// Creates a MetFile object from a string in the format of a text met file.
+        /// </summary>
+        /// <param name="content">The string content of the met file</param>
+        /// <returns>A MetFile object</returns>
+        public static MetFile Create(string content)
+        {
+            return new MetFile()
+            {
+                data = ReadMet(content)
+            };
+        }
+
         ////////////////////////////////////////////////////////////////////////
         // Private Static Helper Functions
         ////////////////////////////////////////////////////////////////////////
