@@ -22,7 +22,7 @@ namespace Models.GrazPlan.Biomass
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-        private List<IBiomass> organs = null;
+        private List<IOrganDamage> organs = null;
 
         /// <summary>List of organs to aggregate.</summary>
         [Description("List of organs to aggregate.")]
@@ -62,24 +62,22 @@ namespace Models.GrazPlan.Biomass
             return PastureModel.GetHerbageConc(comp, part, GrazType.TOTAL, elem);
         }
         
-       
-
         /// <summary>Clear ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            organs = new List<IBiomass>();
+            organs = new List<IOrganDamage>();
             var parentPlant = Structure.FindParent<Pasture>(recurse: true);
             if (parentPlant == null)
                 throw new Exception("CompositeBiomass can only be dropped on a plant.");
             foreach (var organName in OrganNames)
             {
                 var organ = parentPlant.Children.FirstOrDefault(o => o.Name == organName);
-                if (organ == null && !(organ is IBiomass))
+                if (organ == null && !(organ is IOrganDamage))
                     throw new Exception($"In {Name}, cannot find a plant organ called {organName}");
-                organs.Add(organ as IBiomass);
+                organs.Add(organ as IOrganDamage);
                 
             }
         }
@@ -89,31 +87,17 @@ namespace Models.GrazPlan.Biomass
         public double Wt
         {
             get
-            {
-                
+            {            
                 double wt = 0;
                 if (organs != null)
                     foreach (var organ in organs)
                     {
-                        wt+=organ.Wt;
-                    }
-
-               
-               bool liveOnly = IncludeLive && !IncludeDead;
-               bool deadOnly = IncludeDead && !IncludeLive;
-         
-
-               if (PastureModel != null)
-               {
-                    if (Name == "AboveGroundLive")
-                        wt = liveOnly ? GetDM(GrazType.sgGREEN, GrazType.TOTAL) / 10.0 : 0;
-
-                    else if (Name == "AboveGroundDead")
-                        wt = deadOnly ? GetDM(GrazType.stDEAD, GrazType.TOTAL) / 10.0 : 0;
-               }
-
+                        if(IncludeLive)
+                            wt+=organ.Live.Wt;
+                        if(IncludeDead)
+                            wt+=organ.Dead.Wt;
+                    }           
                return wt;
- 
             }
         }
  
@@ -127,26 +111,15 @@ namespace Models.GrazPlan.Biomass
             {
                 
                 double n = 0;
-                
                 if (organs != null)
                 {
                     foreach (var organ in organs)
-                        n+=organ.N;
-
-                }
-                    
-                    
-                 if (PastureModel != null)
-                {
-                    if (Name == "AboveGroundLive")
-                    {   
-                         n= GetDM(GrazType.sgGREEN, GrazType.TOTAL) / 10.0 * GetPlantNutr(GrazType.sgGREEN, GrazType.TOTAL, TPlantElement.N);
-                    
+                    {
+                        if(IncludeLive)
+                            n += organ.Live.N;
+                        if(IncludeDead)
+                            n += organ.Dead.N;
                     }
-                   
-                    if(Name=="AboveGroundDead")
-                        n = GetDM(GrazType.stDEAD, GrazType.TOTAL) / 10.0 * GetPlantNutr(GrazType.stDEAD, GrazType.TOTAL, TPlantElement.N);
-                       
                 }
                 return n;
             }
@@ -170,7 +143,6 @@ namespace Models.GrazPlan.Biomass
         /// <summary>
         /// Gets Structual N
         /// </summary>
-
         public double StructuralN
         {
             get
@@ -180,10 +152,12 @@ namespace Models.GrazPlan.Biomass
                 {
                     foreach (var organ in organs)
                     {
-                        n += organ.StructuralN;
+                       if(IncludeLive)
+                            n += organ.Live.StructuralN;
+                       if(IncludeDead)
+                            n += organ.Dead.StructuralN;
                     }
                 }
-
                 return n;
             }
         }
@@ -193,17 +167,19 @@ namespace Models.GrazPlan.Biomass
         /// </summary>
         public double StorageWt
         {
-            get
+           get
             {
                 double wt =0;
                 if(organs != null)
                 {
                     foreach (var organ in organs)
                     {
-                        wt += organ.StructuralWt;
+                       if(IncludeLive)
+                            wt += organ.Live.StorageWt;
+                        if(IncludeDead)
+                            wt += organ.Dead.StorageWt;
                     }
                 }
-
                 return wt; 
             }
         }
@@ -214,16 +190,18 @@ namespace Models.GrazPlan.Biomass
         public double StorageN
         {
             get
-            {
+           {
                 double n =0;
                 if(organs != null)
                 {
                     foreach (var organ in organs)
                     {
-                        n += organ.StructuralWt;
+                        if(IncludeLive)
+                            n += organ.Live.StorageN;
+                        if(IncludeDead)
+                            n += organ.Dead.StorageN;
                     }
                 }
-
                 return n; 
             }
         }
@@ -241,14 +219,14 @@ namespace Models.GrazPlan.Biomass
                 {
                     foreach (var organ in organs)
                     {
-                        wt += organ.StructuralWt;
+                       if(IncludeLive)
+                            wt =+ organ.Live.StructuralWt;
+                        if(IncludeDead)
+                            wt += organ.Dead.StructuralWt;
                     }
                 }
-
                 return wt; 
             }
         }
-
-
     }
 }

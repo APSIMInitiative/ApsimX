@@ -14,7 +14,9 @@
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
             "ObservedPastureBiomass.xlsx",
-            "ObservedPastureN.xlsx"
+            "ObservedPastureN.xlsx",
+            "ObservedLWG.xlsx",
+            "ObservedDigestibility.xlsx"
           ],
           "SheetNames": [
             "Observed"
