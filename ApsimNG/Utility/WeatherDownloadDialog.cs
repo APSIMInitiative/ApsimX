@@ -5,8 +5,11 @@ using Models.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +38,7 @@ namespace APSIMNG.Utility
         private RadioButton radioSiloDataDrill = null;
         private RadioButton radioSiloPatchPoint = null;
         private RadioButton radioNASA = null;
+        private RadioButton radioNASAOnly = null;
         private Gtk.Calendar calendarStart = null;
         private Gtk.Calendar calendarEnd = null;
         private Entry entryFilePath = null;
@@ -75,6 +79,7 @@ namespace APSIMNG.Utility
             radioSiloDataDrill = (RadioButton)builder.GetObject("radioSiloDataDrill");
             radioSiloPatchPoint = (RadioButton)builder.GetObject("radioSiloPatchPoint");
             radioNASA = (RadioButton)builder.GetObject("radioNASA");
+            radioNASAOnly = (RadioButton)builder.GetObject("radioNASAOnly");
             btnOk = (Button)builder.GetObject("btnOk");
             btnCancel = (Button)builder.GetObject("btnCancel");
             btnGetPlacename = (Button)builder.GetObject("btnGetPlacename");
@@ -220,7 +225,28 @@ namespace APSIMNG.Utility
                                     WaitCursor = true;
                                     btnCancel.Label = "Stop";
                                     labelDest.Text = "Downloading...";
-                                    newWeatherPath = await GetNasaChirps();
+                                    double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
+                                    double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
+                                    bool useWorldModellersRain = true;
+                                    newWeatherPath = await GetNasaPower(latitude, longitude, 
+                                        calendarStart.Date.ToString("yyyy-MM-dd"), calendarEnd.Date.ToString("yyyy-MM-dd"),
+                                        useWorldModellersRain);
+                                }
+                            }
+                            else if (radioNASAOnly.Active)
+                            {
+                                validEntries = ValidateNasaChoice();
+                                if (validEntries)
+                                {
+                                    WaitCursor = true;
+                                    btnCancel.Label = "Stop";
+                                    labelDest.Text = "Downloading...";
+                                    double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
+                                    double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
+                                    bool useWorldModellersRain = false;
+                                    newWeatherPath = await GetNasaPower(latitude, longitude, 
+                                        calendarStart.Date.ToString("yyyy-MM-dd"), calendarEnd.Date.ToString("yyyy-MM-dd"),
+                                        useWorldModellersRain);
                                 }
                             }
                         }
@@ -892,6 +918,42 @@ namespace APSIMNG.Utility
             return newWeatherPath;
         }
 
+        
+
+        private static string AddDateColumnToMetText(string metText, List<DateTime> dates)
+        {
+            string[] lines = metText.Replace("\r\n", "\n").Split('\n');
+            int headerLine = -1;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string trimmed = lines[i].Trim();
+                if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("["))
+                    continue;
+                if (!trimmed.Contains("=") && !trimmed.StartsWith("!"))
+                {
+                    headerLine = i;
+                    break;
+                }
+            }
+
+            if (headerLine < 0 || headerLine + 1 >= lines.Length)
+                return metText;
+
+            lines[headerLine] = "date " + lines[headerLine];
+            lines[headerLine + 1] = "(yyyy-mm-dd) " + lines[headerLine + 1];
+
+            int dateIndex = 0;
+            for (int i = headerLine + 2; i < lines.Length && dateIndex < dates.Count; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                    continue;
+                lines[i] = dates[dateIndex].ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) + " " + lines[i];
+                dateIndex++;
+            }
+
+            return string.Join("\n", lines);
+        }
+
         private bool waiting = false;
         /// <summary>
         /// Used to modify the cursor. If set to true, the waiting cursor will be displayed.
@@ -911,6 +973,29 @@ namespace APSIMNG.Utility
                     waiting = value;
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Gets the NASA POWER data for the specified location and date range, 
+        /// and returns the path to the APSIM file.
+        /// </summary> 
+        /// <param name="lat">Latitude value as a double</param>
+        /// <param name="lon">Longitude value as a double</param>
+        /// <param name="startDateStr">Date string formatted as YYYY-MM-DD</param>
+        /// <param name="endDateStr">Date string formatted as YYYY-MM-DD</param>
+        /// <param name="useWorldModellersRain">Are World Modellers API rain values used in place of NASA Power rain values?</param>
+        private async Task<string> GetNasaPower(double lat, double lon, string startDateStr, string endDateStr, bool useWorldModellersRain)
+        {
+
+            string fileContents = await WeatherThirdPartyUtility.GetNasaPower(lat, lon, startDateStr, endDateStr, useWorldModellersRain);
+            string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
+            File.WriteAllText(dest, fileContents);
+            if (File.Exists(dest))
+            {
+                return dest;
+            }
+            else throw new FileNotFoundException("Failed to create weather file");
         }
     }
 }
