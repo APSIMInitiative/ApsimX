@@ -3535,7 +3535,7 @@
                       "LineThickness": 0,
                       "TableName": "Observed",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "Rhodes.AboveGround.N",
+                      "YFieldName": "TotalSoilNPercent",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
