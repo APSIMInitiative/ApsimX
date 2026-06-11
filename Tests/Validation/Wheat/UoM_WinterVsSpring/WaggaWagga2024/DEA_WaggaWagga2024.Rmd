@@ -148,8 +148,12 @@ tar_load(list_observed_dfs)
 ```
 
 ```{r}
+library(targets)
 tar_load(df_soil_water)
-tar_load(soilN_data_clean)
+#tar_load(soilN_data_clean)
 tar_load(soil_DUL)
+tar_load(df_obs_plus_pheno_with_amounts)
+x<-tar_read(df_obs_plus_pheno_with_amounts)
+names(x)[grepl("Spike", names(x))]
 ```
 

@@ -194,19 +194,35 @@ list(
       hi_col_name = "HarvestIndex"
     )
   ),
+  # tar_target(
+  #   name = df_obs_plus_pheno_hi_amounts,
+  #   command = calc_nutrient_absolute_amounts(
+  #     df           = df_obs_plus_pheno_plus_hi, 
+  #     crop_prefix  = "Wheat",
+  #     # Note for Gnarwarre: Removed .Live from Stem and Spike to match lab data
+  #     organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+  #     conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
+  #     mass_suffix  = "Wt",
+  #     ag_name      = "Wheat.AboveGround",
+  #     divisor      = 1 
+  #   )
+  # ),
+  
   tar_target(
     name = df_obs_plus_pheno_hi_amounts,
     command = calc_nutrient_absolute_amounts(
-      df           = df_obs_plus_pheno_plus_hi, 
-      crop_prefix  = "Wheat",
-      # Note for Gnarwarre: Removed .Live from Stem and Spike to match lab data
-      organs       = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
-      conc_targets = c("N" = "NConc", "WSC" = "WSCc"), 
-      mass_suffix  = "Wt",
-      ag_name      = "Wheat.AboveGround",
-      divisor      = 1 
+      df             = df_obs_plus_pheno_plus_hi, 
+      crop_prefix    = "Wheat",
+      organs         = c("Leaf.Live", "Leaf.Dead", "Stem.Live", "Spike.Live"), 
+      conc_targets   = c("N" = "NConc", "WSC" = "WSCc"), 
+      mass_suffix    = "Wt",
+      ag_name        = "Wheat.AboveGround",
+      divisor        = 1,
+      error_log_path = file.path(paste0(config$proj_name, "_nutrient_calc_logs.csv"))
     )
   ),
+  
+  
   tar_target(
     name = df_obs_final,
     command = add_harv_into_obs(
