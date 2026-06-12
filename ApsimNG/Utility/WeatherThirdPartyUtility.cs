@@ -36,7 +36,7 @@ public static class WeatherThirdPartyUtility
     /// Parameters currently set to return daily max and min temperature, precipitation,
     /// solar radiation, relative humidity and wind speed.
     /// </summary>
-    private static string NASAPOWERAPI = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,ALLSKY_SFC_SW_DWN,PRECTOTCORR,RH2M,WS2M&community=AG&format=JSON&time-standard=UTC&";
+    private static string NASAPOWERAPI = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,ALLSKY_SFC_SW_DWN,PRECTOTCORR,RH2M,WS2M&community=AG&format=JSON&time-standard=LST&";
  
     /// <summary>
     /// Get the NASA POWER data
