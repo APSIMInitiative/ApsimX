@@ -320,6 +320,10 @@ namespace APSIM.Shared.Utilities
             if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
+            // Record the start date in the internal MetData so other APIs
+            // (e.g. GetDay) can compute offsets correctly.
+            data.StartDate = date;
+
             for(int i = 0; i < values.Length; i += numColumns)
             {
                 MetRow row = new MetRow();
@@ -328,8 +332,8 @@ namespace APSIM.Shared.Utilities
 
                 for(int j = 0; j < numColumns; j++)
                 {
-                    row.Inputs.Add(values[i].ToString());
-                    row.Values.Add(values[i]);
+                    row.Inputs.Add(values[i+j].ToString());
+                    row.Values.Add(values[i+j]);
                 }
                 data.Rows.Add(row);
             }
@@ -353,9 +357,9 @@ namespace APSIM.Shared.Utilities
         {
             // Create an array that Load method can use.
             List<double> valuesArrayList = new();
-            for(int i = 0; i < columns.Length; i++)
+            for(int j = 0; j < numberOfDays; j++)
             {
-                for(int j = 0; j < numberOfDays; j++)
+                for(int i = 0; i < columns.Length; i++)
                     valuesArrayList.Add(valueLists[i][j]);
             }
             double[] values = valuesArrayList.ToArray();
@@ -650,6 +654,14 @@ namespace APSIM.Shared.Utilities
             {
                 data = ReadMet(content)
             };
+        }
+
+        ///<summary>
+        /// Return false if MetFile.data is empty.
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return data.Rows.Count == 0;
         }
 
         ////////////////////////////////////////////////////////////////////////
