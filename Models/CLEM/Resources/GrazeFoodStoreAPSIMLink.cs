@@ -26,8 +26,6 @@ namespace Models.CLEM.Resources
     [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
     public class GrazeFoodStoreAPSIMLink : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IGrazeFoodStoreType, IValidatableObject
     {
-        //[Link]
-        //private readonly CLEMEvents events = null;
         private double biomassAddedThisYear;
         private double biomassConsumed;
         private Forages forages;
@@ -207,18 +205,6 @@ namespace Models.CLEM.Resources
 
         //private double amount = 0;
 
-        ///// <summary>
-        ///// Amount (kg total)
-        ///// </summary>
-        //[JsonIgnore]
-        //public double Amount
-        //{
-        //    get
-        //    {
-        //        return amount;  // Set in update paddock in PastureReady event
-        //    }
-        //}
-
         /// <summary>
         /// The biomass per hectare of pasture available
         /// </summary>
@@ -295,8 +281,6 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            //AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(RumenDegradableProteinPercent, TypeOfFeed);
-
             forages = Node.Find<Forages>();
             paddock = Node.Find<Zone>(name: PaddockName);
             if (forages is null || paddock is null)
@@ -308,7 +292,7 @@ namespace Models.CLEM.Resources
             paddockInfo = new PaddockInfo(zone: paddock, structure: Structure) { zone = paddock };
             paddockInfo.ClearSupplement();
 
-            // find all the child crop, pasture components that have removable biomass
+            // find all the child crop, pasture components that have removable biomass for the current paddock
             foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == paddock))
                 forageProviders.AddProvider(paddockInfo, paddock.Name, paddock.Name + "." + forage.Name, 0, 0, forage);
         }
@@ -703,6 +687,10 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
         {
+            //string devStyle = "ByDMD";
+            //string devStyle = "BySpecies";
+            string devStyle = "ByForageVSurfaceOM";
+
             if (paddockInfo?.Forages == null || paddockInfo.Forages.Count() == 0)
                 return [];
 
@@ -720,33 +708,44 @@ namespace Models.CLEM.Resources
                     double dead = material.Where(m => !m.IsLive).Sum(m => m.Total.Wt);
                     //return (live + dead) > 0.0;
                     return wt > 0.0;
-                });
+                })
+                .Select(provider => new GrazeAPSIMForagePool(this, provider, paddockInfo));
 
-            var pools2 = pools
-                .Select(provider => new GrazeAPSIMForagePool(provider)); // created a list of pools with their DMD values set from the forage model that had biomass present
-            //.GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
-            //.Select(groups => new FoodResourceStore(
-            //    [.. groups],
-            //    greenAge,
-            //    numberOfTimesteps
-            //    )
-            //).OrderByDescending(a => a.Details.DryMatterDigestibility);
-
-            return []; // pools.ToList();
-
-            //var nestedGroups = forageProviders.Providers.Select(a => new GrazeAPSIMForagePool(a))
-            //    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-            //    .Select(groups => new FoodResourceStore(
-            //        [.. groups],
-            //        greenAge,
-            //        numberOfTimesteps
-            //        )
-            //    ).OrderByDescending(a => a.Details.DryMatterDigestibility);
-
-            //return nestedGroups.ToList();
-
-            //IEnumerable<GrazeFoodStorePool> pasturePools;
-            //pasturePools = Pools;
+            switch (devStyle)
+            {
+                case "ByDMD":
+                    // pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
+                    return pools
+                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
+                    .Select(groups => new FoodResourceStore(
+                        [.. groups],
+                        greenAge,
+                        numberOfTimesteps
+                        )
+                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
+                case "BySpecies":
+                    // pools ordered by species and grouped into FoodResourceStore for feeding to animals            
+                    return pools
+                    .GroupBy(s => s.Name.Split('.').First()) 
+                    .Select(groups => new FoodResourceStore(
+                        [.. groups],
+                        greenAge,
+                        numberOfTimesteps
+                        )
+                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
+                case "ByForageVSurfaceOM":
+                    // pools combined into pasture vs surface organic matter
+                    return pools
+                    .GroupBy(s => s.Name.Contains("Surface") == false)
+                    .Select(groups => new FoodResourceStore(
+                        [.. groups],
+                        greenAge,
+                        numberOfTimesteps
+                        )
+                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
+                default:
+                    return [];
+            }
 
             // think about different approaches
             // 1. whole avearge pasture pool (DMD step = 100)
@@ -756,22 +755,7 @@ namespace Models.CLEM.Resources
             // 5. CLEM low biomass intake limited - implemented
 
             // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
-
-            //var nestedGroups = pasturePools
-            //    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-            //    .Select(groups => new FoodResourceStore(
-            //        groups.ToList(),
-            //        greenAge,
-            //        numberOfTimesteps
-            //        )
-            //    ).OrderByDescending(a => a.Details.DryMatterDigestibility);
-
-            //return nestedGroups.ToList();
-
         }
-
-        ///// <inheritdoc/>
-        //public IEnumerable<FoodResourceStore> DigestiblePasturePoolGroups { get; set; }
 
         /// <summary>
         /// Apply the prepared forage removals for the daily intake request

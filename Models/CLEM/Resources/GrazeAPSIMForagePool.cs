@@ -1,5 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
+using Models.ForageDigestibility;
+using Models.GrazPlan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,46 +17,74 @@ namespace Models.CLEM.Resources
     public class GrazeAPSIMForagePool: IGrazeIntakePool
     {
         private GrazPlan.ForageProvider forageProvider;
+        private IFeed feedDetails;
         private double amount = 0;
+        private double nitrogen = 0;
+        private double dmd = 0;
 
         /// <summary>
         /// Create the adapter
         /// </summary>
+        /// <param name="details"></param>
         /// <param name="forageProviderModel">
         /// An enumerable of forageProviders included in this intake pool
         /// </param>
-        public GrazeAPSIMForagePool(GrazPlan.ForageProvider forageProviderModel)
+        /// <param name="paddock"></param>
+        public GrazeAPSIMForagePool(GrazeFoodStoreAPSIMLink details, GrazPlan.ForageProvider forageProviderModel, PaddockInfo paddock)
         {
             forageProvider = forageProviderModel;
-            amount = forageProvider.ForageObj.Material.Sum(a => a.Consumable.Wt);
+            feedDetails = details as IFeed;
+            amount = forageProvider.ForageObj.Material.Sum(a => a.Consumable.Wt) * paddock.Area;
+            nitrogen = forageProvider.ForageObj.Material.Sum(a => a.Consumable.N) * paddock.Area;
+
+            double totalDMD = 0;
+            double totalWt = 0;
+            foreach (var live in forageProvider.ForageObj.Material.Where(m => m.IsLive))
+            {
+                Name = live.Name;
+
+                // Find corresponding dead material
+                var dead = forageProvider.ForageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+                if (dead == null)
+                    throw new Exception($"Cannot find dead material for {live.Name}.");
+
+                if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
+                {
+                    // we can find the dmd of structural, assume storage and metabolic are 100% digestible
+                    dmd = (paddock.ForagesModel.GetDigestibility(live) * live.Consumable.StructuralWt) + (1 * live.Consumable.StorageWt) + (1 * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                    dmd += (paddock.ForagesModel.GetDigestibility(dead) * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt);
+                    totalDMD += dmd;
+                    totalWt += live.Total.Wt + dead.Total.Wt;
+                }
+            }
+            dmd = totalDMD / totalWt * 100;
+            GutFill = details.CalculateGutFill(totalDMD);
         }
 
         /// <inheritdoc/>
         public double Amount { get => amount - AmountPending; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double DMD { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public FeedType TypeOfFeed { get => feedDetails.TypeOfFeed; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public FeedType TypeOfFeed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double GrossEnergyContent { get => feedDetails.GrossEnergyContent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double GrossEnergyContent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double MetabolisableEnergyContent { get => feedDetails.MetabolisableEnergyContent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double MetabolisableEnergyContent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double DryMatterDigestibility { get => dmd; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double DryMatterDigestibility { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double FatPercent { get => feedDetails.FatPercent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double FatPercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double NitrogenPercent { get => nitrogen / amount; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double NitrogenPercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double CrudeProteinPercent { get => nitrogen * 6.25 / amount; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double CrudeProteinPercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double RumenDegradableProteinPercent { get => feedDetails.RumenDegradableProteinPercent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double RumenDegradableProteinPercent { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double AcidDetergentInsolubleProtein { get => feedDetails.AcidDetergentInsolubleProtein; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double AcidDetergentInsolubleProtein { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public double GutFill { get; set; }
         /// <inheritdoc/>
-        public double GutFill { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        /// <inheritdoc/>
-        public int Age { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int Age { get => 10; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
         public double Detached { get; set; }
         /// <inheritdoc/>
@@ -62,7 +92,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double Growth => double.NaN;
         /// <inheritdoc/>
-        public string Name { get => forageProvider.ForageObj.Name; set => throw new NotImplementedException(); }
+        public string Name { get; set; }
         /// <inheritdoc/>
         public double AmountAvailable => amount - AmountPending;
         /// <inheritdoc/>
