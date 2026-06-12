@@ -32,7 +32,7 @@ public static class WeatherThirdPartyUtility
     /// Parameters currently set to return daily max and min temperature, precipitation,
     /// solar radiation, relative humidity and wind speed.
     /// </summary>
-    private static string NASAPOWERAPI = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,ALLSKY_SFC_SW_DWN,PRECTOTCORR,RH2M,WS2M&community=AG&format=JSON&time-standard=LST&";
+    private static string NASAPOWERAPI = "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M_MAX,T2M_MIN,ALLSKY_SFC_SW_DWN,RH2M,WS2M,PRECTOTCORR&community=AG&format=JSON&time-standard=LST&";
  
     /// <summary>
     /// Get the NASA POWER data
@@ -43,7 +43,7 @@ public static class WeatherThirdPartyUtility
     /// <param name="endDateStr">Date string formatted as YYYY-MM-DD</param>
     /// <param name="useWorldModellersRain"></param>
     /// <returns>APSIM met file content. This will never return null</returns>
-    public static async Task<string> GetNasaPower(double lat, double lon, string startDateStr, string endDateStr, bool useWorldModellersRain)
+    public static async Task<MetFile> GetNasaPower(double lat, double lon, string startDateStr, string endDateStr, bool useWorldModellersRain)
     {
         string metFileContent = string.Empty;
 
@@ -58,9 +58,10 @@ public static class WeatherThirdPartyUtility
         ];
 
         string[] columns = [
-            "date",
-            "mint",
+            "year",
+            "day",
             "maxt",
+            "mint",
             "radn",
             "rh",
             "wind",
@@ -68,54 +69,92 @@ public static class WeatherThirdPartyUtility
         ];
 
         string[] units = [
-            "()",
-            "(oC)",
-            "(oC)",
-            "(MJ/m^2)",
-            "(%)",
-            "(m/s)",
-            "(mm)"
+            "",
+            "",
+            "oC",
+            "oC",
+            "MJ/m^2",
+            "%",
+            "m/s",
+            "mm"
         ];
 
-        List<WeatherVariable> allVariables = new List<WeatherVariable>();
         try
         {
+            // Add Year and Day variables
+            Dictionary<DateTime,double> YearDictionary = new();
+            Dictionary<DateTime,double> DOYDictionary = new();
+            for(int i = 0; i < numDays; i++)
+            {
+                DateTime date = startDate.AddDays(i);
+                YearDictionary[date] = date.Year;
+                DOYDictionary[date] = date.DayOfYear;
+            }
+            List<WeatherVariable> allVariables = [new WeatherVariable("year", YearDictionary)];
+            WeatherVariable dayWeatherVariable = new("day", DOYDictionary);
+            allVariables.Add(dayWeatherVariable);
+
             // Get the NASA Power variables.
-            allVariables = await GetWeatherVariablesFromNASAPower(numDays, lat, lon, startDateStr, endDateStr);
+            allVariables.AddRange(await GetWeatherVariablesFromNASAPower(numDays, lat, lon, startDateStr, endDateStr));
+
             // Get and add the rain variable from World Modellers API.
             if (useWorldModellersRain == true)
-                allVariables.Add(await GetRainVariablesFromWorldModellers(lat, lon, startDate, endDate));
-            // Create a MetFile object initially for the NASA Power data.
-            List<List<double>> valueLists = new();
-            foreach(WeatherVariable weatherVariable in allVariables)
             {
-                List<double> newVariableList = [];
-                foreach(KeyValuePair<DateTime, double> valuePair in weatherVariable.Values)
-                    newVariableList.Add(valuePair.Value);
+                allVariables.RemoveAll(x => x.Name == "PRECTOTCORR"); // PRECTOTCORR a.k.a rain.
+                allVariables.Add(await GetRainVariablesFromWorldModellers(lat, lon, startDate, endDate));
+            }
+
+            // Create a MetFile object initially for the NASA Power data.
+            // Ensure variables are ordered to match the expected columns so that
+            // values are placed into the correct met columns regardless of the
+            // order returned by the NASA POWER API.
+            List<List<double>> valueLists = new();
+
+            // Helper to map our column name to the variable name returned/created.
+            string MapColumnToVariableName(string col)
+            {
+                return col switch
+                {
+                    "year" => "year",
+                    "day" => "day",
+                    "maxt" => "T2M_MAX",
+                    "mint" => "T2M_MIN",
+                    "radn" => "ALLSKY_SFC_SW_DWN",
+                    "rh"   => "RH2M",
+                    "wind" => "WS2M",
+                    "rain" => useWorldModellersRain ? "rain" : "PRECTOTCORR",
+                    _ => col
+                };
+            }
+
+            foreach (string col in columns)
+            {
+                string varName = MapColumnToVariableName(col);
+                WeatherVariable variable = allVariables.FirstOrDefault(v => string.Equals(v.Name, varName, StringComparison.OrdinalIgnoreCase));
+                if (variable == null)
+                    throw new Exception($"Expected weather variable '{varName}' not found when constructing met file.");
+
+                List<double> newVariableList = new();
+                for (int d = 0; d < numDays; d++)
+                {
+                    DateTime date = startDate.AddDays(d);
+                    if (!variable.Values.TryGetValue(date, out double val))
+                        val = double.NaN;
+                    newVariableList.Add(val);
+                }
                 valueLists.Add(newVariableList);
             }
+
             MetFile nasaMetFile = new MetFile();
             nasaMetFile.Load(constants, columns, units, startDateStr, numDays, valueLists);
-            
-
-
-
-
-
-            // // Next, construct the new amalgamated APSIM met file.
-            // List<string> newAPSIMFileLines = CreateAPSIMMetFileTopSection(constants, columns, units);
-            // if (newAPSIMFileLines.Count == 0)
-            //     throw new Exception("Something went wrong creating APSIM met file headers.");
-            // // Add each of the variables in the correct position for each day on a line.
-            // metFileContent = CreateAPSIMMetFileString(startDate, numDays, allVariables, newAPSIMFileLines, useWorldModellersRain);
-            // if (string.IsNullOrEmpty(metFileContent))
-            //     throw new Exception("An error occurred trying to organising the met file records for writing.");
+            if (nasaMetFile.IsEmpty())
+                throw new Exception("Weather cannot be created. No MetFile data was added.");
+            return nasaMetFile;
         }
         catch (Exception ex)
         {
             throw new Exception("Error retrieving NASA POWER data: " + ex.Message, ex);
         }
-        return metFileContent;
     }
 
     private static string CreateAPSIMMetFileString(DateTime startDate, int numDays, List<WeatherVariable> allVariables, List<string> newAPSIMFileLines, bool useWorldModellersRain)

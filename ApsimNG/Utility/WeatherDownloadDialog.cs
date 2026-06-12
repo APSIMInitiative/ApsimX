@@ -988,14 +988,18 @@ namespace APSIMNG.Utility
         private async Task<string> GetNasaPower(double lat, double lon, string startDateStr, string endDateStr, bool useWorldModellersRain)
         {
 
-            string fileContents = await WeatherThirdPartyUtility.GetNasaPower(lat, lon, startDateStr, endDateStr, useWorldModellersRain);
+            MetFile metFile = await WeatherThirdPartyUtility.GetNasaPower(lat, lon, startDateStr, endDateStr, useWorldModellersRain);
             string dest = PathUtilities.GetAbsolutePath(entryFilePath.Text, this.explorerPresenter.ApsimXFile.FileName);
-            File.WriteAllText(dest, fileContents);
-            if (File.Exists(dest))
+            try
             {
+                metFile.Save(dest);
                 return dest;
             }
-            else throw new FileNotFoundException("Failed to create weather file");
+            catch
+            {
+                throw new Exception("Unable to create the weather file from a MetFile object.");
+            }
+
         }
     }
 }

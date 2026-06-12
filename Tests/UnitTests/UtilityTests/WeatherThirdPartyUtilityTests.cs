@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using APSIM.Shared.Utilities;
 using APSIMNG.Utility;
 using NUnit.Framework;
 
@@ -44,24 +45,27 @@ namespace UnitTests.UtilityTests
 
             WeatherThirdPartyUtility.ExtractDataFromURL = (url, cancellationToken) => Task.FromResult(new MemoryStream(Encoding.UTF8.GetBytes(nasaResponse)));
 
-            string metContent = await WeatherThirdPartyUtility.GetNasaPower(0.0, 0.0, startDate, endDate, useWorldModellersRain: false);
+            MetFile metFile = await WeatherThirdPartyUtility.GetNasaPower(0.0, 0.0, startDate, endDate, useWorldModellersRain: false);
+
+            // Read textual met content for header checks
+            string metContent;
+            using (var sr = new StreamReader(metFile.GetStream(MetFile.MetFileFormat.Text)))
+                metContent = sr.ReadToEnd();
+
             Assert.That(metContent, Does.Contain("[weather.met.weather]"));
-            Assert.That(metContent, Does.Contain("date"));
             Assert.That(metContent, Does.Contain("rain"));
 
-            string[] lines = metContent.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            Assert.That(lines.Length, Is.EqualTo(6 + 3)); // 6 header lines + 3 data lines
+            // Verify numeric values via MetFile API to avoid relying on exact text formatting
+            string[] columns = metFile.Columns;
+            int mintIndex = Array.IndexOf(columns, "mint");
+            Assert.That(mintIndex, Is.GreaterThanOrEqualTo(0));
 
-            DateTime currentDate = DateTime.Parse(startDate);
-            for (int i = 6; i < lines.Length; i++)
+            DateTime current = DateTime.Parse(startDate);
+            double[] expectedMins = new[] { 10.1, 10.2, 10.3 };
+            for (int d = 0; d < expectedMins.Length; d++)
             {
-                string[] tokens = lines[i].Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                Assert.That(tokens[0], Is.EqualTo(currentDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)));
-                Assert.That(tokens[1], Is.EqualTo((10.1 + i - 6).ToString("0.0"))
-                    .Or.EqualTo("10.1")
-                    .Or.EqualTo("10.2")
-                    .Or.EqualTo("10.3"));
-                currentDate = currentDate.AddDays(1);
+                double[] row = metFile.GetDay(current.AddDays(d));
+                Assert.That(row[mintIndex], Is.EqualTo(expectedMins[d]).Within(1e-9));
             }
         }
 
@@ -87,16 +91,23 @@ namespace UnitTests.UtilityTests
             WeatherThirdPartyUtility.ExtractDataFromURL = (url, cancellationToken) => Task.FromResult(new MemoryStream(Encoding.UTF8.GetBytes(nasaResponse)));
             WeatherThirdPartyUtility.GetStringFromURL = (url, cancellationToken) => Task.FromResult(worldModellersMet);
 
-            string metContent = await WeatherThirdPartyUtility.GetNasaPower(0.0, 0.0, startDate, endDate, useWorldModellersRain: true);
-            string[] lines = metContent.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            MetFile metFile = await WeatherThirdPartyUtility.GetNasaPower(0.0, 0.0, startDate, endDate, useWorldModellersRain: true);
 
-            Assert.That(lines.Length, Is.EqualTo(6 + 3));
+            string metContent;
+            using (var sr = new StreamReader(metFile.GetStream(MetFile.MetFileFormat.Text)))
+                metContent = sr.ReadToEnd();
+
+            string[] lines = metContent.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             Assert.That(lines[0], Does.Contain("[weather.met.weather]"));
-            Assert.That(lines[4], Does.Contain("date"));
-            Assert.That(lines[5], Does.Contain("()"));
-            Assert.That(lines[6].Split(' ', StringSplitOptions.RemoveEmptyEntries).Last(), Is.EqualTo("7"));
-            Assert.That(lines[7].Split(' ', StringSplitOptions.RemoveEmptyEntries).Last(), Is.EqualTo("8"));
-            Assert.That(lines[8].Split(' ', StringSplitOptions.RemoveEmptyEntries).Last(), Is.EqualTo("9"));
+
+            // Ensure rain values come from World Modellers (7,8,9)
+            string[] cols = metFile.Columns;
+            int rainIndex = Array.IndexOf(cols, "rain");
+            Assert.That(rainIndex, Is.GreaterThanOrEqualTo(0));
+            DateTime start = DateTime.Parse(startDate);
+            Assert.That(metFile.GetDay(start)[rainIndex], Is.EqualTo(7.0).Within(1e-9));
+            Assert.That(metFile.GetDay(start.AddDays(1))[rainIndex], Is.EqualTo(8.0).Within(1e-9));
+            Assert.That(metFile.GetDay(start.AddDays(2))[rainIndex], Is.EqualTo(9.0).Within(1e-9));
         }
 
         [Test]
