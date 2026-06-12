@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Gtk;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
+using Models.Climate;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -57,10 +58,8 @@ public static class WeatherThirdPartyUtility
         int numDays = (endDate - startDate).Days + 1;
 
         string[] constants = [
-            "[weather.met.weather]",
             "latitude = " + lat.ToString(),
             "longitude = " + lon.ToString(),
-            "!Data extracted from NASA POWER API: https://power.larc.nasa.gov/",
         ];
 
         string[] columns = [
@@ -91,14 +90,31 @@ public static class WeatherThirdPartyUtility
             // Get and add the rain variable from World Modellers API.
             if (useWorldModellersRain == true)
                 allVariables.Add(await GetRainVariablesFromWorldModellers(lat, lon, startDate, endDate));
-            // Next, construct the new amalgamated APSIM met file.
-            List<string> newAPSIMFileLines = CreateAPSIMMetFileTopSection(constants, columns, units);
-            if (newAPSIMFileLines.Count == 0)
-                throw new Exception("Something went wrong creating APSIM met file headers.");
-            // Add each of the variables in the correct position for each day on a line.
-            metFileContent = CreateAPSIMMetFileString(startDate, numDays, allVariables, newAPSIMFileLines, useWorldModellersRain);
-            if (string.IsNullOrEmpty(metFileContent))
-                throw new Exception("An error occurred trying to organising the met file records for writing.");
+            // Create a MetFile object initially for the NASA Power data.
+            List<List<double>> valueLists = new();
+            foreach(WeatherVariable weatherVariable in allVariables)
+            {
+                List<double> newVariableList = [];
+                foreach(KeyValuePair<DateTime, double> valuePair in weatherVariable.Values)
+                    newVariableList.Add(valuePair.Value);
+                valueLists.Add(newVariableList);
+            }
+            MetFile nasaMetFile = new MetFile();
+            nasaMetFile.Load(constants, columns, units, startDateStr, numDays, valueLists);
+            
+
+
+
+
+
+            // // Next, construct the new amalgamated APSIM met file.
+            // List<string> newAPSIMFileLines = CreateAPSIMMetFileTopSection(constants, columns, units);
+            // if (newAPSIMFileLines.Count == 0)
+            //     throw new Exception("Something went wrong creating APSIM met file headers.");
+            // // Add each of the variables in the correct position for each day on a line.
+            // metFileContent = CreateAPSIMMetFileString(startDate, numDays, allVariables, newAPSIMFileLines, useWorldModellersRain);
+            // if (string.IsNullOrEmpty(metFileContent))
+            //     throw new Exception("An error occurred trying to organising the met file records for writing.");
         }
         catch (Exception ex)
         {

@@ -255,10 +255,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Loads the MetFile with the given byte array.
         /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="bytes"></param>
+        /// <remarks>
+        /// If filepath contains .bin file extension a bin file is created.
+        /// Otherwise if it contains a .met file extension a met file is created.
+        /// </remarks>
+        /// <param name="filepath">the output filepath</param>
+        /// <param name="bytes">an array of bytes</param>
         public void Load(string filepath, byte[] bytes)
         {
             if (filepath.ToLower().EndsWith(".met"))
@@ -329,6 +333,35 @@ namespace APSIM.Shared.Utilities
                 }
                 data.Rows.Add(row);
             }
+        }
+
+        /// <summary>
+        /// Load data into a MetFile object using a List of string Lists.
+        /// </summary>
+        /// <param name="constants">The constants for the MetFile.</param>
+        /// <param name="columns">Used to order the values appropriately.</param>
+        /// <param name="units">the units for columns.</param>
+        /// <param name="startDate">the start of the value set.</param>
+        /// <param name="numberOfDays">Number of days in the weather file.</param>
+        /// <param name="valueLists">
+        /// List of string Lists containing the met file values. 
+        /// Each List should contain all values of one column, date, rain or mint for example.
+        /// Warning: Care should be taken to ensure the lists are in the same order
+        /// as the columns.
+        /// </param>
+        public void Load(string[] constants, string[] columns, string[] units, string startDate, int numberOfDays, List<List<double>> valueLists)
+        {
+            // Create an array that Load method can use.
+            List<double> valuesArrayList = new();
+            for(int i = 0; i < columns.Length; i++)
+            {
+                for(int j = 0; j < numberOfDays; j++)
+                    valuesArrayList.Add(valueLists[i][j]);
+            }
+            double[] values = valuesArrayList.ToArray();
+
+            // Then feed the array into another load method to get MetData.
+            Load(constants, columns, units, values, startDate);
         }
 
         /// <summary>
