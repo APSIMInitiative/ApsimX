@@ -5,11 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Gtk;
-using Microsoft.CodeAnalysis.VisualBasic.Syntax;
-using Models.Climate;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
