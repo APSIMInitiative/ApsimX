@@ -45,6 +45,9 @@ namespace UnitTests
         public double[] AbovegroundLivegrms { get; private set; }
         public double[] TotalWt { get; private set; }
         public double[] TotalBiomass { get; private set; }
+        public double[] EstabDMgms { get; private set; }
+        public double[] LitterDMgms { get; private set; }
+        public double[] RootLiveWt { get; private set; }
 
         [Test]
         public void TestPastureCompositeBiomasses()
@@ -68,14 +71,16 @@ namespace UnitTests
                 "[Pasture].Leaf.Wt",
                 "[Pasture].ShootDM/10",
                 "[Pasture].Stem.Wt",
-                "[Pasture].Root.Wt",
                 "[Pasture].AboveGround.Wt",
                 "[Pasture].GreenDM/10",
+                "[Pasture].EstabDM/10",
+                "[Pasture].DeadDM/10",
                 "[Pasture].AboveGroundLive.Wt",
                 "[Pasture].DeadDM/10",
                 "[Pasture].AboveGroundDead.Wt",
                 "[Pasture].Total.Wt",
-                "[Pasture].Leaf.Wt+[Pasture].Stem.Wt+[Pasture].Root.Wt"
+                "[Pasture].AboveGroundLive.Wt+[Pasture].AboveGroundDead.Wt+[Pasture].Root.Live.Wt+[Pasture].Root.Dead.Wt",
+                "[Pasture].LitterDM/10"
             };
             report.EventNames = new[]
             {
@@ -104,9 +109,9 @@ namespace UnitTests
                         StemWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Stem.Wt", CultureInfo.InvariantCulture);
                     }
 
-                     if (col.ColumnName == "Pasture.Root.Wt")
+                     if (col.ColumnName == "Pasture.Root.Live.Wt")
                     {
-                        RootWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Root.Wt", CultureInfo.InvariantCulture);
+                        RootLiveWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Root.Live.Wt", CultureInfo.InvariantCulture);
                     }
 
                     if (col.ColumnName == "Pasture.AboveGround.Wt")
@@ -120,6 +125,10 @@ namespace UnitTests
                     if (col.ColumnName == "Pasture.GreenDM/10")
                     {
                         GreenDMgms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.GreenDM/10", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.EstabDM/10")
+                    {
+                        EstabDMgms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.EstabDM/10", CultureInfo.InvariantCulture);
                     }
                     if (col.ColumnName == "Pasture.DeadDM/10")
                     {
@@ -139,27 +148,23 @@ namespace UnitTests
                         TotalWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Total.Wt", CultureInfo.InvariantCulture);
 
                     }
-                     if (col.ColumnName == "Pasture.Leaf.Wt+Pasture.Stem.Wt+Pasture.Root.Wt" )
+                    if (col.ColumnName == "Pasture.AboveGroundLive.Wt+Pasture.AboveGroundDead.Wt+Pasture.Root.Live.Wt+Pasture.Root.Dead.Wt")
                     {
-                        TotalBiomass = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Leaf.Wt+Pasture.Stem.Wt+Pasture.Root.Wt" , CultureInfo.InvariantCulture);
+                        TotalBiomass = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.AboveGroundLive.Wt+Pasture.AboveGroundDead.Wt+Pasture.Root.Live.Wt+Pasture.Root.Dead.Wt" , CultureInfo.InvariantCulture);
+                    }
+                    if(col.ColumnName == "Pasture.LitterDM/10")
+                    {
+                        LitterDMgms = DataTableUtilities.GetColumnAsDoubles(dataTable,"Pasture.LitterDM/10", CultureInfo.InvariantCulture);   
                     }
                     
             }
-            
-            
-           //Assert biomasses calculated in AusFarm  and refactored Pasture model return same values.
-           
-           //Assert.That(LeafWt.Add(StemWt), Is.EqualTo(AbovegroundWtgms));
-           //Assert.That(ShootDMgms, Is.EqualTo(AbovegroundWtgms).Within(1e-10));
-           //Assert.That(AboveGroundDeadgrms,Is.EqualTo(DeadDMgms));
-           //Assert.That(AbovegroundLivegrms, Is.EqualTo(GreenDMgms));
-           //Assert.That(TotalWt, Is.EqualTo(TotalBiomass));
-          
-
-
-        }
  
-
-    }
+           //Assert biomasses calculated in AusFarm  and refactored Pasture model return same values.
+           Assert.That(TotalWt, Is.EqualTo(TotalBiomass).Within(1e-10));
+           Assert.That(EstabDMgms, Is.EqualTo(AbovegroundLivegrms).Within(1e-10));
+           Assert.That(DeadDMgms, Is.EqualTo(AboveGroundDeadgrms).Within(1e-10)); 
+          
+        }
+     }
 }
         
