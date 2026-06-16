@@ -79,7 +79,7 @@ namespace Models.Forestry
                 var best = FitError(x[0], x[1], stemPopulation, basalArea, meanDBH, location);
                 var step = new[] { 0.8, Math.Max(1.0, x[1] * 0.2) };
 
-                var maxIters = 6000;
+                var maxIters = 40;//00;
                 var converged = false;
 
                 for (var iter = 0; iter < maxIters; iter++)
@@ -114,9 +114,9 @@ namespace Models.Forestry
                     }
                 }
 
-                
-                Shape = x[0];
-                Scale = x[1];
+
+                Shape = 2.5;// x[0];
+                Scale = meanDBH - location;// x[1];
                 Location = location;
                 Convergence=converged?0:1;
                 Objective = best;
