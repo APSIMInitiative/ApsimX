@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 209,
+  "Version": 216,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -20,7 +20,8 @@
             "Gatton9597.xlsx",
             "CasinoObserved9194.xlsx",
             "RainShelter.xlsx",
-            "Observed.xlsx"
+            "Observed.xlsx",
+            "ThinzarObserved.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -326,7 +327,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Mutdapilly9294Base",
                   "ResourceName": null,
                   "Children": [
@@ -1590,6 +1590,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -3554,7 +3555,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Gatton9597Base",
                   "ResourceName": null,
                   "Children": [
@@ -5013,6 +5013,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -6765,7 +6766,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Kyabram9597",
                   "ResourceName": null,
                   "Children": [
@@ -8064,6 +8064,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -12209,7 +12210,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase93",
                           "ResourceName": null,
                           "Children": [
@@ -13419,6 +13419,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -16395,7 +16396,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase94",
                           "ResourceName": null,
                           "Children": [
@@ -17636,6 +17636,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -20544,7 +20545,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "KairiBase91",
                           "ResourceName": null,
                           "Children": [
@@ -21741,6 +21741,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -24659,7 +24660,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "Mutdapillybase93",
                           "ResourceName": null,
                           "Children": [
@@ -25868,6 +25868,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -28880,7 +28881,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "MutdapillyBase94",
                           "ResourceName": null,
                           "Children": [
@@ -30088,6 +30088,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -33032,7 +33033,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "MutdapillyBase91",
                           "ResourceName": null,
                           "Children": [
@@ -34227,6 +34227,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -37145,7 +37146,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase93",
                           "ResourceName": null,
                           "Children": [
@@ -38354,6 +38354,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -41262,7 +41263,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase94",
                           "ResourceName": null,
                           "Children": [
@@ -42503,6 +42503,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -45519,7 +45520,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "CasinoBase91",
                           "ResourceName": null,
                           "Children": [
@@ -46714,6 +46714,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -47913,8 +47914,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Weekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -48546,8 +48546,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "SpringDrought",
                                   "ResourceName": null,
                                   "Children": [
@@ -48850,8 +48849,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "AutumnDrought",
                                   "ResourceName": null,
                                   "Children": [
@@ -49217,8 +49215,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "2Weekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -49899,8 +49896,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "2WeeksIn3",
                                   "ResourceName": null,
                                   "Children": [
@@ -50581,8 +50577,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "1WeekIn4",
                                   "ResourceName": null,
                                   "Children": [
@@ -51258,7 +51253,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "RainShelter",
                       "ResourceName": null,
                       "Children": [
@@ -52037,6 +52031,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -54359,8 +54354,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "TwoPerWeek",
                                   "ResourceName": null,
                                   "Children": [
@@ -55013,8 +55007,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "OnePerWeek",
                                   "ResourceName": null,
                                   "Children": [
@@ -55024,273 +55017,273 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-11-07T00:00:00",
+                                          "Date": "2011-11-07",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2011-11-07 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-11-25T00:00:00",
+                                          "Date": "2011-11-25",
                                           "Action": "[Irrigation].Apply(13.6);",
                                           "Line": "2011-11-25 [Irrigation].Apply(13.6);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-11-29T00:00:00",
+                                          "Date": "2011-11-29",
                                           "Action": "[Irrigation].Apply(36.5);",
                                           "Line": "2011-11-29 [Irrigation].Apply(36.5);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-12-15T00:00:00",
+                                          "Date": "2011-12-15",
                                           "Action": "[Irrigation].Apply(34.9);",
                                           "Line": "2011-12-15 [Irrigation].Apply(34.9);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-12-29T00:00:00",
+                                          "Date": "2011-12-29",
                                           "Action": "[Irrigation].Apply(41.8);",
                                           "Line": "2011-12-29 [Irrigation].Apply(41.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-01-05T00:00:00",
+                                          "Date": "2012-01-05",
                                           "Action": "[Irrigation].Apply(22.8);",
                                           "Line": "2012-01-05 [Irrigation].Apply(22.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-01-12T00:00:00",
+                                          "Date": "2012-01-12",
                                           "Action": "[Irrigation].Apply(26.9);",
                                           "Line": "2012-01-12 [Irrigation].Apply(26.9);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-01-19T00:00:00",
+                                          "Date": "2012-01-19",
                                           "Action": "[Irrigation].Apply(36.8);",
                                           "Line": "2012-01-19 [Irrigation].Apply(36.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-02T00:00:00",
+                                          "Date": "2012-02-02",
                                           "Action": "[Irrigation].Apply(19.8);",
                                           "Line": "2012-02-02 [Irrigation].Apply(19.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-09T00:00:00",
+                                          "Date": "2012-02-09",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2012-02-09 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-16T00:00:00",
+                                          "Date": "2012-02-16",
                                           "Action": "[Irrigation].Apply(13);",
                                           "Line": "2012-02-16 [Irrigation].Apply(13);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-23T00:00:00",
+                                          "Date": "2012-02-23",
                                           "Action": "[Irrigation].Apply(14.3);",
                                           "Line": "2012-02-23 [Irrigation].Apply(14.3);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-03-29T00:00:00",
+                                          "Date": "2012-03-29",
                                           "Action": "[Irrigation].Apply(10);",
                                           "Line": "2012-03-29 [Irrigation].Apply(10);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-04-05T00:00:00",
+                                          "Date": "2012-04-05",
                                           "Action": "[Irrigation].Apply(11.4);",
                                           "Line": "2012-04-05 [Irrigation].Apply(11.4);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-04-26T00:00:00",
+                                          "Date": "2012-04-26",
                                           "Action": "[Irrigation].Apply(11.5);",
                                           "Line": "2012-04-26 [Irrigation].Apply(11.5);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-05-03T00:00:00",
+                                          "Date": "2012-05-03",
                                           "Action": "[Irrigation].Apply(10.1);",
                                           "Line": "2012-05-03 [Irrigation].Apply(10.1);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-11-01T00:00:00",
+                                          "Date": "2012-11-01",
                                           "Action": "[Irrigation].Apply(18);",
                                           "Line": "2012-11-01 [Irrigation].Apply(18);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-11-15T00:00:00",
+                                          "Date": "2012-11-15",
                                           "Action": "[Irrigation].Apply(12);",
                                           "Line": "2012-11-15 [Irrigation].Apply(12);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-11-29T00:00:00",
+                                          "Date": "2012-11-29",
                                           "Action": "[Irrigation].Apply(24);",
                                           "Line": "2012-11-29 [Irrigation].Apply(24);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-12-13T00:00:00",
+                                          "Date": "2012-12-13",
                                           "Action": "[Irrigation].Apply(21);",
                                           "Line": "2012-12-13 [Irrigation].Apply(21);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-12-27T00:00:00",
+                                          "Date": "2012-12-27",
                                           "Action": "[Irrigation].Apply(33);",
                                           "Line": "2012-12-27 [Irrigation].Apply(33);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-01-10T00:00:00",
+                                          "Date": "2013-01-10",
                                           "Action": "[Irrigation].Apply(42);",
                                           "Line": "2013-01-10 [Irrigation].Apply(42);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-01-24T00:00:00",
+                                          "Date": "2013-01-24",
                                           "Action": "[Irrigation].Apply(39);",
                                           "Line": "2013-01-24 [Irrigation].Apply(39);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-07T00:00:00",
+                                          "Date": "2013-02-07",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2013-02-07 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-21T00:00:00",
+                                          "Date": "2013-02-21",
                                           "Action": "[Irrigation].Apply(42);",
                                           "Line": "2013-02-21 [Irrigation].Apply(42);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-28T00:00:00",
+                                          "Date": "2013-02-28",
                                           "Action": "[Irrigation].Apply(20);",
                                           "Line": "2013-02-28 [Irrigation].Apply(20);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-03-07T00:00:00",
+                                          "Date": "2013-03-07",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2013-03-07 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-04-04T00:00:00",
+                                          "Date": "2013-04-04",
                                           "Action": "[Irrigation].Apply(27);",
                                           "Line": "2013-04-04 [Irrigation].Apply(27);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-04-18T00:00:00",
+                                          "Date": "2013-04-18",
                                           "Action": "[Irrigation].Apply(15);",
                                           "Line": "2013-04-18 [Irrigation].Apply(15);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-10-24T00:00:00",
+                                          "Date": "2013-10-24",
                                           "Action": "[Irrigation].Apply(12);",
                                           "Line": "2013-10-24 [Irrigation].Apply(12);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-11-07T00:00:00",
+                                          "Date": "2013-11-07",
                                           "Action": "[Irrigation].Apply(24);",
                                           "Line": "2013-11-07 [Irrigation].Apply(24);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-11-21T00:00:00",
+                                          "Date": "2013-11-21",
                                           "Action": "[Irrigation].Apply(33);",
                                           "Line": "2013-11-21 [Irrigation].Apply(33);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-12-05T00:00:00",
+                                          "Date": "2013-12-05",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2013-12-05 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-12-19T00:00:00",
+                                          "Date": "2013-12-19",
                                           "Action": "[Irrigation].Apply(17);",
                                           "Line": "2013-12-19 [Irrigation].Apply(17);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-01-02T00:00:00",
+                                          "Date": "2014-01-02",
                                           "Action": "[Irrigation].Apply(12.7);",
                                           "Line": "2014-01-02 [Irrigation].Apply(12.7);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-01-16T00:00:00",
+                                          "Date": "2014-01-16",
                                           "Action": "[Irrigation].Apply(40.9);",
                                           "Line": "2014-01-16 [Irrigation].Apply(40.9);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-01-30T00:00:00",
+                                          "Date": "2014-01-30",
                                           "Action": "[Irrigation].Apply(35);",
                                           "Line": "2014-01-30 [Irrigation].Apply(35);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-02-13T00:00:00",
+                                          "Date": "2014-02-13",
                                           "Action": "[Irrigation].Apply(25);",
                                           "Line": "2014-02-13 [Irrigation].Apply(25);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-02-27T00:00:00",
+                                          "Date": "2014-02-27",
                                           "Action": "[Irrigation].Apply(32);",
                                           "Line": "2014-02-27 [Irrigation].Apply(32);"
                                         }
@@ -55310,8 +55303,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "ThreeWeekly",
                                   "ResourceName": null,
                                   "Children": [
@@ -55321,182 +55313,182 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-11-07T00:00:00",
+                                          "Date": "2011-11-07",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2011-11-07 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-11-29T00:00:00",
+                                          "Date": "2011-11-29",
                                           "Action": "[Irrigation].Apply(47.6);",
                                           "Line": "2011-11-29 [Irrigation].Apply(47.6);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-12-15T00:00:00",
+                                          "Date": "2011-12-15",
                                           "Action": "[Irrigation].Apply(34.9);",
                                           "Line": "2011-12-15 [Irrigation].Apply(34.9);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2011-12-29T00:00:00",
+                                          "Date": "2011-12-29",
                                           "Action": "[Irrigation].Apply(41.8);",
                                           "Line": "2011-12-29 [Irrigation].Apply(41.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-01-12T00:00:00",
+                                          "Date": "2012-01-12",
                                           "Action": "[Irrigation].Apply(49.8);",
                                           "Line": "2012-01-12 [Irrigation].Apply(49.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-01-26T00:00:00",
+                                          "Date": "2012-01-26",
                                           "Action": "[Irrigation].Apply(36.8);",
                                           "Line": "2012-01-26 [Irrigation].Apply(36.8);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-09T00:00:00",
+                                          "Date": "2012-02-09",
                                           "Action": "[Irrigation].Apply(49.6);",
                                           "Line": "2012-02-09 [Irrigation].Apply(49.6);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-02-23T00:00:00",
+                                          "Date": "2012-02-23",
                                           "Action": "[Irrigation].Apply(34.3);",
                                           "Line": "2012-02-23 [Irrigation].Apply(34.3);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-04-05T00:00:00",
+                                          "Date": "2012-04-05",
                                           "Action": "[Irrigation].Apply(21.4);",
                                           "Line": "2012-04-05 [Irrigation].Apply(21.4);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-05-03T00:00:00",
+                                          "Date": "2012-05-03",
                                           "Action": "[Irrigation].Apply(23.7);",
                                           "Line": "2012-05-03 [Irrigation].Apply(23.7);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-11-01T00:00:00",
+                                          "Date": "2012-11-01",
                                           "Action": "[Irrigation].Apply(18);",
                                           "Line": "2012-11-01 [Irrigation].Apply(18);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-11-22T00:00:00",
+                                          "Date": "2012-11-22",
                                           "Action": "[Irrigation].Apply(12);",
                                           "Line": "2012-11-22 [Irrigation].Apply(12);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2012-12-13T00:00:00",
+                                          "Date": "2012-12-13",
                                           "Action": "[Irrigation].Apply(27);",
                                           "Line": "2012-12-13 [Irrigation].Apply(27);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-01-03T00:00:00",
+                                          "Date": "2013-01-03",
                                           "Action": "[Irrigation].Apply(42);",
                                           "Line": "2013-01-03 [Irrigation].Apply(42);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-01-24T00:00:00",
+                                          "Date": "2013-01-24",
                                           "Action": "[Irrigation].Apply(45);",
                                           "Line": "2013-01-24 [Irrigation].Apply(45);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-14T00:00:00",
+                                          "Date": "2013-02-14",
                                           "Action": "[Irrigation].Apply(90.6);",
                                           "Line": "2013-02-14 [Irrigation].Apply(90.6);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-28T00:00:00",
+                                          "Date": "2013-02-28",
                                           "Action": "[Irrigation].Apply(20);",
                                           "Line": "2013-02-28 [Irrigation].Apply(20);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-03-07T00:00:00",
+                                          "Date": "2013-03-07",
                                           "Action": "[Irrigation].Apply(30);",
                                           "Line": "2013-03-07 [Irrigation].Apply(30);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-03-28T00:00:00",
+                                          "Date": "2013-03-28",
                                           "Action": "[Irrigation].Apply(18);",
                                           "Line": "2013-03-28 [Irrigation].Apply(18);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-04-18T00:00:00",
+                                          "Date": "2013-04-18",
                                           "Action": "[Irrigation].Apply(15);",
                                           "Line": "2013-04-18 [Irrigation].Apply(15);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-10-24T00:00:00",
+                                          "Date": "2013-10-24",
                                           "Action": "[Irrigation].Apply(12);",
                                           "Line": "2013-10-24 [Irrigation].Apply(12);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-11-14T00:00:00",
+                                          "Date": "2013-11-14",
                                           "Action": "[Irrigation].Apply(33);",
                                           "Line": "2013-11-14 [Irrigation].Apply(33);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-12-05T00:00:00",
+                                          "Date": "2013-12-05",
                                           "Action": "[Irrigation].Apply(36);",
                                           "Line": "2013-12-05 [Irrigation].Apply(36);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-01-16T00:00:00",
+                                          "Date": "2014-01-16",
                                           "Action": "[Irrigation].Apply(44.7);",
                                           "Line": "2014-01-16 [Irrigation].Apply(44.7);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-02-05T00:00:00",
+                                          "Date": "2014-02-05",
                                           "Action": "[Irrigation].Apply(33.5);",
                                           "Line": "2014-02-05 [Irrigation].Apply(33.5);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2014-02-27T00:00:00",
+                                          "Date": "2014-02-27",
                                           "Action": "[Irrigation].Apply(32);",
                                           "Line": "2014-02-27 [Irrigation].Apply(32);"
                                         }
@@ -55516,8 +55508,7 @@
                                   "Specifications": [
                                     "[IrrigationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "None",
                                   "ResourceName": null,
                                   "Children": [
@@ -55527,7 +55518,7 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
-                                          "Date": "2013-02-28T00:00:00",
+                                          "Date": "2013-02-28",
                                           "Action": "[Irrigation].Apply(20);",
                                           "Line": "2013-02-28 [Irrigation].Apply(20);"
                                         }
@@ -55561,8 +55552,7 @@
                                     "[FertiliserSchedule]",
                                     "[DefoliationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Ryegrass",
                                   "ResourceName": null,
                                   "Children": [
@@ -55918,8 +55908,7 @@
                                     "[FertiliserSchedule]",
                                     "[DefoliationEvents]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Lucerne",
                                   "ResourceName": null,
                                   "Children": [
@@ -56283,7 +56272,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LandPBase",
                       "ResourceName": null,
                       "Children": [
@@ -57060,6 +57048,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
