@@ -284,9 +284,9 @@ namespace Models
 
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
-
             if (!match.Success)
                 throw new Exception($"Invalid format for report aggregation variable {descriptor}");
+                
             if(descriptor.Contains(" as "))
             {
                 var alias = match.Groups["alias"].Value;
