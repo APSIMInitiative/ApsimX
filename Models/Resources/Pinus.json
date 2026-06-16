@@ -4026,10 +4026,21 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "",
-                  "Expression": "[Pinus].Stem.DBH * 0.66",
+                  "Expression": "[Pinus].Stem.DBH * [Fraction].FixedValue",
                   "Name": "Location",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": null,
+                      "Name": "Fraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
