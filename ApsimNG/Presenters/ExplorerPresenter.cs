@@ -551,12 +551,6 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (model is IGenerateNodes generator)
-                {
-                    generator.CleanNodes();
-                    RebuildTree();
-                }
-
                 DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
                 this.ApsimXFile.Node.ClearLocator();
                 CommandHistory.Add(command, true);
@@ -1167,7 +1161,6 @@ namespace UserInterface.Presenters
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
 
 

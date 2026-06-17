@@ -6,8 +6,8 @@ using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
 using Models.Factorial;
-using APSIM.Core;
 using UserInterface.Commands;
+using System.Data;
 
 namespace UserInterface.Presenters
 {
@@ -125,11 +125,6 @@ namespace UserInterface.Presenters
         private void OnModelChanged(object changedModel)
         {
             model = changedModel as IModel;
-            if (model is IGenerateNodes generator)
-            {
-                Node.Create(model.Node.FindParent<Simulations>(recurse: true), null, false, model.Node.FileName);
-                explorerPresenter.RebuildTree();
-            }
             Refresh();
         }
 
@@ -240,6 +235,19 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Add a markdown view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="table"></param>
+        private void AddList(WidgetPosition position, DataTable table)
+        {
+            ExperimentView experimentView = view.AddComponent(WidgetType.List, position) as ExperimentView;
+            ListPresenter listPresenter = new ListPresenter();
+            listPresenter.Attach(model, experimentView, explorerPresenter);
+            presenters.Add(listPresenter);
+        }
+
+        /// <summary>
         /// Setup a generic layout with grid, graph and properties
         /// </summary>
         private void CreateLayoutGeneric()
@@ -306,8 +314,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private void CreateLayoutFactorFromFile()
         {
+            DataTable dt = new DataTable("Test");
+            dt.Columns.Add("NewColumn");
+            DataRow row = dt.NewRow();
+            row["NewColumn"] = "a value";
+            dt.Rows.Add(row);
+
             AddProperty(WidgetPosition.TopLeft);
-            AddGrid(WidgetPosition.BottomLeft);
+            AddList(WidgetPosition.BottomLeft, dt);
             AddText(WidgetPosition.TopRight, "Commands:");
             AddCode(WidgetPosition.BottomRight);
             view.OverrideSlider(0.6);

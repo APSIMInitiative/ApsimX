@@ -557,9 +557,6 @@ public class Node : IStructure
                 try
                 {
                     (node.Model as ICreatable).OnCreated();
-                    if (node.Parent != null)
-                        if (node.Model is IGenerateNodes generateNode)
-                            generateNodes.Add(generateNode);
                 }
                 catch (Exception err)
                 {
@@ -567,12 +564,6 @@ public class Node : IStructure
                         throw;
                     errorHandler(err);
                 }
-            }
-            
-            foreach (IGenerateNodes model in generateNodes)
-            {
-                model.CleanNodes();
-                model.GenerateNodes();
             }
         }
         finally

@@ -162,8 +162,6 @@ namespace Models.Factorial
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
             List<CompositeFactorPair> pairs = ParseSpecifications();
-            if (pairs.Count == 0)
-                throw new InvalidOperationException($"Error in composite factor {Name}: Has no specifications");
 
             // Add a simulation override for each path / value combination.
             foreach(CompositeFactorPair pair in pairs)

@@ -59,7 +59,7 @@ namespace Models.Factorial
                     if (Specification.Contains(" to ") && Specification.Contains(" step "))
                     {
                         if (childCompositeFactors.Any())
-                            throw new InvalidOperationException("Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                            throw new InvalidOperationException($"Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                         factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
                     }
                     else if (Specification.Contains('='))

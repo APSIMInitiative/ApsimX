@@ -128,9 +128,6 @@ namespace UserInterface.Interfaces
         /// <summary>The child nodes of this node</summary>
         public List<TreeViewNode> Children = new List<TreeViewNode>();
 
-        /// <summary>Determines whether this node is checked</summary>
-        public bool Checked { get; set; }
-
         /// <summary>The text colour of this node.</summary>
         public System.Drawing.Color Colour { get; set; }
 

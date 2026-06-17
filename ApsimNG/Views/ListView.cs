@@ -94,7 +94,6 @@ namespace UserInterface.Views
                 this.submitButton = submitButton;
                 submitButton.Pressed += SubmitButtonPressed;
             }
-
         }
 
         private void SubmitButtonPressed(object sender, EventArgs e)
@@ -541,13 +540,23 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             owner = ownerView;
-            tree = (Gtk.TreeView)gtkControl;
+            if (gtkControl is Gtk.TreeView)
+            {
+                tree = (Gtk.TreeView)gtkControl;
+            }
+            else
+            {
+                tree = new Gtk.TreeView();
+                mainWidget = gtkControl as Gtk.Container;
+                (mainWidget as Gtk.Container).Add(tree);
+            }
+            
             tree.ButtonReleaseEvent += OnTreeClicked;
-            mainWidget = tree;
-            mainWidget.Destroyed += OnMainWidgetDestroyed;
             tree.Selection.Mode = SelectionMode.Multiple;
             tree.RubberBanding = true;
             tree.CanFocus = true;
+
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
         }
 
         /// <summary>the sort column.</summary>

@@ -7,10 +7,5 @@
         /// Generate the nodes
         /// </summary>
         public bool GenerateNodes();
-
-        /// <summary>
-        /// Cleanup the generated nodes
-        /// </summary>
-        public bool CleanNodes();
     }
 }
