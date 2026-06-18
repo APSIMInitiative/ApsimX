@@ -1,0 +1,17 @@
+SimulationName,[Grain].MaximumPotentialGrainSize.FixedValue,[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue,[Phenology].PhyllochronPpSensitivity.FixedValue,[Phenology].CAMP.FLNparams.MinLN,[Phenology].CAMP.FLNparams.PpLN,[Phenology].CAMP.FLNparams.VrnLN,[Phenology].CAMP.FLNparams.VxPLN,[Phenology].HeadEmergenceLongDayBase.FixedValue,[Phenology].HeadEmergencePpSensitivity.FixedValue,[Phenology].CAMP.EnvData.VrnTreatTemp,[Phenology].CAMP.EnvData.VrnTreatDuration
+Fords2025SowApril_Illabo,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Kittyhawk,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Mowhawk,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Osprey,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Rosella,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Wedgetail,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Whistler,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowApril_Wylah,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Gregory,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Janz,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Mace,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Meering,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Scepter,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Sunmaster,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Wyalkatchem,,,0.247,7,4,2,0,50,5,6,60
+Fords2025SowMay_Yitpi,,,0.247,7,4,2,0,50,5,6,60

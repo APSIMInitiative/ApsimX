@@ -83,11 +83,11 @@ namespace UnitTests.PMF.Phenology.Scales
             // Expected values
             double expectedStage1 = 1.0;
             double expectedStage10 = 10.0;
-            double expectedStage31 = 69.0;
-            double expectedStage39 = 97.0;
-            double expectedStage55 = 114.0;
-            double expectedStage65 = 119.0;
-            double expectedStage90 = 175.0;
+            double expectedStage31 = 65.0;
+            double expectedStage39 = 87.0;
+            double expectedStage55 = 103.0;
+            double expectedStage65 = 109.0;
+            double expectedStage90 = 166.0;
 
             // Assertions - check each stage DAS value
             Assert.That(finalStage1, Is.EqualTo(expectedStage1),

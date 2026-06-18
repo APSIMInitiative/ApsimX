@@ -1,0 +1,106 @@
+---
+title: "Fords2025 Notebook"
+output: html_notebook
+---
+# Libraries
+```{r, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(visNetwork)
+```
+
+```{r}
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(this.path::this.dir())
+getwd()
+```
+
+# Check pipeline status
+```{r}
+tar_glimpse()
+```
+
+```{r}
+tar_visnetwork()
+```
+
+```{r}
+tar_visnetwork(targets_only = TRUE)
+```
+
+# Construct pipeline
+```{r}
+# targets::tar_make(callr_function = NULL) # for debugging
+targets::tar_make()
+```
+
+# Destroy pipeline (off by default)
+```{r, warning=FALSE, eval = FALSE }
+# tar_destroy()
+# targets::tar_destroy(ask = FALSE)
+```
+
+
+# Run pipeline and save pipeline logs (ideal final run)
+- Re-runs all pipeline
+- Prints log with all warnings
+```{r}
+targets::tar_destroy(ask = FALSE)
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+
+# -----------------------------------------------------
+# Debugging and other miscelaneous functionalities below 
+#------------------------------------------------------
+
+
+
+
+```{r}
+tar_load(df_simNameByCult)
+tar_load(df_pheno_raw)
+tar_load(df_obs_meta_data)
+tar_load(processed_met_data)
+tar_load(list_observed_dfs_raw)
+tar_load(df_obs_wide)
+tar_load(df_obs_plus_pheno_hi_with_amounts)
+tar_load(df_obs_plus_pheno_harv)
+tar_load(df_pheno_input_param)
+tar_load(df_pheno_input_param)
+tar_read(df_obs_plus_pheno)
+```
+
+```{r}
+# Replace 'your_previous_target_name' with the actual name from _targets.R
+df_suspect <- targets::tar_read(df_obs_plus_pheno_harv)
+
+library(dplyr)
+
+df_suspect %>%
+  filter(SimulationName == "Fords2025SowApril_Illabo", 
+         stringr::str_detect(Clock.Today, "14-05")) %>%
+  arrange(Clock.Today) %>%
+  print(width = Inf)
+```
+
+
+```{r}
+targets::tar_make(
+  callr_arguments = list(
+    stdout = "pipeline_log.txt",
+    stderr = "pipeline_log.txt"
+  )
+)
+```
+
+```{r}
+tar_load(soil_profile)
+readr::write_csv(soil_profile, "soil_profile.csv", na = "")
+```
+
