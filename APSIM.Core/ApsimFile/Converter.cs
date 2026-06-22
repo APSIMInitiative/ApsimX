@@ -7792,20 +7792,23 @@ internal class Converter
     {
         foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
         {
-            // var variableNames = JsonUtilities.Values(report, "VariableNames");
-            // if (variableNames != null)
-            // {
-            //     for (int i = 0; i < variableNames.Count; i++)
-            //     {
-            //         if (variableNames[i].Contains(" as ") && variableNames[i].Contains("/"))
-            //         {
-            //             variableNames[i] = variableNames[i].Replace("/", "");
-            //             JsonUtilities.SetValues(report, "VariableNames", variableNames);                       
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+            bool replacementMade = false;
+            if (variableNames != null)
+            {
+                for (int i = 0; i < variableNames.Count; i++)
+                {
+                    if (variableNames[i].Contains(" as ") && variableNames[i].Contains("/"))
+                    {
+                        variableNames[i] = variableNames[i].Replace("/", "");
+                         replacementMade = true;                    
                         
-            //         }
-            //     }        
-            // } 
-            JsonUtilities.SearchReplaceReportVariableNames(report, " as AboveGroundBiomass_kgDM/ha", " as AboveGroundBiomass_kgDMha");   
+                    }
+                } 
+                if (replacementMade)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);       
+            } 
+            //JsonUtilities.SearchReplaceReportVariableNames(report, " as AboveGroundBiomass_kgDM/ha", " as AboveGroundBiomass_kgDMha");   
         }
     }    
 }
