@@ -285,17 +285,6 @@ namespace Models
             var match = regEx.Match(descriptor);
             if (!match.Success)
                 throw new Exception($"Invalid format for report aggregation variable {descriptor}");
-<<<<<<< HEAD
-                
-            if(descriptor.Contains(" as "))
-            {
-                var alias = match.Groups["alias"].Value;
-                // Allowed characters in alias: letters, digits, _, ., @
-                if (!Regex.IsMatch(alias, @"^[\w.@]+$"))
-                    throw new Exception($"Alias '{alias}' contains invalid characters.");
-            }
-=======
->>>>>>> parent of 4e0b3188d (Made changes to ParseReportLine() to validate Alias to throw expection when there is an invalid character.)
             return match;
         }
 
