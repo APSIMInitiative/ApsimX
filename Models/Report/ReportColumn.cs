@@ -274,18 +274,18 @@ namespace Models
         /// <returns>The successful RegEx match instance.</returns>
         private Match ParseReportLine(string descriptor)
         {
-            var pattern =
-                @"((?<agg>sum|Sum|mean|Mean|min|Min|max|Max|first|First|last|Last|" +
-                @"diff|Diff|stddev|Stddev|prod|Prod)\s+of\s+)?" +                     // aggregation
-                @"(?<var>.+?)(?=\s+(from|as|on)\s+|$)" +                              // variable/expression
-                @"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                    // on keyword
-                @"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +           // from/to window
-                @"(\s+as\s+(?<alias>\S+))?";                                          // alias (full token)
+            var pattern = @"((?<agg>sum|Sum|mean|Mean|min|Min|max|Max|first|First|last|Last|" + // aggregation
+                          @"diff|Diff|stddev|Stddev|prod|Prod)\s+of\s+)?" +                     // more aggregation
+                          $@"(?<var>((?!\s+from\s+|\s+as\s+|\s+on\s+).)+)" +                    // APSIM variable or expression
+                          $@"(\s+on\s+(?<on>((?!\s+from\s+|\s+as\s+).)+))?" +                   // on keyword
+                          $@"(\s+from\s+(?<from>\S+)\s+to\s+(?<to>((?!\s+as)\S)+))?" +          // from and to keywords
+                          @"(\s+as\s+(?<alias>[\w.@]+))?";                                      // alias
 
             var regEx = new Regex(pattern);
             var match = regEx.Match(descriptor);
             if (!match.Success)
                 throw new Exception($"Invalid format for report aggregation variable {descriptor}");
+<<<<<<< HEAD
                 
             if(descriptor.Contains(" as "))
             {
@@ -294,10 +294,10 @@ namespace Models
                 if (!Regex.IsMatch(alias, @"^[\w.@]+$"))
                     throw new Exception($"Alias '{alias}' contains invalid characters.");
             }
+=======
+>>>>>>> parent of 4e0b3188d (Made changes to ParseReportLine() to validate Alias to throw expection when there is an invalid character.)
             return match;
         }
-
-
 
         /// <summary>
         /// Initialise the column instance.

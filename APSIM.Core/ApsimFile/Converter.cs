@@ -19,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 216; } }
+    public static int LatestVersion { get { return 217; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7782,4 +7782,27 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
+    private static void UpgradeToVersion217(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+            if (variableNames != null)
+            {
+                for (int i = 0; i < variableNames.Count; i++)
+                {
+                    if (variableNames[i].Contains(" as ") && variableNames[i].Contains("/"))
+                    {
+                        variableNames[i] = variableNames[i].Replace("/", "");
+                        JsonUtilities.SetValues(report, "VariableNames", variableNames);
+                        
+                        
+                    }
+                }
+        
+            }
+            
+        }
+ 
+    }    
 }
