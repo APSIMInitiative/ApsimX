@@ -7782,6 +7782,12 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
+
+    /// <summary>
+    /// Removes invalid charaters "/ "in alias in report variable
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
     private static void UpgradeToVersion217(JObject root, string fileName)
     {
         foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
@@ -7794,15 +7800,11 @@ internal class Converter
                     if (variableNames[i].Contains(" as ") && variableNames[i].Contains("/"))
                     {
                         variableNames[i] = variableNames[i].Replace("/", "");
-                        JsonUtilities.SetValues(report, "VariableNames", variableNames);
-                        
+                        JsonUtilities.SetValues(report, "VariableNames", variableNames);                       
                         
                     }
-                }
-        
-            }
-            
+                }        
+            }    
         }
- 
     }    
 }
