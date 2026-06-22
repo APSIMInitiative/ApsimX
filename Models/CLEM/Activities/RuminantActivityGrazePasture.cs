@@ -1,11 +1,4 @@
-﻿using APSIM.Core;
-using APSIM.Numerics;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Mapsui.Manipulations;
-using MathNet.Numerics.Distributions;
-using Models.CLEM.Groupings;
-using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -13,9 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Linq;
-using System.ServiceModel.Security;
 
 namespace Models.CLEM.Activities
 {
@@ -157,12 +148,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            // generate pool gropus based on available pasture in the graze food store pools
+            // generate pool groups based on available pasture in the graze food store pools
             // For each pool group (i.e. based on DMD)
             // fill individual's feed requirements from first pool
             // Reduce based on shortfall of pasture for all herds. 
 
-            //totalPastureAvailable = GrazeFoodStoreModel.AmountAvailable;
             int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
             var intakeGroups = GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
 
@@ -229,49 +219,6 @@ namespace Models.CLEM.Activities
 
             return ResourceRequestList;
         }
-
-        ///// <summary>
-        ///// Method to create mixed pasture pool groups for feeding.
-        ///// </summary>
-        ///// <param name="grazeFoodStore">The graze food store type for the pasture.</param>
-        ///// <param name="numberOfTimesteps">Number of timesteps to convert daily to total intake</param>
-        ///// <param name="greenAge">
-        ///// The age (in months) for pasture to be considered green. (-1 ignore green details)
-        ///// </param>
-        ///// <param name="dmdStep">The step size for Dry Matter Digestibility (DMD) categories (100 no groups).</param>
-        //public static List<FoodResourceStore> GeneratePoolsGroups(IGrazeFoodStoreType grazeFoodStore, int numberOfTimesteps, int greenAge = -1, int dmdStep = 10)
-        //{
-        //    IEnumerable<GrazeFoodStorePool> pasturePools;
-        //    if (grazeFoodStore is GrazeFoodStoreType grazeFoodStoreType)
-        //    {
-        //        pasturePools = grazeFoodStoreType.Pools;
-        //    }
-        //    else
-        //    {
-        //        // Handled in GrazeFoodStoreAPSIMLink. Could move code here out of resource
-        //        return null;
-        //    }
-
-        //    // think about different approaches
-        //    // 1. whole avearge pasture pool (DMD step = 100)
-        //    // 2. select by DMD - current DMD step (e.g. 10)
-        //    // 3. proportional with weighting toward green
-        //    // 4. CLEM green biomass limit - implemented
-        //    // 5. CLEM low biomass intake limited - implemented
-
-        //    // individual selective ability proceedures can be actioned in GeneratePoolGroups and thus the list and order of pools the animals feed from.
-
-        //    var nestedGroups = pasturePools
-        //        .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep)
-        //        .Select(groups => new FoodResourceStore(
-        //            groups.ToList(),
-        //            greenAge,
-        //            numberOfTimesteps
-        //            )
-        //        ).OrderByDescending(a => a.Details.DryMatterDigestibility);
-
-        //    return nestedGroups.ToList();
-        //}
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)

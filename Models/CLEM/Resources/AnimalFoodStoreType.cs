@@ -226,16 +226,54 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <inheritdoc/>
-        public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
-        {
-            if (request.Required == 0)
-            {
-                return;
-            }
-            request.AdditionalDetails = CurrentStoreDetails;
-            base.RemoveFromResource(request);
-        }
+        ///// <inheritdoc/>
+        //public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
+        //{
+        //    if (request.Required == 0)
+        //    {
+        //        return;
+        //    }
+        //    request.AdditionalDetails = CurrentStoreDetails;
+        //    base.RemoveFromResource(request);
+        //}
+
+        ///// <summary>
+        ///// Performs a transaction by specified amount.
+        ///// </summary>
+        ///// <param name="request">The amount of the transaction.</param>
+        ///// <param name="handlePendingTransaction">
+        ///// This transaction should handle any pending amount rather than the amount provided.
+        ///// </param>
+        //public override void PerformTransaction(ResourceRequest request, bool handlePendingTransaction = false)
+        //{
+        //    request.Provided = AmountPending;
+        //    if (handlePendingTransaction)
+        //        return;
+
+        //    //double provided = 0;
+        //    //// remove all pending and take from pools 
+        //    //// set provided to pending pool amounts
+        //    //if (request.AdditionalDetails is IEnumerable<FoodResourceStore> foodStores)
+        //    //{
+        //    //    foreach (var foodStore in foodStores)
+        //    //    {
+        //    //        for (int i = 0; i < foodStore.Pools.Count; i++)
+        //    //        {
+        //    //            provided += foodStore.Pools[i].AmountPending;
+        //    //            foodStore.Pools[i].ConsumePending();
+        //    //        }
+        //    //    }
+        //    //}
+        //    //if (provided <= 0)
+        //    //    return;
+
+        //    //request.Provided = provided;
+        //    request.TransactionPending = false;
+        //    base.RemoveFromResource(request);
+
+        //    //base.PerformTransaction(request, handlePendingTransaction);
+        //}
+
 
         #endregion
 

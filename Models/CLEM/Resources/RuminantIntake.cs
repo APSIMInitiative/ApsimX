@@ -100,10 +100,14 @@ namespace Models.CLEM.Resources
             // ========================================================================================================================
 
             // CLEM does not currently include legumes in pastures so there is no need to differentiate feed types when applying quality affect.
+            // handling legume was the only reason for type based assessment for the PastureTemperate and PastureTropical
             double sumFs = 0;
             double iReduction = 0;
 
-            //for each food type
+            // this should include any previous reductions based on RDP gut biome shortfalls
+            double solidIntake = SolidsDaily.Actual;
+
+            // for each food type
             // sorted by DMD descending and concentrate first (if same DMD) to ensure quality reduction is applied to lower quality feeds first, and concentrates are last to be reduced (as they are often the highest quality feed).
             foreach (var item in feedTypeStoreDict.Where(a => a.Value.Details.TypeOfFeed != FeedType.Milk).OrderByDescending(a => a.Value.Details.DryMatterDigestibility).OrderByDescending(a => a.Value.Details.TypeOfFeed == FeedType.Concentrate))
             {
@@ -111,15 +115,9 @@ namespace Models.CLEM.Resources
                 // FS relative availability of the feed
                 double FS = 0;
                 double RS = 0;
-                //double SF = 0; // temperate C3 pasture
-                //switch (item.Key)
-                //{
-                //    case FeedType.Concentrate:
-                //    case FeedType.HaySilage:
-                // 1.7 -> 1.25
                 double RQ = Math.Min(1.0, 1 - ind.Parameters.GrowPF_CI.DigestibilitySlope_CR3 * (ind.Parameters.GrowPF_CI.DigestibilityPeak_CR1 - (item.Value.Details.DryMatterDigestibility/100.0)));
 
-                double offered_adj = (item.Value.Details.Amount/SolidsDaily.Received)*RQ;
+                double offered_adj = (item.Value.Details.Amount/solidIntake)*RQ;
                 double unsatisfied_adj = Math.Max(0, 1-sumFs);
                 double quality_adj = (isLactating? ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorLactating_CR20:ind.Parameters.GrowPF_CI.QualityIntakeSubsititutionFactorNonLactating_CR11)/item.Value.Details.MEContent;
 
@@ -131,36 +129,11 @@ namespace Models.CLEM.Resources
 
                 FS =  Math.Min(offered_adj, Math.Min(unsatisfied_adj, quality_adj));
                 RS = FS * RQ;
-//                        break;
-//                    case FeedType.PastureTemperate:
-//                    case FeedType.PastureTropical:
-//                        if (item.Key is FeedType.PastureTropical)
-//                        {
-//                              SF = 0.16; // tropical pasture C4
-//                        }
 
-//                        RQ = 1.0-1.7*StdMath.DIM((0.8-(1 - item.Value.Details.LegumePercent)*SF), item.Value.Details.DryMatterDigestibility/100.0);
-//                        // CLEM assumes you can only graze one pasture type in a time step. Technically we should be able to add two pastures of the same type during the time-step but not mixed tropical and temperate pastures.
-//                        //double ZF = 1.0;
-//                        //if (ind.Weight.RelativeSize < 0.5)
-//                        //{
-//                        //    ZF = 1 + 0.5 - ind.Weight.RelativeSize;
-//                        //}
-////                        double RR = 1.0 - Math.Exp(-1 * 1.35 * (0.78 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass);
-////                        double RT = 1 + (0.6 * Math.Exp(-1 * 1.35 * (0.74 * 10e-3) * ZF * item.Value.Details.OverallPastureBiomass));
-//                        unsatisfied_adj = Math.Max(0, 1 - sumFs);
-//                        FS = unsatisfied_adj * RQ;
-//                        //  FS = unsatisfied_adj * RR * RT;
-//                        //  RS = FS * RQ * (1 + (0.17 * item.Value.Details.ProportionLegumeInPasture * Math.Pow(sumFs,2)));
-//                        break;
-//                    default:
-//                        break;
-                //}
-
-                iReduction = StdMath.DIM(item.Value.Details.Amount, RS * SolidsDaily.Received);
+                iReduction = StdMath.DIM(item.Value.Details.Amount, RS * solidIntake);
                 if (iReduction > 0)
                 {
-                    item.Value.ReturnPending(iReduction);
+                    item.Value.ReturnPendingByProportion(iReduction / item.Value.Details.Amount);
                     SolidsDaily.Unneeded += iReduction;
                 }
                 sumFs += FS;
@@ -494,7 +467,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Causes a proportional reduction in intake (and RPD )
+        /// Causes a proportional reduction in intake (and RPD)
         /// </summary>
         /// <param name="proportion">Proportional reduction</param>
         public void ReduceIntakeByProportion(double proportion)

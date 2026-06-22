@@ -1041,6 +1041,23 @@ namespace Models.CLEM.Resources
             base.DecreasePending(request, amount);
         }
 
+        /// <inheritdoc/>
+        public new void DecreasePendingByProportion(ResourceRequest request, double proportion)
+        {
+            double totalAmount = 0;
+            if (request.AdditionalDetails is FoodResourceStore foodStore)
+            {
+                for (int i = 0; i < foodStore.Pools.Count; i++)
+                {
+                    double amountToRemove = foodStore.Pools[i].AmountPending * proportion;
+                    foodStore.Pools[i].ReducePending(amountToRemove);
+                    totalAmount += amountToRemove;
+                }
+            }
+            // do removal from pending
+            base.DecreasePending(request, totalAmount);
+        }
+
         ///// <summary>
         ///// Simple remove resource by specified amount
         ///// </summary>

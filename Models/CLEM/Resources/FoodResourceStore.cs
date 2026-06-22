@@ -44,6 +44,11 @@ namespace Models.CLEM.Resources
         public double ProportionGreen { get; private set; }
 
         /// <summary>
+        /// Name to identify the store if needed
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Total crude protein in the store.
         /// </summary>
         public double CrudeProtein 
@@ -96,8 +101,6 @@ namespace Models.CLEM.Resources
         public FoodResourceStore(FoodResourcePacket foodResourcePacket, double amount, ResourceRequest request = null, int daysInTimeStep = 1)
         {
             Details.SetPropertiesFromPacket(foodResourcePacket, amount);
-            //CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
             if (request is not null)
                 AssociatedResourceRequest = request;
             NumberOfDaysInTimestep = daysInTimeStep;
@@ -114,11 +117,6 @@ namespace Models.CLEM.Resources
         public FoodResourceStore(FoodResourceStore foodResourceStore, double amount)
         {
             Details.SetPropertiesFromPacket(foodResourceStore.Details, amount);
-            //if (Details.Amount > 0)
-            //{
-            //    CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-            //    DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
-            //}
 
             NumberOfDaysInTimestep = foodResourceStore.NumberOfDaysInTimestep;
             Pools = foodResourceStore.Pools;
@@ -136,7 +134,8 @@ namespace Models.CLEM.Resources
         /// <param name="numberOfTimesteps">
         /// The number of timesteps to convert from daily rates to toal for intake to total
         /// </param>
-        public FoodResourceStore(List<IGrazeIntakePool> pools, int greenAge, int numberOfTimesteps)
+        /// <param name="name">Name to identify this store</param>
+        public FoodResourceStore(List<IGrazeIntakePool> pools, int greenAge, int numberOfTimesteps, string name = "")
         {
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;
@@ -176,9 +175,6 @@ namespace Models.CLEM.Resources
             Details.GutFill = ((Details.GutFill * Details.Amount) + (packet.GutFill * specifyAmount.Value)) / (Details.Amount + specifyAmount.Value);
 
             Details.AddAmount(specifyAmount.Value);
-
-            //CrudeProtein += Details.CrudeProtein;
-            //DegradableCrudeProtein += Details.DegradableProtein;
         }
 
         /// <summary>
@@ -192,38 +188,41 @@ namespace Models.CLEM.Resources
 
             dailyAmount *= NumberOfDaysInTimestep;
             Details.AddAmount(dailyAmount);
-            //CrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount;
-            //DegradableCrudeProtein += (Details.CrudeProteinPercent / 100.0) * dailyAmount * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
-        /// Reduce the store by specified amount as required by indake reduction due to quality
+        /// Reduce the store by specified amount as required by intake reduction due to quality and shortfall in Gut
+        /// biome RDP requirement
         /// </summary>
-        /// <param name="dailyAmount">The daily amount to remove</param>
-        public void ReturnPending(double dailyAmount)
+        /// <param name="amount">The daily amount to remove</param>
+        public void ReturnPending(double amount)
         {
-            if (dailyAmount <= 0)
+            if (amount <= 0)
                 return;
 
-            // do we need to modify the values in the foodStore.Details?
-            dailyAmount = Details.ReduceAmount(dailyAmount);
+            //Todo: I deleted the Details.Remove() that I believe should not adjust details.
 
             // reduce pending in graze food store
             // reduce pending in associated pools by amount and poolProportions[]
-            AssociatedResourceRequest?.Resource.DecreasePending(AssociatedResourceRequest, dailyAmount);
-
-            if (Details.Amount == 0)
-            {
-                //CrudeProtein = 0;
-                //DegradableCrudeProtein = 0;
-                return;
-            }
-            //CrudeProtein -= (Details.CrudeProteinPercent/100.0) * dailyAmount;
-            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
+            AssociatedResourceRequest?.Resource.DecreasePending(AssociatedResourceRequest, amount);
         }
 
         /// <summary>
-        /// Reduce from the pending take by a proportion
+        /// Reduce the store pending by specified proportion amount
+        /// </summary>
+        /// <param name="proportion">The proportion of the store to return</param>
+        public void ReturnPendingByProportion(double proportion)
+        {
+            proportion = Math.Min(1.0, Math.Max(proportion, 0));
+            if (proportion <= 0)
+                return;
+
+            // reduce pending in associated pools by amount and poolProportions[]
+            AssociatedResourceRequest?.Resource.DecreasePendingByProportion(AssociatedResourceRequest, proportion);
+        }
+
+        /// <summary>
+        /// Reduce from the pending by a proportion
         /// </summary>
         /// <param name="proportion">the proportion to reduce by</param>
         /// <param name="reducePending">Whether to reduce the pending take from pools as well (default true)</param>
@@ -235,7 +234,11 @@ namespace Models.CLEM.Resources
                 return 0;
 
             double amountToReduce = Details.Amount * proportion;
-            ReturnPending(Details.Amount * proportion);
+            Details.ReduceAmount(amountToReduce);
+            if (reducePending)
+            {
+                ReturnPendingByProportion(proportion);
+            }
             return amountToReduce;
         }
 
@@ -306,8 +309,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Reset()
         {
-            //CrudeProtein = 0;
-            //DegradableCrudeProtein = 0;
             Details.Reset();
         }
     }

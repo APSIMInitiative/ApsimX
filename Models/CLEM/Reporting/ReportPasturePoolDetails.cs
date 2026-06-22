@@ -2,6 +2,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Surface;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -154,20 +155,47 @@ namespace Models.CLEM.Reporting
             if (ReportPoolsNitrogen) poolEntries.Add("Nitrogen");
             if (ReportPoolsDMD) poolEntries.Add("DMD");
 
-            foreach (GrazeFoodStoreType pasture in Structure.FindAll<GrazeFoodStoreType>())
+            foreach (IGrazeFoodStoreType pasture in Structure.FindAll<IGrazeFoodStoreType>())
             {
+                GrazeFoodStoreAPSIMLink resHolderAPSIM = null;
+                if (pasture is GrazeFoodStoreAPSIMLink)
+                {
+                    resHolderAPSIM = pasture as GrazeFoodStoreAPSIMLink;
+                }
+
                 // pasture based measures
                 foreach (string pastureVariable in pastureEntries)
                 {
-                    variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1) as {pasture.Name}.{pastureVariable}");
+                    variableNames.Add($"[{resHolder.Name}].{(pasture as CLEMModel).NameWithParent}.Report(\"{pastureVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1) as {pasture.Name}.{pastureVariable}");
+                    if (resHolderAPSIM is not null && pastureVariable == "Amount")
+                    {
+                        variableNames.Add($"[{resHolder.Name}].{(pasture as CLEMModel).NameWithParent}.Report(\"AmountConsumable\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, -1) as {pasture.Name}.Consumable");
+                    }
                 }
 
+
                 // by pool measures
+                // todo: does not currently work for APSIMlinked pastures
                 foreach (string poolVariable in poolEntries)
                 {
-                    for (int j = 0; j <= 12; j++)
+                    string extraName = "";
+                    int poolCount = 12;
+                    if (resHolderAPSIM is not null)
                     {
-                        variableNames.Add($"[{resHolder.Name}].{pasture.NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{poolVariable}.{j}");
+                        poolCount = resHolderAPSIM.NumberOfItakeStores - 1;
+                    }
+
+                    for (int j = 0; j <= poolCount; j++)
+                    {
+                        if (resHolderAPSIM is not null)
+                        {
+                            extraName = resHolderAPSIM.GetStoreName(j);
+                        }
+                        else
+                        {
+                            extraName = j.ToString();
+                        }
+                        variableNames.Add($"[{resHolder.Name}].{(pasture as CLEMModel).NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{extraName}.{poolVariable}");
                     }
                 }
             }

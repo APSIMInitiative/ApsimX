@@ -35,7 +35,6 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private CLEMEvents events = null;
-        //[JsonIgnore]
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = true;
@@ -335,7 +334,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to take the relative intake and consider any pastureshortfall andcompetition modifiers
+        /// Method to take the relative intake and consider any pastureshortfall and competition modifiers
         /// </summary>
         /// <param name="group">Pasture pool group to consume</param>
         /// <param name="groupIndex">0 based index of pasture pool in list</param>
@@ -373,6 +372,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
+            // this code performs all actions handled by the GrazePasture activity and is only used when this GrazePastureHerd activity has been provided alone 
+
             if (!isStandAloneModel)
                 return null;
 
@@ -494,7 +495,7 @@ namespace Models.CLEM.Activities
 
             // report shortfalls based on multipliers.
 
-            if (MathUtilities.IsGreaterThan(DailyPastureDesired * events.Interval - (pastureRequest.Provided), DailyPastureDesired * events.Interval * shortfallReportingCutoff))
+            if (MathUtilities.IsGreaterThan(MathUtilities.PositiveDifference(DailyPastureDesired * events.Interval, pastureRequest.Provided), DailyPastureDesired * events.Interval * shortfallReportingCutoff))
             {
                 ResourceRequest shortfallRequest = pastureRequest;
                 shortfallRequest.Required = DailyPastureRequired * events.Interval;

@@ -16,49 +16,57 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class GrazeAPSIMForagePool: IGrazeIntakePool
     {
-        private GrazPlan.ForageProvider forageProvider;
+        private ModelWithDigestibleBiomass biomassModel;
         private IFeed feedDetails;
         private double amount = 0;
         private double nitrogen = 0;
-        private double dmd = 0;
+
+        /// <summary>
+        /// Provides the model with digestibile biomass associated with this pool
+        /// </summary>
+        public ModelWithDigestibleBiomass BiomassModel => biomassModel;
 
         /// <summary>
         /// Create the adapter
         /// </summary>
-        /// <param name="details"></param>
-        /// <param name="forageProviderModel">
-        /// An enumerable of forageProviders included in this intake pool
+        /// <param name="details">The IFeed quality details of the pool</param>
+        /// <param name="biomassModel">
+        /// The model with digestible biomass associated with the pool
         /// </param>
-        /// <param name="paddock"></param>
-        public GrazeAPSIMForagePool(GrazeFoodStoreAPSIMLink details, GrazPlan.ForageProvider forageProviderModel, PaddockInfo paddock)
+        /// <param name="forages"></param>
+        /// <param name="area"></param>
+        public GrazeAPSIMForagePool(GrazeFoodStoreAPSIMLink details, ModelWithDigestibleBiomass biomassModel, Forages forages, double area)
         {
-            forageProvider = forageProviderModel;
-            feedDetails = details as IFeed;
-            amount = forageProvider.ForageObj.Material.Sum(a => a.Consumable.Wt) * paddock.Area;
-            nitrogen = forageProvider.ForageObj.Material.Sum(a => a.Consumable.N) * paddock.Area;
+            this.biomassModel = biomassModel;
+            feedDetails = new FoodResourcePacket(details);
+            amount = biomassModel.Material.Sum(a => a.Consumable.Wt) * area;
+            nitrogen = biomassModel.Material.Sum(a => a.Consumable.N) * area;
+
 
             double totalDMD = 0;
             double totalWt = 0;
-            foreach (var live in forageProvider.ForageObj.Material.Where(m => m.IsLive))
+            foreach (var liveAndDead in biomassModel.Material.Where(a => a.Consumable.Wt > 0).GroupBy(a => a.Name).Select(a => new { Live = a.Where(b => b.IsLive).FirstOrDefault(), Dead = a.Where(b => !b.IsLive).FirstOrDefault() }))
             {
-                Name = live.Name;
-
-                // Find corresponding dead material
-                var dead = forageProvider.ForageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
-                if (dead == null)
-                    throw new Exception($"Cannot find dead material for {live.Name}.");
-
-                if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
+                Name = liveAndDead.Live?.Name ?? liveAndDead.Dead.Name;
+                if (liveAndDead.Live is not null && liveAndDead.Dead is null)
                 {
-                    // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-                    dmd = (paddock.ForagesModel.GetDigestibility(live) * live.Consumable.StructuralWt) + (1 * live.Consumable.StorageWt) + (1 * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-                    dmd += (paddock.ForagesModel.GetDigestibility(dead) * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt);
-                    totalDMD += dmd;
-                    totalWt += live.Total.Wt + dead.Total.Wt;
+                    throw new Exception($"Cannot find dead material for {liveAndDead.Live.Name}.");
                 }
+                if (liveAndDead.Live is not null && liveAndDead.Live.Total.Wt > 0)
+                {
+                    totalDMD += (forages.GetDigestibility(liveAndDead.Live) * liveAndDead.Live.Consumable.StructuralWt) + (1 * liveAndDead.Live.Consumable.StorageWt) + (1 * liveAndDead.Live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                    totalWt += liveAndDead.Live.Total.Wt;
+                }
+                if ( liveAndDead.Dead is not null && liveAndDead.Dead.Total.Wt > 0)
+                {
+                    totalDMD += (forages.GetDigestibility(liveAndDead.Dead) * liveAndDead.Dead.Consumable.StructuralWt) + (1 * liveAndDead.Dead.Consumable.StorageWt) + (1 * liveAndDead.Dead.Consumable.MetabolicWt);
+                    totalWt += liveAndDead.Dead.Total.Wt;
+                }
+                // Note from Stock: we can find the dmd of structural, assume storage and metabolic are 100% digestible
             }
-            dmd = totalDMD / totalWt * 100;
-            GutFill = details.CalculateGutFill(totalDMD);
+            feedDetails.DryMatterDigestibility = totalDMD / totalWt * 100;
+            feedDetails.MetabolisableEnergyContent = 0;  //16.0 * (feedDetails.DryMatterDigestibility / 100.0); from APSIM or use calcs from CLEM foodReesourcePacket
+            feedDetails.GutFill = details.CalculateGutFill(feedDetails.DryMatterDigestibility);
         }
 
         /// <inheritdoc/>
@@ -70,19 +78,19 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double MetabolisableEnergyContent { get => feedDetails.MetabolisableEnergyContent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double DryMatterDigestibility { get => dmd; set => throw new NotImplementedException(); }
+        public double DryMatterDigestibility { get => feedDetails.DryMatterDigestibility; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
         public double FatPercent { get => feedDetails.FatPercent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double NitrogenPercent { get => nitrogen / amount; set => throw new NotImplementedException(); }
+        public double NitrogenPercent { get => nitrogen / amount * 100.0; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double CrudeProteinPercent { get => nitrogen * 6.25 / amount; set => throw new NotImplementedException(); }
+        public double CrudeProteinPercent { get => NitrogenPercent * 6.25; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
         public double RumenDegradableProteinPercent { get => feedDetails.RumenDegradableProteinPercent; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
         public double AcidDetergentInsolubleProtein { get => feedDetails.AcidDetergentInsolubleProtein; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public double GutFill { get; set; }
+        public double GutFill { get => feedDetails.GutFill; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
         public int Age { get => 10; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
@@ -110,7 +118,9 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public void ConsumePending()
         {
-            throw new NotImplementedException();
+            Consumed += AmountPending;
+            this.amount -= AmountPending;
+            AmountPending = 0;
         }
         /// <inheritdoc/>
         public double Detach(double proportion)
@@ -120,7 +130,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public void ReducePending(double amountReturned)
         {
-            throw new NotImplementedException();
+            AmountPending -= Math.Min(AmountPending, amountReturned);
         }
         /// <inheritdoc/>
         public void Remove(double removeAmount)

@@ -133,6 +133,7 @@ namespace Models.ForageDigestibility
                     //   computing new ones at each iteration.
 
                     // NB: Does this while loop do anything at all! I'm not sure what it is supposed to do. (Dean)
+                    // NB: I think this is a clunky approach. This should have first determined the fraction consumable in each material. Then based on material available adjusted the live and dead up and down at the same time to try and meet the preference while ensuring the consumable amount was not exceeded. This would ensure fractions add to 1 and only the biomass available is consumed. (Adam @lie112)
                     int count = 1;
                     totalFrac = fracRemoving.Sum(m => m.Fraction);
                     while (!MathUtilities.FloatsAreEqual(1.0 - totalFrac, 0.0, 0.000000001))

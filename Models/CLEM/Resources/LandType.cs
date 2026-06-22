@@ -57,14 +57,6 @@ namespace Models.CLEM.Resources
         [Required]
         public string SoilType { get; set; }
 
-        /*/// <summary>
-        /// Area not currently being used (ha)
-        /// </summary>
-        [JsonIgnore]
-        public double AreaAvailable { get { return areaAvailable; } }
-        private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
-        private double roundedAreaAvailable;*/
-
         /// <summary>
         /// The total area available
         /// </summary>
@@ -79,17 +71,13 @@ namespace Models.CLEM.Resources
 
         private CLEMModel ActivityRequestingRemainingLand;
 
-        ///// <inheritdoc/>
-        //public new double AmountTotal => AreaAvailable;
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            if (UsableArea > 0)
-                AddToResource(UsableArea, null, null, "Starting value");
+            AddToResource(UsableArea, null, null, "Starting value");
 
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)
@@ -185,10 +173,7 @@ namespace Models.CLEM.Resources
                 UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountRemoved, true);
         }
 
-        /// <summary>
-        /// Set amount of land available
-        /// </summary>
-        /// <param name="newValue">New value to set land to</param>
+        /// <inheritdoc/>
         public new void Set(double newValue)
         {
             throw new NotImplementedException("Set() method of LandType is not currently implemented. Use add and Remove to modify this resource.");

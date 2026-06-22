@@ -1,5 +1,4 @@
 ﻿using Models.CLEM.Activities;
-using Models.CLEM.Resources;
 
 namespace Models.CLEM.DescriptiveSummary;
 

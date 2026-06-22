@@ -1,3 +1,4 @@
+using APSIM.Core;
 using Docker.DotNet.Models;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Models.CLEM.Interfaces;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 using StdUnits;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -33,18 +35,28 @@ namespace Models.CLEM.Resources
         private const double TOLERANCE = 0.0000001;
 
         /// <summary>
-        /// The amount available accounting for pending transactions.
+        /// The amount available accounting for unavailable and pending transactions.
         /// </summary>
         [JsonIgnore]
-        public double AmountAvailable { get { return AmountTotal - AmountPending; } }
+        public double AmountAvailable { get { return AmountTotal - AmountPending - AmountUnavailable; } }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Total amount present
+        /// </summary>
         [JsonIgnore]
         public double AmountTotal { get { return amount; } }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Amount in pending transactions
+        /// </summary>
         [JsonIgnore]
         public double AmountPending { get { return pending.Sum(a => a.Value); } }
+
+        /// <summary>
+        /// Amount unavailable
+        /// </summary>
+        [JsonIgnore]
+        public double AmountUnavailable { get; private set; }
 
         /// <summary>
         /// A link to the equivalent market store for trading.
@@ -429,7 +441,25 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove a specified amount from the resource.
+        /// Remove amount based on a ResourceRequest object
+        /// </summary>
+        /// <param name="request">Object containing amount required</param>
+        public void RemoveFromResource(ResourceRequest request)
+        {
+            if (request.Required == 0)
+                return;
+
+            double amountRemoved = RemoveFromResource(request.Required, request.TransactionPending ? request : null);
+            request.Provided = amountRemoved;
+
+            if (!request.TransactionPending)
+            {
+                PerformTransaction(request, request.TransactionPending);
+            }
+        }
+
+        /// <summary>
+        /// Remove a specified amount from the resource with additional pending details.
         /// </summary>
         /// <param name="amountToRemove">Amount to remove from resource store</param>
         /// <param name="pendingRequest">
@@ -459,21 +489,6 @@ namespace Models.CLEM.Resources
             return amountToRemove;
         }
 
-        /// <summary>
-        /// Remove amount based on a ResourceRequest object
-        /// </summary>
-        /// <param name="request">Object containing amount required</param>
-        public void RemoveFromResource(ResourceRequest request)
-        {
-            if (request.Required == 0)
-                return;
-
-            double amountRemoved = RemoveFromResource(request.Required, request.TransactionPending ? request : null);
-            request.Provided = amountRemoved;
-
-            PerformTransaction(request, !request.TransactionPending);
-        }
-
         /// <inheritdoc/>
         public void DecreasePending(ResourceRequest request, double amount)
         {
@@ -486,6 +501,19 @@ namespace Models.CLEM.Resources
             amount = Math.Min(amount, pending[request]);
             pending[request] -= amount;
         }
+
+        /// <inheritdoc/>
+        public void DecreasePendingByProportion(ResourceRequest request, double proportion)
+        {
+            if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
+            {
+                string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+                return;
+            }
+            pending[request] *= (1 - proportion);
+        }
+
 
         /// <summary>
         /// Performs a transaction by specified amount.
@@ -540,6 +568,7 @@ namespace Models.CLEM.Resources
                 if (item.Value > 0)
                 {
                     item.Key.Provided = item.Value;
+                    amount -= item.Key.Provided;
                     PerformTransaction(item.Key, true);
                 }
             }
@@ -549,10 +578,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Set the amount of the resource. Use with caution as resources should be changed by add and remove methods.
         /// </summary>
-        /// <param name="newAmount"></param>
-        public void Set(double newAmount)
+        /// <param name="total">The total amount</param>
+        public void Set(double total)
         {
-            amount = newAmount;
+            amount = total;
             if (pending.Count > 0) 
             {
                 string warnMessage = $"Pending transactions for [r={Name}] have not been completed at the time of a Set operation. Amount pending of [a={AmountPending}] was not reported";
@@ -560,5 +589,20 @@ namespace Models.CLEM.Resources
             }
             pending.Clear();
         }
+
+        /// <summary>
+        /// Set the amount of the resource that is unavailable. This is influence TotalAvailable
+        /// </summary>
+        /// <param name="amount">The amount not available</param>
+        public void SetUnavailable(double amount)
+        {
+            this.AmountUnavailable = amount;
+            if (pending.Count > 0)
+            {
+                string warnMessage = $"Pending transactions for [r={Name}] have not been completed at the time of a SetUnavailable operation. Amount pending of [a={AmountPending}] may no be correct for new unavailable details";
+                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+            }
+        }
+
     }
 }

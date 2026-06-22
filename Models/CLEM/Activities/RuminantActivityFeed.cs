@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using System.IO;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
@@ -171,6 +170,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
+            ResourceRequestList.Clear();
             numberToDo = 0;
             numberToSkip = 0;
             amountToDo = 0;

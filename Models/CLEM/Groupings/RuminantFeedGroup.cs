@@ -105,7 +105,7 @@ namespace Models.CLEM.Groupings
                 ActivityModel = Parent as CLEMActivityBase,
                 Category = TransactionCategory,
                 RelatesToResource = feedActivityParent.PredictedHerdNameToDisplay,
-                TransactionPending = true
+                TransactionPending = true,
             };
 
             switch (feedActivityParent.FeedStyle)
@@ -173,6 +173,7 @@ namespace Models.CLEM.Groupings
         public void UpdateCurrentFeedDemand(RuminantActivityFeed feedActivityParent)
         {
             double value = CurrentValue;
+            currentFeedRequest.Required = 0;
             FeedToSatisfy = 0;
             //FeedToOverSatisfy = 0;
             double feedNeeded = 0;
