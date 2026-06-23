@@ -176,12 +176,21 @@ namespace Models.CLEM
         /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResource")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialise(object sender, EventArgs e)
         {
-            // Performed in CLEMInitialiseResource to catch any errors thrown in previous early CLEMInitialise and checksof RuminantHerd
+            // Performed in CLEMInitialise to catch any errors thrown in previous early OnCommencing
             // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
+            ReportInvalidParameters(this, dataStore, summary, simulation.Name);
+        }
 
+        /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            // Performed in CLEMInitialiseResource to catch any errors thrown in previous early CLEMInitialise and checks of RuminantHerd
             ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
