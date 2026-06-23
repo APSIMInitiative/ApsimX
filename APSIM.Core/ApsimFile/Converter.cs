@@ -7784,7 +7784,7 @@ internal class Converter
     }
 
     /// <summary>
-    /// Removes invalid charaters "/ "in alias in report variable
+    /// Removes invalid character "/ " in alias 
     /// </summary>
     /// <param name="root"></param>
     /// <param name="fileName"></param>
@@ -7793,22 +7793,33 @@ internal class Converter
         foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
         {
             var variableNames = JsonUtilities.Values(report, "VariableNames");
-            bool replacementMade = false;
-            if (variableNames != null)
+
+            if (variableNames == null || variableNames.Count == 0)
+                continue;
+            bool changed = false;
+           
+            for (int i = 0; i < variableNames.Count; i++)
             {
-                for (int i = 0; i < variableNames.Count; i++)
+                string reportVariable = variableNames[i];
+                // Only rewrite if BOTH patterns exist
+                if (reportVariable.Contains(" as ") && reportVariable .Contains("/"))
                 {
-                    if (variableNames[i].Contains(" as ") && variableNames[i].Contains("/"))
+                    // Remove ONLY the slash inside the variable expression
+                    int asIndex = reportVariable .IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                    string expr = reportVariable .Substring(0, asIndex); // experssion before " as "
+                    string alias = reportVariable .Substring(asIndex); // experssion with " as "
+                    string cleanedExpr = alias.Replace("/", ""); // Removes / in alias alone
+                    string rewritten = expr + cleanedExpr ;
+                    if (rewritten != reportVariable )
                     {
-                        variableNames[i] = variableNames[i].Replace("/", "");
-                         replacementMade = true;                    
-                        
+                        variableNames[i] = rewritten;
+                        changed = true;
                     }
-                } 
-                if (replacementMade)
-                JsonUtilities.SetValues(report, "VariableNames", variableNames);       
-            } 
-            //JsonUtilities.SearchReplaceReportVariableNames(report, " as AboveGroundBiomass_kgDM/ha", " as AboveGroundBiomass_kgDMha");   
-        }
-    }    
+                }
+            }
+            if (changed)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);
+            }
+    }
+   
 }
