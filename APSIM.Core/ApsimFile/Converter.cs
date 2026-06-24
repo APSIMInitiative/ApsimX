@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 216; } }
+    public static int LatestVersion { get { return 218; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7785,11 +7785,50 @@ internal class Converter
         }
     }
 
+    /// <summary>
+    /// Removes invalid character "/" in alias 
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion217(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+
+            if (variableNames == null || variableNames.Count == 0)
+                continue;
+            bool changed = false;
+           
+            for (int i = 0; i < variableNames.Count; i++)
+            {
+                string reportVariable = variableNames[i];
+                // Only rewrite if BOTH patterns exist
+                if (reportVariable.Contains(" as ") && reportVariable.Contains("/"))
+                {
+                    // Remove ONLY the slash inside the variable expression
+                    int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                    string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
+                    string alias = reportVariable.Substring(asIndex); // experssion includes " as "
+                    string cleanedAlias = alias.Replace("/", string.Empty); // Replaces / in alias with empty string
+                    string rewritten = expr + cleanedAlias;
+                    if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                    {
+                        variableNames[i] = rewritten;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);
+            }
+    }
+
     /// Change CLEM to work with new custom time-step rather than months and method of handling age and dates
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
-    private static void UpgradeToVersion300(JObject root, string _)
+    private static void UpgradeToVersion218(JObject root, string _)
     {
         Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
             {
@@ -7975,6 +8014,7 @@ internal class Converter
         newAgeSpecifier = newAgeSpecifier.Replace("[VALUE]", partsString);
         return JObject.Parse(newAgeSpecifier);
     }
+
 }
 
 
