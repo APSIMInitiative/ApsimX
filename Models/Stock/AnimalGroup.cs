@@ -1837,16 +1837,13 @@ namespace Models.GrazPlan
             this.ages.GetOlder(ageDays, ref numMale, ref numFemale);
         }
 
-        // ------------------ Private model logic ------------------
-        // some made public static so CLEM can integrate with paddocks and forage
-
         /// <summary>
         ///
         /// </summary>
         /// <param name="classAttr"></param>
         /// <param name="netClassIntake"></param>
         /// <param name="summaryIntake"></param>
-        public static void AddDietElement(ref GrazType.IntakeRecord classAttr, double netClassIntake, ref GrazType.IntakeRecord summaryIntake)
+        public void AddDietElement(ref GrazType.IntakeRecord classAttr, double netClassIntake, ref GrazType.IntakeRecord summaryIntake)
         {
             if (netClassIntake > 0.0)
             {
@@ -1864,7 +1861,7 @@ namespace Models.GrazPlan
         /// Summarise the intake record
         /// </summary>
         /// <param name="summaryIntake">The intake record</param>
-        public static void SummariseIntakeRecord(ref GrazType.IntakeRecord summaryIntake)
+        public void SummariseIntakeRecord(ref GrazType.IntakeRecord summaryIntake)
         {
             double trivialIntake = 1.0E-6; // (kg/head)
 
