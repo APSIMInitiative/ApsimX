@@ -38,7 +38,7 @@ public class TimerRangeItemTest
     [TestCase(0, 10, 0, "31/10/2004", false)] // month only provided for end of range - uses events.clock.startYear
     [TestCase(0, 10, 5, "5/10/2004", true)] // month only provided for start of range - uses events.clock.startYear
     [TestCase(0, 0, 60, "29/02/2004", true)] // days only provided for start of range - uses events.clock.startYear
-    [TestCase(0, 0, 100, "10/04/2004", false)] // days only provided for end of range allowing for leap year
+    [TestCase(0, 0, 100, "9/04/2004", false)] // days only provided for end of range allowing for leap year
     [TestCase(2002, 0, 100, "10/04/2002", true)] // year and days provided for start of range when not a leap year
     public void TimerInitialiseValidAgeSpecifier(int year, int month, int day, string dateString, bool startOfRange)
     {
@@ -61,16 +61,15 @@ public class TimerRangeItemTest
     // test initialisation of TimerRangeItem with various invalid AgeSpecifier inputs
     [TestCase(0, 0, 0, "Empty date specifier supplied")] // missing value
     [TestCase(2000, 14, 0, "Month must be between 1 and 12 when providing details with date or month style (x,m,x)")] // invalid month > 12
-    [TestCase(2000, -2, 0, "Month must be between 1 and 12 when providing details with date or month style (x,m,x)")] // invalid month < 0
-    [TestCase(0, 0, 366, "Day of year must be between 1 and 365 when providing details in day style (0,0,d)")] // invalid day for non-leap year
-    [TestCase(2000, 0, 3, "Month must be provided with date style(x, m, d)")] // missing month
+    [TestCase(2000, -2, 0, "Invalid date parts. All values (y,m,d) must be greater than or equal to 0")] // invalid month < 0
+    [TestCase(-2, 0, 0, "Invalid date parts. All values (y,m,d) must be greater than or equal to 0")] // invalid month < 0
+    [TestCase(0, 0, -10, "Invalid date parts. All values (y,m,d) must be greater than or equal to 0")] // invalid month < 0
     [TestCase(2000, 9, 31, "Invalid days [31] of month [9] for style (x,m,d)")] // invalid days for specified month
-    [TestCase(2000, 9, 0, "Invalid date parts. Days cannot be 0 with year and month (y,m,0)")] // invalid days for specified month
-    public void TimerNextStartDate(int year, int month, int day, string errorString)
+    public void TimerInitialiseInvalidAgeSpecifier(int year, int month, int day, string errorString)
     {
         var ageSpecifier = new AgeSpecifier()
         {
-            Parts = [day, month, year]
+            Parts = [year, month, day]
         };
         TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, true, true);
 

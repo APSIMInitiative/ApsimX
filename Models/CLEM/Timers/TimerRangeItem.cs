@@ -129,7 +129,13 @@ namespace Models.CLEM.Timers
         {
             (int year, int month, int day) dateParts = (0, 0, 0);
 
-            if (details.Parts[0] < 0 || details.Parts[0] < 0 || details.Parts[0] < 0)
+            if (details.Parts.Sum() == 0)
+            {
+                ErrorMessages.Add("Empty date specifier supplied");
+                return dateParts;
+            }
+
+            if (details.Parts[0] < 0 | details.Parts[1] < 0 | details.Parts[2] < 0)
             {
                 ErrorMessages.Add("Invalid date parts. All values (y,m,d) must be greater than or equal to 0");
                 return dateParts;
