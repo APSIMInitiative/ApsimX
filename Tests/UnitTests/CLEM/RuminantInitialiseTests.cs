@@ -27,6 +27,10 @@ namespace UnitTests.CLEM
             singleSheepSim = Utilities.ReadFromResource<Simulations>("UnitTests.CLEM.Resources.SingleSheep.apsimx", e => throw e);
             sheepCohort = singleSheepSim.Node.Find<RuminantTypeCohort>();
             sheepHerd = singleSheepSim.Node.Find<RuminantHerd>();
+            foreach (var sheepType in sheepHerd.Node.FindChildren<RuminantType>())
+            {
+                sheepType.Parameters.Initialise(sheepType);
+            }
         }
 
         // Setting initial weight with options
