@@ -7803,18 +7803,22 @@ internal class Converter
                 string reportVariable = variableNames[i];
                 // Only rewrite if BOTH patterns exist
                 if (reportVariable.Contains(" as "))
-                {
-                    // Remove all invalid characters the variable expression
-                    int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
-                    string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
-                    string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
-                    string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
-                    string rewritten = expr + " as " + cleanedAlias;
-                    if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                {   
+                    if(!reportVariable.Contains("//"))
                     {
-                        variableNames[i] = rewritten;
-                        changed = true;
+                            // Remove all invalid characters the variable expression
+                        int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                        string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
+                        string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
+                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
+                        string rewritten = expr + " as " + cleanedAlias;
+                        if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                        {
+                            variableNames[i] = rewritten;
+                            changed = true;
+                        }
                     }
+                    
                 }
             }
             if (changed)
