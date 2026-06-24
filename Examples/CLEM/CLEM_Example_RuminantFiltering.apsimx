@@ -1,0 +1,855 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 217,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "RuminantFilters",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "# Filtering ruminants example\n\nBy changing the filters in the Activities.ReportHerd this simulation will report all individuals that match in the Reports.Report  \nAdd and change the filters in the filter group below the ReportHerd component in Activities to define which individuals are selected.\nA range of filters are provided and all disabled. Right click a filter and enable to include the filter in the simulation.\nYou can also add sort and take components.\n\n## Initial Herd by each individual created\n- 1 Suckling 2month Female GenoIndex and GenoA attributes\n- 2 Suckling 2month Male\n- 3 Suckling 2month Male\n- 4 Heifer Female 12month\n- 5 Female 24month GenoIndex\n- 6 Female 36month (cohort of 4)\n- 7 Female 36month\n- 8 Female 36month\n- 9 Female 36month\n- 10 Male 12month\n- 11 Male 24month\n- 12 Male 36month\n- 13 Male 36month Sire GenoA\n\n\n",
+          "Name": "Simulation information",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "# Checks completed\n\n## No filters with sort and take tests\n* No filters (return all individuals) OK    \n*  SortByProperty Age ascending OK\n* SortByProprty weight descending OK\n* TakeFromFiltered Proportion = 0.5 (50%) OK\n* TakeFromFiltered Individuals = 3 OK\n\n## Filter by attributes\n\n* FilterByAttribute for genetics GenoIndex exists OK\n* FilterByAttribute for genetics GenoIndex value > 60 OK\n* FilterByAttribute for genetics GenoIndex value > 60 AND GenoA exists OK\n\n## Filter by property\n\n* FilterByProperty boolean IsSire OK\n* FilterByProperty enum Sex is Male OK\n* FilterByProperty number Age < 12 OK\n\n## Sort by attribute\n\n* SortByAttribute GenoIndex exists descending OK\n* SortByAttribute GenoIndex value descending with -9999 for those missing the attribute OK\n\n## Failed filter check\n\n* FilterByProperty a male (IsSire) and female (IsLactating) based property OK - NO RESULTS\n\n### Other hard coded checks performed\n* Filter a list of female ruminants by a female property (IsHeifer) OK - 3 ind weaned and not preg at startup returned\n* Filter a list of female ruminants by a male property (IsSire) OK - NO RESULTS\n",
+          "Name": "Results",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2000-08-01T00:00:00",
+          "End": "2000-08-30T00:00:00",
+          "Name": "clock",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.CLEMEvents, Models",
+              "TimeStep": 30,
+              "CustomTimeStep": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
+              "EcologicalIndicatorsCalculationMonth": 7,
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "CLEMEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "Seed": 0,
+          "Name": "RandomNumbers",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.ZoneCLEM, Models",
+          "UserType": 0,
+          "FarmMultiplier": 1.0,
+          "AutoCreateDescriptiveSummary": false,
+          "DescriptiveSummaryFormatStyle": 0,
+          "BuildTransactionCategoryFromTree": false,
+          "UseModelNameAsTransactionCategory": false,
+          "Area": 0.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "CanopyType": null,
+          "Name": "CLEM",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Resources",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Resources.RuminantHerd, Models",
+                  "TransactionStyle": 0,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "Ruminants",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.RuminantType, Models",
+                      "Notes": null,
+                      "SelectedTab": null,
+                      "Name": "Bos indicus",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
+                          "WeightWarningOccurred": true,
+                          "ManagedPastureName": "Not specified",
+                          "ManagedPasture": null,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "Initial cohorts NoTrend",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 0,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  2,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": true,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "suckling F GenoIndex GenoA",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "GenoIndex",
+                                  "Category": 0,
+                                  "Value": 50.0,
+                                  "MinimumValue": -100.0,
+                                  "MaximumValue": 200.0,
+                                  "StandardDeviation": 20.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 35,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": false,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "GenoIndex",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "GenoA",
+                                  "Category": 0,
+                                  "Value": 50.0,
+                                  "MinimumValue": -100.0,
+                                  "MaximumValue": 200.0,
+                                  "StandardDeviation": 20.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 35,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": false,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "GenoA",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  2,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 2.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": true,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "suckling M 2",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 0,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  1,
+                                  2,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Heifer 14",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 0,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  2,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Female 24",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 0,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  3,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 6.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Female 36 4",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "GenoIndex",
+                                  "Category": 0,
+                                  "Value": 50.0,
+                                  "MinimumValue": -100.0,
+                                  "MaximumValue": 200.0,
+                                  "StandardDeviation": 20.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 35,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": false,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "GenoIndex",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  12,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Male 12",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  2,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Male 24",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  3,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": false,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Male 36",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "GenoA",
+                                  "Category": 0,
+                                  "Value": 50.0,
+                                  "MinimumValue": -100.0,
+                                  "MaximumValue": 200.0,
+                                  "StandardDeviation": 20.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 35,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": true,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "GenoA",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                              "Sex": 1,
+                              "AgeDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  3,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "AgeSD": 0.0,
+                              "Number": 1.0,
+                              "Weight": 0.0,
+                              "WeightSD": 0.0,
+                              "InitialFatProteinStyle": 4,
+                              "InitialFatProteinValues": null,
+                              "Suckling": false,
+                              "Sire": true,
+                              "ProportionFleecePresent": 0.0,
+                              "ManagedPastureName": "Not specified",
+                              "ManagedPasture": null,
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "Name": "Sire GenoA",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.SetAttributeWithValue, Models",
+                                  "AttributeName": "GenoA",
+                                  "Category": 0,
+                                  "Value": 50.0,
+                                  "MinimumValue": -100.0,
+                                  "MaximumValue": 200.0,
+                                  "StandardDeviation": 20.0,
+                                  "UseStandardDeviationSign": false,
+                                  "InheritanceStyle": 35,
+                                  "GenotypeStandardDeviation": 0.0,
+                                  "Mandatory": false,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "Name": "GenoA",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Activities",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
+                  "ReportAtStart": true,
+                  "WithinTimeStepTiming": 1,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "ReportHerd",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                      "RandomiseBeforeSorting": false,
+                      "Identifier": null,
+                      "Measure": "",
+                      "Notes": null,
+                      "SelectedTab": null,
+                      "Name": "RuminantGroup",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "Female.IsPregnant",
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "True",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByPropertyIsPregnant",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByAttribute, Models",
+                          "AttributeTag": "GenoIndex",
+                          "FilterStyle": 0,
+                          "Rule": null,
+                          "Operator": 15,
+                          "Value": "50",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByGenoIndexGT50",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByAttribute, Models",
+                          "AttributeTag": "GenoIndex",
+                          "FilterStyle": 1,
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "true",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByGenoIndexExists",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByAttribute, Models",
+                          "AttributeTag": "GenoA",
+                          "FilterStyle": 1,
+                          "Rule": null,
+                          "Operator": 83,
+                          "Value": null,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByGenoA",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "Female.IsHeifer",
+                          "Rule": null,
+                          "Operator": 83,
+                          "Value": null,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByHeifer",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.SortByProperty, Models",
+                          "PropertyOfIndividual": "Weight",
+                          "SortDirection": 1,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "SortByProperty",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.TakeFromFiltered, Models",
+                          "TakeStyle": 0,
+                          "TakePositionStyle": 1,
+                          "Value": 0.5,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "TakeFromFilteredProportion",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.TakeFromFiltered, Models",
+                          "TakeStyle": 1,
+                          "TakePositionStyle": 0,
+                          "Value": 3.0,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "TakeFromFilteredIndividuals",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "Male.IsSire",
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "true",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterBySires",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "Sex",
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "Male",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByMales",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "AgeInYears",
+                          "Rule": null,
+                          "Operator": 20,
+                          "Value": 1.0,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByAgeLess12",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "Female.IsLactating",
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "true",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByLactating",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.SortByAttribute, Models",
+                          "AttributeTag": "GenoIndex",
+                          "FilterStyle": 1,
+                          "SortDirection": 1,
+                          "MissingAttributeValue": "false",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "SortByAttributeGenoIndexExists",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.SortByAttribute, Models",
+                          "AttributeTag": "GenoIndex",
+                          "FilterStyle": 0,
+                          "SortDirection": 0,
+                          "MissingAttributeValue": "-9999",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "SortByAttributeGenoIndexValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                          "PropertyOfIndividual": "IsAbleToBreed",
+                          "Rule": null,
+                          "Operator": 13,
+                          "Value": "true",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "FilterByAbleToBreed",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.CLEM.Groupings.SortRandom, Models",
+                          "SortDirection": 0,
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "Name": "SortRandom",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.CLEMFolder, Models",
+              "ShowInDocs": false,
+              "Name": "Reports",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ResourceGroupsToReport": "Ruminants",
+                  "ReportStyle": 0,
+                  "ReportLossesAsNegative": false,
+                  "IncludePrice": false,
+                  "IncludeFinancialYear": false,
+                  "IncludeConversions": false,
+                  "TransactionCategoryLevels": 0,
+                  "TransactionCategoryLevelColumnNames": null,
+                  "CustomVariableNames": null,
+                  "ReportRuminantAge": 0,
+                  "IncludeRuminantAE": false,
+                  "IncludeRuminantBreed": false,
+                  "IncludeRuminantCategory": false,
+                  "IncludeRuminantChangeDirection": false,
+                  "IncludeRuminantClass": false,
+                  "IncludeRuminantID": false,
+                  "IncludeRuminantLocation": false,
+                  "IncludeRuminantRelatesTo": false,
+                  "IncludeRuminantSex": false,
+                  "IncludeRuminantWeight": false,
+                  "IncludeRuminantGrowthRate": false,
+                  "SelectedTab": null,
+                  "VariableNames": [
+                    "Ruminants"
+                  ],
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "HerdLedger",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today as Date",
+                    "[ReportHerd].ReportDetails.Individual.ID as ID",
+                    "[ReportHerd].ReportDetails.Individual.Sex as Sex",
+                    "[ReportHerd].ReportDetails.Individual.Age as Age",
+                    "[ReportHerd].ReportDetails.Individual.Weight as Weight",
+                    "[ReportHerd].ReportDetails.Individual.Attributes.Exists(\"GenoIndex\") as GenoIndexExists",
+                    "[ReportHerd].ReportDetails.Individual.IsAbleToBreed as AbleToBreed"
+                  ],
+                  "EventNames": [
+                    "[ReportHerd].OnReportItemGenerated"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Report",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
