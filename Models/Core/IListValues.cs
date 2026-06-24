@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 
 namespace Models.Core
 {
@@ -11,6 +10,6 @@ namespace Models.Core
         /// <summary>
         /// Returns a datatable to display
         /// </summary>
-        DataTable Data { get; }
+        DataTable Rows { get; }
     }
 }

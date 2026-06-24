@@ -16,8 +16,7 @@ namespace UserInterface.Views
         /// <param name="owner">The owner widget.</param>
         public ExperimentView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
-            InitialiseWidget(builder);
+            Initialise(owner, null);
         }
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)

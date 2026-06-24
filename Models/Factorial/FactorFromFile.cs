@@ -1,6 +1,5 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
-using BruTile.Wmts.Generated;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -91,7 +90,7 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel spreadsheet or csv file")]
-    public class FactorFromFile: Model, IReferenceExternalFiles, ILineEditor, IListValues
+    public class FactorFromFile: Model, IReferenceExternalFiles, ICodeEditor, IListValues
     {
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
@@ -102,9 +101,7 @@ namespace Models.Factorial
 
         private DataTable _data { get; set; } = null;
 
-        private string[] _commands { get; set; } = new string[0];
-
-        private List<CompositeFactor> _generatedFactors { get; set; } = null;
+        private List<string[]> _generatedCommands { get; set; } = null;
 
         /// <summary>
         /// The name of the Excel spreadsheet containing all factors details. 
@@ -174,16 +171,35 @@ namespace Models.Factorial
             }
         }
 
-        /// <summary>Contents of the CSV file</summary>
-        [Display]
-        public DataTable Data
+        /// <summary></summary>
+        [JsonIgnore]
+        public DataTable Rows
         {
             get {
-                if (_data != null)
-                    return _data;
-                else
-                    return new DataTable();
+                if (_data == null)
+                    GetCompositeFactors();
+                return _data;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<string> Code
+        { 
+            get {
+                if (_generatedCommands == null)
+                    GetCompositeFactors();
+                
+                List<string> allCode = new List<string>();
+                foreach (string[] commands in _generatedCommands)
+                    foreach (string command in commands)
+                        allCode.Add(command);
+
+                return allCode;
+            } 
+            set {return;}
         }
 
         /// <summary>Return our input filenames</summary>
@@ -195,10 +211,23 @@ namespace Models.Factorial
         /// <summary>
         /// 
         /// </summary>
-        [JsonIgnore]
-        public IEnumerable<string> Lines { 
-            get {return _commands;} 
-            set {return;}
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public IEnumerable<string> GetCommands(int index)
+        {
+            if (index < 0)
+                throw new Exception($"FactorFromFile: GetCommands cannot have negative index of {index}");
+            if (index >= _generatedCommands.Count())
+                throw new Exception($"FactorFromFile: Index {index} provided to GetCommands is higher than number of composite factors count={_generatedCommands.Count()}");
+
+            List<string> lines = new List<string>();
+            if (_generatedCommands == null)
+                GetCompositeFactors();
+
+            foreach (string command in _generatedCommands[index])
+                lines.Add(command);
+
+            return lines;
         }
 
         /// <summary></summary>
@@ -212,7 +241,7 @@ namespace Models.Factorial
         /// </summary>
         private void GenerateNodes(IModel model)
         {
-            _commands = new string[0];
+            _generatedCommands = new List<string[]>();
 
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
@@ -228,13 +257,16 @@ namespace Models.Factorial
                 //Check if this model is read only, and disable temporarily while generating the children
                 if (readOnly)
                     ReadOnly = false;
-
-                _commands = GetCommands(experiment).ToArray();
-                IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, model.Node.Model, relativeDirectory);
+                _generatedCommands = GetCommands(experiment);
+                
+                //Lines will pull from _generatedCommads as a 1D array
+                IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(Code, model.Node.Model, relativeDirectory);
                 CommandProcessor.Run(commands, model.Node.Model, runner: null);
             }
             catch (Exception exception)
             {
+                _data = new DataTable();
+                _generatedCommands = new List<string[]>();
                 throw new Exception(exception.Message);
             }
             finally //reset the read only status
@@ -246,10 +278,10 @@ namespace Models.Factorial
         /// <summary>
         /// Method to read factors from an excel spreadsheet and populate parent model with factors and composite factor components.
         /// </summary>
-        private string[] GetCommands(Experiment experiment)
+        private List<string[]> GetCommands(Experiment experiment)
         {
             if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
-                return new string[0];
+                return new List<string[]>();
 
             Simulation simulation = experiment.Node.FindChild<Simulation>();
             if (simulation == null)
@@ -260,7 +292,12 @@ namespace Models.Factorial
                 column.ReadOnly = true;
 
             if (!_data.GetColumnNames().Contains(NameColumn))
-                throw new Exception($"Sheet \"{Sheet}\" does not have a column called \"{NameColumn}\"");
+            {
+                if (Path.GetExtension(FullFileName) == "csv")
+                    throw new Exception($"File does not have a column called \"{NameColumn}\"");
+                else
+                    throw new Exception($"Sheet \"{Sheet}\" does not have a column called \"{NameColumn}\"");
+            }
 
             List<CommandType> columnCommandType = new List<CommandType>();
             foreach(DataColumn column in _data.Columns)
@@ -295,10 +332,17 @@ namespace Models.Factorial
                 }
             }
 
-            List<string> commands = new List<string>();
+            List<string[]> allCommands = new List<string[]>();
+            List<string> newCompositeFactorNames = new List<string>();
             foreach(DataRow row in _data.Rows)
             {
+                List<string> commands = new List<string>();
                 string label = row[NameColumn].ToString().Trim();
+                if (newCompositeFactorNames.Contains(label))
+                    throw new Exception($"FactorFromFile has multiple CompositeFactors with the name {label}, this not allowed as it would cause idential simulation names.");
+                else
+                    newCompositeFactorNames.Add(label);
+                
                 commands.Add($"add new CompositeFactor to [{Name}] name {label}");
                 for(int i = 0; i < _data.Columns.Count; i++)
                 {
@@ -349,9 +393,9 @@ namespace Models.Factorial
                         }
                     }
                 }
-                commands.Add($"[{Name}].{label}.ReadOnly = true");
+                allCommands.Add(commands.ToArray());
             }
-            return commands.ToArray();
+            return allCommands;
         }
 
         /// <summary>

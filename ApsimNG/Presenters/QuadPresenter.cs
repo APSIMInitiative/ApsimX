@@ -7,7 +7,9 @@ using Models.Soils;
 using Models.WaterModel;
 using Models.Factorial;
 using UserInterface.Commands;
-using System.Data;
+using System;
+using UserInterface.EventArguments;
+using System.Linq;
 
 namespace UserInterface.Presenters
 {
@@ -22,6 +24,8 @@ namespace UserInterface.Presenters
 
         /// <summary>The model.</summary>
         private IModel model;
+
+        private bool hasSuccessfullyBuiltPresenters = false;
 
         /// <summary>Sub-presenters that are added to this presenter</summary>
         private List<ISubPresenter> presenters;
@@ -43,21 +47,6 @@ namespace UserInterface.Presenters
             if (this.view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
 
-            if (model is XYPairs)
-                CreateLayoutXYPairs();
-            else if (model is Physical)
-                CreateLayoutPhysical();
-            else if (model is WaterBalance)
-                CreateLayoutWaterBalance();
-            else if (model is CompositeFactor)
-                CreateLayoutCompositeFactor();
-            else if (model is FactorFromFile)
-                CreateLayoutFactorFromFile();
-            else if (model is FactorsFromFile)
-                CreateLayoutFactorFromFile();
-            else
-                CreateLayoutGeneric();
-
             Refresh();
         }
 
@@ -65,15 +54,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             DisconnectEvents();
-            foreach (ISubPresenter presenter in presenters)
-            {
-                if (presenter is GridPresenter grid)
-                    grid.Detach();
-                else if (presenter is PropertyPresenter properties)
-                    properties.Detach();
-                else if (presenter is QuadGraphPresenter graph)
-                    graph.Detach();
-            }
+            destroyPresenters();
             view.Dispose();
         }
 
@@ -82,9 +63,52 @@ namespace UserInterface.Presenters
         {
             DisconnectEvents();
 
+            if (!hasSuccessfullyBuiltPresenters)
+                createPresenters();
+
+            List<Exception> errors = new List<Exception>();
+            try
+            {
+                if (model is FactorFromFile factorFromFile)
+                    factorFromFile.GetCompositeFactors();
+            }
+            catch (Exception exception)
+            {
+                errors.Add(exception);
+            }
+
             foreach (ISubPresenter presenter in presenters)
-                presenter.Refresh();
-            view.Refresh();
+            {
+                try
+                {
+                    presenter.Refresh();
+                }
+                catch (Exception exception)
+                {
+                    errors.Add(exception);
+                }
+            }
+
+            try
+            {
+                SetCode((model as FactorFromFile).GetCommands(0).ToArray());
+            }
+            catch
+            {
+                SetCode([""]);
+            }
+            
+            try
+            {
+                view.Refresh();
+            }
+            catch (Exception exception)
+            {
+                errors.Add(exception);
+            }
+
+            if (errors.Count > 0)
+                explorerPresenter.MainPresenter.ShowError(errors, overwrite:true);
 
             ConnectEvents();
         }
@@ -99,6 +123,8 @@ namespace UserInterface.Presenters
                     grid.CellChanged += OnCellChanged;
                 if (presenter is EditorPresenter editor)
                     editor.TextChanged += OnTextChanged;
+                if (presenter is ListPresenter list)
+                    list.SelectionChanged += OnListSelectionChanged;
             }
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -114,8 +140,53 @@ namespace UserInterface.Presenters
                     grid.CellChanged -= OnCellChanged;
                 if (presenter is EditorPresenter editor)
                     editor.TextChanged -= OnTextChanged;
+                if (presenter is ListPresenter list)
+                    list.SelectionChanged -= OnListSelectionChanged;
             }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        private void createPresenters()
+        {
+            try
+            {
+                destroyPresenters();
+
+                if (model is XYPairs)
+                    CreateLayoutXYPairs();
+                else if (model is Physical)
+                    CreateLayoutPhysical();
+                else if (model is WaterBalance)
+                    CreateLayoutWaterBalance();
+                else if (model is CompositeFactor)
+                    CreateLayoutCompositeFactor();
+                else if (model is FactorFromFile)
+                    CreateLayoutFactorFromFile();
+                else if (model is FactorsFromFile)
+                    CreateLayoutFactorFromFile();
+                else
+                    CreateLayoutGeneric();
+                hasSuccessfullyBuiltPresenters = true;
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception, overwrite:true);
+            }
+        }
+
+        private void destroyPresenters()
+        {
+            foreach (ISubPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.Detach();
+                else if (presenter is PropertyPresenter properties)
+                    properties.Detach();
+                else if (presenter is QuadGraphPresenter graph)
+                    graph.Detach();
+                if (presenter is ListPresenter list)
+                    list.Detach();
+            }
         }
 
         /// <summary>
@@ -128,12 +199,22 @@ namespace UserInterface.Presenters
             Refresh();
         }
 
-        void OnCellChanged(Gtk.Sheet.IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        private void OnCellChanged(Gtk.Sheet.IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
             DisconnectEvents();
-            foreach (ISubPresenter presenter in presenters)
-                presenter.Refresh();
-            ConnectEvents();
+            try
+            {
+                foreach (ISubPresenter presenter in presenters)
+                    presenter.Refresh();
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception);
+            }
+            finally
+            {
+                ConnectEvents();
+            }
         }
 
         /// <summary>
@@ -142,12 +223,46 @@ namespace UserInterface.Presenters
         /// <param name="model">The model</param>
         /// <param name="property">The property changed</param>
         /// <param name="lines">The lines it should be given</param>
-        private void OnTextChanged(ILineEditor model, string property, string[] lines)
+        private void OnTextChanged(ICodeEditor model, string property, string[] lines)
         {
             DisconnectEvents();
-            ChangeProperty command = new ChangeProperty(model, property, lines);
-            explorerPresenter.CommandHistory.Add(command);
-            ConnectEvents();
+            try
+            {
+                ChangeProperty command = new ChangeProperty(model, property, lines);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception);
+            }
+            finally
+            {
+                ConnectEvents();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void OnListSelectionChanged(object sender, EventArgsValue e)
+        {
+            if (model is FactorFromFile factorFromFile)
+            {
+                DisconnectEvents();
+                try
+                {
+                    int index = e.Value;
+                    SetCode(factorFromFile.GetCommands(index).ToArray());
+                }
+                catch (Exception exception)
+                {
+                    explorerPresenter.MainPresenter.ShowError(exception);
+                }
+                finally
+                {
+                    ConnectEvents();
+                }
+            }
         }
 
         /// <summary>
@@ -235,11 +350,22 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lines"></param>
+        private void SetCode(string[] lines)
+        {
+            foreach(ISubPresenter presenter in presenters)
+                if (presenter is EditorPresenter editor)
+                    editor.SetCode(lines);
+        }
+
+        /// <summary>
         /// Add a markdown view to one of the quads
         /// </summary>
         /// <param name="position">Which quad to use</param>
         /// <param name="table"></param>
-        private void AddList(WidgetPosition position, DataTable table)
+        private void AddList(WidgetPosition position)
         {
             ExperimentView experimentView = view.AddComponent(WidgetType.List, position) as ExperimentView;
             ListPresenter listPresenter = new ListPresenter();
@@ -314,15 +440,9 @@ namespace UserInterface.Presenters
         /// </summary>
         private void CreateLayoutFactorFromFile()
         {
-            DataTable dt = new DataTable("Test");
-            dt.Columns.Add("NewColumn");
-            DataRow row = dt.NewRow();
-            row["NewColumn"] = "a value";
-            dt.Rows.Add(row);
-
             AddProperty(WidgetPosition.TopLeft);
-            AddList(WidgetPosition.BottomLeft, dt);
             AddText(WidgetPosition.TopRight, "Commands:");
+            AddList(WidgetPosition.BottomLeft);
             AddCode(WidgetPosition.BottomRight);
             view.OverrideSlider(0.6);
         }

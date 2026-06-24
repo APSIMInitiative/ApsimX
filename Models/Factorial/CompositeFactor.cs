@@ -23,7 +23,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
-    public class CompositeFactor : Model, IReferenceExternalFiles, ILineEditor
+    public class CompositeFactor : Model, IReferenceExternalFiles, ICodeEditor
     {
         /// <summary>
         /// A list of models that have been passed into this composite factor 
@@ -117,7 +117,7 @@ namespace Models.Factorial
 
         /// <summary>Property for the ILineEditor to change Specifications with</summary>
         [JsonIgnore]
-        public IEnumerable<string> Lines { 
+        public IEnumerable<string> Code { 
             get { return Specifications; } 
             set { Specifications = value.ToArray(); } 
         }

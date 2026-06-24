@@ -17,7 +17,7 @@ namespace UserInterface.Presenters
     public class EditorPresenter : IPresenter, ISubPresenter
     {
         /// <summary>The cultivar model</summary>
-        private ILineEditor model;
+        private ICodeEditor model;
 
         /// <summary>The cultivar view</summary>
         private IEditorView view;
@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model</param>
         /// <param name="property">The property changed</param>
         /// <param name="lines">The lines it should be given</param>
-        public delegate void TextChangedDelegate(ILineEditor model, string property, string[] lines);
+        public delegate void TextChangedDelegate(ICodeEditor model, string property, string[] lines);
 
         /// <summary>
         /// Invoked when the user changes the text in the editor
@@ -52,14 +52,14 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.model = model as ILineEditor;
+            this.model = model as ICodeEditor;
             this.view = view as IEditorView;
             (this.view as EditorView).Language = "c-sharp";
             this.explorerPresenter = explorerPresenter;
 
-            this.view.Lines = this.model.Lines?.ToArray();
             intellisense = new IntellisensePresenter(this.view as ViewBase);
             ConnectEvents();
+            Refresh();
         }
 
         /// <summary>Detach the model from the view</summary>
@@ -100,8 +100,14 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            SetCode(this.model.Code?.ToArray());
             view.Show();
             view.Refresh();
+        }
+
+        public void SetCode(string[] lines)
+        {
+            this.view.Lines = lines;
         }
 
         /// <summary>The user has changed the commands</summary>
@@ -111,13 +117,13 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (this.view.Lines != this.model.Lines)
+                if (this.view.Lines != this.model.Code)
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    if (model.Lines == null || !model.Lines.SequenceEqual(view.Lines))
+                    if (model.Code == null || !model.Code.SequenceEqual(view.Lines))
                     {
-                        ChangeProperty command = new ChangeProperty(model, nameof(model.Lines), this.view.Lines);
+                        ChangeProperty command = new ChangeProperty(model, nameof(model.Code), this.view.Lines);
                         explorerPresenter.CommandHistory.Add(command);
                     }
 
@@ -153,9 +159,9 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel is ILineEditor linesModel)
+            if (changedModel is ICodeEditor linesModel)
                 if (linesModel.FullPath == model.FullPath)
-                    view.Lines = linesModel.Lines.ToArray();
+                    view.Lines = linesModel.Code.ToArray();
         }
 
         /// <summary>

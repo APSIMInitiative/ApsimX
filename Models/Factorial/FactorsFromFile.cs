@@ -20,7 +20,7 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factors))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Description("Generate factors as specified in an Excel file")]
-    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ILineEditor
+    public class FactorsFromFile: Model, IReferenceExternalFiles, IGenerateNodes, ICodeEditor
     {
         private string _filename { get; set; } = null;
 
@@ -103,7 +103,7 @@ namespace Models.Factorial
         /// 
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<string> Lines { 
+        public IEnumerable<string> Code { 
             get {return _commands;} 
             set {return;}
         }

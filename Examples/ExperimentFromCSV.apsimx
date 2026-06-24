@@ -36,7 +36,7 @@
             {
               "$type": "Models.Factorial.FactorFromFile, Models",
               "FileName": "ExperimentFromCSV-FactorialTrials.csv",
-              "Sheet": "Trials",
+              "Sheet": "",
               "NameColumn": "Scenario",
               "Name": "Scenario",
               "ResourceName": null,
@@ -66,7 +66,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "WeatherFiles/NZ_Lincoln",
+              "FileName": "WeatherFiles/NZ_Lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -1031,7 +1031,7 @@
             {
               "$type": "Models.Factorial.FactorFromFile, Models",
               "FileName": "ExperimentFromCSV-FactorialSites.csv",
-              "Sheet": "Sites",
+              "Sheet": "",
               "NameColumn": "Site",
               "Name": "Site",
               "ResourceName": null,
