@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 217; } }
+    public static int LatestVersion { get { return 216; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7789,7 +7789,7 @@ internal class Converter
     /// </summary>
     /// <param name="root">The root JSON token.</param>
     /// <param name="_">The name of the apsimx file.</param>
-    private static void UpgradeToVersion217(JObject root, string _)
+    private static void UpgradeToVersion300(JObject root, string _)
     {
         Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
             {
