@@ -278,15 +278,24 @@ namespace Models.CLEM.Resources
             return (Parent as Labour).PayRate(this);
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            ageInMonths = InitialAge * 12;
+        }
+
         #region Transactions
 
-        /// <summary>
-        /// Add to labour store of this type
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+            /// <summary>
+            /// Add to labour store of this type
+            /// </summary>
+            /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+            /// <param name="activity">Name of activity adding resource</param>
+            /// <param name="relatesToResource"></param>
+            /// <param name="category"></param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
