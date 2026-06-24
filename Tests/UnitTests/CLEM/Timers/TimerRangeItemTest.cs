@@ -3,6 +3,7 @@ using Models.CLEM;
 using Models.CLEM.Timers;
 using NUnit.Framework;
 using System;
+using System.Globalization;
 using System.Reflection;
 
 namespace UnitTests.CLEM;
@@ -29,23 +30,27 @@ public class TimerRangeItemTest
     // initialise valid AgeSpecifier inputs
     // test initialisation of TimerRangeItem with various AgeSpecifier inputs
     [TestCase(2000, 10, 10, "10/10/2000", true)] // year, month and day all provided for start of range
-    [TestCase(2000, 0, 0, "1/1/2000", true)] // year only provided for start of range
+    [TestCase(2000, 0, 0, "1/01/2000", true)] // year only provided for start of range
     [TestCase(2000, 0, 0, "31/12/2000", false)] // year only provided for end of range
-    [TestCase(2000, 6, 0, "1/6/2000", true)] // year and month only provided for start of range
-    [TestCase(2000, 6, 0, "30/6/2000", false)] // year and month only provided for end of range
+    [TestCase(2000, 6, 0, "1/06/2000", true)] // year and month only provided for start of range
+    [TestCase(2000, 6, 0, "30/06/2000", false)] // year and month only provided for end of range
     [TestCase(0, 10, 0, "1/10/2004", true)] // month only provided for start of range - uses events.clock.startYear
-    [TestCase(0, 10, 0, "30/10/2004", false)] // month only provided for end of range - uses events.clock.startYear
+    [TestCase(0, 10, 0, "31/10/2004", false)] // month only provided for end of range - uses events.clock.startYear
     [TestCase(0, 10, 5, "5/10/2004", true)] // month only provided for start of range - uses events.clock.startYear
-    [TestCase(0, 0, 60, "29/2/2004", true)] // days only provided for start of range - uses events.clock.startYear
-    [TestCase(0, 0, 100, "10/10/2004", false)] // days only provided for end of range
-    [TestCase(2002, 0, 100, "10/10/2002", true)] // year and days provided for start of range
+    [TestCase(0, 0, 60, "29/02/2004", true)] // days only provided for start of range - uses events.clock.startYear
+    [TestCase(0, 0, 100, "10/04/2004", false)] // days only provided for end of range allowing for leap year
+    [TestCase(2002, 0, 100, "10/04/2002", true)] // year and days provided for start of range when not a leap year
     public void TimerInitialiseValidAgeSpecifier(int year, int month, int day, string dateString, bool startOfRange)
     {
-        var ageSpecifier = new AgeSpecifier()
+        AgeSpecifier ageSpecifier = new()
         {
-            Parts = [day, month, year]
+            Parts = [year, month, day]
         };
-        var date = DateTime.Parse(dateString);
+        // Define the expected date format
+        string format = "d/MM/yyyy";
+        CultureInfo provider = CultureInfo.InvariantCulture;
+
+        var date = DateTime.ParseExact(dateString, format, provider);
         TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, startOfRange, true);
 
         Assert.That(timerRangeItem.Date, Is.EqualTo(date));
