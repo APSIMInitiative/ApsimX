@@ -1918,14 +1918,14 @@ namespace Models.GrazPlan
             }
             timeStepState.PaddockIntake = new GrazType.IntakeRecord();              // Summarise herbage+seed intake
             for (classIdx = 1; classIdx <= GrazType.DigClassNo; classIdx++)
-                AnimalGroup.AddDietElement(ref this.Herbage.Herbage[classIdx], timeStepState.IntakePerHead.Herbage[classIdx], ref timeStepState.PaddockIntake);
+                AddDietElement(ref this.Herbage.Herbage[classIdx], timeStepState.IntakePerHead.Herbage[classIdx], ref timeStepState.PaddockIntake);
             for (species = 1; species <= GrazType.MaxPlantSpp; species++)
             {
                 for (ripeIdx = GrazType.UNRIPE; ripeIdx <= GrazType.RIPE; ripeIdx++)
-                    AnimalGroup.AddDietElement(ref this.Herbage.Seeds[species, ripeIdx], timeStepState.IntakePerHead.Seed[species, ripeIdx], ref timeStepState.PaddockIntake);
+                    AddDietElement(ref this.Herbage.Seeds[species, ripeIdx], timeStepState.IntakePerHead.Seed[species, ripeIdx], ref timeStepState.PaddockIntake);
             }
 
-            AnimalGroup.SummariseIntakeRecord(ref timeStepState.PaddockIntake);
+            SummariseIntakeRecord(ref timeStepState.PaddockIntake);
             if (timeStepState.PaddockIntake.Biomass == 0.0) // i.e. less than fTrivialIntake
                 timeStepState.IntakePerHead = new GrazType.GrazingOutputs();
 
@@ -1949,11 +1949,11 @@ namespace Models.GrazPlan
                         gutPassage = 0.0;
                     this.timeStepNetSupplementDMI[idx] = (1.0 - gutPassage) * this.RationFed.GetFWFract(idx) * (PotIntake * suppRI);
 
-                    AnimalGroup.AddDietElement(ref suppInput, this.timeStepNetSupplementDMI[idx], ref timeStepState.SuppIntake);
+                    AddDietElement(ref suppInput, this.timeStepNetSupplementDMI[idx], ref timeStepState.SuppIntake);
                     supp_ME2DM = supp_ME2DM + this.timeStepNetSupplementDMI[idx] * this.RationFed[idx].ME2DM;
                 }
 
-                AnimalGroup.SummariseIntakeRecord(ref timeStepState.SuppIntake);
+                SummariseIntakeRecord(ref timeStepState.SuppIntake);
                 if (timeStepState.SuppIntake.Biomass == 0.0)
                 {
                     // i.e. less than fTrivialIntake
