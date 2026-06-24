@@ -179,6 +179,7 @@ namespace Models.CLEM.Activities
                         {
                             Area += areaNeeded;
                         }
+                        ResourceRequestList = [];
                     }
                     else
                     {
