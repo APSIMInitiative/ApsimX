@@ -519,6 +519,8 @@ namespace Models.AgPasture
             PostGrazeDM = 0;
             ClippingsWtReturned = 0;
             ClippingsNReturned = 0;
+            AmountDungNReturned = 0;
+            AmountUrineNReturned = 0;
             foreach (var zone in zones)
                 zone.OnStartOfDay();
         }
