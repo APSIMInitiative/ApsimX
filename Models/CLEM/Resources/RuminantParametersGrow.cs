@@ -125,7 +125,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Maximum age for energy maintenance calculation")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier EnergyMaintenanceMaximumAge { get; set; } = new int[] { 6, 0, 0 };
 

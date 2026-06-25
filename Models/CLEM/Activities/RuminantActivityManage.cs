@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Destock", "Breeding females")]
         [Description("Old female breeder age for removal")]
-        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
+        [Core.Display(EnabledCallback = "EnableOldFemaleSellProperties")]
         [Units("years, months, days")]
         public AgeSpecifier MaximumBreederAge { get; set; } = new int[] { 20, 0 };
 
@@ -204,7 +204,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Destock", "Breeding males")]
         [Description("Old sire age for removal")]
-        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties", SubstituteSubPropertyName = "Parts")]
+        [Core.Display(EnabledCallback = "EnableOldMaleSellProperties")]
         [Units("years, months, days")]
         public AgeSpecifier MaximumSireAge { get; set; } = new int[] { 20, 0 };
 
@@ -281,7 +281,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Males")]
         [Description("Grow out male selling age (months)")]
-        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties", SubstituteSubPropertyName = "Parts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutMaleSellProperties")]
         [Units("years, months, days")]
         public AgeSpecifier MaleSellingAge { get; set; } = new int[] { 24, 0 };
 
@@ -307,7 +307,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling age (months)")]
-        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties")]
         [Units("years, months, days")]
         public AgeSpecifier FemaleSellingAge { get; set; } = new int[] { 24, 0 };
 
@@ -317,7 +317,7 @@ namespace Models.CLEM.Activities
         [Category("Grow out herd", "Females")]
         [Description("Grow out female selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
-        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties", SubstituteSubPropertyName = "Parts")]
+        [Core.Display(EnabledCallback = "EnableGrowoutFemaleSellProperties")]
         public double FemaleSellingWeight { get; set; }
 
         /// <summary>

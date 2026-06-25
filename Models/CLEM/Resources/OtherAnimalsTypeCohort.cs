@@ -56,7 +56,6 @@ namespace Models.CLEM.Resources
         /// Initial age
         /// </summary>
         [Description("Age")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier AgeDetails { get; set; } = new int[] { 12, 0 };
 

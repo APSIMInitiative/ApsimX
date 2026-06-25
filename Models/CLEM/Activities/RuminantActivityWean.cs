@@ -50,7 +50,6 @@ namespace Models.CLEM.Activities
         /// Weaning age
         /// </summary>
         [Description("Weaning age")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier WeaningAge { get; set; } = new int[] { 6, 0 };
 

@@ -43,7 +43,6 @@ namespace Models.CLEM.Timers
         /// Provides the start of range in a user friendly format of "years (optional), months (optional), days"
         /// </summary>
         [Description("Start of range details")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Category("Timer", "Range")]
         public AgeSpecifier StartDetails { get; set; } = new int[] { 0, 0, 0 };
 
@@ -51,7 +50,6 @@ namespace Models.CLEM.Timers
         /// Provides the end of range in a user friendly format of "years (optional), months (optional), days"
         /// </summary>
         [Description("End of range details")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Category("Timer", "Range")]
         public AgeSpecifier EndDetails { get; set; } = new int[] { 0, 0, 0 };
 
@@ -59,7 +57,6 @@ namespace Models.CLEM.Timers
         /// Provides and interval based on years, months, and days before a floating range is repeated
         /// </summary>
         [Description("Interval between repeated ranges")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Category("Timer", "Repeat")]
         public AgeSpecifier RepeatInterval { get; set; } = new int[] { 0, 0, 0 };
 

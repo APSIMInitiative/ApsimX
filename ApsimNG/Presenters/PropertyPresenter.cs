@@ -136,8 +136,7 @@ namespace UserInterface.Presenters
             List<Property> properties = new List<Property>();
             List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
             CategoryAttribute categoryAttribute = null;
-            PropertyInfo subProperty = null;
-            object subObject = null;
+            
             foreach (PropertyInfo property in allProperties)
             {
                 // Assign any category attribute details here for category based property presenter (currently in CLEM)
@@ -151,7 +150,7 @@ namespace UserInterface.Presenters
                 DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
                 if (display != null && display.Type == DisplayType.SubModel)
                 {
-                    subObject = property.GetValue(obj);
+                    object subObject = property.GetValue(obj);
                     if (subObject == null)
                         subObject = Activator.CreateInstance(property.PropertyType);
                     PropertyGroup group = GetProperties(subObject);
@@ -167,27 +166,24 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    // determine where to link to the property or use a substitute sub-property for a class-based property.
-                    Property result;
-                    string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
-                    if (subPropertyName.Any())
-                    {
-                        subObject = property.GetValue(obj);
-                        subObject ??= Activator.CreateInstance(property.PropertyType);
-                        subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
-                    }
-
-                    if (subPropertyName.Any() && subProperty is not null)
-                    {
-                        result = new Property(subObject, subProperty, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty, Category = categoryAttribute });
-                    }
-                    else
-                    {
-                        result = new Property(obj, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property, Category = categoryAttribute });
-                    }
+                    Property result = new Property(obj, property);
                     properties.Add(result);
+
+                    PropertyInfo propertyRef = property;
+                    object objectRef = obj;
+
+                    //check if our property is a class of some sort (but not a DateTime or list/array). If so, look for a property it holds to use instead.
+                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)))
+                    {
+                        object subObject = property.GetValue(obj);
+                        PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
+                        if (subProperty != null)
+                        {
+                            objectRef = subObject;
+                            propertyRef = subProperty;
+                        }
+                    }
+                    propertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
                 }
             }
 

@@ -37,7 +37,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed", "Growth")]
         [Description("Natural weaning age (0, use gestation length)")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier NaturalWeaningAge { get; set; } = new int[] { 0 };
 
@@ -66,7 +65,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Category("Breed:CrossBreed", "Breeding")]
         [Description("Days from conception to parturition")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier GestationLength { get; set; } = new int[] { 0, 9, 0 };
 
@@ -222,7 +220,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Average weaning age to estimate age growth rate coefficient")]
         [Category("Farm:Summary", "Growth")]
-        [Core.Display(SubstituteSubPropertyName = "Parts", VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
+        [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
         [Units("years, months, days")]
         public AgeSpecifier CN1EstimatedWeaningAge { get; set; } = new int[] { 0 };
 

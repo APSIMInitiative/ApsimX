@@ -42,7 +42,6 @@ namespace Models.CLEM.Resources
         /// Age when individuals become adults for feeding and breeding rates
         /// </summary>
         [Description("Age when adult")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier AgeWhenAdult { get; set; } = new int[] { 12, 0 };
 
@@ -50,7 +49,6 @@ namespace Models.CLEM.Resources
         /// Age when individuals die
         /// </summary>
         [Description("Maximum age before death")]
-        [Core.Display(SubstituteSubPropertyName = "Parts")]
         [Units("years, months, days")]
         public AgeSpecifier MaxAge { get; set; } = new int[] { 20, 0 };
 
