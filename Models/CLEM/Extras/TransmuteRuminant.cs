@@ -1,5 +1,4 @@
 ﻿using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -14,17 +13,18 @@ using System.Linq;
 namespace Models.CLEM
 {
     ///<summary>
-    /// Determines the individual ruminans required for the transmutation
+    /// Determines the individual ruminants required for the transmutation
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
-    [Description("Identifies how rumiants (as resource B) are transmuted into a shortfall resource (A, e.g.food)")]
+    [Description("Identifies how ruminants (as resource B) are transmuted into a shortfall resource (A, e.g.food)")]
     [HelpUri(@"Content/Features/Transmutation/TransmuteRuminant.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         private double shortfallPacketSize = 1;
@@ -50,7 +50,7 @@ namespace Models.CLEM
         /// Style for direct exchange
         /// </summary>
         [Description("Measure of ruminant (for direct transmute)")]
-        public PricingStyleType DirectExhangeStyle { get; set; }
+        public PricingStyleType DirectExchangeStyle { get; set; }
 
         /// <inheritdoc/>
         [Description("Amount (B) per packet (A)")]
@@ -65,8 +65,7 @@ namespace Models.CLEM
         ///<inheritdoc/>
         [Description("Resource for price-based transactions")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
-        [System.ComponentModel.DefaultValueAttribute("No transactions")]
-        public string FinanceTypeForTransactionsName { get; set; }
+        public string FinanceTypeForTransactionsName { get; set; } = "No transactions";
 
         /// <summary>
         /// Method to determine if direct transmute style will enable the amount property
@@ -94,41 +93,46 @@ namespace Models.CLEM
             double available = 0;
             foreach (var group in groupings)
             {
-                foreach (var ind in group.Filter((ResourceGroup as RuminantHerd).Herd.Where(a => !a.ReadyForSale)))
+                foreach (var ind in group.Filter((ResourceGroup as RuminantHerd).Herd.Where(a => !a.IsReadyForSale)))
                 {
                     switch (TransmuteStyle)
                     {
                         case TransmuteStyle.Direct:
-                            switch (DirectExhangeStyle)
+                            switch (DirectExchangeStyle)
                             {
                                 case PricingStyleType.perHead:
                                     available += 1;
                                     break;
                                 case PricingStyleType.perKg:
-                                    available += ind.Weight;
+                                    available += ind.Weight.Live;
                                     break;
                                 case PricingStyleType.perAE:
-                                    available += ind.AdultEquivalent;
+                                    available += ind.Weight.AdultEquivalent;
                                     break;
                                 default:
                                     break;
                             }
                             break;
                         case TransmuteStyle.UsePricing:
-                            available += ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
+                            available += ind.Parameters.Details.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale)?.CurrentPrice ?? 0;
                             break;
                         default:
                             break;
                     }
 
                     if (!queryOnly)
+                    {
                         // remove individual from herd immediately
                         (ResourceGroup as RuminantHerd).Herd.Remove(ind);
+                    }
 
                     if (MathUtilities.IsGreaterThanOrEqual(available, needed))
                     {
                         if (queryOnly)
+                        {
                             return true;
+                        }
+
                         break;
                     }
                 }
@@ -139,7 +143,7 @@ namespace Models.CLEM
                 if (TransmuteStyle == TransmuteStyle.UsePricing && financeType != null)
                 {
                     // finance transaction from sale of animals
-                    financeType.Add(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
+                    financeType.AddToResource(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // finance transaction from purchase of shortfall
                     ResourceRequest financeRequest = new ResourceRequest()
@@ -151,7 +155,7 @@ namespace Models.CLEM
                         ActivityModel = request.ActivityModel,
                         Category = request.Category,
                     };
-                    financeType.Remove(financeRequest);
+                    financeType.RemoveFromResource(financeRequest);
                 }
             }
             return true;
@@ -162,26 +166,20 @@ namespace Models.CLEM
         {
             double unitsNeeded = amount / shortfallPacketSize;
             if (shortfallWholePackets)
+            {
                 unitsNeeded = Math.Ceiling(unitsNeeded);
-            return unitsNeeded;
-        }
+            }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TransmuteRuminant()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            base.SetDefaults();
+            return unitsNeeded;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            // get herd for transmutating
+            // get herd for transmuting
             ResourceGroup = resources.FindResourceGroup<RuminantHerd>();
             TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
@@ -193,87 +191,23 @@ namespace Models.CLEM
             {
                 shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
                 if (FinanceTypeForTransactionsName != "No transactions")
+                {
                     // link to first bank account
                     financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+                }
             }
         }
 
         #region validation
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (ResourceGroup is null)
             {
                 IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                string[] memberNames = new string[] { "Ruminant herd resource" };
-                results.Add(new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={this.Name}] for [r={parentResource.Name}]", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override string ModelSummaryNameTypeHeaderText()
-        {
-            return Transmute.AddTransmuteStyleText(this);
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                if (TransmuteStyle == TransmuteStyle.Direct)
-                {
-                    string directexchangeStyleText = "";
-                    switch (DirectExhangeStyle)
-                    {
-                        case PricingStyleType.perHead:
-                            directexchangeStyleText = "head of ";
-                            break;
-                        case PricingStyleType.perKg:
-                            directexchangeStyleText = "kg live weight head of ";
-                            break;
-                        case PricingStyleType.perAE:
-                            directexchangeStyleText = "animal equivalents of ";
-                            break;
-                        default:
-                            break;
-                    }
-                    if (AmountPerPacket > 0)
-                        htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> {directexchangeStyleText} ");
-                    else
-                        htmlWriter.Write($"<span class=\"errorlink\">Not set</span> {directexchangeStyleText} ");
-                }
-
-                IModel ruminants = Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
-                if(ruminants is null)
-                    htmlWriter.Write("<span class=\"errorlink\">Herd not found</span>");
-                else
-                    htmlWriter.Write($"<span class=\"resourcelink\">{ruminants.Name}</span>");
-
-                htmlWriter.Write($" (B) are taken from the following groups to supply shortfall resource (A) ");
-
-                if (TransmuteStyle == TransmuteStyle.UsePricing)
-                {
-                    htmlWriter.Write($" using the herd pricing details");
-                    if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
-                        htmlWriter.Write($" with all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                }
-                htmlWriter.WriteLine("</div>");
-                return htmlWriter.ToString();
+                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", new string[] { "Ruminant herd resource" });
             }
         }
-
         #endregion
     }
 }

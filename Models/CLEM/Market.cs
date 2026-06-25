@@ -3,6 +3,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.Storage;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,19 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
-    public class Market : Zone, IValidatableObject, ICLEMUI, IScopedModel
+    public class Market : Zone, IValidatableObject, ICLEMUI, IScopedModel, IStructureDependency
     {
+        /// <summary>Structure instance supplied by APSIM.core.</summary>
+        [field: NonSerialized]
+        [JsonIgnore]
+        public new IStructure Structure { get; set; }
+
         [Link]
         private Summary summary = null;
+        [Link]
+        private Simulation simulation = null;
+        [Link]
+        private readonly DataStore dataStore = null;
 
         private ResourcesHolder resources;
 
@@ -65,7 +75,10 @@ namespace Models.CLEM
             get
             {
                 if (resources == null)
+                {
                     resources = Structure.FindChildren<ResourcesHolder>().FirstOrDefault();
+                }
+
                 return resources;
             }
         }
@@ -82,7 +95,9 @@ namespace Models.CLEM
                 {
                     var finance = Resources.FindResourceGroup<Finance>();
                     if (finance != null)
+                    {
                         bankAccount = Structure.FindChildren<FinanceType>(relativeTo: finance).FirstOrDefault();
+                    }
                 }
                 return bankAccount;
             }
@@ -96,76 +111,54 @@ namespace Models.CLEM
         {
             // validation is performed here
             // see ZoneCLEM OnCLEMValidate for more details
-            if (!ZoneCLEM.Validate(this, "", this, summary))
-                ZoneCLEM.ReportInvalidParameters(this, Structure);
+            CLEMEvents events = Structure.Find<CLEMEvents>();
+
+            if (!ZoneCLEM.Validate(this, "", this, summary, events))
+            {
+                ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);
+            }
+        }
+
+        /// <summary>An event handler to catch file association errors before moving to initialisation of resources and activities</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialise(object sender, EventArgs e)
+        {
+            // The tests of model associations (Attribute) now fire in Commencing and this section is designed to fire errors if issues found prior to any resource or activity initialisation.
+            ZoneCLEM.ReportInvalidParameters(this, dataStore, summary, simulation.Name);
         }
 
         #region validation
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that one resources and on activities are present.
             int holderCount = Structure.FindChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A market place must contain a Resources Holder to manage resources", memberNames));
+                yield return new ValidationResult("A market place must contain a Resources Holder to manage resources", memberNames);
             }
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
-                results.Add(new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames));
+                yield return new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames);
             }
             holderCount = Structure.FindChildren<ActivitiesHolder>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
-                results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
+                yield return new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames);
             }
             // only one market
             holderCount = Structure.FindChildren<Market>(relativeTo: Structure.FindParent<Simulation>(recurse: true)).Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
-                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames));
-            }
-
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public List<string> CurrentAncestorList { get; set; } = new List<string>();
-
-        /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
-
-        /// <inheritdoc/>
-        public string GetFullSummary(object model, List<string> parentControls, Func<string, string> markdown2Html = null)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                var parents = parentControls.ToList();
-                parents.Add(model.GetType().Name);
-
-                htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
-                foreach (CLEMModel cm in Structure.FindChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
+                yield return new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames);
             }
         }
         #endregion
-
-
     }
 }
