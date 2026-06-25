@@ -638,7 +638,7 @@ namespace Models.Surface
                     throw new ArgumentOutOfRangeException(nameof(InitialStandingFraction), 
                         $"Standing Fraction is only allowed to be a number between 0 and 1. " +
                         $"Please change the value in model located at path: {FullPath}");
-                double standFract = double.IsNaN(InitialStandingFraction) ? DefaultCPRatio : InitialStandingFraction;
+                double standFract = double.IsNaN(InitialStandingFraction) ? 0 : InitialStandingFraction;
 
                 for (int j = 0; j < maxFr; j++)
                 {
