@@ -1,6 +1,7 @@
 ﻿using Models;
 using Models.CLEM;
 using Models.CLEM.DescriptiveSummary;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -74,9 +75,9 @@ namespace UserInterface.Presenters
             {
                 models.Clear();
                 models.AddRange(this.model.Node.FindChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
-                var provider = DescriptiveSummaryResolver.GetProviderInstance(model, null);
-
-                foreach (var ignoredChildGroup in provider.GetChildrenInSummary().Where(a => !a.Include))
+                
+                IDescriptiveSummaryProvider provider = DescriptiveSummaryResolver.GetProviderInstance(model, null);
+                foreach (ChildComponentGroup ignoredChildGroup in provider.GetChildrenInSummary().Where(a => !a.Include))
                     models.RemoveAll(a => ignoredChildGroup.SelectedModels.Contains(a));
 
                 if (models.GroupBy(a => a.GetType()).Count() > 1)
