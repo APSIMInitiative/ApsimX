@@ -49,8 +49,8 @@ namespace Models.Factorial
     /// 
     /// This table is converted to a list of APSIM commands that describe everything that must be done to the file in 
     /// order to create the simulation modifications that you've provided. These commands are run whenever the file is 
-    /// loaded, is run, or the FactorFromFile is refreshed. Then the currently open file is modified with read-only nodes. 
-    /// These generated nodes are not saved into your file, and are recreated whenever the file is openned again.
+    /// loaded, is run, or the FactorFromFile is refreshed. These generated nodes are not saved into your file, and are 
+    /// recreated whenever the file is openned again.
     /// 
     /// ```
     /// add new CompositeFactor to [Factors].MyFactor name Sim1
@@ -59,14 +59,12 @@ namespace Models.Factorial
     /// [Factors].MyFactor.Sim1.Specifications += [ModelToReplace]
     /// [Factors].MyFactor.Sim1.Specifications += [Model].Property=10
     /// [Factors].MyFactor.Sim1.Specifications += [Manager].Script.Property=20
-    /// [Factors].MyFactor.Sim1.ReadOnly = true
     /// add new CompositeFactor to [Factors].MyFactor name Sim2
     /// [Factors].MyFactor.Sim2.DescriptorNames += ColumnLabel
     /// [Factors].MyFactor.Sim2.DescriptorValues += Second
     /// [Factors].MyFactor.Sim2.Specifications += [Folder].ModelToCopy from anotherfile.apsimx
     /// [Factors].MyFactor.Sim2.Specifications += [Model].Property=20
     /// [Factors].MyFactor.Sim2.Specifications += [Manager].Script.Property=[SomeModelReference]
-    /// [Factors].MyFactor.Sim2.ReadOnly = true
     /// ```
     /// 
     /// In the end, you would end up with a file that looks something like this:
@@ -249,15 +247,15 @@ namespace Models.Factorial
         /// <returns></returns>
         public IEnumerable<string> GetCommands(int index)
         {
+            if (_generatedCommands == null)
+                GetCompositeFactors();
+
             if (index < 0)
                 throw new Exception($"FactorFromFile: GetCommands cannot have negative index of {index}");
             if (index >= _generatedCommands.Count())
                 throw new Exception($"FactorFromFile: Index {index} provided to GetCommands is higher than number of composite factors count={_generatedCommands.Count()}");
 
             List<string> lines = new List<string>();
-            if (_generatedCommands == null)
-                GetCompositeFactors();
-
             foreach (string command in _generatedCommands[index])
                 lines.Add(command);
 
@@ -275,11 +273,11 @@ namespace Models.Factorial
         /// </summary>
         private void GenerateNodes(IModel model)
         {
-            _generatedCommands = new List<string[]>();
-
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
-                throw new Exception();
+                return;
+
+            _generatedCommands = new List<string[]>();
 
             Experiment experiment = model as Experiment;
             if (experiment == null)
@@ -301,7 +299,7 @@ namespace Models.Factorial
             {
                 _data = new DataTable();
                 _generatedCommands = new List<string[]>();
-                throw new Exception(exception.Message);
+                throw new Exception("FactorFromFile failed to generate factors from the input file.", exception);
             }
             finally //reset the read only status
             {
@@ -327,7 +325,7 @@ namespace Models.Factorial
 
             if (!_data.GetColumnNames().Contains(NameColumn))
             {
-                if (Path.GetExtension(FullFileName) == "csv")
+                if (Path.GetExtension(FullFileName).ToLower() == ".csv")
                     throw new Exception($"File does not have a column called \"{NameColumn}\"");
                 else
                     throw new Exception($"Sheet \"{Sheet}\" does not have a column called \"{NameColumn}\"");
@@ -372,7 +370,9 @@ namespace Models.Factorial
             {
                 List<string> commands = new List<string>();
                 string label = row[NameColumn].ToString().Trim();
-                if (newCompositeFactorNames.Contains(label))
+                if (string.IsNullOrEmpty(label))
+                    throw new Exception($"FactorFromFile has a row with a blank name, this not allowed, each row must have a name.");
+                else if (newCompositeFactorNames.Contains(label))
                     throw new Exception($"FactorFromFile has multiple CompositeFactors with the name {label}, this not allowed as it would cause idential simulation names.");
                 else
                     newCompositeFactorNames.Add(label);
@@ -414,15 +414,15 @@ namespace Models.Factorial
                         else if (commandType == CommandType.SetDate)
                         {
                             string dateString = DateUtilities.GetDateAsString(DateUtilities.GetDate(row[columnName].ToString()));
-                            commands.Add($"[{Name}].{label}.Specifications += {column}={dateString}");
+                            commands.Add($"[{Name}].{label}.Specifications += {columnName}={dateString}");
                         }
                         else if (commandType == CommandType.Set)
                         {
-                            commands.Add($"[{Name}].{label}.Specifications += {column}={value}");
+                            commands.Add($"[{Name}].{label}.Specifications += {columnName}={value}");
                         }
                         else if (commandType == CommandType.Descriptor)
                         {
-                            commands.Add($"[{Name}].{label}.DescriptorNames += {column}");
+                            commands.Add($"[{Name}].{label}.DescriptorNames += {columnName}");
                             commands.Add($"[{Name}].{label}.DescriptorValues += {value}");
                         }
                     }

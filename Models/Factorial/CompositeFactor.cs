@@ -115,7 +115,7 @@ namespace Models.Factorial
             }
         }
 
-        /// <summary>Property for the ILineEditor to change Specifications with</summary>
+        /// <summary>Property for the ICodeEditor to change Specifications with</summary>
         [JsonIgnore]
         public IEnumerable<string> Code { 
             get { return Specifications; } 

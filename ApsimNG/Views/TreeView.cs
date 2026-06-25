@@ -504,7 +504,14 @@ namespace UserInterface.Views
             _treeview1.ExpandRow(new TreePath("0"), false);
 
             // Expand all rows which were previously expanded by the user.
-            expandedNodes.ForEach(row => _treeview1.ExpandRow(new TreePath(row), false));
+            try
+            {
+                expandedNodes.ForEach(row => _treeview1.ExpandRow(new TreePath(row), false));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
 
             if (ContextMenu != null)
                 ContextMenu.AttachToWidget(_treeview1);

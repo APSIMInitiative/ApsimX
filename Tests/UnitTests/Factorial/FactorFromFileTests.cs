@@ -11,7 +11,7 @@ namespace UnitTests.Factorial
 {
     /// <summary>This is a test class for the FactorFromFile class</summary>
     [TestFixture]
-    public class FactorFromFileTests
+    public class FactorFromFileTest
     {
         /// <summary></summary>
         [Test]

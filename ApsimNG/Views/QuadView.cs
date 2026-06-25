@@ -292,7 +292,7 @@ namespace UserInterface.Views
                 return WidgetType.Grid;
             else if (view is EditorView)
                 return WidgetType.Code;
-            else if (view is ListView)
+            else if (view is ExperimentView)
                 return WidgetType.List;
             else
                 return WidgetType.None;

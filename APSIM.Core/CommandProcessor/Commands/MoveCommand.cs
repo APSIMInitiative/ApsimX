@@ -44,7 +44,7 @@ internal partial class MoveCommand : IModelCommand
         List<INodeModel> children = parent.GetChildren().ToList();
         int indexToAddAt = 0;
 
-        for(int i = 0; i == 0 && i < children.Count; i++)
+        for(int i = 0; i < children.Count; i++)
             if (children[i] == modelToMoveBeside)
                 indexToAddAt = i;
 
@@ -52,6 +52,7 @@ internal partial class MoveCommand : IModelCommand
             indexToAddAt += 1;
 
         parent.InsertChild(indexToAddAt, modelToMove);
+        modelToMove.Node.Parent.RemoveChild(modelToMove);
 
         return relativeTo;
     }

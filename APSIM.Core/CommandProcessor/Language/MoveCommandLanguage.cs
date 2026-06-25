@@ -18,9 +18,9 @@ internal partial class MoveCommand: IModelCommand
         string modelNameWithBrackets = @"[\w\d\[\]\.]+";
         string position = @"before|after";
 
-        string pattern = $@"move (?<from>{modelNameWithBrackets})" +
+        string pattern = $@"^move\s+(?<from>{modelNameWithBrackets})" +
                          $@"\s+(?<position>{position})" +
-                         $@"\s+(?<to>{modelNameWithBrackets})*";
+                         $@"\s+(?<to>{modelNameWithBrackets})$";
 
         Match match = Regex.Match(command, pattern);
         if (match == null || !match.Success)
