@@ -50,7 +50,7 @@ namespace Models.Factorial
     /// This table is converted to a list of APSIM commands that describe everything that must be done to the file in 
     /// order to create the simulation modifications that you've provided. These commands are run whenever the file is 
     /// loaded, is run, or the FactorFromFile is refreshed. These generated nodes are not saved into your file, and are 
-    /// recreated whenever the file is openned again.
+    /// recreated whenever the file is opened again.
     /// 
     /// ```
     /// add new CompositeFactor to [Factors].MyFactor name Sim1

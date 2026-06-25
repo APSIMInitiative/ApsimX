@@ -54,7 +54,7 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             DisconnectEvents();
-            destroyPresenters();
+            DestroyPresenters();
             view.Dispose();
         }
 
@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
             DisconnectEvents();
 
             if (!hasSuccessfullyBuiltPresenters)
-                createPresenters();
+                CreatePresenters();
 
             List<Exception> errors = new List<Exception>();
             if (model is FactorFromFile factorFromFile)
@@ -137,11 +137,11 @@ namespace UserInterface.Presenters
         /// Destroys any existing presenters and rebuilds everything depending 
         /// on the model type.
         /// </summary>
-        private void createPresenters()
+        private void CreatePresenters()
         {
             try
             {
-                destroyPresenters();
+                DestroyPresenters();
 
                 if (model is XYPairs)
                     CreateLayoutXYPairs();
@@ -168,7 +168,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Destroys all the created presenters by detatching them
         /// </summary>
-        private void destroyPresenters()
+        private void DestroyPresenters()
         {
             foreach (ISubPresenter presenter in presenters)
             {

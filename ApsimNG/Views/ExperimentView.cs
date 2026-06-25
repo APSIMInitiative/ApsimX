@@ -59,10 +59,10 @@ namespace UserInterface.Views
         /// <summary>Grid for holding data.</summary>
         public IListView List { get; private set; }
         
-        /// <summary>Gets or sets the value displayed in the number of simulations label./// </summary>
+        /// <summary>Gets or sets the value displayed in the number of simulations label</summary>
         public ILabelView NumberSimulationsLabel { get; set; }
 
-        /// <summary>Filename textbox.</summary>
+        /// <summary>Maximum number of simulations to show</summary>
         public IEditView MaximumNumSimulations { get; private set; }
 
         /// <summary>Run APSIM menu item.</summary>

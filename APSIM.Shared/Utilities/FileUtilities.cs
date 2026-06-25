@@ -62,7 +62,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Get the names of all the sheets in an excen file
+        /// Get the names of all the sheets in an excel file
         /// </summary>
         /// <param name="filepath">Filepath to open</param>
         /// <returns></returns>

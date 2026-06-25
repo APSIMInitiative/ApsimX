@@ -10,14 +10,14 @@ using UserInterface.EventArguments;
 namespace UserInterface.Presenters
 {
     /// <summary>
-    /// A presenter class for showing a cultivar.
+    /// A presenter class for and Editor view
     /// </summary>
     public class EditorPresenter : IPresenter, ISubPresenter
     {
-        /// <summary>The cultivar model</summary>
+        /// <summary>The model</summary>
         private ICodeEditor model;
 
-        /// <summary>The cultivar view</summary>
+        /// <summary>The view</summary>
         private IEditorView view;
 
         /// <summary>The parent explorer presenter</summary>
@@ -44,7 +44,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private bool _eventsConnected = false;
 
-        /// <summary>Attach the cultivar model to the cultivar view</summary>
+        /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The mode</param>
         /// <param name="view">The view</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
@@ -153,7 +153,7 @@ namespace UserInterface.Presenters
             
         }
 
-        /// <summary>The cultivar model has changed probably because of an undo.</summary>
+        /// <summary>The model has changed</summary>
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
