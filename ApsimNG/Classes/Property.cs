@@ -120,11 +120,9 @@ namespace UserInterface.Classes
         {
             IModel model = obj as IModel;
             ID = Guid.NewGuid();
-
             Name = metadata.GetCustomAttribute<DescriptionAttribute>()?.ToString();
             if (string.IsNullOrEmpty(Name))
                 Name = metadata.Name;
-
             string units = metadata.GetCustomAttribute<UnitsAttribute>()?.ToString();
             if (!string.IsNullOrEmpty(units))
             {
@@ -166,7 +164,7 @@ namespace UserInterface.Classes
                     // Try a property with this name.
                     PropertyInfo visibleProperty = metadata.DeclaringType.GetProperty(attrib.VisibleCallback, flags);
                     if (visibleProperty == null)
-                        throw new InvalidOperationException($"Unable to evaluate visible callback {attrib.VisibleCallback} for property {Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
+                        throw new InvalidOperationException($"Unable to evaluate visible callback {attrib.VisibleCallback} for property {metadata.Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
 
                     if (visibleProperty.PropertyType != typeof(bool))
                         throw new InvalidOperationException($"Property {visibleProperty.Name} is not a valid enabled callback, because it has a return type of {visibleProperty.PropertyType}. It should have a bool return type.");
@@ -178,11 +176,11 @@ namespace UserInterface.Classes
                 else
                 {
                     if (method.ReturnType != typeof(bool))
-                        throw new InvalidOperationException($"Method {Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
                     ParameterInfo[] parameters = method.GetParameters();
                     List<ParameterInfo> nonOptionalParameters = parameters.Where(p => !p.IsOptional).ToList();
                     if (nonOptionalParameters.Count != 0)
-                        throw new InvalidOperationException($"Method {Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
 
                     Visible = (bool)method.Invoke(obj, null);
                 }
@@ -199,7 +197,7 @@ namespace UserInterface.Classes
                     // Try a property with this name.
                     PropertyInfo enabledProperty = metadata.DeclaringType.GetProperty(attrib.EnabledCallback, flags);
                     if (enabledProperty == null)
-                        throw new InvalidOperationException($"Unable to evaluate enabled callback {attrib.EnabledCallback} for property {Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
+                        throw new InvalidOperationException($"Unable to evaluate enabled callback {attrib.EnabledCallback} for property {metadata.Name} on type {metadata.DeclaringType.FullName} - method or property does not exist");
 
                     if (enabledProperty.PropertyType != typeof(bool))
                         throw new InvalidOperationException($"Property {enabledProperty.Name} is not a valid enabled callback, because it has a return type of {enabledProperty.PropertyType}. It should have a bool return type.");
@@ -211,11 +209,11 @@ namespace UserInterface.Classes
                 else
                 {
                     if (method.ReturnType != typeof(bool))
-                        throw new InvalidOperationException($"Method {Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it has a return type of {method.ReturnType}. It should have a bool return type.");
                     ParameterInfo[] parameters = method.GetParameters();
                     List<ParameterInfo> nonOptionalParameters = parameters.Where(p => !p.IsOptional).ToList();
                     if (nonOptionalParameters.Count != 0)
-                        throw new InvalidOperationException($"Method {Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
+                        throw new InvalidOperationException($"Method {metadata.Name} is not a valid enabled callback, because it takes {nonOptionalParameters.Count} non-optional arguments ({string.Join(", ", nonOptionalParameters.Select(p => p.Name))}). It should take 0 arguments");
 
                     Enabled = (bool)method.Invoke(obj, null);
                 }
