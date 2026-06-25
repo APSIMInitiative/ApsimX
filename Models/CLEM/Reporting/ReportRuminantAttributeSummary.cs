@@ -24,7 +24,7 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/RuminantAttributeSummary.htm")]
     public class ReportRuminantAttributeSummary : CLEMModel, ICLEMUI, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
@@ -46,15 +46,13 @@ namespace Models.CLEM.Reporting
         /// Report mate values for breeders
         /// </summary>
         [Description("Report values for last mate")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool ReportMateValues { get; set; }
+        public bool ReportMateValues { get; set; } = true;
 
         /// <summary>
         /// Number of months since mating to report last mate
         /// </summary>
         [Description("Maximum months since mating to report last mate")]
-        [System.ComponentModel.DefaultValue(12)]
-        public int MaxMonthsToReportMate { get; set; }
+        public int MaxMonthsToReportMate { get; set; } = 12;
 
         /// <summary>
         /// Report item was generated event handler
@@ -68,15 +66,7 @@ namespace Models.CLEM.Reporting
         public RuminantAttributeStatisticsEventArgs LastStatistics { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportRuminantAttributeSummary()
-        {
-            SetDefaults();
-        }
-
-        /// <summary>
-        /// Report item generated and ready for reporting
+        /// Report item generated and ready for reporting 
         /// </summary>
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(RuminantAttributeStatisticsEventArgs e)
@@ -138,37 +128,32 @@ namespace Models.CLEM.Reporting
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             if (TimingOK)
+            {
                 ReportHerd();
+            }
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             if (ruminantHerd is null)
             {
                 string[] memberNames = new string[] { "Missing resource" };
-                results.Add(new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantAttributeSummary] [{this.Name}]", memberNames));
+                yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantAttributeSummary] [{this.Name}]", memberNames);
             }
             if (!Structure.FindChildren<RuminantGroup>().Any())
             {
                 string[] memberNames = new string[] { "Missing ruminant filter group" };
-                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames));
+                yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames);
             }
             if (!Structure.FindChildren<Report>().Where(a => a.Name == this.Name).Any())
             {
                 string[] memberNames = new string[] { "Missing report" };
-                results.Add(new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames));
+                yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames);
             }
-            return results;
         }
 
         #endregion
@@ -182,7 +167,9 @@ namespace Models.CLEM.Reporting
         private void OncCLEMValidate(object sender, EventArgs e)
         {
             if (ReportAtStart)
+            {
                 ReportHerd();
+            }
         }
 
         /// <summary>
@@ -214,28 +201,36 @@ namespace Models.CLEM.Reporting
         {
             ListStatistics listStatistics = new ListStatistics();
             if (ruminantHerd is null)
+            {
                 return listStatistics;
+            }
 
             IEnumerable<Ruminant> herd = null;
             if (herdGroup != null)
+            {
                 herd = herdGroup.Filter(ruminantHerd.Herd);
+            }
             else
+            {
                 herd = ruminantHerd.Herd;
+            }
 
             // do not report mate if greater than max months since conception
             // if not valid report NAN that is filtered out in calculations below
             var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
-                (a.Sex == Sex.Female && a.Age - (a as RuminantFemale).AgeAtLastConception <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
+                (a.Sex == Sex.Female && a.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
-            if (values.Count() == 0)
+            if (values.Count == 0)
+            {
                 return listStatistics;
+            }
 
             double sd = 0;
             Single mean = 0;
             Single sum = 0;
             var valuesPresent = values.Where(a => !float.IsNaN(a.Item1));
-            if (valuesPresent.Count() > 0)
+            if (valuesPresent.Any())
             {
                 mean = valuesPresent.Average(a => a.Item1);
                 sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item1 - mean, 2)));
@@ -246,7 +241,7 @@ namespace Models.CLEM.Reporting
             }
 
             valuesPresent = values.Where(a => !float.IsNaN(a.Item2));
-            if (valuesPresent.Count() > 0)
+            if (valuesPresent.Any())
             {
                 mean = valuesPresent.Average(a => a.Item2);
                 sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item2 - mean, 2)));
@@ -258,13 +253,6 @@ namespace Models.CLEM.Reporting
             listStatistics.Count = values.Count();
 
             return listStatistics;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
         }
     }
 

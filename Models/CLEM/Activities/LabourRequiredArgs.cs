@@ -29,7 +29,7 @@
         public string Category { get; set; }
 
         /// <summary>
-        /// Transacation relates to resource
+        /// Transaction relates to resource
         /// </summary>
         public string RelatesToResource { get; set; }
     }

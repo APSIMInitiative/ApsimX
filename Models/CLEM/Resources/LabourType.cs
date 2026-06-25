@@ -125,18 +125,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return null;
-            }
-        }
-
+        /// <inheritdoc/>
+        public new double? Value => null;
 
         /// <summary>
         /// Monthly dietary components
@@ -153,8 +143,12 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             if (DietaryComponentList != null)
+            {
                 foreach (LabourDietComponent dietComponent in DietaryComponentList)
+                {
                     value += dietComponent.GetTotal(metric);
+                }
+            }
 
             return value;
         }
@@ -166,9 +160,13 @@ namespace Models.CLEM.Resources
         public double GetAmountConsumed()
         {
             if (DietaryComponentList is null)
+            {
                 return 0;
+            }
             else
+            {
                 return DietaryComponentList.Sum(a => a.AmountConsumed);
+            }
         }
 
         /// <summary>
@@ -178,9 +176,13 @@ namespace Models.CLEM.Resources
         public double GetAmountConsumed(string foodTypeName)
         {
             if (DietaryComponentList is null)
+            {
                 return 0;
+            }
             else
+            {
                 return DietaryComponentList.Where(a => a.FoodStore?.Name == foodTypeName).Sum(a => a.AmountConsumed);
+            }
         }
 
         /// <summary>
@@ -239,7 +241,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public LabourType()
         {
-            this.SetDefaults();
         }
 
         /// <summary>
@@ -247,7 +248,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="activityID">Unique activity ID</param>
         /// <param name="maxLabourAllowed">Max labour allowed</param>
-        /// <param name="takeMode">Logical specifiying whether this is a availability check or resource take request</param>
+        /// <param name="takeMode">Logical specifying whether this is a availability check or resource take request</param>
         /// <returns></returns>
         public double LabourCurrentlyAvailableForActivity(Guid activityID, double maxLabourAllowed, bool takeMode)
         {
@@ -263,7 +264,9 @@ namespace Models.CLEM.Resources
         {
             AvailableDays = 0;
             if (LabourAvailability != null)
+            {
                 AvailableDays = Math.Min(30.4, LabourAvailability.GetAvailability(month - 1) * AvailabilityLimiter);
+            }
         }
 
         /// <summary>
@@ -275,19 +278,30 @@ namespace Models.CLEM.Resources
             return (Parent as Labour).PayRate(this);
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            ageInMonths = InitialAge * 12;
+        }
+
         #region Transactions
 
-        /// <summary>
-        /// Add to labour store of this type
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+            /// <summary>
+            /// Add to labour store of this type
+            /// </summary>
+            /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+            /// <param name="activity">Name of activity adding resource</param>
+            /// <param name="relatesToResource"></param>
+            /// <param name="category"></param>
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+            {
+                throw new Exception(String.Format("ResourceAmount object of type {0} does not support Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+            }
 
             double amountAdded = (double)resourceAmount;
 
@@ -309,22 +323,30 @@ namespace Models.CLEM.Resources
 
             LabourDietComponent alreadyEaten = DietaryComponentList.Where(a => a.FoodStore != null && a.FoodStore.Name == dietComponent.FoodStore.Name).FirstOrDefault();
             if (alreadyEaten != null)
+            {
                 alreadyEaten.AmountConsumed += dietComponent.AmountConsumed;
+            }
             else
+            {
                 DietaryComponentList.Add(dietComponent);
+            }
         }
 
         /// <summary>
         /// Remove from labour store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             if (request.Required == 0)
+            {
                 return;
+            }
 
-            if (this.Individuals > 1)
+            if (Individuals > 1)
+            {
                 throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
+            }
 
             double amountRemoved = request.Required;
             // avoid taking too much
@@ -365,56 +387,6 @@ namespace Models.CLEM.Resources
             {
                 return this.AvailableDays;
             }
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (!FormatForParentControl)
-                {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    if (this.Individuals == 0)
-                        htmlWriter.Write("No individuals are provided for this labour type");
-                    else
-                    {
-                        if (this.Individuals > 1)
-                            htmlWriter.Write($"<span class=\"setvalue\">{this.Individuals}</span> x ");
-                        htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
-                        htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
-                        if (IsHired)
-                            htmlWriter.Write(" as hired labour");
-                    }
-                    htmlWriter.Write("</div>");
-
-                    if (this.Individuals > 1)
-                        htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            if (FormatForParentControl)
-                return "";
-            else
-                return base.ModelSummaryClosingTags();
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            if (FormatForParentControl)
-                return "";
-            else
-                return base.ModelSummaryOpeningTags();
         }
 
         #endregion

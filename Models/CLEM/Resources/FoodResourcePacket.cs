@@ -1,0 +1,369 @@
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Models.CLEM.Interfaces;
+using System;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// Additional information for animal food requests
+    /// </summary>
+    [Serializable]
+    public class FoodResourcePacket : IFeed
+    {
+        private const double feedCP2N = 6.25;
+        private const double milkCP2N = 6.38;
+
+        /// <summary>
+        /// Protein to nitrogen in milk conversion factor
+        /// </summary>
+        public static double MilkProteinToNitrogenFactor = milkCP2N;
+
+        /// <summary>
+        /// Protein to nitrogen in feed conversion factor
+        /// </summary>
+        public static double FeedProteinToNitrogenFactor = feedCP2N;
+
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; }
+
+        /// <inheritdoc/>
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double MetabolisableEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double DryMatterDigestibility { get; set; }
+
+        /// <inheritdoc/>
+        public double FatPercent { get; set; }
+
+        /// <inheritdoc/>
+        public double NitrogenPercent { get; set; }
+
+        private double rumenDegradableProteinPercent;
+
+        /// <inheritdoc/>
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
+
+        /// <inheritdoc/>
+        public double AcidDetergentInsolubleProtein { get; set; }
+
+        /// <summary>
+        /// Method to calculate the Acid Detergent Insoluble Protein based on the rumen degradable protein and type of
+        /// feed
+        /// </summary>
+        /// <param name="rumenDegradableProteinPercent">RDP of feed</param>
+        /// <param name="typeOfFeed">Type of feed to identify forage</param>
+        /// <returns>The proportion of crude protein that is ADIP</returns>
+        public static double CalculateAcidDetergentInsolubleProtein(double rumenDegradableProteinPercent, FeedType typeOfFeed)
+        {
+            if (typeOfFeed == FeedType.Concentrate | typeOfFeed == FeedType.Milk)
+            {
+                return Math.Max(0.03, 0.87 - (1.09 * rumenDegradableProteinPercent / 100));
+            }
+            else
+            {
+                return 0.19 * (1 - rumenDegradableProteinPercent / 100);
+            }
+        }
+
+        /// <summary>
+        /// Factor used to convert the Nitrogen percentage and DM to crude protein
+        /// </summary>
+        public double NitrogenToCrudeProteinFactor
+        {
+            get
+            {
+                if (TypeOfFeed == FeedType.Milk)
+                {
+                    return MilkProteinToNitrogenFactor;
+                }
+
+                return FeedProteinToNitrogenFactor;
+            }
+        }
+
+        /// <inheritdoc/>
+        public double GutFill { get; set; } = 0.08;
+
+        /// <summary>
+        /// Amount of food in packet
+        /// </summary>
+        public double Amount { get; private set; }
+
+        /// <summary>
+        /// Set the amount present to zero but maintain the quality details.
+        /// </summary>
+        public void ClearAmount()
+        {
+            Amount = 0;
+        }
+
+        /// <summary>
+        /// Add a specified amount of current content to this packet
+        /// </summary>
+        /// <param name="amount">The amount to add</param>
+        public void SetAmount(double amount) => Amount = amount;
+
+        /// <summary>
+        /// Add a specified amount of current content to this packet
+        /// </summary>
+        /// <param name="amount">The amount to add</param>
+        public void AddAmount(double amount) => Amount += amount;
+
+        /// <summary>
+        /// Reduce the take pending by a specified amount
+        /// </summary>
+        /// <param name="amount">The amount returned from pending request</param>
+        /// <returns>The amount reduced</returns>
+        public double ReduceAmount(double amount)
+        {
+            double amountReduced = Math.Min(Amount, amount);
+            Amount -= amountReduced;
+            return amountReduced;
+        }
+
+        /// <summary>
+        /// Metabolic Energy Content of the food resource packet
+        /// </summary>
+        public double MEContent
+        {
+            get
+            {
+                if (MetabolisableEnergyContent > 0)
+                {
+                    return MetabolisableEnergyContent;
+                }
+                return TypeOfFeed switch
+                {
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical => ((0.172 * DryMatterDigestibility) - 1.707),
+                    FeedType.Concentrate => ((0.134 * DryMatterDigestibility) + (0.235 * FatPercent) + 1.23),
+                    _ => throw new NotImplementedException($"Cannot provide MEContent for the TypeOfFeed: {TypeOfFeed}."),
+                };
+            }
+        }
+
+        /// <summary>
+        /// Fermentable Metabolic Energy Content of the food resource packet
+        /// </summary>
+        public double FMEContent
+        {
+            get
+            {
+                return 0.7 * MEContent;
+            }
+        }
+
+        /// <summary>
+        /// Calculate Crude Protein from nitrogen content and amount (g/g DM)
+        /// </summary>
+        public double CrudeProtein
+        {
+            get
+            {
+                return (CrudeProteinPercent / 100.0) * Amount;
+            }
+        }
+
+        /// <summary>
+        /// Calculate Crude Protein percentage from nitrogen content (%)
+        /// </summary>
+        public double CrudeProteinPercent { get; set; }
+
+        /// <summary>
+        /// Calculate Undegradable Crude Protein percent (CP% - RDP%)
+        /// </summary>
+        public double UndegradableCrudeProteinPercent
+        {
+            get
+            {
+                return 100.0 - RumenDegradableProteinPercent;
+            }
+        }
+
+        /// <summary>
+        /// Calculate the Degradable Protein based on feed type equations
+        /// </summary>
+        public double DegradableProtein
+        {
+            get
+            {
+                // Return from non-concentrate is taken from APSIM
+                // It assumes we don't know RDPContent for non-concentrates and will estimate based on DMD
+                // New approach assumes RDPContent is 0.7 (used in concentrate and may be user altered)
+
+                return TypeOfFeed switch
+                {
+                    FeedType.HaySilage or
+                    FeedType.PastureTemperate or
+                    FeedType.PastureTropical or //=> CrudeProtein * Math.Min(0.84 * (DryMatterDigestibility/100.0) + 0.33, 1),
+                    FeedType.Concentrate => (RumenDegradableProteinPercent / 100.0) * CrudeProtein,
+                    FeedType.Milk => 0,
+                    _ => throw new NotImplementedException($"Cannot provide degradable protein for the FeedType {TypeOfFeed}"),
+                };
+            }
+        }
+
+        /// <summary>
+        /// Reset all stores
+        /// </summary>
+        public void Reset()
+        {
+            DryMatterDigestibility = 0;
+            FatPercent = 0;
+            NitrogenPercent = 0;
+            CrudeProteinPercent = 0;
+            Amount = 0;
+            MetabolisableEnergyContent = 0;
+            RumenDegradableProteinPercent = 0;
+            AcidDetergentInsolubleProtein = 0;
+            GrossEnergyContent = 0;
+        }
+
+        /// <summary>
+        /// Clone this packet
+        /// </summary>
+        /// <returns>A copy of this packet</returns>
+        public FoodResourcePacket Clone(double amount)
+        {
+            return new FoodResourcePacket(this)
+            {
+                Amount = amount,
+            };
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FoodResourcePacket()
+        {
+
+        }
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public FoodResourcePacket(double initialAmount)
+        {
+            Amount = initialAmount;
+        }
+
+        /// <summary>
+        /// Constructor based on an IFeed clone
+        /// </summary>
+        /// <param name="packet"></param>
+        public FoodResourcePacket(IFeed packet)
+        {
+            SetPropertiesFromPacket(packet);
+        }
+
+        /// <summary>
+        /// Set properties based on Ifeed packet
+        /// </summary>
+        /// <param name="packet">Packet providing quality settings</param>
+        public void SetPropertiesFromPacket(IFeed packet)
+        {
+            TypeOfFeed = packet.TypeOfFeed;
+            MetabolisableEnergyContent = packet.MetabolisableEnergyContent;
+            DryMatterDigestibility = packet.DryMatterDigestibility;
+            FatPercent = packet.FatPercent;
+            NitrogenPercent = packet.NitrogenPercent;
+            CrudeProteinPercent = packet.CrudeProteinPercent;
+            RumenDegradableProteinPercent = packet.RumenDegradableProteinPercent;
+            AcidDetergentInsolubleProtein = packet.AcidDetergentInsolubleProtein;
+            GrossEnergyContent = packet.GrossEnergyContent;
+            GutFill = packet.GutFill;
+        }
+
+        /// <summary>
+        /// Set propterties based on Ifeed packet and amount
+        /// </summary>
+        /// <param name="packet">Packet providing quality</param>
+        /// <param name="amount">Amount to inialise packet</param>
+        public void SetPropertiesFromPacket(IFeed packet, double amount)
+        {
+            SetPropertiesFromPacket(packet);
+            Amount = amount;
+        }
+
+        /// <summary>
+        /// A method to add an amount of another packet (i.e. graze food pool) and mix to give amount weighted average
+        /// properties
+        /// </summary>
+        /// <param name="packet">The details of the packet added</param>
+        /// <param name="amount">The amount of the packet added</param>
+        public void AddAndMix(IFeed packet, double amount)
+        {
+            MetabolisableEnergyContent = WeightedAverage("MetabolisableEnergyContent", packet, amount);
+            DryMatterDigestibility = WeightedAverage("DryMatterDigestibility", packet, amount);
+            FatPercent = WeightedAverage("FatPercent", packet, amount);
+            NitrogenPercent = WeightedAverage("NitrogenPercent", packet, amount);
+            CrudeProteinPercent = WeightedAverage("CrudeProteinPercent", packet, amount);
+            RumenDegradableProteinPercent = WeightedAverage("RumenDegradableProteinPercent", packet, amount);
+            GrossEnergyContent = WeightedAverage("GrossEnergyContent", packet, amount);
+            GutFill = WeightedAverage("GutFill", packet, amount);
+            Amount += amount;
+            TypeOfFeed = packet.TypeOfFeed;
+        }
+
+        private double WeightedAverage(string Property, IFeed packet, double amount)
+        {
+            double value = 0;
+            double newValue = 0;
+            switch (Property)
+            {
+                case "MetabolisableEnergyContent":
+                    value = MetabolisableEnergyContent;
+                    newValue = packet.MetabolisableEnergyContent;
+                    break;
+                case "DryMatterDigestibility":
+                    value = DryMatterDigestibility;
+                    newValue = packet.DryMatterDigestibility;
+                    break;
+                case "FatPercent":
+                    value = FatPercent;
+                    newValue = packet.FatPercent;
+                    break;
+                case "NitrogenPercent":
+                    value = NitrogenPercent;
+                    newValue = packet.NitrogenPercent;
+                    break;
+                case "CrudeProteinPercent":
+                    value = CrudeProteinPercent;
+                    newValue = packet.CrudeProteinPercent;
+                    break;
+                case "RumenDegradableProteinPercent":
+                    value = RumenDegradableProteinPercent;
+                    newValue = packet.RumenDegradableProteinPercent;
+                    break;
+                case "GrossEnergyContent":
+                    value = GrossEnergyContent;
+                    newValue = packet.GrossEnergyContent;
+                    break;
+                case "GutFill":
+                    value = GutFill;
+                    newValue = packet.GutFill;
+                    break;
+            }
+            if (amount == 0)
+                return value;
+            if (value == 0 && newValue == 0)
+                return 0;
+            return ((value * Amount) + (newValue * amount)) / (Amount + amount);
+        }
+    }
+}
