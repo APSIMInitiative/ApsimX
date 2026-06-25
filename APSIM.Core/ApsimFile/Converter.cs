@@ -19,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 217; } }
+    public static int LatestVersion { get { return 218; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7824,6 +7824,31 @@ internal class Converter
             if (changed)
                 JsonUtilities.SetValues(report, "VariableNames", variableNames);
             }
+    }
+
+
+    /// <summary>
+    /// Rounds out of range InitialStandingFraction values to either 0 or 1.
+    /// Also changes any NaN values to 0.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion218(JObject root, string fileName)
+    {
+        foreach (JObject surfaceOrganicMatter in JsonUtilities.ChildrenOfType(root, "SurfaceOrganicMatter"))
+        {
+            // Check if the value is NaN and correct.
+            string initialStandingFraction = surfaceOrganicMatter["InitialStandingFraction"].ToString();
+            if (initialStandingFraction.Equals("NaN"))
+                surfaceOrganicMatter["InitialStandingFraction"] = 0.0;
+            
+            // Reset the value to be within valid bounds.
+            Double.TryParse(initialStandingFraction, out double initialStandingFractionDouble);
+            if (initialStandingFractionDouble > 1)
+                surfaceOrganicMatter["InitialStandingFraction"] = 1.0;
+            if (initialStandingFractionDouble < 0)
+                surfaceOrganicMatter["InitialStandingFraction"] = 0.0;
+        }
     }
    
 }
