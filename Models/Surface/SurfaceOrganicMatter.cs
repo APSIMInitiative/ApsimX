@@ -4,6 +4,7 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
@@ -173,25 +174,13 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double InitialResidueMass { get; set; }
 
-        private double initialStandingFraction;
 
         /// <summary>Gets or sets the standing fraction of initial residue pool</summary>
         [Summary]
         [Description("Standing fraction (0-1)")]
         [Units("0-1")]
-        public double InitialStandingFraction
-        {
-            get => initialStandingFraction;
-            set
-            {
-                if (double.IsNaN(value) || value < 0.0 || value > 1.0)
-                    throw new ArgumentOutOfRangeException(
-                        nameof(InitialStandingFraction), 
-                        "Initial standing fraction must be between 0.0 and 1.0");
+        public double InitialStandingFraction { get; set; }
 
-                initialStandingFraction = value;
-            }
-        }
 
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
         [Summary]
@@ -645,6 +634,10 @@ namespace Models.Surface
                 double cpr = double.IsNaN(InitialCPR) ? DefaultCPRatio : InitialCPR;
                 totP = MathUtilities.Divide(totC, cpr, 0.0);
 
+                if (InitialStandingFraction < 0 || InitialStandingFraction > 1)
+                    throw new ArgumentOutOfRangeException(nameof(InitialStandingFraction), 
+                        $"Standing Fraction is only allowed to be a number between 0 and 1. " +
+                        $"Please change the value in model located at path: {FullPath}");
                 double standFract = double.IsNaN(InitialStandingFraction) ? DefaultCPRatio : InitialStandingFraction;
 
                 for (int j = 0; j < maxFr; j++)
