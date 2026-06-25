@@ -86,7 +86,7 @@ public partial class SetPropertyCommand : IModelCommand
                 {
                     instance.Value = null;
                 }
-                else if (propertyValue.Contains('[') && propertyValue.Contains(']'))
+                else if ((propertyValue.Trim().StartsWith('[') && propertyValue.Trim().EndsWith(']')) || propertyValue.Trim().StartsWith('.'))
                 {
                     VariableComposite reference = relativeTo.Node.GetObject(propertyValue);
                     if (reference != null)
