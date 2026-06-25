@@ -1,0 +1,41 @@
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Models.CLEM.Interfaces;
+using Models.Core;
+using System;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// This stores the parameters for ruminant SCA07 growth model
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
+    [ValidParent(ParentType = typeof(RuminantParametersHolder))]
+    [Description("Ruminant growth parameters specific to SCA07 approach")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowSCA07.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+
+    public class RuminantParametersGrowSCA07 : CLEMModel, ISubParameters, ICloneable
+    {
+        /// <summary>
+        /// The maintenance breed factor
+        /// </summary>
+        [Category("Breed", "Growth")]
+        [Description("Breed based maintenance factor")]
+        public double MaintenanceFactor { get; set; } = 1.4; // cattle. 1.0 sheep
+
+        /// <summary>
+        /// Create a clone of this class
+        /// </summary>
+        /// <returns>A copy of the class</returns>
+        public object Clone()
+        {
+            RuminantParametersGrowSCA07 clonedParameters = new()
+            {
+                MaintenanceFactor = this.MaintenanceFactor,
+            };
+            return clonedParameters;
+        }
+    }
+}

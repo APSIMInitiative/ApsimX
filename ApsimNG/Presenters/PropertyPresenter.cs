@@ -1,4 +1,6 @@
 using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Utilities;
 using System;
@@ -42,7 +44,7 @@ namespace UserInterface.Presenters
         /// This associates an ID with each property being displayed in
         /// the view, and the object to which that property belongs.
         /// </summary>
-        private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
+        public Dictionary<Guid, PropertyObjectPair> PropertyMap { get; private set; } = new Dictionary<Guid, PropertyObjectPair>();
 
         /// <summary>
         /// Called when the view is refreshed
@@ -128,8 +130,18 @@ namespace UserInterface.Presenters
             // yield multiple properties to be displayed in the view.
             List<Property> properties = new List<Property>();
             List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
+            CategoryAttribute categoryAttribute = null;
+            
             foreach (PropertyInfo property in allProperties)
             {
+                // Assign any category attribute details here for category based property presenter (currently in CLEM)
+                if (property.IsDefined(typeof(CategoryAttribute), false))
+                {
+                    categoryAttribute = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
+                    if(categoryAttribute.Category == "*")
+                        categoryAttribute = new CategoryAttribute("Simulation", "Details");
+                }
+
                 DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
                 if (display != null && display.Type == DisplayType.SubModel)
                 {
@@ -149,24 +161,35 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    // determine where to link to the property or use a substitute sub-property for a class-based property.
-                    Property result;
-                    string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
-                    if (subPropertyName.Any())
+                    Property result = new Property(obj, property);
+                    properties.Add(result);
+
+                    PropertyInfo propertyRef = property;
+                    object objectRef = obj;
+
+                    //check if our property is a class of some sort (but not a DateTime or list/array). If so, look for a property it holds to use instead.
+                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)))
                     {
                         object subObject = property.GetValue(obj);
-                        subObject ??= Activator.CreateInstance(property.PropertyType);
-                        PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
+                        PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
+                        if (subProperty != null)
+                        {
+                            objectRef = subObject;
+                            propertyRef = subProperty;
+                        }
+                    }
+                    PropertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
+                }
+            }
 
-                        result = new Property(subObject, subProperty);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
-                    }
-                    else
-                    {
-                        result = new Property(obj, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
-                    }
-                    properties.Add(result);
+            // Also allow children of parent object to be added as groups if they are of type ISubParameters (Used in CLEM and CategoryProperyPresenter)
+            if (obj is CLEMModel cm)
+            {
+                foreach (var submodel in cm.Structure.FindChildren<ISubParameters>().Cast<CLEMModel>())
+                {
+                    PropertyGroup group = GetProperties(submodel);
+                    group.Name = submodel.Name;
+                    subModelProperties.Add(group);
                 }
             }
             string name = obj is IModel model ? model.Name : obj.GetType().Name;
@@ -235,7 +258,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
         {
-            if (propertyMap.Values.Any(p => p.Model == changedModel))
+            if (PropertyMap.Values.Any(p => p.Model == changedModel))
                 RefreshView(model);
         }
 
@@ -251,8 +274,8 @@ namespace UserInterface.Presenters
             DisconnectEvents();
 
             // Figure out which property of which object is being changed.
-            PropertyInfo property = propertyMap[args.ID].Property;
-            object changedObject = propertyMap[args.ID].Model;
+            PropertyInfo property = PropertyMap[args.ID].Property;
+            object changedObject = PropertyMap[args.ID].Model;
 
             object newValue = args.NewValue;
 
@@ -301,15 +324,6 @@ namespace UserInterface.Presenters
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
             ConnectEvents();
-        }
-
-        /// <summary>
-        /// Stores a property and the object to which it belongs.
-        /// </summary>
-        private struct PropertyObjectPair
-        {
-            public object Model { get; set; }
-            public PropertyInfo Property { get; set; }
         }
     }
 }
