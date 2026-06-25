@@ -1068,7 +1068,8 @@
                 "[Soil].Swim3.Runoff as Runoff",
                 "[Soil].Swim3.Pond as PondDepth",
                 "sum([Soil].Water.MM) as WaterStored",
-                "[Soil].Swim3.Runoff as Runoff[Soil].Water.Volumetric as SW"
+                "[Soil].Swim3.Runoff as Runoff",
+				        "[Soil].Water.Volumetric as SW"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"

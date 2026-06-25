@@ -19,7 +19,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 216; } }
+    public static int LatestVersion { get { return 217; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7782,4 +7782,48 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
+
+    /// <summary>
+    /// Removes invalid character "/" in alias 
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion217(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+
+            if (variableNames == null || variableNames.Count == 0)
+                continue;
+            bool changed = false;
+           
+            for (int i = 0; i < variableNames.Count; i++)
+            {
+                string reportVariable = variableNames[i];
+                // Only rewrite if BOTH patterns exist
+                if (reportVariable.Contains(" as "))
+                {   
+                    if(!reportVariable.Contains("//"))
+                    {
+                            // Remove all invalid characters the variable expression
+                        int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                        string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
+                        string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
+                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
+                        string rewritten = expr + " as " + cleanedAlias;
+                        if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                        {
+                            variableNames[i] = rewritten;
+                            changed = true;
+                        }
+                    }
+                    
+                }
+            }
+            if (changed)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);
+            }
+    }
+   
 }

@@ -24,7 +24,7 @@
     <PackageReference Include="Azure.Identity" Version="1.17.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="NetMQ" Version="4.0.2.2" />
-    <PackageReference Include="MessagePack" Version="3.1.4" />
+    <PackageReference Include="MessagePack" Version="3.1.7" />
     <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.4" />
     <ProjectReference Include="..\APSIM.Core\APSIM.Core.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
