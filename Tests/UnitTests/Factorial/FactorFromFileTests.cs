@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using APSIM.Core;
 using Models.Core;
 using Models.Core.Run;
@@ -25,6 +26,7 @@ namespace UnitTests.Factorial
             File.WriteAllText(filename, csv);
             
             FactorFromFile factorFromFile = new FactorFromFile();
+            factorFromFile.Name = "Site";
             factorFromFile.NameColumn = "Site";
             factorFromFile.FileName = filename;
 
@@ -44,15 +46,15 @@ namespace UnitTests.Factorial
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
 
-            Assert.That(simulations.Node.FindChild<FactorFromFile>(recurse:true), Is.Not.Null);
-            Factor generatedFactor = simulations.Node.FindChild<Factor>("Site", recurse:true);
-            Assert.That(generatedFactor, Is.Not.Null);
-            Assert.That(generatedFactor.ReadOnly, Is.True);
-            Assert.That(generatedFactor.Children.Count, Is.EqualTo(2));
-            Assert.That((generatedFactor.Children[0] as CompositeFactor).Name, Is.EqualTo("A"));
-            Assert.That((generatedFactor.Children[0] as CompositeFactor).Specifications[0], Contains.Substring("1"));
-            Assert.That((generatedFactor.Children[1] as CompositeFactor).Name, Is.EqualTo("B"));
-            Assert.That((generatedFactor.Children[1] as CompositeFactor).Specifications[0], Contains.Substring("2"));
+            List<SimulationDescription> sims = experiment.GenerateSimulationDescriptions();
+            Assert.That(sims[0].Name, Is.EqualTo("ExperimentSiteA"));
+            Assert.That(sims[1].Name, Is.EqualTo("ExperimentSiteB"));
+
+            string[] commands = factorFromFile.Code.ToArray();
+            Assert.That(commands[0], Is.EqualTo("add new CompositeFactor to [Site] name A"));
+            Assert.That(commands[1], Is.EqualTo("[Site].A.Specifications += [Zone].Area=1"));
+            Assert.That(commands[2], Is.EqualTo("add new CompositeFactor to [Site] name B"));
+            Assert.That(commands[3], Is.EqualTo("[Site].B.Specifications += [Zone].Area=2"));
         }
 
     }
