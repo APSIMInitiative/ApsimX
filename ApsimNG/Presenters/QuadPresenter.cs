@@ -153,8 +153,6 @@ namespace UserInterface.Presenters
                     CreateLayoutCompositeFactor();
                 else if (model is FactorFromFile)
                     CreateLayoutFactorFromFile();
-                else if (model is FactorsFromFile)
-                    CreateLayoutFactorFromFile();
                 else
                     CreateLayoutGeneric();
                 hasSuccessfullyBuiltPresenters = true;
