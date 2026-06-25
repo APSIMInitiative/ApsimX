@@ -9,8 +9,6 @@ using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
-
-
     /// <summary>
     /// A presenter class for showing a cultivar.
     /// </summary>
@@ -186,13 +184,13 @@ namespace UserInterface.Presenters
             if (TextChanged == null)
             {
                 explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Lines", view.Lines));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Code", view.Lines));
                 explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             }
             //if something is, let the other presenter do the change (such as this being a sub presenter)
             else 
             {
-                TextChanged?.Invoke(model, "Lines", view.Lines);
+                TextChanged?.Invoke(model, "Code", view.Lines);
             }
         }
     }

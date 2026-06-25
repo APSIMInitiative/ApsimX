@@ -67,14 +67,10 @@ namespace UserInterface.Presenters
                 createPresenters();
 
             List<Exception> errors = new List<Exception>();
-            try
+            if (model is FactorFromFile factorFromFile)
             {
-                if (model is FactorFromFile factorFromFile)
-                    factorFromFile.GetCompositeFactors();
-            }
-            catch (Exception exception)
-            {
-                errors.Add(exception);
+                try { factorFromFile.GetCompositeFactors(); }
+                catch (Exception exception) { errors.Add(exception); }
             }
 
             foreach (ISubPresenter presenter in presenters)
@@ -87,15 +83,6 @@ namespace UserInterface.Presenters
                 {
                     errors.Add(exception);
                 }
-            }
-
-            try
-            {
-                SetCode((model as FactorFromFile).GetCommands(0).ToArray());
-            }
-            catch
-            {
-                SetCode([""]);
             }
             
             try
