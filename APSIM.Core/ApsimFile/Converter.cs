@@ -8032,6 +8032,11 @@ internal class Converter
     {
         foreach (JObject surfaceOrganicMatter in JsonUtilities.ChildrenOfType(root, "SurfaceOrganicMatter"))
         {
+            // APSIMTests.cs fails if you look for InitialStandingFraction in SurfaceOrganicMatter.
+            // The Simulations version is retrieved from an old XML version and doesn't appear to have this property,
+            // so we should skip these models.
+            if (surfaceOrganicMatter["InitialStandingFraction"] == null)
+                continue;
             // Check if the value is NaN and correct.
             string initialStandingFraction = surfaceOrganicMatter["InitialStandingFraction"].ToString();
             if (initialStandingFraction.Equals("NaN"))
