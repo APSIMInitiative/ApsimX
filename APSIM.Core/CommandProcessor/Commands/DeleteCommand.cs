@@ -1,5 +1,3 @@
-using Models.Core;
-
 namespace APSIM.Core;
 
 /// <summary>A delete model command</summary>

@@ -133,6 +133,10 @@ namespace UserInterface.Presenters
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
+        /// <summary>
+        /// Destroys any existing presenters and rebuilds everything depending 
+        /// on the model type.
+        /// </summary>
         private void createPresenters()
         {
             try
@@ -161,6 +165,9 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Destroys all the created presenters by detatching them
+        /// </summary>
         private void destroyPresenters()
         {
             foreach (ISubPresenter presenter in presenters)
@@ -177,7 +184,8 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// The mode has changed (probably via undo/redo).
+        /// Listener for if hte model is changed (most likely by a sub presenter)
+        /// When this happens, it just tells all the presenters to refresh
         /// </summary>
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
@@ -186,6 +194,14 @@ namespace UserInterface.Presenters
             Refresh();
         }
 
+        /// <summary>
+        /// Listener for Grid cell change events.
+        /// Does not use given parameters, just refreshes the presenters
+        /// </summary>
+        /// <param name="dataProvider">Data Provider for the grid</param>
+        /// <param name="colIndices">column indexes changed</param>
+        /// <param name="rowIndices">row indexes changed</param>
+        /// <param name="values">values that were put in</param>
         private void OnCellChanged(Gtk.Sheet.IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
         {
             DisconnectEvents();
@@ -205,7 +221,8 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// 
+        /// Listener for Text change events from a Code Editor
+        /// Does not use given parameters, just refreshes the presenters
         /// </summary>
         /// <param name="model">The model</param>
         /// <param name="property">The property changed</param>
@@ -229,7 +246,9 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// 
+        /// Listener for List selection events from a List view
+        /// Does nothing unless model is FactorFromFile, in which case the 
+        /// code view is updated.
         /// </summary>
         private void OnListSelectionChanged(object sender, EventArgsValue e)
         {
@@ -337,7 +356,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// 
+        /// Set the text contents of an Editor view
         /// </summary>
         /// <param name="lines"></param>
         private void SetCode(string[] lines)
@@ -348,7 +367,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Add a markdown view to one of the quads
+        /// Add a List view to one of the quads
         /// </summary>
         /// <param name="position">Which quad to use</param>
         /// <param name="table"></param>
@@ -423,7 +442,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Create layout for a FactorsFromFile
+        /// Create layout for a FactorsFromFile, property, text, list and code
         /// </summary>
         private void CreateLayoutFactorFromFile()
         {

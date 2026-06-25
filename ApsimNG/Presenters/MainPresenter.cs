@@ -513,7 +513,7 @@ namespace UserInterface.Presenters
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(fileName, e => ShowError(e), false);
+                    var response = FileFormat.ReadFromFileAndReturnConvertState<Simulations>(fileName, e => ShowError(e), true);
                     Simulations simulations = response.head.Model as Simulations;
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 

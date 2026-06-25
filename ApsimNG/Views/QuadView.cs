@@ -1,8 +1,6 @@
 ﻿using Gtk;
 using System;
 using System.Data;
-using APSIMNG.Utility;
-using System.Linq;
 
 namespace UserInterface.Views
 {
@@ -225,15 +223,6 @@ namespace UserInterface.Views
                 throw new Exception("QuadView does not contain a Label");
             else
                 view.Text = text;
-        }
-
-        public void SetListData(DataTable table)
-        {
-            //ListView view = GetView(WidgetType.List) as ListView;
-            //if (view == null)
-            //    throw new Exception("QuadView does not contain a List");
-            //else
-            //    view.DataSource = table;
         }
 
         public ViewBase GetView(WidgetType type)

@@ -1,5 +1,3 @@
-using APSIM.Shared.Utilities;
-
 namespace APSIM.Core;
 
 /// <summary>A Move command</summary>
@@ -15,7 +13,7 @@ internal partial class MoveCommand : IModelCommand
     private readonly bool _placeBefore;
 
     /// <summary>
-    /// Constructor. Add a new model to a parent model and optionally name it.
+    /// Constructor. Move a model beside another model, either before or after
     /// </summary>
     /// <param name="fromPath">The model to move.</param>
     /// <param name="toPath">The path of a model move beside.</param>

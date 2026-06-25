@@ -50,10 +50,7 @@ namespace UserInterface.Presenters
             // Give the view the default maximum number of simulations to display.
             _view.MaximumNumSimulations.Text = DEFAULT_MAX.ToString();
 
-            ConnectEvents();
-
-            // Populate the view.
-            PopulateView();
+            Refresh();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -84,18 +81,11 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>Refresh the grid.</summary>
+        /// <summary>Refresh the list</summary>
         public void Refresh()
         {
             DisconnectEvents();
-            PopulateView();
-            ConnectEvents();
-        }
-
-        /// <summary>Populate the view.</summary>
-        private void PopulateView()
-        {
-
+            
             // Give the table to the view.
             DataTable data = (_model as IListValues).Rows;
 
@@ -116,6 +106,8 @@ namespace UserInterface.Presenters
             {
                 _view.NumberSimulationsLabel.Text = $"Number of Rows: 0";
             }
+            
+            ConnectEvents();
         }
 
         /// <summary>
@@ -139,7 +131,7 @@ namespace UserInterface.Presenters
             if (!success || _maxEntries < 0)
                 _maxEntries = DEFAULT_MAX;
 
-            PopulateView();
+            Refresh();
         }
     }
 }

@@ -213,7 +213,10 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// 
+        /// Recreate the explorer tree view (that holds the file structure)
+        /// This will initialise the entire tree and rebuild it from scratch.
+        /// it may also cause other unexpected behaviour such as changing the 
+        /// scrollbar position. Any expanded nodes will remain expanded.
         /// </summary>
         public void RebuildTree()
         {

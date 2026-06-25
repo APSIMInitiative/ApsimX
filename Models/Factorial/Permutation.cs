@@ -26,10 +26,8 @@ namespace Models.Factorial
             var factors = new List<List<CompositeFactor>>();
             // recurse factor list to pick up any factors that are nested below any FactorFromFile component as a child of permutation.
             foreach (Factor factor in Node.FindChildren<Factor>(recurse: true))
-            {
                 if (factor.Enabled)
                     factors.Add(factor.GetCompositeFactors());
-            }
 
             foreach (FactorFromFile factor in Node.FindChildren<FactorFromFile>(recurse: true))
             {

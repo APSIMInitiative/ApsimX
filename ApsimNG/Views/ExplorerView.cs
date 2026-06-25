@@ -57,7 +57,8 @@ namespace UserInterface.Views
         public event EventHandler DividerChanged;
 
         /// <summary>
-        /// 
+        /// Remake the treeview from scratch, disposing of the existing one if 
+        /// it exists and putting the new one into the view.
         /// </summary>
         /// <param name="rootNode"></param>
         /// <param name="expandedNodes"></param>

@@ -53,6 +53,9 @@ namespace UserInterface.Presenters
                 item.Clicked += OnAddToPlaylist;
             }
 
+            // Once the simulation is finished, we will need to reset the disabled simulation names.
+            //runner.Finished += OnSimulationsCompleted;
+
             view.EnableAction.Clicked += OnEnable;
             view.DisableAction.Clicked += OnDisable;
             view.ExportToCSVAction.Clicked += OnExportCsv;

@@ -95,12 +95,41 @@ namespace Models.Factorial
         /// <summary>
         /// The types of columns within the CSV, used to help determine how to read the inputs.
         /// </summary>
-        private enum CommandType { None, Label, Replacement, Set, SetDate, Descriptor };
+        private enum CommandType 
+        { 
+            /// <summary>Does not fit a category, is ignored</summary>
+            None,
 
+            /// <summary>Column that is used as the CompositeFactor name</summary>
+            Label,
+
+            /// <summary>Value should be used to make a replacements command</summary>
+            Replacement,
+
+            /// <summary>A property should be set to the value</summary>
+            Set,
+
+            /// <summary>Values are dates and need to be converted before assigned to a property</summary>
+            SetDate,
+
+            /// <summary>Values can be used as experiment descriptors. Must not contain symbols or whitespace</summary>
+            Descriptor
+        };
+
+        /// <summary>
+        /// Filename to be used
+        /// </summary>
         private string _filename { get; set; } = null;
 
+        /// <summary>
+        /// A datatable of the csv that is read in, minus any columns that are 
+        /// listed as None. This is displayed in the gui
+        /// </summary>
         private DataTable _data { get; set; } = null;
 
+        /// <summary>
+        /// The list of commands that are generated
+        /// </summary>
         private List<string[]> _generatedCommands { get; set; } = null;
 
         /// <summary>
@@ -171,7 +200,10 @@ namespace Models.Factorial
             }
         }
 
-        /// <summary></summary>
+        /// <summary>
+        /// A datatable of the csv that is read in, minus any columns that are 
+        /// listed as None. This is displayed in the gui.
+        /// </summary>
         [JsonIgnore]
         public DataTable Rows
         {
@@ -183,7 +215,8 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// 
+        /// A list of all the commands used by FactorFromFile to generate the 
+        /// CompositeFactors that it creates.
         /// </summary>
         [JsonIgnore]
         public IEnumerable<string> Code
@@ -209,9 +242,10 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// 
+        /// Get the commands for one of the generated CompositeFactors, index
+        /// must be provided.
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="index">Index to return</param>
         /// <returns></returns>
         public IEnumerable<string> GetCommands(int index)
         {
@@ -230,7 +264,7 @@ namespace Models.Factorial
             return lines;
         }
 
-        /// <summary></summary>
+        /// <summary>Function for IReferenceExternalFiles</summary>
         public void RemovePathsFromReferencedFileNames()
         {
             FileName = Path.GetFileName(FileName);
