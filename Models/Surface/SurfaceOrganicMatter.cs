@@ -4,7 +4,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF;
