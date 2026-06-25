@@ -44,12 +44,7 @@ namespace UserInterface.Presenters
         /// This associates an ID with each property being displayed in
         /// the view, and the object to which that property belongs.
         /// </summary>
-        private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
-
-        /// <summary>
-        /// Provide the list of properties for category presenters to work with
-        /// </summary>
-        public Dictionary<Guid, PropertyObjectPair> GetPropertyMap { get { return propertyMap; } }
+        public Dictionary<Guid, PropertyObjectPair> PropertyMap { get; private set; } = new Dictionary<Guid, PropertyObjectPair>();
 
         /// <summary>
         /// Called when the view is refreshed
@@ -183,7 +178,7 @@ namespace UserInterface.Presenters
                             propertyRef = subProperty;
                         }
                     }
-                    propertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
+                    PropertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
                 }
             }
 
@@ -197,7 +192,6 @@ namespace UserInterface.Presenters
                     subModelProperties.Add(group);
                 }
             }
-
             string name = obj is IModel model ? model.Name : obj.GetType().Name;
             return new PropertyGroup(name, properties, subModelProperties);
         }
@@ -264,7 +258,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
         {
-            if (propertyMap.Values.Any(p => p.Model == changedModel))
+            if (PropertyMap.Values.Any(p => p.Model == changedModel))
                 RefreshView(model);
         }
 
@@ -280,8 +274,8 @@ namespace UserInterface.Presenters
             DisconnectEvents();
 
             // Figure out which property of which object is being changed.
-            PropertyInfo property = propertyMap[args.ID].Property;
-            object changedObject = propertyMap[args.ID].Model;
+            PropertyInfo property = PropertyMap[args.ID].Property;
+            object changedObject = PropertyMap[args.ID].Model;
 
             object newValue = args.NewValue;
 
@@ -330,16 +324,6 @@ namespace UserInterface.Presenters
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
             ConnectEvents();
-        }
-
-        /// <summary>
-        /// Stores a property and the object to which it belongs.
-        /// </summary>
-        public struct PropertyObjectPair
-        {
-            public object Model { get; set; }
-            public PropertyInfo Property { get; set; }
-            public CategoryAttribute Category { get; set; }
         }
     }
 }

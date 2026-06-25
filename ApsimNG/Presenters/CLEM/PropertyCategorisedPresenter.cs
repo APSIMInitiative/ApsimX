@@ -275,7 +275,7 @@ namespace UserInterface.Presenters
         {
             CategoryTree categories = new CategoryTree();
 
-            foreach (var propertyPair in (propertyPresenter as PropertyPresenter).GetPropertyMap.Values)
+            foreach (var propertyPair in (propertyPresenter as PropertyPresenter).PropertyMap.Values)
             {
 
                 if(propertyPair.Category is not null)
