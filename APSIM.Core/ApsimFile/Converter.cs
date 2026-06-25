@@ -8038,16 +8038,16 @@ internal class Converter
             if (surfaceOrganicMatter["InitialStandingFraction"] == null)
                 continue;
             // Check if the value is NaN and correct.
-            string initialStandingFraction = surfaceOrganicMatter["InitialStandingFraction"].ToString();
-            if (initialStandingFraction.Equals("NaN"))
-                surfaceOrganicMatter["InitialStandingFraction"] = 0.0;
-            
-            // Reset the value to be within valid bounds.
-            Double.TryParse(initialStandingFraction, out double initialStandingFractionDouble);
-            if (initialStandingFractionDouble > 1)
-                surfaceOrganicMatter["InitialStandingFraction"] = 1.0;
-            if (initialStandingFractionDouble < 0)
-                surfaceOrganicMatter["InitialStandingFraction"] = 0.0;
+            JToken token = surfaceOrganicMatter["InitialStandingFraction"];
+            double value;
+            if (token.Type == JTokenType.Float || token.Type == JTokenType.Integer)
+                value = token.Value<double>();
+            else if (token.Type == JTokenType.String && string.Equals(token.ToString(), "NaN", StringComparison.OrdinalIgnoreCase))
+                value = 0.0;
+            else if (!double.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                continue;
+            // Constrains the value to within the lower and upper values.
+            surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
         }
     }
    
