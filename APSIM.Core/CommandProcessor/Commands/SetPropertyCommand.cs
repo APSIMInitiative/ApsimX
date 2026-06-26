@@ -91,11 +91,19 @@ public partial class SetPropertyCommand : IModelCommand
                 {
                     VariableComposite reference = null;
                     //check if this might be a model reference
-                    if ((propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']')) || propertyValue.Trim().StartsWith('.'))
+                    if (propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']'))
                         reference = relativeTo.Node.GetObject(propertyValue);
 
                     if (reference != null)
-                        instance.Value = reference.Value;
+                    {
+                        Type type = instance.Property.PropertyType;
+                        if (type == typeof(string))
+                            instance.Value = propertyValue.Trim();
+                        else if (type.IsPrimitive)
+                            instance.Value = ApsimConvert.ToType(reference.Value, instance.DataType);
+                        else
+                            instance.Value = reference.Value;
+                    }
                     else
                         instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
                 }
