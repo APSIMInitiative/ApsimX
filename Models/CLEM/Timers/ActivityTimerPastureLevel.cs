@@ -50,7 +50,7 @@ namespace Models.CLEM.Timers
         /// paddock or pasture to graze
         /// </summary>
         [JsonIgnore]
-        public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
+        public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
         /// Minimum pasture level
@@ -77,7 +77,7 @@ namespace Models.CLEM.Timers
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
