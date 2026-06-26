@@ -1,3 +1,4 @@
+using System.ServiceModel;
 using Newtonsoft.Json;
 
 namespace APSIM.Core;
@@ -86,17 +87,17 @@ public partial class SetPropertyCommand : IModelCommand
                 {
                     instance.Value = null;
                 }
-                else if (propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']'))
+                else
                 {
-                    VariableComposite reference = relativeTo.Node.GetObject(propertyValue);
+                    VariableComposite reference = null;
+                    //check if this might be a model reference
+                    if ((propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']')) || propertyValue.Trim().StartsWith('.'))
+                        reference = relativeTo.Node.GetObject(propertyValue);
+
                     if (reference != null)
                         instance.Value = reference.Value;
                     else
-                        throw new Exception($"Cannot find reference to {propertyValue} in set command {this}");
-                }
-                else
-                {
-                    instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                        instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
                 }
             }
             else
