@@ -32,7 +32,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[IPlant]",
-                  "Name": "Factor",
+                  "Name": "Models",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -350,8 +350,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1990-10-10",
-                              "Action": "[IPlant].Sow(population: 1, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)",
-                              "Line": "1990-10-10 [IPlant].Sow(population: 1, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)"
+                              "Action": "[IPlant].Sow(population: 100, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)",
+                              "Line": "1990-10-10 [IPlant].Sow(population: 100, cultivar: \"Hartog\", depth: 5, rowSpacing: 150)"
                             }
                           ],
                           "Name": "Operations",
@@ -1232,7 +1232,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1310,7 +1310,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1378,7 +1378,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
@@ -1446,7 +1446,7 @@
               "XAxis": 3,
               "YAxis": 0,
               "ColourArgb": 0,
-              "FactorToVaryColours": "Factor",
+              "FactorToVaryColours": "Models",
               "FactorToVaryMarkers": null,
               "FactorToVaryLines": null,
               "Marker": 11,
