@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 218; } }
+    public static int LatestVersion { get { return 219; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7991,6 +7991,8 @@ internal class Converter
             node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(endMonth)))); //new AgeSpecifier(endMonth))));
         }
     }
+
+
     private static JObject createCLEMAgeSpecifier(decimal value)
     {
         int[] parts;
@@ -8019,6 +8021,36 @@ internal class Converter
         return JObject.Parse(newAgeSpecifier);
     }
 
+
+    /// <summary>
+    /// Rounds out of range InitialStandingFraction values to either 0 or 1.
+    /// Also changes any NaN values to 0.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion219(JObject root, string fileName)
+    {
+        foreach (JObject surfaceOrganicMatter in JsonUtilities.ChildrenOfType(root, "SurfaceOrganicMatter"))
+        {
+            // APSIMTests.cs fails if you look for InitialStandingFraction in SurfaceOrganicMatter.
+            // The Simulations version is retrieved from an old XML version and doesn't appear to have this property,
+            // so we should skip these models.
+            if (surfaceOrganicMatter["InitialStandingFraction"] == null)
+                continue;
+            // Check if the value is NaN and correct.
+            JToken token = surfaceOrganicMatter["InitialStandingFraction"];
+            double value;
+            if (token.Type == JTokenType.Float || token.Type == JTokenType.Integer)
+                value = token.Value<double>();
+            else if (token.Type == JTokenType.String && string.Equals(token.ToString(), "NaN", StringComparison.OrdinalIgnoreCase))
+                value = 0.0;
+            else if (!double.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                continue;
+            // Constrains the value to within the lower and upper values.
+            surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
+        }
+    }
+   
 }
 
 
