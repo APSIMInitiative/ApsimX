@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
 
             // units provided from Material (PMF.Biomass) are g per m2, so need to be converted to kg/ha here (x10)
             // this is performed in SimpleGrazing.ZoneWithForage where amount to remove in kh/ha is converted to g m-2 before removal
-
+            intakeStoreRequests.Clear();
             totalWt = 0;
             consumableWt = 0;
             biomassConsumed = 0;
@@ -423,7 +423,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
-            double convertToKg = 10.0 * paddock.Area;
+
+
+            double convertToKgInPaddock = 10.0 * paddock.Area;
             double convert = (tonnes ? 1000 : 1) * (hectares ? paddock.Area : 1);
             double valueToUse = 0;
             switch (grazeProperty)
@@ -431,21 +433,21 @@ namespace Models.CLEM.Resources
                 case "Amount":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt)) * convertToKg / convert;
+                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {
-                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt)) * convertToKg / convert;
+                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
                     }
                     break;
                 case "AmountConsumable":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt)) * convertToKg / convert;
+                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {
-                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt)) * convertToKg / convert;
+                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
                     }
                     break;
                 case "Growth":
