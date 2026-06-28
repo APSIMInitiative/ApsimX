@@ -41,8 +41,8 @@ namespace Models.CLEM.Resources
             Name = biomassModel.Material.FirstOrDefault().Name;
             this.biomassModel = biomassModel;
             feedDetails = new FoodResourcePacket(details);
-            amount = biomassModel.Material.Sum(a => a.Consumable.Wt) * gm2Tokgha * area;
-            nitrogen = biomassModel.Material.Sum(a => a.Consumable.N) * gm2Tokgha * area;
+            amount = biomassModel.Material.Sum(a => a.Consumable.Wt * gm2Tokgha) * area;
+            nitrogen = biomassModel.Material.Sum(a => a.Consumable.N * gm2Tokgha) * area;
 
             double totalDMD = 0;
             double totalWt = 0;
