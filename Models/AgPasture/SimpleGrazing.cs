@@ -1,16 +1,17 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
+using APSIM.Core;
+using APSIM.Numerics;
+using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.ForageDigestibility;
+using Models.Functions;
+using Models.Interfaces;
+using Models.PMF.Interfaces;
 using Models.Soils;
 using Models.Surface;
-using Models.Functions;
-using Models.PMF.Interfaces;
-using Models.ForageDigestibility;
 using Newtonsoft.Json;
-using APSIM.Shared.Utilities;
-using APSIM.Numerics;
-using APSIM.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Models.AgPasture
@@ -404,6 +405,43 @@ namespace Models.AgPasture
         /// <summary>Divisor for reporting</summary>
         public double DivisorForReporting => urineDungPatches == null ? 0 : urineDungPatches.DivisorForReporting;
 
+        /////////////// Interface with other models ////////////////////
+
+        private ExternalLivestockSupplyAndDemand externalInputsAndRemovals = new();
+
+        /// <summary>
+        /// Method for external livestock model to set the daily urine and dung deposited into paddock
+        /// </summary>
+        /// <param name="urineN">Urine nitrogen</param>
+        /// <param name="dungN">Dung nitrogen</param>
+        /// <param name="dungDM">Dung DM weight</param>
+        /// <param name="numberOfUrinations">Number of urinations</param>
+        public void ProvideExternalLivestockInputs(double urineN, double dungN, double dungDM, int numberOfUrinations)
+        {
+            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals.SetDungAndUrine(urineN, dungN, dungDM, numberOfUrinations);
+        }
+
+        /// <summary>
+        /// Method for external livestock model to set the daily amount consumed for paddock
+        /// </summary>
+        /// <param name="amount">Amount to remove</param>
+        /// <param name="proportions">Proportions of each pool</param>
+        public void ProvideExternalLivestockConsumption(double amount, double[] proportions = null)
+        {
+            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals.SetOfftake(amount, proportions);
+        }
+
+        /// <summary>
+        /// A method to state that no grazing is happening from the external livestock models.
+        /// </summary>
+        public void ProvideExternalLivestockNoGrazing()
+        {
+            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals.Clear();
+        }
+
         ////////////// Methods //////////////
 
         /// <summary>
@@ -475,6 +513,7 @@ namespace Models.AgPasture
                 numForages = zones.Where(z => z.Zone == this.Parent).First().NumForages;
 
             speciesCutProportions = MathUtilities.CreateArrayOfValues(1.0, numForages);
+            externalInputsAndRemovals.SpeciesProportionToTake = speciesCutProportions;
 
             if (SimpleGrazingFrequencyString != null && SimpleGrazingFrequencyString.Equals("end of month", StringComparison.InvariantCultureIgnoreCase))
                 simpleGrazingFrequency = 0;
@@ -532,6 +571,12 @@ namespace Models.AgPasture
 
             // Determine if we can graze today.
             GrazedToday = false;
+            if (externalInputsAndRemovals?.PastureRequested ?? false)
+            {
+                GrazedToday = true;
+                GrazeToResidual(residualBiomass);
+                return; // need to avoid the if NoGrazingStartString statement setting GrazedToday to false
+            }
             if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
                 GrazedToday = SimpleRotation();
             else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
@@ -557,7 +602,16 @@ namespace Models.AgPasture
             DaysSinceGraze = 0;
 
             foreach (var zone in zones)
-                zone.RemoveDMFromPlants(residual, speciesCutProportions);
+            {
+                if (externalInputsAndRemovals?.PastureRequested?? false) // override the residual with the requested amount if it is set
+                {
+                    zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, speciesCutProportions, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
+                }
+                else
+                {
+                    zone.RemoveDMFromPlants(residual, speciesCutProportions, ZoneWithForage.StyleOfPastureRemoval.GrazeToResidual);
+                }
+            }
 
             if (IsDungUrineReturnOn)
                 DoUrineDungTrampling();
@@ -596,7 +650,28 @@ namespace Models.AgPasture
             // If SimpleCow is in the simulation then call it to get urine and dung N return
             int numberUrinations;
 
-            if (simpleCow != null)
+            // if external urine and dung is available then use that for values
+            if (externalInputsAndRemovals is not null && externalInputsAndRemovals.PastureRequested)
+            {
+                double urineN = externalInputsAndRemovals.UrineNitrogen;
+                double dungN = externalInputsAndRemovals.DungNitrogen;
+                double dungWt = externalInputsAndRemovals.DungMass;
+                numberUrinations = externalInputsAndRemovals.NumberOfUrinations;
+
+                // Apply fraction of dung and urine to lanes, gateways etc.
+                ApplyOffPaddockAndElsewhereFractions(ref urineN, ref dungN, ref dungWt);
+
+                // Perform urine/dung trampling. If patching is turned on then only
+                // send to first zone, otherwise to all zones.
+                if (UsePatching)
+                    zones.First().DoUrineDungTrampling(urineN, dungN, dungWt, numberUrinations);
+                else
+                {
+                    foreach (var zone in zones)
+                        zone.DoUrineDungTrampling(urineN, dungN, dungWt, numberUrinations);
+                }
+            }
+            else if (simpleCow != null)
             {
                 // SIMPLECOW is in simulation. It calculates urine and dung N.
                 var (numUrinations, urineNSimpleCow, dungNSimpleCow) = simpleCow.OnGrazed(GrazedDM, GrazedME, GrazedN);
@@ -848,6 +923,18 @@ namespace Models.AgPasture
             /// <summary>Area weighted nitrogen in uring (kg N/ha)</summary>
             public double AmountUrineNReturned => amountUrineNReturned * areaWeighting;
 
+            public enum StyleOfPastureRemoval
+            {
+                /// <summary>
+                /// Graze down the the amount specified
+                /// </summary>
+                GrazeToResidual,
+                /// <summary>
+                /// Graze the amount specified
+                /// </summary>
+                GrazeByAmount
+            }
+
             /// <summary>
             /// Called at start of day.
             /// </summary>
@@ -878,15 +965,22 @@ namespace Models.AgPasture
             }
 
             /// <summary>Remove biomass from the specified forage.</summary>
-            /// <param name="residual">The residual to cut to (kg/ha).</param>
+            /// <param name="amount">The amount (kg/ha).</param>
             /// <param name="speciesCutProportions">The proportions to cut each species.</param>
-            public void RemoveDMFromPlants(double residual, double[] speciesCutProportions)
+            /// <param name="removalStyle">
+            /// Specifies cutting to amount representing residual, or remove amount specified
+            /// </param>
+            public void RemoveDMFromPlants(double amount, double[] speciesCutProportions, StyleOfPastureRemoval removalStyle)
             {
                 // This is a simple implementation. It proportionally removes biomass from organs.
                 // What about non harvestable biomass?
                 // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
                 double preGrazeDM = forages.Sum(f => f.Material.Sum(m => m.Total.Wt * 10));
-                double removeAmount = Math.Max(0, preGrazeDM - residual) / 10; // to g/m2
+                double removeAmount = amount / 10; // to g/m2
+                if (removalStyle == StyleOfPastureRemoval.GrazeToResidual)
+                {
+                    removeAmount = Math.Max(0, preGrazeDM - amount) / 10; // to g/m2
+                }
 
                 dmRemovedToday = removeAmount;
                 if (MathUtilities.IsGreaterThan(removeAmount, 0.0))
