@@ -354,7 +354,7 @@ namespace Models.CLEM.Activities
             DailyPastureTaken = 0;
             for (int i = 0; i < currentHerdSize; i++)
             {
-                double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier;
+                double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier; // daily take
                 if (imposeGreenLimit && group.ProportionGreen > 0.9 && PotentialIntakeProportionGreenLimit < 1.0)
                 {
                     indDailyGreenIntakeRemaining[i] -= amountToEat;
@@ -502,7 +502,7 @@ namespace Models.CLEM.Activities
                 double urineN = apsimLink.ConvertToPerHaPerDay(herdToFeed.Sum(a => a.Output.NitrogenUrine), events.Interval);
                 double dung = apsimLink.ConvertToPerHaPerDay(herdToFeed.Sum(a => a.Output.Manure), events.Interval);
                 double dungN = apsimLink.ConvertToPerHaPerDay(herdToFeed.Sum(a => a.Output.NitrogenFaecal), events.Interval);
-                int numberOfUrinations = (int)Math.Ceiling(apsimLink.ConvertToPerHaPerDay(herdToFeed.Count * 5.0, events.Interval)); // how do we estimate this
+                int numberOfUrinations = (int)Math.Ceiling(apsimLink.ConvertToPerHaPerDay(herdToFeed.Count * 5.0 * events.Interval, events.Interval)); // how do we estimate this. this assumes 5 per individual per day
 
                 apsimLink.SimpleGrazingModel?.ProvideExternalLivestockInputs(urineN, dungN, dung, numberOfUrinations);
             }
