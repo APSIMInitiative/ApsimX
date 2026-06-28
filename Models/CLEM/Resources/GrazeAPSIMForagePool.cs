@@ -20,6 +20,7 @@ namespace Models.CLEM.Resources
         private IFeed feedDetails;
         private double amount = 0;
         private double nitrogen = 0;
+        private const double gm2Tokgha = 10.0;
 
         /// <summary>
         /// Provides the model with digestibile biomass associated with this pool
@@ -37,33 +38,25 @@ namespace Models.CLEM.Resources
         /// <param name="area"></param>
         public GrazeAPSIMForagePool(GrazeFoodStoreAPSIMLink details, ModelWithDigestibleBiomass biomassModel, Forages forages, double area)
         {
+            Name = biomassModel.Material.FirstOrDefault().Name;
             this.biomassModel = biomassModel;
             feedDetails = new FoodResourcePacket(details);
-            amount = biomassModel.Material.Sum(a => a.Consumable.Wt) * area;
-            nitrogen = biomassModel.Material.Sum(a => a.Consumable.N) * area;
-
+            amount = biomassModel.Material.Sum(a => a.Consumable.Wt) * gm2Tokgha * area;
+            nitrogen = biomassModel.Material.Sum(a => a.Consumable.N) * gm2Tokgha * area;
 
             double totalDMD = 0;
             double totalWt = 0;
-            foreach (var liveAndDead in biomassModel.Material.Where(a => a.Consumable.Wt > 0).GroupBy(a => a.Name).Select(a => new { Live = a.Where(b => b.IsLive).FirstOrDefault(), Dead = a.Where(b => !b.IsLive).FirstOrDefault() }))
+
+            foreach (var material in biomassModel.Material)
             {
-                Name = liveAndDead.Live?.Name ?? liveAndDead.Dead.Name;
-                if (liveAndDead.Live is not null && liveAndDead.Dead is null)
-                {
-                    throw new Exception($"Cannot find dead material for {liveAndDead.Live.Name}.");
-                }
-                if (liveAndDead.Live is not null && liveAndDead.Live.Total.Wt > 0)
-                {
-                    totalDMD += (forages.GetDigestibility(liveAndDead.Live) * liveAndDead.Live.Consumable.StructuralWt) + (1 * liveAndDead.Live.Consumable.StorageWt) + (1 * liveAndDead.Live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-                    totalWt += liveAndDead.Live.Total.Wt;
-                }
-                if ( liveAndDead.Dead is not null && liveAndDead.Dead.Total.Wt > 0)
-                {
-                    totalDMD += (forages.GetDigestibility(liveAndDead.Dead) * liveAndDead.Dead.Consumable.StructuralWt) + (1 * liveAndDead.Dead.Consumable.StorageWt) + (1 * liveAndDead.Dead.Consumable.MetabolicWt);
-                    totalWt += liveAndDead.Dead.Total.Wt;
-                }
-                // Note from Stock: we can find the dmd of structural, assume storage and metabolic are 100% digestible
+                totalDMD += (forages.GetDigestibility(material) * material.Consumable.StructuralWt) + (1 * material.Consumable.StorageWt) + (1 * material.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                totalWt += material.Total.Wt;
             }
+
+            // Note: Previous code from Stock uses dmd of structural, assume storage and metabolic are 100% digestible
+            // ToDo: still need to find the FromModel DMD provided by AgPasture models
+            // the previous approach was taken from Stock, ensured there was a dead material available for every live material but SimpleGrazing in AgPasture example throws a "Cannot find dead material error" so simplified to just work with any material present
+
             feedDetails.DryMatterDigestibility = totalDMD / totalWt * 100;
             feedDetails.MetabolisableEnergyContent = 0;  //16.0 * (feedDetails.DryMatterDigestibility / 100.0); from APSIM or use calcs from CLEM foodReesourcePacket
             feedDetails.GutFill = details.CalculateGutFill(feedDetails.DryMatterDigestibility);
