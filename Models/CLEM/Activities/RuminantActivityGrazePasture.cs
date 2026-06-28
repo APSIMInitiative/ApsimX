@@ -192,31 +192,6 @@ namespace Models.CLEM.Activities
                 grazeHerd.CreateResourceRequest();
                 grazeHerd.PotentialIntakeShortfallLimiter = grazeHerd.CalculatePotentialShortfallLimiter();
             }
-
-            // looking at form of relationships for lowbiomass and greenpasture modifiers, I don't think there is much scope to take more intake if still not satisfied
-
-            // determine if individuals can still feed by order of least overhead
-            // if StrictFeedingLimits = false - individuals can eat beyond the green limit if needed
-            // if green proportion < 1 - there was a green limit imposed
-            // there is still feed in green pools
-            // if individual unsatisfied - still demands feed
-
-            /*            foreach (RuminantActivityGrazePastureHerd grazeHerd in grazeHerdChildren)
-                        {
-                            if (grazeHerd.RuminantTypeModel.Parameters.Grazing.StrictFeedingLimits)
-                                continue;
-                            if (grazeHerd.PotentialIntakeGreenPastureLimiter >= 1.0)
-                                continue;
-
-                            foreach (var poolGroup in poolGroups.Where(a => a.ProportionGreen > 0.9 && a.Pools.Sum(b => b.AmountAvailable) > 0))
-                            {
-                                if (grazeHerd.DailyPastureTaken >= grazeHerd.DailyPastureRequired)
-                                    continue;
-
-                                throw new NotImplementedException("Second take from green pools is not enabled in current version");
-                            }
-                        }*/
-
             return ResourceRequestList;
         }
 
