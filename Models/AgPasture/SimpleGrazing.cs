@@ -605,7 +605,7 @@ namespace Models.AgPasture
             {
                 if (externalInputsAndRemovals.UrineDungDeposited) // override the residual with the requested amount if it is set
                 {
-                    zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, speciesCutProportions, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
+                    zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, externalInputsAndRemovals.SpeciesProportionToTake, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
                 }
                 else
                 {
