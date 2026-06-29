@@ -418,7 +418,6 @@ namespace Models.AgPasture
         /// <param name="numberOfUrinations">Number of urinations</param>
         public void ProvideExternalLivestockInputs(double urineN, double dungN, double dungDM, int numberOfUrinations)
         {
-            externalInputsAndRemovals = new();
             externalInputsAndRemovals.SetDungAndUrine(urineN, dungN, dungDM, numberOfUrinations);
         }
 
@@ -429,7 +428,6 @@ namespace Models.AgPasture
         /// <param name="proportions">Proportions of each pool</param>
         public void ProvideExternalLivestockConsumption(double amount, double[] proportions = null)
         {
-            externalInputsAndRemovals = new();
             externalInputsAndRemovals.SetOfftake(amount, proportions);
         }
 
@@ -438,7 +436,6 @@ namespace Models.AgPasture
         /// </summary>
         public void ProvideExternalLivestockNoGrazing()
         {
-            externalInputsAndRemovals = new();
             externalInputsAndRemovals.Clear();
         }
 
@@ -571,7 +568,7 @@ namespace Models.AgPasture
 
             // Determine if we can graze today.
             GrazedToday = false;
-            if (externalInputsAndRemovals.PastureRequested == false)
+            if (externalInputsAndRemovals.PastureRequested)
             {
                 GrazedToday = true;
                 GrazeToResidual(residualBiomass);
@@ -606,7 +603,7 @@ namespace Models.AgPasture
 
             foreach (var zone in zones)
             {
-                if (externalInputsAndRemovals.PastureRequested == false) // override the residual with the requested amount if it is set
+                if (externalInputsAndRemovals.UrineDungDeposited) // override the residual with the requested amount if it is set
                 {
                     zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, speciesCutProportions, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
                 }
