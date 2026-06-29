@@ -36,19 +36,23 @@
         /// </summary>
         /// <param name="amount"></param>
         /// <param name="speciesProportions"></param>
-        public void SetOfftake(double amount, double[] speciesProportions)
+        public void SetOfftake(double amount, double[] speciesProportions = null)
         {
             BiomassRequested = amount;
-            SpeciesProportionToTake = speciesProportions;
+            if (speciesProportions != null)
+            {
+                // forced setting of species proportions
+                this.speciesProportions = speciesProportions;
+            }
         }
 
         /// <summary>
-        /// Detemerines whether pasture was requested by external livesotck
+        /// Determines whether pasture was requested by external livestock
         /// </summary>
         public bool PastureRequested => BiomassRequested > 0;
 
         /// <summary>
-        /// Detemerines whether urine or dung were deposited
+        /// Determines whether urine or dung were deposited
         /// </summary>
         public bool UrineDungDeposited => UrineNitrogen + DungNitrogen > 0;
 
@@ -63,7 +67,7 @@
         public double UrineNitrogen { get; set; }
 
         /// <summary>
-        /// Number of urninations
+        /// Number of urinations
         /// </summary>
         public int NumberOfUrinations { get; set; }
 
@@ -82,6 +86,7 @@
         /// </summary>
         public double[] SpeciesProportionToTake
         {
+            // cannot overwrite value already provided by the user.
             get
             {
                 return speciesProportions;
@@ -90,7 +95,9 @@
             set
             {
                 if (speciesProportions is null)
+                {
                     speciesProportions = value;
+                }
             }
         }
 
@@ -104,7 +111,6 @@
             DungMass = 0;
             NumberOfUrinations = 0;
             BiomassRequested = 0;
-            speciesProportions = [];
         }
     }
 }
