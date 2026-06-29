@@ -144,7 +144,13 @@ namespace Models.AgPasture
         public void Update()
         {
             dryMatter.Wt += DMTransferredIn - DMTransferredOut;
+            if (MathUtilities.FloatsAreEqual(dryMatter.Wt, 0))
+                dryMatter.Wt = 0;
+
             dryMatter.N += NTransferredIn - (NTransferredOut + NRemobilised);
+            if (MathUtilities.FloatsAreEqual(dryMatter.N, 0))
+                dryMatter.N = 0;
+
             if (dryMatter.Wt < 0)
                 throw new Exception($"{species.Name} {Name} tissue has negative dry matter");
             if (dryMatter.N < 0)

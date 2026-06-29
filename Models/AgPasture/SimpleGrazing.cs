@@ -571,7 +571,6 @@ namespace Models.AgPasture
             if (externalInputsAndRemovals.PastureRequested)
             {
                 GrazedToday = true;
-                GrazeToResidual(residualBiomass);
             }
             else
             {
@@ -586,12 +585,12 @@ namespace Models.AgPasture
                     NoGrazingEndString != null && NoGrazingEndString.Length > 0 &&
                     DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
                     GrazedToday = false;
-
-                // Perform grazing if necessary.
-                if (GrazedToday)
-                    GrazeToResidual(residualBiomass);
             }
-            
+
+            // Perform grazing if necessary.
+            if (GrazedToday)
+                GrazeToResidual(residualBiomass);
+
         }
 
         /// <summary>Perform grazing.</summary>
