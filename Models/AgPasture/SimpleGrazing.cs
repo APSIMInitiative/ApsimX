@@ -418,7 +418,7 @@ namespace Models.AgPasture
         /// <param name="numberOfUrinations">Number of urinations</param>
         public void ProvideExternalLivestockInputs(double urineN, double dungN, double dungDM, int numberOfUrinations)
         {
-            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals = new();
             externalInputsAndRemovals.SetDungAndUrine(urineN, dungN, dungDM, numberOfUrinations);
         }
 
@@ -429,7 +429,7 @@ namespace Models.AgPasture
         /// <param name="proportions">Proportions of each pool</param>
         public void ProvideExternalLivestockConsumption(double amount, double[] proportions = null)
         {
-            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals = new();
             externalInputsAndRemovals.SetOfftake(amount, proportions);
         }
 
@@ -438,7 +438,7 @@ namespace Models.AgPasture
         /// </summary>
         public void ProvideExternalLivestockNoGrazing()
         {
-            externalInputsAndRemovals ??= new();
+            externalInputsAndRemovals = new();
             externalInputsAndRemovals.Clear();
         }
 
@@ -571,27 +571,30 @@ namespace Models.AgPasture
 
             // Determine if we can graze today.
             GrazedToday = false;
-            if (externalInputsAndRemovals?.PastureRequested ?? false)
+            if (externalInputsAndRemovals.PastureRequested == false)
             {
                 GrazedToday = true;
                 GrazeToResidual(residualBiomass);
-                return; // need to avoid the if NoGrazingStartString statement setting GrazedToday to false
             }
-            if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
-                GrazedToday = SimpleRotation();
-            else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
-                GrazedToday = TargetMass();
-            else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
-                GrazedToday = FlexibleTiming();
+            else
+            {
+                if (GrazingRotationType == GrazingRotationTypeEnum.SimpleRotation)
+                    GrazedToday = SimpleRotation();
+                else if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
+                    GrazedToday = TargetMass();
+                else if (GrazingRotationType == GrazingRotationTypeEnum.Flexible)
+                    GrazedToday = FlexibleTiming();
 
-            if (NoGrazingStartString != null && NoGrazingStartString.Length > 0 &&
-                NoGrazingEndString != null && NoGrazingEndString.Length > 0 &&
-                DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
-                GrazedToday = false;
+                if (NoGrazingStartString != null && NoGrazingStartString.Length > 0 &&
+                    NoGrazingEndString != null && NoGrazingEndString.Length > 0 &&
+                    DateUtilities.WithinDates(NoGrazingStartString, clock.Today, NoGrazingEndString))
+                    GrazedToday = false;
 
-            // Perform grazing if necessary.
-            if (GrazedToday)
-                GrazeToResidual(residualBiomass);
+                // Perform grazing if necessary.
+                if (GrazedToday)
+                    GrazeToResidual(residualBiomass);
+            }
+            
         }
 
         /// <summary>Perform grazing.</summary>
@@ -603,7 +606,7 @@ namespace Models.AgPasture
 
             foreach (var zone in zones)
             {
-                if (externalInputsAndRemovals?.PastureRequested?? false) // override the residual with the requested amount if it is set
+                if (externalInputsAndRemovals.PastureRequested == false) // override the residual with the requested amount if it is set
                 {
                     zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, speciesCutProportions, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
                 }
@@ -651,7 +654,7 @@ namespace Models.AgPasture
             int numberUrinations;
 
             // if external urine and dung is available then use that for values
-            if (externalInputsAndRemovals is not null && externalInputsAndRemovals.PastureRequested)
+            if (externalInputsAndRemovals.PastureRequested)
             {
                 double urineN = externalInputsAndRemovals.UrineNitrogen;
                 double dungN = externalInputsAndRemovals.DungNitrogen;

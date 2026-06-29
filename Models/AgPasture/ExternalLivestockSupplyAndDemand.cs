@@ -1,11 +1,4 @@
-﻿using Docker.DotNet.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models.AgPasture
+﻿namespace Models.AgPasture
 {
     /// <summary>
     /// Manages any amounts taken or provided from external livestock models to drive the forage removal and
@@ -13,7 +6,15 @@ namespace Models.AgPasture
     /// </summary>
     public class ExternalLivestockSupplyAndDemand
     {
-        private double[] speciesProportions = null;
+        private double[] speciesProportions;
+
+        /// <summary>
+        /// Basic Constructor
+        /// </summary>
+        public ExternalLivestockSupplyAndDemand()
+        {
+            Clear();
+        }
 
         /// <summary>
         /// Specify daily urine and dung details
@@ -103,6 +104,7 @@ namespace Models.AgPasture
             DungMass = 0;
             NumberOfUrinations = 0;
             BiomassRequested = 0;
+            speciesProportions = [];
         }
     }
 }
