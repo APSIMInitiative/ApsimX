@@ -27,6 +27,7 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private ResourcesHolder resources = null;
+        private string nameOfManagedPastureFound = "";
 
         /// <summary>
         /// Managed pasture to move to
@@ -36,9 +37,9 @@ namespace Models.CLEM.Resources
         public string ManagedPastureName { get; set; } = "Not specified";
 
         /// <summary>
-        /// Managed pasture to move to
+        /// Name of model linked to ManagedPastureName that individuals will be moved to.
         /// </summary>
-        public GrazeFoodStoreType ManagedPasture { get; set; }
+        public string NameOfManagedPastureForLocation => nameOfManagedPastureFound;
 
         /// <summary>
         /// Determines if any SetPreviousConception components were found
@@ -65,7 +66,8 @@ namespace Models.CLEM.Resources
         {
             if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
             {
-                ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                CLEMModel managedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as CLEMModel;
+                nameOfManagedPastureFound = managedPasture?.Name ?? "";
             }
 
             foreach (FileRuminantCohorts cohortsReader in Structure.FindChildren<FileRuminantCohorts>().ToList())

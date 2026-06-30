@@ -227,9 +227,9 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    if (this.Parent is RuminantInitialCohorts initCohorts && initCohorts.ManagedPasture is not null)
+                    if (this.Parent is RuminantInitialCohorts initCohorts && initCohorts.NameOfManagedPastureForLocation != "")
                     {
-                        newIndividual.Location = initCohorts.ManagedPasture.Name;
+                        newIndividual.Location = initCohorts.NameOfManagedPastureForLocation;
                     }
                 }
                 individuals.Add(newIndividual);
