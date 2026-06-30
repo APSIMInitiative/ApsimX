@@ -88,6 +88,8 @@ namespace UserInterface.Presenters
             
             // Give the table to the view.
             DataTable data = (_model as IListValues).Rows;
+            if (data == null)
+                data = new DataTable();
 
             //Trim the data table down to the max entries to show
             DataTable dataTrimmed = data.Clone();
