@@ -1,5 +1,6 @@
 using APSIM.Shared;
 using APSIM.Shared.Utilities;
+using Models.Core;
 
 namespace APSIM.Core;
 
@@ -550,6 +551,7 @@ public class Node : IStructure
             foreach (var node in Walk())
                 node.IsInitialising = true;
 
+            List<IGenerateNodes> generateNodes = new List<IGenerateNodes>();
             foreach (Node node in Walk().Where(n => n.Model is ICreatable))
             {
                 try
@@ -588,6 +590,7 @@ public class Node : IStructure
         childNode.scope = scope;
         childNode.locator = locator;
         childModel.Node = childNode;
+        childModel.ReadOnly = false;
 
         // Resolves child dependencies.
         ResolvesDependencies(childNode);

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 217,
+  "Version": 219,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15,7 +15,7 @@
             "Transparent": false,
             "ID": 0,
             "Name": "Inert",
-            "Location": "850, 100",
+            "Location": "708, 382",
             "Colour": "0, 158, 115"
           },
           {
@@ -24,7 +24,7 @@
             "Transparent": false,
             "ID": 0,
             "Name": "FOMLignin",
-            "Location": "350, 100",
+            "Location": "479, 108",
             "Colour": "0, 158, 115"
           },
           {
@@ -33,7 +33,7 @@
             "Transparent": false,
             "ID": 0,
             "Name": "FOMCellulose",
-            "Location": "600, 100",
+            "Location": "706, 103",
             "Colour": "0, 158, 115"
           },
           {
@@ -42,7 +42,7 @@
             "Transparent": false,
             "ID": 0,
             "Name": "FOMCarbohydrate",
-            "Location": "100, 100",
+            "Location": "268, 103",
             "Colour": "0, 158, 115"
           },
           {
@@ -51,7 +51,7 @@
             "Transparent": false,
             "ID": 0,
             "Name": "Microbial",
-            "Location": "100, 350",
+            "Location": "217, 390",
             "Colour": "0, 158, 115"
           },
           {
@@ -60,7 +60,52 @@
             "Transparent": false,
             "ID": 0,
             "Name": "Humic",
-            "Location": "600, 350",
+            "Location": "449, 379",
+            "Colour": "0, 158, 115"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
+            "Name": "Urea",
+            "Location": "709, 562",
+            "Colour": "86, 180, 233"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
+            "Name": "NO3",
+            "Location": "219, 553",
+            "Colour": "86, 180, 233"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
+            "Name": "NH4",
+            "Location": "456, 551",
+            "Colour": "86, 180, 233"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": true,
+            "ID": 0,
+            "Name": "Atmosphere",
+            "Location": "226, 750",
+            "Colour": "Beige"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
+            "Name": "SurfaceResidue",
+            "Location": "65, 105",
             "Colour": "0, 158, 115"
           }
         ],
@@ -69,100 +114,155 @@
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "225, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "259, 221",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "475, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "412, 196",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "350, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "395, 235",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "600, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "604, 282",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "100, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "187, 227",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "350, 225",
-            "Colour": ""
+            "Name": null,
+            "Location": "329, 173",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "100, 350",
-            "Colour": ""
+            "Name": null,
+            "Location": "340, 471",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "350, 350",
-            "Colour": ""
+            "Name": null,
+            "Location": "345, 400",
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
             "SourceID": 0,
             "DestinationID": 0,
-            "Conditions": [],
-            "Actions": [],
+            "Conditions": null,
+            "Actions": null,
             "ID": 0,
-            "Name": "",
-            "Location": "350, 350",
-            "Colour": ""
+            "Name": null,
+            "Location": "334, 340",
+            "Colour": "Black"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
+            "Location": "578, 491",
+            "Colour": "Black"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
+            "Location": "126, 634",
+            "Colour": "Black"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
+            "Location": "327, 466",
+            "Colour": "Black"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
+            "Location": "82, 264",
+            "Colour": "Black"
+          },
+          {
+            "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
+            "Location": "201, 199",
+            "Colour": "Black"
           }
         ]
       },
