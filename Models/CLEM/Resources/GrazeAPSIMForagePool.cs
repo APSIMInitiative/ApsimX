@@ -50,7 +50,7 @@ namespace Models.CLEM.Resources
             foreach (var material in biomassModel.Material)
             {
                 totalDMD += (forages.GetDigestibility(material) * material.Consumable.StructuralWt) + (1 * material.Consumable.StorageWt) + (1 * material.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-                totalWt += material.Total.Wt;
+                totalWt += material.Consumable.Wt;
             }
 
             // Note: Previous code from Stock uses dmd of structural, assume storage and metabolic are 100% digestible
