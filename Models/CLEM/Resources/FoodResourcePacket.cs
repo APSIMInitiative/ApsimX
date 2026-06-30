@@ -150,7 +150,7 @@ namespace Models.CLEM.Resources
                 {
                     FeedType.HaySilage or
                     FeedType.PastureTemperate or
-                    FeedType.PastureTropical => ((0.172 * DryMatterDigestibility) - 1.707),
+                    FeedType.PastureTropical => (0.172 * Math.Max(9.95, DryMatterDigestibility) - 1.707),
                     FeedType.Concentrate => ((0.134 * DryMatterDigestibility) + (0.235 * FatPercent) + 1.23),
                     _ => throw new NotImplementedException($"Cannot provide MEContent for the TypeOfFeed: {TypeOfFeed}."),
                 };
