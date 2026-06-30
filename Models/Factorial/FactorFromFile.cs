@@ -273,11 +273,11 @@ namespace Models.Factorial
         /// </summary>
         private void GenerateNodes(IModel model)
         {
+             _generatedCommands = new List<string[]>();
+
             string relativeDirectory = Path.GetDirectoryName(Node.FileName);
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(NameColumn))
                 return;
-
-            _generatedCommands = new List<string[]>();
 
             Experiment experiment = model as Experiment;
             if (experiment == null)
