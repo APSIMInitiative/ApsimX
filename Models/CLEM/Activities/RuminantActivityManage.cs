@@ -581,6 +581,12 @@ namespace Models.CLEM.Activities
             // calculate the number of breeders, sucklings, weaners and prebreeders
             if (AdjustBreedingFemalesAtStartup)
             {
+                if (cohorts.Where(a => a.Sex == Sex.Female && a.Weight == 0).Any())
+                {
+                    warn = $"Problem with [Adjust breeding females at start-up] using [a={this.Name}].{Environment.NewLine}Female cohorts with no Weight provided (i.e. using normalised weight for age) cannot currently be assessed for maturity and will not be included in the number of breeders present for calculations.";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                }
+
                 var breederFemales = cohorts.Where(a => a.Sex == Sex.Female && a.Weight >= herds.FirstOrDefault().Parameters.General.MinimumSizeForMaturityFemale * herds.FirstOrDefault().Parameters.General.SRWFemale);
                 if (breederFemales.Any())
                 {
