@@ -1,7 +1,7 @@
 # Copilot Cloud Agent Instructions for APSIMInitiative/ApsimX
 
 ## Repository overview
-- APSIM Next Generation is a large .NET solution (`/home/runner/work/ApsimX/ApsimX/ApsimX.sln`) with core projects including:
+- APSIM Next Generation is a large .NET solution (`ApsimX.sln`) with core projects including:
   - `Models` (simulation/model logic)
   - `ApsimNG` (GUI)
   - `APSIM.Cli` (CLI entrypoint)
@@ -10,14 +10,14 @@
 
 ## First steps for any coding task
 1. Read relevant docs before editing:
-   - `/home/runner/work/ApsimX/ApsimX/Docs/content/Development/compile.md`
-   - `/home/runner/work/ApsimX/ApsimX/Docs/content/Development/Software/CodingStyle.md`
-   - `/home/runner/work/ApsimX/ApsimX/Docs/content/Contribute/pullrequests.md`
+   - `Docs/content/Development/compile.md`
+   - `Docs/content/Development/Software/CodingStyle.md`
+   - `Docs/content/Contribute/pullrequests.md`
 2. Keep changes tightly scoped to one concern.
 3. Prefer modifying existing files and patterns over introducing new abstractions.
 
 ## Build and test commands (verified)
-Run from `/home/runner/work/ApsimX/ApsimX`:
+Run from `/ApsimX`:
 
 ```bash
 dotnet build --configuration Release
@@ -30,8 +30,8 @@ Notes:
 
 ## Coding conventions to follow
 - Follow Microsoft C# conventions with project-specific guidance in:
-  - `/home/runner/work/ApsimX/ApsimX/Docs/content/Development/Software/CodingStyle.md`
-  - `/home/runner/work/ApsimX/ApsimX/.editorconfig`
+  - `Docs/content/Development/Software/CodingStyle.md`
+  - `.editorconfig`
 - Prefer:
   - PascalCase for types/members, camelCase for method args/private fields.
   - Allman-style braces.
@@ -45,29 +45,29 @@ Notes:
 - For science changes, include validation evidence and keep data-only changes isolated when possible.
 
 ## High-value paths for common tasks
-- Core model code: `/home/runner/work/ApsimX/ApsimX/Models`
-- Unit tests: `/home/runner/work/ApsimX/ApsimX/Tests/UnitTests`
-- GUI code: `/home/runner/work/ApsimX/ApsimX/ApsimNG`
-- CLI code: `/home/runner/work/ApsimX/ApsimX/APSIM.Cli`
-- Developer docs: `/home/runner/work/ApsimX/ApsimX/Docs/content/Development`
+- Core model code: `Models`
+- Unit tests: `Tests/UnitTests`
+- GUI code: `ApsimNG`
+- CLI code: `Models`
+- Developer docs: `Docs/content/Development`
 
 ## Known errors and workarounds
 Documented issues from repository docs/workflows:
 
 1. **Linux runtime error loading sqlite**
-   - Error: `System.DllNotFoundException: Unable to load shared library 'sqlite3'... libsqlite3.so: cannot open shared object file`
-   - Workaround: install `libsqlite3-dev` (preferred) or create a symlink from `libsqlite3.so.0` to `libsqlite3.so`.
-   - Source: `/home/runner/work/ApsimX/ApsimX/Docs/content/Development/compile.md`
+   - Error: `System.DllNotFoundException: Unable to load shared library 'sqlite3' or one of its dependencies... libsqlite3: cannot open shared object file: No such file or directory`
+   - Workaround: on Debian/derivatives, install `libsqlite3-dev` (provides `libsqlite3.so`); alternatively create a symlink named `libsqlite3.so` pointing to `libsqlite3.so.0`.
+   - Source: `Docs/content/Development/compile.md`
 
 2. **Package install issue on Debian/Ubuntu**
    - Error: `E: Unable to locate package dotnet-runtime-8.0`
    - Workaround: install .NET packages from Microsoft package repositories (not default Debian repos).
-   - Source: `/home/runner/work/ApsimX/ApsimX/Docs/content/Development/compile.md`
+   - Source: `Docs/content/Development/compile.md`
 
 3. **Model validation workflow can fail when branch is stale**
    - Error condition: merge step in `.github/workflows/run-model-validations.yml` fails when PR branch cannot merge cleanly with `upstream/master`.
    - Workaround: update/rebase/merge latest `master` into the PR branch and resolve conflicts before rerunning validation.
-   - Source: `/home/runner/work/ApsimX/ApsimX/.github/workflows/run-model-validations.yml`
+   - Source: `.github/workflows/run-model-validations.yml`
 
 ## Agent efficiency tips
 - Before broad changes, use targeted searches in `Models` and `Tests/UnitTests` to mirror existing patterns.
