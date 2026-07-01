@@ -10269,26 +10269,6 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
                   ],
-                  "Name": "Cesario",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 8.5",
-                    "[Phenology].CAMP.FLNparams.PpLN = 4",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 7.5",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 1",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 109.3",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.2",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.9",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
-                  ],
                   "Name": "Anapurna",
                   "ResourceName": null,
                   "Children": [],
@@ -10370,26 +10350,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
                   ],
                   "Name": "Catapult",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 7.3",
-                    "[Phenology].CAMP.FLNparams.PpLN = 4",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 2.3",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0.8",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95.5",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.3",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.9",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 230",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.5"
-                  ],
-                  "Name": "Stockade",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -10610,26 +10570,6 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8"
                   ],
                   "Name": "Osprey",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].CAMP.FLNparams.MinLN = 8",
-                    "[Phenology].CAMP.FLNparams.PpLN = 2.3",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 7.8",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.0",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 132",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.8"
-                  ],
-                  "Name": "Whistler",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
