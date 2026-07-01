@@ -125,11 +125,13 @@ namespace Models.Soils
         private const double slcerr = 0.000001;
 
         /// <summary>Depth in the soil to assess water content for runoff effect (mm).</summary>
-        [Description("Hydraulically-effective depth in the soil  (mm). Default: 450 mm")]
+        [Description("Hydraulically-effective depth in the soil (mm). Default: 450 mm")]
+        [Bounds(Lower = 1.0, Upper = 1000.0)]
         public double hydrol_effective_depth { get; set; } = 450;
 
-        /// <summary>Exponent in the equation for hydraulically effectiveness for runoff (-).</summary>
+        /// <summary>Exponent in the equation for hydraulic effectiveness for runoff (-).</summary>
         [Description("Exponent in the hydraulically-effective depth equation (-). Default: 4.16")]
+        [Bounds(Lower = 0.1, Upper = 10.0)]
         public double hydrol_effective_exponent { get; set; } = 4.16;
 
         private double[] _swf;
@@ -2336,7 +2338,7 @@ namespace Models.Soils
                 // assume water content to c%hydrol_effective_depth affects runoff
                 // sum of wf should = 1 - may need to be bounded? <dms 7-7-95>
 
-                wx = scale_fact * (1.0 - Math.Exp(-1 * hydrol_effective_exponent * cum_depth / hydrolEffectiveDepth));
+                wx = scale_fact * (1.0 - Math.Exp(-hydrol_effective_exponent * cum_depth / hydrolEffectiveDepth));
                 runoff_wf[layer] = wx - xx;
                 xx = wx;
 
