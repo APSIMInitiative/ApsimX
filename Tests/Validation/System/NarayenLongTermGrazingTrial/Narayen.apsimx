@@ -13,12 +13,13 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "ObservedPastureBiomass.xlsx",
+            "ObservedSoilTotalN1967-87.xlsx",
+            "ObservedSoilOM.xlsx",
             "ObservedPastureN.xlsx",
+            "ObservedPastureBiomass.xlsx",
             "ObservedLWG.xlsx",
             "ObservedDigestibility.xlsx",
-            "ObservedPercentPaddockSoilN.xlsx",
-            "ObservedSoilOM.xlsx"
+            "Observed.xlsx"
           ],
           "SheetNames": [
             "Observed"
