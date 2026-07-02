@@ -1,0 +1,2491 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "GenericFruitTree Example",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Children": [
+        {
+          "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+          "Name": "SoilArbitrator",
+          "Children": []
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1997-07-01T00:00:00",
+          "End": "1999-06-30T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "SummaryFile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "FileName": "../WeatherFiles/AU_Dalby.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1,
+          "Slope": 0,
+          "AspectAngle": 0,
+          "Altitude": 50,
+          "Name": "Zone1",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.PerennialMicroClimate, Models",
+              "Name": "MicroClimate",
+              "a_interception": 0,
+              "b_interception": 1,
+              "c_interception": 0,
+              "d_interception": 0,
+              "SoilHeatFluxFraction": 0.4,
+              "MinimumHeightDiffForNewLayer": 0,
+              "NightInterceptionFraction": 0.5,
+              "ReferenceHeight": 2,
+              "Children": [
+                {
+                  "$type": "Models.AtmosphericPotentialEvaporation, Models",
+                  "Name": "AtmosphericPotentialEvaporation",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "Report",
+              "VariableNames": [
+                "[Clock].Today",
+                "[FruitTree].BiomassLeavesOutput",
+                "[FruitTree].BiomassFruitsOutput",
+                "[FruitTree].QualityBrix",
+                "[FruitTree].QualityDMPctOutput",
+                "[FruitTree].QualityAcidPctOutput",
+                "[Arbitrator].fruitOrgan.DMDemand.Structural",
+                "[Arbitrator].fruitOrgan.Allocated.StructuralWt",
+                "[Arbitrator].fruitOrgan.Live.Wt",
+                "[Arbitrator].fruitOrgan.Nflower",
+                "[Arbitrator].fruitOrgan.Nfruit",
+                "[Arbitrator].fruitOrgan.FruitDM_g_m2",
+                "[Arbitrator].fruitOrgan.FruitAgeTT",
+                "[Arbitrator].fruitOrgan.InReproSeason",
+                "[Arbitrator].fruitOrgan.IsHarvestable",
+                "[Arbitrator].leafOrgan.LAI",
+                "[FruitTree].ActiveStructuralPruningFractionOutput",
+                "[FruitTree].CanopyStructuralSizeFactorOutput",
+                "[FruitTree].CanopyStructuralLightFactorOutput",
+                "[Arbitrator].leafOrgan.Fw",
+                "[FruitTree].LeafWaterStressRawOutput",
+                "[Arbitrator].leafOrgan.RadiationIntercepted",
+                "[Arbitrator].leafOrgan.Fn",
+                "[Arbitrator].leafOrgan.FRGR",
+                "[Arbitrator].leafOrgan.Wt",
+                "[Arbitrator].leafOrgan.WaterAllocation",
+                "[Arbitrator].leafOrgan.Photosynthesis",
+                "[FruitTree].PotentialEP",
+                "[FruitTree].WaterDemand",
+                "[Arbitrator].rootOrgan.Depth",
+                "[Arbitrator].rootOrgan.WaterUptake",
+                "[Arbitrator].rootOrgan.SWUptakeLayered",
+                "[Arbitrator].rootOrgan.NUptakeLayered",
+                "[Soil].SoilWater.SW",
+                "[Soil].SoilWater.ESW",
+                "[Soil].SoilWater.PAW",
+                "[FruitTree].FruitSinkStrengthOutput",
+                "[FruitTree].LeafSinkStrengthOutput",
+                "[FruitTree].FruitSinkStrengthEffectiveOutput",
+                "[FruitTree].LeafSinkStrengthEffectiveOutput",
+                "[FruitTree].RootZonePAWFractionOutput",
+                "[FruitTree].RootActivationOutput",
+                "[FruitTree].BudLoadPerAreaOutput",
+                "[FruitTree].SupplyIndexRawOutput",
+                "[FruitTree].SupplyIndexEffectiveOutput",
+                "[FruitTree].GrowthStressModifierOutput",
+                "[FruitTree].StressForReproOutput",
+                "[FruitTree].ReproSetRateOutput",
+                "[FruitTree].ReproDropRateOutput",
+                "[FruitTree].FruitWaterFractionOutput",
+                "[Arbitrator].DM.TotalFixationSupply",
+                "[Arbitrator].DM.TotalPlantSupply",
+                "[Arbitrator].DM.TotalStructuralDemand",
+                "[Arbitrator].DM.TotalMetabolicDemand",
+                "[Arbitrator].DM.TotalStorageDemand",
+                "[Arbitrator].DM.TotalPlantDemand",
+                "[Arbitrator].DM.TotalStructuralAllocation",
+                "[Arbitrator].DM.TotalMetabolicAllocation",
+                "[Arbitrator].DM.TotalStorageAllocation",
+                "[Arbitrator].FDM",
+                "[Arbitrator].DeltaWt",
+                "[Arbitrator].N.TotalPlantSupply",
+                "[Arbitrator].N.TotalPlantDemand",
+                "[Arbitrator].FN",
+                "[FruitTree].IsEmerged",
+                "[FruitTree].IsAlive",
+                "[Phenology].CurrentStageName",
+                "[Arbitrator].leafOrgan.DMDemand.Structural",
+                "[Arbitrator].leafOrgan.DMDemand.Metabolic",
+                "[Arbitrator].leafOrgan.DMDemand.Storage",
+                "[Arbitrator].rootOrgan.NUptakeLayered",
+                "[leafOrgan].Fn",
+                "[Arbitrator].N.TotalPlantSupply",
+                "[Arbitrator].N.TotalPlantDemand",
+                "[Arbitrator].DM.TotalPlantAllocation",
+                "[Arbitrator].DM.NutrientLimitation",
+                "[Arbitrator].DM.SinkLimitation",
+                "[Arbitrator].DM.NotAllocated",
+                "[Arbitrator].N.TotalPlantAllocation",
+                "[Arbitrator].N.TotalStructuralAllocation",
+                "[Arbitrator].N.TotalMetabolicAllocation",
+                "[Arbitrator].N.TotalStorageAllocation",
+                "[Arbitrator].leafOrgan.NDemand.Structural",
+                "[Arbitrator].leafOrgan.NDemand.Storage",
+                "[Arbitrator].N.TotalUptakeSupply",
+                "[Arbitrator].N.TotalReallocationSupply",
+                "[Arbitrator].N.TotalRetranslocationSupply",
+                "[Arbitrator].N.TotalFixationSupply",
+                "[Arbitrator].rootOrgan.Wt",
+                "[Arbitrator].rootOrgan.DMDemand.Structural",
+                "[Arbitrator].rootOrgan.NDemand.Structural",
+                "[Arbitrator].TotalDMFixationSupply",
+                "[Arbitrator].woodOrgan.Live.StructuralWt",
+                "[Arbitrator].woodOrgan.Senesced.Wt",
+                "[Arbitrator].woodOrgan.DMDemand.Structural",
+                "[Arbitrator].woodOrgan.DMDemand.Storage",
+                "[Arbitrator].woodOrgan.NDemand.Storage",
+                "[Arbitrator].woodOrgan.DMRetranslocationFactor",
+                "[Arbitrator].woodOrgan.Live.StorageWt",
+                "[Arbitrator].woodOrgan.Live.StorageN",
+                "[woodOrgan].minimumNConc",
+                "[FruitTree].ReserveSupplyDMOutput",
+                "[FruitTree].ReserveCriticalDemandDMOutput",
+                "[FruitTree].ReserveStoredDMOutput",
+                "[FruitTree].ReservePoolDMOutput",
+                "[FruitTree].ReserveCapacityDMOutput",
+                "[FruitTree].ReserveMobilisedDMOutput"
+              ]
+            },
+            {
+              "$type": "Models.Report, Models",
+              "EventNames": [
+                "[Clock].EndOfDay"
+              ],
+              "Name": "NDiagnostics",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Arbitrator].rootOrgan.NUptake",
+                "[Arbitrator].rootOrgan.NUptakeLayered",
+                "[Arbitrator].N.TotalUptakeSupply",
+                "[Arbitrator].N.TotalPlantSupply",
+                "[Arbitrator].N.TotalPlantDemand",
+                "[Arbitrator].rootOrgan.NDemand.Structural",
+                "[Arbitrator].leafOrgan.NDemand.Structural",
+                "[Arbitrator].leafOrgan.NDemand.Storage",
+                "[Arbitrator].leafOrgan.N",
+                "[Arbitrator].leafOrgan.Wt",
+                "[NO3].kgha",
+                "[NH4].kgha",
+                "[NO3].ppm",
+                "[NH4].ppm"
+              ]
+            },
+            {
+              "$type": "Models.Agroforestry.GenericFruitTree, Models",
+              "Name": "FruitTree",
+              "PlantType": "FruitTree",
+              "InitialHeight": 0.8,
+              "InitialPopulation": 1200,
+              "PlantHydraulicConductance": 1,
+              "SupplyTauDownDays": 1.5,
+              "SupplyTauUpDays": 7.5,
+              "GrowthStressExponent": 1.8,
+              "PAW50": 0.55,
+              "FruitFatePolicy": 2,
+              "LayerCount": 12,
+              "LAD_Alpha": 2.5,
+              "LAD_Beta": 2.5,
+              "ClumpingIndex": 1,
+              "PruningStructuralSizeSensitivity": 0.5,
+              "PruningStructuralLightSensitivity": 0.5,
+              "DormancyStage": "Dormancy",
+              "BudBreakStage": "BudBreak",
+              "FloweringStage": "Flowering",
+              "FruitSetStage": "FruitSet",
+              "FruitFillStage": "FruitFill",
+              "MaturityStage": "Maturity",
+              "ResetPhenologyAfterHarvest": true,
+              "SeasonalPhenologyResetStage": "Dormancy",
+              "LeafFallTotalFraction": 0.9,
+              "LeafFallDurationDays": 40,
+              "LeafFallShape": 2,
+              "ReserveCapacityFracOfWoodDM": 0.15,
+              "ReserveMobilisationRate": 0.02,
+              "ReserveStorageRate": 0.1,
+              "MinDaysBetweenBudBreak": 300,
+              "ReserveInitFrac": 0.1,
+              "InitialReserveNConc": 0.006,
+              "SugarPerDM": 0.75,
+              "AcidPerDM": 0.05,
+              "AcidDegradationRate": 0.01,
+              "SugarConcRate": 0,
+              "WC_Min": 0.75,
+              "WC_Max": 0.92,
+              "WC_Fw50": 0.5,
+              "WC_FwSlope": 12,
+              "WC_Stage50": 0.5,
+              "WC_StageSlope": 10,
+              "BrixMax": 24,
+              "AcidMax": 3,
+              "CapSharpness": 3,
+              "HarvestByPhenology": true,
+              "HarvestBrixThreshold": 0,
+              "HarvestAcidThreshold": 0,
+              "Children": [
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "LeafSinkStrength",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Name": "Default",
+                      "Children": []
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].FractionInCurrentPhase"
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "X": [
+                        0,
+                        0.5,
+                        1
+                      ],
+                      "Y": [
+                        1,
+                        0.5,
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "FruitSinkStrength",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "Name": "XValue",
+                      "VariableName": "[Phenology].FractionInCurrentPhase"
+                    },
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "X": [
+                        0,
+                        0.5,
+                        1
+                      ],
+                      "Y": [
+                        0,
+                        0.7,
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                  "MaximumTemperatureWeighting": 0.5,
+                  "Name": "ChillRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "Name": "XYPairs",
+                      "X": [
+                        -5,
+                        0,
+                        5,
+                        12,
+                        18,
+                        25
+                      ],
+                      "Y": [
+                        0,
+                        0.4,
+                        1,
+                        1,
+                        0.2,
+                        0
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "mortalityRate",
+                  "FixedValue": 0.0001
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "seedMortalityRate",
+                  "FixedValue": 0.0001
+                },
+                {
+                  "$type": "Models.PMF.Phen.Phenology, Models",
+                  "Name": "Phenology",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "thermalTime",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "Name": "XYPairs",
+                          "X": [
+                            0,
+                            30,
+                            40
+                          ],
+                          "Y": [
+                            0,
+                            30,
+                            0
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Sowing_Emergence",
+                      "Start": "Sowing",
+                      "End": "Emergence",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 1
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Emergence_VegetativeFlush",
+                      "Start": "Emergence",
+                      "End": "VegetativeFlush",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 50
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "VegetativeFlush_FloralInduction",
+                      "Start": "VegetativeFlush",
+                      "End": "FloralInduction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 120
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "FloralInduction_Dormancy",
+                      "Start": "FloralInduction",
+                      "End": "Dormancy",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 80
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Dormancy_Forcing",
+                      "Start": "Dormancy",
+                      "End": "Forcing",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 3000
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Forcing_BudBreak",
+                      "Start": "Forcing",
+                      "End": "BudBreak",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 350
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "BudBreak_Flowering",
+                      "Start": "BudBreak",
+                      "End": "Flowering",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 300
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Flowering_FruitSet",
+                      "Start": "Flowering",
+                      "End": "FruitSet",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 180
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "FruitSet_FruitFill",
+                      "Start": "FruitSet",
+                      "End": "FruitFill",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 800
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "FruitFill_Maturity",
+                      "Start": "FruitFill",
+                      "End": "Maturity",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 2200
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Phen.GenericPhase, Models",
+                      "Name": "Maturity_Harvest",
+                      "Start": "Maturity",
+                      "End": "Harvest",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Progression",
+                          "VariableName": "[Phenology].thermalTime"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Target",
+                          "FixedValue": 10000
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.OrganArbitrator, Models",
+                  "Name": "Arbitrator",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+                      "Name": "dmArbitration",
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.RelativeAllocation, Models",
+                          "Name": "ArbitrationMethod"
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "Name": "PotentialPartitioningMethods",
+                          "Children": [
+                            {
+                              "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                              "Name": "ReallocationMethod"
+                            },
+                            {
+                              "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                              "Name": "AllocateFixationMethod"
+                            },
+                            {
+                              "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                              "Name": "RetranslocationMethod"
+                            },
+                            {
+                              "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                              "Name": "SendPotentialDMAllocationsMethod"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "Name": "AllocationMethods",
+                          "Children": [
+                            {
+                              "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                              "Name": "NutrientConstrainedAllocationMethod"
+                            },
+                            {
+                              "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                              "Name": "DryMatterAllocationsMethod"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+                      "Name": "nArbitration",
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.RelativeAllocation, Models",
+                          "Name": "ArbitrationMethod"
+                        },
+                        {
+                          "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                          "Name": "AllocateUptakesMethod"
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "Name": "PotentialPartitioningMethods",
+                          "Children": [
+                            {
+                              "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                              "Name": "ReallocationMethod"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "Name": "ActualPartitioningMethods",
+                          "Children": [
+                            {
+                              "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                              "Name": "AllocateFixationMethod"
+                            },
+                            {
+                              "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                              "Name": "RetranslocationMethod"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Core.Folder, Models",
+                          "Name": "AllocationMethods",
+                          "Children": [
+                            {
+                              "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                              "Name": "NitrogenAllocationsMethod"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+                      "Name": "waterUptakeMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+                      "Name": "nitrogenUptakeMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Organs.PerennialLeaf, Models",
+                      "Name": "leafOrgan",
+                      "Gsmax350": 0.0145,
+                      "R50": 150,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.SubDailyInterpolation, Models",
+                          "Name": "FRGR_TempOnly",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "Name": "Response",
+                              "X": [
+                                5,
+                                15,
+                                32,
+                                42
+                              ],
+                              "Y": [
+                                0,
+                                1,
+                                1,
+                                0
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                              "Name": "InterpolationMethod"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "FRGR_ForAssim",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "TempOnly",
+                              "VariableName": "[leafOrgan].FRGR_TempOnly"
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "Fn",
+                              "VariableName": "[leafOrgan].Fn"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "Fw",
+                          "VariableName": "[leafOrgan].Fw"
+                        },
+                        {
+                          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                          "Name": "BiomassRemovalDefaults",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false,
+                          "HarvestFractionLiveToRemove": 0,
+                          "HarvestFractionDeadToRemove": 0,
+                          "HarvestFractionLiveToResidue": 0.98,
+                          "HarvestFractionDeadToResidue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MaximumNConc",
+                          "FixedValue": 0.018
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MinimumNConc",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "CarbonConcentration",
+                          "FixedValue": 0.45
+                        },
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "FRGRFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubDailyInterpolation, Models",
+                              "Name": "FRGRFunctionTemp",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "Name": "Response",
+                                  "X": [
+                                    5,
+                                    15,
+                                    32,
+                                    42
+                                  ],
+                                  "Y": [
+                                    0,
+                                    1,
+                                    1,
+                                    0
+                                  ]
+                                },
+                                {
+                                  "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                                  "Name": "InterpolationMethod"
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "Fn",
+                              "VariableName": "[leafOrgan].Fn"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "StomatalConductanceCO2Modifier",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "FCO2",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.ExpressionFunction, Models",
+                              "Name": "RelativeCO2Gradient",
+                              "Expression": "([IWeather].CO2 - 163)/(350 - 163)"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "dmDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "BaseLeafDMdemand",
+                                  "FixedValue": 1
+                                },
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "LeafPriority",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "Name": "Base",
+                                      "FixedValue": 1
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "Name": "LeafSinkStrengthRef",
+                                      "VariableName": "[FruitTree].LeafSinkStrengthEffectiveOutput"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0.0002
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "nDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "Base",
+                                  "FixedValue": 0.0025
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "LeafSink",
+                                  "VariableName": "[FruitTree].LeafSinkStrengthEffectiveOutput"
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "Temp",
+                                  "VariableName": "[leafOrgan].FRGR_TempOnly"
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "ExtinctionCoefficient",
+                          "FixedValue": 0.57
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "Name": "ExtinctionCoefficientDead",
+                          "VariableName": "[leafOrgan].ExtinctionCoefficient"
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Photosynthesis",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "RUE",
+                              "FixedValue": 3
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "FCO2",
+                              "VariableName": "[leafOrgan].StomatalConductanceCO2Modifier"
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "InterceptedRadiation",
+                              "VariableName": "[leafOrgan].RadiationIntercepted"
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "WaterStressFactor",
+                              "VariableName": "[leafOrgan].Fw"
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "Frgr",
+                              "VariableName": "[leafOrgan].FRGR_ForAssim"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "HeightFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "Name": "XYPairs",
+                              "X": [
+                                0.5,
+                                5
+                              ],
+                              "Y": [
+                                500,
+                                2500
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[leafOrgan].Wt"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "LeafResidenceTime",
+                          "FixedValue": 220
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "LeafDevelopmentRate",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "LeafKillFraction",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MinimumLAI",
+                          "FixedValue": 0.02
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "SpecificLeafAreaFunction",
+                          "FixedValue": 0.02
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "DMConversionEfficiency",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "LeafDetachmentTime",
+                          "FixedValue": 90
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NRetranslocationFactor",
+                          "FixedValue": 0.3
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "DMRetranslocationFactor",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NReallocationFactor",
+                          "FixedValue": 0.2
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "InitialWtFunction",
+                          "FixedValue": 1
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Organs.GenericOrgan, Models",
+                      "Name": "woodOrgan",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "NUptakeSWFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "XValue",
+                              "VariableName": "[Soil].SoilWater.SW"
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "Name": "XYPairs",
+                              "X": [
+                                0,
+                                1
+                              ],
+                              "Y": [
+                                0,
+                                1
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.RetranslocateNonStructural, Models",
+                          "Name": "RetranslocateNitrogen"
+                        },
+                        {
+                          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                          "Name": "BiomassRemovalDefaults",
+                          "Children": [],
+                          "HarvestFractionLiveToRemove": 0,
+                          "HarvestFractionDeadToRemove": 0,
+                          "HarvestFractionLiveToResidue": 0,
+                          "HarvestFractionDeadToResidue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "SenescenceRate",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "detachmentRateFunction",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NRetranslocationFactor",
+                          "FixedValue": 0.3
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NReallocationFactor",
+                          "FixedValue": 0.2
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "DMRetranslocationFactor",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "dmReallocationFactor",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                          "Name": "dmDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Structural",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStructuralPriority",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QMetabolicPriority",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStoragePriority",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                          "Name": "nDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Structural",
+                              "FixedValue": 0.0005
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStructuralPriority",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QMetabolicPriority",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStoragePriority",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "InitialWt",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Structural",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "initialNConcFunction",
+                          "FixedValue": 0.03
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "maximumNConc",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "minimumNConc",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "criticalNConc",
+                          "FixedValue": 0.05
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "maintenanceRespirationFunction",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "DMConversionEfficiency",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "remobilisationCost",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "CarbonConcentration",
+                          "FixedValue": 0.4
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Photosynthesis",
+                          "FixedValue": 0
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.PMF.Organs.Root, Models",
+                      "Name": "rootOrgan",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
+                          "Name": "RootShape",
+                          "Children": []
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "KNO3",
+                          "FixedValue": 0.011
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "KNH4",
+                          "FixedValue": 0.016
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "SenescenceRate",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "RootFrontVelocity",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "RFVbase",
+                              "FixedValue": 20,
+                              "Units": "mm/d"
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Water",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "Name": "TempNitrogen",
+                              "VariableName": "[leafOrgan].FRGR_TempOnly"
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Name": "MaximumNConc"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.01,
+                          "Name": "minimumNConc"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MaxDailyNUptake",
+                          "FixedValue": 0.6
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1,
+                          "Name": "KLModifier"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1100,
+                          "Name": "MaximumRootDepth"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1,
+                          "Name": "DMConversionEfficiency"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Name": "CarbonConcentration"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0,
+                          "Name": "RemobilisationCost"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1,
+                          "Name": "MaintenanceRespirationFunction"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "SpecificRootLength",
+                          "FixedValue": 60
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "InitialWt",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 5,
+                              "Units": "g/plant",
+                              "Name": "Structural",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0,
+                              "Units": "g/plant",
+                              "Name": "Metabolic",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0,
+                              "Units": "g/plant",
+                              "Name": "Storage",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "NUptakeSWFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MinimumFunction, Models",
+                              "Name": "XValue",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MaximumFunction, Models",
+                                  "Name": "FloorToZero",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "ESW_over_PAW",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "Name": "ESW",
+                                          "VariableName": "[Soil].SoilWater.ESW"
+                                        },
+                                        {
+                                          "$type": "Models.Functions.MaximumFunction, Models",
+                                          "Name": "SafePAW",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.VariableReference, Models",
+                                              "Name": "PAW",
+                                              "VariableName": "[Soil].SoilWater.PAW"
+                                            },
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "Name": "Tiny",
+                                              "FixedValue": 0.000001
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "Name": "Zero",
+                                      "FixedValue": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "One",
+                                  "FixedValue": 1
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "Name": "XYPairs",
+                              "X": [
+                                0,
+                                0.15,
+                                0.4,
+                                1
+                              ],
+                              "Y": [
+                                0,
+                                0.5,
+                                0.85,
+                                1
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                          "Name": "BiomassRemovalDefaults",
+                          "HarvestFractionLiveToRemove": 0,
+                          "HarvestFractionDeadToRemove": 0,
+                          "HarvestFractionLiveToResidue": 0,
+                          "HarvestFractionDeadToResidue": 0
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                          "Name": "dmDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "RootShootRatio",
+                                  "FixedValue": 0.15
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "LeafDemand",
+                                  "VariableName": "[Arbitrator].leafOrgan.DMDemand.Structural"
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStructuralPriority",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QMetabolicPriority",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStoragePriority",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                          "Name": "nDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "MinNconc",
+                                  "VariableName": "[rootOrgan].minimumNConc"
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "PotentialDMAllocation",
+                                  "VariableName": "[rootOrgan].potentialDMAllocation.Structural"
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStructuralPriority",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QMetabolicPriority",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "QStoragePriority",
+                              "FixedValue": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.Agroforestry.FruitOrgan, Models",
+                      "Name": "fruitOrgan",
+                      "FruitSetDurationDays": 14,
+                      "FruitSetMaxFrac": 0.7,
+                      "FruitDropRate": 0.03,
+                      "Fw50_Set": 0.5,
+                      "FwSlope_Set": 12,
+                      "FruitSeedDM_gPerFruit": 0.05,
+                      "PostMaturityDropRate": 0.05,
+                      "ReproPotentialPerBud": 1,
+                      "SetRateMax": 0.35,
+                      "DropRateBase": 0.01,
+                      "DropStressSensitivity": 0.08,
+                      "PotentialFruitSizeDM": 18,
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "nDemands",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "Base",
+                                  "FixedValue": 0.003
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "FruitSink",
+                                  "VariableName": "[FruitTree].FruitSinkStrengthEffectiveOutput"
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "Water",
+                                  "VariableName": "[FruitTree].StressForReproOutput"
+                                }
+                              ]
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NumberFunction",
+                          "FixedValue": 25,
+                          "Units": "fruit/m^2"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "WaterContent",
+                          "FixedValue": 0.85,
+                          "Units": "0-1"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NFillingRate",
+                          "FixedValue": 0.2,
+                          "Units": "g/m^2/day"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MaximumNConc",
+                          "FixedValue": 0.015
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "MinimumNConc",
+                          "FixedValue": 0.005
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "CarbonConcentration",
+                          "FixedValue": 0.45
+                        },
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "DMDemandFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "BaseFruitDM",
+                              "FixedValue": 8,
+                              "Units": "g/m^2/day"
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "FruitPriority",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "Name": "Base",
+                                  "FixedValue": 0.8
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "Name": "FruitSinkStrengthRef",
+                                  "VariableName": "[FruitTree].FruitSinkStrengthEffectiveOutput"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "DMConversionEfficiency",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "RemobilisationCost",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "dmDemandPriorityFactors",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Structural",
+                              "FixedValue": 1
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Metabolic",
+                              "FixedValue": 0
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "Name": "Storage",
+                              "FixedValue": 0
+                            }
+                          ]
+                        },
+                        {
+                          "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                          "Name": "BiomassRemovalDefaults",
+                          "HarvestFractionLiveToRemove": 0,
+                          "HarvestFractionDeadToRemove": 0,
+                          "HarvestFractionLiveToResidue": 1,
+                          "HarvestFractionDeadToResidue": 1
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.Agroforestry.BudOrgan, Models",
+                      "Name": "budOrgan",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "BudsPerTreeAtBudBreak",
+                          "FixedValue": 300,
+                          "Units": "bud/tree"
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Deltanodenumber",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "Deltalai",
+                          "FixedValue": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "ChillUnitsRequired": 45,
+              "ForcingStage": "Forcing",
+              "ForcingUnitsRequired": 250,
+              "ForcingBaseTemperature": 4
+            },
+            {
+              "$type": "Models.VPDCalculator, Models",
+              "Name": "VPDCalculator"
+            },
+            {
+              "$type": "Models.Irrigation, Models",
+              "Name": "Irrigation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Fertiliser, Models",
+              "Name": "Fertiliser",
+              "ResourceName": "Fertiliser",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Name": "Organic",
+                  "FOMCNRatio": 40,
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "Carbon": [
+                    2.2,
+                    1.4,
+                    0.8,
+                    0.4
+                  ],
+                  "CarbonUnits": 0,
+                  "SoilCNRatio": [
+                    12,
+                    12,
+                    11,
+                    10
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.03,
+                    0.02,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4
+                  ],
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Name": "Chemical",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "PH": [
+                    7,
+                    7,
+                    7,
+                    7
+                  ],
+                  "PHUnits": 0,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "SoilTemperature"
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Name": "SurfaceOrganicMatter",
+                  "InitialResidueName": "StrawResidue",
+                  "InitialResidueType": "WheatStraw",
+                  "InitialResidueMass": 1000,
+                  "InitialStandingFraction": 0.5,
+                  "InitialCPR": 100,
+                  "InitialCNR": 25,
+                  "Verbose": true,
+                  "Children": [
+                    {
+                      "$type": "Models.Surface.ResidueTypes, Models",
+                      "Name": "ResidueTypes",
+                      "ResidueType": [
+                        {
+                          "fom_type": "FruitTree",
+                          "derived_from": "WheatStraw"
+                        },
+                        {
+                          "fom_type": "WheatStraw",
+                          "derived_from": "",
+                          "fraction_C": 0.4,
+                          "po4ppm": 0,
+                          "nh4ppm": 0,
+                          "no3ppm": 0,
+                          "specific_area": 1000,
+                          "cf_contrib": 1,
+                          "pot_decomp_rate": 0.1,
+                          "fr_c": [
+                            0.33,
+                            0.33,
+                            0.34
+                          ],
+                          "fr_n": [
+                            0.33,
+                            0.33,
+                            0.34
+                          ],
+                          "fr_p": [
+                            0.33,
+                            0.33,
+                            0.34
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "surfaceResidue"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Name": "Physical",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "ParticleSizeSand": [
+                    70,
+                    60,
+                    50,
+                    40
+                  ],
+                  "ParticleSizeSilt": [
+                    20,
+                    25,
+                    30,
+                    35
+                  ],
+                  "ParticleSizeClay": [
+                    10,
+                    15,
+                    20,
+                    25
+                  ],
+                  "Rocks": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "Texture": [
+                    "SandyLoam",
+                    "Loam",
+                    "ClayLoam",
+                    "SiltyClay"
+                  ],
+                  "BD": [
+                    1.3,
+                    1.4,
+                    1.5,
+                    1.6
+                  ],
+                  "AirDry": [
+                    0.05,
+                    0.06,
+                    0.07,
+                    0.08
+                  ],
+                  "LL15": [
+                    0.1,
+                    0.12,
+                    0.14,
+                    0.16
+                  ],
+                  "DUL": [
+                    0.2,
+                    0.22,
+                    0.24,
+                    0.26
+                  ],
+                  "SAT": [
+                    0.4,
+                    0.42,
+                    0.43,
+                    0.39
+                  ],
+                  "KS": [
+                    10,
+                    8,
+                    6,
+                    4
+                  ],
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "Name": "FruitTreeSoil",
+                      "LL": [
+                        0.1,
+                        0.12,
+                        0.14,
+                        0.16
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.055
+                      ],
+                      "XF": [
+                        1,
+                        1,
+                        1,
+                        1
+                      ],
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Name": "NO3",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "InitialValues": [
+                    25,
+                    15,
+                    8,
+                    4
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0,
+                  "D0": 0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0,
+                  "MaxDepthSoluteAccessible": 0,
+                  "RunoffEffectivenessAtMovingSolute": 0,
+                  "MaxEffectiveRunoff": 0
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Name": "NH4",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "InitialValues": [
+                    3,
+                    2,
+                    1,
+                    0.5
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0,
+                  "D0": 0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0,
+                  "MaxDepthSoluteAccessible": 0,
+                  "RunoffEffectivenessAtMovingSolute": 0,
+                  "MaxEffectiveRunoff": 0
+                },
+                {
+                  "$type": "Models.Soils.Solute, Models",
+                  "Name": "Urea",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "InitialValues": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "InitialValuesUnits": 0,
+                  "WaterTableConcentration": 0,
+                  "D0": 0,
+                  "Exco": null,
+                  "FIP": null,
+                  "DepthConstant": 0,
+                  "MaxDepthSoluteAccessible": 0,
+                  "RunoffEffectivenessAtMovingSolute": 0,
+                  "MaxEffectiveRunoff": 0
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "Name": "nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false,
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "Inert"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "Microbial"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "Humic"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "FOMCellulose"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "FOMCarbohydrate"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.OrganicPool, Models",
+                      "Name": "FOMLignin"
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.NFlow, Models",
+                      "Name": "Hydrolysis",
+                      "SourceName": "Urea",
+                      "DestinationName": "NH4",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "rate",
+                          "FixedValue": 0.05
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "reduction",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NLoss",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "N2OFraction",
+                          "FixedValue": 0
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.NFlow, Models",
+                      "Name": "Denitrification",
+                      "SourceName": "NO3",
+                      "DestinationName": "NH4",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "rate",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "reduction",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NLoss",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "N2OFraction",
+                          "FixedValue": 0.7
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.NFlow, Models",
+                      "Name": "Nitrification",
+                      "SourceName": "NH4",
+                      "DestinationName": "NO3",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "rate",
+                          "FixedValue": 0.05
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "reduction",
+                          "FixedValue": 1
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "NLoss",
+                          "FixedValue": 0.01
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "N2OFraction",
+                          "FixedValue": 0.5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "Name": "SoilWater",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 6,
+                  "SummerCona": 3.5,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 6,
+                  "WinterCona": 2.5,
+                  "DiffusConst": 200,
+                  "DiffusSlope": 8,
+                  "Salb": 0.23,
+                  "CN2Bare": 75,
+                  "CNRed": 20,
+                  "CNCov": 0.8,
+                  "DischargeWidth": 5,
+                  "CatchmentArea": 10,
+                  "PSIDul": -100,
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "SWCON": [
+                    0.2,
+                    0.2,
+                    0.2,
+                    0.2
+                  ],
+                  "KLAT": [
+                    100,
+                    100,
+                    100,
+                    100
+                  ],
+                  "Children": [
+                    {
+                      "$type": "Models.WaterModel.LateralFlowModel, Models",
+                      "Name": "LateralFlowModel"
+                    },
+                    {
+                      "$type": "Models.WaterModel.RunoffModel, Models",
+                      "Name": "runoffModel",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "cnReductionForCover",
+                          "FixedValue": 0
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "Name": "cnReductionForTillage",
+                          "FixedValue": 0
+                        }
+                      ]
+                    },
+                    {
+                      "$type": "Models.WaterModel.SaturatedFlowModel, Models",
+                      "Name": "saturatedFlow"
+                    },
+                    {
+                      "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
+                      "Name": "unsaturatedFlow"
+                    },
+                    {
+                      "$type": "Models.WaterModel.EvaporationModel, Models",
+                      "Name": "evaporationModel"
+                    },
+                    {
+                      "$type": "Models.WaterModel.WaterTableModel, Models",
+                      "Name": "waterTableModel"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Soils.Water, Models",
+                  "Thickness": [
+                    100,
+                    200,
+                    300,
+                    500
+                  ],
+                  "InitialValues": [
+                    0.4,
+                    0.22,
+                    0.24,
+                    0.26
+                  ],
+                  "InitialValuesUnits": 0,
+                  "InitialPAWmm": 40.05,
+                  "FilledFromTop": true,
+                  "Name": "Water",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Name": "SowManager",
+          "CodeArray": [
+            "using System;",
+            "using Models.Core;",
+            "using Models.Agroforestry;",
+            "",
+            "namespace UserCode",
+            "{",
+            "    [Serializable]",
+            "    public class SowScript : Model",
+            "    {",
+            "        [Link(ByName = true)] private GenericFruitTree FruitTree = null!;",
+            "        private bool _sown = false;",
+            "",
+            "        [Description(\"Cultivar to sow\")]",
+            "        public string CultivarName { get; set; } = \"Default\";",
+            "        [Description(\"Population (trees/ha)\")]",
+            "        public double Population   { get; set; } = 1200;",
+            "        [Description(\"Buds per tree\")]",
+            "        public double BudNumber    { get; set; } = 300.0;",
+            "        [Description(\"Row spacing (mm)\")]",
+            "        public double RowSpacing   { get; set; } = 3500;",
+            "        [Description(\"Skiprow config (0=none,1=alt,2=2skip1,3=2skip2)\")]",
+            "        public double RowConfig    { get; set; } = 0;",
+            "        [Description(\"Seeds per m² (if no pop)\")]",
+            "        public double Seeds        { get; set; } = 0;",
+            "        [Description(\"Tillering method (-1,0,1)\")]",
+            "        public int    Tillering    { get; set; } = 0;",
+            "        [Description(\"Fertile tiller number\")]",
+            "        public double FTN          { get; set; } = 0.0;",
+            "        [Description(\"Depth (mm)\")]",
+            "        public double Depth        { get; set; } = 0.0;",
+            "        [Description(\"Max cover (0 - 1)\")]",
+            "        public double MaxCover     { get; set; } = 1.0;",
+            "",
+            "        // Sow once on the first daily tick, avoiding Commence-time arbitration.",
+            "        [EventSubscribe(\"DoDailyInitialisation\")]",
+            "        private void OnFirstDay(object sender, EventArgs e)",
+            "        {",
+            "            if (_sown) return;",
+            "            double popPerM2 = Population / 10000.0;",
+            "            FruitTree.Sow(",
+            "                CultivarName,",
+            "                popPerM2,",
+            "                Depth,",
+            "                RowSpacing,",
+            "                MaxCover,",
+            "                BudNumber,",
+            "                RowConfig,",
+            "                Seeds,",
+            "                Tillering,",
+            "                FTN);",
+            "            _sown = true;",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [
+            {
+              "Key": "CultivarName",
+              "Value": "Default"
+            },
+            {
+              "Key": "Population",
+              "Value": "1200"
+            },
+            {
+              "Key": "BudNumber",
+              "Value": "300.0"
+            },
+            {
+              "Key": "RowSpacing",
+              "Value": "3500"
+            },
+            {
+              "Key": "RowConfig",
+              "Value": "0"
+            },
+            {
+              "Key": "Seeds",
+              "Value": "0"
+            },
+            {
+              "Key": "Tillering",
+              "Value": "0"
+            },
+            {
+              "Key": "FTN",
+              "Value": "0.0"
+            },
+            {
+              "Key": "Depth",
+              "Value": "0"
+            },
+            {
+              "Key": "MaxCover",
+              "Value": "1.0"
+            }
+          ],
+          "Enabled": true,
+          "Children": []
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Name": "OrchardManagement",
+          "CodeArray": [
+            "using System;",
+            "using Models;",
+            "using Models.Core;",
+            "using Models.Agroforestry;",
+            "using Models.Soils;",
+            "",
+            "namespace UserCode",
+            "{",
+            "    [Serializable]",
+            "    public class OrchardManagementScript : Model",
+            "    {",
+            "        [Link] private Clock Clock = null!;",
+            "        [Link] private ISummary Summary = null!;",
+            "        [Link(ByName = true)] private GenericFruitTree FruitTree = null!;",
+            "        [Link] private Irrigation Irrigation = null!;",
+            "        [Link] private Fertiliser Fertiliser = null!;",
+            "",
+            "        [Description(\"Annual pruning fraction of live leaf biomass\")]",
+            "        public double PruningLeafFraction { get; set; } = 0.10;",
+            "        [Description(\"Annual pruning fraction for canopy structure and light interception\")]",
+            "        public double PruningStructuralFraction { get; set; } = 0.10;",
+            "        [Description(\"Late-February thinning fraction of live fruit biomass\")]",
+            "        public double ThinningFraction { get; set; } = 0.15;",
+            "        [Description(\"Irrigation trigger as root-zone PAW fraction\")]",
+            "        public double IrrigationPAWTrigger { get; set; } = 0.45;",
+            "        [Description(\"Irrigation amount when triggered (mm)\")]",
+            "        public double IrrigationAmount { get; set; } = 25.0;",
+            "        [Description(\"Minimum days between irrigation events\")]",
+            "        public int MinimumIrrigationInterval { get; set; } = 10;",
+            "        [Description(\"Annual nitrogen application (kg N/ha)\")]",
+            "        public double AnnualNitrogen { get; set; } = 40.0;",
+            "",
+            "        private DateTime lastIrrigation = DateTime.MinValue;",
+            "        private int lastPruneYear = int.MinValue;",
+            "        private int lastThinYear = int.MinValue;",
+            "        private int lastFertiliseYear = int.MinValue;",
+            "",
+            "        [EventSubscribe(\"DoManagement\")]",
+            "        private void OnDoManagement(object sender, EventArgs e)",
+            "        {",
+            "            if (Clock.Today.DayOfYear == 210 && lastPruneYear != Clock.Today.Year)",
+            "            {",
+            "                FruitTree.PruningLeafFraction = PruningLeafFraction;",
+            "                FruitTree.PruningStructuralFraction = PruningStructuralFraction;",
+            "                new Events(this).Publish(\"Prune\", new object[] { this, EventArgs.Empty });",
+            "                Summary.WriteMessage(this, $\"Pruned {PruningLeafFraction:P0} of live leaf biomass and {PruningStructuralFraction:P0} of canopy structure.\", MessageType.Information);",
+            "                lastPruneYear = Clock.Today.Year;",
+            "            }",
+            "",
+            "            if (Clock.Today.DayOfYear == 260 && lastFertiliseYear != Clock.Today.Year)",
+            "            {",
+            "                Fertiliser.Apply(amount: AnnualNitrogen, type: \"NO3N\");",
+            "                lastFertiliseYear = Clock.Today.Year;",
+            "            }",
+            "",
+            "            if (Clock.Today.DayOfYear == 55 && lastThinYear != Clock.Today.Year)",
+            "            {",
+            "                FruitTree.ThinningFraction = ThinningFraction;",
+            "                new Events(this).Publish(\"Thin\", new object[] { this, EventArgs.Empty });",
+            "                Summary.WriteMessage(this, $\"Thinned {ThinningFraction:P0} of live fruit biomass.\", MessageType.Information);",
+            "                lastThinYear = Clock.Today.Year;",
+            "            }",
+            "",
+            "            if ((Clock.Today - lastIrrigation).TotalDays >= MinimumIrrigationInterval",
+            "                && FruitTree.RootZonePAWFractionOutput < IrrigationPAWTrigger)",
+            "            {",
+            "                Irrigation.Apply(IrrigationAmount);",
+            "                lastIrrigation = Clock.Today;",
+            "            }",
+            "        }",
+            "    }",
+            "}"
+          ],
+          "Parameters": [
+            {
+              "Key": "PruningLeafFraction",
+              "Value": "0.10"
+            },
+            {
+              "Key": "PruningStructuralFraction",
+              "Value": "0.10"
+            },
+            {
+              "Key": "ThinningFraction",
+              "Value": "0.15"
+            },
+            {
+              "Key": "IrrigationPAWTrigger",
+              "Value": "0.45"
+            },
+            {
+              "Key": "IrrigationAmount",
+              "Value": "25.0"
+            },
+            {
+              "Key": "MinimumIrrigationInterval",
+              "Value": "10"
+            },
+            {
+              "Key": "AnnualNitrogen",
+              "Value": "40.0"
+            }
+          ],
+          "Enabled": true,
+          "Children": []
+        }
+      ]
+    }
+  ]
+}
