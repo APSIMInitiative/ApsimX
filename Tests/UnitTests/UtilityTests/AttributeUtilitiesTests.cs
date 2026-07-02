@@ -11,7 +11,7 @@ public class AttributeUtilitiesTests
 {
     private enum TestEnum
     {
-        [Description("First option")]
+        [Models.Core.Description("First option")]
         First,
         Second
     }
