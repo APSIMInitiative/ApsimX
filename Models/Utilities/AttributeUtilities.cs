@@ -91,7 +91,12 @@ public static class AttributeUtilities
     /// <returns></returns>
     public static string GetEnumDescription(Enum value)
     {
+        if (value == null)
+            return string.Empty;
+
         FieldInfo fi = value.GetType().GetField(value.ToString());
+        if (fi == null)
+            return string.Empty;
 
         DescriptionAttribute[] attributes =
         (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
