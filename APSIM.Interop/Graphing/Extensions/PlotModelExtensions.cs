@@ -32,8 +32,8 @@ namespace APSIM.Interop.Graphing.Extensions
 
         public static void SetLegendBackground(this PlotModel plot, OxyColor colour)
         {
-        foreach (LegendBase legend in plot.Legends)
-            legend.LegendBackground = colour;
+            foreach (LegendBase legend in plot.Legends)
+                legend.LegendBackground = colour;
         }
 
         public static void SetLegendFontSize(this PlotModel plot, double size)

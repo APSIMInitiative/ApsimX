@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using APSIM.Interop.Graphing;
 using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Interop.Graphing.Extensions;
 using APSIM.Numerics;
@@ -74,7 +75,7 @@ namespace UserInterface.Views
             set
             {
                 markerSize = value;
-                double numericValue = GetMarkerSizeNumericValue(value);
+                double numericValue = value.ToOxyPlotMarkerSize();
                 if (plot1 != null && plot1.Model != null)
                     foreach (var series in plot1.Model.Series.OfType<LineSeriesWithTracker>())
                         series.MarkerSize = numericValue;
@@ -561,8 +562,7 @@ namespace UserInterface.Views
                     series.MarkerType = type;
                 }
 
-                //MarkerSize = markerSize;
-                series.MarkerSize = GetMarkerSizeNumericValue(markerSize) * markerModifier;
+                series.MarkerSize = markerSize.ToOxyPlotMarkerSize() * markerModifier;
 
                 series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
                 if (filled)
@@ -586,23 +586,6 @@ namespace UserInterface.Views
                 this.plot1.Model.Series.Add(series);
             }
 
-        }
-
-        private double GetMarkerSizeNumericValue(MarkerSize markerSize)
-        {
-            if (markerSize == MarkerSize.Large)
-                return 9.0;
-
-            if (markerSize == MarkerSize.Normal)
-                return 7.0;
-
-            if (markerSize == MarkerSize.Small)
-                return 5.0;
-
-            if (markerSize == MarkerSize.VerySmall)
-                return 3.0;
-
-            throw new NotImplementedException($"No supported marker size translation for {markerSize}");
         }
 
         /// <summary>
@@ -640,7 +623,6 @@ namespace UserInterface.Views
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
-
 
                 // By default, clicking on a datapoint (a bar) of a bar graph
                 // will create a pop-up showing the x/y values at the beginning
@@ -943,11 +925,6 @@ namespace UserInterface.Views
                 series.WhiskerWidth = width;
 
                 plot1.Model.Series.Add(series);
-
-                OxyPlot.Axes.Axis xAxis = GetAxis(xAxisType);
-
-                //xAxis.Minimum = 0 - width;
-                //xAxis.Maximum = plot1.Model.Series.OfType<BoxPlotSeries>().Count() - 1 + width;
             }
         }
 
@@ -1796,7 +1773,7 @@ namespace UserInterface.Views
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
             {
-                OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
+                OxyPlot.Axes.AxisPosition position = axisType.ToOxyAxisPosition();
                 OxyPlot.Axes.Axis axisToAdd;
                 if (dataType == typeof(DateTime))
                 {
@@ -1838,7 +1815,7 @@ namespace UserInterface.Views
         /// <returns>The axis</returns>
         private int GetAxisIndex(APSIM.Shared.Graphing.AxisPosition axisType)
         {
-            OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
+            OxyPlot.Axes.AxisPosition position = axisType.ToOxyAxisPosition();
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
             {
                 if (this.plot1.Model.Axes[i].Position == position)
@@ -1848,29 +1825,6 @@ namespace UserInterface.Views
             }
 
             return -1;
-        }
-
-        /// <summary>
-        /// Convert the Axis.AxisType into an OxyPlot.AxisPosition.
-        /// </summary>
-        /// <param name="type">The axis type</param>
-        /// <returns>The position of the axis.</returns>
-        private OxyPlot.Axes.AxisPosition AxisTypeToPosition(APSIM.Shared.Graphing.AxisPosition type)
-        {
-            if (type == APSIM.Shared.Graphing.AxisPosition.Bottom)
-            {
-                return OxyPlot.Axes.AxisPosition.Bottom;
-            }
-            else if (type == APSIM.Shared.Graphing.AxisPosition.Left)
-            {
-                return OxyPlot.Axes.AxisPosition.Left;
-            }
-            else if (type == APSIM.Shared.Graphing.AxisPosition.Top)
-            {
-                return OxyPlot.Axes.AxisPosition.Top;
-            }
-
-            return OxyPlot.Axes.AxisPosition.Right;
         }
 
         /// <summary>

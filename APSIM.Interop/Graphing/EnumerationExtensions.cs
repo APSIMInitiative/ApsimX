@@ -52,7 +52,6 @@ namespace APSIM.Interop.Graphing
                 case LineThickness.Normal:
                     return 0.5;
                 case LineThickness.Thin:
-                    // todo: test this
                     return 0.25;
                 default:
                     throw new NotImplementedException($"Unknown line thickness: {thickness}");
