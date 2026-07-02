@@ -21,7 +21,7 @@ Run from the repository root (folder containing `ApsimX.sln`):
 
 ```bash
 dotnet build --configuration Release
-dotnet test --configuration Release --no-build
+dotnet test
 ```
 
 Notes:
