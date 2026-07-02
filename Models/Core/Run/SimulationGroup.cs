@@ -289,7 +289,8 @@ namespace Models.Core.Run
                             storage.Writer.Clean(names, false);
                         }
                         foreach (IRunnable job in jobs)
-                            Add(job);
+                            if (job.Enabled)
+                                Add(job);
                     }
 
                     if (numJobsToRun == 0)

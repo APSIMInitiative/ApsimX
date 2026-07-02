@@ -38,5 +38,8 @@ namespace Models.Core.Run
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
         public double Progress { get { return 1; } }
+
+        /// <summary> Returns true if the job is enabled</summary>
+        public bool Enabled => true;
     }
 }

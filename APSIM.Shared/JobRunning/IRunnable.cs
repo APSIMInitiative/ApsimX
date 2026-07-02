@@ -13,6 +13,9 @@
         /// </summary>
         string Name { get; }
 
+        /// <summary> Returns true if the job is enabled</summary>
+        bool Enabled { get; }
+
         /// <summary>
         /// Prepare to run.
         /// </summary>
