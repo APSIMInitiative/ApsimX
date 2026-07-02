@@ -137,17 +137,10 @@ namespace UserInterface.Presenters
                 //Forward check for invalid enum values so this can report an error to the gui
                 if (property.PropertyType.IsEnum)
                 {
-                    object objValue = null;
-                    try
-                    {
-                        objValue = property.GetValue(obj);
-                        AttributeUtilities.GetEnumDescription((Enum)Enum.Parse(property.PropertyType, objValue?.ToString()));
-                    }
-                    catch (Exception exception)
-                    {
-                        presenter.MainPresenter.ShowError($"Error: Cannot match Enum {property.Name} with value {objValue} to valid Enum Value. Reset to default. " + exception.Message);
-                        property.SetValue(obj, Activator.CreateInstance(property.PropertyType));
-                    }
+                    object objValue = property.GetValue(obj);
+                    string text = AttributeUtilities.GetEnumDescription((Enum)Enum.Parse(property.PropertyType, objValue?.ToString()));
+                    if (string.IsNullOrEmpty(text))
+                        presenter.MainPresenter.ShowError($"Error: Cannot match Enum {property.Name} with value {objValue} to valid Enum Value.");
                 }
 
                 // Assign any category attribute details here for category based property presenter (currently in CLEM)
