@@ -135,17 +135,18 @@ namespace UserInterface.Presenters
             foreach (PropertyInfo property in allProperties)
             {
                 //Forward check for invalid enum values so this can report an error to the gui
-                object objValue = property.GetValue(obj);
                 if (property.PropertyType.IsEnum)
                 {
+                    object objValue = null;
                     try
                     {
+                        objValue = property.GetValue(obj);
                         AttributeUtilities.GetEnumDescription((Enum)Enum.Parse(property.PropertyType, objValue?.ToString()));
                     }
                     catch (Exception exception)
                     {
                         presenter.MainPresenter.ShowError($"Error: Cannot match Enum {property.Name} with value {objValue} to valid Enum Value. Reset to default. " + exception.Message);
-                        property.SetValue(obj, 0); //set the value back to index 0
+                        property.SetValue(obj, Activator.CreateInstance(property.PropertyType));
                     }
                 }
 
