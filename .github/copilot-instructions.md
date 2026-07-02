@@ -17,7 +17,7 @@
 3. Prefer modifying existing files and patterns over introducing new abstractions.
 
 ## Build and test commands (verified)
-Run from `/ApsimX`:
+Run from the repository root (folder containing `ApsimX.sln`):
 
 ```bash
 dotnet build --configuration Release
