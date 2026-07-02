@@ -17,6 +17,7 @@ weight: 20
 * Ensure a pull request is close to the tip revision i.e. ensure the most recent version of repo is pulled into the PR branch.
 * A pull request must only do one thing.
 * A pull request should briefly and concisely describe what the issue was, what changes have been made and the rationale.
+* If the pull request resolves an issue, the first line of the PR description must be exactly `resolves #issue` (no other text on that line).
 * Changes to observed data, or the addition of new data, should be on a PR with no other changed files. This allows the software team to clearly see the effect of the changed/new data without it being confounded by other changes.
 * **Science** changes require observed data to demonstrate that the change does what it intends. Additionally unit tests are to be included.
 * **Graphical user interface (GUI)** changes and fixes that include a short video showing the changes working will improve review time.

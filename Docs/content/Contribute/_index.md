@@ -24,7 +24,7 @@ The software team will:
 ### Step 3 Developer raises a GitHub Pull Request (PR)
 
 * Ensure the PR conforms to the [PR guidelines](/contribute/pullrequests)
-* The developer must link to an issue. Use ```working on #issue``` or ```resolves #issue```
+* The developer must link to an issue. If the PR resolves an issue, the first line of the PR description must be exactly ```resolves #issue``` (no other text on that line).
 * Ensure the PR matches the Issue
 * The build/test system will run automatically and set a green/red (pass/fail) status.
 * The developer may need to push changes multiple times to resolve errors.
