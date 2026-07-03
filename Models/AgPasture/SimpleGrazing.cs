@@ -570,7 +570,7 @@ namespace Models.AgPasture
 
             // Determine if we can graze today.
             GrazedToday = false;
-            if (externalInputsAndRemovals.PastureRequested)
+            if (externalInputsAndRemovals.PastureRequested || externalInputsAndRemovals.UrineDungDeposited)
             {
                 GrazedToday = true;
             }
@@ -604,7 +604,7 @@ namespace Models.AgPasture
 
             foreach (var zone in zones)
             {
-                if (externalInputsAndRemovals.UrineDungDeposited) // override the residual with the requested amount if it is set
+                if (externalInputsAndRemovals.PastureRequested) // override the residual with the requested amount if it is set
                 {
                     zone.RemoveDMFromPlants(externalInputsAndRemovals.BiomassRequested, externalInputsAndRemovals.SpeciesProportionToTake, ZoneWithForage.StyleOfPastureRemoval.GrazeByAmount);
                 }
@@ -652,7 +652,7 @@ namespace Models.AgPasture
             int numberUrinations;
 
             // if external urine and dung is available then use that for values
-            if (externalInputsAndRemovals.PastureRequested)
+            if (externalInputsAndRemovals.UrineDungDeposited)
             {
                 double urineN = externalInputsAndRemovals.UrineNitrogen;
                 double dungN = externalInputsAndRemovals.DungNitrogen;
