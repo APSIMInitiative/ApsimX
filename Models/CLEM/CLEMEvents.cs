@@ -453,7 +453,13 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    int day = Clock.StartDate.Day;
+                    if (TimeStep == TimeStepTypes.Monthly)
+                    {
+                        day = 1;
+                    }
+
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, day);
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
                     {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
