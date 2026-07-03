@@ -345,8 +345,8 @@ namespace Models.CLEM
         /// <summary>Fire ruminant growth ready to take pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoStock")]
-        protected virtual void OnAPSIMStock(object sender, EventArgs args)
+        [EventSubscribe("DoManagement")]
+        protected virtual void OnAPSIMDoManagement(object sender, EventArgs args)
         {
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
