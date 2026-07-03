@@ -1,12 +1,11 @@
-﻿using MathNet.Numerics;
-using Models;
+﻿using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Logging;
+using Models.Soils;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text;
 using UserInterface.Commands;
@@ -152,30 +151,15 @@ namespace UserInterface.Presenters
                 if (!initialConditions.ContainsKey(simulationName))
                     initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
-                IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName].Select(i => i);
+                IEnumerable<InitialConditionsTable> initialTables = initialConditions[simulationName];
 
                 // Initial condition tables list for solutes.
                 List<InitialConditionsTable> soluteTables = new List<InitialConditionsTable>();
                 List<InitialConditionsTable> tablesWithoutSolutes = new List<InitialConditionsTable>();
-                DataTable soluteTable = new() { TableName = "Solutes" };
 
                 OrganiseInitialConditionTables(initialTables, soluteTables, tablesWithoutSolutes);
                 AppendInitialConditionsToMarkdown(markdown, tablesWithoutSolutes);
-                StringBuilder soluteMarkdownTable = new StringBuilder();
-                CreateSoluteMarkDownTable(soluteTables, soluteMarkdownTable);
-                CreateSoluteTableHeadings(soluteTables, soluteMarkdownTable);
-                soluteMarkdownTable.AppendLine();
-                soluteMarkdownTable.Append("|");
-                CreateSoluteTableHeadingDividers(soluteTables, soluteMarkdownTable);
-                soluteMarkdownTable.AppendLine();
-                CreateSoluteTableSubHeadings(soluteTables, soluteMarkdownTable);
-
-                List<List<InitialCondition>> allInitialConditionsLists = new();
-                List<List<string>> tempValueLists = new();
-                CreateInitialConditionLists(soluteTables, allInitialConditionsLists, tempValueLists);
-                soluteMarkdownTable.AppendLine();
-                CreateSoluteValueRows(soluteMarkdownTable, tempValueLists);
-                markdown.Append(soluteMarkdownTable.ToString());
+                markdown.Append(BuildSoluteGridMarkdown(soluteTables));
             }
 
             // Fetch messages from the model for this simulation name.
@@ -249,102 +233,117 @@ namespace UserInterface.Presenters
             markdown.AppendLine(string.Join("", tablesWithoutSolutes.Select(i => i.ToMarkdown())));
         }
 
-        private void CreateSoluteMarkDownTable(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        private string BuildSoluteGridMarkdown(IReadOnlyList<InitialConditionsTable> soluteTables)
         {
-            if (soluteTables.Count > 0)
-                soluteMarkdownTable.AppendLine("### Solutes");
-            soluteMarkdownTable.AppendLine();
-            soluteMarkdownTable.Append("|");
-        }
+            if (soluteTables == null || soluteTables.Count == 0)
+                return string.Empty;
 
-        private void CreateSoluteTableHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
-        {
-            bool isFirstTableNamePrinted = false;
-            foreach (InitialConditionsTable table in soluteTables)
+            var soluteColumns = soluteTables.Select(BuildSoluteColumns).ToList();
+            StringBuilder markdown = new StringBuilder();
+            markdown.AppendLine("### Solutes");
+            markdown.AppendLine();
+
+            markdown.Append("|Depth (mm)|");
+            foreach (var solute in soluteColumns)
+                markdown.Append($"{solute.Name} ({solute.PrimaryLabel})|{solute.Name} ({solute.SecondaryLabel})|");
+            markdown.AppendLine();
+
+            markdown.Append("|---|");
+            foreach (var _ in soluteColumns)
+                markdown.Append("---:|---:|");
+            markdown.AppendLine();
+
+            int rowCount = soluteColumns.Max(s => s.Depth.Count);
+            for (int row = 0; row < rowCount; row++)
             {
-                if (!isFirstTableNamePrinted)
+                markdown.Append("|");
+                markdown.Append(GetAt(soluteColumns[0].Depth, row));
+                markdown.Append("|");
+
+                foreach (var solute in soluteColumns)
                 {
-                    soluteMarkdownTable.AppendFormat("|{0}|   |", table.Model.Name);
-                    isFirstTableNamePrinted = true;
+                    markdown.Append(FormatNumericOrText(GetAt(solute.Primary, row)));
+                    markdown.Append("|");
+                    markdown.Append(FormatNumericOrText(GetAt(solute.Secondary, row)));
+                    markdown.Append("|");
                 }
-                else soluteMarkdownTable.AppendFormat("{0}|   |", table.Model.Name);
+                markdown.AppendLine();
             }
+
+            markdown.AppendLine();
+            return markdown.ToString();
         }
 
-        private void CreateSoluteTableHeadingDividers(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        private (string Name, List<string> Depth, List<string> Primary, List<string> Secondary, string PrimaryLabel, string SecondaryLabel) BuildSoluteColumns(InitialConditionsTable table)
         {
-            bool isFirstSoluteTablePrinted = false;
-            foreach (InitialConditionsTable table in soluteTables)
-            {
-                if (!isFirstSoluteTablePrinted)
-                {
-                    soluteMarkdownTable.AppendFormat("---|---:|---:|");
-                    isFirstSoluteTablePrinted = true;
-                }
-                else soluteMarkdownTable.AppendFormat("---:|---:|");
-            }
+            List<InitialCondition> conditions = table.Conditions?.ToList() ?? new List<InitialCondition>();
+
+            InitialCondition depthCondition = conditions.FirstOrDefault(c => string.Equals(c.Name, "Depth", StringComparison.OrdinalIgnoreCase));
+            List<InitialCondition> valueConditions = conditions.Where(c => !string.Equals(c.Name, "Depth", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            List<string> depth = SplitValues(depthCondition.Value);
+            List<string> primary = SplitValues(valueConditions.ElementAtOrDefault(0).Value);
+            List<string> secondary = SplitValues(valueConditions.ElementAtOrDefault(1).Value);
+
+            return (
+                table.Model?.Name ?? "Solute",
+                depth,
+                primary,
+                secondary,
+                GetLabel(table, valueConditions.ElementAtOrDefault(0), "value"),
+                GetLabel(table, valueConditions.ElementAtOrDefault(1), "alt")
+            );
         }
 
-        private void CreateSoluteTableSubHeadings(List<InitialConditionsTable> soluteTables, StringBuilder soluteMarkdownTable)
+        private string GetLabel(InitialConditionsTable table, InitialCondition condition, string fallback)
         {
-            if (soluteTables?.Count > 0)
-                soluteMarkdownTable.Append("|**Depth(mm)**|");
+            if (string.IsNullOrWhiteSpace(condition.Name))
+                return fallback;
 
-            foreach (InitialConditionsTable table in soluteTables)
+            if (!string.IsNullOrWhiteSpace(condition.Units))
+                return condition.Units;
+
+            if (table.Model is Solute solute)
             {
-                IEnumerable<string> units = table.Conditions.Select(i => i.Units);
-                List<string> unitStrings = units.ToList();
-                if (unitStrings[1] == "ppm")
-                    soluteMarkdownTable.Append($"**{unitStrings[1]}**|**kg/ha**|");
-                else
-                    soluteMarkdownTable.Append($"**{unitStrings[1]}**|**ppm**|");
+                bool initialIsPpm = solute.InitialValuesUnits == Solute.UnitsEnum.ppm;
+                if (string.Equals(condition.Name, "InitialValues", StringComparison.OrdinalIgnoreCase))
+                    return initialIsPpm ? "ppm" : "kg/ha";
+                if (string.Equals(condition.Name, "InitialValuesConverted", StringComparison.OrdinalIgnoreCase))
+                    return initialIsPpm ? "kg/ha" : "ppm";
             }
+
+            if (string.Equals(condition.Name, "InitialValues", StringComparison.OrdinalIgnoreCase))
+                return "initial";
+            if (string.Equals(condition.Name, "InitialValuesConverted", StringComparison.OrdinalIgnoreCase))
+                return "converted";
+
+            return condition.Name;
         }
 
-        private void CreateInitialConditionLists(List<InitialConditionsTable> soluteTables, List<List<InitialCondition>> allInitialConditionsLists, List<List<string>> tempValueLists)
+        private List<string> SplitValues(string values)
         {
-            foreach (InitialConditionsTable table in soluteTables)
-            {
-                // Temp storage for each condition for allInitialConditionsLists.
-                List<InitialCondition> conditions = new List<InitialCondition>();
-                foreach (InitialCondition condition in table.Conditions)
-                {
-                    string stringToBeList = condition.Value;
-                    List<string> newConditionValueList = stringToBeList.Split(", ").ToList();
-                    tempValueLists.Add(newConditionValueList);
-                    conditions.Add(condition);
-                }
-                allInitialConditionsLists.Add(conditions);
-            }
+            if (string.IsNullOrWhiteSpace(values))
+                return new List<string>();
+
+            return values
+                .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .ToList();
         }
 
-        private void CreateSoluteValueRows(StringBuilder soluteMarkdownTable, List<List<string>> tempValueLists)
+        private string GetAt(List<string> values, int index)
         {
-            int valueCount = 0;
-            if (tempValueLists.Count > 0)
-            {
-                valueCount = tempValueLists[0].Count;
-            }
-            // Create a markdown table row for each value in the list.
-            for (int i = 0; i < valueCount; i++)
-            {
-                soluteMarkdownTable.Append("| ");
-                // Put the actual value in the markdown table.
-                bool depthPrinted = false;
-                foreach (List<string> valueList in tempValueLists)
-                {
-                    double convertedValue = 0.0;
-                    bool canConvert = double.TryParse(valueList[i], out convertedValue);
-                    if (canConvert)
-                        soluteMarkdownTable.AppendFormat("{0:F3}|", convertedValue.Round(3));
-                    else if (!depthPrinted && !canConvert)
-                    {
-                        soluteMarkdownTable.AppendFormat("{0}|", valueList[i]);
-                        depthPrinted = true;
-                    }
-                }
-                soluteMarkdownTable.AppendLine();
-            }
+            if (values == null || index < 0 || index >= values.Count)
+                return string.Empty;
+
+            return values[index];
+        }
+
+        private string FormatNumericOrText(string value)
+        {
+            if (double.TryParse(value, out double numericValue))
+                return numericValue.ToString("F3");
+
+            return value ?? string.Empty;
         }
     }
 }
