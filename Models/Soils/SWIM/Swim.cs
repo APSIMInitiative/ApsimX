@@ -125,13 +125,9 @@ namespace Models.Soils
         private const double slcerr = 0.000001;
 
         /// <summary>Depth in the soil to assess water content for runoff effect (mm).</summary>
-        [Description("Hydraulically-effective depth in the soil (mm). Default: 450 mm")]
-        [Bounds(Lower = 1.0, Upper = 1000.0)]
         public double hydrol_effective_depth { get; set; } = 450;
 
         /// <summary>Exponent in the equation for hydraulic effectiveness for runoff (-).</summary>
-        [Description("Exponent in the hydraulically-effective depth equation (-). Default: 4.16")]
-        [Bounds(Lower = 0.1, Upper = 10.0)]
         public double hydrol_effective_exponent { get; set; } = 4.16;
 
         private double[] _swf;
