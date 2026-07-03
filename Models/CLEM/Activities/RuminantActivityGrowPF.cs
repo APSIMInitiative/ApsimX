@@ -460,7 +460,7 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
+            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
             ind.Weight.Protein.NormalShortfall = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
@@ -573,11 +573,11 @@ namespace Models.CLEM.Activities
             ind.Weight.Adjust();
 
             // Equations 118-120   ==================================================
-            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactationActual / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
+            ind.Output.NitrogenBalance =  (ind.Intake.CrudeProtein * daysInTimeStep)/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactationActual / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
             // Total fecal protein
-            ind.Weight.Protein.ForFaecal = ind.Intake.IndigestibleUDP + ind.Parameters.GrowPF_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + ind.Weight.Protein.ForEndogenousFaecal;
+            ind.Weight.Protein.ForFaecal = (ind.Intake.IndigestibleUDP * daysInTimeStep) + ind.Parameters.GrowPF_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + ind.Weight.Protein.ForEndogenousFaecal;
             // Total urinary protein
-            ind.Weight.Protein.ForUrinary = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
+            ind.Weight.Protein.ForUrinary = (ind.Intake.CrudeProtein * daysInTimeStep) - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
             ind.Output.NitrogenUrine = ind.Weight.Protein.ForUrinary / 6.25 * daysInTimeStep;
             ind.Output.NitrogenFaecal = ind.Weight.Protein.ForFaecal / 6.25 * daysInTimeStep;
 
