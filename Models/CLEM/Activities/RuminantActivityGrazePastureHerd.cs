@@ -488,14 +488,8 @@ namespace Models.CLEM.Activities
 
             if (apsimLink is not null) 
             {
-                // set daily pasture to remove and urine dung details per hectare
-                if (pastureRequest.Provided == 0)
-                {
-                    apsimLink?.SimpleGrazingModel.ProvideExternalLivestockNoGrazing();
-                    return;
-                }
-
                 // set the amount to take from pasture if APSIMLink
+                // allow these to set values even if pasture.provided = 0 which allows animals to be on pasture with 0 consumption (no pasture) but still urinate etc.
                 apsimLink.SimpleGrazingModel?.ProvideExternalLivestockConsumption(apsimLink.ConvertToPerHaPerDay(pastureRequest.Provided, events.Interval));
 
                 // set the urine returned to pasture
@@ -506,17 +500,6 @@ namespace Models.CLEM.Activities
 
                 apsimLink.SimpleGrazingModel?.ProvideExternalLivestockInputs(urineN, dungN, dung, numberOfUrinations);
             }
-
-            // feed quality reduction will now have been handled by ruminant.Intake
-            // report any grazePaddock.TimeStepForageConsumed.Amount here
-
-            // check if we need to update the resource request or if this is handled automatically. 
-            // update the amount actually taken and perfrm transaction recording.
-
-            // convert amounts to total per time step
-            //pastureRequest.Available *= events.Interval;
-            //pastureRequest.Required *= events.Interval;
-
 
             // report shortfalls based on multipliers.
 
