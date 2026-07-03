@@ -847,7 +847,7 @@ namespace UserInterface.Presenters
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
                 string summaryFleName = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".sum");
-                Summary.WriteSummaryToTextFiles(storage, summaryFleName, Configuration.Settings.DarkTheme);
+                SummaryReport.WriteSummaryToTextFiles(storage, summaryFleName, Configuration.Settings.DarkTheme);
                 explorerPresenter.MainPresenter.ShowMessage("Summary file written: " + summaryFleName, Simulation.MessageType.Information);
             }
             catch (Exception err)
