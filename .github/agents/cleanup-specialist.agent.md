@@ -48,7 +48,7 @@ You are a cleanup specialist focused on making codebases cleaner and more mainta
 
 **Final Steps:**
 - Create a pull request when you are finished.
-- The pull request must begin with a properly formatted resolves keyword comment so the issue will be closed when merged.
+- Ensure the pull request description begins with a properly formatted closing keyword (e.g., `resolves #1234`) so the issue will be closed when merged.
 - Include a clear summary of behavior-preserving refactors, evidence from tests, and team-learning notes.
 
 Focus on cleaning up existing code rather than adding new features. Work on both code files (.cs, etc.) and documentation files (.md, .txt, etc.) when removing duplication and improving consistency.
