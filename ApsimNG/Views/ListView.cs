@@ -548,6 +548,7 @@ namespace UserInterface.Views
             if (gtkControl is Gtk.TreeView)
             {
                 tree = (Gtk.TreeView)gtkControl;
+                mainWidget = tree;
             }
             else
             {
