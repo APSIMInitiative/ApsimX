@@ -226,11 +226,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Converts an amount to units per hectare per day
         /// </summary>
-        /// <param name="amount">Amount to convert</param>
+        /// <param name="amountToConvert">Amount to convert</param>
         /// <param name="daysInTimeStep">Number of days in current time step</param>
-        public double ConvertToPerHaPerDay(double amount, int daysInTimeStep)
+        public double ConvertToPerHaPerDay(double amountToConvert, int daysInTimeStep)
         {
-            return amount / paddock.Area / daysInTimeStep;
+            return amountToConvert / paddock.Area / daysInTimeStep;
         }
 
         /// <summary>
