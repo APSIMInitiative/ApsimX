@@ -65,8 +65,6 @@ namespace Models.CLEM
         public event EventHandler CLEMAnimalMilkProduction;
         /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
         public event EventHandler CLEMAnimalWeightGain;
-        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
-        public event EventHandler CLEMDailyASPIMForageTake;
         /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
         public event EventHandler CLEMAnimalDeath;
         /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
@@ -363,13 +361,6 @@ namespace Models.CLEM
                 CLEMGetResourcesRequired?.Invoke(this, args);
                 CLEMAnimalWeightGain?.Invoke(this, args);
                 CLEMPostRuminantConsumption?.Invoke(this, args);
-            }
-
-            // allow access to daily time step of APSIM models to remove daily intake from forages when CLEM is not running on daily time step 
-            CLEMDailyASPIMForageTake?.Invoke(this, args);
-
-            if (Clock.Today == timeStepEnd)
-            {
                 CLEMCollectManure?.Invoke(this, args);
             }
         }
