@@ -212,7 +212,10 @@ namespace UserInterface.Presenters
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-            return obj.GetType().GetProperties(flags);
+            if (obj == null)
+                return new List<PropertyInfo>();
+            else
+                return obj.GetType().GetProperties(flags);
         }
 
         /// <summary>
