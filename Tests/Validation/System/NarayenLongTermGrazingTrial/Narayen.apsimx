@@ -13,9 +13,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "ObservedPeakYieldAnnualSummary 1970-1990.xlsx",
-            "ObservedPctSownGrassAnnualSummary 1970-1990.xlsx",
-            "ObservedLWGAnnualSummary 1970-1990.xlsx"
+            "ObservedDigestibility.xlsx"
           ],
           "SheetNames": [
             "Observed"
