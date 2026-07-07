@@ -423,8 +423,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
-
-
             double convertToKgInPaddock = 10.0 * paddock.Area;
             double convert = (tonnes ? 1000 : 1) * (hectares ? paddock.Area : 1);
             double valueToUse = 0;

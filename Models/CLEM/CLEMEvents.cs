@@ -348,9 +348,10 @@ namespace Models.CLEM
         [EventSubscribe("DoManagement")]
         protected virtual void OnAPSIMDoManagement(object sender, EventArgs args)
         {
+            // trialing running these at the start of the time step to allow the daily inputs and outputs to be applied to APSIM models as they run through the CLEM interval.
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
-            if (Clock.Today == timeStepEnd)
+            if (Clock.Today == timeStepStart)
             {
                 CLEMPastureReady?.Invoke(this, args);
                 CLEMDoCutAndCarry?.Invoke(this, args);
@@ -373,7 +374,7 @@ namespace Models.CLEM
         {
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
-            if (Clock.Today == timeStepEnd)
+            if (Clock.Today == timeStepStart)
             {
                 CLEMManagePendingTransactions?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
@@ -391,7 +392,7 @@ namespace Models.CLEM
                 CLEMFinalizeTimeStep?.Invoke(this, args);
                 CLEMEndOfTimeStep?.Invoke(this, args);
 
-                SetNextTimeStep(Clock.Today.AddDays(1));
+                SetNextTimeStep(Clock.Today.AddDays(Interval));
             }
         }
 
