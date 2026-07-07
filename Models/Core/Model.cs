@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
-using APSIM.Shared.Utilities;
 using Models.Factorial;
 using Newtonsoft.Json;
 using APSIM.Core;
+using Models.PreSimulationTools;
 
 namespace Models.Core
 {
@@ -18,6 +17,7 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
+    [ValidParent(typeof(Import))]
     public abstract class Model : IModel, INodeModel, ICreatable
     {
         [NonSerialized]

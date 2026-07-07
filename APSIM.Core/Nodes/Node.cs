@@ -528,11 +528,17 @@ public class Node : IStructure
         // Replace all models that have a ResourceName with the official, released models from resources.
         Resource.Instance.Replace(head);
 
+        //check if this will generate nodes, if so, we can't do this in the background
+        bool willGenerateNodes = false;
+        foreach (var node in head.Walk())
+            if (node.Model is IGenerateNodes)
+                willGenerateNodes = true;
+
         // Initialise the model.
         if (doInitialise)
         {
             // Call created in all models.
-            if (initInBackground)
+            if (initInBackground && !willGenerateNodes)
                 Task.Run(() => head.InitialiseModel(errorHandler));
             else
                 head.InitialiseModel(errorHandler);
@@ -557,6 +563,9 @@ public class Node : IStructure
                 try
                 {
                     (node.Model as ICreatable).OnCreated();
+                    if (node.Parent != null)
+                        if (node.Model is IGenerateNodes generateNode)
+                            generateNodes.Add(generateNode);
                 }
                 catch (Exception err)
                 {
@@ -564,6 +573,14 @@ public class Node : IStructure
                         throw;
                     errorHandler(err);
                 }
+            }
+
+            string directory = Path.GetDirectoryName(Walk().First().FileName);
+            foreach (IGenerateNodes model in generateNodes)
+            {
+                model.FilePath.SetStartDirectory(directory);
+                model.DeleteNodes();
+                model.CreateNodes();
             }
         }
         finally

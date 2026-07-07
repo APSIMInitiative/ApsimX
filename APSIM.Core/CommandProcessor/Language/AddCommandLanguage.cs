@@ -19,9 +19,9 @@ internal partial class AddCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\w\d\[\]\.]+";
-        string modelNamePattern = @"[\w\d]+";
-        string fileNamePattern = @"[\w\d-_\.\\:/]+";
+        string modelNameWithBrackets = @"""?[\w\d-\[\]\. ]+""?";
+        string modelNamePattern = @"""?[\w\d- ]+""?";
+        string fileNamePattern = @"""?[\w\d-_\.\\:/ ]+""?";
 
         string pattern = $@"add (?<new>new)*" + @"\s*" +
                          $@"(?<modelname>{modelNameWithBrackets})" + @"\s+" +
