@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.PostSimulationTools;
+using Models.PreSimulationTools;
 using Models.Storage;
 
 namespace Models.Core.Run
@@ -179,8 +180,9 @@ namespace Models.Core.Run
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
 
-            if (storage?.Writer != null)
-                storage.Writer.TablesModified.Clear();
+            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                if (datastore.Writer != null)
+                    datastore.Writer.TablesModified.Clear();
 
             if (runPreAndPostSimulationTools)
             {
@@ -210,7 +212,7 @@ namespace Models.Core.Run
         public void StorageFinishWriting()
         {
             storage?.Writer.Stop();
-            storage?.Reader.Refresh();
+            storage?.Refresh();
         }
 
         /// <summary>Initialise the instance.</summary>
@@ -267,7 +269,7 @@ namespace Models.Core.Run
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
                     // Find a storage model.
-                    storage = rootModel.Node.FindChild<IDataStore>();
+                    storage = rootModel.Node.FindChild<IDataStore>(recurse: true);
 
                     // Find simulations to run.
                     if (runSimulations)
@@ -322,7 +324,7 @@ namespace Models.Core.Run
                     if (SimulationNameIsMatched(description.Name))
                         yield return description;
             }
-            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations)
+            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations || relativeTo is Import)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)
@@ -350,8 +352,7 @@ namespace Models.Core.Run
             // Call all pre simulation tools.
             foreach (IPreSimulationTool tool in FindPreSimulationTools())
             {
-                storage?.Writer.WaitForIdle();
-                storage?.Reader.Refresh();
+                storage.Refresh();
                 try
                 {
                     if (tool.Enabled)
@@ -381,8 +382,7 @@ namespace Models.Core.Run
             object[] args = new object[] { this, new EventArgs() };
             foreach (IPostSimulationTool tool in FindPostSimulationTools())
             {
-                storage?.Writer.WaitForIdle();
-                storage?.Reader.Refresh();
+                storage?.Refresh();
 
                 DateTime startTime = DateTime.Now;
                 Exception exception = null;
@@ -414,8 +414,7 @@ namespace Models.Core.Run
         /// <summary>Run all tests.</summary>
         private void RunTests()
         {
-            storage?.Writer.WaitForIdle();
-            storage?.Reader.Refresh();
+            storage?.Refresh();
 
             List<object> services;
             if (relativeTo is Simulations)

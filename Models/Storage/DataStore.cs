@@ -15,12 +15,8 @@ namespace Models.Storage
     [ViewName("ApsimNG.Resources.Glade.DataStoreView.glade")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class DataStore : Model, IDataStore, IDisposable, IStructureDependency
+    public class DataStore : Model, IDataStore, IDisposable
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>A database connection</summary>
         [NonSerialized]
         private IDatabaseConnection connection = null;
@@ -191,12 +187,12 @@ namespace Models.Storage
         {
             string extension = ".db";
 
-            Simulations simulations = Structure?.FindParent<Simulations>(recurse: true);
+            Simulations simulations = Node.FindParent<Simulations>(recurse: true);
 
             // If we have been cloned prior to a run, then we won't be able to locate
             // the simulations object. In this situation we can fallback to using the
             // parent simulation's filename (which should be the same anyway).
-            Simulation simulation = Structure?.FindParent<Simulation>(recurse: true);
+            Simulation simulation = Node.FindParent<Simulation>(recurse: true);
 
             if (useInMemoryDB)
                 FileName = ":memory:";
@@ -287,6 +283,20 @@ namespace Models.Storage
                 throw new NotImplementedException();
             }
             return "";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Refresh()
+        {
+            IModel rootModel = Node.FindParent<Simulations>(recurse: true);
+            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                if (datastore.Writer != null)
+                    datastore.Writer.WaitForIdle();
+            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                if (datastore.Reader != null)
+                    datastore.Reader.Refresh();
         }
     }
 }

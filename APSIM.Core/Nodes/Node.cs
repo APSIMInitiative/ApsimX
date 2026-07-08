@@ -554,18 +554,28 @@ public class Node : IStructure
     {
         try
         {
-            foreach (var node in Walk())
-                node.IsInitialising = true;
-
             List<IGenerateNodes> generateNodes = new List<IGenerateNodes>();
+            foreach (var node in Walk())
+            {
+                node.IsInitialising = true;
+                if (node.Parent != null)
+                        if (node.Model is IGenerateNodes generateNode)
+                            generateNodes.Add(generateNode);
+            }
+                
+            string directory = Path.GetDirectoryName(Walk().First().FileName);
+            foreach (IGenerateNodes model in generateNodes)
+            {
+                model.FilePath.SetStartDirectory(directory);
+                model.DeleteNodes();
+                model.CreateNodes();
+            }
+
             foreach (Node node in Walk().Where(n => n.Model is ICreatable))
             {
                 try
                 {
                     (node.Model as ICreatable).OnCreated();
-                    if (node.Parent != null)
-                        if (node.Model is IGenerateNodes generateNode)
-                            generateNodes.Add(generateNode);
                 }
                 catch (Exception err)
                 {
@@ -573,14 +583,6 @@ public class Node : IStructure
                         throw;
                     errorHandler(err);
                 }
-            }
-
-            string directory = Path.GetDirectoryName(Walk().First().FileName);
-            foreach (IGenerateNodes model in generateNodes)
-            {
-                model.FilePath.SetStartDirectory(directory);
-                model.DeleteNodes();
-                model.CreateNodes();
             }
         }
         finally

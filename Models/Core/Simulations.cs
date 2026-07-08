@@ -110,7 +110,7 @@ namespace Models.Core
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
-                storage.Reader.Refresh();
+                storage.Refresh();
             }
         }
 

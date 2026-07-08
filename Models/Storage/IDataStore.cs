@@ -33,5 +33,10 @@ namespace Models.Storage
         /// </summary>
         /// <param name="name">name of the view</param>
         string GetViewSQL(string name);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void Refresh();
     }
 }

@@ -5,6 +5,15 @@
   "ResourceName": null,
   "Children": [
     {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
       "Name": "Replacements",
