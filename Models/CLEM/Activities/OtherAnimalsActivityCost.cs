@@ -4,13 +4,9 @@ using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Models.CLEM.Groupings;
-using System.Net.WebSockets;
 
 namespace Models.CLEM.Activities
 {
@@ -24,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Allows labour and costs to be applied to specified other animals")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityTask.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityCost.htm")]
     public class OtherAnimalsActivityCost : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo = 0;
@@ -71,8 +67,6 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             numberToDo = 0;
-
-            // get all cohorts
             IEnumerable<OtherAnimalsTypeCohort> CohortsToReport = otherAnimals.GetCohorts(filterGroups, true);
             numberToDo = CohortsToReport.Sum(a => a.Number);
         }
@@ -129,24 +123,9 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Partial;
             }
             else
-                this.Status = ActivityStatus.Success;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Calculates the number of Other Animal individuals specified by filter groups to apply costs and labour.</br>");
-                htmlWriter.Write("Each cohort will only be considered once (when first specified) regardless of multiple filter groups.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                this.Status = ActivityStatus.Success;
             }
         }
-        #endregion
-
     }
 }

@@ -3,11 +3,9 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.PMF.Organs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Xml.Serialization;
 
@@ -38,14 +36,21 @@ namespace Models.CLEM.Resources
         /// Unit type
         /// </summary>
         [Description("Units (nominal)")]
-        public string Units { get; set; }
+        public string Units { get; set; } = "Individuals";
+
+        /// <summary>
+        /// Age when individuals become adults for feeding and breeding rates
+        /// </summary>
+        [Description("Age when adult")]
+        [Units("years, months, days")]
+        public AgeSpecifier AgeWhenAdult { get; set; } = new int[] { 12, 0 };
 
         /// <summary>
         /// Age when individuals die
         /// </summary>
-        [Description("Maximum age before death (months)")]
-        [Required, GreaterThanValue(0.0)]
-        public double MaxAge { get; set; }
+        [Description("Maximum age before death")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaxAge { get; set; } = new int[] { 20, 0 };
 
         /// <summary>
         /// Current cohorts of this Other Animal Type.
@@ -233,7 +238,7 @@ namespace Models.CLEM.Resources
                 {
                     cohort.SaleFlag = HerdChangeReason.InitialHerd;
                     cohort.AdjustedNumber = cohort.Number;
-                    Add(child, null, null, "Initial numbers");
+                    AddToResource(child, null, null, "Initial numbers");
                 }
             }
         }
@@ -252,7 +257,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Total value of resource
         /// </summary>
-        public double? Value
+        public new double? Value
         {
             get
             {
@@ -306,14 +311,13 @@ namespace Models.CLEM.Resources
                     // no price match found.
                     string warningString = warningMessage;
                     if (warningString == "")
-                        warningString = $"No [{purchaseStyle}] price entry was found for [r={cohort.Name}] meeting the required criteria [f=age: {cohort.Age}] [f=sex: {cohort.Sex}] [f=weight: {cohort.Weight:##0}]";
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={cohort.Name}] meeting the required criteria [f=age: {cohort.AgeDetails.InDays} days] [f=sex: {cohort.Sex}] [f=weight: {cohort.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
                 return animalPrice;
             }
             return null;
         }
-
 
         #region Transactions
 
@@ -330,12 +334,12 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
         {
             if (addIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
                 OtherAnimalsTypeCohort cohortToAdd = null;
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortDetails.Age && a.Sex == cohortDetails.Sex).FirstOrDefault();
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
 
                 if (cohortexists == null)
                 {
@@ -365,12 +369,12 @@ namespace Models.CLEM.Resources
         {
             if (removeIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortDetails.Age && a.Sex == cohortDetails.Sex).FirstOrDefault();
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
 
                 if (cohortexists == null)
                 {
                     // tried to remove individuals that do not exist
-                    throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.Age}]");
+                    throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.AgeDetails.InDays} days]");
                 }
 
                 cohortexists.Number = Math.Max(0, cohortexists.Number - cohortDetails.AdjustedNumber);

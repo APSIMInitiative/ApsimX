@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Docker.DotNet.Models;
+using System;
 
 namespace Models.CLEM.Interfaces
 {
@@ -8,7 +9,7 @@ namespace Models.CLEM.Interfaces
     public interface IResourceWithTransactionType
     {
         /// <summary>
-        /// Resource transaction occured event handler
+        /// Resource transaction occurred event handler
         /// </summary>
         event EventHandler TransactionOccurred;
 

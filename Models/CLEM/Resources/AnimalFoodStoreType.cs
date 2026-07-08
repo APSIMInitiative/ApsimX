@@ -3,12 +3,13 @@ using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.ServiceModel.Channels;
 
 namespace Models.CLEM.Resources
 {
-
     /// <summary>
     /// This stores the initialisation parameters for a fodder type.
     /// </summary>
@@ -19,65 +20,142 @@ namespace Models.CLEM.Resources
     [Description("This resource represents an animal food store (e.g. lucerne)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStoreType.htm")]
-    public class AnimalFoodStoreType : CLEMResourceTypeBase, IFeedType, IResourceType
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    public class AnimalFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IFeed, IResourceType, IValidatableObject
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        public string Units { get; private set; }
+        private static readonly string[] memberNamesN = ["UserNitrogenPercent"];
+        private static readonly string[] memberNamesCP = ["UserCrudeProteinPercent"];
+
+        /// <inheritdoc/>
+        public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
+        [Required]
+        [Description("Broad type of feed")]
+        public FeedType TypeOfFeed { get; set; }
+
+        /// <inheritdoc/>
+        [Required, GreaterThanValue(0)]
+        [Description("Gross energy content")]
+        [Units("MJ/kg DM")]
+        public double GrossEnergyContent { get; set; } = 18.4;
+
+        /// <inheritdoc/>
+        [Required, GreaterThanValue(0)]
+        [Description("Metabolisable energy content")]
+        [Units("MJ/kg DM")]
+        public double MetabolisableEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Fat percent (ether extract)")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Units("%")]
+        public double FatPercent { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Dry Matter Digestibility")]
+        [Required, Percentage, GreaterThanEqualValue(1)]
+        [Units("%")]
+        public double DryMatterDigestibility { get; set; }
 
         /// <summary>
-        /// Dry Matter Digestibility (%)
+        /// Style of providing the crude protein content
         /// </summary>
-        [Description("Dry Matter Digestibility (%)")]
-        [Required, Percentage, GreaterThanValue(0)]
-        public double DMD { get; set; }
+        [Description("Style of providing crude protein")]
+        [Required]
+        public CrudeProteinContentStyle CPContentStyle { get; set; } = CrudeProteinContentStyle.SpecifyCrudeProteinContent;
+
+        /// <inheritdoc/>
+        [Description("Nitrogen percent"),]
+        [Core.Display(VisibleCallback = "NitrogenPropertiesVisible")]
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Units("%")]
+        public double UserNitrogenPercent { get; set; }
 
         /// <summary>
-        /// Nitrogen (%)
+        /// Crude protein content (%)
         /// </summary>
-        [Description("Nitrogen (%)")]
-        [Required, Percentage, GreaterThanValue(0)]
-        public double Nitrogen { get; set; }
+        [Description("Crude protein percent")]
+        [Core.Display(VisibleCallback = "CrudeProteinPropertiesVisible")]
+        [Required, GreaterThanEqualValue(0)]
+        [Units("%")]
+        public double UserCrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Current store nitrogen (%)
+        /// Crude protein content (%)
         /// </summary>
-        [JsonIgnore]
-        public double CurrentStoreNitrogen { get; set; }
+        [Description("Gut fill")]
+        [Required, Proportion, GreaterThanEqualValue(0)]
+        public double GutFill { get; set; } = 0.08;
+
+        /// <summary>
+        /// Crude protein content (%)
+        /// </summary>
+        public double CrudeProteinPercent { get; set; }
+
+        /// <summary>
+        /// Nitrogen content (%)
+        /// </summary>
+        public double NitrogenPercent { get; set; }
+
+        private double rumenDegradableProteinPercent;
+
+        /// <inheritdoc/>
+        [Required, Percentage, GreaterThanEqualValue(0)]
+        [Description("Rumen degradable protein percent (%, g/g CP * 100)")]
+        [Units("%")]
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
+
+        /// <inheritdoc/>
+        public double AcidDetergentInsolubleProtein { get; set; }
 
         /// <summary>
         /// Starting Amount (kg)
         /// </summary>
         [Description("Starting Amount (kg)")]
         [Required, GreaterThanEqualValue(0)]
+        [Units("kg")]
         public double StartingAmount { get; set; }
 
         /// <summary>
-        /// Amount currently available (kg dry)
+        /// A packet to pass the current food quality to activities. Allows for mixing of feed into store
         /// </summary>
         [JsonIgnore]
-        public double Amount { get { return amount; } set { return; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
+        public FoodResourcePacket CurrentStoreDetails { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// A packet to store the quality details of this food
         /// </summary>
-        public AnimalFoodStoreType()
+        [JsonIgnore]
+        public FoodResourcePacket StoreDetails { get; set; }
+
+        /// <summary>
+        /// Determine whether N% or CP% are displayed to user based on CP style.
+        /// </summary>
+        /// <returns>Bool indicating that CP content is needed</returns>
+        public bool CrudeProteinPropertiesVisible()
         {
-            Units = "kg";
+            return CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent;
         }
 
         /// <summary>
-        /// Total value of resource
+        /// Determine whether N% or CP% are displayed to user based on CP style.
         /// </summary>
-        public double? Value
+        /// <returns>Bool indicating that CP content is needed</returns>
+        public bool NitrogenPropertiesVisible()
         {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
+            return (CrudeProteinPropertiesVisible() == false);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -86,9 +164,25 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
+            if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
+            {
+                NitrogenPercent = UserNitrogenPercent;
+                CrudeProteinPercent = UserNitrogenPercent * FoodResourcePacket.FeedProteinToNitrogenFactor;
+            }
+            else
+            {
+                NitrogenPercent = UserCrudeProteinPercent / FoodResourcePacket.FeedProteinToNitrogenFactor;
+                CrudeProteinPercent = UserCrudeProteinPercent;
+            }
+
+            AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(RumenDegradableProteinPercent, TypeOfFeed);
+
+            // initialise the current state and details of this store
+            CurrentStoreDetails = new FoodResourcePacket(this);
+            StoreDetails = new FoodResourcePacket(this);
+
             if (StartingAmount > 0)
-                Add(StartingAmount, null, null, "Starting value");
+                AddToResource(StartingAmount, null, null, "Starting value");
         }
 
         #region Transactions
@@ -98,120 +192,115 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        /// <param name="relatesToResource">Resource the transasction relates to</param>
+        /// <param name="category">Transaction category</param>
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            double amountAdded;
-            double nAdded;
+            FoodResourcePacket foodPacket;
+            double addAmount;
             switch (resourceAmount.GetType().ToString())
             {
                 case "System.Double":
-                    amountAdded = (double)resourceAmount;
-                    nAdded = Nitrogen;
+                    foodPacket = StoreDetails;
+                    addAmount = (double)resourceAmount;
                     break;
                 case "Models.CLEM.Resources.FoodResourcePacket":
-                    amountAdded = ((FoodResourcePacket)resourceAmount).Amount;
-                    nAdded = ((FoodResourcePacket)resourceAmount).PercentN;
+                    foodPacket = resourceAmount as FoodResourcePacket;
+                    addAmount = foodPacket.Amount;
                     break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type {resourceAmount.GetType()} is not supported Add method in {this.Name}");
             }
 
-            if (amountAdded > 0)
+            if (addAmount > 0)
             {
-                // update N based on new input added
-                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * amountAdded)) / (Amount + amountAdded);
+                // update quality details to allow mixed feed inputs
+                CurrentStoreDetails.NitrogenPercent = ((CurrentStoreDetails.NitrogenPercent * AmountAvailable) + (foodPacket.NitrogenPercent * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.DryMatterDigestibility = ((CurrentStoreDetails.DryMatterDigestibility * AmountAvailable) + (foodPacket.DryMatterDigestibility * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.FatPercent = ((CurrentStoreDetails.FatPercent * AmountAvailable) + (foodPacket.FatPercent * addAmount)) / (AmountTotal + addAmount);
+                CurrentStoreDetails.MetabolisableEnergyContent = ((CurrentStoreDetails.MetabolisableEnergyContent * AmountAvailable) + (foodPacket.MetabolisableEnergyContent * addAmount)) / (AmountTotal + addAmount);
 
-                this.amount += amountAdded;
+                base.Add(addAmount);
 
-                ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
+                ReportTransaction(TransactionType.Gain, addAmount, activity, relatesToResource, category, this);
             }
         }
 
-        /// <summary>
-        /// Remove from animal food store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
-        {
-            if (request.Required == 0)
-                return;
+        ///// <inheritdoc/>
+        //public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
+        //{
+        //    if (request.Required == 0)
+        //    {
+        //        return;
+        //    }
+        //    request.AdditionalDetails = CurrentStoreDetails;
+        //    base.RemoveFromResource(request);
+        //}
 
-            // if this request aims to trade with a market see if we need to set up details for the first time
-            if (request.MarketTransactionMultiplier > 0)
-                FindEquivalentMarketStore();
+        ///// <summary>
+        ///// Performs a transaction by specified amount.
+        ///// </summary>
+        ///// <param name="request">The amount of the transaction.</param>
+        ///// <param name="handlePendingTransaction">
+        ///// This transaction should handle any pending amount rather than the amount provided.
+        ///// </param>
+        //public override void PerformTransaction(ResourceRequest request, bool handlePendingTransaction = false)
+        //{
+        //    request.Provided = AmountPending;
+        //    if (handlePendingTransaction)
+        //        return;
 
-            double amountRemoved = request.Required;
-            // avoid taking too much
-            amountRemoved = Math.Min(this.amount, amountRemoved);
+        //    //double provided = 0;
+        //    //// remove all pending and take from pools 
+        //    //// set provided to pending pool amounts
+        //    //if (request.AdditionalDetails is IEnumerable<FoodResourceStore> foodStores)
+        //    //{
+        //    //    foreach (var foodStore in foodStores)
+        //    //    {
+        //    //        for (int i = 0; i < foodStore.Pools.Count; i++)
+        //    //        {
+        //    //            provided += foodStore.Pools[i].AmountPending;
+        //    //            foodStore.Pools[i].ConsumePending();
+        //    //        }
+        //    //    }
+        //    //}
+        //    //if (provided <= 0)
+        //    //    return;
 
-            if (amountRemoved > 0)
-            {
-                this.amount -= amountRemoved;
+        //    //request.Provided = provided;
+        //    request.TransactionPending = false;
+        //    base.RemoveFromResource(request);
 
-                FoodResourcePacket additionalDetails = new FoodResourcePacket
-                {
-                    DMD = this.DMD,
-                    PercentN = this.CurrentStoreNitrogen
-                };
-                request.AdditionalDetails = additionalDetails;
+        //    //base.PerformTransaction(request, handlePendingTransaction);
+        //}
 
-                request.Provided = amountRemoved;
-
-                // send to market if needed
-                if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                {
-                    additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                    (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
-                }
-
-                ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            }
-            return;
-        }
-
-        /// <summary>
-        /// Set amount of animal food available
-        /// </summary>
-        /// <param name="newValue">New value to set food store to</param>
-        public new void Set(double newValue)
-        {
-            this.amount = newValue;
-        }
 
         #endregion
 
-        #region descriptive summary
+        #region validation
 
         /// <inheritdoc/>
-        public override string ModelSummary()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            if (CPContentStyle == CrudeProteinContentStyle.EstimateFromNitrogenContent)
             {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
-                if (DMD > 0)
-                    htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
-                else
-                    htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
-
-                htmlWriter.Write("</div>");
-                if (StartingAmount > 0)
+                if (UserNitrogenPercent <= 0)
                 {
-                    htmlWriter.Write("<div class=\"activityentry\">");
-                    htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
-                    htmlWriter.Write("</div>");
+                    yield return new ValidationResult($"Percent nitrogen content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", memberNamesN);
                 }
-                return htmlWriter.ToString();
             }
+            else if (CPContentStyle == CrudeProteinContentStyle.SpecifyCrudeProteinContent)
+            {
+                if (UserCrudeProteinPercent <= 0)
+                {
+                    yield return new ValidationResult($"Percent crude protein content must be supplied for [r={NameWithParent}] when using [{CPContentStyle}]", memberNamesCP);
+                }
+            }
+
+            // ToDo: add warnings for questionable gut fill to feed type settings.
+
         }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
         #endregion
 
     }

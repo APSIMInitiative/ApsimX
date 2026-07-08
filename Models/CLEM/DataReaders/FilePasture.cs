@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class FilePasture : CLEMModel, IFilePasture
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -179,14 +179,6 @@ namespace Models.CLEM
         private double[] distinctStkRates;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilePasture()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Does file exist
         /// </summary>
         public bool FileExists
@@ -213,9 +205,13 @@ namespace Models.CLEM
             {
                 Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                 if (simulation != null && this.FileName != null)
+                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                }
                 else
+                {
                     return this.FileName;
+                }
             }
         }
 
@@ -231,8 +227,10 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // check filename exists
-            if(!this.FileExists)
+            if (!this.FileExists)
+            {
                 throw new ApsimXException(this, "The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
+            }
 
             this.regionIndex = 0;
             this.soilIndex = 0;
@@ -367,7 +365,9 @@ namespace Models.CLEM
                 return table;
             }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -440,12 +440,15 @@ namespace Models.CLEM
 
             string filter;
             if (startYear == endYear)
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
+            }
             else
+            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
@@ -453,13 +456,16 @@ namespace Models.CLEM
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")";
+            }
 
             DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
             List<PastureDataType> filtered = new List<PastureDataType>();
 
             foreach (DataRow dr in foundRows)
+            {
                 filtered.Add(DataRow2PastureDataType(dr));
+            }
 
             filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
 
@@ -483,27 +489,34 @@ namespace Models.CLEM
         private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
             int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
         {
-            string errormessageStart = "Problem with Pasture database file." + System.Environment.NewLine
+            string errorMessageStart = "Problem with Pasture database file." + System.Environment.NewLine
                         + "For Region: " + region + ", Soil: " + soil
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
             if (clock.EndDate == clock.Today)
+            {
                 return;
+            }
 
             //Check no gaps in the months
             DateTime tempdate = startDate;
             foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
-                    throw new ApsimXException(this, errormessageStart
+                {
+                    throw new ApsimXException(this, errorMessageStart
                         + "Missing entry for Year: " + month.Year + " and Month: " + month.Month);
+                }
+
                 tempdate = tempdate.AddMonths(1);
             }
 
             //Check months go right up until EndDate
-            if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-                throw new ApsimXException(this, errormessageStart
+            if ((tempdate.Month != endDate.Month) && (tempdate.Year != endDate.Year))
+            {
+                throw new ApsimXException(this, errorMessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
+            }
         }
 
         /// <summary>
@@ -517,7 +530,7 @@ namespace Models.CLEM
         /// <param name="stockingRate"></param>
         /// <param name="year"></param>
         /// <param name="month"></param>
-        /// <returns>CropDataType containg the crop data for this month</returns>
+        /// <returns>CropDataType containing the crop data for this month</returns>
         public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate,
                                          int year, int month)
         {
@@ -535,9 +548,9 @@ namespace Models.CLEM
 
             if (dr != null)
             {
-                PastureDataType pasturedata = DataRow2PastureDataType(dr);
+                PastureDataType pastureData = DataRow2PastureDataType(dr);
 
-                return pasturedata;
+                return pastureData;
             }
             else
             {
@@ -556,7 +569,7 @@ namespace Models.CLEM
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
         {
-            PastureDataType pasturedata = new PastureDataType
+            PastureDataType pastureData = new PastureDataType
             {
                 Region = int.Parse(dr["Region"].ToString(), CultureInfo.InvariantCulture),
                 Soil = int.Parse(dr["Soil"].ToString(), CultureInfo.InvariantCulture),
@@ -578,8 +591,8 @@ namespace Models.CLEM
                 Rainfall = double.Parse(dr["Rainfall"].ToString(), CultureInfo.InvariantCulture),
                 Runoff = double.Parse(dr["Runoff"].ToString(), CultureInfo.InvariantCulture)
             };
-            pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
-            return pasturedata;
+            pastureData.CutDate = new DateTime(pastureData.Year, pastureData.Month, 1);
+            return pastureData;
         }
 
         /// <summary>
@@ -589,9 +602,11 @@ namespace Models.CLEM
         public bool OpenDataFile()
         {
             if (this.FullFileName == null || this.FullFileName == "")
+            {
                 return false;
+            }
 
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(this.FullFileName))
             {
                 if (this.reader == null)
                 {
@@ -697,13 +712,17 @@ namespace Models.CLEM
                 else
                 {
                     if (this.reader.IsExcelFile != true)
+                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
+                    }
                 }
 
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -715,138 +734,5 @@ namespace Models.CLEM
                 reader = null;
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-                else
-                {
-                    if (!this.FileExists)
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    else
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-    }
-
-    /// <summary>
-    /// A structure containing the commonly used weather data.
-    /// </summary>
-    [Serializable]
-    public struct PastureDataType
-    {
-        /// <summary>
-        /// Climatic Region Number
-        /// </summary>
-        public int Region;
-
-        /// <summary>
-        /// Soil Number
-        /// </summary>
-        public int Soil;
-
-        /// <summary>
-        /// Forage Number
-        /// nb. This column is to be ignored.
-        /// </summary>
-        public int ForageNo;
-
-        /// <summary>
-        /// Grass Basal Area
-        /// </summary>
-        public int GrassBA;
-
-        /// <summary>
-        /// Land Condition
-        /// </summary>
-        public int LandCon;
-
-        /// <summary>
-        /// Stocking Rate
-        /// </summary>
-        public int StkRate;
-
-        /// <summary>
-        /// Year Number (counting from start of simulation ?)
-        /// </summary>
-        public int YearNum;
-
-        /// <summary>
-        /// Year (eg. 2017)
-        /// </summary>
-        public int Year;
-
-        /// <summary>
-        /// Cut Number in this year
-        /// </summary>
-        public int CutNum;
-
-        /// <summary>
-        /// Month (eg. 1 is Jan, 2 is Feb)
-        /// </summary>
-        public int Month;
-
-        /// <summary>
-        /// Amout in Kg of Biomass of the pasture
-        /// </summary>
-        public double Growth;
-
-        /// <summary>
-        /// Amount in Kg of By Product 1 of the production of this pasture
-        /// </summary>
-        public double BP1;
-
-        /// <summary>
-        /// Amount in Kg of By Product 2 of the production of this pasture
-        /// </summary>
-        public double BP2;
-
-        /// <summary>
-        /// Utilisation
-        /// </summary>
-        public double Utilisn;
-
-        /// <summary>
-        /// Soil Loss
-        /// </summary>
-        public double SoilLoss;
-
-        /// <summary>
-        /// Cover
-        /// </summary>
-        public double Cover;
-
-        /// <summary>
-        /// Tree Basal Area
-        /// </summary>
-        public double TreeBA;
-
-        /// <summary>
-        /// Rainfall
-        /// </summary>
-        public double Rainfall;
-
-        /// <summary>
-        /// Runoff
-        /// </summary>
-        public double Runoff;
-
-        /// <summary>
-        /// Combine Year and Month to create a DateTime.
-        /// Day is set to the 1st of the month.
-        /// </summary>
-        public DateTime CutDate;
-
     }
 }
