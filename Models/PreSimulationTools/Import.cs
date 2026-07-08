@@ -80,7 +80,7 @@ namespace Models.PreSimulationTools
         /// </summary>
         public void CreateCommands()
         {
-            _commands = GetCommands(this, FileName, ModelPath);
+            _commands = GetCommands(this, FilePath.AbsoluteFilePath, ModelPath);
         }
 
         /// <summary>

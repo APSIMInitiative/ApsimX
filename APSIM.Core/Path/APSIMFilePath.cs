@@ -30,7 +30,7 @@ public class APSIMFilePath
             if (string.IsNullOrEmpty(StartDirectory))
                 _relativeFilePath = value;
             else
-                _relativeFilePath = PathUtilities.GetAbsolutePath(value, StartDirectory);
+                _relativeFilePath = PathUtilities.GetRelativePath(value, StartDirectory);
         }
     }
 
