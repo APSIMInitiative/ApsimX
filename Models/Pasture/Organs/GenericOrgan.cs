@@ -387,7 +387,6 @@ namespace Models.GrazPlan.Organs
     public double RemoveBiomass( double liveToRemove = 0,  double deadToRemove = 0,   double liveToResidue = 0,   double deadToResidue = 0,   double fractionStanding = 0)
     {
         double totalBiomass = 0.0;
-        double totalBiomassRemoved = 0.0;
         double PostDMTotal = 0.0;
         
         double totalDM =  PastureModel.GetHerbageMass(stESTAB, TOTAL, TOTAL) +  PastureModel.GetHerbageMass(stDEAD, TOTAL, TOTAL);
@@ -450,7 +449,7 @@ namespace Models.GrazPlan.Organs
                                
                 //update live and dead biomasses
                 CalculateLiveDead();
-                double RemoveDM = totalBiomass - totalBiomassRemoved;
+                double RemoveDM = totalBiomass - PostDMTotal;
                 return RemoveDM;    
             }
             else
