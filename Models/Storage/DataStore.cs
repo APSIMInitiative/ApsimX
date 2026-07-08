@@ -45,9 +45,16 @@ namespace Models.Storage
             set
             {
                 useInMemoryDB = value;
-                Close();
-                UpdateFileName();
-                Open();
+                if (connection != null)
+                {
+                    Close();
+                    UpdateFileName();
+                    Open();
+                }
+                else
+                {
+                    UpdateFileName();
+                }
             }
         }
 
@@ -185,8 +192,18 @@ namespace Models.Storage
         /// </summary>
         public void UpdateFileName()
         {
-            string extension = ".db";
+            if (useInMemoryDB)
+            {
+                FileName = ":memory:";
+                return;
+            }
 
+            if (Node == null)
+            {
+                FileName = "";
+                return;
+            }
+                
             Simulations simulations = Node.FindParent<Simulations>(recurse: true);
 
             // If we have been cloned prior to a run, then we won't be able to locate
@@ -194,9 +211,8 @@ namespace Models.Storage
             // parent simulation's filename (which should be the same anyway).
             Simulation simulation = Node.FindParent<Simulation>(recurse: true);
 
-            if (useInMemoryDB)
-                FileName = ":memory:";
-            else if (simulations != null && simulations.FileName != null)
+            string extension = ".db";
+            if (simulations != null && simulations.FileName != null)
                 FileName = Path.ChangeExtension(simulations.FileName, extension);
             else if (simulation != null && simulation.FileName != null)
                 FileName = Path.ChangeExtension(simulation.FileName, extension);
@@ -207,7 +223,7 @@ namespace Models.Storage
         /// <summary>Open the database.</summary>
         public void Open()
         {
-            if (FileName == null)
+            if (string.IsNullOrEmpty(FileName))
                 UpdateFileName();
 
             connection = new SQLite();
@@ -286,17 +302,27 @@ namespace Models.Storage
         }
 
         /// <summary>
-        /// 
+        /// Wait until writing has finished to the database, then find and 
+        /// refresh all the datastores in the file.
         /// </summary>
         public void Refresh()
         {
-            IModel rootModel = Node.FindParent<Simulations>(recurse: true);
-            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
-                if (datastore.Writer != null)
-                    datastore.Writer.WaitForIdle();
-            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
-                if (datastore.Reader != null)
-                    datastore.Reader.Refresh();
+            if (Node == null)
+            {
+                //used by unit tests where datastore isnt in a simulation
+                Writer.WaitForIdle();
+                Reader.Refresh();
+            }
+            else
+            {
+                IModel rootModel = Node.Root().Model as IModel;
+                foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                    if (datastore.Writer != null)
+                        datastore.Writer.WaitForIdle();
+                foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                    if (datastore.Reader != null)
+                        datastore.Reader.Refresh();
+            }
         }
     }
 }

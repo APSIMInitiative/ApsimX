@@ -182,9 +182,7 @@ namespace Models.Core
                 else if (child is DataStore)
                 {
                     DataStore storage = child as DataStore;
-                    storage.Close();
-                    storage.UpdateFileName();
-                    storage.Open();
+                    storage.UseInMemoryDB = storage.UseInMemoryDB; //this refreshes the filename status
                 }
             }
         }
