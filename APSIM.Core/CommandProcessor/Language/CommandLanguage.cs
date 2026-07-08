@@ -112,6 +112,8 @@ public class CommandLanguage
             return RunCommand.Create(command);
         else if (command.StartsWith("replace", StringComparison.InvariantCultureIgnoreCase))
             return ReplaceCommand.Create(command, relativeTo, relativeToDirectory);
+        else if (command.StartsWith("move", StringComparison.InvariantCultureIgnoreCase))
+            return MoveCommand.Create(command);
         else if (command.Contains('='))
             return SetPropertyCommand.Create(command, relativeToDirectory);
 

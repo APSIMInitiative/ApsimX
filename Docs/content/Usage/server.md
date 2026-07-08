@@ -20,7 +20,7 @@ The recommended way to send these commands to the server is to use a client API.
 
 ## Zmqserver Behaviour
 
-Likewise the server will initially prepare a simulation to run, and then wait for a client connection. In the oneshot mode, the commands (run, get) are similar to the V1 server. In interactive mode, the server will pass the simulation the address of a controlling port that a manager component within the simulation will connect to. The protocol (get/set/do/resume) for this connection is implemented within the manager component. Samples of clients in R and Python are in the [Test Directory](../../../Tests/Simulation/ZMQ-Sync/).
+Likewise the server will initially prepare a simulation to run, and then wait for a client connection. In the oneshot mode, the commands (run, get) are similar to the V1 server. In interactive mode, the server will pass the simulation the address of a controlling port that a manager component within the simulation will connect to. The protocol (get/set/do/resume) for this connection is implemented within the manager component. Samples of clients in R and Python are in the [Test Directory](https://github.com/APSIMInitiative/ApsimX/tree/master/Tests/Simulation/ZMQ-Sync).
 
 ## Notes on running/invoking the server
 

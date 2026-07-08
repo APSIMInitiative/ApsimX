@@ -7,20 +7,23 @@ using Models.CLEM;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using UserInterface.Views;
+using APSIMNG.Utility;
+using Models.CLEM.DescriptiveSummary;
 
 namespace UserInterface.Presenters
 {
-
     /// <summary>
     /// Presenter to provide HTML description summary for CLEM models
     /// </summary>
     public class CLEMSummaryPresenter : IPresenter, IRefreshPresenter
     {
         private Model model;
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
         private ExplorerPresenter explorer;
         private string htmlFilePath = "";
         private string targetFilePath = "";
+        private bool firstentry = true;
+        readonly DescriptiveSummaryGenerator summaryGenerator = new DescriptiveSummaryGenerator(DescriptiveSummaryFormat.HTML, false);
 
         /// <summary>
         /// Attach the view
@@ -31,27 +34,47 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IMarkdownView;
+            this.genericView = view as MarkdownView;
+            
             explorer = explorerPresenter;
 
             // save summary to disk when component is first pressed regardless of user selecting summary tab as now goes to html in browser
+            
+            if (model is not ZoneCLEM zc)
+            {
+                zc = (model as IModel).Node.Find<ZoneCLEM>();
+                if (zc is null) return;
+            }
 
-            htmlFilePath = "CurrentDescriptiveSummary.html";
-            targetFilePath = "CurrentDescriptiveSummary.html";
+            summaryGenerator.OutputFormat = zc.DescriptiveSummaryFormatStyle;
+            summaryGenerator.IsDarkMode = Configuration.Settings.DarkTheme;
+
+            string extension = DescriptiveSummaryGenerator.FileExtensionToUse(zc.DescriptiveSummaryFormatStyle);
+
+            htmlFilePath = $"CurrentDescriptiveSummary{extension}";
+            targetFilePath = $"CurrentDescriptiveSummary{extension}";
 
             if (typeof(ISpecificOutputFilename).IsAssignableFrom(model.GetType()))
                 targetFilePath = (model as ISpecificOutputFilename).HtmlOutputFilename;
 
             htmlFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), htmlFilePath);
             targetFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), targetFilePath);
-            File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml ));
+
+            summaryGenerator.GenerateSummaryForComponentAndChildren(model as IModel, htmlFilePath);
+            //summaryGenerator.GenerateSummaryForComponentAndChildren(model as IModel, Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"));
+            //File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml ));
         }
 
         public void Refresh()
         {
             this.genericView.Text = CreateMarkdown(this.model);
-            // save summary to disk
-            File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml));
+            //save summary to disk
+            //File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, this.model.Node, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml));
+            if (!firstentry)
+            {
+                summaryGenerator.GenerateSummaryForComponentAndChildren(model as IModel, htmlFilePath);
+                firstentry = false;
+            }
         }
 
         public string CreateMarkdown(Model modelToSummarise)

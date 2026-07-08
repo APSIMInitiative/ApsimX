@@ -152,7 +152,12 @@ namespace Models.Core
         /// <summary>
         /// Provides CropSoil names for a dropdown
         /// </summary>
-        SoilCrop
+        SoilCrop,
+
+        /// <summary>
+        /// Provides a clickable button for a boolean used for refreshing with a ModelChanged event.
+        /// </summary>
+        Button
     }
 
     /// <summary>
@@ -228,13 +233,5 @@ namespace Models.Core
         /// Otherwise the line number of Description attribute is used for ordering
         /// </summary>
         public int Order { get; set; }
-
-        /// <summary>
-        /// Specifies the name of a single sub-property of supported type to substitute for a class-based property in the display
-        /// This allows a class-based property to be represented by managed by the user through one of its own properties in the GUI rather than providing all properties using the DisplayType.SubModel approach
-        /// </summary>
-        public string SubstituteSubPropertyName { get; set; }
-
-
     }
 }

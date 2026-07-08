@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using UserInterface.Commands;
 using UserInterface.Views;
-using Utility;
+using APSIMNG.Utility;
 using APSIM.Numerics;
 using APSIM.Core;
 
@@ -334,7 +334,7 @@ namespace UserInterface.Presenters
                 ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
-            explorerPresenter.Populate();
+            explorerPresenter.RebuildTree();
         }
 
         /// <summary>

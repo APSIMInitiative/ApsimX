@@ -8,6 +8,7 @@ using Gtk;
 using GLib;
 using System;
 using UserInterface.Interfaces;
+using System.Collections.Generic;
 
 namespace UserInterface.Views
 {
@@ -21,8 +22,8 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private Box rightHandView;
+        private Gtk.ScrolledWindow treeBox;
         private Gtk.TreeView treeviewWidget;
-        private MarkdownView descriptionView;
         private Paned hpaned;
 
         /// <summary>Default constructor for ExplorerView</summary>
@@ -34,11 +35,8 @@ namespace UserInterface.Views
             hpaned = (Paned)builder.GetObject("hpaned1");
             hpaned.AddNotification(OnDividerNotified);
 
-            treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
-            treeviewWidget.Realized += OnLoaded;
-            Tree = new TreeView(owner, treeviewWidget);
+            treeBox = (ScrolledWindow)builder.GetObject("treewindow1");
             rightHandView = (Box)builder.GetObject("vbox2");
-            //rightHandView.ShadowType = ShadowType.EtchedOut;
 
             mainWidget.Destroyed += OnDestroyed;
         }
@@ -59,6 +57,34 @@ namespace UserInterface.Views
         public event EventHandler DividerChanged;
 
         /// <summary>
+        /// Remake the treeview from scratch, disposing of the existing one if 
+        /// it exists and putting the new one into the view.
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <param name="expandedNodes"></param>
+        public void RebuildTree(TreeViewNode rootNode, List<string> expandedNodes)
+        {
+            if (treeviewWidget != null)
+            {
+                treeviewWidget.Realized -= OnLoaded;
+                treeviewWidget.Dispose();
+            }
+
+            foreach(Widget widget in treeBox.Children)
+                treeBox.Remove(widget);
+            
+            treeviewWidget = new Gtk.TreeView();
+            treeviewWidget.HeadersVisible = false;
+            treeviewWidget.EnableTreeLines = true;
+            treeviewWidget.Realized += OnLoaded;
+            
+            Tree = new TreeView(owner, treeviewWidget);
+            Tree.Populate(rootNode, expandedNodes);
+            
+            treeBox.Add(treeviewWidget);
+        }
+
+        /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
@@ -75,47 +101,6 @@ namespace UserInterface.Views
                 CurrentRightHandView = view;
                 rightHandView.PackEnd(view.MainWidget, true, true, 0);
                 rightHandView.ShowAll();
-            }
-        }
-
-        /// <summary>
-        /// Add a description to the right hand view.
-        /// </summary>
-        /// <param name="description">The description to show.</param>
-        public void AddDescriptionToRightHandView(string description)
-        {
-            if (description == null)
-            {
-                if (descriptionView != null)
-                {
-                    descriptionView.Dispose();
-                    //Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
-                    //rightHandView.Remove(descriptionWidget);
-                    //descriptionWidget.Dispose();
-                }
-                descriptionView = null;
-            }
-            else
-            {
-                if (descriptionView == null)
-                {
-                    descriptionView = new MarkdownView(this);
-                    // Set PropagateNaturalHeight to true, to ensure that the
-                    // scrolled window requests enough space to not require a
-                    // scrollbar by default. We could change MarkdownView to
-                    // always do this, but it's used in lots of other places, so
-                    // that may have unintended consequences and would require
-                    // more extensive testing.
-                    if (descriptionView.MainWidget is ScrolledWindow scroller)
-                        scroller.PropagateNaturalHeight = true;
-                    rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
-                    // Let Gtk catch up with things; otherwise too much space
-                    // is allocated to the new description view. Is there a better way?
-
-                    while (!descriptionView.SizeIsAllocated)
-                        Gtk.Application.RunIteration();
-                }
-                descriptionView.Text = description;
             }
         }
 

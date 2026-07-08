@@ -1,15 +1,13 @@
-﻿namespace Utility
-{
-    using UserInterface.Interfaces;
-    using System;
-    using System.IO;
-    using System.Linq;
-    using Gtk;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using UserInterface.Extensions;
-    using UserInterface.Views;
+﻿using UserInterface.Interfaces;
+using System;
+using System.IO;
+using System.Linq;
+using Gtk;
+using APSIM.Shared.Utilities;
+using UserInterface.Views;
 
+namespace APSIMNG.Utility
+{
 
     /// <summary>
     /// All access to this class should be via <see cref="IFileDialog"/>.
@@ -155,7 +153,7 @@
             if (!string.IsNullOrEmpty(FileType))
             {
                 specParts = FileType.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
+                for (int i = 0; i + 1 < specParts.Length; i += 2)
                 {
                     FileFilter fileFilter = new FileFilter();
                     fileFilter.Name = specParts[i];

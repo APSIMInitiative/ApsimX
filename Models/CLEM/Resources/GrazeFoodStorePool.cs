@@ -1,56 +1,109 @@
-﻿using Models.CLEM.Interfaces;
-using Models.Core;
+﻿using APSIM.Numerics;
+using BruTile;
+using Models.CLEM.Interfaces;
+using NetTopologySuite.Mathematics;
 using Newtonsoft.Json;
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using System.Linq;
+using System.ServiceModel.Channels;
 
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// A food pool of given age
+    /// A pasture pool of given age as used by CLEM pasture
     /// </summary>
     [Serializable]
-    public class GrazeFoodStorePool : IFeedType
+    public class GrazeFoodStorePool : IGrazeIntakePool
     {
-        /// <summary>
-        /// Unit type
-        /// </summary>
-        [Description("Units (nominal)")]
-        public string Units { get; set; }
+        private IGrazeFoodStoreType grazeStore;
+
+        /// <inheritdoc/>
+        public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
+
+        /// <inheritdoc/>
+        public double GrossEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double MetabolisableEnergyContent { get; set; }
+
+        /// <inheritdoc/>
+        public double FatPercent { get; set; }
+
+        private double nitrogenPercent = 0;
+
+        /// <inheritdoc/>
+        public double NitrogenPercent
+        {
+            get
+            {
+                return nitrogenPercent;
+            }
+            set
+            {
+                nitrogenPercent = value;
+                CrudeProteinPercent = nitrogenPercent * 6.25;
+            }
+        }
+
+        /// <inheritdoc/>
+        public double CrudeProteinPercent { get; set; }
 
         /// <summary>
-        /// Dry Matter (%)
+        /// Style of providing the dry matter digestibility of pasture
         /// </summary>
-        [Description("Dry Matter (%)")]
-        [Required, Percentage]
-        public double DryMatter { get; set; }
+        public DryMatterDigestibilityStyle DMDStyle { get; set; }
 
-        /// <summary>
-        /// Dry Matter Digestibility (%)
-        /// </summary>
-        [Description("Dry Matter Digestibility (%)")]
-        [Required, Percentage]
-        public double DMD { get; set; }
+        private double dmd = 0;
 
-        /// <summary>
-        /// Nitrogen (%)
-        /// </summary>
-        [Description("Nitrogen (%)")]
-        [Required, Percentage]
-        public double Nitrogen { get; set; }
+        /// <inheritdoc/>
+        public double DryMatterDigestibility 
+        { 
+            get
+            {
+                return dmd;
+            }
+            set
+            {
+                dmd = value;
+                GutFill = grazeStore?.CalculateGutFill(dmd)??0.08; // ToDo: determine default gut fill if grazestore not provided.
+            }
+        }
 
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
-        [JsonIgnore]
-        public double Amount { get { return amount; } }
-        private double amount = 0;
+        /// <inheritdoc/>
+        private double rumenDegradableProteinPercent;
+
+        /// <inheritdoc/>
+        public double RumenDegradableProteinPercent
+        {
+            get
+            {
+                return rumenDegradableProteinPercent;
+            }
+            set
+            {
+                rumenDegradableProteinPercent = value;
+                AcidDetergentInsolubleProtein = FoodResourcePacket.CalculateAcidDetergentInsolubleProtein(rumenDegradableProteinPercent, TypeOfFeed);
+            }
+        }
+
+        /// <inheritdoc/>
+        public double AcidDetergentInsolubleProtein { get; set; }
+
+        /// <inheritdoc/>
+        public double GutFill { get; set; }
 
         /// <summary>
         /// Age of pool in months
         /// </summary>
         [JsonIgnore]
         public int Age { get; set; }
+
+        /// <summary>
+        /// Date the growth was added to pools
+        /// </summary>
+        [JsonIgnore]
+        public DateTime GrowthDate { get; set; } = new DateTime();
 
         /// <summary>
         /// Amount to set at start (kg)
@@ -68,40 +121,57 @@ namespace Models.CLEM.Resources
         public double Consumed { get; set; }
 
         /// <summary>
-        /// Amount detached in this time step (kg)
+        /// Amount of growth in this time step (kg)
         /// </summary>
-        public double Growth { get; set; }
+        public double Growth => (Age == 0) ? Amount : 0; // { get; set; }
 
-        /// <summary>
-        /// Name of component
-        /// </summary>
+        /// <inheritdoc/>
         public string Name { get; set; }
 
-        /// <summary>
-        /// pricing
-        /// </summary>
+        /// <inheritdoc/>
+        public string Units { get; private set; } = "kg";
+
+        /// <inheritdoc/>
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
         {
             return null;
         }
 
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
+        /// <inheritdoc/>
         public double? Value
         {
-            get
-            {
-                return null;
-            }
+            get { return null; }
         }
 
+        private double amount = 0;
+
         /// <summary>
-        /// Get the amount of the last gain in this resource 
+        /// Amount of biomass in this pool (kg)
         /// </summary>
-        [JsonIgnore]
-        public double LastGain { get; set; }
+        public double Amount => amount;
+
+        /// <summary>
+        /// Amount of biomass in this pool (kg)
+        /// </summary>
+        public double AmountAvailable => amount - AmountPending;
+
+        /// <summary>
+        /// Amount of biomass in this pool that is currently a pending take by an activity
+        /// </summary>
+        public double AmountPending { get; set; } = 0;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="startingAmount">Initial amount of biomass in the pool (kg)</param>
+        /// <param name="store"></param>
+        /// <param name="age">Age of pool (in months) when created</param>
+        public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store = null, int age = 0)
+        {
+            amount = startingAmount;
+            Age = age;
+            grazeStore = store;
+        }
 
         /// <summary>
         /// Reset timestep stores
@@ -110,87 +180,106 @@ namespace Models.CLEM.Resources
         {
             Detached = 0;
             Consumed = 0;
-            Growth = 0;
+            AmountPending = 0;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public void Initialise()
         {
             throw new NotImplementedException();
         }
 
-        #region transactions
-
         /// <summary>
-        /// Add to Resource method.
-        /// This style is not supported in GrazeFoodStoreType
-        /// </summary>
-        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
-        public void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Add to Resource method.
-        /// This style is used when a pool needs to be added to the current pool
-        /// This occurs when no detachment and decay (values of zero) are included in the GrazeFoodStore parameters
+        /// Add another pool arranging quality mixing This style is used when a pool needs to be added to the current
+        /// pool This occurs when no detachment and decay (values of zero) are included in the GrazeFoodStore parameters
         /// </summary>
         /// <param name="pool">GrazeFoodStorePool to add to this pool</param>
         public void Add(GrazeFoodStorePool pool)
         {
-            if (pool.Amount > 0)
+            if (pool.Amount <= 0) return;
+
+            // adjust DMD and N% based on incoming if needed
+            if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenPercent != pool.NitrogenPercent)
             {
-                // adjust DMD and N% based on incoming if needed
-                if (DMD != pool.DMD || Nitrogen != pool.Nitrogen)
-                {
-                    //TODO: run calculation passed others.
-                    DMD = ((DMD * Amount) + (pool.DMD * pool.Amount)) / (Amount + pool.Amount);
-                    Nitrogen = ((Nitrogen * Amount) + (pool.Nitrogen * pool.Amount)) / (Amount + pool.Amount);
-                }
-                amount += pool.Amount;
-                Growth += pool.Growth;
+                //TODO: run calculation passed others.
+                DryMatterDigestibility = ((DryMatterDigestibility * Amount) + (pool.DryMatterDigestibility * pool.Amount)) / (Amount + pool.Amount);
+                NitrogenPercent = ((NitrogenPercent * Amount) + (pool.NitrogenPercent * pool.Amount)) / (Amount + pool.Amount);
             }
+            amount += pool.Amount;
         }
 
         /// <summary>
-        /// 
+        /// Remove an amout from the pool
         /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public double Remove(double removeAmount, CLEMModel activity, string reason)
+        /// <param name="removeAmount">Amount taken</param>
+        public void Remove(double removeAmount)
         {
-            removeAmount = Math.Min(this.amount, removeAmount);
-            this.Consumed += removeAmount;
-            this.amount -= removeAmount;
+            // TODO: do when need to consider burning separate to grazing in reporting or is it all consumed
+            removeAmount = Math.Min(removeAmount, Amount);
+            Consumed += removeAmount;
+            amount -= removeAmount;
+        }
 
+        /// <summary>
+        /// Reduce the pending amount in the pool
+        /// </summary>
+        /// <param name="amountReturned">Amount to reduce from pending (total for time step)</param>
+        public void ReducePending(double amountReturned)
+        {
+            AmountPending -= Math.Min(AmountPending, amountReturned);
+        }
+
+        /// <summary>
+        /// Detatch a proportion of the pool
+        /// </summary>
+        /// <param name="proportion">Proportion of the pool to detach</param>
+        /// <returns>
+        /// The amount detached from the pool (kg)
+        /// </returns>
+        public double Detach(double proportion)
+        {
+            double removeAmount = AmountAvailable * proportion;
+            AmountPending *= proportion;
+            Detached += removeAmount;
+            amount -= removeAmount;
             return removeAmount;
         }
 
         /// <summary>
-        /// Remove from finance type store
+        /// Consume a specified amount of the pool (cattle, fire, cut and carry) removing from the pool and adjusting
+        /// pending if required
         /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public void Remove(ResourceRequest request)
+        /// <param name="amount">Amount of the pool consumed</param>
+        /// <param name="reducePending">Reduce pending</param>
+        public void Consume(double amount, bool reducePending = true)
         {
-            throw new NotImplementedException();
+            double removeAmount = Math.Min(amount, Amount);
+            if (reducePending)
+            {
+                AmountPending = Math.Max(0, MathUtilities.RoundToZero(AmountPending - removeAmount, 1e-5));
+            }
+            Consumed += removeAmount;
+            this.amount -= removeAmount;
         }
 
         /// <summary>
-        /// 
+        /// Consume the pending amount
         /// </summary>
-        /// <param name="newAmount"></param>
-        public void Set(double newAmount)
+        public void ConsumePending()
         {
-            this.amount = Math.Max(0, newAmount);
+            Consumed += AmountPending;
+            this.amount -= AmountPending;
+            AmountPending = 0;
         }
-        #endregion
 
+        /// <summary>
+        /// Used to set the amount in the pool at the start of simulation
+        /// </summary>
+        /// <param name="amount">Amount in the pool</param>
+        public void InitialBiomassSet(double amount)
+        {
+            this.amount = amount;
+
+        }
     }
 }

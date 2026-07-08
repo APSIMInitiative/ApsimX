@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
-  "Version": 208,
+  "Version": 219,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Soils.Nutrients.Nutrient, Models",
@@ -11,214 +11,267 @@
         "Nodes": [
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Inert",
             "Location": "708, 382",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMLignin",
             "Location": "479, 108",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMCellulose",
             "Location": "706, 103",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "FOMCarbohydrate",
             "Location": "268, 103",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Microbial",
             "Location": "217, 390",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Humic",
             "Location": "449, 379",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "Urea",
             "Location": "709, 562",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "NO3",
             "Location": "219, 553",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "NH4",
             "Location": "456, 551",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "86, 180, 233"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": true,
+            "ID": 0,
             "Name": "Atmosphere",
             "Location": "226, 750",
-            "Colour": "245, 245, 220",
-            "OutlineColour": "0, 0, 0",
-            "Transparent": true
+            "Colour": "Beige"
           },
           {
             "$type": "APSIM.Shared.Graphing.Node, APSIM.Shared",
+            "Description": "",
+            "Transparent": false,
+            "ID": 0,
             "Name": "SurfaceResidue",
             "Location": "65, 105",
-            "Colour": "0, 158, 115",
-            "OutlineColour": "Black",
-            "Transparent": false
+            "Colour": "0, 158, 115"
           }
         ],
         "Arcs": [
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMLignin",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "259, 221",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMLignin",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "412, 196",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCellulose",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "395, 235",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCellulose",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "604, 282",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCarbohydrate",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "187, 227",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "FOMCarbohydrate",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "329, 173",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Microbial",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "340, 471",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Microbial",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "345, 400",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Humic",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "334, 340",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "Urea",
-            "DestinationName": "NH4",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "578, 491",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NO3",
-            "DestinationName": "Atmosphere",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "126, 634",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "NH4",
-            "DestinationName": "NO3",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "327, 466",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "SurfaceResidue",
-            "DestinationName": "Microbial",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "82, 264",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           },
           {
             "$type": "APSIM.Shared.Graphing.Arc, APSIM.Shared",
-            "SourceName": "SurfaceResidue",
-            "DestinationName": "Humic",
+            "SourceID": 0,
+            "DestinationID": 0,
+            "Conditions": null,
+            "Actions": null,
+            "ID": 0,
+            "Name": null,
             "Location": "201, 199",
-            "Colour": "Black",
-            "Name": null
+            "Colour": "Black"
           }
         ]
       },
-      "ResourceName": null,
       "Name": "Nutrient",
+      "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).\n\nThe N pools / flows simulate the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([probert_apsims_1998]), which was derived from approaches in CERES-Maize ([jones_ceres-maize:_1986]).",
+          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([#Probert1998APSIM]).\n\nThe N pools / flows simulate the nitrate content of each soil layer.  Much of the capability has been taken from implementation in the APSIM SoilN model ([#Probert1998APSIM]), which was derived from approaches in CERES-Maize ([#jones_ceres-maize:_1986]).",
           "Name": "Introduction",
           "ResourceName": null,
           "Children": [],
@@ -232,7 +285,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([probert_apsims_1998]).",
+              "Text": "The inert pool captures organic matter that either does not decompose, or decomposes at a rate slow enough to be of little importance to simulations.  Such an approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]).",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -241,6 +294,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Soil].Organic.FInert * [Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -260,6 +314,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Inert].C / [Soil].Organic.CNR",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -279,6 +334,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Inert].C / [Inert].InitialCPRatio",
               "Name": "InitialPhosphorus",
               "ResourceName": null,
@@ -317,7 +373,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.",
+              "Text": "The FOMLignin pool captures \"lignin-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). This pool has the slowest decomposition rate of the three FOM pools.",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -326,6 +382,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Soil].Organic.FOM * 0.1 * 0.4",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -345,6 +402,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[FOMLignin].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -419,7 +477,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). ",
+              "Text": "The FOMCellulose pool captures \"cellulose-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -428,6 +486,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Soil].Organic.FOM * 0.7 * 0.4",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -447,6 +506,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[FOMCellulose].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -521,7 +581,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([probert_apsims_1998]) and in CERES Maize([jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.",
+              "Text": "The FOMCarbohydrate pool captures \"carbohydrate-like\" material within fresh organic matter (FOM).  Such as approach was also captured in the APSIM SoilN model ([#probert_apsims_1998]) and in CERES Maize([#jones_ceres-maize:_1986]). This pool has the fastest decomposition rate of the three FOM pools.",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -530,6 +590,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Soil].Organic.FOM * 0.2 * 0.4",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -549,6 +610,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[FOMCarbohydrate].C / [Soil].Organic.FOMCNRatio",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -632,6 +694,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "(([Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness -[Inert].C) * [Soil].Organic.FBiom) / (1 + [Soil].Organic.FBiom)",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -651,6 +714,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Microbial].C /  [CNRatio]",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -670,6 +734,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Microbial].C / [Microbial].InitialCPRatio",
               "Name": "InitialPhosphorus",
               "ResourceName": null,
@@ -748,7 +813,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
+                              "Text": "The default potential decomposition rate comes from SoilN ([#probert_apsims_1998]). For sandy soils, the rate is modified as per [#Asseng1998163].",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -829,6 +894,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "(1-[Soil].Organic.FInert)*[Soil].Organic.Carbon * 100 * [Soil].Physical.BD * [Soil].Physical.Thickness - [Microbial].C",
               "Name": "InitialCarbon",
               "ResourceName": null,
@@ -848,6 +914,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Humic].C / [Soil].Organic.CNR",
               "Name": "InitialNitrogen",
               "ResourceName": null,
@@ -867,6 +934,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "[Humic].C / [Humic].InitialCPRatio",
               "Name": "InitialPhosphorus",
               "ResourceName": null,
@@ -945,6 +1013,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -965,7 +1034,6 @@
                     1.0,
                     0.5
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -992,6 +1060,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.SoilWaterScale, Models",
+                  "LLModel": 1,
                   "Name": "SoilWaterScale",
                   "ResourceName": null,
                   "Children": [],
@@ -1012,7 +1081,6 @@
                     1.0,
                     0.5
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1056,6 +1124,7 @@
         },
         {
           "$type": "Models.Functions.ExpressionFunction, Models",
+          "Units": null,
           "Expression": "([Soil].Physical.BD*[Soil].Physical.Thickness)/100",
           "Name": "ppm2kgha",
           "ResourceName": null,
@@ -1070,6 +1139,7 @@
           "Children": [
             {
               "$type": "Models.Functions.SoilWaterScale, Models",
+              "LLModel": 1,
               "Name": "SoilWaterScale",
               "ResourceName": null,
               "Children": [],
@@ -1090,7 +1160,6 @@
                 1.0,
                 1.0
               ],
-              "XVariableName": null,
               "Name": "XYPairs",
               "ResourceName": null,
               "Children": [],
@@ -1139,7 +1208,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The nitrogen flow captures the conversion of urea to ammonium by urease enzymes from soil bacteria.",
+              "Text": "The nitrogen flow captures the conversion of urea to ammonium by urease enzymes from soil bacteria ([#Godwin1991Nitrogen]).\n\nFurther information on soil nitrogen modelling can be found: [#VERBURG2025104213]",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -1206,7 +1275,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).  These were based upon the work of [Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis.  ",
+              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([#jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([#Probert1998APSIM]).  These were based upon the work of [#Rolston1984].  Denitrification rate is calculated using this approach to account for the effect of soil carbon, temperature and water on the fraction of nitrate lost on a daily basis. \n\nFurther information on soil nitrogen modelling can be found: [#VERBURG2025104213]",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -1216,6 +1285,8 @@
             {
               "$type": "Models.Functions.CERESDenitrificationModel, Models",
               "DenitrificationRateModifier": 0.0006,
+              "DenitrificationCarbonSlopeFactor": 0.0031,
+              "DenitrificationCarbonOffsetFactor": 24.5,
               "IsInertActive": true,
               "Name": "Rate",
               "ResourceName": null,
@@ -1268,7 +1339,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([PARTON1998]) as previously tested in APSIM ([THORBURN2010]).",
+                  "Text": "The emission of N2O during denitrification is calculated from an N2:N2O ratio using the approach from the DayCent model ([#PARTON1998]) as previously tested in APSIM ([#THORBURN2010]).\n\n\nFor access to the equations: [#VERBURG2025104213]",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1292,7 +1363,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "Denitrification is simulated using the approaches initially used in CERES Maize ([jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([probert_apsims_1998]).",
+              "Text": "Nitrification is simulated using the approaches initially used in CERES Maize ([#jones_ceres-maize:_1986]) as implemented in APSIM SoilN ([#Probert1998APSIM]). \n\nFurther information on soil nitrogen modelling can be found: [#VERBURG2025104213]",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -1355,7 +1426,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Currently, no N2O is assumed to be produced during nitrification processes.",
+                  "Text": "Currently, no N2 is assumed to be produced during nitrification processes.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -1495,5 +1566,7 @@
       "Enabled": true,
       "ReadOnly": false
     }
-  ]
+  ],
+  "Enabled": true,
+  "ReadOnly": false
 }

@@ -7,9 +7,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
-using Models.PMF.Organs;
 using System.Collections.Generic;
-using Models.LifeCycle;
 using System.IO;
 
 namespace Models.CLEM.Activities
@@ -27,7 +25,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
-        private int malebreeders = 0;
+        private int maleBreeders = 0;
         private int breeders = 0;
 
         /// <summary>
@@ -48,9 +46,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Breeding female age
         /// </summary>
-        [Description("Breeding age (months)")]
-        [Required, GreaterThanEqualValue(1)]
-        public int BreedingAge { get; set; }
+        [Description("Breeding age")]
+        [Units("years, months, days")]
+        public AgeSpecifier BreedingAge { get; set; } = new int[] { 18, 0 };
 
         /// <summary>
         /// Use local males for breeding
@@ -85,7 +83,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get other animal type model
             SelectedOtherAnimalsType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, AnimalTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
@@ -115,11 +112,11 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             IEnumerable<OtherAnimalsTypeCohort> cohorts = SelectedOtherAnimalsType.GetCohorts(null, false).ToList();
-            malebreeders = cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
+            maleBreeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
             breeders = 0;
-            if (!UseLocalMales | malebreeders > 0)
+            if (!UseLocalMales | maleBreeders > 0)
             {
-                breeders = cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
+                breeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Female).Sum(b => b.Number);
             }
         }
 
@@ -186,82 +183,66 @@ namespace Models.CLEM.Activities
 
                 if (breeders > 0)
                 {
-                    double newbysex = breeders * this.OffspringPerBreeder / 2.0;
-                    int singlesex = 0;
+                    double newBySex = breeders * this.OffspringPerBreeder / 2.0;
+                    int singleSex = 0;
 
                     // apply stochasticity to determine proportional numbers to integers
-                    if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.Next())
-                        singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
+                    if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.Next())
+                    {
+                        singleSex = Convert.ToInt32(Math.Ceiling(newBySex));
+                    }
                     else
-                        singlesex = Convert.ToInt32(Math.Floor(newbysex));
+                    {
+                        singleSex = Convert.ToInt32(Math.Floor(newBySex));
+                    }
 
-                    double newweight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
-                    if (singlesex > 1)
+                    double newWeight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
+                    if (singleSex > 1)
                     {
                         OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
                         {
-                            Age = 0,
-                            Weight = newweight,
+                            AgeDetails = new(0),
+                            Weight = newWeight,
                             Sex = Sex.Male,
-                            Number = singlesex,
-                            AdjustedNumber = singlesex,
+                            Number = singleSex,
+                            AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this, null, "Births");
+                        SelectedOtherAnimalsType.AddToResource(newmales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
+                        {
                             Status = ActivityStatus.Success;
+                        }
                     }
 
-                    if (newbysex - Math.Truncate(newbysex) > RandomNumberGenerator.Generator.NextDouble())
-                        singlesex = Convert.ToInt32(Math.Ceiling(newbysex));
-                    else
-                        singlesex = Convert.ToInt32(Math.Floor(newbysex));
-
-                    if (singlesex > 1)
+                    if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.NextDouble())
                     {
-                        OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
+                        singleSex = Convert.ToInt32(Math.Ceiling(newBySex));
+                    }
+                    else
+                    {
+                        singleSex = Convert.ToInt32(Math.Floor(newBySex));
+                    }
+
+                    if (singleSex > 1)
+                    {
+                        OtherAnimalsTypeCohort newFemales = new OtherAnimalsTypeCohort()
                         {
-                            Age = 0,
-                            Weight = newweight,
+                            AgeDetails = new(0),
+                            Weight = newWeight,
                             Sex = Sex.Female,
-                            Number = singlesex,
-                            AdjustedNumber = singlesex,
+                            Number = singleSex,
+                            AdjustedNumber = singleSex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this, null, "Births");
+                        SelectedOtherAnimalsType.AddToResource(newFemales, this, null, "Births");
                         if (Status != ActivityStatus.Partial)
+                        {
                             Status = ActivityStatus.Success;
+                        }
                     }
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new ())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"[r={DisplaySummaryValueSnippet(AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}] individuals must be {DisplaySummaryValueSnippet(BreedingAge, "Mature age not set", HTMLSummaryStyle.Default)} months of age to breed.");
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (UseLocalMales)
-                    htmlWriter.Write("Breeding will only occur when adult males are present in the local population.");
-                else
-                    htmlWriter.Write("Breeding will only regardless of whether adult males are present in the local population.");
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Each breeding female will produce {DisplaySummaryValueSnippet(OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals.");
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

@@ -9,13 +9,11 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant collec manure activity</summary>
-    /// <summary>This occurs from a specified paddock</summary>
+    /// <summary>Collect ruminant manure from specified paddock activity</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -25,11 +23,11 @@ namespace Models.CLEM.Activities
     [Description("Undertake the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ManureActivityCollectPaddock: CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
-
+        private readonly IClock clock = null;
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
         private double amountToDo;
@@ -57,8 +55,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // locate a cut and carry limiter associated with this event.
             limiter = ActivityCarryLimiter.Locate(this, Structure);
         }
 
@@ -164,21 +160,5 @@ namespace Models.CLEM.Activities
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Collect manure from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

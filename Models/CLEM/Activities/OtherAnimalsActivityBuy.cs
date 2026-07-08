@@ -1,16 +1,11 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Models.CLEM.Groupings;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
-using Models.PMF.Organs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -24,7 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages the purchase of specified other animals")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/BuyOtherAnimals.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBuy.htm")]
     public class OtherAnimalsActivityBuy : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         IEnumerable<OtherAnimalsTypeCohort> cohorts = null;
@@ -51,12 +46,18 @@ namespace Models.CLEM.Activities
 
             var animalTypesPresent = cohorts.Select(a => a.AnimalTypeName.Split('.')[1]).Distinct();
             if (!animalTypesPresent.Any())
+            {
                 return;
+            }
 
             if (animalTypesPresent.Count() == 1)
+            {
                 PredictedAnimalType = string.Join(',', animalTypesPresent);
+            }
             else
+            {
                 PredictedAnimalType = "Mixed types";
+            }
         }
 
         /// <inheritdoc/>
@@ -103,7 +104,10 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             foreach (var cohort in cohorts)
+            {
                 cohort.AdjustedNumber = cohort.Number;
+            }
+
             numberToBuy = cohorts.Sum(a => a.Number);
             purchaseValue = cohorts.Sum(a => a.Number * a.AnimalType.GetPriceGroupOfCohort(a, PurchaseOrSalePricingStyleType.Sale)?.Value ?? 0);
         }
@@ -194,12 +198,16 @@ namespace Models.CLEM.Activities
                 int numberAdjusted = cohorts.Sum(a => a.AdjustedNumber);
                 foreach (var cohort in cohorts.Where(a => a.Number > 0))
                 {
-                    cohort.AnimalType.Add(cohort, this, null, "Purchase");
+                    cohort.AnimalType.AddToResource(cohort, this, null, "Purchase");
                 }
-                if(numberAdjusted == numberToBuy)
+                if (numberAdjusted == numberToBuy)
+                {
                     Status = ActivityStatus.Success;
+                }
                 else
+                {
                     Status = ActivityStatus.Partial;
+                }
             }
         }
     }

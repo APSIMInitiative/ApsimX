@@ -1,7 +1,7 @@
 using Gtk;
 using UserInterface.Interfaces;
 using System;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {
@@ -38,8 +38,6 @@ namespace UserInterface.Views
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             mainWidget = hpaned;
             rightHandView.BorderWidth = 7;
-
-
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
