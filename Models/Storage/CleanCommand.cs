@@ -3,18 +3,18 @@ using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using System.Threading;
-using System;
-using Models.Core;
 
 namespace Models.Storage
 {
     internal class CleanCommand : IRunnable
     {
-        private static readonly string[] otherTablesToClean = new string[3]
+        private static readonly string[] otherTablesToClean = new string[5]
         {
             "_Messages",
             "_Factors",
-            "_InitialConditions"
+            "_InitialConditions",
+            "_Metadata",
+            "_PredictedObserved"
         };
 
         private DataStoreWriter writer;
