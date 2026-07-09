@@ -151,7 +151,7 @@ namespace Models.Core
             simulationDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", Name));
 
             foreach (var zone in Node.FindChildren<Zone>(recurse: true))
-                simulationDescription.Descriptors.Add(new SimulationDescription.Descriptor("Zone", zone.Name));
+                simulationDescription.Descriptors.Add(new SimulationDescriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
         }
