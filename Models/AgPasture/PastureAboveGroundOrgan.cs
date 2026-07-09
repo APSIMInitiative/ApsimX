@@ -100,32 +100,7 @@ namespace Models.AgPasture
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get { return DeadTissue.DM.Wt; } }
-
-        /// <summary>
-        /// TESTING LEAF AND STEM WT in g/m2
-        /// </summary>
-        public double Wt
-        {
-            get {return  DMTotal /10.0;}
-        }
-
-        /// <summary>
-        /// Testing LEAF AND STEM N in g/m2
-        /// </summary>
-        public double N
-        {
-            get {return NTotal /10.0;}
-        }
-
-        /// <summary>
-        /// TESTING nconc for leaf and stem
-        /// </summary>
-        public double NConc
-        {   
-
-            get { return NTotal/DMTotal; }
-        }
+        public double DMDead { get { return DeadTissue.DM.Wt; } }     
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -319,8 +294,9 @@ namespace Models.AgPasture
         /// <param name="deadToRemove">Fraction of dead biomass to remove from simulation (0-1).</param>
         /// <param name="liveToResidue">Fraction of live biomass to remove and send to residue pool(0-1).</param>
         /// <param name="deadToResidue">Fraction of dead biomass to remove and send to residue pool(0-1).</param>
+        /// <param name="fractionStanding">Fraction of biomass that remains standing when passed to surfaceOM (0-1).</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
-        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
+        public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
             // The fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);

@@ -983,5 +983,22 @@ namespace APSIM.Shared.Utilities
             }
             return currentLine;
         }
+
+        /// <summary>
+        /// Convert an object to a string. 
+        /// If the object is a DateTime then it is converted 
+        /// to a string using the invariant culture.
+        /// </summary>
+        /// <param name="obj">The object to convert.</param>
+        /// <returns>A string representation of the object.</returns>
+        public static string ConvertObjectToString(object obj)
+        {
+            if (obj == null)
+                return string.Empty;
+            else if (obj is DateTime dt)
+                return DateUtilities.GetDateAsString(dt);
+            else
+                return obj.ToString();
+        }
     }
 }

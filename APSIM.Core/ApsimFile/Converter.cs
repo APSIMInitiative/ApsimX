@@ -1,11 +1,11 @@
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
-using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
-using BruTile.Wmts.Generated;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.CodeAnalysis;
@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 210; } }
+    public static int LatestVersion { get { return 219; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -66,7 +66,8 @@ internal class Converter
             int fileVersion = (int)returnData.Root["Version"];
 
             if (fileVersion > LatestVersion)
-                throw new Exception(string.Format("Unable to open file '{0}'. File version is greater than the latest file version. Has this file been opened in a more recent version of Apsim?", fileName));
+                throw new Exception(string.Format("Unable to open file '{0}'. This file has a version number of " + fileVersion.ToString() + " but the version of apsim trying to run it is " + LatestVersion.ToString() + ".  " +
+                    "Files can only be run on an equal or greater versions of apsim. Was this file previously opened in a more recent version of Apsim?", fileName));
 
             // Run converters if not at the latest version.
             while (fileVersion < toVersion)
@@ -6828,7 +6829,6 @@ internal class Converter
         }
     }
 
-
     /// <summary>
     /// Change all FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor methods to
     /// Structure.FindSibling, Structure.Child, Structure.FindChildren, Structure.Parent
@@ -7014,6 +7014,7 @@ internal class Converter
     /// <param name="_">The name of the apsimx file.</param>
     private static void UpgradeToVersion202(JObject root, string _)
     {
+
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
@@ -7047,6 +7048,7 @@ internal class Converter
                 }
             }
         }
+
     }
 
     /// <summary>
@@ -7097,7 +7099,6 @@ internal class Converter
         }
     }
 
-    /// <summary>
     /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
     /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
     /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
@@ -7248,7 +7249,7 @@ internal class Converter
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "NDVIModel.Script.NDVI", "Spectral.NDVI");
     }
-    
+
     /// <summary>
     /// Change manager scripts:
     ///      Models.Core.ApsimFile.Structure.Add(newZone, simulation);
@@ -7301,7 +7302,7 @@ internal class Converter
             Regex regex = new Regex(@"\[([^\#\]]+)\](?!\()");
             MatchCollection matches = regex.Matches(text);
             int offset = 0;
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
                 string value = match.Groups[0].Value;
                 string reference = match.Groups[1].Value;
@@ -7313,7 +7314,7 @@ internal class Converter
 
             regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
             matches = regex.Matches(text);
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
                 string value = match.Groups[0].Value;
                 string url = match.Groups[1].Value;
@@ -7339,6 +7340,719 @@ internal class Converter
         // Change graph variables.
         foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
             JsonUtilities.SearchReplaceGraphVariableNames(graph, "Wheat.Grain.NperKernal", "Wheat.Grain.NperKernel");
-
     }
+
+    /// <summary>
+    /// Combining ZadokPMF, ZadokPMFWheat and new ZadokPMFWinterCereal to all use the same comnbined Zadok class.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion211(JObject root, string _)
+    {
+        //used by both Zadoks
+        JObject xValue = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "XValue",
+            ["VariableName"] = "[Phenology].Stage"
+        };
+
+        //children for PMF zadok
+        JObject VegetativePhasePMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculation"
+        };
+        JObject xyPairsPMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["X"] = new JArray(new double[] { 4.3, 4.9, 5.0, 6.0, 7.0, 8.0, 9.0 }),
+            ["Y"] = new JArray(new double[] { 30.0, 33, 39.0, 65.0, 71.0, 87.0, 90.0 })
+        };
+        JObject linearInterpPMF = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["Children"] = new JArray()
+        };
+        (linearInterpPMF["Children"] as JArray).Add(xyPairsPMF);
+        (linearInterpPMF["Children"] as JArray).Add(xValue);
+
+        //Replace all ZadokPMFs with new Zadok
+        List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
+        foreach (JObject zadok in zadokPMFs)
+        {
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhasePMF);
+            (zadok["Children"] as JArray).Add(linearInterpPMF);
+        }
+
+        //children for Wheat zadok
+        JObject xyPairsWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.XYPairs, Models",
+            ["Name"] = "XYPairs",
+            ["ResourceName"] = null,
+            ["X"] = new JArray(new double[] { 5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0 }),
+            ["Y"] = new JArray(new double[] { 30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0 })
+        };
+        JObject linearInterpWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.LinearInterpolationFunction, Models",
+            ["Name"] = "ZadokStageMapping",
+            ["ResourceName"] = null,
+            ["Children"] = new JArray()
+        };
+        (linearInterpWheat["Children"] as JArray).Add(xyPairsWheat);
+        (linearInterpWheat["Children"] as JArray).Add(xValue);
+
+        JObject VegetativePhaseWheat = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "VegetativePhaseFunction",
+            ["VariableName"] = "[Phenology].Zadok.VegetativePhaseCalculationWheat"
+        };
+
+        //Replace all ZadokPMFWheats with new Zadok
+        List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
+        foreach (JObject zadok in zadokPMFWheats)
+        {
+            zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
+            (zadok["Children"] as JArray).Add(VegetativePhaseWheat);
+            (zadok["Children"] as JArray).Add(linearInterpWheat);
+        }
+
+        // Change report variables.
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMF", "Phenology.Zadok", caseSensitive: false);
+            JsonUtilities.SearchReplaceReportVariableNames(report, "Phenology.ZadokPMFWheat", "Phenology.Zadok", caseSensitive: false);
+        }
+
+        // Change graph variables.
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMF", "Phenology.Zadok");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Phenology.ZadokPMFWheat", "Phenology.Zadok");
+        }
+    }
+
+    /// <summary>
+    /// Adding child to BBCH nodes to define what calulation to use. Any BBCH
+    /// under a canola plant should use the Canola version, all others should
+    /// use the generic version.
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion212(JObject root, string _)
+    {
+        //child for Generic BBCH
+        JObject bbchCalculation = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "BBCHCalculationFunction",
+            ["VariableName"] = "[Phenology].BBCH.BBCHCalculation"
+        };
+
+        //child for Canola BBCH
+        JObject bbchCalculationCanola = new JObject()
+        {
+            ["$type"] = "Models.Functions.VariableReference, Models",
+            ["Name"] = "BBCHCalculationFunction",
+            ["VariableName"] = "[Phenology].BBCH.BBCHCalculationCanola"
+        };
+
+        //Add child to BBCH
+        List<JObject> bbchs = JsonUtilities.ChildrenRecursively(root, "BBCH");
+        foreach (JObject bbch in bbchs)
+        {
+            JObject plant = JsonUtilities.Ancestor(bbch, "IPlant");
+            if (plant != null && plant["Name"].ToString() == "Canola")
+                (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+            else
+                (bbch["Children"] as JArray).Add(bbchCalculation);
+        }
+
+        //do the same for all BBCHCanola
+        bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
+        foreach (JObject bbch in bbchs)
+        {
+            bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
+            (bbch["Children"] as JArray).Add(bbchCalculationCanola);
+        }
+    }
+
+    /// <summary>
+    /// Rename Maize Organ "Rachis" to "Cobb"
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion213(JObject root, string fileName)
+    {
+        // Change reporting variables for Rachis
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].Rachis.", "[Maize].Cob.");
+            JsonUtilities.SearchReplaceReportVariableNames(report, "[Maize].EarLive.", "[Maize].Ear.");
+        }
+        // Change graph variables for Rachis
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.Rachis.", "Maize.Cob.");
+            JsonUtilities.SearchReplaceGraphVariableNames(graph, "Maize.EarLive.", "Maize.Ear.");
+        }
+        // change biomass removal objects that mention Rachis
+        foreach (var OrganType in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+            foreach (var fraction in OrganType["BiomassRemovalFractions"])
+            {
+                if (fraction["PlantName"].ToString().Equals("Maize", StringComparison.InvariantCultureIgnoreCase))
+                    if (fraction["OrganName"].ToString().Equals("Rachis", StringComparison.InvariantCultureIgnoreCase))
+                        fraction["OrganName"] = "Cob";
+            }
+        }
+    }
+
+    /// Fix some things in STRUM
+    /// <param name="root">Root json object.</param>
+    /// <param name="_">Unused filename.</param>
+    private static void UpgradeToVersion214(JObject root, string _)
+    {
+        // Find all StrumTreeInstance models in the JSON and update values
+        foreach (var model in root
+            .SelectTokens("$..[?(@.$type && @.$type =~ /StrumTreeInstance/i)]")
+            .OfType<JObject>())
+        {
+            // 1) Targeted fix: only the explicit property used to store the tree type.
+            var treeType = model["TreeType"] as JValue;
+            if (treeType != null &&
+                treeType.Type == JTokenType.String &&
+                string.Equals((string)treeType, "Ever green", StringComparison.OrdinalIgnoreCase))
+            {
+                model["TreeType"] = "Evergreen";
+            }
+        }
+
+        // 1) Define your replacements: substring -> replacement (partial matches allowed)
+        //    Examples (replace with your real renames):
+        var map = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            { "STRUM.Height.CanopyBaseHeight", "STRUM.Height.PrunedCanopyBaseHeight" },
+            { "[STRUM].Height.CanopyBaseHeight", "[STRUM].Height.PrunedCanopyBaseHeight" },
+            { "STRUM.Height.SeasonalGrowth", "STRUM.Height.SeasonalDepthGrowth" },
+            { "[STRUM].Height.SeasonalGrowth", "[STRUM].Height.SeasonalDepthGrowth" },
+            { "STRUM.CanopyBaseHeight", "STRUM.BaseHeight" },
+            { "[STRUM].CanopyBaseHeight", "[STRUM].BaseHeight" },
+            { "STRUM.Trunk.", "STRUM.Wood." },
+            { "[STRUM].Trunk.", "[STRUM].Wood." },
+        };
+
+        // 2) REPORT models (Models.Report.VariableNames, Models)
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, key, map[key], caseSensitive: false);
+            }
+        }
+
+        // 3) GRAPH SERIES models (Models.Graph.Series, Models)
+        foreach (var graph in JsonUtilities.ChildrenOfType(root, "Graph"))
+        {
+            foreach (string key in map.Keys)
+            {
+                JsonUtilities.SearchReplaceGraphVariableNames(graph, key, map[key]);
+            }
+        }
+
+        // 4) rename trunk to wook in biomass removal events
+        foreach (var remove in JsonUtilities.ChildrenOfType(root, "BiomassRemovalEvents"))
+        {
+            if (remove["NameOfPlantToRemoveFrom"].ToString() == "STRUM")
+            {
+                JArray organs = remove["BiomassRemovalFractions"] as JArray;
+
+                foreach (JToken organ in organs)
+                {
+                    if (organ["OrganName"].ToString() == "Trunk")
+                    {
+                        organ["OrganName"] = "Wood";
+                    }
+                }
+            }
+        }
+
+        // 5) Manager script renames
+        foreach (var manager in JsonUtilities.ChildManagers(root))
+        {
+            foreach (string key in map.Keys)
+            {
+                var changed = manager.Replace(key, map[key]);
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        List<string> toRescale = new List<string> { "MaxRD",
+                                                    "MatureCanopyBaseHeight",
+                                                    "MaturePrunedCanopyBaseHeight",
+                                                    "MatureHeight",
+                                                    "MaturePrunedHeight",
+                                                    "MatureWidth",
+                                                    "MaturePrunedWidth" };
+
+        // 6. convert canopy and root dimensions from mm to m
+        foreach (var ScrumTreeInstance in JsonUtilities.ChildrenOfType(root, "StrumTreeInstance"))
+        {
+            foreach (string param in toRescale)
+            {
+
+                if (!ScrumTreeInstance.TryGetValue(param, out JToken token))
+                    continue;
+
+                if ((double)ScrumTreeInstance[param] > 100)
+                    ScrumTreeInstance[param] = (double)ScrumTreeInstance[param] / 1000;
+            }
+        }
+
+        string paramGroup = string.Join("|", toRescale.Select(Regex.Escape));
+        var regex = new Regex(
+            $@"^(?<prefix>\[Row\]\.[^\.]+\.({paramGroup})\s*=\s*)" +
+            @"(?<value>-?\d+(\.\d+)?)",
+            RegexOptions.Compiled);
+        foreach (var CompositeFactor in JsonUtilities.ChildrenOfType(root, "CompositeFactor"))
+        {
+
+            JArray specs = CompositeFactor["Specifications"] as JArray;
+            if (specs == null || specs.Count == 0)
+                continue;
+
+            for (int i = 0; i < specs.Count; i++)
+            {
+                if (specs[i].Type != JTokenType.String)
+                    continue;
+
+                string specText = specs[i].Value<string>();
+                specs[i] = regex.Replace(specText, match =>
+                {
+                    double value = double.Parse(
+                        match.Groups["value"].Value,
+                        CultureInfo.InvariantCulture);
+
+                    // Same guard as StrumTreeInstance
+                    if (value <= 100)
+                        return match.Value;
+
+                    double scaled = value / 1000.0;
+
+                    return match.Groups["prefix"].Value +
+                           scaled.ToString("G", CultureInfo.InvariantCulture);
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Makes StoreTypes in Stores property of Supplement into children instead.
+    /// Also updates stores report variables as well.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion215(JObject root, string fileName)
+    {
+        foreach (JObject supplement in JsonUtilities.ChildrenOfType(root, "Supplement"))
+        {
+            var stores = supplement["Stores"];
+            if (stores != null)
+            {
+                foreach (JObject store in stores.Cast<JObject>())
+                {
+                    // Fodder StoreTypes have historically been a hidden StoreType property of Supplement.
+                    // Now that they are children and not in a Stores property we only want them to exist
+                    // in memory and not be serialised to the .apsimx file. 
+                    string fodderStoreTypeName = "fodder";
+                    if (!store["Name"].ToString().Equals(fodderStoreTypeName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var newChildStore = new JObject
+                        {
+                            ["$type"] = store["$type"],
+                            ["Name"] = store["Name"],
+                            ["Stored"] = store["Stored"],
+                            ["IsRoughage"] = store["IsRoughage"],
+                            ["DMContent"] = store["DMContent"],
+                            ["DMD"] = store["DMD"],
+                            ["MEContent"] = store["MEContent"],
+                            ["CPConc"] = store["CPConc"],
+                            ["ProtDg"] = store["ProtDg"],
+                            ["PConc"] = store["PConc"],
+                            ["SConc"] = store["SConc"],
+                            ["EEConc"] = store["EEConc"],
+                            ["ADIP2CP"] = store["ADIP2CP"],
+                            ["AshAlk"] = store["AshAlk"],
+                            ["MaxPassage"] = store["MaxPassage"]
+                        };
+
+                        if (newChildStore["Name"].ToString().Contains(".5me"))
+                        {
+                            newChildStore["Name"] = newChildStore["Name"].ToString().Replace(".", "");
+                        }
+                        JObject supplementStoreParent = JsonUtilities.Parent(store) as JObject;
+                        JsonUtilities.AddChild(supplementStoreParent, newChildStore);
+                    }
+                }
+                supplement.Remove("Stores");
+            }
+        }
+
+        foreach (JObject operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+        {
+            foreach (JObject operation in operations["OperationsList"])
+            {
+                // Remove period from supplement names in the Actions and 
+                // Line properties.
+                // The names of these supplements will be changed to above to a
+                // legal name as periods are not allowed.
+                if (operation["Action"] is JToken actionObject)
+                {
+                    if (actionObject.ToString().Contains(".5me"))
+                    {
+                        operation["Action"] = actionObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+
+                if (operation["Line"] is JToken lineObject)
+                {
+                    if (lineObject.ToString().Contains(".5me"))
+                    {
+                        operation["Line"] = lineObject.ToString().Replace(".5me", "5me");
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// The 'address' of various model parameters has changed. User's cultivars should be kept synchronized.
+    /// </summary>
+    /// <param name="root">Root json token.</param>
+    /// <param name="name">File name.</param>
+    private static void UpgradeToVersion216(JObject root, string name)
+    {
+        List<(string, string)> maizeUpadtes =
+        [
+            ("[Grain].MaximumGrainsPerCob.FixedValue", "[Grain].MaximumGrainsPerCob.PotentialMaximumGrainsPerCob.FixedValue"),
+            ("[Structure].Phyllochron.Phyllochron", "[Structure].Phyllochron.BasePhyllochron.Phyllochron"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs")
+        ];
+        List<(string, string)> soybeanUpdates =
+        [
+            ("[Grain].PotentialHarvestIndex", "[Grain].PotentialHarvestIndex.PotentialHarvestIndex"),
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].Phyllochron", "[Leaf].Phyllochron.Phyllochron")
+        ];
+        List<(string, string)> canolaUpdates =
+        [
+            ("[Leaf].Photosynthesis.FW.XYPairs", "[Leaf].Photosynthesis.FW.Deficient.XYPairs"),
+            ("[Leaf].SenescenceRate.Reproductive.Rate.Fraction.Modifier", "[Leaf].SenescenceRate.Reproductive.Rate.MaximumFunction.Fraction.Modifier"),
+            ("[Grain].MaximumPotentialGrainSize", "[Grain].MaximumPotentialGrainSize.GrainSize")
+        ];
+
+        foreach (var plant in JsonUtilities.ChildrenOfType(root, "Plant"))
+        {
+            var plantName = plant["Name"].Value<string>();
+            var updates = plantName switch
+            {
+                "Maize" => maizeUpadtes.Concat(maizeUpadtes.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Soybean" => soybeanUpdates.Concat(soybeanUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                "Canola" => canolaUpdates.Concat(canolaUpdates.Select(u => (ReformatPath(u.Item1, plantName), u.Item2))),
+                _ => []
+            };
+            if (updates.Any() && plant["ResourceName"].Value<string>() == plantName)
+            {
+                foreach (var cultivar in JsonUtilities.ChildrenOfType(plant, "Cultivar"))
+                {
+                    JsonUtilities.UpdateCultivarPaths(cultivar, updates);
+                }
+            }
+        }
+
+        // Not uncommon to see people write a cultivar path like it is a report entry. Want our path updates to hit both.
+        static string ReformatPath(string normalPath, string plant)
+        {
+            var parts = normalPath.Split(".");
+            var organ = parts[0][1..^1];
+            return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
+        }
+    }
+
+    /// <summary>
+    /// Removes invalid character "/" in alias 
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion217(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+
+            if (variableNames == null || variableNames.Count == 0)
+                continue;
+            bool changed = false;
+           
+            for (int i = 0; i < variableNames.Count; i++)
+            {
+                string reportVariable = variableNames[i];
+                // Only rewrite if BOTH patterns exist
+                if (reportVariable.Contains(" as "))
+                {   
+                    if(!reportVariable.Contains("//"))
+                    {
+                            // Remove all invalid characters the variable expression
+                        int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                        string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
+                        string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
+                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
+                        string rewritten = expr + " as " + cleanedAlias;
+                        if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                        {
+                            variableNames[i] = rewritten;
+                            changed = true;
+                        }
+                    }
+                    
+                }
+            }
+            if (changed)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);
+            }
+    }
+
+    /// Change CLEM to work with new custom time-step rather than months and method of handling age and dates
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion218(JObject root, string _)
+    {
+        Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
+            {
+                { "Models.CLEM.Resources.LabourAvailabilityItemMonthly", "Models.CLEM.Groupings.LabourAvailabilityGroupMonthly" },
+                { "Models.CLEM.Resources.LabourAvailabilityItem", "Models.CLEM.Groupings.LabourAvailabilityGroup" },
+            };
+
+        foreach (var item in searchReplaceStrings)
+            JsonUtilities.ReplaceChildModelType(root, item.Key, item.Value);
+
+        // replace all Grow24 with GrowPF
+
+        var rumCompUpdated = new Tuple<string, string, string>[]
+        {
+                    new ("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
+                    new ("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
+                    new ("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
+                    new ("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
+                    new ("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
+                    new ("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
+                    new ("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
+                    new ("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
+                    new ("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
+                    new ("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
+        };
+
+        foreach (var update in rumCompUpdated)
+        {
+            foreach (JObject rumComponent in JsonUtilities.ChildrenRecursively(root, $"Models.CLEM.{update.Item1}.{update.Item2}"))
+            {
+                rumComponent["$type"] = $"Models.CLEM.{update.Item1}.{update.Item3}, Models";
+            }
+        }
+
+        // Pseudocode plan:
+        // 1. Loop through each tuple in propertyUpdates (model type, property name).
+        // 2. For each tuple, find all nodes of the given model type in the JSON root.
+        // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
+        // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
+        // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
+
+        var propertyUpdates = new Tuple<string, string>[]
+        {
+                    new("RuminantActivityControlledMating", "MaximumAgeMating"),
+                    new("RuminantActivityWean", "WeaningAge"),
+                    new("RuminantActivityManage", "MaximumBreederAge"),
+                    new("RuminantActivityManage", "MaximumSireAge"),
+                    new("RuminantActivityManage", "MaleSellingAge"),
+                    new("RuminantActivityManage", "FemaleSellingAge"),
+                    new("ProductStoreTypeManure", "MaximumAge"),
+                    new("OtherAnimalsActivityBreed", "InitialAge")
+        };
+
+        foreach (var item in propertyUpdates)
+        {
+            foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+            {
+                // Only update if AgeSpecifier is not already present
+                if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
+                {
+                    var propValue = node[item.Item2];
+                    if (propValue is not null && propValue.Type.ToString() != "Object")
+                    {
+                        decimal value = node.Value<decimal>(item.Item2);
+                        if (item.Item1 == "LabourType")
+                            value *= 12;
+                        node[item.Item2] = JContainer.FromObject(createCLEMAgeSpecifier(value));   //(new Models.CLEM.AgeSpecifier(value));
+
+
+                    }
+                }
+            }
+        }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
+        {
+            if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
+            {
+                decimal value = node.Value<decimal>("Age");
+                node.Add(new JProperty("AgeDetails", JContainer.FromObject(createCLEMAgeSpecifier(value))));   //JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
+            }
+        }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
+        {
+            node["PropertyOfIndividual"] = "AgeInYears";
+            node["Value"] = JContainer.FromObject(node.Value<decimal>("Value") / 12.0m);
+        }
+
+        if (JsonUtilities.ChildrenOfType(root, "ZoneCLEM").Any())  // make sure there is a CLEM component before adding the CLEMEvents
+        {
+            foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                //check if child already has a CLEMEvents
+                if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+                {
+                    string newCLEMEvents = @"{
+                                ""$type"": ""Models.CLEM.CLEMEvents, Models"",
+                                ""TimeStep"": 30, 
+                                ""CustomTimeStep"": 0,
+                                ""EcologicalIndicatorsCalculationInterval"": 12,
+                                ""EcologicalIndicatorsCalculationMonth"": 7,
+                                ""Interval"": 0,
+                                ""Notes"": null,
+                                ""SelectedTab"": null,
+                                ""Name"": ""CLEMEvents"",
+                                ""ResourceName"": null,
+                                ""Children"": [],
+                                ""Enabled"": true,
+                                ""ReadOnly"": false
+                                }";
+
+                    //JsonUtilities.AddModel(clk, new CLEMEvents());
+                    JsonUtilities.AddChild(clk, JObject.Parse(newCLEMEvents));
+                }
+            }
+        }
+
+        // replace ActivityTimerDateRange with new ActivityTimerCalendar details
+        // set start ymd to start.Year, Start.Month, Start.Day
+        // set end ymd to end.Year, end.Month, end.Day
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerDateRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var decmonth = node.Value<DateTime>("StartDate");
+            decimal months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(months)))); //new AgeSpecifier(months))));
+            decmonth = node.Value<DateTime>("EndDate");
+            months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(months))));  //new AgeSpecifier(months))));
+        }
+
+        // replace ActivityTimerInterval with new ActivityTimerCalendar
+        // place interval in the repeatDetails
+        // set start and end ymd to 0, MonthDue, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerInterval"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var monthDue = node.Value<decimal>("MonthDue");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            var interval = node.Value<decimal>("Interval");
+            node.Add(new JProperty("RepeatDetails", JContainer.FromObject(createCLEMAgeSpecifier(interval)))); //new AgeSpecifier(interval))));
+        }
+
+        // replace ActivityTimerMonthRange with new ActivityTimerCalendar
+        // set start ymd to 0, Start.Month, 0
+        // set end ymd to 0, end.Month, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerMonthRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var startMonth = node.Value<decimal>("StartMonth");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(startMonth)))); //new AgeSpecifier(startMonth))));
+            var endMonth = node.Value<decimal>("EndMonth");
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(endMonth)))); //new AgeSpecifier(endMonth))));
+        }
+    }
+
+
+    private static JObject createCLEMAgeSpecifier(decimal value)
+    {
+        int[] parts;
+        if (value >= 12)
+        {
+            decimal years = Math.Floor(value / 12);
+            decimal remainingMonths = value - (years * 12);
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partmonths * 30.4M)];
+        }
+        else
+        {
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [0, Convert.ToInt32(value), Convert.ToInt32(partmonths * 30.4M)];
+        }
+
+        string partsString = string.Join($",{Environment.NewLine}", parts);
+
+        string newAgeSpecifier = @"{
+            ""$type"": ""Models.CLEM.AgeSpecifier, Models"",
+            ""Parts"": [
+                [VALUE]
+            ]
+            }";
+        newAgeSpecifier = newAgeSpecifier.Replace("[VALUE]", partsString);
+        return JObject.Parse(newAgeSpecifier);
+    }
+
+
+    /// <summary>
+    /// Rounds out of range InitialStandingFraction values to either 0 or 1.
+    /// Also changes any NaN values to 0.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion219(JObject root, string fileName)
+    {
+        foreach (JObject surfaceOrganicMatter in JsonUtilities.ChildrenOfType(root, "SurfaceOrganicMatter"))
+        {
+            // APSIMTests.cs fails if you look for InitialStandingFraction in SurfaceOrganicMatter.
+            // The Simulations version is retrieved from an old XML version and doesn't appear to have this property,
+            // so we should skip these models.
+            if (surfaceOrganicMatter["InitialStandingFraction"] == null)
+                continue;
+            // Check if the value is NaN and correct.
+            JToken token = surfaceOrganicMatter["InitialStandingFraction"];
+            double value;
+            if (token.Type == JTokenType.Float || token.Type == JTokenType.Integer)
+                value = token.Value<double>();
+            else if (token.Type == JTokenType.String && string.Equals(token.ToString(), "NaN", StringComparison.OrdinalIgnoreCase))
+                value = 0.0;
+            else if (!double.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                continue;
+            // Constrains the value to within the lower and upper values.
+            surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
+        }
+    }
+   
 }
+
+
+
+

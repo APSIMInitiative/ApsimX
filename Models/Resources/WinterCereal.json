@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 219,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -982,25 +982,62 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.ZadokPMFWheat, Models",
+              "$type": "Models.PMF.Phen.Zadok, Models",
               "Name": "Zadok",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].Haunstage",
-                  "Name": "HaunStage",
+                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat",
+                  "Name": "VegetativePhaseFunction",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].StemNumberPerPlant.Total.Tillers",
-                  "Name": "TillerNumber",
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "ZadokStageMapping",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        5.0,
+                        5.99,
+                        6.0,
+                        7.0,
+                        8.0,
+                        9.0,
+                        10.0,
+                        11.0
+                      ],
+                      "Y": [
+                        30.0,
+                        34.0,
+                        39.0,
+                        55.0,
+                        65.0,
+                        71.0,
+                        87.0,
+                        90.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -7557,13 +7594,13 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Sowing",
-                          "End": "FlagLeafAppearance",
+                          "End": "Anthesis",
                           "Name": "VegetativeGrowth",
                           "ResourceName": null,
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.6,
+                              "FixedValue": 0.7,
                               "Units": null,
                               "Name": "Fraction",
                               "ResourceName": null,
@@ -7577,8 +7614,8 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "FlagLeafAppearance",
-                          "End": "Anthesis",
+                          "Start": "Anthesis",
+                          "End": "HarvestRipe",
                           "Name": "ReproductiveGrowth",
                           "ResourceName": null,
                           "Children": [
@@ -8018,7 +8055,7 @@
             },
             {
               "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowthPF",
+              "Name": "PotentialGrowth",
               "ResourceName": null,
               "Children": [
                 {
@@ -8253,7 +8290,7 @@
               "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "MaximumGrainLength",
-              "Name": "PotentialGrowth",
+              "Name": "PotentialGrowthOLD",
               "ResourceName": null,
               "Children": [
                 {

@@ -31,10 +31,10 @@ namespace UserInterface.Classes
         File,
         Files,
         Directory,
-        //Directories,
         Font,
         Numeric,
-        Code
+        Code,
+        Button
     }
 
     /// <summary>
@@ -283,12 +283,18 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.CultivarName:
                     DisplayMethod = PropertyType.DropDown;
+
                     IPlant plant = null;
-                    PropertyInfo plantProperty = model.GetType().GetProperties().FirstOrDefault(p => typeof(IPlant).IsAssignableFrom(p.PropertyType));
-                    if (plantProperty != null)
-                        plant = plantProperty.GetValue(model) as IPlant;
+                    if (!string.IsNullOrEmpty(attrib.PlantName))
+                        plant = model.Node.Find<IPlant>(attrib.PlantName);
                     else
-                        plant = model.Node.Find<IPlant>();
+                    {
+                        PropertyInfo plantProperty = model.GetType().GetProperties().FirstOrDefault(p => typeof(IPlant).IsAssignableFrom(p.PropertyType));
+                        if (plantProperty != null)
+                            plant = plantProperty.GetValue(model) as IPlant;
+                        else
+                            plant = model.Node.Find<IPlant>();
+                    }
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     else
@@ -424,11 +430,14 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.StrumTreeTypes:
                     DisplayMethod = PropertyType.DropDown;
-                    DropDownOptions = new string[2] { "Ever green", "Deciduous" };
+                    DropDownOptions = new string[2] { "Evergreen", "Deciduous" };
                     break;
                 case DisplayType.CanopyTypes:
                     DisplayMethod = PropertyType.DropDown;
                     DropDownOptions = new string[4] { "BroadAcre", "TreeRow", "CropRow", "VineRow" };
+                    break;
+                case DisplayType.Button:
+                    DisplayMethod = PropertyType.Button;
                     break;
 
                 // Should never happen - presenter should handle this(?)

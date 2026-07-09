@@ -170,20 +170,14 @@ namespace UserInterface.Presenters
         {
             // When the user undoes/redoes something we want to select the affected
             // model. Therefore we can use the same callback for both events.
-            this.ApsimXFile = model as Simulations;
+            ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
-            this.CommandHistory = new CommandHistory(this.view.Tree);
-            this.mainMenu = new MainMenu(MainPresenter);
-            this.ContextMenu = new ContextMenu(this);
+            mainMenu = new MainMenu(MainPresenter);
+            ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
 
-            this.view.Tree.SelectedNodeChanged += this.OnNodeSelected;
-            this.view.Tree.DragStarted += this.OnDragStart;
-            this.view.Tree.AllowDrop += this.OnAllowDrop;
-            this.view.Tree.Droped += this.OnDrop;
-            this.view.Tree.Renamed += this.OnRename;
-
-            Populate();
+            RebuildTree();
+            CommandHistory = new CommandHistory(Tree);
 
             ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
             if (file != null && file.ExpandedNodes != null)
@@ -219,17 +213,43 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Fully populate/refresh the view.
+        /// Recreate the explorer tree view (that holds the file structure)
+        /// This will initialise the entire tree and rebuild it from scratch.
+        /// it may also cause other unexpected behaviour such as changing the 
+        /// scrollbar position. Any expanded nodes will remain expanded.
         /// </summary>
-        /// <remarks>
-        /// This will remove all nodes from the tree and rebuild it from scratch.
-        /// This will be slower than calling RefreshNode() and passing in the
-        /// top-level node, and it may also cause other unexpected behaviour such
-        /// as changing the scrollbar position. Any expanded nodes will remain expanded.
-        /// </remarks>
-        public void Populate()
+        public void RebuildTree()
         {
-            view.Tree.Populate(GetNodeDescription(ApsimXFile));
+            MainPresenter.ClearStatusPanel();
+            string selectedNode = "";
+            List<string> expandedNodes = new List<string>();
+            if (view.Tree != null)
+            {
+                if (view.Tree.ContextMenu != null)
+                {
+                    view.Tree.ContextMenu.Destroy();
+                    view.Tree.ContextMenu = null;
+                }
+                selectedNode =  view.Tree.SelectedNode;
+                expandedNodes = (view.Tree as TreeView).GetExpandedRows();
+                view.Tree.SelectedNodeChanged -= this.OnNodeSelected;
+                view.Tree.DragStarted -= this.OnDragStart;
+                view.Tree.AllowDrop -= this.OnAllowDrop;
+                view.Tree.Droped -= this.OnDrop;
+                view.Tree.Renamed -= this.OnRename;
+            }
+
+            (view as ExplorerView).RebuildTree(GetNodeDescription(ApsimXFile), expandedNodes);
+
+            if (CommandHistory != null)
+                CommandHistory.UpdateTree(this.view.Tree);
+            if (!string.IsNullOrEmpty(selectedNode))
+                view.Tree.SelectedNode = selectedNode;
+            view.Tree.SelectedNodeChanged += this.OnNodeSelected;
+            view.Tree.DragStarted += this.OnDragStart;
+            view.Tree.AllowDrop += this.OnAllowDrop;
+            view.Tree.Droped += this.OnDrop;
+            view.Tree.Renamed += this.OnRename;
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -260,7 +280,11 @@ namespace UserInterface.Presenters
             this.view.Tree.AllowDrop -= this.OnAllowDrop;
             this.view.Tree.Droped -= this.OnDrop;
             this.view.Tree.Renamed -= this.OnRename;
-            this.view.Tree.ContextMenu.Destroy();
+            if (view.Tree.ContextMenu != null)
+            {
+                view.Tree.ContextMenu.Destroy();
+                view.Tree.ContextMenu = null;
+            }
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
@@ -548,6 +572,15 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
+
+                // When a Series model is moved up or down it can change the way it is displayed
+                // in the right hand panel, so we need to refresh that display.
+                // Do any other Models require this?
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
@@ -563,6 +596,11 @@ namespace UserInterface.Presenters
             {
                 MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
+                if (model is Series)
+                {
+                    this.HideRightHandPanel();
+                    this.ShowRightHandPanel();
+                }
             }
             catch (Exception err)
             {
@@ -1126,7 +1164,6 @@ namespace UserInterface.Presenters
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
 
 
@@ -1278,7 +1315,7 @@ namespace UserInterface.Presenters
                 this.mainMenu = new MainMenu(MainPresenter);
                 this.ContextMenu = new ContextMenu(this);
                 this.ApsimXFile.Links.Resolve(ContextMenu);
-                Populate();
+                RebuildTree();
                 PopulateMainMenu();
                 SelectNode(ApsimXFile, false);
                 this.PopulateContextMenu(ApsimXFile.FullPath);

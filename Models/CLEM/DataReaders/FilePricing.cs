@@ -31,14 +31,14 @@ namespace Models.CLEM
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
         [Description("File name")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
         public string FileName { get; set; }
 
@@ -53,17 +53,16 @@ namespace Models.CLEM
         /// Name of column holding date data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Date")]
         [Description("Column name for date")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Date column name must be supplied")]
-        public string DateColumnName { get; set; }
+        public string DateColumnName { get; set; } = "Date";
 
         [NonSerialized]
         private ApsimTextFile reader = null;
         [NonSerialized]
         private DataRowCollection priceFileAsRows;
         [NonSerialized]
-        private List<IResourcePricing> pricingComonentsFound;
+        private List<IResourcePricing> pricingComponentsFound;
 
         /// <summary>
         /// Gets or sets the full file name (with path).
@@ -76,14 +75,20 @@ namespace Models.CLEM
             get
             {
                 if ((this.FileName == null) || (this.FileName == ""))
+                {
                     return "";
+                }
                 else
                 {
                     Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
+                    {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    }
                     else
+                    {
                         return this.FileName;
+                    }
                 }
             }
         }
@@ -106,7 +111,9 @@ namespace Models.CLEM
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
                 if (filename == "")
+                {
                     filename = "Not set";
+                }
 
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
@@ -116,7 +123,9 @@ namespace Models.CLEM
             // put in a list that provides a link to the object so we can use this to set values
             var resources = Structure.FindParents<Zone>().FirstOrDefault();
             if (resources != null)
-                pricingComonentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
+            {
+                pricingComponentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
+            }
 
             DataView dataView = new DataView(GetAllData())
             {
@@ -124,7 +133,7 @@ namespace Models.CLEM
             };
             priceFileAsRows = dataView.ToTable().Rows;
 
-            UpdatePricingToDate(clock.StartDate.Year, clock.StartDate.Month);
+            UpdatePricingToDate(events.Clock.StartDate);
         }
 
         /// <summary>
@@ -148,14 +157,13 @@ namespace Models.CLEM
         {
             // update all pricing this timestep
             // use last price provided for timestep
-            UpdatePricingToDate(clock.Today.Year, clock.Today.Month);
+            UpdatePricingToDate(events.TimeStepEnd);
         }
 
-        private void UpdatePricingToDate(int year, int month)
+        private void UpdatePricingToDate(DateTime date)
         {
-            DateTime checkDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-            // work through to start date
-            while (priceFileAsRows.Count > 0 && (DateTime.Parse(priceFileAsRows[0][DateColumnName].ToString()) <= checkDate))
+            // work through to date
+            while (priceFileAsRows.Count > 0 && (DateTime.Parse(priceFileAsRows[0][DateColumnName].ToString()) <= date))
             {
                 int cnt = 0;
                 foreach (var column in priceFileAsRows[0].Table.Columns)
@@ -163,14 +171,16 @@ namespace Models.CLEM
                     if (!column.ToString().Equals(DateColumnName, StringComparison.OrdinalIgnoreCase) && double.TryParse(priceFileAsRows[0][cnt].ToString(), out double res))
                     {
                         // update
-                        var components = pricingComonentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
+                        var components = pricingComponentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
+                        {
                             resourcePricing.SetPrice(res, this);
+                        }
                     }
                     cnt++;
                 }
@@ -190,15 +200,6 @@ namespace Models.CLEM
         public string ErrorMessage = string.Empty;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilePricing()
-        {
-            base.SetDefaults();
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
-
-        /// <summary>
         /// Get the DataTable view of this data
         /// </summary>
         /// <returns>The DataTable</returns>
@@ -208,12 +209,12 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pricingColumns = new List<string>
+                List<string> pricingColumns = new()
                 {
                     DateColumnName
                 };
 
-                pricingColumns.AddRange(pricingComonentsFound.Select(a => (a as IModel).Name).Distinct());
+                pricingColumns.AddRange(pricingComponentsFound.Select(a => (a as IModel).Name).Distinct());
 
                 // Add all other column names
 
@@ -235,40 +236,51 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(FullFileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
+                        {
                             fileType = "Comma delimited text file (csv)";
+                        }
+
                         if (reader.IsExcelFile)
                         {
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, DateColumnName) == -1)
-                        if (this.reader == null || this.reader.Constant(DateColumnName) == null)
-                            throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, DateColumnName) == -1)
+                    {
+                        if (reader == null || reader.Constant(DateColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                        }
+                    }
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                    {
+                        reader.SeekToDate(reader.FirstDate);
+                    }
                 }
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -281,50 +293,15 @@ namespace Models.CLEM
             }
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                else if (!this.FileExists)
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                else
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-
-                if (FileName != null && FileName.Contains(".xls"))
-                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    else
-                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
-
         #region validation
 
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
-                string[] memberNames = new string[] { "WorksheetName" };
-                results.Add(new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", memberNames));
+                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
             }
-            return results;
         }
         #endregion
     }

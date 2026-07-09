@@ -19,8 +19,11 @@
 .docs-img {
     padding-top: 20px;
     padding-bottom: 20px;
-    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
+
 
 .docs-table-container {
 	width: 100%;

@@ -24,14 +24,13 @@
     <PackageReference Include="Azure.Identity" Version="1.17.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="NetMQ" Version="4.0.2.2" />
-    <PackageReference Include="MessagePack" Version="3.1.4" />
+    <PackageReference Include="MessagePack" Version="3.1.7" />
     <PackageReference Include="PDFsharp-MigraDoc" Version="6.2.4" />
     <ProjectReference Include="..\APSIM.Core\APSIM.Core.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <PackageReference Include="System.Windows.Extensions" Version="10.0.2" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.8.0" />
     <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.CodeDom" Version="10.0.2" />
     <PackageReference Include="System.Resources.Extensions" Version="10.0.2" />

@@ -44,6 +44,15 @@ namespace UnitTests
         public double[] StemWtGms { get; private set; }
         public double[] RootWtGms { get; private set; }
         public double[] RootWt { get; private set; }
+        public double[] LeafLiveWt { get; private set; }
+        public double[] LeafDeadWt { get; private set; }
+        public double[] StemLiveWt { get; private set; }
+        public double[] StemDeadWt { get; private set; }
+        public double[] ShootDMGms { get; private set; }
+        public double[] LitterDMGms { get; private set; }
+        public double[] EstabDMGms { get; private set; }
+        public double[] DeadDMGms { get; private set; }
+        public double[] DryDMGms { get; private set; }
 
         [Test]
         public void TestPastureBiomasses()
@@ -90,7 +99,16 @@ namespace UnitTests
                 "[Pasture].StemDM/10",
                 "[Pasture].Stem.Wt",
                 "[Pasture].Root.Wt",
-                "[Pasture].RootDM/10"
+                "[Pasture].RootDM/10",
+                "[Pasture].Leaf.Live.Wt",
+                "[Pasture].Leaf.Dead.Wt",
+                "[Pasture].Stem.Live.Wt",
+                "[Pasture].Stem.Dead.Wt",
+                "[Pasture].ShootDM/10",
+                "[Pasture].LitterDM/10",
+                "[Pasture].EstabDM/10",
+                "[Pasture].DeadDM/10",
+                "[Pasture].DryDM/10"
             };
             report.EventNames = new[]
             {
@@ -126,6 +144,26 @@ namespace UnitTests
                     {
                         StemWtGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.StemDM/10", CultureInfo.InvariantCulture);
                     }
+                     if (col.ColumnName == "Pasture.ShootDM/10")
+                    {
+                        ShootDMGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.ShootDM/10", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.LitterDM/10")
+                    {
+                        LitterDMGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.LitterDM/10", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.EstabDM/10")
+                    {
+                        EstabDMGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.EstabDM/10", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.DeadDM/10")
+                    {
+                        DeadDMGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.DeadDM/10", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.DryDM/10")
+                    {
+                        DryDMGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.DryDM/10", CultureInfo.InvariantCulture);
+                    }
                      if (col.ColumnName == "Pasture.RootDM/10")
                     {
                         RootWtGms = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.RootDM/10", CultureInfo.InvariantCulture);
@@ -134,14 +172,29 @@ namespace UnitTests
                     {
                         RootWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Root.Wt", CultureInfo.InvariantCulture);
                     }
+                    if (col.ColumnName == "Pasture.Leaf.Live.Wt")
+                    {
+                        LeafLiveWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Leaf.Live.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Leaf.Dead.Wt")
+                    {
+                        LeafDeadWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Leaf.Dead.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Stem.Live.Wt")
+                    {
+                        StemLiveWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Stem.Live.Wt", CultureInfo.InvariantCulture);
+                    }
+                    if (col.ColumnName == "Pasture.Stem.Dead.Wt")
+                    {
+                        StemDeadWt = DataTableUtilities.GetColumnAsDoubles(dataTable, "Pasture.Stem.Dead.Wt", CultureInfo.InvariantCulture);
+                    }
             }
             
 
            //Assert biomasses calculated in AusFarm  and refactored Pasture model return same values.
-   
-            Assert.That (LeafDMgms, Is.EqualTo(LeafWt));
-            Assert.That(StemWtGms, Is.EqualTo(StemWt));
-            Assert.That(RootWtGms, Is.EqualTo(RootWt));
+           Assert.That(LeafLiveWt.Add(StemLiveWt),Is.EqualTo(EstabDMGms).Within(1e-10));
+           Assert.That(LeafDeadWt.Add(StemDeadWt),Is.EqualTo(DeadDMGms).Within(1e-10));
+           
 
               
         }

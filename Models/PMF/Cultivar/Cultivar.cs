@@ -25,7 +25,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(Sugarcane))]
     [ValidParent(ParentType = typeof(OilPalm.OilPalm))]
     [ValidParent(ParentType = typeof(AgPasture.PastureSpecies))]
-    public class Cultivar : Model, ILineEditor, IStructureDependency
+    public class Cultivar : Model, ICodeEditor, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
@@ -59,7 +59,7 @@ namespace Models.PMF
 
         /// <summary>The lines to return to the editor.</summary>
         [JsonIgnore]
-        public IEnumerable<string> Lines { get { return Command; } set { Command = value.ToArray(); } }
+        public IEnumerable<string> Code { get { return Command; } set { Command = value.ToArray(); } }
 
         /// <summary>
         /// Return true if this cultivar has the same name as, or is an alias for, the given name.
