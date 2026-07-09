@@ -1,57 +1,51 @@
 using APSIM.Shared.Utilities;
-using Models.PMF;
 using Models.Storage;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
 namespace Models.Core
 {
-    enum MetadataCategory
-    {
-        None,
-        Example,
-        Prototype,
-        Validation
-    }
-
     /// <summary>
-    /// A simulation model
+    /// 
     /// </summary>
     public class Metadata
     {
-        private Simulation simulation = null;
+        private enum MetadataCategory
+        {
+            None,
+            Example,
+            Prototype,
+            Validation
+        }
 
-        private IDataStore datastore = null;
+        private Simulation _simulation = null;
 
-        private List<string> cultivars;
+        private IDataStore _dataStore = null;
 
         /// <summary></summary>
-        public Metadata(Simulation simulation, IDataStore datastore)
+        public Metadata(Simulation simulation, IDataStore dataStore)
         {
-            this.simulation = simulation;
-            this.datastore = datastore;
-            cultivars = new List<string>();
+            _simulation = simulation;
+            _dataStore = dataStore;
         }
 
         /// <summary></summary>
         public void Save()
         {
-            if (this.datastore != null)
+            if (_dataStore != null)
             {
-                var table = new DataTable("_Metadata");
-                table.Columns.Add("Simulation", typeof(string));
-                table.Columns.Add("Catergory", typeof(string));
-                table.Columns.Add("Directory", typeof(string));
-                table.Columns.Add("Models", typeof(string));
-                table.Columns.Add("File", typeof(string));
-                table.Columns.Add("Cultivars", typeof(string));
+                //Save metadata about simulations
+                DataTable metadataTable = new DataTable("_Metadata");
+                metadataTable.Columns.Add("Simulation", typeof(string));
+                metadataTable.Columns.Add("Catergory", typeof(string));
+                metadataTable.Columns.Add("Directory", typeof(string));
+                metadataTable.Columns.Add("File", typeof(string));
 
-                string name = simulation.Name;
+                string name = _simulation.Name;
 
                 string apsimDirectory = PathUtilities.GetApsimXDirectory() + "/";
-                string filepath = PathUtilities.ConvertSlashes(simulation.FileName);
+                string filepath = PathUtilities.ConvertSlashes(_simulation.FileName);
                 string filename = Path.GetFileNameWithoutExtension(Path.GetFileName(filepath));
                 filepath = filepath.Replace(apsimDirectory, "");
                 
@@ -68,47 +62,15 @@ namespace Models.Core
                     int positionOfNextSlash = filepath.IndexOf('/', position);
                     directory = filepath.Substring(position, positionOfNextSlash - position);
                 }
-
-                IEnumerable<IModel> models = simulation.Node.FindChildren<IModel>(recurse: true);
-                List<string> modelNames = new List<string>();
-                string modelsString = "";
-                foreach(Model m in models)
-                {
-                    string type;
-                    if (m.GetType() == typeof(Plant))
-                    {
-                        type = m.Name.ToString();
-                    }
-                    else
-                    {
-                        type = m.GetType().ToString();
-                        type = type.Substring(type.LastIndexOf('.')+1);
-                    }
-                    if (!modelNames.Contains(type))
-                    {
-                        modelNames.Add(type);
-                        modelsString += type + ",";
-                    }
-                }
-                if (modelsString.EndsWith(','))
-                    modelsString = modelsString.Substring(0, modelsString.Length-1);
-
-                string cultivarsString = "";
-                foreach(string cultivar in cultivars)
-                    cultivarsString += cultivar + ",";
-                if (cultivarsString.EndsWith(','))
-                    cultivarsString = cultivarsString.Substring(0, cultivarsString.Length-1);
                 
-                DataRow row = table.NewRow();
+                DataRow row = metadataTable.NewRow();
                 row["Simulation"] = name;
                 row["Catergory"] = category.ToString();
                 row["Directory"] = directory;
-                row["Models"] = modelsString;
                 row["File"] = filename;
-                row["Cultivars"] = cultivarsString;
-                table.Rows.Add(row);
+                metadataTable.Rows.Add(row);
 
-                this.datastore.Writer.WriteTable(table, false);
+                _dataStore.Writer.WriteTable(metadataTable, false);
             }
             return;
         }
@@ -116,14 +78,6 @@ namespace Models.Core
         /// <summary></summary>
         public void OnSowing(object sender, EventArgs e)
         {
-            Plant plant = sender as Plant;
-            if (plant != null)
-            {
-                SowingParameters sowingParameters = plant.SowingData;
-                string name = plant.PlantType + ": " + sowingParameters.Cultivar;
-                if (!cultivars.Contains(name))
-                    cultivars.Add(name);
-            }
             return;
         }
     }
