@@ -15,9 +15,6 @@ namespace Models.Storage
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
         IStorageWriter Writer { get; }
 
-        /// <summary>Opens the database connection.</summary>
-        void Open();
-
         /// <summary>Closes the database connection.</summary>
         void Close();
 

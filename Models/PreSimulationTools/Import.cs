@@ -160,10 +160,13 @@ namespace Models.PreSimulationTools
                 foreach (IModel child in otherFile.Children)
                 {
                     commands.Add($"add [Simulations].{child.Name} from {fileName} to [{import.Name}]");
-                    commands.Add($"[{import.Name}].{child.Name}.ReadOnly = True");
                     foreach(Node node in child.Node.Walk())
                     {
-                        if (node.Model is Weather weather)
+                        if (node.Model is DataStore dataStore)
+                        {
+                            commands.Add($"[{import.Name}].{dataStore.Name}.FileName = {Path.ChangeExtension(import.Node.FileName, ".db")}");
+                        }
+                        else if (node.Model is Weather weather)
                         {
                             string absolutePath = PathUtilities.GetAbsolutePath(weather.FileName, referenceDirectory);
                             string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);

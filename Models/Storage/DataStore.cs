@@ -19,18 +19,18 @@ namespace Models.Storage
     {
         /// <summary>A database connection</summary>
         [NonSerialized]
-        private IDatabaseConnection connection = null;
+        private IDatabaseConnection _connection = null;
 
         [NonSerialized]
-        private DataStoreReader dbReader = new DataStoreReader();
+        private DataStoreReader _dbReader = new DataStoreReader();
 
         [NonSerialized]
-        private DataStoreWriter dbWriter = new DataStoreWriter();
+        private DataStoreWriter _dbWriter = new DataStoreWriter();
 
-        private bool useInMemoryDB;
+        private bool _useInMemoryDB;
 
         [JsonIgnore]
-        private string fileName;
+        private string _fileName;
 
         /// <summary>
         /// Controls whether the database connection is an in-memory DB.
@@ -40,21 +40,12 @@ namespace Models.Storage
         {
             get
             {
-                return useInMemoryDB;
+                return _useInMemoryDB;
             }
             set
             {
-                useInMemoryDB = value;
-                if (connection != null)
-                {
-                    Close();
-                    UpdateFileName();
-                    Open();
-                }
-                else
-                {
-                    UpdateFileName();
-                }
+                _useInMemoryDB = value;
+                UpdateFileName();
             }
         }
 
@@ -68,11 +59,11 @@ namespace Models.Storage
         {
             get
             {
-                return string.IsNullOrWhiteSpace(CustomFileName) ? fileName : CustomFileName;
+                return string.IsNullOrWhiteSpace(CustomFileName) ? _fileName : CustomFileName;
             }
             set
             {
-                fileName = value;
+                UpdateFileName(value);
             }
         }
 
@@ -82,10 +73,10 @@ namespace Models.Storage
         public string CustomFileName { get; set; } = null;
 
         /// <summary>Get a reader to perform read operations on the datastore.</summary>
-        public IStorageReader Reader { get { return dbReader; } }
+        public IStorageReader Reader { get { return _dbReader; } }
 
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
-        public IStorageWriter Writer { get { return dbWriter; } }
+        public IStorageWriter Writer { get { return _dbWriter; } }
 
         /// <summary>Constructor</summary>
         public DataStore()
@@ -95,20 +86,20 @@ namespace Models.Storage
         /// <summary>Constructor</summary>
         public DataStore(string fileNameToUse)
         {
-            FileName = fileNameToUse;
+            _fileName = fileNameToUse;
             SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            connection = database;
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
+            database.OpenDatabase(_fileName, true);
+            _connection = database;
+            _dbReader.SetConnection(_connection);
+            _dbWriter.SetConnection(_connection);
         }
 
         /// <summary>Constructor</summary>
         public DataStore(IDatabaseConnection db)
         {
-            connection = db;
-            dbReader.SetConnection(connection);
-            dbWriter.SetConnection(connection);
+            _connection = db;
+            _dbReader.SetConnection(_connection);
+            _dbWriter.SetConnection(_connection);
         }
 
         /// <summary>
@@ -182,28 +173,51 @@ namespace Models.Storage
         public override void OnCreated()
         {
             base.OnCreated();
-            if (connection == null)
+
+            if (_connection == null)
+            {
+                UpdateFileName();
                 Open();
+            }
         }
 
         /// <summary>
         /// Updates the file name of the database file, based on the file name
         /// of the parent Simulations object.
         /// </summary>
-        public void UpdateFileName()
+        public void UpdateFileName(string fileName = null)
         {
-            if (useInMemoryDB)
+            bool connectionOpen = false;
+            if (_connection != null)
+                connectionOpen = true;
+            
+            if (connectionOpen)
+                Close();
+
+            if (_useInMemoryDB)
             {
-                FileName = ":memory:";
+                _fileName = ":memory:";
+                if (connectionOpen)
+                    Open();
                 return;
             }
 
             if (Node == null)
             {
-                FileName = "";
+                _fileName = "";
+                if (connectionOpen)
+                    Open();
                 return;
             }
-                
+            
+            if (fileName != null)
+            {
+                _fileName = fileName;
+                if (connectionOpen)
+                    Open();
+                return;
+            }
+
             Simulations simulations = Node.FindParent<Simulations>(recurse: true);
 
             // If we have been cloned prior to a run, then we won't be able to locate
@@ -213,29 +227,28 @@ namespace Models.Storage
 
             string extension = ".db";
             if (simulations != null && simulations.FileName != null)
-                FileName = Path.ChangeExtension(simulations.FileName, extension);
+                _fileName = Path.ChangeExtension(simulations.FileName, extension);
             else if (simulation != null && simulation.FileName != null)
-                FileName = Path.ChangeExtension(simulation.FileName, extension);
+                _fileName = Path.ChangeExtension(simulation.FileName, extension);
             else
-                FileName = ":memory:";
+                _fileName = ":memory:";
+
+            if (connectionOpen)
+                Open();
         }
 
         /// <summary>Open the database.</summary>
-        public void Open()
+        private void Open()
         {
-            if (string.IsNullOrEmpty(FileName))
-                UpdateFileName();
-
-            connection = new SQLite();
-
-            connection.OpenDatabase(FileName, readOnly: false);
+            _connection = new SQLite();
+            _connection.OpenDatabase(FileName, readOnly: false);
 
             Exception caughtException = null;
             try
             {
-                if (dbReader == null)
-                    dbReader = new DataStoreReader();
-                dbReader.SetConnection(connection);
+                if (_dbReader == null)
+                    _dbReader = new DataStoreReader();
+                _dbReader.SetConnection(_connection);
             }
             catch (Exception e)
             {
@@ -243,9 +256,9 @@ namespace Models.Storage
             }
             try
             {
-                if (dbWriter == null)
-                    dbWriter = new DataStoreWriter();
-                dbWriter.SetConnection(connection);
+                if (_dbWriter == null)
+                    _dbWriter = new DataStoreWriter();
+                _dbWriter.SetConnection(_connection);
             }
             catch (Exception e)
             {
@@ -258,23 +271,23 @@ namespace Models.Storage
         /// <summary>Close the database.</summary>
         public void Close()
         {
-            if (connection != null)
+            if (_connection != null)
             {
-                connection.CloseDatabase();
-                connection = null;
+                _connection.CloseDatabase();
+                _connection = null;
             }
         }
 
         /// <inheritdoc/>
         public void AddView(string name, string selectSQL)
         {
-            if (connection is SQLite)
+            if (_connection is SQLite)
             {
-                if (connection.ViewExists(name))
+                if (_connection.ViewExists(name))
                 {
-                    connection.ExecuteNonQuery($"DROP VIEW {name}");
+                    _connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+                _connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else
             {
@@ -285,11 +298,11 @@ namespace Models.Storage
         /// <inheritdoc/>
         public string GetViewSQL(string name)
         {
-            if (connection is SQLite)
+            if (_connection is SQLite)
             {
-                if (connection.ViewExists(name))
+                if (_connection.ViewExists(name))
                 {
-                    var resultSql = dbReader.GetDataUsingSql($"SELECT sql FROM sqlite_master WHERE type='view' and name='{name}'");
+                    var resultSql = _dbReader.GetDataUsingSql($"SELECT sql FROM sqlite_master WHERE type='view' and name='{name}'");
                     if (resultSql.Rows.Count > 0)
                         return resultSql.Rows[0].ItemArray[0].ToString();
                 }
