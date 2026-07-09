@@ -37,10 +37,10 @@ namespace Models.Core
             {
                 //Save metadata about simulations
                 DataTable metadataTable = new DataTable("_Metadata");
-                metadataTable.Columns.Add("Simulation", typeof(string));
-                metadataTable.Columns.Add("Catergory", typeof(string));
-                metadataTable.Columns.Add("Directory", typeof(string));
-                metadataTable.Columns.Add("File", typeof(string));
+                metadataTable.Columns.Add("simulation", typeof(string));
+                metadataTable.Columns.Add("catergory", typeof(string));
+                metadataTable.Columns.Add("directory", typeof(string));
+                metadataTable.Columns.Add("file", typeof(string));
 
                 string name = _simulation.Name;
 
@@ -64,10 +64,10 @@ namespace Models.Core
                 }
                 
                 DataRow row = metadataTable.NewRow();
-                row["Simulation"] = name;
-                row["Catergory"] = category.ToString();
-                row["Directory"] = directory;
-                row["File"] = filename;
+                row["simulation"] = name;
+                row["catergory"] = category.ToString();
+                row["directory"] = directory;
+                row["file"] = filename;
                 metadataTable.Rows.Add(row);
 
                 _dataStore.Writer.WriteTable(metadataTable, false);
