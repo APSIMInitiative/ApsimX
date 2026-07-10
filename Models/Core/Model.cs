@@ -27,6 +27,7 @@ namespace Models.Core
 
         private bool _enabled = true;
         private bool _isCreated = false;
+        private bool _readOnly = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Model" /> class.
@@ -102,7 +103,19 @@ namespace Models.Core
         /// <summary>
         /// Controls whether the model can be modified.
         /// </summary>
-        public bool ReadOnly { get; set; }
+        public bool ReadOnly { 
+            get 
+            { 
+                return _readOnly;
+            } 
+            set
+            {
+                if (value == true)
+                    foreach(IModel child in Children)
+                        child.ReadOnly = true;
+                _readOnly = value;
+            }
+        }
 
         /// <summary>
         /// Full path to the model.

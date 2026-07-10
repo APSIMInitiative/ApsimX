@@ -8,6 +8,7 @@ using Models.Storage;
 using Models.Climate;
 using APSIM.Shared.Utilities;
 using Models.PostSimulationTools;
+using Models.Utilities;
 
 namespace Models.PreSimulationTools
 {
@@ -24,7 +25,7 @@ namespace Models.PreSimulationTools
         internal string _filename = "";
 
         /// <summary>The list of commands that are generated</summary>
-        private string[] _commands { get; set; } = [];
+        private string[] _commands = [];
 
         /// <summary>
         /// 
@@ -137,58 +138,35 @@ namespace Models.PreSimulationTools
         /// <summary>
         ///
         /// </summary>
-        private static string[] GetCommands(IModel import, string fileName, string path)
+        private static string[] GetCommands(Import import, string fileName, string path)
         {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(path))
                 return [];
 
-            bool getChildren = false;
+            Simulations otherFile = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
+            List<IModel> childrenToImport = new List<IModel>();
             if (path.ToLower() == "simulations" || path.ToLower() == "[simulations]")
-                getChildren = true;
+                childrenToImport.AddRange(otherFile.Children);
+            else
+                childrenToImport.Add(otherFile.Node.Find<IModel>(path));
 
             List<string> commands = new List<string>();
-            if (!getChildren)
+            List<string> readOnlyCommands = new List<string>();
+            foreach (IModel child in otherFile.Children)
             {
-                commands.Add($"add {path} from {fileName} to [{import.Name}]");
-                commands.Add($"[{import.Name}].{path}.ReadOnly = True");
-            }
-            else
-            {
-                string localDirectory = Path.GetDirectoryName(import.Node.FileName);
-                string referenceDirectory = Path.GetDirectoryName(fileName);
-                Simulations otherFile = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
-                foreach (IModel child in otherFile.Children)
+                bool allowedToImport = true;
+                if (Folder.IsModelReplacementsFolder(child))
+                    allowedToImport = false;
+                
+                if (allowedToImport)
                 {
                     commands.Add($"add [Simulations].{child.Name} from {fileName} to [{import.Name}]");
+                    readOnlyCommands.Add($"[{import.Name}].{child.Name}.ReadOnly = True");
                     foreach(Node node in child.Node.Walk())
-                    {
-                        if (node.Model is DataStore dataStore)
-                        {
-                            commands.Add($"[{import.Name}].{dataStore.Name}.FileName = {Path.ChangeExtension(import.Node.FileName, ".db")}");
-                        }
-                        else if (node.Model is Weather weather)
-                        {
-                            string absolutePath = PathUtilities.GetAbsolutePath(weather.FileName, referenceDirectory);
-                            string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
-                            string modelPath = weather.FullPath.Replace($".Simulations.", $"[{import.Name}].");
-                            commands.Add($"{modelPath}.FileName = {relativePath}");
-                        }
-                        else if (node.Model is ExcelInput excelInput)
-                        {
-                            List<string> newFileNames = new List<string>();
-                            foreach(string filename in excelInput.FileNames)
-                            {
-                                string absolutePath = PathUtilities.GetAbsolutePath(filename, referenceDirectory);
-                                string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
-                                newFileNames.Add(relativePath);
-                            }
-
-                            string modelPath = excelInput.FullPath.Replace($".Simulations.", $"[{import.Name}].");
-                            commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
-                        }
-                    }
+                        commands.AddRange(ModelSpecificCommands(import, node, fileName));
                 }
             }
+            commands.AddRange(readOnlyCommands);
             return commands.ToArray();
         }
 
@@ -197,6 +175,46 @@ namespace Models.PreSimulationTools
         {
             base.OnCreated();
             FilePath.SetStartDirectory(Path.GetDirectoryName(Node.FileName));
+        }
+
+        private static string[] ModelSpecificCommands(Import import, Node node, string fileName)
+        {
+            string localDirectory = Path.GetDirectoryName(import.Node.FileName);
+            string referenceDirectory = Path.GetDirectoryName(fileName);
+
+            List<string> commands = new List<string>();
+            if (node.Model is DataStore dataStore)
+            {
+                commands.Add($"[{import.Name}].{dataStore.Name}.FileName = {Path.ChangeExtension(import.Node.FileName, ".db")}");
+            }
+            else if (node.Model is Weather weather)
+            {
+                string absolutePath = PathUtilities.GetAbsolutePath(weather.FileName, referenceDirectory);
+                string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
+                string modelPath = weather.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                commands.Add($"{modelPath}.FileName = {relativePath}");
+            }
+            else if (node.Model is ExcelInput excelInput)
+            {
+                List<string> newFileNames = new List<string>();
+                foreach(string filename in excelInput.FileNames)
+                {
+                    string absolutePath = PathUtilities.GetAbsolutePath(filename, referenceDirectory);
+                    string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
+                    newFileNames.Add(relativePath);
+                }
+
+                string modelPath = excelInput.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
+            }
+            else if (node.Model is SetModelParamsBySimulation setModelParamsBySimulation)
+            {
+                string absolutePath = PathUtilities.GetAbsolutePath(setModelParamsBySimulation.ParameterFile, referenceDirectory);
+                string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
+                string modelPath = setModelParamsBySimulation.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                commands.Add($"{modelPath}.ParameterFile = {relativePath}");
+            }
+            return commands.ToArray();
         }
     }
 }
