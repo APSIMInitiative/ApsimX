@@ -74,9 +74,13 @@ public class CommandLanguageTests
 
     /// <summary>Test that invalid commands throw.</summary>
     [Test]
+    [TestCase("add to from name", ExpectedResult = "Invalid command: add to from name")]
+    [TestCase("addtofromname", ExpectedResult = "Invalid command: addtofromname")]
+    [TestCase("add to [Zone] new Report", ExpectedResult = "Invalid command: add to [Zone] new Report")]
+    [TestCase("add Reportto [Zone]", ExpectedResult = "Invalid command: add Reportto [Zone]")]
     [TestCase("add Report to", ExpectedResult = "Invalid command: add Report to")]
+    [TestCase("add Report to ", ExpectedResult = "Invalid command: add Report to")]
     [TestCase("add new Report", ExpectedResult = "Invalid command: add new Report")]
-    [TestCase("add new Report to [Simulation] name", ExpectedResult = "Invalid command: add new Report to [Simulation] name")]
     [TestCase("delete", ExpectedResult = "Invalid command: delete")]
     [TestCase("duplicate", ExpectedResult = "Invalid command: duplicate")]
     [TestCase("save", ExpectedResult = "Invalid command: save")]
