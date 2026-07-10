@@ -29,12 +29,12 @@ namespace Models.CLEM.Interfaces
         /// <param name="amountToReduce">Amount by which to reduce pending amount</param>
         public void DecreasePending(ResourceRequest request, double amountToReduce);
 
-        /// <summary>
-        /// Reduce the current pending amount by a specified amount
-        /// </summary>
-        /// <param name="request">Associated resource request</param>
-        /// <param name="proportion">The proportion of the pending amount to reduce</param>
-        public void DecreasePendingByProportion(ResourceRequest request, double proportion);
+        ///// <summary>
+        ///// Reduce the current pending amount by a specified amount
+        ///// </summary>
+        ///// <param name="request">Associated resource request</param>
+        ///// <param name="proportion">The proportion of the pending amount to reduce</param>
+        //public void DecreasePendingByProportion(ResourceRequest request, double proportion);
 
         /// <summary>
         /// Set the amount to this new value.

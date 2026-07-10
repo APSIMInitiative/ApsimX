@@ -726,9 +726,9 @@ namespace Models.CLEM.Activities
 
         private static double CalculateRumenDegradableProteinIntake(Ruminant ind, double feedingLevel)
         {
-            //// Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly time step
-            //// Ignored from GrassGro latitude factor for now.
-            //// double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
+            // Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly time step
+            // Ignored from GrassGro latitude factor for now.
+            // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
             
             double rdpi = 0;
             if (feedingLevel <= 0)

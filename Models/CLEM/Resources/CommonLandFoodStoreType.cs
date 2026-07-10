@@ -328,6 +328,12 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
+        public void DecreasePendingByStore(ResourceRequest request, FoodResourceStore store, double amount)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }
