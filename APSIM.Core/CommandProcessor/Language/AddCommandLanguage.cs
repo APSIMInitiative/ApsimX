@@ -4,18 +4,17 @@ namespace APSIM.Core;
 
 internal partial class AddCommand: IModelCommand
 {
+    //Keywords for the command, in order they can appear in the command
     private const string KEYWORD_ADD = "add ";
     private const string KEYWORD_FROM = " from ";
     private const string KEYWORD_TO = " to ";
     private const string KEYWORD_NAME = " name ";
 
-    private const string PATTERN_MODEL_PATH = @"[\w\d-\[\]\. ]+";
-    private const string PATTERN_FILE_PATH = @"[\w\d-_\.\\:/ ]+";
-    private const string PATTERN_NAME_TEXT = @"[\w\d- ]+";
-    private const string PATTERN_ADD = $@"{KEYWORD_ADD}(?<new>new )*(?<model>{PATTERN_MODEL_PATH})";
-    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<file>{PATTERN_FILE_PATH})";
-    private const string PATTERN_TO = $@"{KEYWORD_TO}(?<all>all )*(?<model>{PATTERN_MODEL_PATH})";
-    private const string PATTERN_NAME = $@"{KEYWORD_NAME}(?<name>{PATTERN_NAME_TEXT})";
+    //Regex patterns to read the text between keywords
+    private const string PATTERN_ADD = $@"{KEYWORD_ADD}(?<new>new )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+    private const string PATTERN_TO = $@"{KEYWORD_TO}(?<all>all )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_NAME = $@"{KEYWORD_NAME}(?<name>{CommandLanguage.PATTERN_NAME_TEXT})";
 
     /// <summary>
     /// Create an add command.
@@ -163,15 +162,15 @@ internal partial class AddCommand: IModelCommand
 
         parts.Add("to");
 
-        if (multiple)
+        if (_multiple)
             parts.Add("all");
 
-        parts.Add(toPath);
+        parts.Add(_toPath);
 
-        if (!string.IsNullOrEmpty(newName))
+        if (!string.IsNullOrEmpty(_newName))
         {
             parts.Add("name");
-            parts.Add(newName);
+            parts.Add(_newName);
         }
 
         return string.Join(" ", parts);

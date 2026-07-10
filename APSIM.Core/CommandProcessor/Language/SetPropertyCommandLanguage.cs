@@ -46,10 +46,10 @@ public partial class SetPropertyCommand: IModelCommand
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
-        if (fileName == null)
-            return $"{name}{oper}{value}";
+        if (_fileName == null)
+            return $"{_name}{_oper}{_value}";
         else
-            return $"{name}=<{fileName}";
+            return $"{_name}=<{_fileName}";
     }
 
 }

@@ -23,6 +23,15 @@ namespace APSIM.Core;
 /// </remarks>
 public class CommandLanguage
 {
+    /// <summary>Regex pattern for getting a model path</summary>
+    public const string PATTERN_MODEL_PATH = @"[\w\d-\[\]\. ]+";
+
+    /// <summary>Regex pattern for getting a file path</summary>
+    public const string PATTERN_FILE_PATH = @"[\w\d-_\.\\:/ ]+";
+
+    /// <summary>Regex pattern for a model name</summary>
+    public const string PATTERN_NAME_TEXT = @"[\w\d- ]+";
+
     /// <summary>
     /// Parse a collection of lines into a collection of model commands.
     /// </summary>
