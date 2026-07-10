@@ -474,6 +474,28 @@ namespace UnitTests.Soils
 
         //}
 
+        /// <summary>Ensure soil validation fails if multiple soil temperature models are present.</summary>
+        [Test]
+        public void CheckSoilTemperatureModelsThrowsWhenMultipleModelsPresent()
+        {
+            var soil = new Soil
+            {
+                Name = "Soil",
+                Children = new List<IModel>
+                {
+                    new CERESSoilTemperature(),
+                    new SoilTemperature()
+                }
+            };
+
+            var method = typeof(Soil).GetMethod("CheckSoilTemperatureModels", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Assert.That(method, Is.Not.Null);
+
+            var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() => method.Invoke(soil, Array.Empty<object>()));
+            Assert.That(exception.InnerException, Is.TypeOf<Exception>());
+            Assert.That(exception.InnerException.Message, Does.Contain("only use one type of Soil temperature model"));
+        }
+
         /// <summary>Test that InteractionsPerDay property can be set with range constraints.</summary>
         [Test]
         public void TestInteractionsPerDayPropertyCanBeSet()
