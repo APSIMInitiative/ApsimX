@@ -4,6 +4,18 @@ namespace APSIM.Core;
 
 internal partial class AddCommand: IModelCommand
 {
+    //Keywords for the command, in order they can appear in the command
+    private const string KEYWORD_ADD = "add ";
+    private const string KEYWORD_FROM = " from ";
+    private const string KEYWORD_TO = " to ";
+    private const string KEYWORD_NAME = " name ";
+
+    //Regex patterns to read the text between keywords
+    private const string PATTERN_ADD = $@"{KEYWORD_ADD}(?<new>new )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+    private const string PATTERN_TO = $@"{KEYWORD_TO}(?<all>all )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_NAME = $@"{KEYWORD_NAME}(?<name>{CommandLanguage.PATTERN_NAME_TEXT})";
+
     /// <summary>
     /// Create an add command.
     /// </summary>
@@ -19,46 +31,111 @@ internal partial class AddCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\w\d\[\]\.]+";
-        string modelNamePattern = @"[\w\d]+";
-        string fileNamePattern = @"[\w\d-_\.\\:/]+";
+        //Determine what required and optional keywords are in the command
+        //Order of keywords is important
+        string[] keywords = [KEYWORD_ADD, KEYWORD_FROM, KEYWORD_TO, KEYWORD_NAME];
 
-        string pattern = $@"add (?<new>new)*" + @"\s*" +
-                         $@"(?<modelname>{modelNameWithBrackets})" + @"\s+" +
-                         $@"(?:from\s+(?<filename>{fileNamePattern})\s+)*" +
-                         $@"to\s+" +
-                         $@"(?<all>all)*\s*" +
-                         $@"(?<topath>{modelNameWithBrackets})\s*" +
-                         $@"(?:name\s+(?<name>{modelNamePattern}))*";
+        int[] positions = new int[keywords.Length];
+        int lastPosition = 0;
+        for(int i = 0; i < keywords.Length; i++)
+        {
+            positions[i] = command.IndexOf(keywords[i], lastPosition);
+            if (positions[i] > 0)
+                lastPosition = positions[i];
+        }
 
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null || !match.Success ||
-             command.Length != match.Length)
+        //Break the command into parts based on the keywords
+        List<string> segments = new List<string>();
+        for(int i = 0; i < positions.Length; i++)
+        {
+            int startIndex = positions[i];
+            if (startIndex >= 0)
+            {
+                int endIndex = -1;
+                for(int j = i+1; j < positions.Length && endIndex < 0; j++)
+                    if (positions[j] >= 0)
+                        endIndex = positions[j];
+                string segment;
+                if (endIndex >= 0)
+                    segment = command.Substring(startIndex, endIndex-startIndex);
+                else
+                    segment = command.Substring(startIndex);
+                segments.Add(segment);
+            }
+        }
+
+        bool usesNew = false;
+        bool usesAll = false;
+        string source = "";
+        string filepath = "";
+        string destination = "";
+        string name = "";
+        //Use regex to quality check the inputs
+        foreach(string segment in segments)
+        {
+            if (segment.StartsWith(KEYWORD_ADD))
+            {
+                Match match = Regex.Match(segment, PATTERN_ADD);
+                if (!match.Success)
+                    throw new Exception($"Invalid command: {command}");
+                if (!string.IsNullOrEmpty(match.Groups["new"].ToString()))
+                    usesNew = true;
+                source = match.Groups["model"].ToString();
+            }
+            else if (segment.StartsWith(KEYWORD_FROM))
+            {
+                Match match = Regex.Match(segment, PATTERN_FROM);
+                if (!match.Success)
+                    throw new Exception($"Invalid command: {command}");
+                filepath = match.Groups["file"].ToString();
+            }
+            else if (segment.StartsWith(KEYWORD_TO))
+            {
+                Match match = Regex.Match(segment, PATTERN_TO);
+                if (!match.Success)
+                    throw new Exception($"Invalid command: {command}");
+                if (!string.IsNullOrEmpty(match.Groups["all"].ToString()))
+                    usesAll = true;
+                destination = match.Groups["model"].ToString();
+            }
+            else if (segment.StartsWith(KEYWORD_NAME))
+            {
+                Match match = Regex.Match(segment, PATTERN_NAME);
+                if (!match.Success)
+                    throw new Exception($"Invalid command: {command}");
+                name = match.Groups["name"].ToString();
+                if (string.IsNullOrEmpty(name))
+                    throw new Exception($"Invalid command: {command}");
+            }
+        }
+
+        if (string.IsNullOrEmpty(source))
+            throw new Exception($"Invalid command: {command}");
+        if (string.IsNullOrEmpty(destination))
             throw new Exception($"Invalid command: {command}");
 
+        //find or create the model being added
         IModelReference modelReference;
-        if (match.Groups["new"]?.ToString() == "new")
-            modelReference = new NewModelReference(match.Groups["modelname"]?.ToString());
-        else if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
+        if (usesNew)
+        {
+            modelReference = new NewModelReference(source);
+        }
+        else if (!string.IsNullOrEmpty(filepath))
         {
             // If filename is relative, make it absolute
-            string fileName = match.Groups["filename"].ToString();
             if (relativeToDirectory != null)
-                fileName = Path.GetFullPath(fileName, relativeToDirectory);
-            modelReference = new ModelInFileReference(fileName, match.Groups["modelname"]?.ToString());
+                filepath = Path.GetFullPath(filepath, relativeToDirectory);
+            modelReference = new ModelInFileReference(filepath, source);
         }
         else
         {
-            string modelName = match.Groups["modelname"].ToString().Trim();
-            if (!modelName.StartsWith('[') && !modelName.EndsWith(']'))
-                modelName = $"[{modelName}]";
-            modelReference = new ModelLocatorReference(relativeTo, modelName);
+            if (!source.StartsWith('[') && !source.EndsWith(']'))
+                source = $"[{source}]";
+            modelReference = new ModelLocatorReference(relativeTo, source);
         }
 
-        return new AddCommand(modelReference,
-                              toPath: match.Groups["topath"]?.ToString(),
-                              multiple: match.Groups["all"].Success,
-                              newName: match.Groups["name"]?.ToString());
+        //make the command
+        return new AddCommand(modelReference, toPath: destination, multiple: usesAll, newName: name);
     }
 
     /// <summary>
@@ -85,15 +162,15 @@ internal partial class AddCommand: IModelCommand
 
         parts.Add("to");
 
-        if (multiple)
+        if (_multiple)
             parts.Add("all");
 
-        parts.Add(toPath);
+        parts.Add(_toPath);
 
-        if (!string.IsNullOrEmpty(newName))
+        if (!string.IsNullOrEmpty(_newName))
         {
             parts.Add("name");
-            parts.Add(newName);
+            parts.Add(_newName);
         }
 
         return string.Join(" ", parts);
