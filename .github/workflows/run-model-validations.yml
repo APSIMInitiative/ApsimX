@@ -62,7 +62,7 @@ jobs:
           SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
           MAIZE_PASSWORD: ${{ secrets.MAIZE_PASSWORD }}
           RICE_PASSWORD: ${{ secrets.RICE_PASSWORD }}
-          THINZAR_RYEGRASS_PASSWORD: ${{secrets.THINZAR_RYEGRASS_PASSWORD}}
+          THINZAR_RYEGRASS_PASSWORD: ${{ secrets.THINZAR_RYEGRASS_PASSWORD }}
         run: ./.github/workflows/scripts/extract-protected-datasets.sh
 
       - name: Build Models and APSIM.Workflow projects

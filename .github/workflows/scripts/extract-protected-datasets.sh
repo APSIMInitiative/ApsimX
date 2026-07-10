@@ -3,7 +3,7 @@ test -z "$SOYBEAN_PASSWORD" && echo "SOYBEAN_PASSWORD is empty" && exit 1
 test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" && exit 1
 test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" && exit 1
 test -z "$RICE_PASSWORD" && echo "RICE_PASSWORD is empty" && exit 1
-test -z "$THINZAR_RYEGRASS_PASSWORD" && echo "RICE_PASSWORD is empty" && exit 1
+test -z "$THINZAR_RYEGRASS_PASSWORD" && echo "THINZAR_RYEGRASS_PASSWORD is empty" && exit 1
 
 soybean=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Soybean
 cornsoy=/home/runner/work/ApsimX/ApsimX/Tests/Validation/System/FACTS_CornSoy
