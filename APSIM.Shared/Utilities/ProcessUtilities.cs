@@ -57,7 +57,7 @@ namespace APSIM.Shared.Utilities
                 FileInfo file = new FileInfo(filename);
                 Stream fin = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 /*Int32 iRead =*/
-                fin.Read(data, 0, 4096);
+                fin.ReadExactly(data, 0, 4096);
                 fin.Close();
 
                 // If we are running on Linux, the executable/so will start with the string 0x7f + 'ELF'

@@ -75,7 +75,7 @@
         {
             // Read number of bytes.
             var intBuffer = new byte[4];
-            pipeReader.Read(intBuffer, 0, 4);
+            pipeReader.ReadExactly(intBuffer, 0, 4);
             var numBytes = BitConverter.ToInt32(intBuffer, 0);
 
             if (numBytes > 0)
@@ -123,7 +123,7 @@
         {
             // Read number of bytes.
             var intBuffer = new byte[4];
-            pipeReader.Read(intBuffer, 0, 4);
+            pipeReader.ReadExactly(intBuffer, 0, 4);
             var numBytes = BitConverter.ToInt32(intBuffer, 0);
 
             if (numBytes > 0)
@@ -189,7 +189,7 @@
         public static int GetIntFromPipe(Stream pipeReader)
         {
             byte[] intBuffer = new byte[4];
-            pipeReader.Read(intBuffer, 0, 4);
+            pipeReader.ReadExactly(intBuffer, 0, 4);
             return DecodeInt(intBuffer);
         }
 
@@ -221,7 +221,7 @@
         public static double GetDoubleFromPipe(Stream pipeReader)
         {
             byte[] doubleBuffer = new byte[8];
-            pipeReader.Read(doubleBuffer, 0, 8);
+            pipeReader.ReadExactly(doubleBuffer, 0, 8);
             return DecodeDouble(doubleBuffer);
         }
 

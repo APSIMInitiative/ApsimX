@@ -27,7 +27,7 @@ namespace APSIM.Shared.Extensions
             // Read the first N bytes of the stream, where N is the length of
             // this encoding's byte order mark.
             byte[] buf = new byte[bom.Length];
-            stream.Read(buf, 0, bom.Length);
+            stream.ReadExactly(buf, 0, bom.Length);
 
             // Reset stream position after the read.
             stream.Seek(position, SeekOrigin.Begin);
