@@ -1,3 +1,4 @@
+using System.ServiceModel;
 using Newtonsoft.Json;
 
 namespace APSIM.Core;
@@ -83,9 +84,29 @@ public partial class SetPropertyCommand : IModelCommand
                 // If "null" was specified then set the object value to null. Otherwise convert
                 // the value into correct type.
                 if (propertyValue == "null")
+                {
                     instance.Value = null;
+                }
                 else
-                    instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                {
+                    VariableComposite reference = null;
+                    //check if this might be a model reference
+                    if (propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']'))
+                        reference = relativeTo.Node.GetObject(propertyValue);
+
+                    if (reference != null)
+                    {
+                        Type type = instance.Property.PropertyType;
+                        if (type == typeof(string))
+                            instance.Value = propertyValue.Trim();
+                        else if (type.IsPrimitive)
+                            instance.Value = ApsimConvert.ToType(reference.Value, instance.DataType);
+                        else
+                            instance.Value = reference.Value;
+                    }
+                    else
+                        instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                }
             }
             else
             {

@@ -1,22 +1,18 @@
-using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Newtonsoft.Json;
-using Models.Core.Attributes;
-using System.IO;
-using Models.CLEM.Groupings;
-using System.Linq.Expressions;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant graze activity</summary>
     /// <summary>This activity determines how a ruminant group will graze</summary>
     /// <summary>It is designed to request food via a food store arbitrator</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -28,9 +24,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        private IClock clock = null;
-
         /// <summary>
         /// Number of hours grazed
         /// Based on 8 hour grazing days
@@ -38,155 +31,67 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Number of hours grazed")]
         [Required, Range(0, 8, ErrorMessage = "Value based on maximum 8 hour grazing day"), GreaterThanValue(0)]
-        public double HoursGrazed { get; set; }
+        public double HoursGrazed { get; set; } = 8;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to add dynamic components prior to simulation start</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
         {
-            bool buildTransactionFromTree = Structure.FindParent<ZoneCLEM>(recurse: true).BuildTransactionCategoryFromTree;
-
             GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
-            if (grazeFoodStore != null)
+            if (grazeFoodStore is null)
             {
-                this.InitialiseHerd(true, true);
-                // create activity for each pasture type (and common land) and breed at startup
-                // do not include common land pasture..
-                Guid currentUid = UniqueID;
-                foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
-                {
-                    string transCat = "";
-                    if (!buildTransactionFromTree)
-                        transCat = TransactionCategory;
-
-                    RuminantActivityGrazePasture grazePasture = new RuminantActivityGrazePasture
-                    {
-                        ActivitiesHolder = ActivitiesHolder,
-                        CLEMParentName = CLEMParentName,
-                        GrazeFoodStoreTypeName = pastureType.NameWithParent,
-                        HoursGrazed = HoursGrazed,
-                        TransactionCategory = transCat,
-                        GrazeFoodStoreModel = pastureType,
-                        Clock = clock,
-                        Parent = this,
-                        Name = "Graze_" + (pastureType as Model).Name,
-                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                        Status = ActivityStatus.NoTask
-                    };
-                    currentUid = ActivitiesHolder.AddToGuID(currentUid, 1);
-                    grazePasture.UniqueID = currentUid;
-                    grazePasture.SetLinkedModels(Resources);
-                    grazePasture.InitialiseHerd(true, true);
-                    Structure.AddChild(grazePasture);
-
-                    Guid currentHerdUid = currentUid;
-                    foreach (RuminantType herdType in Structure.FindChildren<RuminantType>(relativeTo: HerdResource))
-                    {
-                        RuminantActivityGrazePastureHerd grazePastureHerd = new RuminantActivityGrazePastureHerd
-                        {
-                            GrazeFoodStoreTypeName = pastureType.NameWithParent,
-                            RuminantTypeName = herdType.NameWithParent,
-                            GrazeFoodStoreModel = pastureType,
-                            RuminantTypeModel = herdType,
-                            HoursGrazed = HoursGrazed,
-                            Parent = grazePasture,
-                            Name = grazePasture.Name + "_" + herdType.Name,
-                            OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction,
-                            ActivitiesHolder = ActivitiesHolder,
-                            TransactionCategory = transCat,
-                            Status = ActivityStatus.NoTask
-                        };
-                        currentHerdUid = ActivitiesHolder.AddToGuID(currentHerdUid, 2);
-                        grazePastureHerd.UniqueID = currentHerdUid;
-                        grazePastureHerd.SetLinkedModels(Resources);
-
-                        if (grazePastureHerd.Clock == null)
-                            grazePastureHerd.Clock = this.clock;
-
-                        // add ruminant activity filter group to ensure correct individuals are selected
-                        RuminantActivityGroup herdGroup = new ()
-                        {
-                            Name = "Filter_" + grazePastureHerd.Name,
-                            Parent = this
-                        };
-                        herdGroup.Children.Add(
-                            new FilterByProperty()
-                            {
-                                PropertyOfIndividual = "HerdName",
-                                Operator = ExpressionType.Equal,
-                                Value = herdType.Name,
-                                Parent = herdGroup
-                            }
-                        );
-
-                        grazePasture.Structure.AddChild(grazePastureHerd);
-                        grazePastureHerd.Structure.AddChild(herdGroup);
-                    }
-
-                    foreach (var activityGroup in Structure.FindChildren<RuminantActivityGroup>(relativeTo: grazePasture, recurse: true))
-                        activityGroup.InitialiseFilters();
-                    foreach (var herd in Structure.FindChildren<RuminantActivityGrazePastureHerd>(relativeTo: grazePasture))
-                        herd.InitialiseHerd(false, false);
-
-                }
-                Structure.FindChildren<RuminantActivityGrazePastureHerd>(recurse: true).LastOrDefault().IsHidden = true;
-
-                Events events = new Events(Structure.FindParent<Simulation>(recurse: true));
-                events.ReconnectEvents("Models.Clock");
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={Name}]!", MessageType.Error);
+                return;
             }
-            else
-                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
+
+            // create activity for each pasture type (not common land) and breed at startup
+            bool newPastureAdded = false;
+            Guid nextUID = ActivitiesHolder.AddToGuID(this.UniqueID, 1);
+            foreach (IGrazeFoodStoreType pastureType in Structure.FindChildren<IGrazeFoodStoreType>(relativeTo: grazeFoodStore).Where(a => a is not CommonLandFoodStoreType))  //grazeFoodStore.Children.Where(a => a.GetType().isin == typeof(IGrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
+            {
+                newPastureAdded = true;
+                var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, "", nextUID);
+                newGrazePasture.OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction;
+                Structure.AddChild(newGrazePasture);
+                Links links = new();
+                links.Resolve(newGrazePasture as IModel, true, recurse: false);
+                var apsimEvents = new Events(newGrazePasture);
+                apsimEvents.ConnectEvents();
+                apsimEvents.PublishToModelAndChildren("Commencing", new object[] { newGrazePasture, new EventArgs() });
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+            }
+
+            if (newPastureAdded)
+            {
+                var activities = Structure.FindParent<Simulation>(recurse: true);
+                var apsimEvents = new Events(activities);
+                apsimEvents.ReconnectEvents("CLEMEvents", "CLEMGetResourcesRequired");
+            }
         }
 
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+            if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
+            {
                 Status = ActivityStatus.NoTask;
+            }
+
             return;
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // single grazeall
             if(Structure.FindChildren<RuminantActivityGrazeAll>(relativeTo: ActivitiesHolder, recurse: true).Count() > 1)
             {
-                string[] memberNames = new string[] { "Ruminant graze all activity" };
-                results.Add(new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
-                if (HoursGrazed <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                else
-                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-
-                htmlWriter.Write("the maximum 8 hours each day</span>");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                yield return new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", new string[] { "Ruminant graze all activity" });
             }
         }
         #endregion
-
     }
 }

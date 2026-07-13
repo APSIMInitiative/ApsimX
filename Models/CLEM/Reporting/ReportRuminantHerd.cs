@@ -21,9 +21,10 @@ namespace Models.CLEM.Reporting
     [Description("Provides individual ruminant details for reporting. This uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdReport.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
@@ -31,8 +32,13 @@ namespace Models.CLEM.Reporting
         /// Report at initialisation
         /// </summary>
         [Description("Report at start of simulation")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool ReportAtStart { get; set; }
+        public bool ReportAtStart { get; set; } = true;
+
+        /// <summary>
+        /// Specify when the report will be generated within time step events
+        /// </summary>
+        [Description("Within time step reporting style")]
+        public WithinTimeStepTimingStyle WithinTimeStepTiming { get; set; } = WithinTimeStepTimingStyle.Normal;
 
         /// <summary>
         /// Report item was generated event handler
@@ -46,15 +52,7 @@ namespace Models.CLEM.Reporting
         public RuminantReportItemEventArgs ReportDetails { get; set; }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportRuminantHerd()
-        {
-            SetDefaults();
-        }
-
-        /// <summary>
-        /// Report item generated and ready for reporting
+        /// Report item generated and ready for reporting 
         /// </summary>
         /// <param name="e"></param>
         protected virtual void ReportItemGenerated(RuminantReportItemEventArgs e)
@@ -68,35 +66,56 @@ namespace Models.CLEM.Reporting
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMHerdSummary")]
-        private void OnCLEMHerdSummary(object sender, EventArgs e)
+        private void OnCLEMLate(object sender, EventArgs e)
         {
-            if (TimingOK)
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Late && TimingOK)
+            {
                 ReportHerd();
+            }
+        }
+
+        /// <summary>
+        /// Function to report herd individuals each month
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMNormal(object sender, EventArgs e)
+        {
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Normal && TimingOK)
+            {
+                ReportHerd();
+            }
+        }
+
+        /// <summary>
+        /// Function to report herd individuals each month
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMDoCutAndCarry")]
+        private void OnCLEMEarly(object sender, EventArgs e)
+        {
+            if (WithinTimeStepTiming == WithinTimeStepTimingStyle.Early && TimingOK)
+            {
+                ReportHerd();
+            }
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             if (ruminantHerd is null)
             {
-                string[] memberNames = new string[] { "Missing resource" };
-                results.Add(new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", memberNames));
+                yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", new string[] { "Missing resource" });
             }
             if (!Structure.FindChildren<RuminantGroup>().Any())
             {
-                string[] memberNames = new string[] { "Missing ruminant filter group" };
-                results.Add(new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
+                yield return new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", new string[] { "Missing ruminant filter group" });
             }
-            return results;
         }
 
         #endregion
@@ -110,7 +129,9 @@ namespace Models.CLEM.Reporting
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             if (ReportAtStart)
+            {
                 ReportHerd();
+            }
         }
 
         /// <summary>
@@ -128,21 +149,18 @@ namespace Models.CLEM.Reporting
                 {
                     ReportDetails = new RuminantReportItemEventArgs();
                     if (item is RuminantFemale)
+                    {
                         ReportDetails.RumObj = item as RuminantFemale;
+                    }
                     else
+                    {
                         ReportDetails.RumObj = item as RuminantMale;
+                    }
+
                     ReportItemGenerated(ReportDetails);
                 }
             }
         }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
     }
 
     /// <summary>
