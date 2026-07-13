@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 210,
+  "Version": 219,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -31,15 +31,17 @@
               "Children": [
                 {
                   "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[IPlant]",
+                  "Specification": "",
                   "Name": "Models",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": null,
-                      "Paths": null,
-                      "Values": null,
+                      "Specifications": [
+                        "[IPlant]",
+                        "[Operations]"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "Pasture",
                       "ResourceName": null,
                       "Children": [
@@ -216,9 +218,11 @@
                     },
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": null,
-                      "Paths": null,
-                      "Values": null,
+                      "Specifications": [
+                        "[IPlant]",
+                        "[Operations]"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "AgPasture",
                       "ResourceName": null,
                       "Children": [
@@ -329,9 +333,11 @@
                     },
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
-                      "Specifications": null,
-                      "Paths": null,
-                      "Values": null,
+                      "Specifications": [
+                        "[IPlant]",
+                        "[Operations]"
+                      ],
+                      "CustomDescriptors": [],
                       "Name": "PMF",
                       "ResourceName": null,
                       "Children": [
@@ -378,7 +384,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Base",
           "ResourceName": null,
           "Children": [
@@ -1012,6 +1017,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "SoilTemperatureCampbell",
                       "ResourceName": null,
                       "Children": [],
