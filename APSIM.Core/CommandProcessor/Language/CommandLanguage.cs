@@ -24,13 +24,13 @@ namespace APSIM.Core;
 public class CommandLanguage
 {
     /// <summary>Regex pattern for getting a model path</summary>
-    public const string PATTERN_MODEL_PATH = @"[\w\d-\[\]\. ]+";
+    public const string PATTERN_MODEL_PATH = @"[\w\d\-\[\]\. ]+";
 
     /// <summary>Regex pattern for getting a file path</summary>
-    public const string PATTERN_FILE_PATH = @"[\w\d-_\.\\:/ ]+";
+    public const string PATTERN_FILE_PATH = @"[\w\d\-_\.\\:/ ]+";
 
     /// <summary>Regex pattern for a model name</summary>
-    public const string PATTERN_NAME_TEXT = @"[\w\d- ]+";
+    public const string PATTERN_NAME_TEXT = @"[\w\d\- ]+";
 
     /// <summary>
     /// Parse a collection of lines into a collection of model commands.
@@ -95,6 +95,80 @@ public class CommandLanguage
         foreach (var command in commands)
             lines.Add(command.ToString());
         return lines;
+    }
+
+    public static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
+    {
+        //remove quoted sections prior to searching for keywords
+        List<(int, string)> quotes = new List<(int, string)>();
+        string commandWithoutQuotedSections = "";
+        string quotedSection = "";
+        bool inQuotes = false;
+        foreach(char character in command)
+        {
+            if (character == '"')
+            {
+                inQuotes = !inQuotes;
+                if (inQuotes)
+                    quotedSection = "";
+                else
+                    quotes.Add((commandWithoutQuotedSections.Length, quotedSection));
+            }
+            else
+            {
+                if (!inQuotes)
+                    commandWithoutQuotedSections += character;
+                else
+                    quotedSection += character;
+            }
+        }
+        quotes.Reverse();
+
+        //work out where the keywords are in the quoteless command
+        int[] positions = new int[keywords.Length];
+        int lastPosition = 0;
+        for(int i = 0; i < keywords.Length; i++)
+        {
+            positions[i] = commandWithoutQuotedSections.IndexOf(keywords[i], lastPosition);
+            if (positions[i] > 0)
+                lastPosition = positions[i];
+        }
+        
+        //remove quote characters from original command as our positions are created based on them
+        //not being there
+        string commandWithoutQuoteMarkers = command.Replace("\"", "");
+
+        //adjust positions based on if text was quoted out
+        foreach((int, string) quote in quotes)
+        {
+            for(int i = positions.Length-1; i >= 0; i--)
+            {
+                if (positions[i] >= quote.Item1)
+                    positions[i] += quote.Item2.Length;
+            }
+        }
+
+        //Break the command into parts based on the keywords
+        List<string> segments = new List<string>();
+        for(int i = 0; i < positions.Length; i++)
+        {
+            int startIndex = positions[i];
+            if (startIndex >= 0)
+            {
+                int endIndex = -1;
+                for(int j = i+1; j < positions.Length && endIndex < 0; j++)
+                    if (positions[j] >= 0)
+                        endIndex = positions[j];
+                string segment;
+                if (endIndex >= 0)
+                    segment = commandWithoutQuoteMarkers.Substring(startIndex, endIndex-startIndex);
+                else
+                    segment = commandWithoutQuoteMarkers.Substring(startIndex);
+                segments.Add(segment);
+            }
+        }
+
+        return segments;
     }
 
     /// <summary>

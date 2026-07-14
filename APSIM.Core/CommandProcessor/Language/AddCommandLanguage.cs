@@ -31,38 +31,13 @@ internal partial class AddCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
+        if (!command.ToLower().Trim().StartsWith("add"))
+            throw new Exception($"Invalid command: {command}");
+
         //Determine what required and optional keywords are in the command
         //Order of keywords is important
         string[] keywords = [KEYWORD_ADD, KEYWORD_FROM, KEYWORD_TO, KEYWORD_NAME];
-
-        int[] positions = new int[keywords.Length];
-        int lastPosition = 0;
-        for(int i = 0; i < keywords.Length; i++)
-        {
-            positions[i] = command.IndexOf(keywords[i], lastPosition);
-            if (positions[i] > 0)
-                lastPosition = positions[i];
-        }
-
-        //Break the command into parts based on the keywords
-        List<string> segments = new List<string>();
-        for(int i = 0; i < positions.Length; i++)
-        {
-            int startIndex = positions[i];
-            if (startIndex >= 0)
-            {
-                int endIndex = -1;
-                for(int j = i+1; j < positions.Length && endIndex < 0; j++)
-                    if (positions[j] >= 0)
-                        endIndex = positions[j];
-                string segment;
-                if (endIndex >= 0)
-                    segment = command.Substring(startIndex, endIndex-startIndex);
-                else
-                    segment = command.Substring(startIndex);
-                segments.Add(segment);
-            }
-        }
+        IEnumerable<string> segments = CommandLanguage.BreakCommandIntoSegements(command, keywords);
 
         bool usesNew = false;
         bool usesAll = false;
@@ -103,7 +78,7 @@ internal partial class AddCommand: IModelCommand
                 Match match = Regex.Match(segment, PATTERN_NAME);
                 if (!match.Success)
                     throw new Exception($"Invalid command: {command}");
-                name = match.Groups["name"].ToString();
+                name = match.Groups["name"].ToString().Trim();
                 if (string.IsNullOrEmpty(name))
                     throw new Exception($"Invalid command: {command}");
             }
