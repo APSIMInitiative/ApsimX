@@ -354,6 +354,4 @@ namespace Models.Soils
         }
 
     }
-
-
 }
