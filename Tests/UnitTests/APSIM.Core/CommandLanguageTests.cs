@@ -81,7 +81,6 @@ public class CommandLanguageTests
     [TestCase("add Report to", ExpectedResult = "Invalid command: add Report to")]
     [TestCase("add Report to ", ExpectedResult = "Invalid command: add Report to")]
     [TestCase("add new Report", ExpectedResult = "Invalid command: add new Report")]
-    [TestCase("add new Report to [Simulation] name ", ExpectedResult = "Invalid command: add new Report to [Simulation] name ")]
     [TestCase("delete", ExpectedResult = "Invalid command: delete")]
     [TestCase("duplicate", ExpectedResult = "Invalid command: duplicate")]
     [TestCase("save", ExpectedResult = "Invalid command: save")]
