@@ -2693,9 +2693,9 @@ namespace Models.GrazPlan
             }
 
             DoPastureWater();
-        }
+        }    
 
-        
+
 
 
         /// <summary>
@@ -2711,7 +2711,6 @@ namespace Models.GrazPlan
                 DoPastureGrowth();
                 EndStep();
             }
-
         }
 
         /// <summary>

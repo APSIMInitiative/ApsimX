@@ -134,6 +134,15 @@ namespace UserInterface.Presenters
             
             foreach (PropertyInfo property in allProperties)
             {
+                //Forward check for invalid enum values so this can report an error to the gui
+                if (property.PropertyType.IsEnum)
+                {
+                    object objValue = property.GetValue(obj);
+                    string text = AttributeUtilities.GetEnumDescription((Enum)Enum.Parse(property.PropertyType, objValue?.ToString()));
+                    if (string.IsNullOrEmpty(text))
+                        presenter.MainPresenter.ShowError($"Error: Cannot match Enum {property.Name} with value {objValue} to valid Enum Value.");
+                }
+
                 // Assign any category attribute details here for category based property presenter (currently in CLEM)
                 if (property.IsDefined(typeof(CategoryAttribute), false))
                 {
@@ -203,7 +212,10 @@ namespace UserInterface.Presenters
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-            return obj.GetType().GetProperties(flags);
+            if (obj == null)
+                return new List<PropertyInfo>();
+            else
+                return obj.GetType().GetProperties(flags);
         }
 
         /// <summary>

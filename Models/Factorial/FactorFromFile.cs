@@ -250,9 +250,10 @@ namespace Models.Factorial
             if (_generatedCommands == null)
                 GetCompositeFactors();
 
+            int count = _generatedCommands.Count();
             if (index < 0)
                 throw new Exception($"FactorFromFile: GetCommands cannot have negative index of {index}");
-            if (index >= _generatedCommands.Count())
+            if (count > 0 && index >= _generatedCommands.Count())
                 throw new Exception($"FactorFromFile: Index {index} provided to GetCommands is higher than number of composite factors count={_generatedCommands.Count()}");
 
             List<string> lines = new List<string>();
