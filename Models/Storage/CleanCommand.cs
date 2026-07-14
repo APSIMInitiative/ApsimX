@@ -72,6 +72,10 @@ namespace Models.Storage
             // Do nothing.
         }
 
+        
+        /// <summary> Returns true if the job is enabled</summary>
+        public bool Enabled => true;
+
         /// <summary>
         /// Clean all existing data in the given table for the specified simulation names.
         /// </summary>

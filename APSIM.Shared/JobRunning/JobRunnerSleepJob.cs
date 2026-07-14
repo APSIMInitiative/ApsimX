@@ -27,6 +27,9 @@ namespace APSIM.Shared.JobRunning
         /// </summary>
         public string Name { get { return $"Sleep job ({durationOfSleep}ms)"; } }
 
+        /// <summary> Returns true if the job is enabled</summary>
+        public bool Enabled => true;
+
         /// <summary>
         /// Cleanup the job after running it.
         /// </summary>
