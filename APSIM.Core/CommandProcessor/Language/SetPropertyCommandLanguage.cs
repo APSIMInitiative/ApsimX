@@ -15,8 +15,7 @@ public partial class SetPropertyCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\[\.][\w\d\[\]\.\: ]*[\w\d\[\]\.\:]";
-        
+        string modelNameWithBrackets = @"[\[\.][\w\d\[\]\.:\- ]*[\w\d\[\]\.:\-]";
         string pattern = $@"^(?<keyword>{modelNameWithBrackets})\s*(?<operator>=|\+=|-=)\s*(?<pipe>\<)?\s*(?<value>[^\<]+)?$";
 
         Match match = Regex.Match(command, pattern);
@@ -47,10 +46,10 @@ public partial class SetPropertyCommand: IModelCommand
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
-        if (fileName == null)
-            return $"{name}{oper}{value}";
+        if (_fileName == null)
+            return $"{_name}{_oper}{_value}";
         else
-            return $"{name}=<{fileName}";
+            return $"{_name}=<{_fileName}";
     }
 
 }
