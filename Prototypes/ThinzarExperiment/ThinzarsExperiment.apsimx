@@ -7409,7 +7409,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "C:/Users/pau400/OneDrive - CSIRO/Documents/Jessica/Pasture-JP/Lincoln/APSIM/WhiteClover/WhiteCloverMonoculture/Lincoln_23.met",
+                              "FileName": "Lincoln_23.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
@@ -10279,7 +10279,7 @@
                             {
                               "$type": "Models.Climate.Weather, Models",
                               "ConstantsFile": null,
-                              "FileName": "C:/Users/pau400/OneDrive - CSIRO/Documents/Jessica/Pasture-JP/Lincoln/APSIM/WhiteClover/WhiteCloverMonoculture/Lincoln_23.met",
+                              "FileName": "Lincoln_23.met",
                               "ExcelWorkSheetName": "",
                               "Name": "Weather",
                               "ResourceName": null,
