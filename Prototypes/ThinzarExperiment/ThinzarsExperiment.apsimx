@@ -20,7 +20,23 @@
           ],
           "Name": "ExcelInput",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+              "PredictedTableName": "Report",
+              "ObservedTableName": "Observed",
+              "FieldNameUsedForMatch": "SimulationName",
+              "FieldName2UsedForMatch": "Clock.Today",
+              "FieldName3UsedForMatch": null,
+              "FieldName4UsedForMatch": null,
+              "AllColumns": false,
+              "Name": "PredictedObserved",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
