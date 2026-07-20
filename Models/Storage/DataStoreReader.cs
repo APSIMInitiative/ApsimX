@@ -117,7 +117,10 @@ namespace Models.Storage
         /// <summary>Returns a list of table and view names</summary>
         public List<string> TableAndViewNames { get { return Connection.GetTableAndViewNames().FindAll(t => !t.StartsWith("_")); } }
 
-        /// <summary>Refresh this instance to reflect the database connection. Do not call this directly, refresh the DataStore model directly</summary>
+        /// <summary>
+        /// Refresh this instance to reflect the database connection.
+        /// Do not call this directly; call DataStore.Refresh() instead.
+        /// </summary>
         public void Refresh()
         {
             simulationIDs.Clear();

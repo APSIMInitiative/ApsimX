@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
@@ -329,10 +330,11 @@ namespace Models.Storage
             else
             {
                 IModel rootModel = Node.Root().Model as IModel;
-                foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                IEnumerable<IDataStore> dataStores = rootModel.Node.FindAll<IDataStore>();
+                foreach (IDataStore datastore in dataStores)
                     if (datastore.Writer != null)
                         datastore.Writer.WaitForIdle();
-                foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                foreach (IDataStore datastore in dataStores)
                     if (datastore.Reader != null)
                         datastore.Reader.Refresh();
             }
