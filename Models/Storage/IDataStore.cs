@@ -32,7 +32,8 @@ namespace Models.Storage
         string GetViewSQL(string name);
 
         /// <summary>
-        /// 
+        /// Wait until writing has finished to the database, then find and 
+        /// refresh all the datastores in the file.
         /// </summary>
         void Refresh();
     }
