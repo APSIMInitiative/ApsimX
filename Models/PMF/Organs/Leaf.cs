@@ -397,7 +397,7 @@ namespace Models.PMF.Organs
             }
         }
 
-
+        
         /// <summary>Return the</summary>
         public double CohortCurrentRankCoverAbove
         {

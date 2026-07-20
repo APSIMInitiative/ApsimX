@@ -9,17 +9,17 @@ namespace APSIM.Core;
 public partial class SetPropertyCommand : IModelCommand
 {
     [JsonProperty]
-    private readonly string name;
+    private readonly string _name;
     [JsonProperty]
-    private readonly string value;
+    private readonly string _value;
     [JsonProperty]
-    private readonly string fileName;
+    private readonly string _fileName;
     [JsonProperty]
-    private readonly string oper;
+    private readonly string _oper;
     [JsonProperty]
-    private readonly bool multiple;
-    private readonly List<VariableComposite> obj = [];
-    private readonly List<object> oldValues = [];
+    private readonly bool _multiple;
+    private readonly List<VariableComposite> _obj = [];
+    private readonly List<object> _oldValues = [];
 
     /// <summary>
     /// Constructor.
@@ -31,15 +31,15 @@ public partial class SetPropertyCommand : IModelCommand
     /// <param name="multiple">Perform property set for multiple instances?</param>
     public SetPropertyCommand(string name, string oper, string value, string fileName = null, bool multiple = false)
     {
-        this.name = name;
-        this.oper = oper;
-        this.value = value;
-        this.fileName = fileName;
-        this.multiple = multiple;
+        this._name = name;
+        this._oper = oper;
+        this._value = value;
+        this._fileName = fileName;
+        this._multiple = multiple;
     }
 
     /// <summary>Property value.</summary>
-    internal object Value => value;
+    internal object Value => _value;
 
     /// <summary>
     /// Run the command.
@@ -49,53 +49,73 @@ public partial class SetPropertyCommand : IModelCommand
     INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
     {
         // Read the property value from an external file if necessary.
-        string propertyValue = value;
-        if (fileName != null)
+        string propertyValue = _value;
+        if (_fileName != null)
         {
-            if (!File.Exists(fileName))
-                throw new Exception($"Cannot find file : {fileName}");
-            propertyValue = File.ReadAllText(fileName);
+            if (!File.Exists(_fileName))
+                throw new Exception($"Cannot find file : {_fileName}");
+            propertyValue = File.ReadAllText(_fileName);
         }
 
         // Get all model instances that need a property set.
         IEnumerable<VariableComposite> instances = null;
-        if (multiple)
-            instances = relativeTo.Node.GetAllObjects(name, flags: LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
+        if (_multiple)
+            instances = relativeTo.Node.GetAllObjects(_name, flags: LocatorFlags.PropertiesOnly | LocatorFlags.CaseSensitive | LocatorFlags.IncludeDisabled);
         else
         {
-            var instance = relativeTo.Node.GetObject(name);
+            var instance = relativeTo.Node.GetObject(_name);
             if (instance != null)
                 instances = [instance];
         }
 
         if (instances == null || !instances.Any())
-            throw new Exception($"Cannot find property {name}");
+            throw new Exception($"Cannot find property {_name}");
 
         // Perform multiple property sets.
         foreach (var instance in instances)
         {
             // Capture the old value so that we can perform an undo if necessary.
-            obj.Add(instance);
-            oldValues.Add(instance.Value);
+            _obj.Add(instance);
+            _oldValues.Add(instance.Value);
 
-            if (oper == "=")
+            if (_oper == "=")
             {
                 // If "null" was specified then set the object value to null. Otherwise convert
                 // the value into correct type.
                 if (propertyValue == "null")
+                {
                     instance.Value = null;
+                }
                 else
-                    instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                {
+                    VariableComposite reference = null;
+                    //check if this might be a model reference
+                    if (propertyValue.Trim().StartsWith('[') && propertyValue.Trim().Contains(']'))
+                        reference = relativeTo.Node.GetObject(propertyValue);
+
+                    if (reference != null)
+                    {
+                        Type type = instance.Property.PropertyType;
+                        if (type == typeof(string))
+                            instance.Value = propertyValue.Trim();
+                        else if (type.IsPrimitive)
+                            instance.Value = ApsimConvert.ToType(reference.Value, instance.DataType);
+                        else
+                            instance.Value = reference.Value;
+                    }
+                    else
+                        instance.Value = ApsimConvert.ToType(propertyValue, instance.DataType);
+                }
             }
             else
             {
                 // Throw if trying to add or remove from a scalar.
                 if (!ApsimConvert.IsIList(instance.DataType))
-                    throw new Exception($"Property {name} is not an array type. Cannot use += or -= operators.");
+                    throw new Exception($"Property {_name} is not an array type. Cannot use += or -= operators.");
 
                 // Throw if trying to add or remove from an array that isn't a string array.
                 if (DataAccessor.GetElementTypeOfIList(instance.DataType) != typeof(string))
-                    throw new Exception($"Property {name} is not a string array. Cannot use += or -= operators.");
+                    throw new Exception($"Property {_name} is not a string array. Cannot use += or -= operators.");
 
                 // Get the current array as a list of strings.
                 object valueAsObject = instance.Value ?? throw new Exception($" Cannot use += or -= operators on a null array.");
@@ -103,16 +123,16 @@ public partial class SetPropertyCommand : IModelCommand
                 if (strings == null)
                     throw new Exception("Cannot use += or -= operators on a null array.");
 
-                string[] tokens = [.. value.Split('=').Select(part => part.Trim())];
+                string[] tokens = [.. _value.Split('=').Select(part => part.Trim())];
 
                 // Add or remove a string.
-                if (oper == "+=")
+                if (_oper == "+=")
                 {
                     int index = strings.FindIndex(s => s.Split('=')[0].Trim() == tokens.First());
                     if (index >= 0)
-                        strings[index] = value;
+                        strings[index] = _value;
                     else
-                        strings.Add(value);
+                        strings.Add(_value);
 
                 }
                 else
@@ -132,8 +152,8 @@ public partial class SetPropertyCommand : IModelCommand
     /// </summary>
     public void Undo()
     {
-        for (int i = 0; i < obj.Count; i++)
-            obj[i].Value = oldValues[i];
+        for (int i = 0; i < _obj.Count; i++)
+            _obj[i].Value = _oldValues[i];
     }
 
     /// <summary>
@@ -141,7 +161,7 @@ public partial class SetPropertyCommand : IModelCommand
     /// </summary>
     public override int GetHashCode()
     {
-        return (name, value, fileName, oper, multiple).GetHashCode();
+        return (_name, _value, _fileName, _oper, _multiple).GetHashCode();
     }
 
 }

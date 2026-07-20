@@ -1,9 +1,7 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.GrazPlan;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
@@ -19,6 +17,7 @@ namespace Models.CLEM.Resources
     [Description("Specify ruminant conception based on individual's condition")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
     {
         /// <summary>
@@ -31,26 +30,18 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Cut-off for condition-based conception
         /// </summary>
-        [Category("Advanced", "Survival")]
+        [Category("Farm", "Survival")]
         [Description("Cut-off for condition-based conception")]
         [Required, GreaterThanEqualValue(0)]
         public double ConditionBasedConceptionCutOff { get; set; }
         /// <summary>
         /// Probability of dying if less than condition-based mortality cut-off
         /// </summary>
-        [Category("Advanced", "Survival")]
+        [Category("Farm", "Survival")]
         [Description("Probability of conception when above cut-off")]
         [System.ComponentModel.DefaultValue(1)]
         [Required, Proportion, GreaterThanValue(0)]
         public double ConditionBasedConceptionProbability { get; set; }
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionByCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
 
         /// <summary>
         /// Calculate conception rate for a female based on condition score
@@ -63,9 +54,9 @@ namespace Models.CLEM.Resources
             switch(ConditionBasedConceptionStyle)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    return (female.Weight >= female.HighWeight * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                    return (female.Weight.EmptyBodyMass >= female.Weight.EmptyBodyMassHighest * ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
                 case ConditionBasedCalculationStyle.RelativeCondition:
-                    return (female.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
+                    return (female.Weight.RelativeCondition >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
                 case ConditionBasedCalculationStyle.BodyConditionScore:
                     return (female.BodyConditionScore >= ConditionBasedConceptionCutOff) ? ConditionBasedConceptionProbability : 0;
                 case ConditionBasedCalculationStyle.None:
@@ -74,44 +65,5 @@ namespace Models.CLEM.Resources
                     throw new NotImplementedException($"No conception estimate available for style {ConditionBasedConceptionStyle}");
             }
         }
-
-        #region descriptive summary 
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Females ");
-                switch (ConditionBasedConceptionStyle)
-                {
-                    case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                        htmlWriter.Write("with a ratio of live weight to highest weight achieved greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.RelativeCondition:
-                        htmlWriter.Write("with a relative condition (live weight over normalised weight) greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.BodyConditionScore:
-                        htmlWriter.Write("with a Body Condition Score greater than or equal to ");
-                        break;
-                    case ConditionBasedCalculationStyle.None:
-                        htmlWriter.Write("");
-                        break;
-                    default:
-                        htmlWriter.Write("with <span class=\"errorlink\">Undefined style selected</span> ");
-                        break;
-                }
-                if(ConditionBasedConceptionStyle != ConditionBasedCalculationStyle.None)
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionCutOff, warnZero: true)}");
-                }
-                htmlWriter.Write($" will have a {CLEMModel.DisplaySummaryValueSnippet(ConditionBasedConceptionProbability, warnZero: true)} probability of conceiving.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 }

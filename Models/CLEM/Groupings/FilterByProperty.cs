@@ -23,14 +23,24 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/FilterByProperty.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
-        private PropertyInfo propertyInfo;
+        private IEnumerable<PropertyInfo> propertyInfo = new List<PropertyInfo>();
         private bool validOperator = true;
         
-        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();
+
+        /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public IEnumerable<PropertyInfo> AllPropertyInfoFound { get { return propertyInfo; } }
+
+        /// <summary>
+        /// The current enumerable of properties initialised for the filter
+        /// </summary>
+        public bool IsOperatorValid { get { return validOperator; } }
 
         /// <summary>
         /// The property or method to filter by
@@ -49,33 +59,11 @@ namespace Models.CLEM.Groupings
                 {
                     // allow full path names for location by ignoring the GrazeFoodStore component.
                     case "Location":
-                        if(Value is not null &&  Value.ToString().Contains("."))
+                        if(Value is not null && Value.ToString().Contains("."))
                             return Value.ToString().Split('.')[1];
                         break;
                 }
                 return Value;
-            }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterByProperty()
-        {
-            base.SetDefaults();
-        }
-
-        ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            List<ValidationResult> results = new List<ValidationResult>();
-            ValidationContext context = new ValidationContext(this, null, null);
-            if (Validator.TryValidateObject(this, context, results, true))
-            {
-                Initialise();
-                // rules can only be built on commence not during use in UI (Descriptive summaries)
-                BuildRule();
             }
         }
 
@@ -84,22 +72,29 @@ namespace Models.CLEM.Groupings
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
+                //if(propertyInfo is null)
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-                validOperator = CheckValidOperator(propertyInfo, out string _);
+                if (propertyInfo.Any())
+                {
+                    validOperator = CheckValidOperator(propertyInfo.Last(), out string _);
+                }
             }
         }
 
         /// <inheritdoc/>
         public override void BuildRule()
         {
-            if (Rule is null)
-                Rule = Compile<IFilterable>();
+            Rule ??= Compile<IFilterable>();
         }
 
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            if (!validOperator || propertyInfo is null) return f => false;
+            if (!validOperator || !propertyInfo.Any())
+            {
+                return f => false;
+            }
+
             return CompileComplex<T>();
         }
 
@@ -108,23 +103,37 @@ namespace Models.CLEM.Groupings
             // Check that the filter applies to objects of type T
             var filterParam = Expression.Parameter(typeof(T));
 
-            // check if the parameter passes can inherit the declaring type
+            // check if the parameter passed can inherit the declaring type
             // this will not allow females to check male properties
             // convert parameter to the type of the property, null if fails
-            var filterInherit = Expression.TypeAs(filterParam, propertyInfo.DeclaringType);
-            var typeis = Expression.TypeIs(filterParam, propertyInfo.DeclaringType);
+            var filterInherit = Expression.TypeAs(filterParam, propertyInfo.First().DeclaringType);
+            var typeIs = Expression.TypeIs(filterParam, propertyInfo.First().DeclaringType);
 
-            // Look for the property
-            var key = Expression.Property(filterInherit, propertyInfo.Name);
+            // now using the IEnumerable of property info, build the expression as this allows nested properties to be used. 
+            Expression key = null;
+            foreach (var property in propertyInfo)
+            {
+                if (key == null)
+                {
+                    key = Expression.Property(filterInherit, property.Name);
+                }
+                else
+                {
+                    key = Expression.Property(key, property.Name);
+                }
+            }
 
             // Try convert the Value into the same data type as the property
 
             string propError = "";
-            switch (propertyInfo.PropertyType.Name)
+            switch (propertyInfo.Last().PropertyType.Name)
             {
                 case "Boolean":
-                    if(Value != null && !bool.TryParse(Value.ToString(), out _))
+                    if (Value != null && !bool.TryParse(Value.ToString(), out _))
+                    {
                         propError = $"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]";
+                    }
+
                     break;
                 default:
                     break;
@@ -135,7 +144,7 @@ namespace Models.CLEM.Groupings
                 throw new ApsimXException(this, propError);
             }
 
-            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, ModifiedValueToUse.ToString(), true) : Convert.ChangeType(ModifiedValueToUse ?? 0, propertyInfo.PropertyType);
+            var ce = propertyInfo.Last().PropertyType.IsEnum ? Enum.Parse(propertyInfo.Last().PropertyType, ModifiedValueToUse.ToString(), true) : Convert.ChangeType(ModifiedValueToUse ?? 0, propertyInfo.Last().PropertyType);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T
@@ -148,11 +157,13 @@ namespace Models.CLEM.Groupings
                 binary = Expression.MakeBinary(ExpressionType.Equal, key, Expression.Constant(ce));
             }
             else
+            {
                 binary = Expression.MakeBinary(Operator, key, value);
+            }
 
-            // only perfom if the type is a match to the type of property
+            // only perform if the type is a match to the type of property
             var body = Expression.Condition(
-                typeis,
+                typeIs,
                 binary,
                 Expression.Constant(false)
                 );
@@ -184,10 +195,10 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
@@ -204,10 +215,10 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
                         case ExpressionType.LessThanOrEqual:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
@@ -217,7 +228,7 @@ namespace Models.CLEM.Groupings
                     {
                         case ExpressionType.IsFalse:
                         case ExpressionType.IsTrue:
-                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                         case ExpressionType.Equal:
                         case ExpressionType.NotEqual:
@@ -227,183 +238,174 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.LessThanOrEqual:
                             break;
                         default:
-                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={this.NameWithParent}] ";
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [f={NameWithParent}] ";
                             return false;
                     };
                     break;
                 default:
-                    errorMessage = $"Unsupported property type [{property.PropertyType.Name}] for property [{property.Name}] in [f={this.NameWithParent}] ";
+                    errorMessage = $"Unsupported property type [{property.PropertyType.Name}] for property [{property.Name}] in [f={NameWithParent}] ";
                     return false;
             }
             return true;
         }
 
-        /// <summary>
-        /// Convert filter to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return FilterString(false);
-        }
+        ///// <summary>
+        ///// Convert filter to string
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
+        //    return FilterString(false);
+        //}
 
-        /// <summary>
-        /// Convert filter to html string
-        /// </summary>
-        /// <returns></returns>
-        public string ToHTMLString()
-        {
-            return FilterString(true);
-        }
+        ///// <summary>
+        ///// Convert filter to html string
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToHTMLString()
+        //{
+        //    return FilterString(true);
+        //}
 
-        private string FilterString(bool htmltags)
-        {
-            Initialise();
+        //private string FilterString(bool htmltags)
+        //{
+        //    Initialise();
 
-            using (StringWriter filterWriter = new StringWriter())
-            {
-                if (propertyInfo is null)
-                {
-                    filterWriter.Write($"Filter:");
-                    string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
-                    string spanclose = (htmltags) ? "</span>" : "";
-                    string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
-                    filterWriter.Write($"{errorlink}{message}{spanclose}");
-                    return filterWriter.ToString();
-                }
+        //    using StringWriter filterWriter = new();
+        //    if (propertyInfo.Any() == false)
+        //    {
+        //        filterWriter.Write($"Filter:");
+        //        string errorLink = (htmltags) ? " <span class=\"errorlink\">" : " ";
+        //        string spanClose = (htmltags) ? "</span>" : "";
+        //        string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
+        //        filterWriter.Write($"{errorLink}{message}{spanClose}");
+        //        return filterWriter.ToString();
+        //    }
 
-                filterWriter.Write($"Filter:");
-                bool truefalse = IsOperatorTrueFalseTest();
-                if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
-                {
-                    if (propertyInfo.PropertyType == typeof(bool))
-                    {
-                        if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
-                            filterWriter.Write(" not");
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
-                    else
-                    {
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                        if (validOperator)
-                            filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
-                        else
-                        {
-                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                            string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{spanclose}");
-                        }
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
-                }
-                else
-                {
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //    filterWriter.Write($"Filter:");
+        //    bool trueFalse = IsOperatorTrueFalseTest();
+        //    if (trueFalse | (propertyInfo != null && propertyInfo.Last().PropertyType.IsEnum))
+        //    {
+        //        if (propertyInfo.Last().PropertyType == typeof(bool))
+        //        {
+        //            if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
+        //            {
+        //                filterWriter.Write(" not");
+        //            }
 
-                    if (propertyInfo != null)
-                    {
-                        if (validOperator)
-                            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                        else
-                        {
-                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
-                            string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.PropertyType.Name}{spanclose}");
-                        }
-                    }
-                    else
-                        filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            filterWriter.Write($" {.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
+        //        else
+        //        {
+        //            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            if (validOperator)
+        //            {
+        //                filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+        //            }
+        //            else
+        //            {
+        //                string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+        //                string spanClose = (htmltags) ? "</span>" : "";
+        //                filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{spanClose}");
+        //            }
+        //            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
 
-                    filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                }
-                return filterWriter.ToString();
-            }
-        }
+        //        if (propertyInfo != null)
+        //        {
+        //            if (validOperator)
+        //            {
+        //                filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //            }
+        //            else
+        //            {
+        //                string errorLink = (htmltags) ? "<span class=\"errorlink\">" : "";
+        //                string spanClose = (htmltags) ? "</span>" : "";
+        //                filterWriter.Write($"{errorLink}invalid operator {OperatorToSymbol()}{propertyInfo.Last().PropertyType.Name}{spanClose}");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //        }
+
+        //        filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+        //    }
+        //    return filterWriter.ToString();
+        //}
 
         #region validation
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // no property set, so no need to continue this validation as empty property checked by attribute
-            if (PropertyOfIndividual is null || PropertyOfIndividual == "")
-                return results;
+            if ((PropertyOfIndividual is null || PropertyOfIndividual == "") == false)
+            { 
 
-            if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
-            {
-                string[] memberNames = new string[] { "Missing filter compare value" };
-                results.Add(new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
-            }
-
-            // check valid operator
-            if(!CheckValidOperator(propertyInfo, out _))
-            {
-                string[] memberNames = new string[] { "Invalid operator" };
-                results.Add(new ValidationResult($"The operator provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]", memberNames));
-            }
-
-            // check valid property value.
-            // valid for enum
-            if (propertyInfo.PropertyType.IsEnum)
-            {
-                if(!Enum.TryParse(propertyInfo.PropertyType, Value.ToString(), out _))
+                if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
                 {
-                    string[] memberNames = new string[] { "Invalid compare value" };
-                    results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.PropertyType))}]", memberNames));
+                    string[] memberNames = new string[] { "Missing filter compare value" };
+                    yield return new ValidationResult($"A value to compare with the Property [{PropertyOfIndividual}] is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
                 }
-            }
 
-            // valid for true / false bool
-            if (propertyInfo.PropertyType == typeof(bool))
-            {
-                // blank entry is permitted if using isTrue or isFalse otherwise check value
-                if (Value != null)
+                if (propertyInfo is null || !propertyInfo.Any())
                 {
-                    if(!bool.TryParse(Value.ToString(), out _))
-                    { 
-                        string[] memberNames = new string[] { "Invalid compare value" };
-                        results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames));
+                    string[] memberNames = new string[] { "Invalid property name" };
+                    yield return new ValidationResult($"The property name [{PropertyOfIndividual}] was not found for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
+                }
+                else
+                {
+
+                    // check valid operator
+                    if (!CheckValidOperator(propertyInfo.Last(), out _))
+                    {
+                        string[] memberNames = new string[] { "Invalid operator" };
+                        yield return new ValidationResult($"The operator provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]", memberNames);
+                    }
+
+                    // check valid property value.
+                    // valid for enum
+                    if (propertyInfo.Last().PropertyType.IsEnum)
+                    {
+                        if (!Enum.TryParse(propertyInfo.Last().PropertyType, Value.ToString(), out _))
+                        {
+                            string[] memberNames = new string[] { "Invalid compare value" };
+                            yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Last().Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.Last().PropertyType))}]", memberNames);
+                        }
+                    }
+
+                    // valid for true / false bool
+                    if (propertyInfo.Last().PropertyType == typeof(bool))
+                    {
+                        // blank entry is permitted if using isTrue or isFalse otherwise check value
+                        if (Value != null)
+                        {
+                            if (!bool.TryParse(Value.ToString(), out _))
+                            {
+                                string[] memberNames = new string[] { "Invalid compare value" };
+                                yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames);
+                            }
+                        }
+                    }
+
+                    // valid for isTrue / isFalse
+                    if (Value != null & IsOperatorTrueFalseTest())
+                    {
+                        if (!bool.TryParse(Value.ToString(), out _))
+                        {
+                            string[] memberNames = new string[] { "Invalid compare value" };
+                            yield return new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames);
+                        }
                     }
                 }
             }
-
-            // valid for istrue / isfalse
-            if (Value != null & IsOperatorTrueFalseTest())
-            {
-                if (!bool.TryParse(Value.ToString(), out _))
-                {
-                    string[] memberNames = new string[] { "Invalid compare value" };
-                    results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames));
-                }
-            }
-
-            return results;
         }
         #endregion
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-        #endregion
     }
 
 }

@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,9 @@ namespace Models.CLEM.Timers
     [Description("This timer controls breeding and female selection for best continuous milk production")]
     [HelpUri(@"Content/Features/Timers/ActivityTimerBreedForMilking.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier
+    public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
         private int shortenLactationMonths;
@@ -32,7 +33,7 @@ namespace Models.CLEM.Timers
         private int minConceiveInterval;
         private int startBreedCycleGestationOffsett;
         private int pregnancyDuration;
-        private RuminantType breedParams;
+        private RuminantParameters parameters;
         private RuminantActivityBreed breedParent = null;
         private RuminantActivityControlledMating controlledMatingParent = null;
 
@@ -40,14 +41,12 @@ namespace Models.CLEM.Timers
         /// Months to rest after lactation
         /// </summary>
         [Description("Months to rest after lactation")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
         public int RestMonths { get; set; }
 
         /// <summary>
         /// Months to shorten lactation before next conception
         /// </summary>
         [Description("Months to shorten lactation")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
         public int ShortenLactationMonths { get; set; }
 
         /// <summary>
@@ -64,15 +63,6 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerBreedForMilking()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            base.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -86,12 +76,12 @@ namespace Models.CLEM.Timers
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
             }
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
-            breedParams = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            parameters = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop).Parameters;
 
-            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
+            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(parameters.Lactation.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
 
-            pregnancyDuration = Convert.ToInt32(breedParams.GestationLength, CultureInfo.InvariantCulture);
+            pregnancyDuration = Convert.ToInt32(parameters.General.GestationLength, CultureInfo.InvariantCulture);
 
             // determine min time between conceptions with full milk production minus cut short and resting
             minConceiveInterval = Math.Max(0, pregnancyDuration + shortenLactationMonths + RestMonths);
@@ -118,19 +108,19 @@ namespace Models.CLEM.Timers
             int numberNeeded = 0;
             IndividualsToBreed = null;
 
-            int breedingSpreadMonths = 2;
-
             // get all breeders currently in the population
             // TODO: remove oftype when sex determination fixed
             var females = controlledMatingParent.CurrentHerd(true).OfType<RuminantFemale>();
 
             var breedersList = females.Where(r => r.IsBreeder);
 
-            double tooOldToMate = double.PositiveInfinity;
+            int tooOldToMate = int.MaxValue;
             if (controlledMatingParent != null)
-                tooOldToMate = controlledMatingParent.MaximumAgeMating;
+            {
+                tooOldToMate = controlledMatingParent.MaximumAgeMating.InDays;
+            }
 
-            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= tooOldToMate);
+            var breedersNotTooOldToMate = breedersList.Where(a => a.AgeInDays <= tooOldToMate);
             if (!breedersNotTooOldToMate.Any())
             {
                 return;
@@ -142,7 +132,7 @@ namespace Models.CLEM.Timers
 
             // get females currently lactating            
             var lactatingList = females.Where(f => f.IsLactating);
-            if (lactatingList.Any() && lactatingList.Max(a => a.Age - a.AgeAtLastBirth) < startBreedCycleGestationOffsett)
+            if (lactatingList.Any() && lactatingList.Max(a => a.TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays) < startBreedCycleGestationOffsett)
             {
                 // the max lactation period of lactating females is less than the time to start breeding for future cycle
                 // return with no individuals in the IndividualsToBreed list
@@ -155,26 +145,19 @@ namespace Models.CLEM.Timers
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
 
-            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
-            if (firstCycleList.Count > 0 && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
-            {
-                // if where less than the spread months from the max pregnancy found
-                numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
-            }
-
             if (numberNeeded > 0)
             {
-                // return the number needed of breeders able to mate in this timestep
+                // return the number needed of breeders able to mate in this time step
                 IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
 
                 // report activity performed details.
                 ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                 {
-                    Name = this.Name,
+                    Name = Name,
                     Status = ActivityStatus.Timer,
-                    Id = this.UniqueID.ToString(),
+                    Id = UniqueID.ToString(),
                 };
-                this.OnActivityPerformed(activitye);
+                OnActivityPerformed(activitye);
             }
         }
 
@@ -203,56 +186,18 @@ namespace Models.CLEM.Timers
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
+        ///<inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            if (RestMonths > 0 & ShortenLactationMonths > 0)
             {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("\r\nTiming of breeding and selection of breeders for continous milk production");
-                if (RestMonths + ShortenLactationMonths > 0)
-                {
-                    htmlWriter.Write("\r\n<br />");
-                    if (RestMonths > 0)
-                    {
-                        htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths > 1) ? "s" : "")} rest after lactation");
-                        if (ShortenLactationMonths > 0)
-                            htmlWriter.Write(" and ");
-                    }
-                    if (ShortenLactationMonths > 0)
-                        htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
-                }
-                htmlWriter.Write("\r\n</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-
-                return htmlWriter.ToString();
+                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", new string[] { "Ruminant Milking Timer" });
             }
-        }
 
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
-                    htmlWriter.Write(this.Name);
-                }
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
+            // this should be handled automatically until the allowed time step of this component is set.
+            // yield return new ValidationResult($"Milking timer has not been updated after time step and daily ruminant age changes", new string[] { "Ruminant Milking Timer" });
         }
 
         #endregion
