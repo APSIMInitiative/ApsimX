@@ -177,7 +177,7 @@ namespace Models.CLEM.Reporting
 
             if (report is null)
             {
-                storage.Reader.Refresh();
+                storage.Refresh();
             }
 
             report = storage.Reader.GetData(Parent.Name);
