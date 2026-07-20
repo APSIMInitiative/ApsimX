@@ -20,7 +20,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 219; } }
+    public static int LatestVersion { get { return 220; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8048,6 +8048,32 @@ internal class Converter
                 continue;
             // Constrains the value to within the lower and upper values.
             surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
+        }
+    }
+
+    /// <summary>
+    /// In situations where both a SoilTemperature and CERESSoilTemperature model are present under a soil node,
+    /// and the CERESSoilTemperature is named 'Temperature' and SoilTemperature is named CERESSoilTemperature then
+    /// delete the CERESSoilTemperature model and rename the SoilTemperature model to Temperature.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion220(JObject root, string fileName)
+    {
+        foreach (JObject soil in JsonUtilities.ChildrenOfType(root, "Soil"))
+        {
+            // Check for the specific case of the 
+            bool soilTemperatureNamedCERESSoilTempPresent = false;
+            bool ceresSoilTempNamedTemperature = false;
+            foreach(JObject soilTemp in JsonUtilities.ChildrenOfType(root, "SoilTemperature"))
+                if(soilTemp["Name"].ToString() == "CERESSoilTemperature")
+                    soilTemperatureNamedCERESSoilTempPresent = true;
+            foreach(JObject ceresSoilTemp in JsonUtilities.ChildrenOfType(root, "CERESSoilTemperature"))
+                if(ceresSoilTemp["Name"].ToString() == "Temperature")
+                    ceresSoilTempNamedTemperature = true;
+            if (soilTemperatureNamedCERESSoilTempPresent && ceresSoilTempNamedTemperature)
+                JsonUtilities.RemoveChild(soil,"Temperature");
+                JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
         }
     }
    
