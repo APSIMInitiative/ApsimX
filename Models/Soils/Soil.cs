@@ -345,7 +345,8 @@ namespace Models.Soils
         /// <exception cref="Exception"/>
         private void CheckSoilTemperatureModels()
         {
-            if (Children.OfType<ISoilTemperature>().Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
+            List<ISoilTemperature> soilTemperatures = Children.OfType<ISoilTemperature>().ToList();
+            if ( soilTemperatures.Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
             {
                 throw new Exception($"Soils should only use one type of Soil temperature" +
                     $" model to avoid potential negative behaviour. More than one model found in {FullPath}");
