@@ -1159,7 +1159,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Horsham_79082.met",
+              "FileName": "./Met/Horsham_79082.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -3048,7 +3048,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Merredin_10092.met",
+              "FileName": "./Met/Merredin_10092.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -5637,7 +5637,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Narrabri_local.met",
+              "FileName": "./Met/Narrabri_local.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -8079,7 +8079,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Narrabri_local.met",
+              "FileName": "./Met/Narrabri_local.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -10500,7 +10500,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Narrabri_local.met",
+              "FileName": "./Met/Narrabri_local.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -13089,7 +13089,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "met/Narrabri_local.met",
+              "FileName": "./Met/Narrabri_local.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
