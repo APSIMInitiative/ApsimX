@@ -15,6 +15,7 @@ public class CommandLanguageTests
     [TestCase("add new Report to all [Zone] name MyReport")]
     [TestCase("add [Report] to [Zone] name MyReport")]
     [TestCase("add [Report] from anotherfile.apsimx to all [Zone]")]
+    [TestCase("add new \"Report to\" to [Zone]")]
     [TestCase("delete [Zone].Report")]
     [TestCase("duplicate [Zone].Report")]
     [TestCase("duplicate [Zone].Report name NewName")]
@@ -32,11 +33,10 @@ public class CommandLanguageTests
     [TestCase("replace all [Report] with [ChildReport]")]
     [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx")]
     [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx name NewName")]
-
     public void EnsureLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
-        Assert.That(commands.First().ToString(), Is.EqualTo(commandString));
+        Assert.That(commands.First().ToString(), Is.EqualTo(commandString.Replace("\"", "")));
     }
 
     // Ensure commented lines are ignored.
