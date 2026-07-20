@@ -488,5 +488,72 @@ namespace UnitTests.APSIM.Core.Tests
 
             Assert.Pass();
         }
+
+        [Test]
+        public void TestEnsure220_Removes_CERESSoilTemperatureModels_Named_Temperature_And_Renames_SoilTemperatureModels()
+        {
+            string beforeJSON = """
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 219,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Simulation",
+      "Children": [
+        {
+          "$type": "Models.Soils.Soil, Models",
+          "Name": "Soil",
+          "Children": [
+            {
+              "$type": "Models.Soils.CERESSoilTemperature, Models",
+              "Name": "Temperature"
+            },
+            {
+              "$type": "Models.Soils.SoilTemperature, Models",
+              "Name": "CERESSoilTemperature"
+            }
+          ]
+        },
+        {
+          "$type": "Models.Report, Models",
+          "Name": "DailyReport",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Soil].SoilTemperature.AverageSoilTemperature"
+          ]
+        }
+      ]
+    }
+  ]
+}
+""";
+
+            ConverterReturnType result = Converter.DoConvert(beforeJSON, 220);
+            Assert.That(result.DidConvert, Is.True);
+
+            JObject soil = JsonUtilities.ChildrenOfType(result.Root, "Soil").First();
+            JArray children = soil["Children"] as JArray;
+
+            List<JObject> temperatureChildren = children
+                .OfType<JObject>()
+                .Where(c => string.Equals(c["Name"]?.ToString(), "Temperature", StringComparison.Ordinal))
+                .ToList();
+            Assert.That(temperatureChildren, Has.Count.EqualTo(1));
+            Assert.That(temperatureChildren[0]["$type"]?.ToString(), Is.EqualTo("Models.Soils.SoilTemperature, Models"));
+
+            Assert.That(children
+                .OfType<JObject>()
+                .Any(c => string.Equals(c["Name"]?.ToString(), "CERESSoilTemperature", StringComparison.Ordinal)), Is.False);
+            Assert.That(children
+                .OfType<JObject>()
+                .Any(c => string.Equals(c["$type"]?.ToString(), "Models.Soils.CERESSoilTemperature, Models", StringComparison.Ordinal)), Is.False);
+
+            JObject report = JsonUtilities.ChildrenOfType(result.Root, "Report").First();
+            JArray variableNames = report["VariableNames"] as JArray;
+            Assert.That(variableNames.Select(v => v.ToString()), Does.Contain("[ISoilTemperature].AverageSoilTemperature"));
+            Assert.That(variableNames.Select(v => v.ToString()), Does.Not.Contain("[Soil].SoilTemperature.AverageSoilTemperature"));
+        }
     }
 }
