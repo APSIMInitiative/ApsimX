@@ -100,7 +100,7 @@ namespace Models.AgPasture
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get { return DeadTissue.DM.Wt; } }
+        public double DMDead { get { return DeadTissue.DM.Wt; } }     
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]

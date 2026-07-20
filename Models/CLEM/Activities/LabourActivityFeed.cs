@@ -9,7 +9,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 using APSIM.Core;
 
 namespace Models.CLEM.Activities
@@ -25,8 +24,11 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels, IStructureDependency
+    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
+
         private int numberToDo;
         private double amountToDo;
         private IEnumerable<LabourFeedGroup> filterGroups;
@@ -55,52 +57,40 @@ namespace Models.CLEM.Activities
         /// Feed type
         /// </summary>
         [JsonIgnore]
-        public HumanFoodStoreType FeedType { get; set; }
+        public HumanFoodStoreType FeedType { get; private set; }
 
         /// <summary>
         /// The list of individuals remaining to be fed in the current timestep
         /// </summary>
         [JsonIgnore]
-        public IEnumerable<LabourType> IndividualsToBeFed { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeed()
-        {
-            this.SetDefaults();
-        }
+        public IEnumerable<LabourType> IndividualsToBeFed { get; private set; }
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourFeedGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        {
+                "LabourFeedGroup" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>(),
+                                        measures: new List<string>()
+                                        {
                             "SpecifiedDailyAmountPerIndividual",
                             "SpecifiedDailyAmountPerAE"
-                        }
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                                        }
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>() {
                             "Number fed",
                             "Feed provided"
-                        },
-                        measures: new List<string>() {
+                                        },
+                                        measures: new List<string>() {
                             "fixed",
                             "per head",
                             "per kg feed"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                                        }
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -117,7 +107,9 @@ namespace Models.CLEM.Activities
             ResourcesHolder resourcesHolder = Structure.Find<ResourcesHolder>();
             Labour labour = resourcesHolder.FindResource<Labour>();
             if (labour != null)
+            {
                 population = labour.Items;
+            }
         }
 
         /// <summary>
@@ -126,20 +118,22 @@ namespace Models.CLEM.Activities
         /// <param name="filters">The filter groups to include</param>
         /// <param name="population">the individuals to filter</param>
         /// <returns>A list of unique individuals</returns>
-        public IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<LabourGroup> filters, IEnumerable<T> population) where T : LabourType
+        public static IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<LabourGroup> filters, IEnumerable<T> population) where T : LabourType
         {
             // no filters provided
             if (!filters.Any())
             {
                 return population;
             }
-            // check that no filters will filter all groups otherwise return all
-            // account for any sorting or reduced takes
-            var emptyfilters = filters.Where(a => Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
-            if (emptyfilters.Any())
+            // check that no filters will filter all groups otherwise return all accounting for any sorting or reduced takes
+            var emptyFilters = filters.Where(a => a.Structure.FindChildren<Filter>(relativeTo: a).Any() == false);
+            if (emptyFilters.Any())
             {
-                foreach (var empty in emptyfilters.Where(a => Structure.FindChildren<ISort>(relativeTo: a).Any() || Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
+                foreach (var empty in emptyFilters.Where(a => a.Structure.FindChildren<ISort>(relativeTo: a).Any() || a.Structure.FindChildren<TakeFromFiltered>(relativeTo: a).Any()))
+                {
                     population = empty.Filter(population);
+                }
+
                 return population;
             }
             else
@@ -149,7 +143,10 @@ namespace Models.CLEM.Activities
                 {
                     IEnumerable<T> unique = new List<T>();
                     foreach (var selectFilter in filters)
+                    {
                         unique = unique.Union(selectFilter.Filter(population)).DistinctBy(a => a.Name);
+                    }
+
                     return unique;
                 }
                 else
@@ -165,16 +162,16 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
             numberToDo = 0;
             amountToDo = 0;
-            uniqueIndividuals = GetUniqueIndividuals<LabourType>(filterGroups.Cast<LabourGroup>(), population);
+            uniqueIndividuals = GetUniqueIndividuals(filterGroups.Cast<LabourGroup>(), population);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<LabourType> inds = uniqueIndividuals.ToList();
+            List<LabourType> individuals = uniqueIndividuals.ToList();
             indFed = new List<(LabourType, double)>();
 
             foreach (LabourFeedGroup child in filterGroups)
             {
-                var filteredInd = child.Filter(inds);
+                var filteredInd = child.Filter(individuals);
                 // get list from filters
                 foreach (LabourType ind in filteredInd)
                 {
@@ -183,18 +180,18 @@ namespace Models.CLEM.Activities
                     switch (FeedStyle)
                     {
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                            amountToDo += child.Value * 30.4;
-                            indFed.Add((ind, child.Value * 30.4));
+                            amountToDo += child.Value * events.Interval;
+                            indFed.Add((ind, child.Value * events.Interval));
                             break;
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                            amountToDo += child.Value * ind.AdultEquivalent * 30.4;
-                            indFed.Add((ind, child.Value * ind.AdultEquivalent * 30.4));
+                            amountToDo += child.Value * ind.AdultEquivalent * events.Interval;
+                            indFed.Add((ind, child.Value * ind.AdultEquivalent * events.Interval));
                             break;
                         default:
                             throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
                     }
                 }
-                inds.RemoveAll(a => filteredInd.Contains(a));
+                individuals.RemoveAll(a => filteredInd.Contains(a));
             }
 
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -276,8 +273,6 @@ namespace Models.CLEM.Activities
                 double propFed = resourceRequest.Required / resourceRequest.Provided;
 
                 // feed with any modification
-                // walk througth the indfed list
-
                 foreach (var item in indFed)
                 {
                     item.Item1.AddIntake(new LabourDietComponent()
@@ -290,30 +285,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(propFed < 1);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<LabourFeedGroup>(), true, "childgroupactivityborder", "The following groups will be fed:", "No LabourFeedGroup was provided"),
-            };
-        }
-
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed type not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
     }
 }

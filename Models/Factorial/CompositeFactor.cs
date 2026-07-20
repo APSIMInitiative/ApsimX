@@ -23,7 +23,7 @@ namespace Models.Factorial
     [Serializable]
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
-    public class CompositeFactor : Model, IReferenceExternalFiles, ILineEditor
+    public class CompositeFactor : Model, IReferenceExternalFiles, ICodeEditor
     {
         /// <summary>
         /// A list of models that have been passed into this composite factor 
@@ -59,15 +59,22 @@ namespace Models.Factorial
         public string[] DescriptorNames { 
             get
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = new List<SimulationDescriptor>();
+                try
+                {
+                    List<SimulationDescriptor> generatedDescriptors = GetExperimentDescriptors();
+                    descriptors.AddRange(generatedDescriptors);
+                    descriptors.AddRange(CustomDescriptors);
+                }
+                catch
                 {
                     descriptors.AddRange(CustomDescriptors);
-                    _names = descriptors.Select(d => d.Name).ToArray();
-                    return _names;
                 }
-                else
-                    return [];
+                finally
+                {
+                    _names = descriptors.Select(d => d.Name).ToArray();
+                }
+                return _names;
             }
             set
             {
@@ -84,15 +91,22 @@ namespace Models.Factorial
         public string[] DescriptorValues { 
             get
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = new List<SimulationDescriptor>();
+                try
+                {
+                    List<SimulationDescriptor> generatedDescriptors = GetExperimentDescriptors();
+                    descriptors.AddRange(generatedDescriptors);
+                    descriptors.AddRange(CustomDescriptors);
+                }
+                catch
                 {
                     descriptors.AddRange(CustomDescriptors);
-                    _values = descriptors.Select(d => d.Value).ToArray();
-                    return _values;
                 }
-                else
-                    return [];
+                finally
+                {
+                    _values = descriptors.Select(d => d.Value).ToArray();
+                }
+                return _values;
             }
             set
             {
@@ -101,9 +115,9 @@ namespace Models.Factorial
             }
         }
 
-        /// <summary>Property for the ILineEditor to change Specifications with</summary>
+        /// <summary>Property for the ICodeEditor to change Specifications with</summary>
         [JsonIgnore]
-        public IEnumerable<string> Lines { 
+        public IEnumerable<string> Code { 
             get { return Specifications; } 
             set { Specifications = value.ToArray(); } 
         }
@@ -148,8 +162,6 @@ namespace Models.Factorial
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
             List<CompositeFactorPair> pairs = ParseSpecifications();
-            if (pairs.Count == 0)
-                throw new InvalidOperationException($"Error in composite factor {Name}: Has no specifications");
 
             // Add a simulation override for each path / value combination.
             foreach(CompositeFactorPair pair in pairs)
@@ -345,8 +357,16 @@ namespace Models.Factorial
         {
             if (_names != null && _values != null && _names.Length == _values.Length)
             {
-                List<SimulationDescriptor> descriptors = GetExperimentDescriptors();
-                if (descriptors != null)
+                List<SimulationDescriptor> descriptors = null;
+                try
+                {
+                    descriptors = GetExperimentDescriptors();
+                }
+                catch
+                {
+                    descriptors = new List<SimulationDescriptor>();
+                }
+                finally
                 {
                     IEnumerable<string> readOnlyNames = descriptors.Select(d => d.Name);
                     List<SimulationDescriptor> newCustomDescriptors = new List<SimulationDescriptor>();

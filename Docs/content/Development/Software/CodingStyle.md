@@ -11,12 +11,7 @@ All source code should be written using the Microsoft naming conventions.
 
 In particular please note these guidelines:
 
-Capitalize the first letter of each word in the identifier. Do not use underscores to differentiate words, or for that matter, anywhere in identifiers. There are two appropriate ways to capitalize identifiers, depending on the use of the identifier:
-
-* PascalCasing
-* camelCasing
-
-The PascalCasing convention, used for all identifiers except parameter names, capitalizes the first character of each word (including acronyms over two letters in length), as shown in the following examples:
+When creating a public identifier, capitalize the first letter of each word and do not use underscores using the PascalCasing format. The PascalCasing convention, capitalizes the first character of each word (including acronyms over two letters in length), as shown in the following examples:
 
 ```c#
 PropertyDescriptor
@@ -29,12 +24,12 @@ A special case is made for two-letter acronyms in which both letters are capital
 IOStream
 ```
 
-The camelCasing convention, used only for argument names to methods and private field names, capitalizes the first character of each word except the first word, as shown in the following examples. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
+When creating private identifiers, the camelCasing convention should be used, which capitalizes the first character of each word except the first word, as shown in the following examples. We also append an underscore to the start in order to signal it is local to the class. As the example also shows, two-letter acronyms that begin a camel-cased identifier are both lowercase.
 
 ```c#
-propertyDescriptor
-ioStream
-htmlTag
+_propertyDescriptor
+_ioStream
+_htmlTag
 ```
 
 Example:
@@ -42,33 +37,41 @@ Example:
 ```c#
 public class ModelA : Model
 {
-    private double aVariable;            // camelCase naming convention for private field
-    public double BVariable {  get; }    // PascalCase naming convention for properties
+    private double _aVariable;            // camelCase naming convention for private field
+    public double BVariable { get; }    // PascalCase naming convention for properties
 
     public void AMethod(double argument)   // camelCase the argument.
     {
-        // Do something
+		// Do something
+        _aVariable = argument
     }
 }
 ```
 
-We also use the Visual Studio default brace indention and tab settings (4 spaces). Line endings should be CR/LF (Windows standard).
+We also use the Visual Studio default brace indention and tab settings (4 spaces). Line endings should be LF.
 
 Instance variables should be named differently to the type/object names. e.g.
 
 ```c#
-Soil Soil;    // BAD
-Soil soil;    // BAD - variable name only differs by case
+public Soil Soil;    // BAD - A class link like this should be private
 
-Soil soilModel;    // BETTER
+private Soil soil;    // BAD - does not follow private naming scheme
+
+private Soil _soil;    // GOOD
+
+[Link]
+private Soil _soil;    // BEST - if property is actually a reference to another model, a Link tag should be used
 ```
 
 # Region Usage
-The use of #region is not recommended.
+
+Do not use #region.
 
 # Inheritance
 
-Try and avoid inheritance. For a software engineering view on this see: https://codingdelight.com/2014/01/16/favor-composition-over-inheritance-part-1/. There is general consensus that inheriting from an interface is GOOD but inheriting from a base class is BAD. There are always exceptions of course. In our case, I've been migrating away from having a BaseOrgan and instead put code that is common across organs in a 'library' or 'model' somewhere and simply call methods in that library. An example of this is in the way GenericOrgan relies on a [Link] BiomassRemovalModel  to remove biomass from the organ. A simpler way would be to create a class called say PMFLibrary and put in static methods e.g. 'RemoveBiomass' ...
+Try and avoid inheritance. For a software engineering view on this see: https://codingdelight.com/2014/01/16/favor-composition-over-inheritance-part-1/. There is general consensus that inheriting from an interface is GOOD but inheriting from a base class is BAD. 
+
+There are always exceptions of course. We've been migrating away from having a BaseOrgan and instead put code that is common across organs in a 'library' or 'utility' somewhere and simply call methods in that library. An example of this is in the way GenericOrgan relies on a [Link] BiomassRemovalModel  to remove biomass from the organ. A simpler way would be to create a class called say PMFLibrary and put in static methods e.g. 'RemoveBiomass' ...
 
 # Code Formatting
 
@@ -93,11 +96,11 @@ Links should be first in a class declaration. They specify the dependencies to o
 ```c#
 	/// <summary>The parent plant</summary>
 	[Link]
-	private Plant parentPlant = null;
+	private Plant _parentPlant = null;
 
 	/// <summary>The surface organic matter model</summary>
 	[Link]
-	private ISurfaceOrganicMatter surfaceOrganicMatter = null;
+	private ISurfaceOrganicMatter _surfaceOrganicMatter = null;
 ```
 
 For links to functions that must be child functions use:
@@ -122,10 +125,10 @@ Private and protected fields and enums are next:
 
 ```c#
 	/// <summary>The dry matter supply</summary>
-	private BiomassSupplyType dryMatterSupply = new BiomassSupplyType();
+	private BiomassSupplyType _dryMatterSupply = new BiomassSupplyType();
 
 	/// <summary>The nitrogen supply</summary>
-	private BiomassSupplyType nitrogenSupply = new BiomassSupplyType();
+	private BiomassSupplyType _nitrogenSupply = new BiomassSupplyType();
 ```
 
 ## 3. The constructor
@@ -165,7 +168,7 @@ Public properties (outputs) are next and **should have a trivial implementation*
 
 	/// <summary>Gets the DM demand for this computation round.</summary>
 	[XmlIgnore]
-	public BiomassPoolType DMDemand { get { return dryMatterDemand; } }
+	public BiomassPoolType DMDemand { get { return _dryMatterDemand; } }
 ```
 
 ## 6. Public methods
@@ -192,4 +195,3 @@ Private and protected methods come last. This includes all APSIM event handlers 
 	{
 	}
 ```
-

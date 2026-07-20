@@ -137,6 +137,12 @@ namespace Models.Factorial
                     if (factor.Enabled)
                         allValues.AddRange(factor.GetPermutations());
                 }
+                foreach (FactorFromFile factor in Structure.FindChildren<FactorFromFile>(relativeTo: Factors))
+                {
+                    if (factor.Enabled)
+                        foreach (var compositeFactor in factor.GetCompositeFactors())
+                            allValues.Add(new List<CompositeFactor>() { compositeFactor });
+                }
 
                 return allValues;
             }

@@ -246,5 +246,38 @@ namespace UnitTests
                 }
             }
         }
+
+        /// <summary>
+        /// Ensures a meaningful error is thrown when an observed sheet name conflicts with
+        /// a Report model name, which would otherwise silently overwrite predicted data.
+        /// </summary>
+        [Test]
+        public void ObservationsThrowsErrorWhenSheetNameMatchesReportName()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            // GetRunnableSim creates a simulation with a Report model named "Report".
+            Simulations simulations = Utilities.GetRunnableSim(useInMemoryDb: true);
+            simulations.Node = Node.Create(simulations);
+
+            DataStore dataStore = simulations.Node.FindChild<DataStore>();
+
+            // Use a sheet name that matches the Report model's name.
+            Observations observations = new Observations()
+            {
+                FileNames = ["%root%/Tests/UnitTests/PreSimulationTools/Input.xlsx"],
+                SheetNames = ["Report"]
+            };
+
+            dataStore.Node.AddChild(observations);
+            simulations.Node = Node.Create(simulations);
+            simulations.Links.Resolve(simulations, true, true, false);
+
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+
+            Assert.That(errors, Is.Not.Null.And.Not.Empty, "Expected an error but none was thrown.");
+            Assert.That(errors[0].Message, Does.Contain("Report").And.Contain("conflicts"));
+        }
     }
 }

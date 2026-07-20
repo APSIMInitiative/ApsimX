@@ -255,10 +255,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Loads the MetFile with the given byte array.
         /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="bytes"></param>
+        /// <remarks>
+        /// If filepath contains .bin file extension a bin file is created.
+        /// Otherwise if it contains a .met file extension a met file is created.
+        /// </remarks>
+        /// <param name="filepath">the output filepath</param>
+        /// <param name="bytes">an array of bytes</param>
         public void Load(string filepath, byte[] bytes)
         {
             if (filepath.ToLower().EndsWith(".met"))
@@ -316,6 +320,10 @@ namespace APSIM.Shared.Utilities
             if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
+            // Record the start date in the internal MetData so other APIs
+            // (e.g. GetDay) can compute offsets correctly.
+            data.StartDate = date;
+
             for(int i = 0; i < values.Length; i += numColumns)
             {
                 MetRow row = new MetRow();
@@ -324,11 +332,40 @@ namespace APSIM.Shared.Utilities
 
                 for(int j = 0; j < numColumns; j++)
                 {
-                    row.Inputs.Add(values[i].ToString());
-                    row.Values.Add(values[i]);
+                    row.Inputs.Add(values[i+j].ToString());
+                    row.Values.Add(values[i+j]);
                 }
                 data.Rows.Add(row);
             }
+        }
+
+        /// <summary>
+        /// Load data into a MetFile object using a List of string Lists.
+        /// </summary>
+        /// <param name="constants">The constants for the MetFile.</param>
+        /// <param name="columns">Used to order the values appropriately.</param>
+        /// <param name="units">the units for columns.</param>
+        /// <param name="startDate">the start of the value set.</param>
+        /// <param name="numberOfDays">Number of days in the weather file.</param>
+        /// <param name="valueLists">
+        /// List of string Lists containing the met file values. 
+        /// Each List should contain all values of one column, date, rain or mint for example.
+        /// Warning: Care should be taken to ensure the lists are in the same order
+        /// as the columns.
+        /// </param>
+        public void Load(string[] constants, string[] columns, string[] units, string startDate, int numberOfDays, List<List<double>> valueLists)
+        {
+            // Create an array that Load method can use.
+            List<double> valuesArrayList = new();
+            for(int j = 0; j < numberOfDays; j++)
+            {
+                for(int i = 0; i < columns.Length; i++)
+                    valuesArrayList.Add(valueLists[i][j]);
+            }
+            double[] values = valuesArrayList.ToArray();
+
+            // Then feed the array into another load method to get MetData.
+            Load(constants, columns, units, values, startDate);
         }
 
         /// <summary>
@@ -604,6 +641,27 @@ namespace APSIM.Shared.Utilities
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates a MetFile object from a string in the format of a text met file.
+        /// </summary>
+        /// <param name="content">The string content of the met file</param>
+        /// <returns>A MetFile object</returns>
+        public static MetFile Create(string content)
+        {
+            return new MetFile()
+            {
+                data = ReadMet(content)
+            };
+        }
+
+        ///<summary>
+        /// Return false if MetFile.data is empty.
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return data.Rows.Count == 0;
         }
 
         ////////////////////////////////////////////////////////////////////////

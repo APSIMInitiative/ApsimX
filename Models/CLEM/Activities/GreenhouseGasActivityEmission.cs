@@ -1,5 +1,4 @@
 ﻿using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -11,22 +10,22 @@ using System.ComponentModel.DataAnnotations;
 namespace Models.CLEM.Activities
 {
     /// <summary>Greenhouse gas emission</summary>
-    /// <summary>This component will create a greenouse gas emmission</summary>
+    /// <summary>This component will create a greenhouse gas emission</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityGrow))]
+    [ValidParent(ParentType = typeof(RuminantActivityGrowPF))]
     [ValidParent(ParentType = typeof(RuminantTrucking))]
     [ValidParent(ParentType = typeof(PastureActivityBurn))]
     [Description("Define an emission based on parent activity details")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/GreenhouseGases/Emission.htm")]
-
+    [HelpUri(@"Content/Features/Activities/GreenhouseGases/GreenhouseGasActivityEmission.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class GreenhouseGasActivityEmission : CLEMModel, IActivityCompanionModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private GreenhouseGasesType emissionStore;
 
         /// <summary>
@@ -41,8 +40,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Greenhouse gas store for emission")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store with same name as this component if present", typeof(GreenhouseGases) } })]
-        [System.ComponentModel.DefaultValue("Use store with same name as this component if present")]
-        public string GreenhouseGasStoreName { get; set; }
+        public string GreenhouseGasStoreName { get; set; } = "Use store with same name as this component if present";
 
         /// <summary>
         /// Payment style
@@ -63,6 +61,7 @@ namespace Models.CLEM.Activities
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
+        [Category("Simulation", "Reporting")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
@@ -102,7 +101,9 @@ namespace Models.CLEM.Activities
             }
 
             if (emissionStore != null && MathUtilities.IsPositive(amountOfEmission))
-                emissionStore.Add(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
+            {
+                emissionStore.AddToResource(amountOfEmission, this.Parent as CLEMModel, null, TransactionCategory);
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -114,29 +115,14 @@ namespace Models.CLEM.Activities
             if (MathUtilities.IsPositive(Amount))
             {
                 if (GreenhouseGasStoreName is null || GreenhouseGasStoreName == "Use store with same name as this component if present")
+                {
                     emissionStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, Name, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                }
                 else
+                {
                     emissionStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, GreenhouseGasStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                }
             }
         }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GreenhouseGasActivityEmission()
-        {
-            this.SetDefaults();
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=\"activityentry\">Produce {DisplaySummaryResourceTypeSnippet(GreenhouseGasStoreName)} at rate of {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)} {CLEMModel.DisplaySummaryValueSnippet(Measure)}</div>";
-        }
-        #endregion
-
-
     }
 }

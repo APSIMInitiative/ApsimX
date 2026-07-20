@@ -1,0 +1,476 @@
+﻿using Models.CLEM.Activities;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
+
+namespace Models.CLEM
+{
+    /// <summary>
+    /// Clock component to handle all CLEM specific timing events
+    /// </summary>
+    /// <version>1.0</version>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Clock))]
+    [Description("Provides required Clock events for CLEM")]
+    [HelpUri(@"Content/Features/CLEMEvents.htm")]
+    [ModelAssociations(singleInstance: true)]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    public class CLEMEvents : CLEMModel, IValidatableObject
+    {
+        /// <summary>
+        /// Access to the APSIM Clock (parent)
+        /// </summary>
+        [Link] public Clock Clock { get; set; }
+
+        /// <summary>CLEM initialise occurs once at start of simulation and is first chance for checking setup before use</summary>
+        public event EventHandler CLEMInitialise;
+        /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
+        public event EventHandler CLEMInitialiseResource;
+        /// <summary>CLEM initialise Activity occurs once at start of simulation</summary>
+        public event EventHandler CLEMInitialiseActivity;
+        /// <summary>CLEM validate all data entry</summary>
+        public event EventHandler CLEMValidate;
+        /// <summary>CLEM start of timestep event</summary>
+        public event EventHandler CLEMStartOfTimeStep;
+        /// <summary>CLEM set labour availability after start of timestep and financial considerations.</summary>
+        public event EventHandler CLEMUpdateLabourAvailability;
+        /// <summary>CLEM update pasture</summary>
+        public event EventHandler CLEMUpdatePasture;
+        /// <summary>CLEM detach pasture</summary>
+        public event EventHandler CLEMDetachPasture;
+        /// <summary>CLEM pasture has been added and is ready for use</summary>
+        public event EventHandler CLEMPastureReady;
+        /// <summary>CLEM cut and carry</summary>
+        public event EventHandler CLEMDoCutAndCarry;
+        /// <summary>CLEM allow any tasks needed prior to births such as last pregnancy energy calculations</summary>
+        public event EventHandler CLEMAnimalBeforeBreeding;
+        /// <summary>CLEM Do Animal (Ruminant and Other) Breeding and milk calculations</summary>
+        public event EventHandler CLEMAnimalBreeding;
+        /// <summary>Get potential intake. This includes suckling milk consumption</summary>
+        public event EventHandler CLEMPotentialIntake;
+        /// <summary>Request and allocate resources to all Activities based on UI Tree order of priority. Some activities will obtain resources here and perform actions later</summary>
+        public event EventHandler CLEMPostRuminantConsumption;
+        /// <summary>Evnt to allow Activities to collect manure created. Need to intercept manure creation to allow collection from APSIM paddock linkage</summary>
+        public event EventHandler CLEMCollectManure;
+        /// <summary>Request and perform the collection of manure after resources are allocated and manure produced in time step</summary>
+        public event EventHandler CLEMGetResourcesRequired;
+        /// <summary>CLEM Calculate Animals (Ruminant and Other) milk production</summary>
+        public event EventHandler CLEMAnimalMilkProduction;
+        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
+        public event EventHandler CLEMAnimalWeightGain;
+        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
+        public event EventHandler CLEMDailyASPIMForageTake;
+        /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
+        public event EventHandler CLEMAnimalDeath;
+        /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
+        public event EventHandler CLEMAnimalMilking;
+        /// <summary>CLEM Calculate ecological state after all deaths and before management</summary>
+        public event EventHandler CLEMCalculateEcologicalState;
+        /// <summary>CLEM Do animal marking so complete before undertaking management decisions</summary>
+        public event EventHandler CLEMAnimalMark;
+        /// <summary>CLEM Do Animal (Ruminant and Other) Herd Management (adjust breeders and sires etc.)</summary>
+        public event EventHandler CLEMAnimalManage;
+        /// <summary>CLEM stock animals to pasture availability or other metrics</summary>
+        public event EventHandler CLEMAnimalStock;
+        /// <summary>CLEM sell animals to market including transporting and labour</summary>
+        public event EventHandler CLEMAnimalSell;
+        /// <summary>CLEM buy animals including transporting and labour</summary>
+        public event EventHandler CLEMPreFinalise;
+        /// <summary>CLEM buy animals including transporting and labour</summary>
+        public event EventHandler CLEMAnimalBuy;
+        /// <summary>CLEM Age your resources (eg. Decompose Fodder, Age your labour, Age your Animals)</summary>
+        public event EventHandler CLEMAgeResources;
+        /// <summary>CLEM event to calculate monthly herd summary</summary>
+        public event EventHandler CLEMHerdSummary;
+        /// <summary>CLEM finalize time-step before end</summary>
+        public event EventHandler CLEMFinalizeTimeStep;
+        /// <summary>CLEM end of timestep event</summary>
+        public event EventHandler CLEMEndOfTimeStep;
+        /// <summary>CLEM event to ensure all pending transactions are processed</summary>
+        public event EventHandler CLEMManagePendingTransactions;
+
+        private DateTime timeStepStart;
+        private DateTime timeStepEnd;
+
+        /// <summary>
+        /// CLEM time-step
+        /// </summary>
+        [Description("Time-step")]
+        public TimeStepTypes TimeStep { get; set; } = TimeStepTypes.Monthly;
+
+        /// <summary>
+        /// Custom time-step (days)
+        /// </summary>
+        [Description("Custom time-step (in days)")]
+        [Core.Display(VisibleCallback = "IsCustomIntervalPropertyVisible")]
+        [Required, GreaterThanEqualValue(0)]
+        public int CustomTimeStep { get; set; }
+
+        /// <summary>
+        /// Ecological indicators calculation interval (in months, 1 monthly, 12 annual)
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(12)]
+        [Description("Ecological indicators interval (months)")]
+        [Required, GreaterThanValue(0)]
+        public int EcologicalIndicatorsCalculationInterval { get; set; }
+
+        /// <summary>
+        /// End of month to calculate ecological indicators
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(7)]
+        [Description("First month for ecological indicators")]
+        [Required, Month]
+        public MonthsOfYear EcologicalIndicatorsCalculationMonth { get; set; }
+
+        /// <summary>
+        /// Custom interval (days)
+        /// </summary>
+        [JsonIgnore]
+        public int Interval { get; private set; }
+
+        /// <summary>
+        /// The index of the current interval
+        /// </summary>
+        [JsonIgnore]
+        public int IntervalIndex { get; private set; } = 0;
+
+        /// <summary>
+        /// Month this ecological indicators calculation is next due.
+        /// </summary>
+        [JsonIgnore]
+        public DateTime EcologicalIndicatorsNextDueDate { get; private set; }
+
+        /// <summary>
+        /// The start date of the current time-step
+        /// </summary>
+        [JsonIgnore]
+        public DateTime TimeStepStart { get { return timeStepStart; } }
+
+        /// <summary>
+        /// The end date of the current time-step
+        /// </summary>
+        [JsonIgnore]
+        public DateTime TimeStepEnd { get { return timeStepEnd; } }
+
+        /// <summary>
+        /// Determine if the specified date is within the current time-step
+        /// </summary>
+        /// <param name="date">The date to check</param>
+        /// <returns>True if date is in the current time-step</returns>
+        public bool IsDateInTimeStep(DateTime date)
+        {
+            if (date >= timeStepStart && date <= timeStepEnd)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine the number of days form start of the current time-step to specified date
+        /// </summary>
+        /// <param name="date">The date to consider</param>
+        /// <param name="fromStart">Switch to calculate from the start</param>
+        /// <returns>The number of days</returns>
+        public int DaysToDate(DateTime date, bool fromStart = true)
+        {
+            if (!IsDateInTimeStep(date))
+            {
+                return -1;
+            }
+
+            if (fromStart)
+            {
+                return (date - timeStepStart).Days;
+            }
+            else
+            {
+                return (timeStepEnd-date).Days;
+            }
+        }
+
+        /// <summary>
+        /// Provides the date range of the time-step containing the specified date based on the time-step Interval and simulation start date
+        /// </summary>
+        /// <param name="date">The date to find</param>
+        /// <returns>(start, end) DateTime Tuple containing the specified date</returns>
+        public (DateTime start, DateTime end) GetTimeStepRangeContainingDate(DateTime date)
+        {
+            switch (TimeStep)
+            {
+                case TimeStepTypes.Monthly:
+                    return (new DateTime(date.Year, date.Month, 1), new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month)));
+                case TimeStepTypes.Fortnightly:
+                case TimeStepTypes.Weekly:
+                case TimeStepTypes.Custom:
+                    int days = Convert.ToInt32(Math.Floor(((new DateTime(date.Year, date.Month, date.Day) - Clock.StartDate).TotalDays + 1) / Interval))*Interval;
+                    return (Clock.StartDate.AddDays(days), Clock.StartDate.AddDays(days-1));
+                case TimeStepTypes.Daily:
+                default:
+                    return (date, date);
+            }
+        }
+        private void SetNextTimeStep(DateTime fromDate)
+        {
+            timeStepStart = fromDate;
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                timeStepEnd = new DateTime(timeStepStart.Year, timeStepStart.Month, DateTime.DaysInMonth(timeStepStart.Year, timeStepStart.Month));
+                Interval = (timeStepEnd - timeStepStart).Days + 1;
+            }
+            else
+            {
+                timeStepEnd = timeStepStart.AddDays(Interval-1);
+            }
+        }
+
+        /// <summary>
+        /// Calculates the time-step interval index for a given date.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public int CalculateTimeStepIntervalIndex(DateTime date)
+        {
+            if (date < Clock.StartDate)
+            {
+                return -1;
+            }
+
+            // todo: if months then get month count as integer
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                return (date.Year - Clock.StartDate.Year) * 12 + date.Month - Clock.StartDate.Month + 1;
+            }
+            else
+            {
+                return Convert.ToInt32(Math.Floor((date - Clock.StartDate).TotalDays / (Interval * 1.0))) + 1;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the custom interval property is available based on TimeStepTypes set by user.
+        /// </summary>
+        /// <returns>Boolean indicating whether to display custom interval property</returns>
+        public bool IsCustomIntervalPropertyVisible()
+        {
+            return TimeStep == TimeStepTypes.Custom;
+        }
+
+        /// <summary>
+        /// Method to determine if this is the month to calculate ecological indicators
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEcologicalIndicatorsCalculationDue()
+        {
+            return IsDateInTimeStep(EcologicalIndicatorsNextDueDate);
+        }
+
+        /// <summary>Data stores to clear at start of month</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMEndOfTimeStep")]
+        private void OnEndOfTimeStep(object sender, EventArgs e)
+        {
+            if (IsEcologicalIndicatorsCalculationDue())
+                EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+        }
+
+        /// <summary>An event handler to perform any start of simulation tasks</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        protected virtual void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            SetInterval();
+            SetNextTimeStep(Clock.StartDate);
+
+            CLEMInitialise?.Invoke(this, e);
+            CLEMInitialiseResource?.Invoke(this, e);
+            CLEMInitialiseActivity?.Invoke(this, e);
+            CLEMValidate?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Method to define interval in days from TimeStepType
+        /// </summary>
+        public void SetInterval()
+        {
+            switch (TimeStep)
+            {
+                case TimeStepTypes.Monthly:
+                    break;
+                case TimeStepTypes.Fortnightly:
+                    Interval = 14;
+                    break;
+                case TimeStepTypes.Weekly:
+                    Interval = 7;
+                    break;
+                case TimeStepTypes.Daily:
+                    Interval = 1;
+                    break;
+                case TimeStepTypes.Custom:
+                    Interval = CustomTimeStep;
+                    break;
+                default:
+                    throw new NotImplementedException($"Unknown time-step [{TimeStep}] not supported in [CLEMEvents]");
+            }
+        }
+
+        /// <summary>Fire all setup CLEM events in order at the StartOfDay of start of time step date</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfDay")]
+        protected virtual void OnStartOfDay(object sender, EventArgs args)
+        {
+            // CLEM events performed at the StartOfDay at start of the current time step
+            // Firing setup at start of day on the first day of the time step means we can influence other models for the remainder of the time step
+            if (Clock.Today == timeStepStart)
+            {
+                IntervalIndex++;
+
+                CLEMStartOfTimeStep?.Invoke(this, args);
+                CLEMUpdateLabourAvailability?.Invoke(this, args);
+                CLEMUpdatePasture?.Invoke(this, args);
+            }
+        }
+
+        /// <summary>Fire ruminant growth ready to take pasture</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoStock")]
+        protected virtual void OnAPSIMStock(object sender, EventArgs args)
+        {
+            // CLEM events performed at the EndOfDay at end of the current time step
+            // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
+            if (Clock.Today == timeStepEnd)
+            {
+                CLEMPastureReady?.Invoke(this, args);
+                CLEMDoCutAndCarry?.Invoke(this, args);
+                CLEMAnimalBeforeBreeding?.Invoke(this, args);
+                CLEMAnimalBreeding?.Invoke(this, args);
+                CLEMAnimalMilkProduction?.Invoke(this, args);
+                CLEMPotentialIntake?.Invoke(this, args);
+                CLEMGetResourcesRequired?.Invoke(this, args);
+                CLEMAnimalWeightGain?.Invoke(this, args);
+                CLEMPostRuminantConsumption?.Invoke(this, args);
+            }
+
+            // allow access to daily time step of APSIM models to remove daily intake from forages when CLEM is not running on daily time step 
+            CLEMDailyASPIMForageTake?.Invoke(this, args);
+
+            if (Clock.Today == timeStepEnd)
+            {
+                CLEMCollectManure?.Invoke(this, args);
+            }
+        }
+
+        /// <summary>Fire all completion CLEM events in order at the EndOfDay of end of time step date</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("EndOfDay")]
+        protected virtual void OnEndOfDay(object sender, EventArgs args)
+        {
+            // CLEM events performed at the EndOfDay at end of the current time step
+            // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
+            if (Clock.Today == timeStepEnd)
+            {
+                CLEMManagePendingTransactions?.Invoke(this, args);
+                CLEMAnimalDeath?.Invoke(this, args);
+                CLEMAnimalMilking?.Invoke(this, args);
+                CLEMCalculateEcologicalState?.Invoke(this, args);
+                CLEMAnimalMark?.Invoke(this, args);
+                CLEMAnimalManage?.Invoke(this, args);
+                CLEMAnimalStock?.Invoke(this, args);
+                CLEMAnimalSell?.Invoke(this, args);
+                CLEMDetachPasture?.Invoke(this, args);
+                CLEMHerdSummary?.Invoke(this, args);
+                CLEMPreFinalise?.Invoke(this, args);
+                CLEMAgeResources?.Invoke(this, args);
+                CLEMAnimalBuy?.Invoke(this, args);
+                CLEMFinalizeTimeStep?.Invoke(this, args);
+                CLEMEndOfTimeStep?.Invoke(this, args);
+
+                SetNextTimeStep(Clock.Today.AddDays(1));
+            }
+        }
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Clock.StartDate.ToShortDateString() == "1/01/0001")
+            {
+                string[] memberNames = new string[] { "Clock.StartDate" };
+                yield return new ValidationResult($"Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
+            }
+            if (Clock.EndDate.ToShortDateString() == "1/01/0001")
+            {
+                string[] memberNames = new string[] { "Clock.EndDate" };
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}", memberNames);
+            }
+            if (Clock.EndDate <= Clock.StartDate)
+            {
+                string[] memberNames = new string[] { "Clock.EndDate" };
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}. End of simulation must be after the start of the simulation.", memberNames);
+            }
+
+            if (TimeStep == TimeStepTypes.Monthly & Clock.StartDate.Day != 1)
+            {
+                string[] memberNames = new string[] { "Clock.StartDate" };
+                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
+            }
+            if (TimeStep == TimeStepTypes.Custom & CustomTimeStep <= 0)
+            {
+                string[] memberNames = new string[] { "Custom time-step" };
+                yield return new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time step style", memberNames);
+            }
+        }
+
+        /// <summary>An event handler to allow us to validate properties and setup</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMValidate")]
+        private void OnCLEMValidate(object sender, EventArgs e)
+        {
+            if (EcologicalIndicatorsCalculationMonth == MonthsOfYear.NotSet || Clock.StartDate.Year <= 1)
+                return;
+
+            // validation is performed here
+            // this is done by this component as it is outside of the CLEM/Market branch and needs to be handled itself.
+            if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
+            {
+                if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+                {
+                    DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                    {
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    }
+
+                    EcologicalIndicatorsNextDueDate = trackDate;
+                }
+                else
+                {
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                    {
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                    }
+                }
+            }
+        }
+
+        #endregion
+    }
+}

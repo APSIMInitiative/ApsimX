@@ -1,20 +1,12 @@
-﻿using Models.Core.Attributes;
-using Models.Core;
+﻿using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
-using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json;
-using Models.LifeCycle;
-using Models.PMF.Organs;
-using Microsoft.CodeAnalysis.CSharp;
-using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
 {
@@ -28,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages the sale of specified other animals")]
-    [HelpUri(@"Content/Features/Activities/OtherAnimals/SellOtherAnimals.htm")]
+    [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivitySell.htm")]
     public class OtherAnimalsActivitySell : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private IEnumerable<OtherAnimalsGroup> filterGroups;
@@ -87,10 +79,14 @@ namespace Models.CLEM.Activities
             if (Resources.ResourceItemsExist<Finance>())
             {
                 if (BankAccountName == "")
+                {
                     Summary.WriteMessage(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.", MessageType.Warning);
+                }
             }
             if (BankAccountName != "")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            }
 
             otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
         }
@@ -137,7 +133,6 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             CohortsToBeSold = otherAnimals.GetCohorts(filterGroups, true).ToList();
-
             // number to sell
             numberToDo = CohortsToBeSold.Sum(a => a.AdjustedNumber);
             numberSold = 0;
@@ -218,7 +213,6 @@ namespace Models.CLEM.Activities
         public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
-            // Perform sales
 
             double finalSaleAmount = 0;
             // walk through each OtherAnimalsGroup and sell the required number using the NumberAdjusted property
@@ -226,7 +220,7 @@ namespace Models.CLEM.Activities
             {
                 OtherAnimalsTypeCohort newCohort = new ()
                 {
-                    Age = cohort.Age,
+                    AgeDetails = new int[] { 0, 0, cohort.AgeDetails.InDays },
                     Weight = cohort.Weight,
                     Number = cohort.AdjustedNumber,
                     AdjustedNumber = cohort.AdjustedNumber,
@@ -241,11 +235,11 @@ namespace Models.CLEM.Activities
             }
 
             if (numberSold == 0)
+            {
                 return;
+            }
 
-            // payment to nominated bank accounts
-            bankAccount?.Add(finalSaleAmount, this, PredictedAnimalType, TransactionCategory);
-
+            bankAccount?.AddToResource(finalSaleAmount, this, PredictedAnimalType, TransactionCategory);
             SetStatusSuccessOrPartial(numberSold < numberToDo);
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Gtk;
 using System;
-using UserInterface.Interfaces;
+using System.Data;
 
 namespace UserInterface.Views
 {
@@ -14,7 +14,8 @@ namespace UserInterface.Views
         Graph,
         Grid,
         Property,
-        Code
+        Code,
+        List
     }
 
     /// <summary>
@@ -178,6 +179,10 @@ namespace UserInterface.Views
             {
                 container = this.GetControl<EditorView>(name);
             }
+            else if (type == WidgetType.List)
+            {
+                container = this.GetControl<ExperimentView>(name);
+            }
 
             SetView(container, position);
             return container;
@@ -287,6 +292,8 @@ namespace UserInterface.Views
                 return WidgetType.Grid;
             else if (view is EditorView)
                 return WidgetType.Code;
+            else if (view is ExperimentView)
+                return WidgetType.List;
             else
                 return WidgetType.None;
         }

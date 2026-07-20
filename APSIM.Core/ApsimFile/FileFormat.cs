@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Models.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -214,15 +215,25 @@ public class FileFormat
             /// </remarks>
             private IEnumerable<INodeModel> ChildrenToSerialize(INodeModel model)
             {
+                if (model.ReadOnly)
+                    return [];
+
                 if (model.GetType().Name == "Manager")
                     return [];
 
-                // Serialise all child if ResourceName is empty.
+                // Serialise all child if ResourceName is empty and isn't read only
+                IEnumerable<INodeModel> children = new List<INodeModel>();
                 if (string.IsNullOrEmpty(model.ResourceName))
-                    return model.GetChildren();
-
-                // Return a collection of child models that aren't from a resource.
-                return Resource.Instance.RemoveResourceChildren(model);
+                    children = model.GetChildren();
+                else
+                    children = Resource.Instance.RemoveResourceChildren(model);
+                
+                //Remove read only children
+                List<INodeModel> childrenToReturn = new List<INodeModel>();
+                foreach(INodeModel node in children)
+                    if (node.ReadOnly == false)
+                        childrenToReturn.Add(node);
+                return childrenToReturn;
             }
         }
     }
