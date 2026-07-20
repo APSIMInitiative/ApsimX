@@ -210,7 +210,7 @@ namespace Models.Core.Run
         public void StorageFinishWriting()
         {
             storage?.Writer.Stop();
-            storage?.Reader.Refresh();
+            storage?.Refresh();
         }
 
         /// <summary>Initialise the instance.</summary>
@@ -351,7 +351,7 @@ namespace Models.Core.Run
             foreach (IPreSimulationTool tool in FindPreSimulationTools())
             {
                 storage?.Writer.WaitForIdle();
-                storage?.Reader.Refresh();
+                storage?.Refresh();
                 try
                 {
                     if (tool.Enabled)
@@ -382,7 +382,7 @@ namespace Models.Core.Run
             foreach (IPostSimulationTool tool in FindPostSimulationTools())
             {
                 storage?.Writer.WaitForIdle();
-                storage?.Reader.Refresh();
+                storage?.Refresh();
 
                 DateTime startTime = DateTime.Now;
                 Exception exception = null;
@@ -415,7 +415,7 @@ namespace Models.Core.Run
         private void RunTests()
         {
             storage?.Writer.WaitForIdle();
-            storage?.Reader.Refresh();
+            storage?.Refresh();
 
             List<object> services;
             if (relativeTo is Simulations)
