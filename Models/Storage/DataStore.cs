@@ -334,7 +334,7 @@ namespace Models.Storage
                         datastore.Writer.WaitForIdle();
                 foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
                     if (datastore.Reader != null)
-                        datastore.Refresh();
+                        datastore.Reader.Refresh();
             }
         }
     }

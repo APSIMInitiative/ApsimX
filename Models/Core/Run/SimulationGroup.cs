@@ -179,8 +179,9 @@ namespace Models.Core.Run
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
 
-            if (storage?.Writer != null)
-                storage.Writer.TablesModified.Clear();
+            foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
+                if (datastore.Writer != null)
+                    datastore.Writer.TablesModified.Clear();
 
             if (runPreAndPostSimulationTools)
             {
@@ -267,7 +268,7 @@ namespace Models.Core.Run
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
                     // Find a storage model.
-                    storage = rootModel.Node.FindChild<IDataStore>();
+                    storage = rootModel.Node.FindChild<IDataStore>(recurse: true);
 
                     // Find simulations to run.
                     if (runSimulations)
@@ -350,7 +351,6 @@ namespace Models.Core.Run
             // Call all pre simulation tools.
             foreach (IPreSimulationTool tool in FindPreSimulationTools())
             {
-                storage?.Writer.WaitForIdle();
                 storage?.Refresh();
                 try
                 {
@@ -381,7 +381,6 @@ namespace Models.Core.Run
             object[] args = new object[] { this, new EventArgs() };
             foreach (IPostSimulationTool tool in FindPostSimulationTools())
             {
-                storage?.Writer.WaitForIdle();
                 storage?.Refresh();
 
                 DateTime startTime = DateTime.Now;
@@ -414,7 +413,6 @@ namespace Models.Core.Run
         /// <summary>Run all tests.</summary>
         private void RunTests()
         {
-            storage?.Writer.WaitForIdle();
             storage?.Refresh();
 
             List<object> services;
