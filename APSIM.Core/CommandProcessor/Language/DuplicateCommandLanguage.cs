@@ -27,8 +27,8 @@ internal partial class DuplicateCommand: IModelCommand
         string model = CommandSegment.GetValue(segments, "model");
         string name = CommandSegment.GetValue(segments, "name");
 
-        if (string.IsNullOrEmpty(name))
-            throw new Exception($"Invalid run command: {command}");
+        if (string.IsNullOrEmpty(model))
+            throw new Exception($"Invalid command: {command}");
 
         return new DuplicateCommand(model, name);
     }
