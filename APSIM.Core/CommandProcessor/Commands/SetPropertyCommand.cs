@@ -31,11 +31,11 @@ public partial class SetPropertyCommand : IModelCommand
     /// <param name="multiple">Perform property set for multiple instances?</param>
     public SetPropertyCommand(string name, string oper, string value, string fileName = null, bool multiple = false)
     {
-        this._name = name;
-        this._oper = oper;
-        this._value = value;
-        this._fileName = fileName;
-        this._multiple = multiple;
+        _name = name;
+        _oper = oper;
+        _value = value;
+        _fileName = fileName;
+        _multiple = multiple;
     }
 
     /// <summary>Property value.</summary>
@@ -78,7 +78,7 @@ public partial class SetPropertyCommand : IModelCommand
             _obj.Add(instance);
             _oldValues.Add(instance.Value);
 
-            if (_oper == "=" || _oper == "=<")
+            if (_oper == "=")
             {
                 // If "null" was specified then set the object value to null. Otherwise convert
                 // the value into correct type.
