@@ -150,7 +150,7 @@ namespace UserInterface.Presenters
                     try
                     {
                         storage.Writer.DeleteCheckpoint(checkpointName);
-                        storage.Reader.Refresh();
+                        storage.Refresh();
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }
@@ -171,7 +171,7 @@ namespace UserInterface.Presenters
             var checkpoint = rootNode.Children.Find(node => node.Name == checkpointName);
 
             storage.Writer.SetCheckpointShowGraphs(checkpoint.Name, !checkpoint.ResourceNameForImage.Contains("Check"));
-            storage.Reader.Refresh();
+            storage.Refresh();
             PopulateList();
         }
     }

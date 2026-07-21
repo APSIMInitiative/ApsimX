@@ -101,7 +101,7 @@ namespace UnitTests.Functions
                 throw new AggregateException(errors);
 
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
             return storage.Reader.GetData("Report");
         }
 
