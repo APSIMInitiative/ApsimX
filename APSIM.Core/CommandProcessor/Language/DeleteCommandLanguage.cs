@@ -14,7 +14,7 @@ internal partial class DeleteCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command)
     {
-        string file = CommandLanguage.ReadSimpleCommand(command, KEYWORD_DELETE, PATTERN_DELETE, "model");
+        string file = CommandLanguage.ReadCommand(command, KEYWORD_DELETE, PATTERN_DELETE);
         return new DeleteCommand(file);
     }
 

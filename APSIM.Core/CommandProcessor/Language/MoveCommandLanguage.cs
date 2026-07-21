@@ -28,7 +28,7 @@ internal partial class MoveCommand: IModelCommand
         {
             string[] keywords = [KEYWORD_MOVE, KEYWORD_BEFORE];
             string[] patterns = [PATTERN_REPLACE, PATTERN_POSITION];
-            segments = CommandLanguage.ReadComplexCommand(command, keywords, patterns);
+            segments = CommandLanguage.ReadCommand(command, keywords, patterns);
         }
         //if it didn't contain BEFORE, or after parsing it didn't fit BEFORE, 
         //try again with AFTER
@@ -36,7 +36,7 @@ internal partial class MoveCommand: IModelCommand
         {
             string[] keywords = [KEYWORD_MOVE, KEYWORD_AFTER];
             string[] patterns = [PATTERN_REPLACE, PATTERN_POSITION];
-            segments = CommandLanguage.ReadComplexCommand(command, keywords, patterns);
+            segments = CommandLanguage.ReadCommand(command, keywords, patterns);
         }
 
         string source = CommandSegment.GetValue(segments, "source");

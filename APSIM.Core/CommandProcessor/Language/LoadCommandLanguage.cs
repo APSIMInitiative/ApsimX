@@ -16,7 +16,7 @@ internal partial class LoadCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string file = CommandLanguage.ReadSimpleCommand(command, KEYWORD_LOAD, PATTERN_LOAD, "file");
+        string file = CommandLanguage.ReadCommand(command, KEYWORD_LOAD, PATTERN_LOAD);
 
         if (relativeToDirectory != null)
             file = Path.GetFullPath(file, relativeToDirectory);

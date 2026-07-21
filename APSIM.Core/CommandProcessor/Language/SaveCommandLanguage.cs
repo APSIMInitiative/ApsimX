@@ -16,7 +16,7 @@ internal partial class SaveCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string file = CommandLanguage.ReadSimpleCommand(command, KEYWORD_SAVE, PATTERN_SAVE, "file");
+        string file = CommandLanguage.ReadCommand(command, KEYWORD_SAVE, PATTERN_SAVE);
 
         if (relativeToDirectory != null)
             file = Path.GetFullPath(file, relativeToDirectory);

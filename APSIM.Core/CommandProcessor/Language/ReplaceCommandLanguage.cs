@@ -29,7 +29,7 @@ public partial class ReplaceCommand: IModelCommand
     {
         string[] keywords = [KEYWORD_REPLACE, KEYWORD_WITH, KEYWORD_FROM, KEYWORD_NAME];
         string[] patterns = [PATTERN_REPLACE, PATTERN_WITH, PATTERN_FROM, PATTERN_NAME];
-        CommandSegment[] segments = CommandLanguage.ReadComplexCommand(command, keywords, patterns);
+        CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
 
         bool usesAll = CommandSegment.ContainsKey(segments, "all");
         string existingmodel = CommandSegment.GetValue(segments, "existingmodel");

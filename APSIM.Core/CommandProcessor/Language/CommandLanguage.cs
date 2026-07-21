@@ -139,18 +139,13 @@ public class CommandLanguage
     /// <param name="pattern"></param>
     /// <param name="field"></param>
     /// <returns></returns>
-    public static string ReadSimpleCommand(string command, string keyword, string pattern, string field)
+    public static string ReadCommand(string command, string keyword, string pattern)
     {
-        IEnumerable<string> segments = BreakCommandIntoSegements(command, [keyword]);
+        IEnumerable<CommandSegment> segments = ReadCommand(command, [keyword], [pattern]);
         if (segments.Count() != 1)
             throw new Exception($"Invalid command: {command}");
 
-        string segment = segments.First();
-        
-        Match match = Regex.Match(segment, pattern);
-        if (!match.Success)
-            throw new Exception($"Invalid command: {command}");
-        string value = match.Groups[field].ToString();
+        string value = segments.First().Value;
         if (string.IsNullOrEmpty(value))
             throw new Exception($"Invalid command: {command}");
 
@@ -163,7 +158,7 @@ public class CommandLanguage
     /// <param name="command"></param>
     /// <param name="keywords"></param>
     /// <param name="patterns"></param>
-    public static CommandSegment[] ReadComplexCommand(string command, string[] keywords, string[] patterns)
+    public static CommandSegment[] ReadCommand(string command, string[] keywords, string[] patterns)
     {
         if (keywords.Length != patterns.Length)
             throw new Exception($"Invalid command: {command}");
@@ -196,7 +191,7 @@ public class CommandLanguage
     /// <param name="command"></param>
     /// <param name="keywords"></param>
     /// <returns></returns>
-    public static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
+    private static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
     {
         //remove quoted sections prior to searching for keywords
         List<(int, string)> quotes = new List<(int, string)>();

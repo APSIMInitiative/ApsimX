@@ -34,7 +34,7 @@ internal partial class AddCommand: IModelCommand
 
         string[] keywords = [KEYWORD_ADD, KEYWORD_FROM, KEYWORD_TO, KEYWORD_NAME];
         string[] patterns = [PATTERN_ADD, PATTERN_FROM, PATTERN_TO, PATTERN_NAME];
-        CommandSegment[] segments = CommandLanguage.ReadComplexCommand(command, keywords, patterns);
+        CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
 
         bool usesNew = CommandSegment.ContainsKey(segments, "new");
         bool usesAll = CommandSegment.ContainsKey(segments, "all");
