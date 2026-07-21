@@ -45,7 +45,7 @@ public class CommandSegment
 /// delete [Zone].Report
 /// duplicate [Simulation] name SimulationCopy
 /// [Simulation].Name=NewName
-/// run APSIM
+/// run
 /// load base.apsimx
 /// save modifiedSim.apsimx
 /// </remarks>
@@ -64,7 +64,7 @@ public class CommandLanguage
     public const string PATTERN_VALUE = @"[^\<]+";
 
     /// <summary>Regex pattern for an operator on a value setting command</summary>
-    public const string PATTERN_OPERATOR = @"=|\+=|-=|=<";
+    public const string PATTERN_OPERATOR = @"=|\+=|-=";
 
     /// <summary>
     /// Parse a collection of lines into a collection of model commands.
