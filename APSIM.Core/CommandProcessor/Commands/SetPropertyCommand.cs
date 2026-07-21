@@ -78,7 +78,7 @@ public partial class SetPropertyCommand : IModelCommand
             _obj.Add(instance);
             _oldValues.Add(instance.Value);
 
-            if (_oper == "=")
+            if (_oper == "=" || _oper == "=<")
             {
                 // If "null" was specified then set the object value to null. Otherwise convert
                 // the value into correct type.

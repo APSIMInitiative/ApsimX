@@ -1,5 +1,5 @@
 using System.Text;
-using APSIM.Shared.Utilities;
+using System.Text.RegularExpressions;
 
 namespace APSIM.Core;
 
@@ -24,13 +24,19 @@ namespace APSIM.Core;
 public class CommandLanguage
 {
     /// <summary>Regex pattern for getting a model path</summary>
-    public const string PATTERN_MODEL_PATH = @"[\w\d\-\[\]\. ]+";
+    public const string PATTERN_MODEL_PATH = @"[\w\-\[\]\.\: ]+";
 
     /// <summary>Regex pattern for getting a file path</summary>
-    public const string PATTERN_FILE_PATH = @"[\w\d\-_\.\\:/ ]+";
+    public const string PATTERN_FILE_PATH = @"[\w\-_\.\\:/ ]+";
 
     /// <summary>Regex pattern for a model name</summary>
-    public const string PATTERN_NAME_TEXT = @"[\w\d\- ]+";
+    public const string PATTERN_NAME_TEXT = @"[\w\- ]+";
+
+    /// <summary>Regex pattern for a generic value</summary>
+    public const string PATTERN_VALUE = @"[^\<]+";
+
+    /// <summary>Regex pattern for an operator on a value setting command</summary>
+    public const string PATTERN_OPERATOR = @"=|\+=|-=|=<";
 
     /// <summary>
     /// Parse a collection of lines into a collection of model commands.
@@ -97,6 +103,38 @@ public class CommandLanguage
         return lines;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="keyword"></param>
+    /// <param name="pattern"></param>
+    /// <param name="field"></param>
+    /// <returns></returns>
+    public static string ReadSimpleCommand(string command, string keyword, string pattern, string field)
+    {
+        IEnumerable<string> segments = BreakCommandIntoSegements(command, [keyword]);
+        if (segments.Count() != 1)
+            throw new Exception($"Invalid command: {command}");
+
+        string segment = segments.First();
+        
+        Match match = Regex.Match(segment, pattern);
+        if (!match.Success)
+            throw new Exception($"Invalid command: {command}");
+        string value = match.Groups[field].ToString();
+        if (string.IsNullOrEmpty(value))
+            throw new Exception($"Invalid command: {command}");
+
+        return value;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="keywords"></param>
+    /// <returns></returns>
     public static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
     {
         //remove quoted sections prior to searching for keywords

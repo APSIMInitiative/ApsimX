@@ -15,8 +15,7 @@ public partial class SetPropertyCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\[\.][\w\d\[\]\.:\- ]*[\w\d\[\]\.:\-]";
-        string pattern = $@"^(?<keyword>{modelNameWithBrackets})\s*(?<operator>=|\+=|-=)\s*(?<pipe>\<)?\s*(?<value>[^\<]+)?$";
+        string pattern = $@"^(?<keyword>{CommandLanguage.PATTERN_MODEL_PATH})\s*(?<operator>{CommandLanguage.PATTERN_OPERATOR})\s*(?<value>{CommandLanguage.PATTERN_VALUE})?$";
 
         Match match = Regex.Match(command, pattern);
         if (match == null || !match.Success)
@@ -24,7 +23,7 @@ public partial class SetPropertyCommand: IModelCommand
 
         string fileName = null;
         string value = match.Groups["value"]?.ToString();
-        if (match.Groups["pipe"].ToString() == "<")
+        if (match.Groups["operator"].ToString() == "=<")
         {
             if (string.IsNullOrEmpty(value))
                 throw new Exception($"Invalid command: {command}");

@@ -1,9 +1,10 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 internal partial class SaveCommand: IModelCommand
 {
+    private const string KEYWORD_SAVE = "save ";
+    private const string PATTERN_SAVE = $@"{KEYWORD_SAVE}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+
     /// <summary>
     /// Create a save command.
     /// </summary>
@@ -15,27 +16,18 @@ internal partial class SaveCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileNamePattern = @"[\w\d-_\.\\:/]+";
+        string file = CommandLanguage.ReadSimpleCommand(command, KEYWORD_SAVE, PATTERN_SAVE, "file");
 
-        string pattern = $@"save\s+" +
-                         $@"(?<filename>{fileNamePattern})";
-
-        Match match = Regex.Match(command, pattern);
-        if (match == null || !match.Success)
-            throw new Exception($"Invalid command: {command}");
-
-        // Get filename to convert to absolute path if necessary.
-        string fileName = match.Groups["filename"].ToString();
         if (relativeToDirectory != null)
-            fileName = Path.GetFullPath(fileName, relativeToDirectory);
+            file = Path.GetFullPath(file, relativeToDirectory);
 
-        return new SaveCommand(fileName);
+        return new SaveCommand(file);
     }
 
     /// <summary>
     /// Convert an save command instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
-    public override string ToString()=> $"save {fileName}";
+    public override string ToString()=> $"{KEYWORD_SAVE}{fileName}";
 
 }

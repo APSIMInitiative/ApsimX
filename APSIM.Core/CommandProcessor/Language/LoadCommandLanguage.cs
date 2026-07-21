@@ -1,9 +1,10 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 internal partial class LoadCommand: IModelCommand
 {
+    private const string KEYWORD_LOAD = "load ";
+    private const string PATTERN_LOAD = $@"{KEYWORD_LOAD}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+    
     /// <summary>
     /// Create a load command.
     /// </summary>
@@ -15,26 +16,17 @@ internal partial class LoadCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string fileNamePattern = @"[\w\d-_\.\\:/]+";
+        string file = CommandLanguage.ReadSimpleCommand(command, KEYWORD_LOAD, PATTERN_LOAD, "file");
 
-        string pattern = $@"load\s+" +
-                         $@"(?<filename>{fileNamePattern})";
-
-        Match match = Regex.Match(command, pattern);
-        if (match == null || !match.Success)
-            throw new Exception($"Invalid command: {command}");
-
-        // Get filename to convert to absolute path if necessary.
-        string fileName = match.Groups["filename"].ToString();
         if (relativeToDirectory != null)
-            fileName = Path.GetFullPath(fileName, relativeToDirectory);
+            file = Path.GetFullPath(file, relativeToDirectory);
 
-        return new LoadCommand(fileName);
+        return new LoadCommand(file);      
     }
 
     /// <summary>
     /// Convert an LoadCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
-    public override string ToString() => $"load {fileName}";
+    public override string ToString() => $"{KEYWORD_LOAD}{fileName}";
 }
