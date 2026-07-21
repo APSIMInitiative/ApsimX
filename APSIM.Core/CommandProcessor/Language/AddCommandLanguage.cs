@@ -43,9 +43,7 @@ internal partial class AddCommand: IModelCommand
         string destination = CommandSegment.GetValue(segments, "destination");
         string name = CommandSegment.GetValue(segments, "name");
 
-        if (string.IsNullOrEmpty(source))
-            throw new Exception($"Invalid command: {command}");
-        if (string.IsNullOrEmpty(destination))
+        if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination))
             throw new Exception($"Invalid command: {command}");
 
         //find or create the model being added

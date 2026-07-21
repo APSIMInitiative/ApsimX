@@ -37,6 +37,9 @@ public partial class ReplaceCommand: IModelCommand
         string file = CommandSegment.GetValue(segments, "file");
         string name = CommandSegment.GetValue(segments, "name");
 
+        if (string.IsNullOrEmpty(existingmodel) || string.IsNullOrEmpty(replacingmodel))
+            throw new Exception($"Invalid command: {command}");
+
         IModelReference modelReference;
         if (!string.IsNullOrEmpty(file))
         {
