@@ -71,7 +71,7 @@ namespace UnitTests
             Assert.That(errors.Count, Is.EqualTo(0));
 
             DataStore dataStore = simulations.Node.Find<DataStore>();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
 
             DataTable dt = dataStore.Reader.GetData("_PredictedObserved");
             Assert.That(dt.Rows.Count, Is.EqualTo(1));
