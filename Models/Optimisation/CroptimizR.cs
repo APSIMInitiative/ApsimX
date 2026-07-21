@@ -533,9 +533,8 @@ namespace Models.Optimisation
             CommandProcessor.Run(optimalValues, relativeTo: clonedSims, runner: null);
 
             DataStore clonedStorage = Structure.FindChild<DataStore>(relativeTo: clonedSims);
-            clonedStorage.Close();
+            clonedStorage.FileName = storage.FileName;
             clonedStorage.CustomFileName = storage.FileName;
-            clonedStorage.Open();
 
             // Run the child models of the cloned CroptimizR.
             Runner runner = new Runner(clonedSims);
