@@ -1,9 +1,19 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 public partial class ReplaceCommand: IModelCommand
 {
+    //Keywords for the command, in order they can appear in the command
+    private const string KEYWORD_REPLACE = "replace ";
+    private const string KEYWORD_WITH = " with ";
+    private const string KEYWORD_FROM = " from ";
+    private const string KEYWORD_NAME = " name ";
+
+    //Regex patterns to read the text between keywords
+    private const string PATTERN_REPLACE = $"{KEYWORD_REPLACE}(?<all>all )*(?<existingmodel>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_WITH = $"{KEYWORD_WITH}(?<replacingmodel>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_FROM = $"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+    private const string PATTERN_NAME = $"{KEYWORD_NAME}(?<name>{CommandLanguage.PATTERN_NAME_TEXT})";
+
     /// <summary>
     /// Create a replace command.
     /// </summary>
@@ -17,44 +27,35 @@ public partial class ReplaceCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, INodeModel relativeTo, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\w\d\[\]\.]+";
-        string fileNamePattern = @"[\w\d-_\.\\:/]+";
-        string modelNamePattern = @"[\w\d]+";
+        string[] keywords = [KEYWORD_REPLACE, KEYWORD_WITH, KEYWORD_FROM, KEYWORD_NAME];
+        string[] patterns = [PATTERN_REPLACE, PATTERN_WITH, PATTERN_FROM, PATTERN_NAME];
+        CommandSegment[] segments = CommandLanguage.ReadComplexCommand(command, keywords, patterns);
 
-        string pattern = $@"replace (?<all>all)*\s*" +
-                         $@"(?<oldmodelpath>{modelNameWithBrackets})" + @"\s+" +
-                         $@"with\s+" +
-                         $@"(?<newmodelpath>{modelNameWithBrackets})\s*" +
-                         $@"(?:from\s+(?<filename>{fileNamePattern}))*\s*" +
-                         $@"(?:name\s+(?<name>{modelNamePattern}))*";
-
-        Match match;
-        if ((match = Regex.Match(command, pattern)) == null || !match.Success ||
-             command.Length != match.Length)
-            throw new Exception($"Invalid command: {command}");
+        bool usesAll = CommandSegment.ContainsKey(segments, "all");
+        string existingmodel = CommandSegment.GetValue(segments, "existingmodel");
+        string replacingmodel = CommandSegment.GetValue(segments, "replacingmodel");
+        string file = CommandSegment.GetValue(segments, "file");
+        string name = CommandSegment.GetValue(segments, "name");
 
         IModelReference modelReference;
-        if (!string.IsNullOrEmpty(match.Groups["filename"]?.ToString()))
+        if (!string.IsNullOrEmpty(file))
         {
-            // If filename is relative, make it absolute
-            string fileName = match.Groups["filename"].ToString();
             if (relativeToDirectory != null)
-                fileName = Path.GetFullPath(fileName, relativeToDirectory);
-            modelReference = new ModelInFileReference(fileName, match.Groups["newmodelpath"]?.ToString());
+                file = Path.GetFullPath(file, relativeToDirectory);
+            modelReference = new ModelInFileReference(file, replacingmodel);
         }
         else
         {
-            string newModelPath = match.Groups["newmodelpath"].ToString().Trim();
-            if (!newModelPath.StartsWith('[') && !newModelPath.EndsWith(']'))
-                newModelPath = $"[{newModelPath}]";
-            modelReference = new ModelLocatorReference(relativeTo, newModelPath);
+            if (!replacingmodel.StartsWith('[') && !replacingmodel.EndsWith(']'))
+                replacingmodel = $"[{replacingmodel}]";
+            modelReference = new ModelLocatorReference(relativeTo, replacingmodel);
         }
 
         return new ReplaceCommand(modelReference,
-                                  replacementPath: match.Groups["oldmodelpath"]?.ToString(),
-                                  multiple: match.Groups["all"].Success,
+                                  replacementPath: existingmodel,
+                                  multiple: usesAll,
                                   MatchType.Name,
-                                  newName: match.Groups["name"].ToString());
+                                  newName: name);
     }
 
     /// <summary>

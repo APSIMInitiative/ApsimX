@@ -3,6 +3,34 @@ using System.Text.RegularExpressions;
 
 namespace APSIM.Core;
 
+public class CommandSegment
+{
+    public string Name {get; set;}
+    public string Value {get; set;}
+
+    public CommandSegment(string name, string value)
+    {
+        Name = name;
+        Value = value;
+    }
+
+    public static bool ContainsKey(IEnumerable<CommandSegment> segments, string name)
+    {
+        foreach(CommandSegment segment in segments)
+            if (segment.Name.ToLower() == name.ToLower())
+                return true;
+        return false;
+    }
+
+    public static string GetValue(IEnumerable<CommandSegment> segments, string name)
+    {
+        foreach(CommandSegment segment in segments)
+            if (segment.Name.ToLower() == name.ToLower())
+                return segment.Value.ToString().Trim();
+        return null;
+    }
+}
+
 /// <summary>
 /// Implements the command language
 /// </summary>
@@ -127,6 +155,39 @@ public class CommandLanguage
             throw new Exception($"Invalid command: {command}");
 
         return value;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="keywords"></param>
+    /// <param name="patterns"></param>
+    public static CommandSegment[] ReadComplexCommand(string command, string[] keywords, string[] patterns)
+    {
+        if (keywords.Length != patterns.Length)
+            throw new Exception($"Invalid command: {command}");
+
+        IEnumerable<string> segments = BreakCommandIntoSegements(command, keywords);
+        
+        List<CommandSegment> commandSegments = new List<CommandSegment>();
+        foreach(string segment in segments)
+        {
+            for(int i = 0; i < keywords.Length; i++)
+            {
+                if (segment.StartsWith(keywords[i]))
+                {
+                    Match match = Regex.Match(segment, patterns[i]);
+                    if (!match.Success)
+                        throw new Exception($"Invalid command: {command}");
+
+                    foreach(string key in match.Groups.Keys)
+                        if (key != "0" && !string.IsNullOrEmpty(match.Groups[key].ToString())) //the first group is the entire segment and should be skipped
+                            commandSegments.Add(new CommandSegment(key, match.Groups[key].ToString()));
+                }
+            }
+        }
+        return commandSegments.ToArray();
     }
 
     /// <summary>
