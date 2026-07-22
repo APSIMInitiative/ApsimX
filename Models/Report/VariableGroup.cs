@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
@@ -54,9 +55,15 @@ namespace Models
             {
                 try
                 {
+                    bool allowed = true;
                     Type type = value.GetType();
-                    if (type.Namespace.StartsWith("Models.") && !type.IsAssignableFrom(typeof(IFunction)))
-                        throw new Exception();
+                    if (type.Namespace.StartsWith("Models."))
+                        foreach (PropertyInfo prop in value.GetType().GetProperties())
+                            if (prop.PropertyType.Namespace.StartsWith("Models."))
+                                allowed = false;
+
+                    if (!allowed)
+                        throw new Exception($"{variableName} has properties that are not primitive types.");
 
                     value = ReflectionUtilities.Clone(value);
                 }
