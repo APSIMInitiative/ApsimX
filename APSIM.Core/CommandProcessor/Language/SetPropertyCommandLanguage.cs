@@ -26,9 +26,9 @@ public partial class SetPropertyCommand: IModelCommand
         string value = CommandSegment.GetValue(segments, "value");
         string file = CommandSegment.GetValue(segments, "file");
 
-        //legacy command value, if no value is set, change to "null" for handling as null
+        //legacy command value, if no value is set, change to empty string
         if (value == null)
-            value = "null";
+            value = "";
 
         if (string.IsNullOrEmpty(model) || string.IsNullOrEmpty(operate))
             throw new Exception($"Invalid command: {command}");
