@@ -367,11 +367,14 @@ namespace Models.PostSimulationTools
 
         private void WriteMetadataToDataStore()
         {
-            Import import = Node.FindParent<Import>(recurse:true);
             string fileReference = "";
-            if (import != null)
-                fileReference = Path.GetFileNameWithoutExtension(import.FileName);
-
+            if (Node != null)
+            {
+                Import import = Node.FindParent<Import>(recurse:true);
+                if (import != null)
+                    fileReference = Path.GetFileNameWithoutExtension(import.FileName);
+            }
+            
             //Save metadata about predictedObserved
             DataTable table = new DataTable("_PredictedObserved");
             table.Columns.Add("name", typeof(string));
