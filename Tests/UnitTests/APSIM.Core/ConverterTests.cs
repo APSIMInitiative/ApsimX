@@ -521,7 +521,7 @@ namespace UnitTests.APSIM.Core.Tests
           "Name": "DailyReport",
           "VariableNames": [
             "[Clock].Today",
-            "[Soil].SoilTemperature.AverageSoilTemperature"
+            "[Soil].CERESSoilTemperature.AverageSoilTemperature"
           ]
         }
       ]
@@ -553,7 +553,7 @@ namespace UnitTests.APSIM.Core.Tests
             JObject report = JsonUtilities.ChildrenOfType(result.Root, "Report").First();
             JArray variableNames = report["VariableNames"] as JArray;
             Assert.That(variableNames.Select(v => v.ToString()), Does.Contain("[ISoilTemperature].AverageSoilTemperature"));
-            Assert.That(variableNames.Select(v => v.ToString()), Does.Not.Contain("[Soil].SoilTemperature.AverageSoilTemperature"));
+            Assert.That(variableNames.Select(v => v.ToString()), Does.Not.Contain("[Soil].CERESSoilTemperature.AverageSoilTemperature"));
         }
     }
 }
