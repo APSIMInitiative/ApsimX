@@ -17,7 +17,7 @@ public partial class SetPropertyCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string[] keywords = ["[", KEYWORD_FROM];
+        string[] keywords = ["", KEYWORD_FROM];
         string[] patterns = [PATTERN_VALUE, PATTERN_FROM];
         CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
 
@@ -25,6 +25,10 @@ public partial class SetPropertyCommand: IModelCommand
         string operate = CommandSegment.GetValue(segments, "operator");
         string value = CommandSegment.GetValue(segments, "value");
         string file = CommandSegment.GetValue(segments, "file");
+
+        //legacy command value, if no value is set, change to "null" for handling as null
+        if (value == null)
+            value = "null";
 
         if (string.IsNullOrEmpty(model) || string.IsNullOrEmpty(operate))
             throw new Exception($"Invalid command: {command}");

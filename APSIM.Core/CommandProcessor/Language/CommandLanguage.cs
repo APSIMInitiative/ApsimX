@@ -163,20 +163,21 @@ public class CommandLanguage
         if (keywords.Length != patterns.Length)
             throw new Exception($"Invalid command: {command}");
 
-        IEnumerable<string> segments = BreakCommandIntoSegements(command, keywords);
+        string[] segments = BreakCommandIntoSegements(command, keywords).ToArray();
         
         List<CommandSegment> commandSegments = new List<CommandSegment>();
-        foreach(string segment in segments)
+        for (int i = 0; i < segments.Length; i++)
         {
-            for(int i = 0; i < keywords.Length; i++)
+            string segment = segments[i];
+            for (int j = i; j < keywords.Length; j++)
             {
-                if (segment.StartsWith(keywords[i]))
+                if (segment.StartsWith(keywords[j]))
                 {
-                    Match match = Regex.Match(segment, patterns[i]);
+                    Match match = Regex.Match(segment, patterns[j]);
                     if (!match.Success)
                         throw new Exception($"Invalid command: {command}");
 
-                    foreach(string key in match.Groups.Keys)
+                    foreach (string key in match.Groups.Keys)
                         if (key != "0" && !string.IsNullOrEmpty(match.Groups[key].ToString())) //the first group is the entire segment and should be skipped
                             commandSegments.Add(new CommandSegment(key, match.Groups[key].ToString()));
                 }
