@@ -1,9 +1,11 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Soils;
 using Models.Soils.SoilTemp;
+using Models.Storage;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -474,26 +476,59 @@ namespace UnitTests.Soils
 
         //}
 
-        /// <summary>Ensure soil validation fails if multiple soil temperature models are present.</summary>
         [Test]
-        public void CheckSoilTemperatureModelsThrowsWhenMultipleModelsPresent()
+        public void CheckSoilWritesWarningWhen_MultipleISoilTempModels_ArePresent()
         {
-            var soil = new Soil
+            var summary = new Summary();
+
+            var soil = new Soil()
             {
                 Name = "Soil",
                 Children = new List<IModel>
                 {
                     new CERESSoilTemperature(),
-                    new SoilTemperature()
+                    new SoilTemperature(),
+                    new Physical
+                    {
+                        Depth = [
+                            "0-100",
+                            "100-200",
+                            "200-400",
+                            "400-700",
+                            "700-1000"
+                        ],
+                        
+                    }
                 }
             };
 
-            var method = typeof(Soil).GetMethod("CheckSoilTemperatureModels", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            Assert.That(method, Is.Not.Null);
+            var simulation = new Simulation()
+            {
+                Name = "Test",
+                Children = new List<IModel> { summary, soil }
+            };
 
-            var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() => method.Invoke(soil, Array.Empty<object>()));
-            Assert.That(exception.InnerException, Is.TypeOf<Exception>());
-            Assert.That(exception.InnerException.Message, Does.Contain("only use one type of Soil temperature model"));
+            Simulations simulations = new Simulations
+            {
+                Children = new List<IModel>
+                {
+                    simulation,
+                    new DataStore()
+                    {
+                        UseInMemoryDB = true
+                    }
+                }
+            };
+
+            Node.Create(simulations);
+            var links = new Links();
+            links.Resolve(simulations, true);
+
+            // Act
+            List<string> warnings = soil.CheckSoilTemperatureModels();
+
+            // Assert
+            Assert.That(warnings, Has.Some.Contains("WARNING: Soils should only use one type of Soil temperature model to avoid unintended behaviour."));
         }
 
         /// <summary>Test that InteractionsPerDay property can be set with range constraints.</summary>
