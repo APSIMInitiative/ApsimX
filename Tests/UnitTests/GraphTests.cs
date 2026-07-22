@@ -65,7 +65,6 @@ namespace UnitTests
             Node.Create(sim);
 
             var storage = sim.Children[4] as DataStore;
-            storage.Open();
             var runner = new Runner(sim);
             List<Exception> errors = runner.Run();
 
