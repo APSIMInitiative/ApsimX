@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.WaterModel;
@@ -132,7 +130,6 @@ namespace Models.Soils
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
             Check(summary);
-            CheckSoilTemperatureModels();
         }
 
         /// <summary>
@@ -329,6 +326,10 @@ namespace Models.Soils
                 }
             }
 
+            // Get warnings related to soil temperature models.
+            List<string> soilTempWarnings = CheckSoilTemperatureModels();
+            warning.AddRange(soilTempWarnings);
+
             if (summary != null && warning.Count > 0)
             {
                 foreach(string line in warning)
@@ -343,18 +344,17 @@ namespace Models.Soils
         /// Checks for multiple ISoilTemperature children.
         /// </summary>
         /// <exception cref="Exception"/>
-        private void CheckSoilTemperatureModels()
+        public List<string> CheckSoilTemperatureModels()
         {
+            List<string> warnings = new();
             List<ISoilTemperature> soilTemperatures = Children.OfType<ISoilTemperature>().ToList();
-            if ( soilTemperatures.Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
+            if (soilTemperatures.Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
             {
-                summary.WriteMessage(this,
+                warnings.Add(
                 $"WARNING: Soils should only use one type of Soil temperature" +
-                $" model to avoid unintended behaviour. More than one model found in {FullPath}",
-                MessageType.Warning);
-                
+                $" model to avoid unintended behaviour. More than one model found in {FullPath}");
             }
-
+            return warnings;
         }
 
     }
