@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Core;
@@ -10,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.PreSimulationTools;
 using Models.Storage;
 
 namespace Models.PostSimulationTools
@@ -365,6 +367,11 @@ namespace Models.PostSimulationTools
 
         private void WriteMetadataToDataStore()
         {
+            Import import = Node.FindParent<Import>();
+            string fileReference = "";
+            if (import != null)
+                fileReference = Path.GetFileNameWithoutExtension(import.FileName);
+
             //Save metadata about predictedObserved
             DataTable table = new DataTable("_PredictedObserved");
             table.Columns.Add("name", typeof(string));
@@ -374,6 +381,7 @@ namespace Models.PostSimulationTools
             table.Columns.Add("field_match_two", typeof(string));
             table.Columns.Add("field_match_three", typeof(string));
             table.Columns.Add("field_match_four", typeof(string));
+            table.Columns.Add("comparision", typeof(string));
 
             DataRow row = table.NewRow();
             row["name"] = Name;
@@ -383,6 +391,7 @@ namespace Models.PostSimulationTools
             row["field_match_two"] = FieldName2UsedForMatch;
             row["field_match_three"] = FieldName3UsedForMatch;
             row["field_match_four"] = FieldName4UsedForMatch;
+            row["comparision"] = FieldName4UsedForMatch;
             table.Rows.Add(row);
 
             dataStore.Writer.WriteTable(table, false);
