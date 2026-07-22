@@ -381,7 +381,7 @@ namespace Models.PostSimulationTools
             table.Columns.Add("field_match_two", typeof(string));
             table.Columns.Add("field_match_three", typeof(string));
             table.Columns.Add("field_match_four", typeof(string));
-            table.Columns.Add("comparision", typeof(string));
+            table.Columns.Add("comparison", typeof(string));
 
             DataRow row = table.NewRow();
             row["name"] = Name;
@@ -391,7 +391,7 @@ namespace Models.PostSimulationTools
             row["field_match_two"] = FieldName2UsedForMatch;
             row["field_match_three"] = FieldName3UsedForMatch;
             row["field_match_four"] = FieldName4UsedForMatch;
-            row["comparision"] = fileReference;
+            row["comparison"] = fileReference;
             table.Rows.Add(row);
 
             dataStore.Writer.WriteTable(table, false);
