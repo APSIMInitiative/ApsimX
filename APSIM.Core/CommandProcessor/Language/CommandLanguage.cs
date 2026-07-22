@@ -132,12 +132,13 @@ public class CommandLanguage
     }
 
     /// <summary>
-    /// 
+    /// Function to read a command that only has a single keyword and value to 
+    /// return. Note that the name of the field in the regex pattern does not 
+    /// matter, as the value of the first labelled group will be returned.
     /// </summary>
-    /// <param name="command"></param>
-    /// <param name="keyword"></param>
-    /// <param name="pattern"></param>
-    /// <param name="field"></param>
+    /// <param name="command">Command to parse</param>
+    /// <param name="keyword">Keyword to find</param>
+    /// <param name="pattern">Regex pattern to match against and find a group with</param>
     /// <returns></returns>
     public static string ReadCommand(string command, string keyword, string pattern)
     {
@@ -153,11 +154,24 @@ public class CommandLanguage
     }
 
     /// <summary>
+    /// Function to read a command that takes in a equal length lists of 
+    /// keywords and regex patterns to parse the given command. This function 
+    /// will break the command up based on the keywords, and then parse each 
+    /// section with the provided regexs, building a list of key/value pairs 
+    /// from the matching regex patterns.
     /// 
+    /// Keywords must be provided in the order they appear in the command, and 
+    /// keywords in the middle of the command should be appended with spaces to 
+    /// help prevent mismatches. The first keyword should not have a space at 
+    /// the start.
+    /// 
+    /// Optional keywords can be provided, and will be excluded from the output 
+    /// if not found. See AddCommand for a good example how to structure the 
+    /// keywords and pattern pairs.
     /// </summary>
-    /// <param name="command"></param>
-    /// <param name="keywords"></param>
-    /// <param name="patterns"></param>
+    /// <param name="command">Command to parse</param>
+    /// <param name="keywords">Array of keywords</param>
+    /// <param name="patterns">Array of regex patterns</param>
     public static CommandSegment[] ReadCommand(string command, string[] keywords, string[] patterns)
     {
         if (keywords.Length != patterns.Length)
@@ -187,11 +201,18 @@ public class CommandLanguage
     }
 
     /// <summary>
+    /// Takes a command and breaks it into smaller strings based on the given 
+    /// keywords. Keywords are searched for in order through the string, so 
+    /// keyword 2 will only be search in the text after keyword 1 is found. 
+    /// If a keyword is not found, the next keyword will start from the same 
+    /// place.
     /// 
+    /// If a value is quoted, those will be removed when searching for keywords 
+    /// so that values can have keywords in them without breaking the command 
+    /// if surrounded by quotes.
     /// </summary>
     /// <param name="command"></param>
     /// <param name="keywords"></param>
-    /// <returns></returns>
     private static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
     {
         //remove quoted sections prior to searching for keywords
