@@ -367,7 +367,7 @@ namespace Models.PostSimulationTools
 
         private void WriteMetadataToDataStore()
         {
-            Import import = Node.FindParent<Import>();
+            Import import = Node.FindParent<Import>(recurse:true);
             string fileReference = "";
             if (import != null)
                 fileReference = Path.GetFileNameWithoutExtension(import.FileName);
@@ -391,7 +391,7 @@ namespace Models.PostSimulationTools
             row["field_match_two"] = FieldName2UsedForMatch;
             row["field_match_three"] = FieldName3UsedForMatch;
             row["field_match_four"] = FieldName4UsedForMatch;
-            row["comparision"] = FieldName4UsedForMatch;
+            row["comparision"] = fileReference;
             table.Rows.Add(row);
 
             dataStore.Writer.WriteTable(table, false);
