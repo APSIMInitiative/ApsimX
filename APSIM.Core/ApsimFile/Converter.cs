@@ -8085,7 +8085,7 @@ internal class Converter
             // Some reports may also need to be updated.
             if (soilSituationFoundAndCorrected == true)
                 foreach (JObject report in JsonUtilities.ChildrenOfType(simulation, "Report"))
-                    JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].SoilTemperature.AverageSoilTemperature", "[ISoilTemperature].AverageSoilTemperature");
+                    JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].CERESSoilTemperature.AverageSoilTemperature", "[ISoilTemperature].AverageSoilTemperature");
         }
     }
 }
