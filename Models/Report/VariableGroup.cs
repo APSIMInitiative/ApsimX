@@ -4,8 +4,6 @@ using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Functions;
 
 namespace Models
 {
@@ -56,6 +54,10 @@ namespace Models
             {
                 try
                 {
+                    Type type = value.GetType();
+                    if (type.Namespace.StartsWith("Models.") && !type.IsAssignableFrom(typeof(IFunction)))
+                        throw new Exception();
+
                     value = ReflectionUtilities.Clone(value);
                 }
                 catch (Exception err)
