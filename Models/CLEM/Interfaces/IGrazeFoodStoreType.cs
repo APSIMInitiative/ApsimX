@@ -23,17 +23,6 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         public double TonnesPerHectareStartOfTimeStep { get; set; }
 
-        ///// <summary>
-        ///// Scale the  current intake by a reduction factor before it is applied to the forage model.
-        ///// </summary>
-        ///// <param name="fractionReduced">Remaining proportion to apply (0..1).</param>
-        //public void ApplyDailyIntakeReduction(double fractionReduced);
-
-        ///// <summary>
-        ///// The current resource request from grazing
-        ///// </summary>
-        //public ResourceRequest CurrentGrazingRequest { get; set; }
-
         /// <summary>
         /// Calculate gut fill for the feed type
         /// </summary>
@@ -50,5 +39,13 @@ namespace Models.CLEM.Interfaces
         /// </param>
         /// <param name="dmdStep">The step size for Dry Matter Digestibility (DMD) categories (100 no groups).</param>
         public List<FoodResourceStore> GenerateIntakeGroups(int numberOfTimesteps, int greenAge = -1, int dmdStep = 10);
+
+        /// <summary>
+        /// Decrease pending for specified food resource store
+        /// </summary>
+        /// <param name="request">Resource request involved</param>
+        /// <param name="store">Food resource store</param>
+        /// <param name="amount">Amount to decrease</param>
+        public void DecreasePendingByStore(ResourceRequest request, FoodResourceStore store, double amount);
     }
 }

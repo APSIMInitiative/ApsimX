@@ -532,9 +532,6 @@ namespace Models.CLEM.Resources
             // Original CLEM assumes 
             // * single births
             // * normalised weight always equals normalised max of new equations.
-            // return StandardReferenceWeight - ((1 - Parameters.General.BirthScalar) * StandardReferenceWeight) * Math.Exp(-(Parameters.General.AgeGrowthRateCoefficient * age) / (Math.Pow(StandardReferenceWeight, Parameters.General.SRWGrowthScalar)));
-
-            // ToDo: Check brackets in CLEM Equations.docx is the Exp applied only to the (1-BS)*SRW. I don't understand this equation.
 
             // ========================================================================================================================
             // Equation 1
@@ -568,14 +565,6 @@ namespace Models.CLEM.Resources
         /// <returns>Estimated age in days</returns>
         public static int EstimateAgeFromNormalisedWeight(double weight, double SRW, RuminantParametersGeneral parametersGeneral)
         {
-            // TODO: check rearrange calculation for age from weight
-
-            // Rearranged from: wt = SRW - (SRW - birthwt) * exp((-NC1*age)/Pow(SRW, CN2))
-            // Solve for age:
-            // (SRW - wt) / (SRW - birthwt) = exp((-NC1*age)/Pow(SRW, CN2))
-            // ln((SRW - wt) / (SRW - birthwt)) = (-NC1*age)/Pow(SRW, CN2)
-            // age = -ln((SRW - wt) / (SRW - birthwt)) * Pow(SRW, CN2) / NC1
-
             if (parametersGeneral == null)
                 return 0;
 
@@ -956,12 +945,13 @@ namespace Models.CLEM.Resources
                 setWeight = CalculateNormalisedWeight(setAge, true);
             }
 
-            // can we update age here after weight and setMature?
-            AgeInDays = setAge;
-
             // This assumes set weight is the fleece free body weight
             // Empty body weight to live weight assumes 1.09 conversion factor when no GrowPF parameters provided.
+            // must be before AgeInDays is set to ensure normalised weight is calculated correctly
             Weight.SetInitialBaseWeight(setWeight);
+
+            // can we update age here after weight and setMature?
+            AgeInDays = setAge;
 
             // determine fat and protein are required and adjust weight if needed
             cohort?.AssociatedHerd?.RuminantGrowActivity?.SetInitialFatProtein(this, cohort, setWeight);

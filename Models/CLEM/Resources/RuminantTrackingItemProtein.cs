@@ -153,7 +153,7 @@ namespace Models.CLEM.Resources
         /// Set the protein mass expected at Standard Reference Weight
         /// </summary>
         /// <param name="ind">The individual ruminant</param>
-        public void SetProteinMassAtSRW(Ruminant ind) //double standardReferenceWeight, RuminantParametersGeneral parameters)
+        public void SetProteinMassAtSRW(Ruminant ind) 
         {
             double EBFMature = ind.Parameters.General.ProportionEBWFatFemale;
             if (ind.Sex == Sex.Male && ind.IsSterilised == false)
@@ -170,6 +170,9 @@ namespace Models.CLEM.Resources
         {
             // ToDo: work out what to do for Oddy and SCA07 that have their own protein content 
             intake = ind.Intake;
+            SetProteinMassAtSRW(ind);
+            initialAmount = Math.Min(initialAmount, MassAtSRW);
+
             Adjust(initialAmount, ind);
         }
 

@@ -145,20 +145,15 @@ namespace Models.CLEM.Resources
 
         private double amount = 0;
 
-        /// <summary>
-        /// Amount of biomass in this pool (kg)
-        /// </summary>
+        /// <inheritdoc/>
         public double Amount => amount;
 
-        /// <summary>
-        /// Amount of biomass in this pool (kg)
-        /// </summary>
+        /// <inheritdoc/>
         public double AmountAvailable => amount - AmountPending;
-
-        /// <summary>
-        /// Amount of biomass in this pool that is currently a pending take by an activity
-        /// </summary>
-        public double AmountPending { get; set; } = 0;
+        /// <inheritdoc/>
+        public double AmountPending { get; private set; } = 0;
+        /// <inheritdoc/>
+        public double AmountInitialPending { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -181,6 +176,7 @@ namespace Models.CLEM.Resources
             Detached = 0;
             Consumed = 0;
             AmountPending = 0;
+            AmountInitialPending = 0;
         }
 
         /// <inheritdoc/>
@@ -270,6 +266,14 @@ namespace Models.CLEM.Resources
             Consumed += AmountPending;
             this.amount -= AmountPending;
             AmountPending = 0;
+            AmountInitialPending = 0;
+        }
+
+        /// <inheritdoc/>
+        public void SetPending(double amountPending)
+        {
+            AmountPending = amountPending;
+            AmountInitialPending = amountPending;
         }
 
         /// <summary>

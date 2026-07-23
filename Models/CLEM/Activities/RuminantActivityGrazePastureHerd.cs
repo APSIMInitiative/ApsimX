@@ -253,6 +253,20 @@ namespace Models.CLEM.Activities
         {
             ResourceRequestList.Clear();
 
+            pastureRequest = new ResourceRequest()
+            {
+                AllowTransmutation = false,
+                Resource = GrazeFoodStoreModel,
+                ResourceType = typeof(GrazeFoodStore),
+                ResourceTypeName = GrazeFoodStoreModel.Name,
+                ActivityModel = this,
+                AdditionalDetails = DigestiblePasturePoolGroups,
+                Category = "Grazed",
+                RelatesToResource = PredictedHerdNameToDisplay,
+                TransactionPending = true
+            };
+
+
             //TODO: add local hoursGrazed that is reset to user level each time step but can be reduced by other activities such as RuminantActivityMove, or ManageRuminants
             // this actually needs to be a property of each individual as we don't know the how management of an individual affects grazing time.
             // grazing competition should probably favour individuals with the lowest grazing time. maybe. 
@@ -351,7 +365,9 @@ namespace Models.CLEM.Activities
         /// </param>
         public void TakeFromGrazingPoolGroup(FoodResourceStore group, int groupIndex, double shortfallMultiplier, bool imposeGreenLimit = true)
         {
+            group.AssociatedResourceRequest = pastureRequest;
             DailyPastureTaken = 0;
+
             for (int i = 0; i < currentHerdSize; i++)
             {
                 double amountToEat = currentHerdDemand * indRelativeDailyIntake[i, groupIndex] * shortfallMultiplier; // daily take
@@ -393,9 +409,6 @@ namespace Models.CLEM.Activities
                 DigestiblePasturePoolGroups = GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
             }
 
-            // TODO: check when SetCurrentBiomass needs to be called
-            //GrazeFoodStoreModel.SetCurrentBiomass();
-
             // fill all animals by calculating relative fill for each pool group 
             for (int i = 0; i < DigestiblePasturePoolGroups.Count; i++)
             {
@@ -434,19 +447,9 @@ namespace Models.CLEM.Activities
             double eaten = DigestiblePasturePoolGroups.Sum(a => a.Details.Amount);
             if (eaten <= 0)
                 return;
-            pastureRequest = new ResourceRequest()
-            {
-                AllowTransmutation = false,
-                Required = eaten,
-                Resource = GrazeFoodStoreModel,
-                ResourceType = typeof(GrazeFoodStore),
-                ResourceTypeName = GrazeFoodStoreModel.Name,
-                ActivityModel = this,
-                AdditionalDetails = DigestiblePasturePoolGroups,
-                Category = "Grazed",
-                RelatesToResource = PredictedHerdNameToDisplay,
-                TransactionPending = true
-            };
+
+            pastureRequest.Required = eaten;
+            pastureRequest.AdditionalDetails = DigestiblePasturePoolGroups;
             ResourceRequestList.Add(pastureRequest);
         }
 
@@ -480,22 +483,20 @@ namespace Models.CLEM.Activities
             }
 
             // provided has been tracked by the pending amounts in each pasture pool group
-            // the details.Amount from each resource group can't be used as they seem to have been reset.
-            pastureRequest.Provided = Math.Min(pastureRequest.Required, DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending));
+            double desiredTotal = DailyPastureDesired * events.Interval;
+            double requiredTotal = DailyPastureRequired * events.Interval;
 
-            PotentialIntakePastureQualityLimiter = pastureRequest.Provided / pastureRequest.Required;
+            double amountPriorToPending = MathUtilities.RoundSignificant(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountInitialPending), 6);
+            double amountPending = MathUtilities.RoundSignificant(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending), 6);
+            pastureRequest.Provided = Math.Min(pastureRequest.Required, amountPending);
+
+            PotentialIntakePastureQualityLimiter = amountPending / requiredTotal;
             Status = ActivityStatus.Success;
 
             if (apsimLink is not null) 
             {
-                // set daily pasture to remove and urine dung details per hectare
-                if (pastureRequest.Provided == 0)
-                {
-                    apsimLink?.SimpleGrazingModel.ProvideExternalLivestockNoGrazing();
-                    return;
-                }
-
                 // set the amount to take from pasture if APSIMLink
+                // allow these to set values even if pasture.provided = 0 which allows animals to be on pasture with 0 consumption (no pasture) but still urinate etc.
                 apsimLink.SimpleGrazingModel?.ProvideExternalLivestockConsumption(apsimLink.ConvertToPerHaPerDay(pastureRequest.Provided, events.Interval));
 
                 // set the urine returned to pasture
@@ -507,34 +508,26 @@ namespace Models.CLEM.Activities
                 apsimLink.SimpleGrazingModel?.ProvideExternalLivestockInputs(urineN, dungN, dung, numberOfUrinations);
             }
 
-            // feed quality reduction will now have been handled by ruminant.Intake
-            // report any grazePaddock.TimeStepForageConsumed.Amount here
-
-            // check if we need to update the resource request or if this is handled automatically. 
-            // update the amount actually taken and perfrm transaction recording.
-
-            // convert amounts to total per time step
-            //pastureRequest.Available *= events.Interval;
-            //pastureRequest.Required *= events.Interval;
-
-
             // report shortfalls based on multipliers.
 
-            if (MathUtilities.IsGreaterThan(MathUtilities.PositiveDifference(DailyPastureDesired * events.Interval, pastureRequest.Provided), DailyPastureDesired * events.Interval * shortfallReportingCutoff))
+            double qualityShortfall = MathUtilities.PositiveDifference(amountPriorToPending, amountPending);
+            double resourceShortfall = MathUtilities.PositiveDifference(requiredTotal, amountPriorToPending);
+
+            if (qualityShortfall + resourceShortfall > 0)
             {
                 ResourceRequest shortfallRequest = pastureRequest;
-                shortfallRequest.Required = DailyPastureRequired * events.Interval;
                 if (shortfallRequest is null)
                 {
                     shortfallRequest = new ResourceRequest()
                     {
-                        Available = pastureRequest.Provided, // display all that was given
-                        Required = DailyPastureRequired * events.Interval,
+                        Available = amountPriorToPending, // display all that was given
+                        Required = desiredTotal,
                         ResourceType = typeof(GrazeFoodStore),
                         ResourceTypeName = GrazeFoodStoreModel.Name
                     };
                 }
-                if (MathUtilities.IsLessThan(PotentialIntakeShortfallLimiter, 1.0))
+
+                if (resourceShortfall >= qualityShortfall)
                 {
                     Status = (pastureRequest.Provided == 0) ? ActivityStatus.Warning : ActivityStatus.Partial;
                     if (Status == ActivityStatus.Warning)
@@ -542,7 +535,8 @@ namespace Models.CLEM.Activities
                         AddStatusMessage("No pasture");
                     }
                     // report desired to ignore the very low pasture biomass limiter that has been invoked with zero pasture.
-                    shortfallRequest.Required = DailyPastureRequired * events.Interval;
+                    shortfallRequest.Required = requiredTotal;
+                    shortfallRequest.Available = amountPriorToPending;
                     shortfallRequest.ShortfallStatus = "BelowRequired";
                 }
                 else
@@ -552,7 +546,8 @@ namespace Models.CLEM.Activities
                         AddStatusMessage("No pasture");
                         Status = ActivityStatus.Warning;
                     }
-                    shortfallRequest.Required = DailyPastureDesired * events.Interval;
+                    shortfallRequest.Available = amountPending;
+                    shortfallRequest.Required = amountPriorToPending;
                     shortfallRequest.ShortfallStatus = "BelowDesired";
                 }
 
@@ -564,9 +559,6 @@ namespace Models.CLEM.Activities
                     throw new ApsimXException(this, $"Insufficient pasture available for grazing in paddock ({GrazeFoodStoreModel.Name}) in time step index: {events.IntervalIndex} ({events.Clock.Today:dd\\MM\\yyyy})");
                 }
             }
-
-            // todo: set the total consumed for this herd so easily reported.
-            // the GrazeFoodStoreType will automatically report pending transactions at end of time step
         }
 
         #region validation

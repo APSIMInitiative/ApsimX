@@ -1229,7 +1229,7 @@
                     "[ReportHerd].ReportDetails.Individual.ID as ID",
                     "[ReportHerd].ReportDetails.Individual.Sex as Sex",
                     "[ReportHerd].ReportDetails.Individual.AgeInYears as Age",
-                    "[ReportHerd].ReportDetails.Individual.Weight as Weight",
+                    "[ReportHerd].ReportDetails.Individual.Weight.Live as Weight",
                     "[ReportHerd].ReportDetails.Individual.Attributes.Exists(\"GenoIndex\") as GenoIndexExists",
                     "[ReportHerd].ReportDetails.Individual.IsAbleToBreed as AbleToBreed"
                   ],

@@ -1,8 +1,10 @@
 ﻿using APSIM.Numerics;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.GrazPlan;
 using Newtonsoft.Json;
 using StdUnits;
 using System;
@@ -460,7 +462,7 @@ namespace Models.CLEM.Activities
             // Note: the use of ZF2 in proteinContentOfGain has been changed to -ve as opposed to the incorrect +ve in documentation (J.Dougherty, CSIRO, 21/1/2025)
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
-            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * relativeSizeForWeightGainPurposes;
+            ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
             ind.Weight.Protein.NormalShortfall = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
 
             // Equation 102, 104 & 105   =======================================
@@ -499,7 +501,7 @@ namespace Models.CLEM.Activities
 
             // 1. if protein from intake available AND insufficient energy to grow protein to normal limit AND lactating, mobilise fat to provide energy to grow protein from diet
 
-            double proteinToMeetNormal = Math.Min(ind.Weight.Protein.NormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake));
+            double proteinToMeetNormal = Math.Min(ind.Weight.Protein.NormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake)) / daysInTimeStep;
             double energyNeededToMeetNormal = proteinToMeetNormal * ind.Parameters.General.MJEnergyPerKgProtein;
             double energyShortfall = Math.Min(0, Math.Max(energyAvailableForGain - energyNeededToMeetNormal, energyNeededToMeetNormal * -1));
             double efficiencyToGetEnergy = Math.Min(1.0, ind.Energy.Km / 0.8);
@@ -513,10 +515,13 @@ namespace Models.CLEM.Activities
                     fatEnergyRemaining = Math.Max(0, ind.Energy.Fat.Amount + energyAvailableForGain);
                 }
 
-                energyShortfall = Math.Min(Math.Abs(energyShortfall), fatEnergyRemaining); // * indFemale.DaysLactatingInTimeStep / ind.Parameters.Details.CurrentTimeStep.Interval;
-                ind.Weight.Fat.MobiliseAmount(energyShortfall / ind.Parameters.General.MJEnergyPerKgFat, efficiencyToGetEnergy, MobilisationReasonType.EnergyForProtein);
-                double energyProvided = ind.Energy.Fat.MobiliseAmount(energyShortfall, efficiencyToGetEnergy, MobilisationReasonType.EnergyForProtein);
-                energyAvailableForGain += energyProvided;
+                energyShortfall = Math.Min(Math.Abs(energyShortfall), fatEnergyRemaining); 
+                ind.Weight.Fat.MobiliseAmountNeeded(energyShortfall / ind.Parameters.General.MJEnergyPerKgFat, efficiencyToGetEnergy, MobilisationReasonType.EnergyForProtein);
+                double energyProvided = ind.Energy.Fat.MobiliseAmountNeeded(energyShortfall, efficiencyToGetEnergy, MobilisationReasonType.EnergyForProtein);
+
+                double proteinAdded = energyProvided / ind.Parameters.General.MJEnergyPerKgProtein;
+                kgProteinGrowth += proteinAdded;
+                proteinAvailableForGainFromIntake = MathUtilities.RoundToZero(proteinAvailableForGainFromIntake - proteinAdded, 1e-5);
             }
 
             // 2. Grow protein up to normal shortfall first using available energy
@@ -527,7 +532,7 @@ namespace Models.CLEM.Activities
                 energyAvailableForGain = MathUtilities.RoundToZero(energyAvailableForGain - energyToUse, 1e-5);
                 double proteinAdded = energyToUse / ind.Parameters.General.MJEnergyPerKgProtein;
                 kgProteinGrowth += proteinAdded;
-                //proteinToMeetNormal = MathUtilities.RoundToZero(proteinToMeetNormal - proteinAdded, 1e-5);
+
                 proteinAvailableForGainFromIntake = MathUtilities.RoundToZero(proteinAvailableForGainFromIntake - proteinAdded, 1e-5);
             }
 
@@ -573,11 +578,11 @@ namespace Models.CLEM.Activities
             ind.Weight.Adjust();
 
             // Equations 118-120   ==================================================
-            ind.Output.NitrogenBalance =  ind.Intake.CrudeProtein/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactationActual / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
+            ind.Output.NitrogenBalance =  (ind.Intake.CrudeProtein * daysInTimeStep)/ FoodResourcePacket.FeedProteinToNitrogenFactor - (ind.Weight.Protein.ForLactationActual / FoodResourcePacket.MilkProteinToNitrogenFactor) - ((ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForWool + ind.Weight.Protein.Change) / FoodResourcePacket.FeedProteinToNitrogenFactor);
             // Total fecal protein
-            ind.Weight.Protein.ForFaecal = ind.Intake.IndigestibleUDP + ind.Parameters.GrowPF_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + ind.Weight.Protein.ForEndogenousFaecal;
+            ind.Weight.Protein.ForFaecal = (ind.Intake.IndigestibleUDP * daysInTimeStep) + ind.Parameters.GrowPF_CACRD.FaecalProteinFromMCP_CA8 * ind.Intake.RDPRequired + (1 - ind.Parameters.GrowPF_CACRD.MilkProteinDigestibility_CA5) * milkStore?.CrudeProtein??0 + ind.Weight.Protein.ForEndogenousFaecal;
             // Total urinary protein
-            ind.Weight.Protein.ForUrinary = ind.Intake.CrudeProtein - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
+            ind.Weight.Protein.ForUrinary = (ind.Intake.CrudeProtein * daysInTimeStep) - (ind.Weight.Protein.ForPregnancy + ind.Weight.Protein.ForLactationActual + ind.Weight.Protein.Change + ind.Weight.Protein.ForWool) - ind.Weight.Protein.ForFaecal - ind.Weight.Protein.ForDermal;
             ind.Output.NitrogenUrine = ind.Weight.Protein.ForUrinary / 6.25 * daysInTimeStep;
             ind.Output.NitrogenFaecal = ind.Weight.Protein.ForFaecal / 6.25 * daysInTimeStep;
 
@@ -726,9 +731,9 @@ namespace Models.CLEM.Activities
 
         private static double CalculateRumenDegradableProteinIntake(Ruminant ind, double feedingLevel)
         {
-            //// Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly time step
-            //// Ignored from GrassGro latitude factor for now.
-            //// double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
+            // Ignored from GrassGro: timeOfYearFactor 19/9/2023 as calculation showed it has very little effect compared with the error in parameterisation and tracking of feed quality and a monthly time step
+            // Ignored from GrassGro latitude factor for now.
+            // double timeOfYearFactorRDPR = 1 + rumenDegradableProteinTimeOfYear * latitude / 40 * Math.Sin(2 * Math.PI * dayOfYear / 365); //Eq.(52)
             
             double rdpi = 0;
             if (feedingLevel <= 0)
@@ -1119,7 +1124,7 @@ namespace Models.CLEM.Activities
                     pFat *= individual.Weight.EmptyBodyMass;
                     pProtein = individual.Parameters.GrowPF_CG.ProteinContentOfFatFreeTissueGainWetBasis * (individual.Weight.EmptyBodyMass - pFat);
                     if (cohort.AssociatedHerd.RuminantGrowActivity.IncludeVisceralProteinMass)
-                        {
+                    {
                         throw new NotImplementedException("Cannot estimate required visceral protein mass using the RelativeCondition fat and protein mass assignment style.");
                     }
                     break;
@@ -1135,6 +1140,7 @@ namespace Models.CLEM.Activities
             {
                 individual.Weight.Protein = new(individual, pProtein);
                 individual.Weight.ProteinViscera = new(individual, vProtein);
+                // ToDo: protein mass is not corrected to Protein at SRW when Viscera is included.
                 individual.Energy.ProteinViscera = new(vProtein * individual.Parameters.General.MJEnergyPerKgProtein);
             }
             else
