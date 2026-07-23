@@ -55,10 +55,17 @@ namespace Models
             {
                 try
                 {
+                    //this block of checks if the value being reported is a 
+                    //class or not. if it is a class, and its in the Models 
+                    //namespace, we then check that all the properties are 
+                    //of a primitive type.
+                    //This avoids an infinite loop of reporting when trying to 
+                    //report out a model that contains other models in a 
+                    //circular reference
                     bool allowed = true;
                     Type type = value.GetType();
                     if (type.Namespace.StartsWith("Models."))
-                        foreach (PropertyInfo prop in value.GetType().GetProperties())
+                        foreach (PropertyInfo prop in value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                             if (prop.PropertyType.Namespace.StartsWith("Models."))
                                 allowed = false;
 
