@@ -142,21 +142,13 @@ namespace Models.CLEM.Reporting
         {
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
+            ReportDetails = new RuminantReportItemEventArgs();
             // get all filter groups below.
             foreach (var fgroup in Structure.FindChildren<RuminantGroup>())
             {
                 foreach (Ruminant item in fgroup.Filter(ruminantHerd?.Herd))
                 {
-                    ReportDetails = new RuminantReportItemEventArgs();
-                    if (item is RuminantFemale)
-                    {
-                        ReportDetails.RumObj = item as RuminantFemale;
-                    }
-                    else
-                    {
-                        ReportDetails.RumObj = item as RuminantMale;
-                    }
-
+                    ReportDetails.RumObj = item; // as RuminantFemale;
                     ReportItemGenerated(ReportDetails);
                 }
             }
