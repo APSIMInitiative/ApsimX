@@ -173,11 +173,11 @@ public class DescriptiveSummaryGenerator
         ".filterItem .entryValue {font-size:0.9em;}" +
         ".error.filteritem {border-color:[Font-FilterError]; background-color:[Background-ErrorFilter]; color:[Font-FilterError]; font-weight:bold; }" +
         ".filteritemstitle {float:left; margin-right:5px;}" +
-        ".childTitle {margin:10px 0px 5px 0px; font-weight:bold;}" + //  font-size:0.9em;
+        ".childTitle {margin:10px 0px 5px 0px; font-weight:bold;}" + 
         ".filter.childTitle {color:[Font-Filter];}" +
         ".resource.childTitle {color:[Headings-Res];}" +
 
-        ".childgrouplabel {padding:5px 0px 5px 0px; margin-bottom: 10px;}" + //color:#666666; font-style: italic; font-size:0.9em;
+        ".childgrouplabel {padding:5px 0px 5px 0px; margin-bottom: 10px;}" + 
         ".childgroupborder {border-width:0px; border-style:solid; padding:10px; margin:10px 0px 5px 0px; border-radius:5px; }" +
         ".rotationgroup.childgroupborder {border-color:[GroupBorder-Rotation]; background-color:[GroupBackground-Rotation]; border-width:1px; }" +
         ".activitygroup.childgroupborder {border-color:[GroupBorder-Act]; background-color:[GroupBackground-Act]; border-width:1px; }" +
@@ -194,10 +194,11 @@ public class DescriptiveSummaryGenerator
         ".infoBanner.warning {background-color:[BannerBackground-Warning]; color:[BannerFont-Warning];}" +
         ".infoBanner.error {background-color:[BannerBackground-Error]; color:[BannerFont-Error];}" +
 
-        ".detailsnote {font-weight:bold; margin:5px 0px 5px 0px; padding:5px; }" + //font - style:italic; font-size:0.8em; 
+        ".detailsnote {font-weight:bold; margin:5px 0px 5px 0px; padding:5px; }" + 
         ".resource .childgroupborder .detailsnote {border-color:[GroupBorder-Res]; background-color:[GroupBackground-Res]; border-width:1px; }" +
         
-        ".activityborder {border-color:[GroupBackground-Act]; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
+        ".activityborder {border-color:[GroupBorder-Act]; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
+        ".resourceborder {border-color:[GroupBorder-Res]; border-width:2px; border-style:none none none solid; padding:0px 0px 0px 10px; margin-bottom:15px; }" +
         "";
 
     readonly static Dictionary<string, (string light, string dark)> CLEMcolours = new()
@@ -524,7 +525,7 @@ public class DescriptiveSummaryGenerator
     {
         if (OutputFormat == DescriptiveSummaryFormat.HTML)
         {
-            sb.AppendLine($"{GetIndentTabs}<br>");
+            sb.AppendLine($"{GetIndentTabs}<br/>");
         }
     }
 
@@ -536,7 +537,7 @@ public class DescriptiveSummaryGenerator
         string htmlTag = "";
         if (OutputFormat == DescriptiveSummaryFormat.HTML)
         {
-            htmlTag = "<br>";
+            htmlTag = "<br/>";
         }
         return $"{htmlTag}{Environment.NewLine}{GetIndentTabs}";
     }
@@ -764,8 +765,6 @@ public class DescriptiveSummaryGenerator
 
         using (OpenBlock("componentContent"))
         {
-            //Model sim = (component as Model).Node.FindParent<Simulation>(relativeTo: component as Model, recurse: true);
-            //AddBlockWithText(sb, "entryHolder", $"{GetIndentTabs}Simulation: {sim.Name}");
             AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}");
         }
     }
