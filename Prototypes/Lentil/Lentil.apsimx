@@ -878,6 +878,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "ThermalTime",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.AddFunction, Models",
                       "Name": "Target",
                       "ResourceName": null,
@@ -9031,6 +9040,15 @@
                   "Name": "Emerging",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].ThermalTime",
+                      "Name": "ThermalTime",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.AddFunction, Models",
                       "Name": "Target",

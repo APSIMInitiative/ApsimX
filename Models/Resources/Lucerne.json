@@ -357,7 +357,7 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Phenology].ThermalTime",
-                  "Name": "Progression",
+                  "Name": "ThermalTime",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
