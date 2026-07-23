@@ -10,6 +10,8 @@ using UserInterface.Commands;
 using System;
 using UserInterface.EventArguments;
 using System.Linq;
+using Models.PreSimulationTools;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -153,6 +155,8 @@ namespace UserInterface.Presenters
                     CreateLayoutCompositeFactor();
                 else if (model is FactorFromFile)
                     CreateLayoutFactorFromFile();
+                else if (model is Import)
+                    CreateLayoutImport();
                 else
                     CreateLayoutGeneric();
                 hasSuccessfullyBuiltPresenters = true;
@@ -449,6 +453,15 @@ namespace UserInterface.Presenters
             AddList(WidgetPosition.BottomLeft);
             AddCode(WidgetPosition.BottomRight);
             view.OverrideSlider(0.6);
+        }
+
+        /// <summary>
+        /// Create layout for a Importe, property and code
+        /// </summary>
+        private void CreateLayoutImport()
+        {
+            AddProperty(WidgetPosition.TopLeft);
+            AddCode(WidgetPosition.TopRight);
         }
     }
 }

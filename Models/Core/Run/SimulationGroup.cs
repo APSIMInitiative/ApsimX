@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using APSIM.Core;
 using APSIM.Shared.JobRunning;
 using Models.PostSimulationTools;
+using Models.PreSimulationTools;
 using Models.Storage;
 
 namespace Models.Core.Run
@@ -323,7 +324,7 @@ namespace Models.Core.Run
                     if (SimulationNameIsMatched(description.Name))
                         yield return description;
             }
-            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations)
+            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations || relativeTo is Import)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)
@@ -351,7 +352,7 @@ namespace Models.Core.Run
             // Call all pre simulation tools.
             foreach (IPreSimulationTool tool in FindPreSimulationTools())
             {
-                storage?.Refresh();
+                storage.Refresh();
                 try
                 {
                     if (tool.Enabled)

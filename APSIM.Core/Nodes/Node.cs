@@ -480,8 +480,11 @@ public class Node : IStructure
     /// <summary>Find and return the root node</summary>
     public Node Root()
     {
-        return WalkParents().FirstOrDefault(n => n.Parent == null)
-               ?? this;
+        Node root = WalkParents().FirstOrDefault(n => n.Parent == null);
+        if (root != null)
+            return root;
+        else
+            return this;
     }
 
     /// <summary>
@@ -527,11 +530,17 @@ public class Node : IStructure
         // Replace all models that have a ResourceName with the official, released models from resources.
         Resource.Instance.Replace(head);
 
+        //check if this will generate nodes, if so, we can't do this in the background
+        bool willGenerateNodes = false;
+        foreach (var node in head.Walk())
+            if (node.Model is IGenerateNodes)
+                willGenerateNodes = true;
+
         // Initialise the model.
         if (doInitialise)
         {
             // Call created in all models.
-            if (initInBackground)
+            if (initInBackground && !willGenerateNodes)
                 Task.Run(() => head.InitialiseModel(errorHandler));
             else
                 head.InitialiseModel(errorHandler);
@@ -547,10 +556,23 @@ public class Node : IStructure
     {
         try
         {
-            foreach (var node in Walk())
-                node.IsInitialising = true;
-
             List<IGenerateNodes> generateNodes = new List<IGenerateNodes>();
+            foreach (var node in Walk())
+            {
+                node.IsInitialising = true;
+                if (node.Parent != null)
+                        if (node.Model is IGenerateNodes generateNode)
+                            generateNodes.Add(generateNode);
+            }
+                
+            string directory = Path.GetDirectoryName(Walk().First().FileName);
+            foreach (IGenerateNodes model in generateNodes)
+            {
+                model.FilePath.SetStartDirectory(directory);
+                model.DeleteNodes();
+                model.CreateNodes();
+            }
+
             foreach (Node node in Walk().Where(n => n.Model is ICreatable))
             {
                 try
