@@ -289,6 +289,13 @@ namespace Models.CLEM
         [EventSubscribe("StartOfSimulation")]
         protected virtual void OnStartOfSimulation(object sender, EventArgs e)
         {
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                DateTime checkEndDate = new DateTime(Clock.EndDate.Year, Clock.EndDate.Month, DateTime.DaysInMonth(Clock.EndDate.Year, Clock.EndDate.Month));
+                if (Clock.EndDate < checkEndDate)
+                    Clock.EndDate = checkEndDate;
+            }
+
             SetInterval();
             SetNextTimeStep(Clock.StartDate);
 
@@ -374,7 +381,7 @@ namespace Models.CLEM
         {
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
-            if (Clock.Today == timeStepStart)
+            if (Clock.Today == timeStepEnd)
             {
                 CLEMManagePendingTransactions?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
@@ -392,7 +399,7 @@ namespace Models.CLEM
                 CLEMFinalizeTimeStep?.Invoke(this, args);
                 CLEMEndOfTimeStep?.Invoke(this, args);
 
-                SetNextTimeStep(Clock.Today.AddDays(Interval));
+                SetNextTimeStep(timeStepStart.AddDays(Interval));
             }
         }
 
@@ -440,6 +447,7 @@ namespace Models.CLEM
 
             // validation is performed here
             // this is done by this component as it is outside of the CLEM/Market branch and needs to be handled itself.
+            int loopCount = 0;
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
             {
                 if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
@@ -448,6 +456,11 @@ namespace Models.CLEM
                     while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
                     {
                         trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                        loopCount++;
+                        if (loopCount > 1000)
+                        {
+                            throw new ApsimXException(this, "Problem setting Ecological Indicators Calculation Month. Stuck in trackdate calculation loop. Please contact developers via APSIM GitHub Issues.");
+                        }
                     }
 
                     EcologicalIndicatorsNextDueDate = trackDate;
@@ -464,6 +477,11 @@ namespace Models.CLEM
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
                     {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                        loopCount++;
+                        if (loopCount > 1000)
+                        {
+                            throw new ApsimXException(this, "Problem setting Ecological Indicators Calculation Month. Stuck in trackdate calculation loop. Please contact developers via APSIM GitHub Issues.");
+                        }
                     }
                 }
             }
