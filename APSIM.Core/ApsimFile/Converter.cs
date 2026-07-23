@@ -11,6 +11,8 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
+using APSIM.Soils;
 
 namespace APSIM.Core;
 
@@ -20,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 219; } }
+    public static int LatestVersion { get { return 220; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -810,7 +812,7 @@ internal class Converter
 
         // Get sample thickness and bulk density.
         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-        var sampleBD = SoilUtilities.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
+        var sampleBD = Shared.Utilities.SoilUtilities.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
 
         for (int i = 0; i < values.Count; i++)
             values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
@@ -863,7 +865,7 @@ internal class Converter
                     var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                     var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = no3Values.Values<double>().ToArray();
-                    var mappedValues = SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
                     no3Values = new JArray(mappedValues);
 
                     // Move from sample to analysis
@@ -890,7 +892,7 @@ internal class Converter
                     var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                     var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = nh4Values.Values<double>().ToArray();
-                    var mappedValues = SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
                     nh4Values = new JArray(mappedValues);
 
                     // Move from sample to analysis
@@ -1260,7 +1262,7 @@ internal class Converter
                     var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeSand"] = new JArray(mappedValues);
                 }
 
@@ -1269,7 +1271,7 @@ internal class Converter
                     var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeSilt"] = new JArray(mappedValues);
                 }
 
@@ -1278,7 +1280,7 @@ internal class Converter
                     var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeClay"] = new JArray(mappedValues);
                 }
 
@@ -1293,7 +1295,7 @@ internal class Converter
                     }
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["Rocks"] = new JArray(mappedValues);
                 }
 
@@ -4632,11 +4634,11 @@ internal class Converter
                     if (thicknessToReturn != null)
                     {
                         if (units == "kgha")
-                            values = SoilUtilities.MapMass(values, valuesThickness,
+                            values = Shared.Utilities.SoilUtilities.MapMass(values, valuesThickness,
                                                            thicknessToReturn,
                                                            allowMissingValues: true);
                         else
-                            values = SoilUtilities.MapConcentration(values, valuesThickness,
+                            values = Shared.Utilities.SoilUtilities.MapConcentration(values, valuesThickness,
                                                                     thicknessToReturn,
                                                                     defaultValue,
                                                                     allowMissingValues: true);
@@ -8050,7 +8052,42 @@ internal class Converter
             surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
         }
     }
-   
+
+    /// <summary>
+    /// In situations where both a SoilTemperature and CERESSoilTemperature model are present under a soil node,
+    /// and the CERESSoilTemperature is named 'Temperature' and SoilTemperature is named CERESSoilTemperature then
+    /// delete the CERESSoilTemperature model and rename the SoilTemperature model to Temperature.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion220(JObject root, string fileName)
+    {
+        foreach (JObject simulation in JsonUtilities.ChildrenOfType(root, "Simulation"))
+        {
+            bool soilSituationFoundAndCorrected = false;
+            foreach (JObject soil in JsonUtilities.ChildrenOfType(simulation, "Soil"))
+            {
+                // Check for the specific case of the 
+                bool soilTemperatureNamedCERESSoilTempPresent = false;
+                bool ceresSoilTempNamedTemperature = false;
+                foreach(JObject soilTemp in JsonUtilities.ChildrenOfType(soil, "SoilTemperature"))
+                    if(soilTemp["Name"].ToString() == "CERESSoilTemperature")
+                        soilTemperatureNamedCERESSoilTempPresent = true;
+                foreach(JObject ceresSoilTemp in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
+                    if(ceresSoilTemp["Name"].ToString() == "Temperature")
+                        ceresSoilTempNamedTemperature = true;
+                if (soilTemperatureNamedCERESSoilTempPresent && ceresSoilTempNamedTemperature)
+                    JsonUtilities.RemoveChild(soil,"Temperature");
+                    JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+                    soilSituationFoundAndCorrected = true;
+            }
+
+            // Some reports may also need to be updated.
+            if (soilSituationFoundAndCorrected == true)
+                foreach (JObject report in JsonUtilities.ChildrenOfType(simulation, "Report"))
+                    JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].CERESSoilTemperature", "[ISoilTemperature]");
+        }
+    }
 }
 
 

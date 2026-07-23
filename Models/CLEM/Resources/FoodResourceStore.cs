@@ -1,4 +1,6 @@
 ﻿using APSIM.Numerics;
+using Azure.Core;
+using BruTile.Wms;
 using Docker.DotNet.Models;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Models.CLEM.Interfaces;
@@ -81,14 +83,18 @@ namespace Models.CLEM.Resources
         public ResourceRequest AssociatedResourceRequest { get; set; }
 
         /// <summary>
+        /// Link to the food resource store pass to an AddFeed method for ruminants so returned pending amounts can
+        /// directed
+        /// </summary>
+        public FoodResourceStore DefiningStore { get; set; }
+
+        /// <summary>
         /// Constructor for a FoodResourceStore with local packet details.
         /// </summary>
         /// <param name="foodResourcePacket">The food resource packet to initialise the resource with values</param>
         public FoodResourceStore(FoodResourcePacket foodResourcePacket)
         {
             Details.SetPropertiesFromPacket(foodResourcePacket, foodResourcePacket.Amount);
-            //CrudeProtein = (Details.CrudeProteinPercent / 100.0) * Details.Amount;
-            //DegradableCrudeProtein = CrudeProtein * (Details.RumenDegradableProteinPercent / 100.0);
         }
 
         /// <summary>
@@ -100,6 +106,7 @@ namespace Models.CLEM.Resources
         /// <param name="daysInTimeStep">Number of days in time step</param>
         public FoodResourceStore(FoodResourcePacket foodResourcePacket, double amount, ResourceRequest request = null, int daysInTimeStep = 1)
         {
+            // used by Ruminant Feed
             Details.SetPropertiesFromPacket(foodResourcePacket, amount);
             if (request is not null)
                 AssociatedResourceRequest = request;
@@ -116,8 +123,10 @@ namespace Models.CLEM.Resources
         /// <param name="amount">Amount to initialise store with</param>
         public FoodResourceStore(FoodResourceStore foodResourceStore, double amount)
         {
+            // used by RuminantIntake
             Details.SetPropertiesFromPacket(foodResourceStore.Details, amount);
 
+            DefiningStore = foodResourceStore;
             NumberOfDaysInTimestep = foodResourceStore.NumberOfDaysInTimestep;
             Pools = foodResourceStore.Pools;
             AssociatedResourceRequest = foodResourceStore.AssociatedResourceRequest;
@@ -137,6 +146,7 @@ namespace Models.CLEM.Resources
         /// <param name="name">Name to identify this store</param>
         public FoodResourceStore(List<IGrazeIntakePool> pools, int greenAge, int numberOfTimesteps, string name = "")
         {
+            // Called by graze
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;
             double totalInPools = pools.Sum(p => p.AmountAvailable);
@@ -194,31 +204,23 @@ namespace Models.CLEM.Resources
         /// Reduce the store by specified amount as required by intake reduction due to quality and shortfall in Gut
         /// biome RDP requirement
         /// </summary>
-        /// <param name="amount">The daily amount to remove</param>
-        public void ReturnPending(double amount)
+        /// <param name="dailyAmount">The daily amount to remove</param>
+        public void ReturnPending(double dailyAmount)
         {
-            if (amount <= 0)
+            if (dailyAmount <= 0)
                 return;
-
-            //Todo: I deleted the Details.Remove() that I believe should not adjust details.
 
             // reduce pending in graze food store
             // reduce pending in associated pools by amount and poolProportions[]
-            AssociatedResourceRequest?.Resource.DecreasePending(AssociatedResourceRequest, amount);
-        }
-
-        /// <summary>
-        /// Reduce the store pending by specified proportion amount
-        /// </summary>
-        /// <param name="proportion">The proportion of the store to return</param>
-        public void ReturnPendingByProportion(double proportion)
-        {
-            proportion = Math.Min(1.0, Math.Max(proportion, 0));
-            if (proportion <= 0)
-                return;
-
-            // reduce pending in associated pools by amount and poolProportions[]
-            AssociatedResourceRequest?.Resource.DecreasePendingByProportion(AssociatedResourceRequest, proportion);
+            switch(AssociatedResourceRequest?.Resource)
+            {
+                case IGrazeFoodStoreType grazeFoodType:
+                    grazeFoodType.DecreasePendingByStore(AssociatedResourceRequest, DefiningStore, dailyAmount);
+                    break;
+                case AnimalFoodStoreType animalFoodType:
+                    animalFoodType.DecreasePending(AssociatedResourceRequest, dailyAmount * DefiningStore.NumberOfDaysInTimestep); 
+                    break;
+            }
         }
 
         /// <summary>
@@ -234,22 +236,11 @@ namespace Models.CLEM.Resources
                 return 0;
 
             double amountToReduce = Details.Amount * proportion;
-            Details.ReduceAmount(amountToReduce);
             if (reducePending)
             {
-                ReturnPendingByProportion(proportion);
+                ReturnPending(amountToReduce);
             }
             return amountToReduce;
-        }
-
-        /// <summary>
-        /// Reduce the rumen degradable protein by a proportion provided.
-        /// </summary>
-        /// <param name="factor">The reduction factor.</param>
-        public void ReduceDegradableProtein(double factor)
-        {
-            //DegradableCrudeProtein *= factor;
-            //CrudeProtein *= factor;
         }
 
         /// <summary>

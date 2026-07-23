@@ -1019,55 +1019,29 @@ namespace Models.CLEM.Resources
                 {
                     for (int i = 0; i < foodStore.Pools.Count; i++)
                     {
-                        foodStore.Pools[i].AmountPending += foodStore.Details.Amount * foodStore.PoolProportions[i];
+                        foodStore.Pools[i].SetPending(foodStore.Details.Amount * foodStore.PoolProportions[i]);
                     }
                 }
             }
             return amountToRemove;
         }
 
-        /// <inheritdoc/>
-        public new void DecreasePending(ResourceRequest request, double amount)
+        /// <summary>
+        /// Decrease pending for specified food resource store
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="store"></param>
+        /// <param name="amount"></param>
+        public void DecreasePendingByStore(ResourceRequest request, FoodResourceStore store, double amount)
         {
-            if (request.AdditionalDetails is FoodResourceStore foodStore)
+            for (int i = 0; i < store.Pools.Count; i++)
             {
-                amount = foodStore.NumberOfDaysInTimestep;
-                for (int i = 0; i < foodStore.Pools.Count; i++)
-                {
-                    Pools[i].ReducePending(amount * foodStore.PoolProportions[i]);
-                }
+                store.Pools[i].ReducePending(amount * store.PoolProportions[i]);
             }
-            // do removal from pending
-            base.DecreasePending(request, amount);
-        }
 
-        /// <inheritdoc/>
-        public new void DecreasePendingByProportion(ResourceRequest request, double proportion)
-        {
-            double totalAmount = 0;
-            if (request.AdditionalDetails is FoodResourceStore foodStore)
-            {
-                for (int i = 0; i < foodStore.Pools.Count; i++)
-                {
-                    double amountToRemove = foodStore.Pools[i].AmountPending * proportion;
-                    foodStore.Pools[i].ReducePending(amountToRemove);
-                    totalAmount += amountToRemove;
-                }
-            }
             // do removal from pending
-            base.DecreasePending(request, totalAmount);
+            base.DecreasePending(request, amount * store.NumberOfDaysInTimestep);
         }
-
-        ///// <summary>
-        ///// Simple remove resource by specified amount
-        ///// </summary>
-        ///// <param name="removeAmount">Amount to remove</param>
-        ///// <param name="activityName">Activity requesting resource</param>
-        ///// <param name="reason">Label representing reason for removal</param>
-        //public double Remove(double removeAmount, string activityName, string reason)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         /// <summary>
         /// Remove resource based on a ResourceRequest
@@ -1112,119 +1086,13 @@ namespace Models.CLEM.Resources
                         request.Provided = amountCleared;
                         // use generic removal to handle pending and reporting transaction if needed 
                         base.RemoveFromResource(request);
-                        //ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
                     }
-
                     break;
                 default:
                     // Need to add new section here to allow non grazing activity to remove resources from pasture.
                     throw new Exception("Removing resources from GrazeFoodStore can only be performed by a grazing, burning and cut and carry activities at this stage");
             }
-
-
-
-
-            //// handles grazing by breed from this pasture pools based on breed pool limits
-
-            //if (request.AdditionalDetails != null && request.AdditionalDetails is RuminantActivityGrazePastureHerd grazingActivity)
-            //{
-            //    // All pasture selection and quality adjustments should have been made in the grazing activity and the request should be for the final amount to take from the pasture.
-            //    // all Pasture Pools should have had the consumed pasture taken.
-
-            //    // handles pending and reporting transaction if needed 
-            //    base.Remove(request);
-
-
-
-
-            //    if (request.TransactionPending)
-            //        return;
-
-            //    //if graze activity
-            //    biomassConsumed += request.Provided;
-
-            //    // report
-            //    ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            //}
-            //else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityCutAndCarry))
-            //{
-            //    // take from pools by cut and carry
-            //    double amountRequired = request.Required;
-            //    double amountCollected = 0;
-            //    double dryMatterDigestibility = 0;
-            //    double nitrogen = 0;
-
-            //    // take proportionally from all pools.
-            //    double useproportion = Math.Min(1.0, amountRequired / Pools.Sum(a => a.AmountAvailable));
-            //    // if less than pools then take required as proportion of pools
-            //    foreach (GrazeFoodStorePool pool in Pools)
-            //    {
-            //        double amountToRemove = pool.AmountAvailable * useproportion;
-            //        amountCollected += amountToRemove;
-            //        dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
-            //        nitrogen += pool.NitrogenPercent * amountToRemove;
-            //        pool.Remove(amountToRemove); // "Cut and carry"
-            //    }
-            //    request.Provided = amountCollected;
-
-            //    // adjust DMD and N of biomass consumed
-            //    dryMatterDigestibility /= request.Provided;
-            //    nitrogen /= request.Provided;
-
-            //    // report
-            //    ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            //}
-            //else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(PastureActivityBurn))
-            //{
-            //    // take from pools by burning
-            //    double amountRequired = request.Required;
-            //    double amountBurned = 0;
-            //    double dryMatterDigestibility = 0;
-            //    double nitrogen = 0;
-
-            //    // take proportionally from all pools.
-            //    double useproportion = Math.Min(1.0, amountRequired / Pools.Sum(a => a.AmountAvailable));
-            //    // if less than pools then take required as proportion of pools
-            //    foreach (GrazeFoodStorePool pool in Pools)
-            //    {
-            //        double amountToRemove = pool.AmountAvailable * useproportion;
-            //        amountBurned += amountToRemove;
-            //        dryMatterDigestibility += pool.DryMatterDigestibility * amountToRemove;
-            //        nitrogen += pool.NitrogenPercent * amountToRemove;
-            //        pool.Remove(amountToRemove); // "Burned"
-            //    }
-            //    request.Provided = amountBurned;
-
-            //    // adjust DMD and N of biomass consumed
-            //    dryMatterDigestibility /= request.Provided;
-            //    nitrogen /= request.Provided;
-
-            //    // report
-            //    ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            //}
-            //else if (request.AdditionalDetails != null && request.AdditionalDetails.GetType() == typeof(CropActivityManageProduct))
-            //{
-            //    // this occurs when the pasture is being replaced by the provided biomass and clears the stores
-            //    if (request.Category == "StoreCleared")
-            //    {
-            //        double amountCleared = Pools.Sum(a => a.AmountAvailable);
-            //        if (amountCleared == 0)
-            //        {
-            //            return;
-            //        }
-            //        Pools.Clear();
-            //        request.Provided = amountCleared;
-            //        // report
-            //        ReportTransaction(TransactionType.Loss, request.Provided, request.ActivityModel, request.RelatesToResource, request.Category, this);
-            //    }
-            //}
-            //else
-            //{
-            //    // Need to add new section here to allow non grazing activity to remove resources from pasture.
-            //    throw new Exception("Removing resources from GrazeFoodStore can only be performed by a grazing, burning and cut and carry activities at this stage");
-            //}
         }
-
 
         /// <summary>
         /// Performs a transaction by specified amount.

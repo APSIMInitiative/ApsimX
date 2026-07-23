@@ -1303,7 +1303,7 @@ namespace Models.CLEM.Activities
                             {
                                 ind.SaleFlag = HerdChangeReason.SirePurchase;
                                 ind.ID = 0;
-                                ind.DateOfPurchase = events.Clock.Today;
+                                ind.DateOfPurchase = events.TimeStepEnd;
 
                                 // TODO: supply attributes with new individuals
 
@@ -1521,7 +1521,7 @@ namespace Models.CLEM.Activities
                                     //ind.Location = grazeStoreBreeders;
                                     ind.SaleFlag = HerdChangeReason.BreederPurchase;
                                     ind.ID = 0;
-                                    ind.DateOfPurchase = events.Clock.Today; // PurchaseAge = ind.Age;
+                                    ind.DateOfPurchase = events.TimeStepEnd;
 
                                     // weight will be set to normalised weight as it was assigned 0 at initialisation
 
