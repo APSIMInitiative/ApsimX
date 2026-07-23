@@ -91,6 +91,10 @@ namespace Models.PreSimulationTools
         /// </summary>
         public bool CreateNodes()
         {
+            Virtual parentVirtual = Node.FindParent<Virtual>(recurse: true);
+            if (parentVirtual != null)
+                throw new Exception("Virtual cannot be placed under another Virtual node, potential cyclical loop.");
+
             _commands = [];
 
             string relativeDirectory = FilePath.StartDirectory;
@@ -150,22 +154,25 @@ namespace Models.PreSimulationTools
             if (path.ToLower() == "simulations" || path.ToLower() == "[simulations]")
                 childrenToImport.AddRange(otherFile.Children);
             else
-                childrenToImport.Add(otherFile.Node.Find<IModel>(path));
+                childrenToImport.Add(otherFile.Node.GetObject(path, LocatorFlags.ModelsOnly).Value as IModel);
 
             List<string> commands = new List<string>();
             List<string> readOnlyCommands = new List<string>();
-            foreach (IModel child in otherFile.Children)
+            foreach (IModel child in childrenToImport)
             {
-                bool allowedToImport = true;
-                if (Folder.IsModelReplacementsFolder(child))
-                    allowedToImport = false;
-                
-                if (allowedToImport)
+                if (child != null)
                 {
-                    commands.Add($"add [Simulations].{child.Name} from {fileName} to [{import.Name}]");
-                    readOnlyCommands.Add($"[{import.Name}].{child.Name}.ReadOnly = True");
-                    foreach(Node node in child.Node.Walk())
-                        commands.AddRange(ModelSpecificCommands(import, node, fileName));
+                    bool allowedToImport = true;
+                    if (Folder.IsModelReplacementsFolder(child))
+                        allowedToImport = false;
+                    
+                    if (allowedToImport)
+                    {
+                        commands.Add($"add [Simulations].{child.Name} from {fileName} to [{import.Name}]");
+                        readOnlyCommands.Add($"[{import.Name}].{child.Name}.ReadOnly = True");
+                        foreach(Node node in child.Node.Walk())
+                            commands.AddRange(ModelSpecificCommands(import, node, fileName));
+                    }
                 }
             }
             commands.AddRange(readOnlyCommands);
@@ -207,6 +214,19 @@ namespace Models.PreSimulationTools
                 }
 
                 string modelPath = excelInput.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
+            }
+            else if (node.Model is Observations observations)
+            {
+                List<string> newFileNames = new List<string>();
+                foreach(string filename in observations.FileNames)
+                {
+                    string absolutePath = PathUtilities.GetAbsolutePath(filename, referenceDirectory);
+                    string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
+                    newFileNames.Add(relativePath);
+                }
+
+                string modelPath = observations.FullPath.Replace($".Simulations.", $"[{import.Name}].");
                 commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
             }
             else if (node.Model is SetModelParamsBySimulation setModelParamsBySimulation)
