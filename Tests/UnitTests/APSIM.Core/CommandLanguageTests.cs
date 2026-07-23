@@ -15,14 +15,18 @@ public class CommandLanguageTests
     [TestCase("add new Report to all [Zone] name MyReport")]
     [TestCase("add [Report] to [Zone] name MyReport")]
     [TestCase("add [Report] from anotherfile.apsimx to all [Zone]")]
+    [TestCase("add [Report] from \"file.apsimx\" to all [Zone]")]
+    [TestCase("add [Report] from \"to file.apsimx\" to all [Zone]")]
     [TestCase("add new \"Report to\" to [Zone]")]
     [TestCase("delete [Zone].Report")]
     [TestCase("duplicate [Zone].Report")]
     [TestCase("duplicate [Zone].Report name NewName")]
     [TestCase("save C:\\temp\\test.apsimx")]
+    [TestCase("save \"C:\\temp\\test.apsimx\"")]
     [TestCase("load C:\\temp\\test.apsimx")]
+    [TestCase("load \"C:\\temp\\test.apsimx\"")]
     [TestCase("[Simulation].Name=NewName")]
-    [TestCase("[Simulation].Name=<test.txt")]
+    [TestCase("[Simulation].Name= from test.txt")]
     [TestCase("[Cultivar].Commands-=NewName")]
     [TestCase("[Cultivar].Commands+=NewName")]
     [TestCase("[Physical].BD=1,2,3,4,5,6,7")]
@@ -33,6 +37,9 @@ public class CommandLanguageTests
     [TestCase("replace all [Report] with [ChildReport]")]
     [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx")]
     [TestCase("replace all [Report] with [ChildReport] from anotherfile.apsimx name NewName")]
+    [TestCase("replace all [Report] with [ChildReport] from \"anotherfile.apsimx\" name \"NewName\"")]
+    [TestCase("move [Soil] before SurfaceOrganicMatter")]
+    [TestCase("move [Soil] after SurfaceOrganicMatter")]
     public void EnsureLanguageParsingWorks(string commandString)
     {
         var commands = CommandLanguage.StringToCommands([commandString], relativeTo: null, relativeToDirectory: null);
@@ -86,7 +93,12 @@ public class CommandLanguageTests
     [TestCase("save", ExpectedResult = "Invalid command: save")]
     [TestCase("load", ExpectedResult = "Invalid command: load")]
     [TestCase("[Simulation].Filename", ExpectedResult = "Unknown command: [Simulation].Filename")]
-    [TestCase("[Simulation].Filename=<", ExpectedResult = "Invalid command: [Simulation].Filename=<")]
+    [TestCase("move [Soil] into SurfaceOrganicMatter", ExpectedResult = "Invalid command: move [Soil] into SurfaceOrganicMatter")]
+    [TestCase("move [Soil] under SurfaceOrganicMatter", ExpectedResult = "Invalid command: move [Soil] under SurfaceOrganicMatter")]
+    [TestCase("move [Soil] above SurfaceOrganicMatter", ExpectedResult = "Invalid command: move [Soil] above SurfaceOrganicMatter")]
+    [TestCase("move under SurfaceOrganicMatter", ExpectedResult = "Invalid command: move under SurfaceOrganicMatter")]
+    [TestCase("move SurfaceOrganicMatter", ExpectedResult = "Invalid command: move SurfaceOrganicMatter")]
+    [TestCase("move [Soil] SurfaceOrganicMatter", ExpectedResult = "Invalid command: move [Soil] SurfaceOrganicMatter")]
     public string EnsureInvalidCommandsThrow(string commandString)
     {
         try

@@ -1,9 +1,11 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 public partial class SetPropertyCommand: IModelCommand
 {
+    private const string KEYWORD_FROM = " from ";
+    private const string PATTERN_VALUE = $@"(?<model>{CommandLanguage.PATTERN_MODEL_PATH}) ?(?<operator>{CommandLanguage.PATTERN_OPERATOR}) ?(?<value>{CommandLanguage.PATTERN_VALUE})?";
+    private const string PATTERN_FROM = $"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+
     /// <summary>
     /// Create a set properties command.
     /// </summary>
@@ -15,29 +17,27 @@ public partial class SetPropertyCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command, string relativeToDirectory)
     {
-        string modelNameWithBrackets = @"[\[\.][\w\d\[\]\.:\- ]*[\w\d\[\]\.:\-]";
-        string pattern = $@"^(?<keyword>{modelNameWithBrackets})\s*(?<operator>=|\+=|-=)\s*(?<pipe>\<)?\s*(?<value>[^\<]+)?$";
+        string[] keywords = ["", KEYWORD_FROM];
+        string[] patterns = [PATTERN_VALUE, PATTERN_FROM];
+        CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
 
-        Match match = Regex.Match(command, pattern);
-        if (match == null || !match.Success)
+        string model = CommandSegment.GetValue(segments, "model");
+        string operate = CommandSegment.GetValue(segments, "operator");
+        string value = CommandSegment.GetValue(segments, "value");
+        string file = CommandSegment.GetValue(segments, "file");
+
+        //legacy command value, if no value is set, change to empty string
+        if (value == null)
+            value = "";
+
+        if (string.IsNullOrEmpty(model) || string.IsNullOrEmpty(operate))
             throw new Exception($"Invalid command: {command}");
 
-        string fileName = null;
-        string value = match.Groups["value"]?.ToString();
-        if (match.Groups["pipe"].ToString() == "<")
-        {
-            if (string.IsNullOrEmpty(value))
-                throw new Exception($"Invalid command: {command}");
-            fileName = value;
-            value = null;
+        if (!string.IsNullOrEmpty(file))
             if (relativeToDirectory != null)
-                fileName = Path.GetFullPath(fileName, relativeToDirectory);
-        }
+                file = Path.GetFullPath(file, relativeToDirectory);
 
-        return new SetPropertyCommand(match.Groups["keyword"]?.ToString(),
-                                        match.Groups["operator"]?.ToString(),
-                                        value,
-                                        fileName);
+        return new SetPropertyCommand(model, operate, value, file);
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public partial class SetPropertyCommand: IModelCommand
         if (_fileName == null)
             return $"{_name}{_oper}{_value}";
         else
-            return $"{_name}=<{_fileName}";
+            return $"{_name}= from {_fileName}";
     }
 
 }

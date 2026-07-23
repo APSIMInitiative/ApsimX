@@ -1,7 +1,35 @@
 using System.Text;
-using APSIM.Shared.Utilities;
+using System.Text.RegularExpressions;
 
 namespace APSIM.Core;
+
+public class CommandSegment
+{
+    public string Name {get; set;}
+    public string Value {get; set;}
+
+    public CommandSegment(string name, string value)
+    {
+        Name = name;
+        Value = value;
+    }
+
+    public static bool ContainsKey(IEnumerable<CommandSegment> segments, string name)
+    {
+        foreach(CommandSegment segment in segments)
+            if (segment.Name.ToLower() == name.ToLower())
+                return true;
+        return false;
+    }
+
+    public static string GetValue(IEnumerable<CommandSegment> segments, string name)
+    {
+        foreach(CommandSegment segment in segments)
+            if (segment.Name.ToLower() == name.ToLower())
+                return segment.Value.ToString().Trim();
+        return null;
+    }
+}
 
 /// <summary>
 /// Implements the command language
@@ -17,20 +45,26 @@ namespace APSIM.Core;
 /// delete [Zone].Report
 /// duplicate [Simulation] name SimulationCopy
 /// [Simulation].Name=NewName
-/// run APSIM
+/// run
 /// load base.apsimx
 /// save modifiedSim.apsimx
 /// </remarks>
 public class CommandLanguage
 {
     /// <summary>Regex pattern for getting a model path</summary>
-    public const string PATTERN_MODEL_PATH = @"[\w\d\-\[\]\. ]+";
+    public const string PATTERN_MODEL_PATH = @"[\w\-\[\]\.\: ]+";
 
     /// <summary>Regex pattern for getting a file path</summary>
-    public const string PATTERN_FILE_PATH = @"[\w\d\-_\.\\:/ ]+";
+    public const string PATTERN_FILE_PATH = @"[\w\-_\.\\:/ ]+";
 
     /// <summary>Regex pattern for a model name</summary>
-    public const string PATTERN_NAME_TEXT = @"[\w\d\- ]+";
+    public const string PATTERN_NAME_TEXT = @"[\w\- ]+";
+
+    /// <summary>Regex pattern for a generic value</summary>
+    public const string PATTERN_VALUE = @"[^\<]+";
+
+    /// <summary>Regex pattern for an operator on a value setting command</summary>
+    public const string PATTERN_OPERATOR = @"=|\+=|-=";
 
     /// <summary>
     /// Parse a collection of lines into a collection of model commands.
@@ -97,7 +131,89 @@ public class CommandLanguage
         return lines;
     }
 
-    public static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
+    /// <summary>
+    /// Function to read a command that only has a single keyword and value to 
+    /// return. Note that the name of the field in the regex pattern does not 
+    /// matter, as the value of the first labelled group will be returned.
+    /// </summary>
+    /// <param name="command">Command to parse</param>
+    /// <param name="keyword">Keyword to find</param>
+    /// <param name="pattern">Regex pattern to match against and find a group with</param>
+    /// <returns></returns>
+    public static string ReadCommand(string command, string keyword, string pattern)
+    {
+        IEnumerable<CommandSegment> segments = ReadCommand(command, [keyword], [pattern]);
+        if (segments.Count() != 1)
+            throw new Exception($"Invalid command: {command}");
+
+        string value = segments.First().Value;
+        if (string.IsNullOrEmpty(value))
+            throw new Exception($"Invalid command: {command}");
+
+        return value;
+    }
+
+    /// <summary>
+    /// Function to read a command that takes in a equal length lists of 
+    /// keywords and regex patterns to parse the given command. This function 
+    /// will break the command up based on the keywords, and then parse each 
+    /// section with the provided regexs, building a list of key/value pairs 
+    /// from the matching regex patterns.
+    /// 
+    /// Keywords must be provided in the order they appear in the command, and 
+    /// keywords in the middle of the command should be appended with spaces to 
+    /// help prevent mismatches. The first keyword should not have a space at 
+    /// the start.
+    /// 
+    /// Optional keywords can be provided, and will be excluded from the output 
+    /// if not found. See AddCommand for a good example how to structure the 
+    /// keywords and pattern pairs.
+    /// </summary>
+    /// <param name="command">Command to parse</param>
+    /// <param name="keywords">Array of keywords</param>
+    /// <param name="patterns">Array of regex patterns</param>
+    public static CommandSegment[] ReadCommand(string command, string[] keywords, string[] patterns)
+    {
+        if (keywords.Length != patterns.Length)
+            throw new Exception($"Invalid command: {command}");
+
+        string[] segments = BreakCommandIntoSegements(command, keywords).ToArray();
+        
+        List<CommandSegment> commandSegments = new List<CommandSegment>();
+        for (int i = 0; i < segments.Length; i++)
+        {
+            string segment = segments[i];
+            for (int j = i; j < keywords.Length; j++)
+            {
+                if (segment.StartsWith(keywords[j]))
+                {
+                    Match match = Regex.Match(segment, patterns[j]);
+                    if (!match.Success)
+                        throw new Exception($"Invalid command: {command}");
+
+                    foreach (string key in match.Groups.Keys)
+                        if (key != "0" && !string.IsNullOrEmpty(match.Groups[key].ToString())) //the first group is the entire segment and should be skipped
+                            commandSegments.Add(new CommandSegment(key, match.Groups[key].ToString()));
+                }
+            }
+        }
+        return commandSegments.ToArray();
+    }
+
+    /// <summary>
+    /// Takes a command and breaks it into smaller strings based on the given 
+    /// keywords. Keywords are searched for in order through the string, so 
+    /// keyword 2 will only be search in the text after keyword 1 is found. 
+    /// If a keyword is not found, the next keyword will start from the same 
+    /// place.
+    /// 
+    /// If a value is quoted, those will be removed when searching for keywords 
+    /// so that values can have keywords in them without breaking the command 
+    /// if surrounded by quotes.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="keywords"></param>
+    private static IEnumerable<string> BreakCommandIntoSegements(string command, string[] keywords)
     {
         //remove quoted sections prior to searching for keywords
         List<(int, string)> quotes = new List<(int, string)>();
