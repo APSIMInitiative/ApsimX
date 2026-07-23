@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 219,
+  "Version": 220,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -3714,10 +3714,10 @@
       "ReadOnly": false
     },
     {
-      "$type": "Models.PreSimulationTools.Import, Models",
+      "$type": "Models.PreSimulationTools.Virtual, Models",
       "FileName": "%root%/Tests/Validation/Wheat/Wheat.apsimx",
       "ModelPath": "Simulations",
-      "Name": "Import",
+      "Name": "Virtual",
       "ResourceName": null,
       "Children": [],
       "Enabled": true,

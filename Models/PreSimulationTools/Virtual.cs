@@ -19,7 +19,7 @@ namespace Models.PreSimulationTools
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class Import : Model, IReferenceExternalFiles, ICodeEditor, IGenerateNodes
+    public class Virtual : Model, IReferenceExternalFiles, ICodeEditor, IGenerateNodes
     {
         /// <summary>The list of commands that are generated</summary>
         private string[] _commands = [];
@@ -33,7 +33,7 @@ namespace Models.PreSimulationTools
         /// <summary>
         /// Gets or sets the file to read from.
         /// </summary>
-        [Description("APSIM file")]
+        [Description("File Path (*.apsimx)")]
         [Display(Type = DisplayType.FileName)]
         public string FileName
         {
@@ -47,7 +47,7 @@ namespace Models.PreSimulationTools
         /// instead as children of Import.
         /// Defaults to [Simulations]
         /// </summary>
-        [Description("Path to the model in other APSIM file to copy from")]
+        [Description("Model Path")]
         public string ModelPath { get; set; } = "[Simulations]";
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Models.PreSimulationTools
         /// <summary>
         ///
         /// </summary>
-        private static string[] GetCommands(Import import, string fileName, string path)
+        private static string[] GetCommands(Virtual import, string fileName, string path)
         {
             if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(path))
                 return [];
@@ -179,7 +179,7 @@ namespace Models.PreSimulationTools
             FilePath.SetStartDirectory(Path.GetDirectoryName(Node.FileName));
         }
 
-        private static string[] ModelSpecificCommands(Import import, Node node, string fileName)
+        private static string[] ModelSpecificCommands(Virtual import, Node node, string fileName)
         {
             string localDirectory = Path.GetDirectoryName(import.Node.FileName);
             string referenceDirectory = Path.GetDirectoryName(fileName);

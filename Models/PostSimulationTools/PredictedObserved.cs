@@ -370,7 +370,7 @@ namespace Models.PostSimulationTools
             string fileReference = "";
             if (Node != null)
             {
-                Import import = Node.FindParent<Import>(recurse:true);
+                Virtual import = Node.FindParent<Virtual>(recurse:true);
                 if (import != null)
                     fileReference = Path.GetFileNameWithoutExtension(import.FileName);
             }

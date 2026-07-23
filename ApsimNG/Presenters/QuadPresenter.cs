@@ -155,8 +155,8 @@ namespace UserInterface.Presenters
                     CreateLayoutCompositeFactor();
                 else if (model is FactorFromFile)
                     CreateLayoutFactorFromFile();
-                else if (model is Import)
-                    CreateLayoutImport();
+                else if (model is Virtual)
+                    CreateLayoutVirtual();
                 else
                     CreateLayoutGeneric();
                 hasSuccessfullyBuiltPresenters = true;
@@ -456,12 +456,12 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Create layout for a Importe, property and code
+        /// Create layout for a Virtual, property and code
         /// </summary>
-        private void CreateLayoutImport()
+        private void CreateLayoutVirtual()
         {
             AddProperty(WidgetPosition.TopLeft);
-            AddCode(WidgetPosition.TopRight);
+            AddCode(WidgetPosition.BottomLeft);
         }
     }
 }

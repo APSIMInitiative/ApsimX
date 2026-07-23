@@ -324,7 +324,7 @@ namespace Models.Core.Run
                     if (SimulationNameIsMatched(description.Name))
                         yield return description;
             }
-            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations || relativeTo is Import)
+            else if ((relativeTo is Folder && !Folder.IsModelReplacementsFolder(relativeTo)) || relativeTo is Simulations || relativeTo is Virtual)
             {
                 // Get a list of all models we're going to run.
                 foreach (var child in relativeTo.Children)

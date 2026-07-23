@@ -17,7 +17,7 @@ namespace Models.Core
     [ValidParent(typeof(Folder))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    [ValidParent(typeof(Import))]
+    [ValidParent(typeof(Virtual))]
     public abstract class Model : IModel, INodeModel, ICreatable
     {
         [NonSerialized]
