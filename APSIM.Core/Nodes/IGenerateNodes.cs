@@ -21,6 +21,11 @@ namespace Models.Core
         public bool DeleteNodes();
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool RequiresUpdating();
+
+        /// <summary>
         /// DELETE ME LATER
         /// </summary>
         public APSIMFilePath FilePath { get; set; }

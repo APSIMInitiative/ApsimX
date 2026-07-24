@@ -26,6 +26,8 @@ namespace Models.PreSimulationTools
         /// <summary>The list of commands that are generated</summary>
         private string[] _commands = [];
 
+        private bool _requiresUpdating = true;
+
         /// <summary>
         /// 
         /// </summary>
@@ -43,7 +45,8 @@ namespace Models.PreSimulationTools
             set 
             {
                 FilePath.RelativeFilePath = value;
-                _commands = ["Run Simulations to update"];
+                _commands = [];
+                _requiresUpdating = true;
             }
         }
 
@@ -59,7 +62,8 @@ namespace Models.PreSimulationTools
             set
             {
                 _modelPath = value;
-                _commands = ["Run Simulations to update"];
+                _commands = [];
+                _requiresUpdating = true;
             }
         }
 
@@ -136,6 +140,7 @@ namespace Models.PreSimulationTools
             finally //reset the read only status
             {
                 ReadOnly = readOnly;
+                _requiresUpdating = false;
             }
             return true;
         }
@@ -152,6 +157,15 @@ namespace Models.PreSimulationTools
             foreach(IModel child in childrenToDelete)
                 Node.RemoveChild(child.Node.Model);
             return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool RequiresUpdating()
+        {
+            return _requiresUpdating;
         }
 
         /// <summary>

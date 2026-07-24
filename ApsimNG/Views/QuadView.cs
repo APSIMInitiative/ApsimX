@@ -153,6 +153,23 @@ namespace UserInterface.Views
                         rightPaned.Position = paneHeight - natHeight;
                 }
             }
+
+            view = GetView(WidgetType.Button);
+            if (view != null)
+            {
+                WidgetPosition position = WidgetTypeToPosition(WidgetType.Button);
+                ButtonView buttonView = view as ButtonView;
+                buttonView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                natHeight += 20;
+                if (position == WidgetPosition.TopLeft)
+                    leftPaned.Position = natHeight;
+                else if (position == WidgetPosition.TopRight)
+                    rightPaned.Position = natHeight;
+                else if (position == WidgetPosition.BottomLeft)
+                    leftPaned.Position = paneHeight - natHeight;
+                else if (position == WidgetPosition.BottomRight)
+                    rightPaned.Position = paneHeight - natHeight;
+            }
         }
 
         /// <summary></summary>

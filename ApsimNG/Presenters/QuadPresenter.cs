@@ -477,7 +477,7 @@ namespace UserInterface.Presenters
         private void CreateLayoutFactorFromFile()
         {
             AddProperty(WidgetPosition.TopLeft);
-            AddText(WidgetPosition.TopRight, "Commands:");
+            AddUpdateButton(WidgetPosition.TopRight);
             AddList(WidgetPosition.BottomLeft);
             AddCode(WidgetPosition.BottomRight, true);
             view.OverrideSlider(0.6);
@@ -490,7 +490,8 @@ namespace UserInterface.Presenters
         {
             AddUpdateButton(WidgetPosition.TopRight);
             AddProperty(WidgetPosition.TopLeft);
-            AddCode(WidgetPosition.BottomLeft, true);
+            AddCode(WidgetPosition.BottomRight, true);
+            view.OverrideSlider(0.3);
         }
     }
 }
