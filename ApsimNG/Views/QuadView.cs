@@ -15,7 +15,8 @@ namespace UserInterface.Views
         Grid,
         Property,
         Code,
-        List
+        List,
+        Button
     }
 
     /// <summary>
@@ -183,6 +184,10 @@ namespace UserInterface.Views
             {
                 container = this.GetControl<ExperimentView>(name);
             }
+            else if (type == WidgetType.Button)
+            {
+                container = this.GetControl<ButtonView>(name);
+            }
 
             SetView(container, position);
             return container;
@@ -294,6 +299,8 @@ namespace UserInterface.Views
                 return WidgetType.Code;
             else if (view is ExperimentView)
                 return WidgetType.List;
+            else if (view is ButtonView)
+                return WidgetType.Button;
             else
                 return WidgetType.None;
         }
