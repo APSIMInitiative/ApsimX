@@ -477,6 +477,12 @@ public class Node : IStructure
             RemoveChild(child.Model);
     }
 
+    /// <summary>Find and return the root node</summary>
+    public Node Root()
+    {
+        return WalkParents().FirstOrDefault(n => n.Parent == null)
+               ?? this;
+    }
 
     /// <summary>
     /// Constructor
@@ -492,13 +498,6 @@ public class Node : IStructure
 
         Name = model.Name;
         Model = model;
-    }
-
-    /// <summary>Find and return the root node</summary>
-    internal Node Root()
-    {
-        return WalkParents().FirstOrDefault(n => n.Parent == null)
-               ?? this;
     }
 
     /// <summary>

@@ -428,7 +428,7 @@ namespace Models.CLEM.Activities
                     if (amountNeeded < 0.001)
                         amountNeeded = 0;
 
-                    FoodResourceStore foodStore = new FoodResourceStore(details, amount: amountNeeded, request: iChild.CurrentResourceRequest);
+                    FoodResourceStore foodStore = new FoodResourceStore(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
 
                     // try to feed. excess will be returned.
                     overfed += ind.Intake.AddFeed(foodStore, bypassPotIntakeLimits: ForceFeed);

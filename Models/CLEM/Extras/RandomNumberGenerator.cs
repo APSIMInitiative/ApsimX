@@ -56,6 +56,11 @@ namespace Models.CLEM
             } 
         }
 
+        /// <summary>
+        /// Determines if the random nunber generator has been created and is available.
+        /// </summary>
+        public static bool IsAvailable => generator is not null;
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

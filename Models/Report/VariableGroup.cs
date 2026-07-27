@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.Functions;
 
 namespace Models
 {
@@ -56,6 +55,23 @@ namespace Models
             {
                 try
                 {
+                    //this block of checks if the value being reported is a 
+                    //class or not. if it is a class, and its in the Models 
+                    //namespace, we then check that all the properties are 
+                    //of a primitive type.
+                    //This avoids an infinite loop of reporting when trying to 
+                    //report out a model that contains other models in a 
+                    //circular reference
+                    bool allowed = true;
+                    Type type = value.GetType();
+                    if (type.Namespace.StartsWith("Models."))
+                        foreach (PropertyInfo prop in value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                            if (prop.PropertyType.Namespace.StartsWith("Models."))
+                                allowed = false;
+
+                    if (!allowed)
+                        throw new Exception($"{variableName} has properties that are not primitive types.");
+
                     value = ReflectionUtilities.Clone(value);
                 }
                 catch (Exception err)

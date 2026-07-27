@@ -457,7 +457,7 @@ namespace UnitTests.Report
             sim.Prepare();
 
             storage.Writer.WaitForIdle();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
@@ -589,7 +589,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -622,7 +622,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -654,7 +654,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);

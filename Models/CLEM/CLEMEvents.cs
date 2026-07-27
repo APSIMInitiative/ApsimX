@@ -65,8 +65,6 @@ namespace Models.CLEM
         public event EventHandler CLEMAnimalMilkProduction;
         /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
         public event EventHandler CLEMAnimalWeightGain;
-        /// <summary>CLEM Calculate Animals(Ruminant and Other) weight gain</summary>
-        public event EventHandler CLEMDailyASPIMForageTake;
         /// <summary>CLEM Do Animal (Ruminant and Other) death</summary>
         public event EventHandler CLEMAnimalDeath;
         /// <summary>CLEM Do Animal (Ruminant and Other) milking</summary>
@@ -347,12 +345,13 @@ namespace Models.CLEM
         /// <summary>Fire ruminant growth ready to take pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="args">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoStock")]
-        protected virtual void OnAPSIMStock(object sender, EventArgs args)
+        [EventSubscribe("DoManagement")]
+        protected virtual void OnAPSIMDoManagement(object sender, EventArgs args)
         {
+            // trialing running these at the start of the time step to allow the daily inputs and outputs to be applied to APSIM models as they run through the CLEM interval.
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
-            if (Clock.Today == timeStepEnd)
+            if (Clock.Today == timeStepStart)
             {
                 CLEMPastureReady?.Invoke(this, args);
                 CLEMDoCutAndCarry?.Invoke(this, args);
@@ -363,13 +362,6 @@ namespace Models.CLEM
                 CLEMGetResourcesRequired?.Invoke(this, args);
                 CLEMAnimalWeightGain?.Invoke(this, args);
                 CLEMPostRuminantConsumption?.Invoke(this, args);
-            }
-
-            // allow access to daily time step of APSIM models to remove daily intake from forages when CLEM is not running on daily time step 
-            CLEMDailyASPIMForageTake?.Invoke(this, args);
-
-            if (Clock.Today == timeStepEnd)
-            {
                 CLEMCollectManure?.Invoke(this, args);
             }
         }
@@ -382,7 +374,7 @@ namespace Models.CLEM
         {
             // CLEM events performed at the EndOfDay at end of the current time step
             // APSIM is now happy that the time step is over and so we can clean up CLEM and this will report all at end of time-step as previously occurred in monthly time steps.
-            if (Clock.Today == timeStepEnd)
+            if (Clock.Today == timeStepStart)
             {
                 CLEMManagePendingTransactions?.Invoke(this, args);
                 CLEMAnimalDeath?.Invoke(this, args);
@@ -400,7 +392,7 @@ namespace Models.CLEM
                 CLEMFinalizeTimeStep?.Invoke(this, args);
                 CLEMEndOfTimeStep?.Invoke(this, args);
 
-                SetNextTimeStep(Clock.Today.AddDays(1));
+                SetNextTimeStep(Clock.Today.AddDays(Interval));
             }
         }
 
@@ -462,7 +454,13 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    int day = Clock.StartDate.Day;
+                    if (TimeStep == TimeStepTypes.Monthly)
+                    {
+                        day = 1;
+                    }
+
+                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, day);
                     while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
                     {
                         EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
