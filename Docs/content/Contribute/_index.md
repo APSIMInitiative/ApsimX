@@ -47,7 +47,7 @@ This review may take several iterations. Once the team is satisfied, a low level
 The software team will:
 
 * Perform a full code review
-* Initiative a Co-pilot review
+* Initiate a Copilot review
 * Suggest [style guideline](#style-guidelines) fixes
 * Review the tests
 * Review any changes in statistics
@@ -69,6 +69,7 @@ e.g. simple changes or defect fixes to model
 
 * Tag ```@APSIMInitiative/reference-panel``` FYI
 * The software team will merge the PR within 3 business days.
+* All significant statistic changes will have a documented reason.
 
 __Else if this is a significant change to science code or data sets__
 e.g. a new model or significant changes to a published model.
@@ -83,8 +84,15 @@ The software team will:
 * Add ```Reference Panel Review``` label to PR
 * Contact the Reference Panel coordinator to put a PR review on the agenda for the next meeting
 * The software team will assist the developer to ensure all code, tests, documentation, stats should be ready for review by the Reference Panel.
-* Most of the meaningful interactions could happen on GitHub prior to the meeting.
-* The Reference Panel will review the changes and make suggested improvements.
-* Once completed, the process will return to Step 5.
+* Documentation for changes that go to Reference Panel review typically include:
+  * Justification for the proposed changes (science and/or software engineering aspects)
+  * Validation evidence and test results (ideally also included as test/validation datasets)
+  * Discussion of the validation evidence and test results (e.g., improved accuracy, increased robustness, reproducibility, limitations)
+  * Reference to published paper or report, where relevant.
+  * This information can be provided via GitHub issue, pull request and notification email.
+* While it is encouraged that meaningful interactions between Reference Panel members and contributors already happens on GitHub prior to the meeting, contributors (or their representatives) will also typically be asked to provide a brief presentation at the Reference Panel meeting summarising the information and discussion on GitHub
+* All information needs to be available to RP members two weeks prior to their meeting.
+* The Reference Panel will review the changes ahead of the scheduled meeting and make suggestions for improvements and communicate any other requirements before or at the meeting.
+* Once the review is completed and the changes approved by the Reference Panel, the process will return to Step 5.
 
 Further details can be found in [Science contributions](/contribute/science-contributions)

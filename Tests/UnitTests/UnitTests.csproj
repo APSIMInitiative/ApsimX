@@ -23,7 +23,7 @@
     <EmbeddedResource Include="**\*.apsimx" />
     <EmbeddedResource Include="Weather\*.xlsx" />
     <EmbeddedResource Include="**\*.met" />
-    <EmbeddedResource Include="Weather\*.bin" />
+    <EmbeddedResource Include="Weather\**\*.bin" />
     <EmbeddedResource Include="**\*.Expected.txt" />
     <EmbeddedResource Include="APSIMShared/Resources/*.csv" />
     <EmbeddedResource Include="**\*.soil" />
@@ -50,5 +50,9 @@
     <PackageReference Include="System.Resources.Extensions" Version="10.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CLEM\Resources\" />
   </ItemGroup>
 </Project>

@@ -301,6 +301,9 @@ namespace Models.PostSimulationTools
                         }
                         dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
                     }
+
+                    //write the details of the PO to the datastore as well for POStats to read
+                    WriteMetadataToDataStore();
                 }
                 else
                 {
@@ -358,6 +361,31 @@ namespace Models.PostSimulationTools
             }
 
             return intersect.ToArray();
+        }
+
+        private void WriteMetadataToDataStore()
+        {
+            //Save metadata about predictedObserved
+            DataTable table = new DataTable("_PredictedObserved");
+            table.Columns.Add("name", typeof(string));
+            table.Columns.Add("predicted_table", typeof(string));
+            table.Columns.Add("observed_table", typeof(string));
+            table.Columns.Add("field_match_one", typeof(string));
+            table.Columns.Add("field_match_two", typeof(string));
+            table.Columns.Add("field_match_three", typeof(string));
+            table.Columns.Add("field_match_four", typeof(string));
+
+            DataRow row = table.NewRow();
+            row["name"] = Name;
+            row["predicted_table"] = PredictedTableName;
+            row["observed_table"] = ObservedTableName;
+            row["field_match_one"] = FieldNameUsedForMatch;
+            row["field_match_two"] = FieldName2UsedForMatch;
+            row["field_match_three"] = FieldName3UsedForMatch;
+            row["field_match_four"] = FieldName4UsedForMatch;
+            table.Rows.Add(row);
+
+            dataStore.Writer.WriteTable(table, false);
         }
     }
 }

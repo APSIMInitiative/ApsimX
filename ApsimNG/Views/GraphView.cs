@@ -571,7 +571,6 @@ namespace UserInterface.Views
                     series.MarkerStroke = OxyColors.White;
                 }
 
-                this.plot1.Model.Series.Add(series);
                 if (xError != null || yError != null)
                 {
                     NamedScatterErrorSeries errorSeries = new(series.Name)
@@ -584,6 +583,7 @@ namespace UserInterface.Views
                     };
                     this.plot1.Model.Series.Add(errorSeries);
                 }
+                this.plot1.Model.Series.Add(series);
             }
 
         }

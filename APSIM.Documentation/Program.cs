@@ -22,7 +22,7 @@ namespace APSIM.Documentation
                     return GenerateDocument(args[0], args[1], bool.Parse(args[2]));
                 else
                 {
-                    Console.Error.WriteLine("Invalid number of arguments. Either provide no arguments to generate all documents, or provide two arguments: <input file path> <output folder path>.");
+                    Console.Error.WriteLine("Invalid number of arguments. Either provide no arguments to generate all documents, or provide three arguments: <input file path> <output folder path> <optional - boolean to generate graphs or not>");
                     return 1;
                 }
             }
@@ -100,14 +100,27 @@ namespace APSIM.Documentation
         {
             try
             {
+                IModel model = null;
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 if (generateGraphs)
                     DocumentationSettings.GenerateGraphs = true;
-                Simulations sims = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
-                Node.Create(sims, fileName: path);
-                if (sims == null)
+
+                // Document a class file if a .cs file is provided, otherwise document a simulation file.
+                if (File.Exists(path) == false)
+                {
+                    Type modelType = ReflectionUtilities.GetTypeFromUnqualifiedName(path);
+                    if (modelType != null)
+                        model = Activator.CreateInstance(modelType, true) as IModel;
+                    if (model == null)
+                        throw new Exception("Could not find a model class with the name " + path);
+                }
+                else
+                {
+                    model = FileFormat.ReadFromFile<Simulations>(path).Model as Simulations;
+                }
+                if (model == null)
                     throw new Exception("The file " + path + " does not contain a Simulations model at the root.");
-                string html = WebDocs.Generate(sims);
+                string html = WebDocs.Generate(model);
                 if (html != null)
                 {
                     if (!Directory.Exists(outputPath))

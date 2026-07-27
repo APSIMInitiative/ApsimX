@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace UnitTests
 {
@@ -1303,6 +1304,36 @@ save test.apsimx";
             Clock clockNodeAfterChange = sim2.Node.Find<Clock>();
             Assert.That(clockNodeAfterChange.Start, Is.EqualTo(new DateTime(2017, 2, 1)));
         }
+
+        /// <summary>
+        /// Test to make sure that when running a batch file with the apply 
+        /// switch, if one of the rows has an error, 
+        /// the other rows will still run and produce output files.
+        /// </summary>
+        [Test]
+        public static void TestBatch_Continues_OnError()
+        {
+            string batchFilePath = Path.Combine(Path.GetTempPath(), "batch.csv");
+            string commandFilePath = Path.Combine(Path.GetTempPath(), "commands.txt");
+            string testSimFilePath = Path.Combine(Path.GetTempPath(), "test.apsimx");
+            string weatherFilePath = Path.Combine(Path.GetTempPath(), "AU_Dalby.met");
+            string batchFileContent = 
+                "Date,\n" +
+                "djnejfnjkenfkjenfj,\n" +
+                "1900-01-02,\n";
+            string commandFileContent = 
+                $"load test.apsimx\n" +
+                $"[Clock].StartDate=$Date\n" +
+                $"save test_$Date.apsimx\n" +
+                $"run";
+            File.WriteAllText(batchFilePath, batchFileContent);
+            File.WriteAllText(commandFilePath, commandFileContent);
+            File.WriteAllText(testSimFilePath, ReflectionUtilities.GetResourceAsString("UnitTests.Resources.BatchTestResources.test.apsimx"));
+            File.WriteAllText(weatherFilePath, ReflectionUtilities.GetResourceAsString("UnitTests.Resources.BatchTestResources.AU_Dalby.met"));
+            Assert.Throws<Exception>(() => Utilities.RunModels($"--apply {commandFilePath} --batch {batchFilePath}"));
+            Assert.That(File.Exists(Path.Combine(Path.GetTempPath(), "test_1900-01-02.apsimx")), Is.True);
+        }
+
 
 
     }

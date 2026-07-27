@@ -10,14 +10,36 @@ namespace UserInterface.Views
     {
         private Gtk.Menu menu;
 
+        public ExperimentView() { }
+
         /// <summary>Constructor</summary>
         /// <param name="owner">The owner widget.</param>
         public ExperimentView(ViewBase owner) : base(owner)
         {
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
-            mainWidget = (Box)builder.GetObject("vbox");
-            mainWidget.Destroyed += OnMainWidgetDestroyed;
+            Initialise(owner, null);
+        }
 
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            base.Initialise(ownerView, gtkControl);
+            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ExperimentView.glade");
+
+            Box box = (Box)builder.GetObject("vbox");
+            if (gtkControl is Container container)
+            {
+                container.Add(box);
+                mainWidget = container;
+            }
+            else
+            {
+                mainWidget = box;
+            }
+            InitialiseWidget(builder);
+        }
+
+        private void InitialiseWidget(Builder builder)
+        {
+            mainWidget.Destroyed += OnMainWidgetDestroyed;
             menu = (Gtk.Menu)builder.GetObject("popupMenu");
             List = new ListView(owner, 
                                 (Gtk.TreeView) builder.GetObject("list"),
@@ -35,31 +57,31 @@ namespace UserInterface.Views
         }
 
         /// <summary>Grid for holding data.</summary>
-        public IListView List { get; }
+        public IListView List { get; private set; }
         
-        /// <summary>Gets or sets the value displayed in the number of simulations label./// </summary>
+        /// <summary>Gets or sets the value displayed in the number of simulations label</summary>
         public ILabelView NumberSimulationsLabel { get; set; }
 
-        /// <summary>Filename textbox.</summary>
-        public IEditView MaximumNumSimulations { get; }
+        /// <summary>Maximum number of simulations to show</summary>
+        public IEditView MaximumNumSimulations { get; private set; }
 
         /// <summary>Run APSIM menu item.</summary>
-        public IMenuItemView RunAPSIMAction { get; }
+        public IMenuItemView RunAPSIMAction { get; private set; }
 
         /// <summary>Enable menu item.</summary>
-        public IMenuItemView EnableAction { get; }
+        public IMenuItemView EnableAction { get; private set; }
 
         /// <summary>Disable menu item.</summary>
-        public IMenuItemView DisableAction { get; }
+        public IMenuItemView DisableAction { get; private set; }
 
         /// <summary>Generate CSV menu item.</summary>
-        public IMenuItemView ExportToCSVAction { get; }
+        public IMenuItemView ExportToCSVAction { get; private set; }
 
         /// <summary>Import factors menu item.</summary>
-        public IMenuItemView ImportFromCSVAction { get; }
+        public IMenuItemView ImportFromCSVAction { get; private set; }
 
         /// <summary>Adds Simulations to Playlist</summary>
-        public List<IMenuItemView> PlaylistAction { get; }
+        public List<IMenuItemView> PlaylistAction { get; private set; }
 
         /// <summary>Add a menu item to the popup menu</summary>
         /// <returns>Reference to the menuItemView to attach events</returns>

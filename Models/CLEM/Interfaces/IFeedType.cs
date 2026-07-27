@@ -25,12 +25,5 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         [Description("Starting Amount (kg)")]
         double StartingAmount { get; set; }
-
-        /// <summary>
-        /// Amount (kg)
-        /// </summary>
-        [JsonIgnore]
-        new double Amount { get; }
-
     }
 }

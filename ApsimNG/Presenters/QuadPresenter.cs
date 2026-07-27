@@ -1,11 +1,15 @@
 ﻿using Models.Core;
 using UserInterface.Views;
-using Gtk.Sheet;
 using System.Collections.Generic;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Soils;
 using Models.WaterModel;
+using Models.Factorial;
+using UserInterface.Commands;
+using System;
+using UserInterface.EventArguments;
+using System.Linq;
 
 namespace UserInterface.Presenters
 {
@@ -21,8 +25,10 @@ namespace UserInterface.Presenters
         /// <summary>The model.</summary>
         private IModel model;
 
+        private bool hasSuccessfullyBuiltPresenters = false;
+
         /// <summary>Sub-presenters that are added to this presenter</summary>
-        private List<IPresenter> presenters;
+        private List<ISubPresenter> presenters;
 
         /// <summary>Default constructor</summary>
         public QuadPresenter() {}
@@ -36,37 +42,19 @@ namespace UserInterface.Presenters
             this.model = model as IModel;
             this.view = v as QuadView;
             this.explorerPresenter = explorerPresenter;
-            this.presenters = new List<IPresenter>();
+            this.presenters = new List<ISubPresenter>();
 
             if (this.view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
 
-            if (model is XYPairs)
-                CreateLayoutXYPairs();
-            else if (model is Physical)
-                CreateLayoutPhysical();
-            else if (model is WaterBalance)
-                CreateLayoutWaterBalance();
-            else
-                CreateLayoutGeneric();
-
             Refresh();
-            ConnectEvents();
         }
 
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
             DisconnectEvents();
-            foreach (IPresenter presenter in presenters)
-            {
-                if (presenter is GridPresenter grid)
-                    grid.Detach();
-                else if (presenter is PropertyPresenter properties)
-                    properties.Detach();
-                else if (presenter is QuadGraphPresenter graph)
-                    graph.Detach();
-            }
+            DestroyPresenters();
             view.Dispose();
         }
 
@@ -74,57 +62,211 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             DisconnectEvents();
-            foreach (IPresenter presenter in presenters)
+
+            if (!hasSuccessfullyBuiltPresenters)
+                CreatePresenters();
+
+            List<Exception> errors = new List<Exception>();
+            if (model is FactorFromFile factorFromFile)
             {
-                if (presenter is GridPresenter grid)
-                    grid.Refresh();
-                else if (presenter is QuadGraphPresenter graph)
-                    graph.Refresh();
+                try { factorFromFile.GetCompositeFactors(); }
+                catch (Exception exception) { errors.Add(exception); }
             }
-            view.Refresh();
+
+            foreach (ISubPresenter presenter in presenters)
+            {
+                try
+                {
+                    presenter.Refresh();
+                }
+                catch (Exception exception)
+                {
+                    errors.Add(exception);
+                }
+            }
+            
+            try
+            {
+                view.Refresh();
+            }
+            catch (Exception exception)
+            {
+                errors.Add(exception);
+            }
+
+            if (errors.Count > 0)
+                explorerPresenter.MainPresenter.ShowError(errors, overwrite:true);
+
             ConnectEvents();
         }
 
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            foreach (IPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in presenters)
             {
+                presenter.ConnectEvents();
                 if (presenter is GridPresenter grid)
                     grid.CellChanged += OnCellChanged;
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged += OnTextChanged;
+                if (presenter is ListPresenter list)
+                    list.SelectionChanged += OnListSelectionChanged;
             }
+
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>Disconnect all widget events.</summary>
         private void DisconnectEvents()
         {
-            foreach (IPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in presenters)
             {
+                presenter.DisconnectEvents();
                 if (presenter is GridPresenter grid)
                     grid.CellChanged -= OnCellChanged;
+                if (presenter is EditorPresenter editor)
+                    editor.TextChanged -= OnTextChanged;
+                if (presenter is ListPresenter list)
+                    list.SelectionChanged -= OnListSelectionChanged;
             }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
-        /// <summary>Invoked when a grid cell has changed.</summary>
-        /// <param name="dataProvider">The provider that contains the data.</param>
-        /// <param name="colIndices">The indices of the columns of the cells that were changed.</param>
-        /// <param name="rowIndices">The indices of the rows of the cells that were changed.</param>
-        /// <param name="values">The cell values.</param>
-        private void OnCellChanged(IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        /// <summary>
+        /// Destroys any existing presenters and rebuilds everything depending 
+        /// on the model type.
+        /// </summary>
+        private void CreatePresenters()
         {
-            Refresh();
+            try
+            {
+                DestroyPresenters();
+
+                if (model is XYPairs)
+                    CreateLayoutXYPairs();
+                else if (model is Physical)
+                    CreateLayoutPhysical();
+                else if (model is WaterBalance)
+                    CreateLayoutWaterBalance();
+                else if (model is CompositeFactor)
+                    CreateLayoutCompositeFactor();
+                else if (model is FactorFromFile)
+                    CreateLayoutFactorFromFile();
+                else
+                    CreateLayoutGeneric();
+                hasSuccessfullyBuiltPresenters = true;
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception, overwrite:true);
+            }
         }
 
         /// <summary>
-        /// The mode has changed (probably via undo/redo).
+        /// Destroys all the created presenters by detatching them
+        /// </summary>
+        private void DestroyPresenters()
+        {
+            foreach (ISubPresenter presenter in presenters)
+            {
+                if (presenter is GridPresenter grid)
+                    grid.Detach();
+                else if (presenter is PropertyPresenter properties)
+                    properties.Detach();
+                else if (presenter is QuadGraphPresenter graph)
+                    graph.Detach();
+                if (presenter is ListPresenter list)
+                    list.Detach();
+            }
+        }
+
+        /// <summary>
+        /// Listener for if hte model is changed (most likely by a sub presenter)
+        /// When this happens, it just tells all the presenters to refresh
         /// </summary>
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
             model = changedModel as IModel;
             Refresh();
+        }
+
+        /// <summary>
+        /// Listener for Grid cell change events.
+        /// Does not use given parameters, just refreshes the presenters
+        /// </summary>
+        /// <param name="dataProvider">Data Provider for the grid</param>
+        /// <param name="colIndices">column indexes changed</param>
+        /// <param name="rowIndices">row indexes changed</param>
+        /// <param name="values">values that were put in</param>
+        private void OnCellChanged(Gtk.Sheet.IDataProvider dataProvider, int[] colIndices, int[] rowIndices, string[] values)
+        {
+            DisconnectEvents();
+            try
+            {
+                foreach (ISubPresenter presenter in presenters)
+                    presenter.Refresh();
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception);
+            }
+            finally
+            {
+                ConnectEvents();
+            }
+        }
+
+        /// <summary>
+        /// Listener for Text change events from a Code Editor
+        /// Does not use given parameters, just refreshes the presenters
+        /// </summary>
+        /// <param name="model">The model</param>
+        /// <param name="property">The property changed</param>
+        /// <param name="lines">The lines it should be given</param>
+        private void OnTextChanged(ICodeEditor model, string property, string[] lines)
+        {
+            DisconnectEvents();
+            try
+            {
+                ChangeProperty command = new ChangeProperty(model, property, lines);
+                explorerPresenter.CommandHistory.Add(command);
+            }
+            catch (Exception exception)
+            {
+                explorerPresenter.MainPresenter.ShowError(exception);
+            }
+            finally
+            {
+                ConnectEvents();
+            }
+        }
+
+        /// <summary>
+        /// Listener for List selection events from a List view
+        /// Does nothing unless model is FactorFromFile, in which case the 
+        /// code view is updated.
+        /// </summary>
+        private void OnListSelectionChanged(object sender, EventArgsValue e)
+        {
+            if (model is FactorFromFile factorFromFile)
+            {
+                DisconnectEvents();
+                try
+                {
+                    int index = e.Value;
+                    SetCode(factorFromFile.GetCommands(index).ToArray());
+                }
+                catch (Exception exception)
+                {
+                    explorerPresenter.MainPresenter.ShowError(exception);
+                }
+                finally
+                {
+                    ConnectEvents();
+                }
+            }
         }
 
         /// <summary>
@@ -199,6 +341,43 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Add a Editor view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="text">Text to display in this view</param>
+        private void AddCode(WidgetPosition position)
+        {
+            EditorView editorView = view.AddComponent(WidgetType.Code, position) as EditorView;
+            EditorPresenter editorPresenter = new EditorPresenter();
+            editorPresenter.Attach(model, editorView, explorerPresenter);
+            presenters.Add(editorPresenter);
+        }
+
+        /// <summary>
+        /// Set the text contents of an Editor view
+        /// </summary>
+        /// <param name="lines"></param>
+        private void SetCode(string[] lines)
+        {
+            foreach(ISubPresenter presenter in presenters)
+                if (presenter is EditorPresenter editor)
+                    editor.SetCode(lines);
+        }
+
+        /// <summary>
+        /// Add a List view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="table"></param>
+        private void AddList(WidgetPosition position)
+        {
+            ExperimentView experimentView = view.AddComponent(WidgetType.List, position) as ExperimentView;
+            ListPresenter listPresenter = new ListPresenter();
+            listPresenter.Attach(model, experimentView, explorerPresenter);
+            presenters.Add(listPresenter);
+        }
+
+        /// <summary>
         /// Setup a generic layout with grid, graph and properties
         /// </summary>
         private void CreateLayoutGeneric()
@@ -247,6 +426,29 @@ namespace UserInterface.Presenters
         {
             CreateLayoutGeneric();
             view.OverrideSlider(0.3);
+        }
+
+        /// <summary>
+        /// Create layout for a CompositeFactor with code and grid
+        /// </summary>
+        private void CreateLayoutCompositeFactor()
+        {
+            AddCode(WidgetPosition.TopLeft);
+            AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
+            AddGrid(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.7);
+        }
+
+        /// <summary>
+        /// Create layout for a FactorsFromFile, property, text, list and code
+        /// </summary>
+        private void CreateLayoutFactorFromFile()
+        {
+            AddProperty(WidgetPosition.TopLeft);
+            AddText(WidgetPosition.TopRight, "Commands:");
+            AddList(WidgetPosition.BottomLeft);
+            AddCode(WidgetPosition.BottomRight);
+            view.OverrideSlider(0.6);
         }
     }
 }

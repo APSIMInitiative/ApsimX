@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -19,46 +20,81 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd)")]
-    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
+    [Version(1, 0, 5, "Parameters moved to individual child models")]
+    [Version(1, 0, 4, "Added parameter for overfeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder), typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
         private RuminantHerd parentHerd = null;
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-        private List<string> mandatoryAttributes = new List<string>();
-        private readonly List<string> warningsMultipleEntry = new List<string>();
-        private readonly List<string> warningsNotFound = new List<string>();
+        private List<AnimalPriceGroup> priceGroups = [];
+        private readonly List<string> mandatoryAttributes = [];
+        private readonly List<string> warningsMultipleEntry = [];
+        private readonly List<string> warningsNotFound = [];
+        private MeanTracker meanOfFemaleMaturityAge = new MeanTracker();
+        private MeanTracker meanOfMaleMaturityAge = new MeanTracker();
+
+        /// <summary>
+        /// Access to the CLEM time step for all ruminants of this Ruminant Type
+        /// </summary>
+        public CLEMEvents CurrentTimeStep { get { return events; } }
+
+        /// <summary>
+        /// Store of parameters
+        /// </summary>
+        [JsonIgnore]
+        public RuminantParameters Parameters { get; set; } = new RuminantParameters();
+
+        /// <summary>
+        /// Advanced conception parameters if present
+        /// </summary>
+        [JsonIgnore]
+        public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>
         /// Unit type
         /// </summary>
-        [Description("Units (nominal)")]
         public string Units { get { return "NA"; } }
-
-        /// <summary>
-        /// Breed
-        /// </summary>
-        [Category("Basic", "General")]
-        [Description("Breed")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
-        public string Breed { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantType()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>
         /// Current value of individuals in the herd
         /// </summary>
         [JsonIgnore]
         public AnimalPricing PriceList;
+
+        /// <summary>
+        /// The estimated age of a female at maturity based on the minimum size for maturity normalised for age
+        /// </summary>
+        public double EstimatedAgeAtMaturityFemale { get { return meanOfFemaleMaturityAge.Mean; }  }
+
+        /// <summary>
+        /// The estimated age of a male at maturity based on the minimum size for maturity normalised for age
+        /// </summary>
+        public double EstimatedAgeAtMaturityMale { get { return meanOfMaleMaturityAge.Mean; } }
+
+        /// <summary>
+        /// Returns the parent herd of the ruminant type
+        /// </summary>
+        public RuminantHerd ParentHerd { get { return parentHerd; } }
+
+        /// <summary>
+        /// A method to add a maturity age to the mean age tracker
+        /// </summary>
+        /// <param name="sex">The sex of the individual</param>
+        /// <param name="age">The age at maturity</param>
+        public void AddMaturityAge(Sex sex, double age)
+        {
+            if (sex == Sex.Male)
+                meanOfMaleMaturityAge.AddValue(age);
+            else
+                meanOfFemaleMaturityAge.AddValue(age);
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -72,19 +108,153 @@ namespace Models.CLEM.Resources
             if (Structure.FindChildren<AnimalPricing>().Count() > 0)
             {
                 PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
-                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+                // Components are not permanently modified during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
 
                 priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>().ToList();
             }
 
             // get conception parameters and rate calculation method
-            ConceptionModel = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+            ConceptionModel = ConceptionModel = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+
+
+            if (ParentHerd.RuminantGrowActivity.IncludeFatAndProtein && Structure.FindChildren<RuminantTypeCohort>(recurse: true).Any(a => a.Validate(null).Any()))
+            {
+                // found issues with setting fat and protein so abort and allow the user to fix.
+                return;
+            }
+
+            foreach (RuminantInitialCohorts ruminantCohorts in Structure.FindChildren<RuminantInitialCohorts>())
+                foreach (var ind in ruminantCohorts.CreateIndividuals(events?.Clock.Start ?? default))
+                {
+                    ind.SaleFlag = HerdChangeReason.InitialHerd;
+                    parentHerd.AddRuminant(ind, this);
+                }
+
+            // get list of all sucking individuals
+            var sucklingGroups = parentHerd.Herd.Where(a => a.HerdName == Name && a.IsWeaned == false).GroupBy(a => a.AgeInDays).OrderBy(a => a.Key);
+
+            // start mean maturity ages with an estimated age of maturity based on the minsize for maturity as a proportion of the standard reference weight
+            meanOfFemaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityFemale * Parameters.General.SRWFemale, Parameters.General.SRWFemale, Parameters.General));
+            meanOfMaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityMale * Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General));
+
+            // assign any sucklings to available breeders for milk is available at start of simulation
+            foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
+            {
+                // get list of females of breeding age and condition
+                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+
+                int sucklingCount = 0;
+                int numberThisPregnancy = breedFemales.First()?.CalulateNumberOfOffspringThisPregnancy() ?? 1;
+                int previousRuminantID = -1;
+                foreach (var suckling in sucklingList)
+                {
+                    sucklingCount++;
+                    if (breedFemales.Count != 0)
+                    {
+                        // if next new female set up some details
+                        if (breedFemales[0].ID != previousRuminantID)
+                        {
+                            breedFemales[0].SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(breedFemales[0].AgeInDays - suckling.AgeInDays)).start);
+                            breedFemales[0].SetDateOfLastConception(events.GetTimeStepRangeContainingDate(breedFemales[0].DateOfBirth.AddDays(-breedFemales[0].Parameters.General.GestationLength.InDays)).start);
+                            breedFemales[0].DateEnteredSimulation = breedFemales[0].DateOfLastConception;
+                        }
+
+                        // add this offspring to birth count
+                        if (suckling.AgeInDays == 0)
+                            breedFemales[0].NumberOfBirthsThisTimestep++;
+
+                        // suckling mother set
+                        suckling.Mother = breedFemales[0];
+                        // add suckling to suckling offspring of mother.
+                        breedFemales[0].SucklingOffspringList.Add(suckling);
+
+                        // add this suckling to mother's offspring count.
+                        breedFemales[0].NumberOfOffspring++;
+
+                        // check if a twin and if so apply next individual to same mother.
+                        // otherwise remove this mother from the list and change counters
+                        if (numberThisPregnancy == 1)
+                        {
+                            breedFemales[0].NumberOfBirths++;
+                            breedFemales[0].NumberOfConceptions = 1;
+                            breedFemales.RemoveAt(0);
+                        }
+                        else
+                            numberThisPregnancy--;
+                    }
+                    else
+                    {
+                        Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={NameWithParent}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
+                        break;
+                    }
+                }
+
+            }
+
+            // try and estimate the previous birth and conception date
+            // start stepping backward by gestation + wait + oestrus length
+            // apply the first conception rate in the list as an idea of failure rate.
+            // set details at first successful
+            // go right back to maturity to work out number of births.
+            // IS THIS NEEDED OR DOES IT CORRUPT THE MODEL OUTCOMES
+
+            var remainingFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.DateOfLastConception == default && !a.IsLactating && !a.IsPregnant && (a.AgeInDays > a.Parameters.Details.EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays & a.Weight.RelativeSizeByHighWeight >= a.Parameters.General.MinimumSizeForMaturityFemale));
+            if (remainingFemales.Any() == false || Structure.FindAll<RuminantParametersBreeding>().Any() == false)
+            {
+                return;
+            }
+
+            // step through all possible conceptions assuming perfect conditions and the first conception rate
+            foreach (RuminantFemale female in remainingFemales)
+            {
+                // start from first conception opportunity
+                DateTime conceiveDate = female.DateOfBirth.AddDays(female.Parameters.Details.EstimatedAgeAtMaturityFemale);
+                DateTime lastDate = default;
+                while (conceiveDate < events.TimeStepStart)
+                {
+                    if (conceiveDate.AddDays(female.Parameters.General.GestationLength.InDays) < events.TimeStepStart && (ConceptionModel?.ConceptionRate(female) ?? 0) <= RandomNumberGenerator.Generator.NextDouble())
+                    {
+                        lastDate = new DateTime(conceiveDate.Year, conceiveDate.Month, conceiveDate.Day);
+                    }
+                    conceiveDate = conceiveDate.AddDays(female.Parameters.General.GestationLength.InDays + female.Parameters.Breeding.DaysLastBirthToStartOestrus + female.Parameters.Breeding.OestrusCycleLength);
+                }
+                if (lastDate != default)
+                {
+                    female.SetDateOfLastBirth(lastDate.AddDays(female.Parameters.General.GestationLength.InDays));
+                    female.SetDateOfLastConception(lastDate);
+                }
+            }
+
+            //var firstFemale = remainingFemales.First();
+            //    // gestation interval at smallest size generalised curve
+            //    double minAnimalWeight = firstFemale.Weight.StandardReferenceWeight - ((1 - firstFemale.Parameters.General.BirthScalar[0]) * firstFemale.Weight.StandardReferenceWeight) * Math.Exp(-(firstFemale.Parameters.General.AgeGrowthRateCoefficient_CN1 * (firstFemale.Parameters.General.EstimatedAgeAtMaturityFemale)) / (Math.Pow(firstFemale.Weight.StandardReferenceWeight, firstFemale.Parameters.General.SRWGrowthScalar_CN2))); ;
+            //    double minsizeIPI = Math.Pow(firstFemale.Parameters.Breeding.InterParturitionIntervalIntercept * (minAnimalWeight / firstFemale.Weight.StandardReferenceWeight), firstFemale.Parameters.Breeding.InterParturitionIntervalCoefficient);
+            //    // restrict minimum period between births
+            //    minsizeIPI = Math.Max(minsizeIPI, firstFemale.Parameters.General.GestationLength.InDays + 2);
+
+            //    // assigning values for the remaining females who haven't just bred.
+            //    // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
+            //    double ageFirstBirth = firstFemale.Parameters.General.EstimatedAgeAtMaturityFemale + firstFemale.Parameters.General.GestationLength.InDays;
+            //    foreach (RuminantFemale female in remainingFemales)
+            //    {
+            //        // generalised curve
+            //        double currentIPI = Math.Pow(female.Parameters.Breeding.InterParturitionIntervalIntercept * (female.Weight.Live / female.Weight.StandardReferenceWeight), female.Parameters.Breeding.InterParturitionIntervalCoefficient);
+            //        // restrict minimum period between births (previously +61)
+            //        currentIPI = Math.Max(currentIPI, female.Parameters.General.GestationLength.InDays + 60);
+
+            //        // calculate number of births assuming conception at min age first mating
+            //        // therefore first birth min age + gestation length
+
+            //        int numberOfBirths = Convert.ToInt32((female.AgeInDays - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
+            //        female.SetDateOfLastBirth(events.GetTimeStepRangeContainingDate(female.DateOfBirth.AddDays(ageFirstBirth + (currentIPI * numberOfBirths))).start);
+            //        female.SetDateOfLastConception(events.GetTimeStepRangeContainingDate(female.DateOfLastBirth.AddDays(-female.Parameters.General.GestationLength.InDays)).start);
+            //    }
         }
 
         /// <summary>
         /// Total value of resource
         /// </summary>
-        public double? Value
+        public new double? Value
         {
             get
             {
@@ -101,7 +271,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count > 0); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
@@ -114,7 +284,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determins whether a specified attribute is mandatory
+        /// Determines whether a specified attribute is mandatory
         /// </summary>
         /// <param name="name">name of attribute</param>
         public bool IsMandatoryAttribute(string name)
@@ -123,7 +293,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Check whether an individual has all mandotory attributes
+        /// Check whether an individual has all mandatory attributes
         /// </summary>
         /// <param name="ind">Individual ruminant to check</param>
         /// <param name="model">Model adding individuals</param>
@@ -169,7 +339,7 @@ namespace Models.CLEM.Resources
                     // no price match found.
                     string warningString = warningMessage;
                     if (warningString == "")
-                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.AgeInDays}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
                 return animalPrice;
@@ -243,7 +413,7 @@ namespace Models.CLEM.Resources
                             {
                                 // add using the best pricing available for [][] purchases of xx per head
                                 warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] [" + matchIndividual.PricingStyle.ToString() + "] will be used.";
-                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight.Live : 1.0);
                             }
                             else
                                 warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
@@ -279,7 +449,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -288,7 +458,7 @@ namespace Models.CLEM.Resources
         /// Remove resource
         /// </summary>
         /// <param name="request"></param>
-        public new void Remove(ResourceRequest request)
+        public new void RemoveFromResource(ResourceRequest request)
         {
             throw new NotImplementedException();
         }
@@ -315,12 +485,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current number of individuals of this herd.
         /// </summary>
-        public double Amount
+        public new double AmountTotal
         {
             get
             {
                 if (parentHerd != null)
-                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
+                    return parentHerd.Herd.Where(a => a.HerdName == Name).Count();
                 return 0;
             }
         }
@@ -333,13 +503,13 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                    return parentHerd.Herd.Where(a => a.HerdName == Name).Sum(a => a.Weight.AdultEquivalent);
                 return 0;
             }
         }
 
         /// <summary>
-        /// Returns the most recent conception status
+        /// Arguments for the recent conception status change for OnConceptionStatusChanged
         /// </summary>
         [JsonIgnore]
         public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
@@ -359,596 +529,9 @@ namespace Models.CLEM.Resources
             ConceptionStatusChanged?.Invoke(this, e);
         }
 
-        #region Grow Activity
-
-        /// <summary>
-        /// Energy maintenance efficiency coefficient
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy maintenance efficiency coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double EMaintEfficiencyCoefficient { get; set; }
-        /// <summary>
-        /// Energy maintenance efficiency intercept
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy maintenance efficiency intercept")]
-        [Required, GreaterThanValue(0)]
-        public double EMaintEfficiencyIntercept { get; set; }
-        /// <summary>
-        /// Energy growth efficiency coefficient
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy growth efficiency coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double EGrowthEfficiencyCoefficient { get; set; }
-        /// <summary>
-        /// Energy growth efficiency intercept
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy growth efficiency intercept")]
-        [Required]
-        public double EGrowthEfficiencyIntercept { get; set; }
-        /// <summary>
-        /// Energy lactation efficiency coefficient
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy lactation efficiency coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double ELactationEfficiencyCoefficient { get; set; }
-        /// <summary>
-        /// Energy lactation efficiency intercept
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy lactation efficiency intercept")]
-        [Required, GreaterThanValue(0)]
-        public double ELactationEfficiencyIntercept { get; set; }
-        /// <summary>
-        /// Energy maintenance exponent
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy maintenance exponent")]
-        [Required, GreaterThanValue(0)]
-        public double EMaintExponent { get; set; }
-        /// <summary>
-        /// Energy maintenance intercept
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy maintenance intercept")]
-        [Required, GreaterThanValue(0)]
-        public double EMaintIntercept { get; set; }
-        /// <summary>
-        /// Energy maintenance coefficient
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy maintenance coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double EMaintCoefficient { get; set; }
-        /// <summary>
-        /// Maximum age for energy maintenance calculation (yrs)
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(6)]
-        [Category("Advanced", "Growth")]
-        [Description("Maximum age for energy maintenance calculation (yrs)")]
-        [Required, GreaterThanValue(0)]
-        public double EnergyMaintenanceMaximumAge { get; set; }
-        /// <summary>
-        /// Breed factor for maintenence energy
-        /// </summary>
-        [Category("Basic", "Growth")]
-        [Description("Breed factor for maintenence energy")]
-        [Required, GreaterThanValue(0)]
-        public double Kme { get; set; }
-        /// <summary>
-        /// Parameter for calculation of energy needed per kg empty body gain #1 (a, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy per kg growth #1")]
-        [Required, GreaterThanValue(0)]
-        public double GrowthEnergyIntercept1 { get; set; }
-        /// <summary>
-        /// Parameter for calculation of energy needed per kg empty body gain #2 (b, see p37 Table 1.11 Nutrient Requirements of domesticated ruminants)
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Energy per kg growth #2")]
-        [Required, GreaterThanValue(0)]
-        public double GrowthEnergyIntercept2 { get; set; }
-
-        /// <summary>
-        /// Growth efficiency
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Growth efficiency")]
-        [Required, GreaterThanValue(0)]
-        public double GrowthEfficiency { get; set; }
-
-        /// <summary>
-        /// Natural weaning age
-        /// </summary>
-        [Category("Basic", "Growth")]
-        [Description("Natural weaning age (0 to use gestation length)")]
-        [Required]
-        public double NaturalWeaningAge { get; set; }
-
-        /// <summary>
-        /// Standard Reference Weight of female
-        /// </summary>
-        [Category("Basic", "General")]
-        [Units("kg")]
-        [Description("Standard Ref. Weight (kg) for a female")]
-        [Required, GreaterThanValue(0)]
-        public double SRWFemale { get; set; }
-        /// <summary>
-        /// Standard Reference Weight for male from female multiplier
-        /// </summary>
-        [Category("Advanced", "General")]
-        [Description("Male Standard Ref. Weight multiplier from female")]
-        [Required, GreaterThanValue(0)]
-        public double SRWMaleMultiplier { get; set; }
-        /// <summary>
-        /// Standard Reference Weight at birth
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Units("proportion of female SRW")]
-        [Description("Birth mass (proportion of female SRW)")]
-        [Required, GreaterThanValue(0)]
-        public double SRWBirth { get; set; }
-        /// <summary>
-        /// Age growth rate coefficient
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Age growth rate coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double AgeGrowthRateCoefficient { get; set; }
-        /// <summary>
-        /// SWR growth scalar
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("SRW growth scalar")]
-        [Required, GreaterThanValue(0)]
-        public double SRWGrowthScalar { get; set; }
-        /// <summary>
-        /// Relative body condition to score rate
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Rel. Body Cond. to Score rate")]
-        [Required, GreaterThanValue(0)]
-        public double RelBCToScoreRate { get; set; } = 0.15;
-        /// <summary>
-        /// Body condition score range
-        /// </summary>
-        [Category("Advanced", "Growth")]
-        [Description("Body Condition Score range (min, mid, max)")]
-        [Required, ArrayItemCount(3)]
-        public double[] BCScoreRange { get; set; } = { 0, 3, 5 };
-        /// <summary>
-        /// Body condition score to determine additional mortality
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Body Condition Score for additional mortality")]
-        [Required]
-        [System.ComponentModel.DefaultValue(0)]
-        public double BodyConditionScoreForMortality { get; set; } = 0;
-        /// <summary>
-        /// Low body condition score to mortality rate
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Mortality rate for low Body Condition Score")]
-        [Required]
-        [System.ComponentModel.DefaultValue(0.5)]
-        public double BodyConditionScoreMortalityRate { get; set; } = 0.5;
-        /// <summary>
-        /// Intake coefficient in relation to live weight
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Intake coefficient in relation to Live Weight")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficient { get; set; }
-        /// <summary>
-        /// Intake intercept in relation to live weight
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Intake intercept in relation to SRW")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeIntercept { get; set; }
-        /// <summary>
-        /// Potential intake modifier for maximum intake possible when overfeeding
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Potential intake modifer for max overfeeding intake")]
-        [Required, GreaterThanEqualValue(1)]
-        [System.ComponentModel.DefaultValue(1)]
-        public double OverfeedPotentialIntakeModifier { get; set; }
-        /// <summary>
-        /// Protein requirement coeff (g/kg feed)
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Protein requirement coeff (g/kg feed)")]
-        [Required, GreaterThanValue(0)]
-        public double ProteinCoefficient { get; set; }
-        /// <summary>
-        /// Protein degradability
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Protein degradability")]
-        [Required, GreaterThanValue(0)]
-        public double ProteinDegradability { get; set; }
-        /// <summary>
-        /// Weight(kg) of 1 animal equivalent(steer)
-        /// </summary>
-        [Category("Basic", "General")]
-        [Description("Weight (kg) of an animal equivalent")]
-        [Required, GreaterThanValue(0)]
-        public double BaseAnimalEquivalent { get; set; }
-        /// <summary>
-        /// Maximum green in diet
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Maximum green in diet")]
-        [Required, Proportion]
-        public double GreenDietMax { get; set; }
-        /// <summary>
-        /// Shape of curve for diet vs pasture
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Shape of curve for diet vs pasture")]
-        [Required, GreaterThanValue(0)]
-        public double GreenDietCoefficient { get; set; }
-        /// <summary>
-        /// Proportion green in pasture at zero in diet
-        /// was %
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Proportion green in pasture at zero in diet")]
-        [Required, Proportion]
-        public double GreenDietZero { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for herbage biomass
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage biomass")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientBiomass { get; set; }
-        /// <summary>
-        /// Enforce strict feeding limits
-        /// </summary>
-        [Category("Basic", "Diet")]
-        [Description("Enforce strict feeding limits")]
-        [Required]
-        public bool StrictFeedingLimits { get; set; }
-        /// <summary>
-        /// Coefficient of juvenile milk intake
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient of juvenile milk intake")]
-        [Required, GreaterThanValue(0)]
-        public double MilkIntakeCoefficient { get; set; }
-        /// <summary>
-        /// Intercept of juvenile milk intake
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Intercept of juvenile milk intake")]
-        [Required, GreaterThanValue(0)]
-        public double MilkIntakeIntercept { get; set; }
-        /// <summary>
-        /// Maximum juvenile milk intake
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Maximum juvenile milk intake")]
-        [Required, GreaterThanValue(0)]
-        public double MilkIntakeMaximum { get; set; }
-        /// <summary>
-        /// Milk as proportion of LWT for fodder substitution
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Milk as proportion of LWT for fodder substitution")]
-        [Required, Proportion]
-        public double MilkLWTFodderSubstitutionProportion { get; set; }
-        /// <summary>
-        /// Max juvenile (suckling) intake as proportion of LWT
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Max juvenile (suckling) intake as proportion of LWT")]
-        [Required, GreaterThanValue(0)]
-        public double MaxJuvenileIntake { get; set; }
-        /// <summary>
-        /// Proportional discount to intake due to milk intake
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Proportional discount to intake due to milk intake")]
-        [Required, Proportion]
-        public double ProportionalDiscountDueToMilk { get; set; }
-
-        /// <summary>
-        /// Style of calculating condition-based mortality
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Style of calculating additional condition-based mortality")]
-        [System.ComponentModel.DefaultValue(ConditionBasedCalculationStyle.None)]
-        [Required]
-        public ConditionBasedCalculationStyle ConditionBasedMortalityStyle { get; set; }
-        /// <summary>
-        /// Cut-off for condition-based mortality
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Cut-off for condition-based mortality")]
-        [Required]
-        public double ConditionBasedMortalityCutOff { get; set; }
-        /// <summary>
-        /// Probability of dying if less than condition-based mortality cut-off
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Probability of death below condition-based cut-off")]
-        [System.ComponentModel.DefaultValue(1)]
-        [Required, GreaterThanValue(0)]
-        public double ConditionBasedMortalityProbability { get; set; }
-
-        /// <summary>
-        /// Lactating Potential intake modifier Coefficient A
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Lactating potential intake modifier coefficient A")]
-        [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantA { get; set; }
-        /// <summary>
-        /// Lactating Potential intake modifier Coefficient B
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Lactating potential intake modifier coefficient B")]
-        [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantB { get; set; }
-        /// <summary>
-        /// Lactating Potential intake modifier Coefficient C
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Lactating potential intake modifier coefficient C")]
-        [Required, GreaterThanValue(0)]
-        public double LactatingPotentialModifierConstantC { get; set; }
-        /// <summary>
-        /// Maximum size of individual relative to SRW
-        /// </summary>
-        [Category("Advanced", "General")]
-        [Description("Maximum size of individual relative to SRW")]
-        [Required, GreaterThanValue(0)]
-        public double MaximumSizeOfIndividual { get; set; }
-        /// <summary>
-        /// Mortality rate base
-        /// </summary>
-        [Category("Basic", "Survival")]
-        [Description("Mortality rate base")]
-        [Required, Proportion]
-        public double MortalityBase { get; set; }
-        /// <summary>
-        /// Mortality rate coefficient
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Mortality rate coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityCoefficient { get; set; }
-        /// <summary>
-        /// Mortality rate intercept
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Mortality rate intercept")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityIntercept { get; set; }
-        /// <summary>
-        /// Mortality rate exponent
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Mortality rate exponent")]
-        [Required, GreaterThanValue(0)]
-        public double MortalityExponent { get; set; }
-        /// <summary>
-        /// Juvenile mortality rate coefficient
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Juvenile mortality rate coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double JuvenileMortalityCoefficient { get; set; }
-        /// <summary>
-        /// Juvenile mortality rate maximum
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Juvenile mortality rate maximum")]
-        [Required, Proportion]
-        public double JuvenileMortalityMaximum { get; set; }
-        /// <summary>
-        /// Juvenile mortality rate exponent
-        /// </summary>
-        [Category("Advanced", "Survival")]
-        [Description("Juvenile mortality rate exponent")]
-        [Required]
-        public double JuvenileMortalityExponent { get; set; }
-        /// <summary>
-        /// Wool coefficient
-        /// </summary>
-        [Category("Advanced", "Products")]
-        [Description("Wool coefficient")]
-        [Required]
-        public double WoolCoefficient { get; set; }
-        /// <summary>
-        /// Cashmere coefficient
-        /// </summary>
-        [Category("Advanced", "Products")]
-        [Description("Cashmere coefficient")]
-        [Required]
-        public double CashmereCoefficient { get; set; }
-        #endregion
-
-        #region Breed activity
-
-        /// <summary>
-        /// Advanced conception parameters if present
-        /// </summary>
-        [JsonIgnore]
-        public IConceptionModel ConceptionModel { get; set; }
-
-        /// <summary>
-        /// Milk curve shape suckling
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Milk curve shape suckling")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveSuckling { get; set; }
-        /// <summary>
-        /// Milk curve shape non suckling
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Milk curve shape non suckling")]
-        [Required, GreaterThanValue(0)]
-        public double MilkCurveNonSuckling { get; set; }
-        /// <summary>
-        /// Number of days for milking
-        /// </summary>
-        [Category("Basic", "Lactation")]
-        [Description("Number of days for milking")]
-        [Required, GreaterThanEqualValue(0)]
-        public double MilkingDays { get; set; }
-        /// <summary>
-        /// Peak milk yield(kg/day)
-        /// </summary>
-        [Category("Basic", "Lactation")]
-        [Description("Peak milk yield (kg/day)")]
-        [Required, GreaterThanValue(0)]
-        public double MilkPeakYield { get; set; }
-        /// <summary>
-        /// Milk offset day
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Milk offset day")]
-        [Required, GreaterThanValue(0)]
-        public double MilkOffsetDay { get; set; }
-        /// <summary>
-        /// Milk peak day
-        /// </summary>
-        [Category("Advanced", "Lactation")]
-        [Description("Milk peak day")]
-        [Required, GreaterThanValue(0)]
-        public double MilkPeakDay { get; set; }
-        /// <summary>
-        /// Proportion offspring born male
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0.5)]
-        [Category("Advanced", "Breeding")]
-        [Description("Proportion of offspring male")]
-        [Required, Proportion]
-        public double ProportionOffspringMale { get; set; }
-        /// <summary>
-        /// Inter-parturition interval intercept of PW (months)
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Inter-parturition interval intercept of PW (months)")]
-        [Required, GreaterThanValue(0)]
-        public double InterParturitionIntervalIntercept { get; set; }
-        /// <summary>
-        /// Inter-parturition interval coefficient of PW (months)
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Inter-parturition interval coefficient of PW (months)")]
-        [Required]
-        public double InterParturitionIntervalCoefficient { get; set; }
-        /// <summary>
-        /// Months between conception and parturition
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Months between conception and parturition")]
-        [Required, GreaterThanValue(0)]
-        public double GestationLength { get; set; }
-        /// <summary>
-        /// Minimum age for 1st mating (months)
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Minimum age for 1st mating (months)")]
-        [Required, GreaterThanValue(0)]
-        public double MinimumAge1stMating { get; set; }
-        /// <summary>
-        /// Minimum size for 1st mating, proportion of SRW
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Minimum size for 1st mating, proportion of SRW")]
-        [Required, Proportion]
-        public double MinimumSize1stMating { get; set; }
-        /// <summary>
-        /// Minimum number of days between last birth and conception
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Minimum number of days between last birth and conception")]
-        [Required, GreaterThanValue(0)]
-        public double MinimumDaysBirthToConception { get; set; }
-        /// <summary>
-        /// Rate at which multiple births are concieved (twins, triplets, ...)
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Rate at which multiple births occur (twins,triplets,...")]
-        [Proportion]
-        public double[] MultipleBirthRate { get; set; }
-        /// <summary>
-        /// Proportion of SRW for zero calving/lambing rate
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Proportion of SRW required before conception possible (min size for mating)")]
-        [Required, Proportion]
-        public double CriticalCowWeight { get; set; }
-
-        /// <summary>
-        /// Maximum number of matings per male per day
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Maximum number of matings per male per day")]
-        [Required, GreaterThanValue(0)]
-        public double MaximumMaleMatingsPerDay { get; set; }
-        /// <summary>
-        /// Prenatal mortality rate
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Mortality rate from conception to birth (proportion)")]
-        [Required, Proportion]
-        public double PrenatalMortality { get; set; }
-
-        /// <summary>
-        /// Proportion of wet mother's with no offspring accepting orphan
-        /// </summary>
-        [Category("Advanced", "Breeding")]
-        [Description("Proportion suitable fmeales accpeting orphan")]
-        [System.ComponentModel.DefaultValueAttribute(0)]
-        [Required, Proportion]
-        public double ProportionAcceptingSurrogate { get; set; } = 0;
-
-        #endregion
-
-        #region other
-
-        // add intercept again if next methane equation requires an intercept value
-
-        /// <summary>
-        /// Methane production from intake coefficient
-        /// </summary>
-        [Category("Advanced", "Products")]
-        [Description("Methane production from intake coefficient")]
-        [Required, GreaterThanValue(0)]
-        public double MethaneProductionCoefficient { get; set; }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
-        #endregion
-
         #region validation
 
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -958,13 +541,13 @@ namespace Models.CLEM.Resources
             if (conceptionModelCount > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
+                yield return new ValidationResult($"Only one Conception component is permitted below the Ruminant Type [r={Name}]", memberNames);
             }
 
             if (Structure.FindChildren<AnimalPricing>().Count() > 1)
             {
                 string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
+                yield return new ValidationResult($"Only one Animal pricing schedule is permitted within a Ruminant Type [{Name}]", memberNames);
             }
             else if (Structure.FindChildren<AnimalPricing>().Count() == 1)
             {
@@ -973,12 +556,12 @@ namespace Models.CLEM.Resources
                 if (Structure.FindChildren<AnimalPriceGroup>(relativeTo: price).Count() == 0)
                 {
                     string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
+                    yield return new ValidationResult($"At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{Name}]", memberNames);
                 }
             }
-            return results;
         }
 
         #endregion
+
     }
 }

@@ -1,6 +1,3 @@
-
-# Runtime stage
-# FROM mcr.microsoft.com/dotnet/runtime:8.0 AS build
 # The R sensitivity package seems to have a dependency on shiny - not sure why
 FROM apsiminitiative/rsensitivity AS base
 
@@ -13,10 +10,6 @@ COPY ./Tests/Validation /validation_files/Tests/Validation
 COPY ./Tests/Simulation /validation_files/Tests/Simulation
 COPY ./Tests/WeatherFiles /validation_files/Tests/WeatherFiles
 
-USER root
-RUN apt update -q --silent && \
-    apt install -yq libsqlite3-dev &&\
-    apt install -y dotnet-runtime-8.0
 # Add models to path
 ENV PATH=$PATH:/app
 RUN echo $PATH

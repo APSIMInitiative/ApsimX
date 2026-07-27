@@ -8,6 +8,8 @@ using System.Globalization;
 using UnitTests.Weather;
 using System.Data;
 using APSIM.Core;
+using Models.Surface;
+using System;
 
 namespace UnitTests.SurfaceOrganicMatterTests
 {
@@ -50,6 +52,29 @@ namespace UnitTests.SurfaceOrganicMatterTests
 
             Assert.That(values, Is.EqualTo(expected));
             Assert.That(valuesN, Is.EqualTo(expectedN));
+        }
+
+        /// <summary>
+        /// Ensures ReadParam() rejects InitialStandingFraction outside the [0, 1] range.
+        /// </summary>
+        [TestCase(-0.01)]
+        [TestCase(1.01)]
+        public void SurfaceOrganicMatterInitialStandingFractionOutOfRangeThrows(double standingFraction)
+        {
+            var surfaceOrganicMatter = Utilities.GetModelFromResource<SurfaceOrganicMatter>("SurfaceOrganicMatter");
+            Utilities.ResolveLinks(surfaceOrganicMatter);
+
+            surfaceOrganicMatter.InitialResidueName = "wheat_stubble";
+            surfaceOrganicMatter.InitialResidueType = "wheat";
+            surfaceOrganicMatter.InitialResidueMass = 500;
+            surfaceOrganicMatter.InitialCPR = 0;
+            surfaceOrganicMatter.InitialCNR = 100;
+            surfaceOrganicMatter.InitialStandingFraction = standingFraction;
+
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(() => surfaceOrganicMatter.Reset());
+
+            Assert.That(exception.ParamName, Is.EqualTo(nameof(surfaceOrganicMatter.InitialStandingFraction)));
+            Assert.That(exception.Message, Does.Contain("between 0 and 1"));
         }
     }
 }

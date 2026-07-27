@@ -40,46 +40,5 @@ namespace Models.CLEM.Resources
         [Description("Units")]
         public string Units { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceUnitsConverter()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">1 ");
-                if ((Parent as IResourceType).Units != null)
-                    htmlWriter.Write(" " + (Parent as IResourceType).Units + " ");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
-
-                htmlWriter.Write("<span class=\"resourcelink\">" + this.Parent.Name + "</span> ");
-                htmlWriter.Write("= ");
-
-                if (this.Factor != 0)
-                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Factor.ToString("#,##0.##") + "</span> ");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">[FACTOR NOT SET]</span>");
-
-                htmlWriter.Write(" ");
-                if (this.Units != null)
-                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Units + "</span> ");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
-
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 }

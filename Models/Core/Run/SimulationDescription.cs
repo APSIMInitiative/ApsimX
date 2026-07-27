@@ -68,7 +68,7 @@ namespace Models.Core.Run
         public string Name { get; }
 
         /// <summary>Gets / sets the list of descriptors for this simulaton.</summary>
-        public List<Descriptor> Descriptors { get; set; } = new List<Descriptor>();
+        public List<SimulationDescriptor> Descriptors { get; set; } = new List<SimulationDescriptor>();
 
         /// <summary>Gets or sets the DataStore for this simulaton.</summary>
         public IDataStore Storage
@@ -199,7 +199,7 @@ namespace Models.Core.Run
         /// Return true if this simulation has a descriptor.
         /// </summary>
         /// <param name="descriptor">The descriptor to search for.</param>
-        public bool HasDescriptor(Descriptor descriptor)
+        public bool HasDescriptor(SimulationDescriptor descriptor)
         {
             return Descriptors.Find(d => d.Name == descriptor.Name && d.Value == descriptor.Value) != null;
         }
@@ -219,32 +219,11 @@ namespace Models.Core.Run
             }
         }
 
-        /// <summary>Encapsulates a descriptor for a simulation.</summary>
-        [Serializable]
-        public class Descriptor
-        {
-            /// <summary>The name of the descriptor.</summary>
-            public string Name { get; set; }
-
-            /// <summary>The value of the descriptor.</summary>
-            public string Value { get; set; }
-
-            /// <summary>Constructor</summary>
-            /// <param name="name">Name of the descriptor.</param>
-            /// <param name="value">Value of the descriptor.</param>
-            public Descriptor(string name, string value)
-            {
-                Name = name;
-                Value = value;
-            }
-        }
-
-
         /// <summary>Compare two list of descriptors for equality.</summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns>true if the are the same.</returns>
-        public static bool Equals(List<SimulationDescription.Descriptor> x, List<SimulationDescription.Descriptor> y)
+        public static bool Equals(List<SimulationDescriptor> x, List<SimulationDescriptor> y)
         {
             if (x.Count != y.Count)
                 return false;

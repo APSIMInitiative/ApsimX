@@ -37,9 +37,10 @@ namespace Models.CLEM.Resources
             get
             {
                 if (float.TryParse((StoredValue ?? -9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                {
                     return val;
-                else
-                    return -9999;
+                }
+                return -9999;
             }
         }
 
@@ -51,9 +52,10 @@ namespace Models.CLEM.Resources
             get
             {
                 if (float.TryParse((StoredMateValue ?? -9999).ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float val))
+                {
                     return val;
-                else
-                    return -9999;
+                }
+                return -9999;
             }
         }
 
@@ -106,20 +108,31 @@ namespace Models.CLEM.Resources
                     if (StoredValue != null & StoredValue != null)
                     {
                         if (Value >= MateValue)
+                        {
                             newAttribute.StoredValue = StoredValue;
+                        }
                         else
+                        {
                             newAttribute.StoredValue = StoredMateValue;
+                        }
                     }
                     else
+                    {
                         return null;
+                    }
+
                     break;
                 case AttributeInheritanceStyle.MeanValueZeroAbsent:
                     float offSpringValue = 0;
                     if (StoredValue != null)
+                    {
                         offSpringValue += Value;
+                    }
 
                     if (StoredMateValue != null)
+                    {
                         offSpringValue += MateValue;
+                    }
 
                     newAttribute.StoredValue = (offSpringValue / 2.0f);
                     break;

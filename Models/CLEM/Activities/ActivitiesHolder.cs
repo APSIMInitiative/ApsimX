@@ -1,11 +1,12 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Models.Core.Attributes;
+using System.Linq;
 
 namespace Models.CLEM.Activities
 {
@@ -20,24 +21,27 @@ namespace Models.CLEM.Activities
     [Description("This holds all activities used in the CLEM simulation")]
     [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivitiesHolder: CLEMModel, IValidatableObject
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(singleInstance: true)]
+    public class ActivitiesHolder: CLEMModel
     {
-        private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
+        private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
+        private bool foundReportActivitiesPerformed = false;
 
         /// <summary>
-        /// Last resource request that was in defecit
+        /// Last resource request that was in deficit
         /// </summary>
         [JsonIgnore]
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
         /// <summary>
-        /// Resource shortfall occured event handler
+        /// Resource shortfall occurred event handler
         /// </summary>
         public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
-        /// Resource shortfall occured event handler
+        /// Resource shortfall occurred event handler
         /// </summary>
         public event EventHandler ActivityPerformed;
 
@@ -68,7 +72,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Create a GuID object based on next unique ID available.
         /// </summary>
-        /// <returns>CLEM formated GuID object.</returns>
+        /// <returns>CLEM formatted GuID object.</returns>
         public Guid NextGuID
         {
             get
@@ -95,7 +99,9 @@ namespace Models.CLEM.Activities
                 return Guid.Parse(string.Join('-', parts));
             }
             else
+            {
                 throw new ArgumentException("Add to GuID only supports levels 1 to 3");
+            }
         }
 
 
@@ -105,8 +111,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            foreach (var activity in Structure.FindChildren<CLEMModel>(recurse: true))
+            foundReportActivitiesPerformed = base.Structure.FindAll<ReportActivitiesPerformed>().Any();
+
+            foreach (var activity in Structure.FindChildren<CLEMActivityBase>(recurse: true))
+            {
                 activity.UniqueID = NextGuID;
+                activity.Status = ActivityStatus.Ignored;
+            }
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step.</summary>
@@ -115,26 +126,35 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMEndOfTimeStep")]
         private void ReportActivityStatusAtEndOfTimestep(object sender, EventArgs e)
         {
-            ReportAllActivityStatus();
+            if (foundReportActivitiesPerformed)
+            {
+                ReportAllActivityStatus();
+            }
         }
 
         /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("FinalInitialise")]
+        [EventSubscribe("StartOfFirstDay")]
         private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
         {
-            ReportAllActivityStatus(true);
+            // call after FinalInitialise
+            if (foundReportActivitiesPerformed)
+            {
+                ReportAllActivityStatus(true);
+            }
         }
 
         private void ReportAllActivityStatus(bool fromSetup = false)
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in Structure.FindChildren<CLEMActivityBase>())
+            {
                 child.ReportActivityStatus(0, fromSetup);
+            }
 
             // add timestep activity for reporting
-            ActivityPerformedEventArgs ea = new ActivityPerformedEventArgs()
+            ActivityPerformedEventArgs ea = new()
             {
                 Name = timeStep.Name,
                 Status = timeStep.Status,
@@ -142,7 +162,10 @@ namespace Models.CLEM.Activities
                 ModelType = (int)ActivityPerformedType.Timer,
             };
             LastActivityPerformed = ea;
-            OnActivityPerformed(ea);
+            if (fromSetup || ea.Status != ActivityStatus.NoTask)
+            {
+                OnActivityPerformed(ea);
+            }
         }
 
         /// <summary>
@@ -167,45 +190,16 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Determines whether the specified object is valid.
-        /// </summary>
-        /// <param name="validationContext">The validation context.</param>
-        /// <returns>A collection that holds failed-validation information.</returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // ensure all folders are not APSIM folders
             if (Structure.FindChildren<Folder>(recurse: true).Any())
             {
-                string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+                yield return new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", new string[] { "ActivityHolder" });
             }
-            return results;
         }
 
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "\r\n<h1>Activities summary</h1>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return $"\r\n<div class=\"activity\"style=\"opacity: {SummaryOpacity(FormatForParentControl)}\">";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
-        }
         #endregion
     }
 }
