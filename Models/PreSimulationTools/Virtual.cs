@@ -13,7 +13,12 @@ using Models.Utilities;
 namespace Models.PreSimulationTools
 {
     /// <summary>
+    /// The Virtual model allows the loading of contents of one .apsimx file 
+    /// into another.
     /// 
+    /// ## DO NOT USE
+    /// This model is still in testing and may change functionality in the near 
+    /// future and break your files.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.QuadView")]
