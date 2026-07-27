@@ -21,15 +21,21 @@ namespace Models.PreSimulationTools
     [ValidParent(ParentType = typeof(Simulations))]
     public class Virtual : Model, IReferenceExternalFiles, ICodeEditor, IGenerateNodes
     {
+        //Path to model to copy in
         private string _modelPath = "[Simulations]";
 
         /// <summary>The list of commands that are generated</summary>
         private string[] _commands = [];
 
+        /// <summary>
+        /// An internal flag that is set whenever a property is updated, so 
+        /// that we can skip remaking nodes if nothing has changed on this 
+        /// since it loaded.
+        /// </summary>
         private bool _requiresUpdating = true;
 
         /// <summary>
-        /// 
+        /// Filepath to apsimx file that we are loading from
         /// </summary>
         [JsonIgnore]
         public APSIMFilePath FilePath { get; set; } = new APSIMFilePath();
@@ -95,15 +101,6 @@ namespace Models.PreSimulationTools
         }
 
         /// <summary>
-        /// Create the commands for this model that will be run when generating 
-        /// nodes
-        /// </summary>
-        public void CreateCommands()
-        {
-            _commands = GetCommands(this, FilePath.AbsoluteFilePath, ModelPath);
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         public bool CreateNodes()
@@ -112,7 +109,7 @@ namespace Models.PreSimulationTools
             if (parentVirtual != null)
                 throw new Exception("Virtual cannot be placed under another Virtual node, potential cyclical loop.");
 
-            _commands = [];
+            _commands = GetCommands(this, FilePath.AbsoluteFilePath, ModelPath);
 
             string relativeDirectory = FilePath.StartDirectory;
             if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(ModelPath))
@@ -124,9 +121,6 @@ namespace Models.PreSimulationTools
                 //Check if this model is read only, and disable temporarily while generating the children
                 if (readOnly)
                     ReadOnly = false;
-
-                //Create the commands list
-                CreateCommands();
                 
                 //Lines will pull from _generatedCommads as a 1D array
                 IEnumerable<IModelCommand> commands = CommandLanguage.StringToCommands(_commands, Parent.Node.Model, relativeDirectory);
