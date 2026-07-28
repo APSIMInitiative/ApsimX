@@ -1,15 +1,78 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 207,
+  "Version": 216,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "Initial N modification - Canberra + 100, Young + 30, Condobolin2022, S1+100, S2+60; Condobolin2003, S1 +120, S2 +20, S3+ 20",
-      "Name": "Memo",
+      "Text": "The development of frost and heat damage functions was supported by the ‘Frost and Heat Management Analytics’ (FAHMA) project via funding from the Grains Research and Development Corporation (GRDC; Grant No. CSP2204-009RTX).",
+      "Name": "Funding Acknowledgement",
       "ResourceName": null,
       "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "Data description: https://doi.org/10.25919/j2af-ax46.\n\nDisclaimer: This dataset is provided “as is” without warranty of any kind, express or implied, including but not limited to its accuracy, completeness, or fitness for a particular purpose. The creators and contributors shall not be liable for any damages arising from its use. \n\nLicense: This dataset is released under [Creative Commons Attribution 4.0 International Licence](https://creativecommons.org/licenses/by/4.0/) in [CSIRO DAP](https://doi.org/10.25919/j2af-ax46).\n \nFor further inquiries or permission requests, please contact Dr Julianne Lilley (julianne.lilley@csiro.au).\n\nWhen citing this dataset, please use the following reference: Lilley, Julianne; Kirkegaard, John; Whish, Jeremy; Beletse, Yacob; Berger, Jens; Seymour, Mark; Bucat, Jackie; Herrmann, Chris; Dunn, Mathew; Ware, Andrew; Brill, Rohan; & Zhang, Heping (2024): Canola Agronomy. v3. CSIRO. Data Collection. https://doi.org/10.25919/j2af-ax46.\n \nWhen using the damage functions, please use the following reference for more information: Hu, P., He, D., Zheng, B., Whish, J., Kirkegaard, J., Bell, L., Leske, B., Chen, S., Uppal, R., Biddulph, B., Trethowan, R., Beletse, Y., Lilley, J., 2026. Event-based frost and heat damage functions improve yield predictions of APSIM canola and wheat: formulation, calibration, and evaluation. Agricultural and Forest Meteorology 386, 111239. https://doi.org/10.1016/j.agrformet.2026.111239",
+      "Name": "Data Ownership Acknowledgement",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "CanolaAgronomy_1_Obs.xlsx"
+          ],
+          "SheetNames": [
+            "Obs"
+          ],
+          "Name": "Observation",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "HarvestReport",
+          "ObservedTableName": "Obs",
+          "FieldNameUsedForMatch": "SimulationID",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": true,
+          "Name": "PredictedObserved",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "DamageFunctionHarvestReport",
+          "ObservedTableName": "Obs",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": null,
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": true,
+          "Name": "DamageFunctionHarvestObsPred",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
       "Enabled": true,
       "ReadOnly": false
     },
@@ -833,7 +896,7 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
-                  "IsEmerged": true,
+                  "IsEmerged": false,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
@@ -1784,24 +1847,75 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "RootFrontVelocity",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Germination",
-                      "End": "Emergence",
-                      "Name": "PreEmergence",
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "PotentialRate",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 5.0,
-                          "Units": null,
-                          "Name": "Function",
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Germination",
+                          "End": "Emergence",
+                          "Name": "PreEmergence",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 5.0,
+                              "Units": null,
+                              "Name": "Function",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Emergence",
+                          "End": "StartGrainFilling",
+                          "Name": "early",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 44.0,
+                              "Units": null,
+                              "Name": "Function",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "StartGrainFilling",
+                          "End": "Maturity",
+                          "Name": "late",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Function",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -1810,38 +1924,24 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "StartGrainFilling",
-                      "Name": "early",
+                      "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+                      "MaximumTemperatureWeighting": 0.5,
+                      "Name": "TemperatureFactor",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 44.0,
-                          "Units": null,
-                          "Name": "Function",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartGrainFilling",
-                      "End": "Maturity",
-                      "Name": "late",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Function",
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            20.0,
+                            32.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2497,7 +2597,7 @@
                           "Children": [
                             {
                               "$type": "Models.Memo, Models",
-                              "Text": "This approach is based upon the value used in [robertson_simulation_2002] increased to account for partitioning to roots.",
+                              "Text": "This approach is based upon the value used in [#robertson_simulation_2002] increased to account for partitioning to roots.",
                               "Name": "Memo",
                               "ResourceName": null,
                               "Children": [],
@@ -2724,7 +2824,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0001,
+                              "FixedValue": 0.0005,
                               "Units": null,
                               "Name": "AreaPerPlant",
                               "ResourceName": null,
@@ -3745,35 +3845,7 @@
                   "VariableName": "[Leaf].MaximumNConc",
                   "Name": "CriticalNConc",
                   "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "LAIDead",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].SpecificAreaCanopy",
-                          "Name": "SLA",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Dead.Wt",
-                          "Name": "LeafDeadWt",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3932,7 +4004,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Memo, Models",
-                                                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                                   "Name": "Memo",
                                                   "ResourceName": null,
                                                   "Children": [],
@@ -3999,7 +4071,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Memo, Models",
-                                          "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                          "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                           "Name": "Memo",
                                           "ResourceName": null,
                                           "Children": [],
@@ -4236,16 +4308,6 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0001,
-                      "Units": null,
-                      "Name": "AreaPerPlant",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -4435,7 +4497,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.035,
+                  "FixedValue": 0.025,
                   "Units": "m^2/g",
                   "Name": "SpecificArea",
                   "ResourceName": null,
@@ -5898,7 +5960,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                   "Name": "Memo",
                                   "ResourceName": null,
                                   "Children": [],
@@ -5928,7 +5990,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Memo, Models",
-                                  "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                                  "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                                   "Name": "Memo",
                                   "ResourceName": null,
                                   "Children": [],
@@ -7218,7 +7280,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This approach is based upon that used in [robertson_simulation_2002].",
+                      "Text": "This approach is based upon that used in [#robertson_simulation_2002].",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -7623,6 +7685,7 @@
                     "[Phenology].Vegetative.Target.XYPairs.X = 0,6",
                     "[Phenology].Vegetative.Target.XYPairs.Y = 500,250",
                     "[Phenology].StemElongation.Target.PPResponse.Amount.FixedValue = 200",
+                    "[Phenology].StemElongation.Target.Base.FixedValue = 50",
                     "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                     "[Leaf].Phyllochron.Base.FixedValue = 54"
                   ],
@@ -7831,11 +7894,7 @@
                     "[Leaf].Photosynthesis.RUE.TriazineToleranceModifier.FixedValue = 0.78",
                     "[Leaf].Phyllochron.Base.FixedValue = 54",
                     "",
-                    "/*",
-                    "                ",
-                    "                built from Stingray",
-                    "            ",
-                    "            */"
+                    "//built from Stingray"
                   ],
                   "Name": "Hyola450_TT",
                   "ResourceName": null,
@@ -7876,6 +7935,23 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.XYPairs.X = 0,10",
+                    "[Phenology].Vegetative.Target.XYPairs.Y = 300,1",
+                    "[Leaf].Phyllochron.Base.FixedValue = 60",
+                    "[Photosynthesis].RUE.Potential.FixedValue = 3.4",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 500",
+                    "[Grain].PotentialHarvestIndex.GrainFraction.FixedValue = 0.6"
+                  ],
+                  "Name": "Hyola575",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -8216,22 +8292,22 @@
             {
               "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
               "CropType": 2,
-              "FrostLowTT": -4.108862,
-              "FrostMaxReductionRatio": 0.3050003,
-              "FrostUpTT": -0.7549879,
+              "FrostLowTT": -4.9,
+              "FrostMaxReductionRatio": 0.13,
+              "FrostUpTT": 0.1,
               "FrostMinReductionRatio": 0.0,
-              "FrostStartSensitiveGS": 7.222864,
-              "FrostStartMostSensitiveGS": 7.329504,
-              "FrostEndMostSensitiveGS": 8.063452,
-              "FrostEndSensitiveGS": 8.181088,
-              "HeatLowTT": 27.45271,
+              "FrostStartSensitiveGS": 5.71,
+              "FrostStartMostSensitiveGS": 7.56,
+              "FrostEndMostSensitiveGS": 8.38,
+              "FrostEndSensitiveGS": 9.01,
+              "HeatLowTT": 29.1,
               "HeatMinReductionRatio": 0.0,
-              "HeatUpTT": 38.8354,
-              "HeatMaxReductionRatio": 0.5810167,
-              "HeatStartSensitiveGS": 5.578273,
-              "HeatStartMostSensitiveGS": 6.260291,
-              "HeatEndMostSensitiveGS": 9.200536,
-              "HeatEndSensitiveGS": 9.428058,
+              "HeatUpTT": 39.8,
+              "HeatMaxReductionRatio": 0.42,
+              "HeatStartSensitiveGS": 5.75,
+              "HeatStartMostSensitiveGS": 7.01,
+              "HeatEndMostSensitiveGS": 8.31,
+              "HeatEndSensitiveGS": 10.18,
               "Name": "FrostHeatDamageFunctions",
               "ResourceName": null,
               "Children": [],
@@ -8239,34 +8315,6 @@
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today as Date",
-            "[Canola].Phenology.Stage",
-            "[Canola].Phenology.Zadok",
-            "[Canola].Phenology.CurrentStageName",
-            "[Canola].Phenology.CurrentPhaseName",
-            "[Canola].Phenology.StartFloweringDAS",
-            "[Canola].Phenology.MaturityDAS",
-            "[Canola].AboveGround.Wt",
-            "[Canola].Grain.Wt",
-            "[Canola].LAI",
-            "",
-            "[Weather].MinT",
-            "[Weather].MaxT",
-            "[Canola].Phenology.ThermalTime"
-          ],
-          "EventNames": [
-            "[Clock].DoReport"
-          ],
-          "GroupByVariableName": null,
-          "Name": "DailyReport",
-          "ResourceName": null,
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -8300,11 +8348,7 @@
             "[Canola].Phenology.StartFloweringDAS",
             "[Canola].Phenology.MaturityDAS",
             "[Canola].AboveGround.Wt",
-            "[FrostHeatDamageFunctions].FrostHeatYield as Canola.Grain.Wt",
-            "[FrostHeatDamageFunctions].FrostSensitivePeriodStartDAS",
-            "[FrostHeatDamageFunctions].FrostSensitivePeriodEndDAS",
-            "[FrostHeatDamageFunctions].HeatSensitivePeriodStartDAS",
-            "[FrostHeatDamageFunctions].HeatSensitivePeriodEndDAS"
+            "[FrostHeatDamageFunctions].FrostHeatYield as Canola.Grain.Wt"
           ],
           "EventNames": [
             "[Canola].Harvesting"
@@ -8315,56 +8359,20 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Storage.DataStore, Models",
-      "CustomFileName": null,
-      "Name": "DataStore",
-      "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
-            "CanolaFHObservation.xlsx"
-          ],
-          "SheetNames": [
-            "CanolaFHObservationStage13JulV"
-          ],
-          "Name": "Observation",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
         },
         {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "HarvestReport",
-          "ObservedTableName": "CanolaFHObservationStage13JulV",
-          "FieldNameUsedForMatch": "SimulationID",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "FieldName4UsedForMatch": null,
-          "AllColumns": true,
-          "Name": "PredictedObserved",
-          "ResourceName": null,
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "DamageFunctionHarvestReport",
-          "ObservedTableName": "CanolaFHObservationStage13JulV",
-          "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "FieldName4UsedForMatch": null,
-          "AllColumns": true,
-          "Name": "DamageFunctionHarvestObsPred",
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Canola].SowingData.Cultivar",
+            "[IWeather].Latitude",
+            "[IWeather].Longitude"
+          ],
+          "EventNames": [
+            "[Canola].Sowing"
+          ],
+          "GroupByVariableName": null,
+          "Name": "SowingReport",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -8380,86 +8388,6 @@
       "Name": "Combined Results",
       "ResourceName": null,
       "Children": [
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": null,
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": null,
-              "Maximum": null,
-              "Interval": null
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 1,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": true,
-          "Name": "Phenology",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": -16776961,
-              "FactorToVaryColours": "Observed.JulCultivar",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 10,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "PredictedObserved",
-              "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
-              "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": null,
-              "Name": "Predicted",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
         {
           "$type": "Models.Graph, Models",
           "Caption": null,
@@ -8656,8 +8584,7 @@
                         "[IrrigationFixedDate2].Script.IrrigateDates=5-apr",
                         "[IrrigationFixedDate3].Script.Amount=0"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -8675,8 +8602,7 @@
                         "[IrrigationFixedDate3].Script.Amount=7.5",
                         "[IrrigationFixedDate3].Script.IrrigateDates=16-apr,20-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -8696,8 +8622,7 @@
                         "[IrrigationFixedDate3].Script.Amount=0",
                         "[FertiliseAtSowing].Script.Amount=30"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -8719,8 +8644,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Garnet"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Garnet",
                       "ResourceName": null,
                       "Children": [],
@@ -8732,8 +8656,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola75"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola75",
                       "ResourceName": null,
                       "Children": [],
@@ -8745,8 +8668,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Skipton"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Skipton",
                       "ResourceName": null,
                       "Children": [],
@@ -8767,7 +8689,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "CanberraBase",
           "ResourceName": null,
           "Children": [
@@ -8793,7 +8714,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/canberra_a.met",
+              "FileName": "./met/canberra_a.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -9454,6 +9375,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -9904,6 +9826,8 @@
                     "[Clock].Today.DayOfYear as day",
                     "[Canola].DaysAfterSowing as DaysAftersowing",
                     "[Canola].Phenology.Stage as Stage",
+                    "[Canola].Phenology.AccumulatedTT",
+                    "[Canola].Phenology.CumulativeThermalTime",
                     "[canola].Phenology.CurrentStageName as StageName",
                     "[canola].Phenology.CurrentPhaseName as PhaseName",
                     "[Canola].LAI as lai",
@@ -10284,6 +10208,24 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -12714,8 +12656,7 @@
                         "[SowingFixedDate].Script.SowDate=4-apr",
                         "[SowingFixedDate].Script.Population=55"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -12730,8 +12671,7 @@
                         "[IrrigationFixedDate2].Script.Amount=25",
                         "[IrrigationFixedDate2].Script.IrrigateDates=19-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -12745,8 +12685,7 @@
                         "[SowingFixedDate].Script.Population=50",
                         "[IrrigationFixedDate2].Script.Amount=0"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -12768,8 +12707,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Garnet"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Garnet",
                       "ResourceName": null,
                       "Children": [],
@@ -12781,8 +12719,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola75"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola75",
                       "ResourceName": null,
                       "Children": [],
@@ -12794,8 +12731,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Skipton"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Skipton",
                       "ResourceName": null,
                       "Children": [],
@@ -12816,7 +12752,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "WaggaBase",
           "ResourceName": null,
           "Children": [
@@ -12842,7 +12777,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/wagga5.met",
+              "FileName": "./met/wagga5.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -13717,6 +13652,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -14344,6 +14280,24 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "DamageFunctionHarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -15332,8 +15286,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=16-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -15345,8 +15298,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=29-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -15368,8 +15320,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=46Y78"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "46Y78",
                       "ResourceName": null,
                       "Children": [],
@@ -15381,8 +15332,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola50"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola50",
                       "ResourceName": null,
                       "Children": [],
@@ -15394,8 +15344,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Garnet"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Garnet",
                       "ResourceName": null,
                       "Children": [],
@@ -15416,7 +15365,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "YoungBase",
           "ResourceName": null,
           "Children": [
@@ -15442,7 +15390,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/young_3oaks_2005-2010.met",
+              "FileName": "./met/young_3oaks_2005-2010.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -16306,6 +16254,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -16927,6 +16876,24 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -17912,8 +17879,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=17-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -17925,8 +17891,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=12-may"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -17938,8 +17903,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=11-jun"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -17961,8 +17925,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Beacon"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Beacon",
                       "ResourceName": null,
                       "Children": [],
@@ -17974,8 +17937,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Surpass500"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Surpass500",
                       "ResourceName": null,
                       "Children": [],
@@ -17996,7 +17958,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "GrenfellBase",
           "ResourceName": null,
           "Children": [
@@ -18022,7 +17983,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/grenfell.met",
+              "FileName": "./met/grenfell.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -18886,6 +18847,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -19385,6 +19347,24 @@
                   "Children": [],
                   "Enabled": false,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -19787,8 +19767,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=20-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -19800,8 +19779,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=16-may"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -19813,8 +19791,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=12-jun"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -19836,8 +19813,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Garnet"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Garnet",
                       "ResourceName": null,
                       "Children": [],
@@ -19849,8 +19825,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola50"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola50",
                       "ResourceName": null,
                       "Children": [],
@@ -19862,8 +19837,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola575"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola575CL",
                       "ResourceName": null,
                       "Children": [],
@@ -19875,8 +19849,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=43C80_CL"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "43C80",
                       "ResourceName": null,
                       "Children": [],
@@ -19888,8 +19861,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=43Y85"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "43Y85",
                       "ResourceName": null,
                       "Children": [],
@@ -19901,8 +19873,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=44Y84"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "44Y84",
                       "ResourceName": null,
                       "Children": [],
@@ -19914,8 +19885,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=ATR_Gem"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "ATR_GEM",
                       "ResourceName": null,
                       "Children": [],
@@ -19927,8 +19897,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=ATR_Stingray"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "ATR_Stingray",
                       "ResourceName": null,
                       "Children": [],
@@ -19940,8 +19909,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola555TT"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola555TT",
                       "ResourceName": null,
                       "Children": [],
@@ -19953,8 +19921,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola559_TT"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola559TT",
                       "ResourceName": null,
                       "Children": [],
@@ -19966,8 +19933,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola575"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Midh",
                       "ResourceName": null,
                       "Children": [],
@@ -19988,7 +19954,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "TamworthBase",
           "ResourceName": null,
           "Children": [
@@ -20014,7 +19979,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/tamworth_ARI2.met",
+              "FileName": "./met/tamworth_ARI2.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -20851,6 +20816,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -21252,6 +21218,24 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "DamageFunctionHarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -22309,8 +22293,7 @@
                         "[SowingFixedDate].Script.SowDate=22-apr",
                         "[FertiliseAtSowing].Script.Amount = 100"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -22323,8 +22306,7 @@
                         "[SowingFixedDate].Script.SowDate=17-may",
                         "[FertiliseAtSowing].Script.Amount = 60"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -22336,8 +22318,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=14-jun"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -22359,8 +22340,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Dunkeld"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Dunkeld",
                       "ResourceName": null,
                       "Children": [],
@@ -22372,8 +22352,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=AgOutback"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "AgOutback",
                       "ResourceName": null,
                       "Children": [],
@@ -22385,8 +22364,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Dunkeld"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Late",
                       "ResourceName": null,
                       "Children": [],
@@ -22398,8 +22376,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola42"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola42",
                       "ResourceName": null,
                       "Children": [],
@@ -22411,8 +22388,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Oscar"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Oscar",
                       "ResourceName": null,
                       "Children": [],
@@ -22424,8 +22400,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Rainbow"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Rainbow",
                       "ResourceName": null,
                       "Children": [],
@@ -22446,7 +22421,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Condobolin2002Base",
           "ResourceName": null,
           "Children": [
@@ -22472,7 +22446,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/condobolin.met",
+              "FileName": "./met/condobolin_oa.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -23253,6 +23227,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -23911,6 +23886,24 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -24899,8 +24892,7 @@
                         "[IrrigationFixedDate1].Script.Efficiency=1",
                         "[FertiliseAtSowing].Script.Amount = 120"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -24916,8 +24908,7 @@
                         "[IrrigationFixedDate1].Script.Efficiency=0.01",
                         "[FertiliseAtSowing].Script.Amount = 120"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -24932,8 +24923,7 @@
                         "[IrrigationFixedDate1].Script.Efficiency=0.01",
                         "[FertiliseAtSowing].Script.Amount = 20"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -24947,8 +24937,7 @@
                         "[SowingFixedDate].Script.Population = 30",
                         "[IrrigationFixedDate1].Script.Efficiency=0.01"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "4",
                       "ResourceName": null,
                       "Children": [],
@@ -24970,8 +24959,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Dunkeld"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Dunkeld",
                       "ResourceName": null,
                       "Children": [],
@@ -24983,8 +24971,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=AgOutback"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "AgOutback",
                       "ResourceName": null,
                       "Children": [],
@@ -24996,8 +24983,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Dunkeld"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Late",
                       "ResourceName": null,
                       "Children": [],
@@ -25009,8 +24995,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola42"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola42",
                       "ResourceName": null,
                       "Children": [],
@@ -25022,8 +25007,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Oscar"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Oscar",
                       "ResourceName": null,
                       "Children": [],
@@ -25035,8 +25019,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Rainbow"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Rainbow",
                       "ResourceName": null,
                       "Children": [],
@@ -25058,8 +25041,7 @@
                       "Specifications": [
                         "[IrrigationFixedDate2].Script.Amount=30"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "30",
                       "ResourceName": null,
                       "Children": [],
@@ -25071,8 +25053,7 @@
                       "Specifications": [
                         "[IrrigationFixedDate2].Script.Amount=0.1"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "0",
                       "ResourceName": null,
                       "Children": [],
@@ -25093,7 +25074,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Condobolin2003Base",
           "ResourceName": null,
           "Children": [
@@ -25119,7 +25099,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/condobolin.met",
+              "FileName": "./met/condobolin_oa.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -25891,6 +25871,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -26455,6 +26436,24 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "DamageFunctionHarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -27443,8 +27442,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=13-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -27456,8 +27454,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=26-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -27469,8 +27466,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=14-May"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "3",
                       "ResourceName": null,
                       "Children": [],
@@ -27492,8 +27488,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Garnet"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Garnet",
                       "ResourceName": null,
                       "Children": [],
@@ -27505,8 +27500,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=43Y85"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "43Y85",
                       "ResourceName": null,
                       "Children": [],
@@ -27518,8 +27512,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=44Y84"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "44Y84",
                       "ResourceName": null,
                       "Children": [],
@@ -27531,8 +27524,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola50"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola50",
                       "ResourceName": null,
                       "Children": [],
@@ -27553,7 +27545,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Trangie2012Base",
           "ResourceName": null,
           "Children": [
@@ -27579,7 +27570,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/trangie-fh.met",
+              "FileName": "./met/trangie-fh.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -28178,6 +28169,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -28635,6 +28627,24 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "DamageFunctionHarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -29623,8 +29633,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=21-apr"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "1",
                       "ResourceName": null,
                       "Children": [],
@@ -29636,8 +29645,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.SowDate=18-may"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "2",
                       "ResourceName": null,
                       "Children": [],
@@ -29659,8 +29667,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=44C79"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "44C79",
                       "ResourceName": null,
                       "Children": [],
@@ -29672,8 +29679,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Tarcoola"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Tarcoola",
                       "ResourceName": null,
                       "Children": [],
@@ -29685,8 +29691,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Hyola50"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Hyola50",
                       "ResourceName": null,
                       "Children": [],
@@ -29698,8 +29703,7 @@
                       "Specifications": [
                         "[SowingFixedDate].Script.CultivarName=Skipton"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Earlymid",
                       "ResourceName": null,
                       "Children": [],
@@ -29720,7 +29724,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Trangie2009Base",
           "ResourceName": null,
           "Children": [
@@ -29746,7 +29749,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "Weather/trangie-fh.met",
+              "FileName": "./met/trangie-fh.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "ResourceName": null,
@@ -30345,6 +30348,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -30731,6 +30735,24 @@
                   ],
                   "GroupByVariableName": null,
                   "Name": "DamageFunctionHarvestReport",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Canola].SowingData.Cultivar",
+                    "[IWeather].Latitude",
+                    "[IWeather].Longitude"
+                  ],
+                  "EventNames": [
+                    "[Canola].Sowing"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "SowingReport",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -31677,496 +31699,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
-      "Name": "APSIMClassicVSAPSIMNG",
-      "ResourceName": null,
-      "Children": [
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed FloweringDAS",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 70.0,
-              "Maximum": 140.0,
-              "Interval": 10.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM NG Simulated FloweringDAS",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 70.0,
-              "Maximum": 140.0,
-              "Interval": 10.0
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM NG FloweringDAS",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Cultivar",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "PredictedObserved",
-              "XFieldName": "Observed.Canola.Phenology.StartFloweringDAS",
-              "YFieldName": "Predicted.Canola.Phenology.StartFloweringDAS",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed FloweringDAS",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 70.0,
-              "Maximum": 140.0,
-              "Interval": 10.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM Classic Simulated FloweringDAS",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 70.0,
-              "Maximum": 140.0,
-              "Interval": 10.0
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM Classic FloweringDAS",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Cultivar",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "CanolaFHObservationStage13JulV",
-              "XFieldName": "Canola.Phenology.StartFloweringDAS",
-              "YFieldName": "Classic.StartFloweringDAS",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed Biomass",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 1600.0,
-              "Interval": 200.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM NG Biomass",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 1600.0,
-              "Interval": 200.0
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM NG Biomass",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Cultivar",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "PredictedObserved",
-              "XFieldName": "Observed.Canola.AboveGround.Wt",
-              "YFieldName": "Predicted.Canola.AboveGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed Biomass",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 1600.0,
-              "Interval": 200.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM Classic Simulated Biomass",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": "NaN",
-              "Interval": "NaN"
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM Classic Biomass",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "CanolaFHObservationStage13JulV",
-              "XFieldName": "Canola.AboveGround.Wt",
-              "YFieldName": "Classic.AboveGround.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed Yield",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 400.0,
-              "Interval": 50.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM NG Simulated Yield",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 400.0,
-              "Interval": 50.0
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM NG Yield",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "PredictedObserved",
-              "XFieldName": "Observed.Canola.Grain.Wt",
-              "YFieldName": "Predicted.Canola.Grain.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Graph, Models",
-          "Caption": null,
-          "Axis": [
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "Observed Yield",
-              "Position": 3,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 400.0,
-              "Interval": 50.0
-            },
-            {
-              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-              "Title": "APSIM Classic Simulated Yield",
-              "Position": 0,
-              "Inverted": false,
-              "CrossesAtZero": false,
-              "LabelOnOneLine": false,
-              "Minimum": 0.0,
-              "Maximum": 400.0,
-              "Interval": 50.0
-            }
-          ],
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "AnnotationLocation": 0,
-          "DisabledSeries": [],
-          "LegendOutsideGraph": false,
-          "Name": "APSIM Classic Yield",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Series, Models",
-              "Type": 1,
-              "XAxis": 3,
-              "YAxis": 0,
-              "ColourArgb": 0,
-              "FactorToVaryColours": "Experiment",
-              "FactorToVaryMarkers": null,
-              "FactorToVaryLines": null,
-              "Marker": 0,
-              "MarkerSize": 0,
-              "Line": 4,
-              "LineThickness": 0,
-              "TableName": "CanolaFHObservationStage13JulV",
-              "XFieldName": "Canola.Grain.Wt",
-              "YFieldName": "Classic.Grain.Wt",
-              "X2FieldName": null,
-              "Y2FieldName": null,
-              "ShowInLegend": true,
-              "IncludeSeriesNameInLegend": false,
-              "Cumulative": false,
-              "CumulativeX": false,
-              "Filter": "",
-              "Name": "Series",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Regression, Models",
-                  "ForEachSeries": false,
-                  "showOneToOne": true,
-                  "showEquation": true,
-                  "Name": "Regression",
-                  "ResourceName": null,
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
