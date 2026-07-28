@@ -1246,8 +1246,7 @@ save {savingApsimFileNameShort} ";
             string outputFile = "test.apsimx";
 
             string configFile = tempPath + "config.txt";
-            File.WriteAllText(configFile, @"[Simulation].Name=<input.txt
-save " + outputFile);
+            File.WriteAllText(configFile, "[Simulation].Name= from input.txt\nsave " + outputFile);
 
             Utilities.RunModels(file, $"--apply {configFile}");
 

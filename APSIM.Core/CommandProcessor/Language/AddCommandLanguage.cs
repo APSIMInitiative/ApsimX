@@ -1,5 +1,3 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 internal partial class AddCommand: IModelCommand
@@ -11,10 +9,10 @@ internal partial class AddCommand: IModelCommand
     private const string KEYWORD_NAME = " name ";
 
     //Regex patterns to read the text between keywords
-    private const string PATTERN_ADD = $@"{KEYWORD_ADD}(?<new>new )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
-    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
-    private const string PATTERN_TO = $@"{KEYWORD_TO}(?<all>all )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
-    private const string PATTERN_NAME = $@"{KEYWORD_NAME}(?<name>{CommandLanguage.PATTERN_NAME_TEXT})";
+    private const string PATTERN_ADD = $"{KEYWORD_ADD}(?<new>new )*(?<source>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_FROM = $"{KEYWORD_FROM}(?<file>{CommandLanguage.PATTERN_FILE_PATH})";
+    private const string PATTERN_TO = $"{KEYWORD_TO}(?<all>all )*(?<destination>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_NAME = $"{KEYWORD_NAME}(?<name>{CommandLanguage.PATTERN_NAME_TEXT})";
 
     /// <summary>
     /// Create an add command.
@@ -34,59 +32,18 @@ internal partial class AddCommand: IModelCommand
         if (!command.ToLower().Trim().StartsWith("add"))
             throw new Exception($"Invalid command: {command}");
 
-        //Determine what required and optional keywords are in the command
-        //Order of keywords is important
         string[] keywords = [KEYWORD_ADD, KEYWORD_FROM, KEYWORD_TO, KEYWORD_NAME];
-        IEnumerable<string> segments = CommandLanguage.BreakCommandIntoSegements(command, keywords);
+        string[] patterns = [PATTERN_ADD, PATTERN_FROM, PATTERN_TO, PATTERN_NAME];
+        CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
 
-        bool usesNew = false;
-        bool usesAll = false;
-        string source = "";
-        string filepath = "";
-        string destination = "";
-        string name = "";
-        //Use regex to quality check the inputs
-        foreach(string segment in segments)
-        {
-            if (segment.StartsWith(KEYWORD_ADD))
-            {
-                Match match = Regex.Match(segment, PATTERN_ADD);
-                if (!match.Success)
-                    throw new Exception($"Invalid command: {command}");
-                if (!string.IsNullOrEmpty(match.Groups["new"].ToString()))
-                    usesNew = true;
-                source = match.Groups["model"].ToString();
-            }
-            else if (segment.StartsWith(KEYWORD_FROM))
-            {
-                Match match = Regex.Match(segment, PATTERN_FROM);
-                if (!match.Success)
-                    throw new Exception($"Invalid command: {command}");
-                filepath = match.Groups["file"].ToString();
-            }
-            else if (segment.StartsWith(KEYWORD_TO))
-            {
-                Match match = Regex.Match(segment, PATTERN_TO);
-                if (!match.Success)
-                    throw new Exception($"Invalid command: {command}");
-                if (!string.IsNullOrEmpty(match.Groups["all"].ToString()))
-                    usesAll = true;
-                destination = match.Groups["model"].ToString();
-            }
-            else if (segment.StartsWith(KEYWORD_NAME))
-            {
-                Match match = Regex.Match(segment, PATTERN_NAME);
-                if (!match.Success)
-                    throw new Exception($"Invalid command: {command}");
-                name = match.Groups["name"].ToString().Trim();
-                if (string.IsNullOrEmpty(name))
-                    throw new Exception($"Invalid command: {command}");
-            }
-        }
+        bool usesNew = CommandSegment.ContainsKey(segments, "new");
+        bool usesAll = CommandSegment.ContainsKey(segments, "all");
+        string source = CommandSegment.GetValue(segments, "source");
+        string filepath = CommandSegment.GetValue(segments, "file");
+        string destination = CommandSegment.GetValue(segments, "destination");
+        string name = CommandSegment.GetValue(segments, "name");
 
-        if (string.IsNullOrEmpty(source))
-            throw new Exception($"Invalid command: {command}");
-        if (string.IsNullOrEmpty(destination))
+        if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(destination))
             throw new Exception($"Invalid command: {command}");
 
         //find or create the model being added

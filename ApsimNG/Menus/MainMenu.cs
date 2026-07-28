@@ -216,13 +216,13 @@ namespace UserInterface.Presenters
             
             //Prior to running, we need to generate any virtual nodes that have 
             //been changed since opening the file
-            bool treeUpdated = false;
+            bool treeNeedsUpdating = false;
             foreach (Node node in currentNode.Node.Walk())
                 if (node.Model is IGenerateNodes generator)
                     if (generator.RequiresUpdating())
-                        treeUpdated = true;
+                        treeNeedsUpdating = true;
             
-            if (treeUpdated)
+            if (treeNeedsUpdating)
             {
                 Node.Create(currentNode.Node.Model);
                 explorerPresenter.RebuildTree();

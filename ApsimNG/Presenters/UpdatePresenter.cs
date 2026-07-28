@@ -64,9 +64,11 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>Refresh the list</summary>
+        /// <summary>Refresh the presenter</summary>
         public void Refresh()
         {
+            //does nothing - here for interface
+            //button has nothing to update
         }
 
         /// <summary>
