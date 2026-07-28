@@ -12,7 +12,6 @@
 set -euo pipefail
 
 test -z ${DOCKER_METADATA_OUTPUT_VERSION:+x} && ( echo "DOCKER_METADATA_OUTPUT_VERSION not set"; exit 1 )
-test -z ${NETLIFY_BUILD_HOOK:+x} && ( echo "NETLIFY_BUILD_HOOK not set"; exit 1 )
 test -z ${BUILDS_JWT:+x} && ( echo "BUILDS_JWT not set"; exit 1 )
 
 PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
