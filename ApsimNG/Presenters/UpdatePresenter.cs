@@ -72,7 +72,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Event handler for changing the selected row of the list
         /// </summary>
-        private void OnClick(object sender, System.EventArgs e)
+        private void OnClick(object sender, EventArgs e)
         {
             if (_model is IGenerateNodes generator)
             {
@@ -80,7 +80,7 @@ namespace UserInterface.Presenters
                 generator.CreateNodes();
                 _explorerPresenter.RebuildTree();
                 if (Click != null)
-                    Click.Invoke(this, null);
+                    Click.Invoke(this, new EventArgsValue(0));
             }
         }
     }

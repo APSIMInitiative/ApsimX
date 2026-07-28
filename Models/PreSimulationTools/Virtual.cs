@@ -94,7 +94,7 @@ namespace Models.PreSimulationTools
         /// </summary>
         public IEnumerable<string> GetReferencedFileNames()
         {
-            return [];
+            return [FileName];
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Models.PreSimulationTools
         /// </summary>
         public void RemovePathsFromReferencedFileNames()
         {
-            return;
+            FilePath.RelativeFilePath = Path.GetFileName(FilePath.RelativeFilePath);
         }
 
         /// <summary>

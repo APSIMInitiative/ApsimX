@@ -352,7 +352,8 @@ namespace Models.Core.Run
             // Call all pre simulation tools.
             foreach (IPreSimulationTool tool in FindPreSimulationTools())
             {
-                storage.Refresh();
+                if (storage != null)
+                    storage.Refresh();
                 try
                 {
                     if (tool.Enabled)
