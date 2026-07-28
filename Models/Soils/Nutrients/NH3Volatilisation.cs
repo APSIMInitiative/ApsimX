@@ -116,7 +116,7 @@ namespace Models.Soils.Nutrients
         ///////////////////////////////////////////////////////////////////////////
 
         /// <summary>Dynamic pH within the volatilisation model</summary>
-        public double[] pH { get; private set; }
+        public double[] pH { get; set; }
 
         /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
         public double[] EmissabilityNH3 { get; private set; }
@@ -344,8 +344,8 @@ namespace Models.Soils.Nutrients
                 if (GasExchangeNH[z] > 0)
                 {
                     EmissionNH3[z] = NH3Gas[z] * GasExchangeNH[z] * EmissabilityNH3[z];      // mg/m2
-                    EmissionNH3[z] = EmissionNH3[z] * 10E+4;                      // mg/ha
-                    EmissionNH3[z] = EmissionNH3[z] * 10E-6;                      // kg/ha
+                    EmissionNH3[z] = EmissionNH3[z] * 1E+4;                      // mg/ha
+                    EmissionNH3[z] = EmissionNH3[z] * 1E-6;                      // kg/ha
                 }
                 else
                     EmissionNH3[z] = 0;
