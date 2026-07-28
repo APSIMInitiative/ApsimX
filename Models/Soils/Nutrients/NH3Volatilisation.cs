@@ -120,7 +120,7 @@ namespace Models.Soils.Nutrients
         ///////////////////////////////////////////////////////////////////////////
 
         /// <summary>Dynamic pH within the volatilisation model</summary>
-        public double[] pH { get; private set; }
+        public double[] pH { get; set; }
 
         /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
         public double[] EmissabilityNH3 { get; private set; }
