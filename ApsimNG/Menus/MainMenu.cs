@@ -162,7 +162,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/");
+                ProcessUtilities.ProcessStart("https://docs.apsim.info/");
             }
             catch (Exception err)
             {

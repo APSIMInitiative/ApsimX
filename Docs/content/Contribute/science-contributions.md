@@ -7,7 +7,7 @@ weight: 200
 ### Documentation
 
 * Documentation is automatically generated from the submitted validation .apsimx file.
-* A science document may also be submitted by the model author (e.g. [see AgPasture science document](https://apsimnextgeneration.netlify.app/modeldocumentation/)).
+* A science document may also be submitted by the model author (e.g. [see AgPasture science document](https://docs.apsim.info/validation/AgPasture)).
 * All equations shall have units on all variables.
 
 ### Examples
