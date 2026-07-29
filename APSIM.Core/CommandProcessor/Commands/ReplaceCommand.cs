@@ -7,27 +7,27 @@ namespace APSIM.Core;
 /// <remarks>
 /// The JsonProperty attributes below are needed for JSON serialisation which the APSIM.Server uses.
 /// </remarks>
-public partial class ReplaceCommand : IModelCommand
+public partial class ReplaceCommand : IModelCommand, ICommandReferenceExternalFile
 {
     /// <summary>A reference to a model.</summary>
     [JsonProperty]
-    private readonly IModelReference modelReference;
+    private readonly IModelReference _modelReference;
 
     /// <summary>The path of models to replace.</summary>
     [JsonProperty]
-    private readonly string replacementPath;
+    private readonly string _replacementPath;
 
     /// <summary>Do as many replacements as possible?</summary>
     [JsonProperty]
-    private readonly bool multiple;
+    private readonly bool _multiple;
 
     /// <summary>Match on name and type? If false, will only match when names match.</summary>
     [JsonProperty]
-    private readonly MatchType matchType;
+    private readonly MatchType _matchType;
 
     /// <summary>Name given to model after replacement</summary>
     [JsonProperty]
-    private readonly string newName;
+    private readonly string _newName;
 
     /// <summary>
     /// Specifies how models are matched for replacement: by name, by both name and type, or by either name or type.
@@ -44,11 +44,11 @@ public partial class ReplaceCommand : IModelCommand
     /// <param name="newName">Name given to model after replacement.</param>
     public ReplaceCommand(IModelReference modelReference, string replacementPath, bool multiple, MatchType matchType, string newName = null)
     {
-        this.modelReference = modelReference;
-        this.replacementPath = replacementPath;
-        this.multiple = multiple;
-        this.matchType = matchType;
-        this.newName = newName;
+        _modelReference = modelReference;
+        _replacementPath = replacementPath;
+        _multiple = multiple;
+        _matchType = matchType;
+        _newName = newName;
     }
 
     /// <summary>
@@ -56,29 +56,45 @@ public partial class ReplaceCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner, List<Node> externalFileCache)
     {
-        INodeModel modelToAdd = modelReference.GetModel();
+
+        INodeModel modelToAdd = null;
+        if (_modelReference is ModelInFileReference fileReference)
+        {
+            if (externalFileCache != null)
+                foreach(Node node in externalFileCache)
+                    if (node.FileName == fileReference.GetFilePath())
+                        modelToAdd = fileReference.GetModelUsingCache(node);
+
+            //if file wasn't in cache, try loading now
+            if (modelToAdd == null)
+                 modelToAdd = _modelReference.GetModel();
+        }
+        else
+        {
+            modelToAdd = _modelReference.GetModel();
+        }
 
         IEnumerable<INodeModel> modelsToReplace;
-        if (replacementPath.Contains('.'))
+        if (_replacementPath.Contains('.'))
         {
-            var modelToReplace = (INodeModel)relativeTo.Node.Get(replacementPath)
-                 ?? throw new Exception($"Cannot find model: {replacementPath}");
-            if (matchType == MatchType.NameAndType && !modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
-                throw new Exception($"Model {replacementPath} is not of type {modelToAdd.GetType().Name}");
+            var modelToReplace = (INodeModel)relativeTo.Node.Get(_replacementPath)
+                 ?? throw new Exception($"Cannot find model: {_replacementPath}");
+            if (_matchType == MatchType.NameAndType && !modelToReplace.GetType().IsAssignableFrom(modelToAdd.GetType()))
+                throw new Exception($"Model {_replacementPath} is not of type {modelToAdd.GetType().Name}");
             modelsToReplace = [modelToReplace];
         }
         else
         {
-            var replacementPathWithoutBrackets = replacementPath.Replace("[", string.Empty)
+            var replacementPathWithoutBrackets = _replacementPath.Replace("[", string.Empty)
                                                                 .Replace("]", string.Empty);
             modelsToReplace = relativeTo.Node.FindAll(name: replacementPathWithoutBrackets);
-            if (matchType == MatchType.NameAndType)
+            if (_matchType == MatchType.NameAndType)
             {
                 modelsToReplace = modelsToReplace.Where(model => model.GetType().IsAssignableFrom(modelToAdd.GetType()));
             }
-            else if (matchType == MatchType.NameOrType && !modelsToReplace.Any())
+            else if (_matchType == MatchType.NameOrType && !modelsToReplace.Any())
             {
                 // didn't find any matches using name so try by type.
                 Type t = ModelRegistry.ModelNameToType(replacementPathWithoutBrackets);
@@ -87,17 +103,17 @@ public partial class ReplaceCommand : IModelCommand
             }
         }
 
-        if (!multiple)
+        if (!_multiple)
             modelsToReplace = modelsToReplace.Take(1);
 
         // Do model replacement.
         foreach (var modelToReplace in modelsToReplace.ToArray())  // Need the ToArray because modelsToReplace changes because of the ReplaceChild call.
         {
             var newModel = ReflectionUtilities.Clone(modelToAdd) as INodeModel ?? throw new Exception("Cloning the model failed or did not return an INodeModel instance.");
-            if (string.IsNullOrEmpty(newName))
+            if (string.IsNullOrEmpty(_newName))
                 newModel.Rename(modelToReplace.Name);
             else
-                newModel.Rename(newName);
+                newModel.Rename(_newName);
             CopyEnabledStateRecursively(modelToReplace, newModel);
             modelToReplace.Node.Parent.ReplaceChild(modelToReplace, newModel);
         }
@@ -137,6 +153,17 @@ public partial class ReplaceCommand : IModelCommand
     /// </summary>
     public override int GetHashCode()
     {
-        return (modelReference.GetHashCode(), replacementPath, multiple, matchType, newName).GetHashCode();
+        return (_modelReference.GetHashCode(), _replacementPath, _multiple, _matchType, _newName).GetHashCode();
+    }
+
+    /// <summary>
+    /// Returns the potential filepath for this command.
+    /// </summary>
+    public string GetFilePath()
+    {
+        if (_modelReference is ModelInFileReference fileReference)
+            return fileReference.GetFilePath();
+        else
+            return null;
     }
 }

@@ -46,7 +46,7 @@ public partial class SetPropertyCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner, List<Node> externalFileCache)
     {
         // Read the property value from an external file if necessary.
         string propertyValue = _value;

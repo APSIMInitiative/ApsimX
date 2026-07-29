@@ -13,7 +13,26 @@ public class CommandProcessor
     {
         var localRelativeTo = relativeTo;
 
-        foreach (var command in commands)
-            localRelativeTo = command.Run(localRelativeTo, runner);
+        List<string> filePaths = new List<string>();
+        foreach (IModelCommand command in commands)
+        {
+            if (command is ICommandReferenceExternalFile file)
+            {
+                string filePath = file.GetFilePath();
+                if (!string.IsNullOrEmpty(filePath) && !filePaths.Contains(filePath))
+                    if (File.Exists(filePath))
+                        filePaths.Add(filePath);
+            }
+        }
+        List<Node> externalFileCache = new List<Node>();
+        foreach (string filePath in filePaths)
+        {
+            Type simulationsType = ModelRegistry.ModelNameToType("Simulations");
+            Node externalRootNode = FileFormat.ReadFromFile(filePath, simulationsType);
+            externalFileCache.Add(externalRootNode);
+        }
+
+        foreach (IModelCommand command in commands)
+            localRelativeTo = command.Run(localRelativeTo, runner, externalFileCache);
     }
 }
