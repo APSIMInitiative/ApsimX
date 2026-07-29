@@ -1,9 +1,10 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 internal partial class DeleteCommand: IModelCommand
 {
+    private const string KEYWORD_DELETE = "delete ";
+    private const string PATTERN_DELETE = $@"{KEYWORD_DELETE}(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+
     /// <summary>
     /// Create a delete command.
     /// </summary>
@@ -13,20 +14,13 @@ internal partial class DeleteCommand: IModelCommand
     /// </remarks>
     public static IModelCommand Create(string command)
     {
-        string modelNameWithBrackets = @"[\w\d\[\]\.]+";
-
-        string pattern = $@"delete (?<modelname>{modelNameWithBrackets})";
-
-        Match match = Regex.Match(command, pattern);
-        if (match == null || !match.Success)
-            throw new Exception($"Invalid command: {command}");
-
-        return new DeleteCommand(match.Groups["modelname"]?.ToString());
+        string model = CommandLanguage.ReadCommand(command, KEYWORD_DELETE, PATTERN_DELETE);
+        return new DeleteCommand(model);
     }
 
     /// <summary>
     /// Convert an DeleteCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
-    public override string ToString() => $"delete {modelName}";
+    public override string ToString() => $"{KEYWORD_DELETE}{modelName}";
 }

@@ -10,6 +10,8 @@ using UserInterface.Commands;
 using System;
 using UserInterface.EventArguments;
 using System.Linq;
+using Models.PreSimulationTools;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -112,6 +114,8 @@ namespace UserInterface.Presenters
                     editor.TextChanged += OnTextChanged;
                 if (presenter is ListPresenter list)
                     list.SelectionChanged += OnListSelectionChanged;
+                if (presenter is UpdatePresenter update)
+                    update.Click += OnUpdateClick;
             }
 
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
@@ -129,6 +133,8 @@ namespace UserInterface.Presenters
                     editor.TextChanged -= OnTextChanged;
                 if (presenter is ListPresenter list)
                     list.SelectionChanged -= OnListSelectionChanged;
+                if (presenter is UpdatePresenter update)
+                    update.Click -= OnUpdateClick;
             }
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
@@ -153,6 +159,8 @@ namespace UserInterface.Presenters
                     CreateLayoutCompositeFactor();
                 else if (model is FactorFromFile)
                     CreateLayoutFactorFromFile();
+                else if (model is Virtual)
+                    CreateLayoutVirtual();
                 else
                     CreateLayoutGeneric();
                 hasSuccessfullyBuiltPresenters = true;
@@ -270,6 +278,15 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Listener for click events from an UpdatePresenter
+        /// Tells the view to refresh in case of changes.
+        /// </summary>
+        private void OnUpdateClick(object sender, EventArgsValue e)
+        {
+            Refresh();
+        }
+
+        /// <summary>
         /// Add a graph presenter to one of the quads
         /// </summary>
         /// <param name="position">Which quad to use</param>
@@ -345,9 +362,11 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="position">Which quad to use</param>
         /// <param name="text">Text to display in this view</param>
-        private void AddCode(WidgetPosition position)
+        /// <param name="readOnly">Whether the text in this view can be changed by the user</param>
+        private void AddCode(WidgetPosition position, bool readOnly)
         {
             EditorView editorView = view.AddComponent(WidgetType.Code, position) as EditorView;
+            editorView.ReadOnly = readOnly;
             EditorPresenter editorPresenter = new EditorPresenter();
             editorPresenter.Attach(model, editorView, explorerPresenter);
             presenters.Add(editorPresenter);
@@ -375,6 +394,19 @@ namespace UserInterface.Presenters
             ListPresenter listPresenter = new ListPresenter();
             listPresenter.Attach(model, experimentView, explorerPresenter);
             presenters.Add(listPresenter);
+        }
+
+        /// <summary>
+        /// Add a List view to one of the quads
+        /// </summary>
+        /// <param name="position">Which quad to use</param>
+        /// <param name="table"></param>
+        private void AddUpdateButton(WidgetPosition position)
+        {
+            ButtonView buttonView = view.AddComponent(WidgetType.Button, position) as ButtonView;
+            UpdatePresenter updatePresenter = new UpdatePresenter();
+            updatePresenter.Attach(model, buttonView, explorerPresenter);
+            presenters.Add(updatePresenter);
         }
 
         /// <summary>
@@ -433,7 +465,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void CreateLayoutCompositeFactor()
         {
-            AddCode(WidgetPosition.TopLeft);
+            AddCode(WidgetPosition.TopLeft, false);
             AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
             AddGrid(WidgetPosition.BottomRight);
             view.OverrideSlider(0.7);
@@ -445,10 +477,21 @@ namespace UserInterface.Presenters
         private void CreateLayoutFactorFromFile()
         {
             AddProperty(WidgetPosition.TopLeft);
-            AddText(WidgetPosition.TopRight, "Commands:");
+            AddUpdateButton(WidgetPosition.TopRight);
             AddList(WidgetPosition.BottomLeft);
-            AddCode(WidgetPosition.BottomRight);
+            AddCode(WidgetPosition.BottomRight, true);
             view.OverrideSlider(0.6);
+        }
+
+        /// <summary>
+        /// Create layout for a Virtual, property and code
+        /// </summary>
+        private void CreateLayoutVirtual()
+        {
+            AddUpdateButton(WidgetPosition.TopRight);
+            AddProperty(WidgetPosition.TopLeft);
+            AddCode(WidgetPosition.BottomRight, true);
+            view.OverrideSlider(0.3);
         }
     }
 }
