@@ -28,5 +28,5 @@ internal partial class LoadCommand: IModelCommand
     /// Convert an LoadCommand instance to a string.
     /// </summary>
     /// <returns>A command language string.</returns>
-    public override string ToString() => $"{KEYWORD_LOAD}{fileName}";
+    public override string ToString() => $"{KEYWORD_LOAD}{_fileName}";
 }

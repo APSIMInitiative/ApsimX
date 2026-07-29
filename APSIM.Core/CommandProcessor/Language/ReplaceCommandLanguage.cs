@@ -69,25 +69,25 @@ public partial class ReplaceCommand: IModelCommand
     {
         List<string> parts = ["replace"];
 
-        if (multiple)
+        if (_multiple)
             parts.Add("all");
 
-        parts.Add(replacementPath);
+        parts.Add(_replacementPath);
 
         parts.Add("with");
 
-        if (modelReference is ModelLocatorReference childModelReference)
+        if (_modelReference is ModelLocatorReference childModelReference)
             parts.Add(childModelReference.modelName);
-        else if (modelReference is ModelInFileReference modelInFileReference)
+        else if (_modelReference is ModelInFileReference modelInFileReference)
         {
             parts.Add(modelInFileReference.modelName);
             parts.Add("from");
             parts.Add(modelInFileReference.fileName);
         }
-        if (!string.IsNullOrEmpty(newName))
+        if (!string.IsNullOrEmpty(_newName))
         {
             parts.Add("name");
-            parts.Add(newName);
+            parts.Add(_newName);
         }
 
         return string.Join(" ", parts);
