@@ -49,6 +49,8 @@ internal partial class AddCommand : IModelCommand, ICommandReferenceExternalFile
             //if file wasn't in cache, try loading now
             if (modelToAdd == null)
                  modelToAdd = _modelReference.GetModel();
+            //clone to prevent changing cache
+            modelToAdd = ReflectionUtilities.Clone(modelToAdd) as INodeModel;
         }
         else
         {

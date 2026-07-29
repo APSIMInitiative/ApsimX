@@ -149,7 +149,7 @@ namespace UnitTests.APSIM.Core.Tests
         public void SetPropertyInTypeMatchedModels()
         {
             SetPropertyCommand command = new("[Report].VariableNames", "=", "x,y,z", multiple: true);
-            (command as IModelCommand).Run(sims1, runner: null, null);
+            (command as IModelCommand).Run(sims1, null, null);
 
             foreach (var report in sims1.Node.FindAll<Models.Report>())
                 Assert.That(report.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
