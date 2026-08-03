@@ -14,7 +14,7 @@ namespace Models.Core
     [ViewName("UserInterface.Views.EditorView")]
     [PresenterName("UserInterface.Presenters.EditorPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class ModelOverrides : Model, ILineEditor
+    public class ModelOverrides : Model, ICodeEditor
     {
         /// <summary>The collection of undo overrides that undo the overrides.</summary>
         private IEnumerable<IModelCommand> commands;
@@ -24,7 +24,7 @@ namespace Models.Core
 
         /// <summary>The lines to return to the editor./// </summary>
         [JsonIgnore]
-        public IEnumerable<string> Lines { get { return Overrides; } set { Overrides = value.ToArray(); } }
+        public IEnumerable<string> Code { get { return Overrides; } set { Overrides = value.ToArray(); } }
 
 
         /// <summary>
@@ -34,10 +34,10 @@ namespace Models.Core
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            if (Lines == null)
+            if (Code == null)
                 return;
 
-            commands = CommandLanguage.StringToCommands(Lines, relativeTo: Parent as INodeModel, relativeToDirectory: null);
+            commands = CommandLanguage.StringToCommands(Code, relativeTo: Parent as INodeModel, relativeToDirectory: null);
             CommandProcessor.Run(commands, relativeTo: Parent as INodeModel, runner: null);
         }
 

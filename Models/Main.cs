@@ -249,8 +249,6 @@ namespace Models
             if (string.IsNullOrEmpty(relativeToDirectory))
                 relativeToDirectory = Directory.GetCurrentDirectory();
 
-            List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
-
             if (options.Batch != null)
             {
                 if (File.Exists(options.Batch) && Path.GetExtension(options.Batch).Equals(".csv"))
@@ -258,22 +256,38 @@ namespace Models
                     using var streamReader = new StreamReader(options.Batch);
                     var dataTable = DataTableUtilities.FromCSV(options.Batch, streamReader.ReadToEnd());
 
+                    Console.WriteLine($"Running batch commands for {dataTable.Rows.Count} rows");
                     foreach (DataRow row in dataTable.Rows)
                     {
+                        Console.WriteLine($"Running batch command {dataTable.Rows.IndexOf(row) + 1}/{dataTable.Rows.Count}.");
+                        List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
+                        
                         var dict = row.Table.Columns
                                         .Cast<DataColumn>()
-                                        .ToDictionary(c => c.ColumnName, c => row[c].ToString());
+                                        .ToDictionary(c => c.ColumnName, c => StringUtilities.ConvertObjectToString(row[c]));
 
                         for (int i = 0; i < commandsList.Count; i++)
                             commandsList[i] = Macro.Replace(commandsList[i], dict);
 
                         foreach (string file in files)
-                            ExecuteCommands(options, commandsList, file, relativeToDirectory, row);
+                        {
+                            try
+                            {
+                                ExecuteCommands(options, commandsList, file, relativeToDirectory, row);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"An error occurred when trying to run the batch command\n" + ex.ToString());
+                                exitCode++;
+                            }
+                        }
                     }
+                    Console.WriteLine($"Finished running batch commands for {dataTable.Rows.Count} rows with {exitCode} error(s).");
                 }
             }
             else
             {
+                List<string> commandsList = File.ReadAllLines(commandFileName).ToList();
                 foreach (string file in files)
                     ExecuteCommands(options, commandsList, file, relativeToDirectory);
             }

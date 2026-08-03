@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 212,
+  "Version": 220,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7733,55 +7733,6 @@
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 28",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
-                    "[Phenology].CAMP.FLNparams.MinLN = 8",
-                    "[Phenology].CAMP.FLNparams.PpLN = 12",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 12",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 4",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
-                    "[Phenology].GrainFilling.Target.FixedValue = 700"
-                  ],
-                  "Name": "Cesario",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
-                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
-                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
-                    "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
-                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
-                    "[Phenology].CAMP.FLNparams.MinLN = 8",
-                    "[Phenology].CAMP.FLNparams.PpLN = 12",
-                    "[Phenology].CAMP.FLNparams.VrnLN = 12",
-                    "[Phenology].CAMP.FLNparams.VxPLN = 4",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
-                  ],
-                  "Name": "Stockade",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
-                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 105.0",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.75",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 26",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
@@ -10690,6 +10641,43 @@
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2"
                   ],
                   "Name": "UOM001_9_1",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Argentina",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "",
+                    "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.24",
+                    "[Phenology].CAMP.FLNparams.MinLN = 10",
+                    "[Phenology].CAMP.FLNparams.PpLN = 0.5",
+                    "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                    "[Phenology].CAMP.FLNparams.VxPLN = -1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 10",
+                    "[Phenology].GrainFilling.Target.FixedValue = 290",
+                    "[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
+                    "[Photosynthesis].RUE.FixedValue = 2.8",
+                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.65",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.040"
+                  ],
+                  "Name": "AGP_FAST",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,

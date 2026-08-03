@@ -74,7 +74,10 @@ namespace Models.Soils.Nutrients
 
                 double[] destination = null;
                 if (destinationName != null)
-                    destination = destinationSolute.kgha;
+                    if (destinationSolute == null)
+                        throw new ApsimXException(this, $"Cannot find destination solute: {destinationName}");
+                    else
+                        destination = destinationSolute.kgha;
 
                 for (int i = 0; i < numLayers; i++)
                 {

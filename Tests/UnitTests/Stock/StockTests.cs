@@ -111,7 +111,7 @@ namespace UnitTests.Stock
             var genotypeNames = genotypes.All.Where(genotype => genotype.AnimalType == "Cattle")
                                              .Select(genotype => genotype.Name);
 
-            Assert.That(genotypeNames.ToArray().OrderBy(x => x), Is.EqualTo(new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
+            Assert.That(genotypeNames.ToArray().OrderBy(x => x), Is.EqualTo(new string[] { "Angus", "Angus(SRW542)", "Angus(SRW625)", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
                                                                     "Dairy Shorthorn", "Friesian", "Guernsey", "Holstein",  "Jersey",
                                                                     "British x Brahman", "British x Charolais", "British x Friesian", "British x Holstein",
                                                                     "Charolais x Friesian", "Charolais x Holstein", "Charolais", "Chianina",

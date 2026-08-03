@@ -24,20 +24,9 @@
         <property name="can-focus">True</property>
         <property name="position">300</property>
         <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
+          <object class="GtkScrolledWindow" id="treewindow1">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <child>
-              <object class="GtkTreeView" id="treeview1">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="headers-visible">False</property>
-                <property name="enable-tree-lines">True</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
-                </child>
-              </object>
-            </child>
           </object>
           <packing>
             <property name="resize">False</property>

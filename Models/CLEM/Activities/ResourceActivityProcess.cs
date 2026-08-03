@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -95,12 +96,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
+            List<ResourceRequest> resourcesNeeded = new();
             resourceRequest = null;
 
             amountToSkip = 0;
-            amountToDo = resourceTypeProcessModel.Amount;
-            if (Reserve > 0)
+            amountToDo = resourceTypeProcessModel.AmountAvailable;
+            if (MathUtilities.IsPositive(Reserve))
             {
                 amountToDo = Math.Min(amountToDo, Reserve);
             }
@@ -121,7 +122,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if (amountToDo > 0)
+            if (MathUtilities.IsPositive(amountToDo))
             {
                 resourceRequest = new ResourceRequest()
                 {
@@ -171,36 +172,9 @@ namespace Models.CLEM.Activities
             if (resourceRequest != null && resourceRequest.Provided > 0)
             {
                 // add created resources
-                resourceTypeCreatedModel.Add(resourceRequest.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
+                resourceTypeCreatedModel.AddToResource(resourceRequest.Provided * ConversionRate, this, (resourceTypeCreatedModel as CLEMModel).NameWithParent, "Created");
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" into ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" at a rate of ");
-                if (ConversionRate <= 0)
-                    htmlWriter.Write("<span class=\"errorlink\">RATE NOT SET</span>");
-                else
-                    htmlWriter.Write("1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>");
-                htmlWriter.Write("</div>");
-                if (Reserve > 0)
-                {
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">{CLEMModel.DisplaySummaryValueSnippet(Reserve, warnZero:true)}");
-                    htmlWriter.Write(" will be reserved.</div>");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
-        #endregion
     }
 }

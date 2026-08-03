@@ -18,6 +18,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines a sort order using the Attribute details of the individual")]
     [Version(1, 0, 0, "")]
     [HelpUri(@"Content/Features/Filters/SortByAttribute.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SortByAttribute : CLEMModel, ISort
     {
         /// <summary>
@@ -60,7 +61,9 @@ namespace Models.CLEM.Groupings
                     IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
                     bool exists = (indAttList.AttributesPresent) ? indAttList.Exists(AttributeTag) : false;
                     if (exists)
+                    {
                         return indAttList.GetValue(AttributeTag).StoredValue;
+                    }
                     else
                         switch (indAttList.GetValue(AttributeTag))
                         {
@@ -74,65 +77,42 @@ namespace Models.CLEM.Groupings
             return 0;
         }
 
-        /// <summary>
-        /// Convert sort to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return SortString(false);
-        }
+        ///// <summary>
+        ///// Convert sort to string
+        ///// </summary>
+        ///// <returns></returns>
+        //public override string ToString()
+        //{
+        //    return SortString(false);
+        //}
 
-        /// <summary>
-        /// Convert sort to html string
-        /// </summary>
-        /// <returns></returns>
-        public string ToHTMLString()
-        {
-            return SortString(true);
-        }
+        ///// <summary>
+        ///// Convert sort to html string
+        ///// </summary>
+        ///// <returns></returns>
+        //public string ToHTMLString()
+        //{
+        //    return SortString(true);
+        //}
 
-        private string SortString(bool htmltags)
-        {
-            string cssSet = "";
-            string cssClose = "";
-            if (htmltags)
-            {
-                cssSet = "<span class = \"filterset\">";
-                cssClose = "</span>";
-            }
+        //private string SortString(bool htmlTags)
+        //{
+        //    string cssSet = "";
+        //    string cssClose = "";
+        //    if (htmlTags)
+        //    {
+        //        cssSet = "<span class = \"filterset\">";
+        //        cssClose = "</span>";
+        //    }
 
-            using (StringWriter sortWriter = new StringWriter())
-            {
-                sortWriter.Write($"Sort: Atrribute-");
-                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                sortWriter.Write($" {cssSet}{FilterStyle.ToString().ToLower()}{cssClose}");
-                sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
-                return sortWriter.ToString();
-            }
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            // allows for collapsed box and simple entry
-            return "";
-        }
-        #endregion
+        //    using (StringWriter sortWriter = new StringWriter())
+        //    {
+        //        sortWriter.Write($"Sort: Attribute-");
+        //        sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmlTags)}");
+        //        sortWriter.Write($" {cssSet}{FilterStyle.ToString().ToLower()}{cssClose}");
+        //        sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
+        //        return sortWriter.ToString();
+        //    }
+        //}
     }
 }

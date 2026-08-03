@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using APSIM.Shared.Documentation.Extensions;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -30,17 +31,17 @@ namespace Models.CLEM
         public bool RandomiseBeforeSorting { get; set; }
 
         /// <summary>
-        /// The properties available for filtering
-        /// </summary>
-        [NonSerialized]
-        protected Dictionary<string, PropertyInfo> properties;
-
-        /// <summary>
         /// An identifier for this FilterGroup based on parent requirements
         /// </summary>
         [Description("Group identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
+
+        /// <summary>
+        /// The properties available for filtering
+        /// </summary>
+        [NonSerialized]
+        protected Dictionary<string, List<PropertyInfo>> properties;
 
         /// <inheritdoc/>
         [XmlIgnore]
@@ -58,26 +59,29 @@ namespace Models.CLEM
         public IEnumerable<string> GetParameterNames()
         {
             if (properties is null)
+            {
                 InitialiseFilters(false);
+            }
 
-            return properties.Keys;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.Filter;
+            return properties.Keys.OrderBy(k => k);
         }
 
         /// <inheritdoc/>
-        public PropertyInfo GetProperty(string name)
+        public IEnumerable<PropertyInfo> GetProperty(string name) 
         {
             if (properties is null)
+            {
                 InitialiseFilters(false);
+            }
 
-            return properties[name];
+            if (properties.ContainsKey(name))
+            {
+                return properties[name];
+            }
+            else
+            {
+                return new List<PropertyInfo>();
+            }
         }
 
         /// <summary>
@@ -86,7 +90,9 @@ namespace Models.CLEM
         public void ClearRules()
         {
             foreach (Filter filter in Structure.FindChildren<Filter>())
+            {
                 filter.ClearRule();
+            }
         }
 
         ///<inheritdoc/>
@@ -95,8 +101,10 @@ namespace Models.CLEM
         {
             filterRules = null;
             sortList = null;
-            if(!GetType().Name.Contains("Linked"))
+            if (!GetType().Name.Contains("Linked"))
+            {
                 InitialiseFilters();
+            }
         }
 
         /// <summary>
@@ -104,52 +112,78 @@ namespace Models.CLEM
         /// </summary>
         public void InitialiseFilters(bool includeBuildRules = true)
         {
-            properties = typeof(TFilter)
-                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
-                .ToDictionary(prop => prop.Name, prop => prop);
+            var pp = GetNestedPropertiesYield(typeof(TFilter), new List<PropertyInfo>());
+            properties = pp.ToDictionary(pair => pair.Key, pair => pair.Value);
 
             var types = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
                 .Where(t => t.IsSubclassOf(typeof(TFilter)));
 
-            foreach (var type in types)
+            // get parameters specific for each type of ruminant (male and female)
+            foreach (var subtype in types)
             {
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                                    .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
-                foreach (var prop in props)
+                foreach (var sub in GetNestedPropertiesYield(subtype, new List<PropertyInfo>()))
                 {
-                    string key = prop.DeclaringType.Name;
-                    if (key.StartsWith(typeof(TFilter).Name))
-                        key = key.Substring(typeof(TFilter).Name.Length);
-                    properties.Add($"{key}.{prop.Name}", prop);
+                    properties.Add($"{subtype.Name[8..]}.{sub.Key}", sub.Value);
                 }
             }
 
+            properties =  properties.OrderBy(x => x.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
             foreach (Filter filter in Structure.FindChildren<Filter>())
             {
                 filter.Initialise();
                 if (includeBuildRules)
+                {
                     filter.BuildRule();
+                }
             }
 
             sortList = Structure.FindChildren<ISort>();
+        }
+
+        /// <summary>
+        /// Recursively gets all properties of a type where FilterByPropertyAttribute is present.
+        /// </summary>
+        /// <param name="type">The type to get properties from</param>
+        /// <param name="nestedPropertyList"></param>
+        /// <returns>A list of PropertyInfo objects representing the properties</returns>
+        public static IEnumerable<KeyValuePair<string, List<PropertyInfo>>> GetNestedPropertiesYield(Type type, List<PropertyInfo> nestedPropertyList)
+        {
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+               .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
+
+            if (!props.Any())
+            {
+                yield return new KeyValuePair<string, List<PropertyInfo>>(string.Join('.', nestedPropertyList.Select(a => a.Name)) , nestedPropertyList);
+            }
+
+            foreach (var prop in props)
+            {
+                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat((new List<PropertyInfo>() { prop })).ToList()))
+                {
+                    yield return new KeyValuePair<string, List<PropertyInfo>>(sub.Key, sub.Value);
+                }
+            }
         }
 
         /// <inheritdoc/>
         public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source) where T : IFilterable
         {
             if (source is null)
+            {
                 throw new NullReferenceException("Cannot filter a null object");
+            }
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
             var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
-            if(sortList?.Any()??false)
+            if (sortList?.Any() ?? false)
+            {
                 // add sorting and take specified
                 filtered = filtered.Sort(sortList, RandomiseBeforeSorting);
+            }
 
             // do all takes and skips
             foreach (var take in Structure.FindChildren<TakeFromFiltered>())
@@ -171,16 +205,26 @@ namespace Models.CLEM
                     case TakeFromFilterStyle.TakeProportion:
                     case TakeFromFilterStyle.TakeIndividuals:
                         if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                        {
                             filtered = filtered.Take(number);
+                        }
                         else
+                        {
                             filtered = filtered.TakeLast(number);
+                        }
+
                         break;
                     case TakeFromFilterStyle.SkipProportion:
                     case TakeFromFilterStyle.SkipIndividuals:
                         if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                        {
                             filtered = filtered.Skip(number);
+                        }
                         else
+                        {
                             filtered = filtered.SkipLast(number);
+                        }
+
                         break;
                 }
             }
@@ -191,7 +235,9 @@ namespace Models.CLEM
         public virtual bool Filter<T>(T item) where T : IFilterable
         {
             if (item == null)
+            {
                 throw new NullReferenceException("Cannot filter a null object");
+            }
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
@@ -214,32 +260,5 @@ namespace Models.CLEM
         {
         }
 
-        #region descriptive summary
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (Structure.FindChildren<Filter>().Count() == 0)
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
     }
 }

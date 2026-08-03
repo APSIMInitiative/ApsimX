@@ -31,8 +31,12 @@ namespace Models.Functions
 
         [Description("Reference Temperature (MinTemp<RefTemp<MaxTemp)")]
         public double RefTemp { get; set; }
-        /// <summary>The met data</summary>
 
+        /// <summary>The beta. Result is raised to this power.</summary>
+        [Description("Beta smoothing factor (0-1).")]
+        public double Beta { get; set; } = 1.0;
+
+        /// <summary>The met data</summary>
         [Link]
         protected IWeather MetData = null;
 
@@ -62,11 +66,12 @@ namespace Models.Functions
             double RelEffRefTemp = 1.0;
             double p = 0.0;
 
-            if ((T > MinTemp) && (T < MaxTemp))
-            {
-                p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
-                RelEff = (2 * Math.Pow(T - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(T - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
-            }
+            // Even if Beta is set to 0 we still want to return 0 if the T is out of range.
+            if (T < MinTemp || T > MaxTemp)
+                return 0;
+
+            p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
+            RelEff = (2 * Math.Pow(T - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(T - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
 
             if ((RefTemp > MinTemp) && (RefTemp < MaxTemp))
             {
@@ -74,7 +79,7 @@ namespace Models.Functions
                 RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
-            return RelEff / RelEffRefTemp;
+            return Math.Pow(RelEff / RelEffRefTemp, Beta);
         }
     }
 }

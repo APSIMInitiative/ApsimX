@@ -47,7 +47,7 @@ namespace UnitTests
 
             excelInput.Run();
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
 
             DataTable dt = dataStore.Reader.GetData("Sheet1");
 

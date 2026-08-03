@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Groupings;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -11,7 +12,6 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>Add or remove a tag to specified individual ruminants</summary>
-    /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityTag : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
@@ -46,12 +46,28 @@ namespace Models.CLEM.Activities
         public TagApplicationStyle ApplicationStyle { get; set; }
 
         /// <summary>
+        /// Tag category
+        /// </summary>
+        [Description("Special category of tag")]
+        [Core.Display(EnabledCallback = "IsAddAttribute")]
+        public RuminantAttributeCategoryTypes TagCategory { get; set; } = RuminantAttributeCategoryTypes.None;
+
+        /// <summary>
         /// constructor
         /// </summary>
         public RuminantActivityTag()
         {
-            // activity is performed in ManageAnimals
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            // activity is performed in CLEMMark event
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <summary>
+        /// Determines if an add tag for display of other properties.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAddAttribute()
+        {
+            return ApplicationStyle == TagApplicationStyle.Add;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -61,7 +77,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
         }
 
@@ -154,16 +170,17 @@ namespace Models.CLEM.Activities
         {
             if(numberToDo - numberToSkip > 0)
             {
+
                 int tagged = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
                     switch (ApplicationStyle)
                     {
                         case TagApplicationStyle.Add:
-                            ruminant.Attributes.Add(TagLabel);
+                            ruminant.AddNewAttribute(TagLabel, TagCategory);
                             break;
                         case TagApplicationStyle.Remove:
-                            ruminant.Attributes.Add(TagLabel);
+                            ruminant.Attributes.Remove(TagLabel);
                             break;
                     }
                     tagged++;
@@ -171,14 +188,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(tagged != numberToDo);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=\"activityentry\">{CLEMModel.DisplaySummaryValueSnippet(ApplicationStyle)} the tag {CLEMModel.DisplaySummaryValueSnippet(TagLabel)} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
-        }
-        #endregion
     }
 }

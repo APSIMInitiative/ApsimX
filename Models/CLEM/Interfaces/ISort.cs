@@ -33,7 +33,7 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <param name="source">The items to sort</param>
         /// <param name="sorts">The parameters to sort by</param>
-        /// <param name="randomiseBeforeSort">enforces a random sort before custom sorts to remove any inherant herd order</param>
+        /// <param name="randomiseBeforeSort">enforces a random sort before custom sorts to remove any inherent herd order</param>
         /// <returns></returns>
         public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source, IEnumerable<ISort> sorts, bool randomiseBeforeSort = false)
         {

@@ -26,10 +26,11 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject, IStructureDependency
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -46,11 +47,11 @@ namespace Models.CLEM.Activities
         public WeaningStyle Style { get; set; }
 
         /// <summary>
-        /// Weaning age (months)
+        /// Weaning age
         /// </summary>
-        [Description("Weaning age (months)")]
-        [Required, GreaterThanEqualValue(0)]
-        public double WeaningAge { get; set; }
+        [Description("Weaning age")]
+        [Units("years, months, days")]
+        public AgeSpecifier WeaningAge { get; set; } = new int[] { 6, 0 };
 
         /// <summary>
         /// Weaning weight (kg)
@@ -64,16 +65,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore (paddock) to place weaners")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", "Leave at current location", typeof(GrazeFoodStore) } })]
-        [System.ComponentModel.DefaultValue("Leave at current location")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Weaned individuals' location required")]
-        public string GrazeFoodStoreName { get; set; }
+        public string GrazeFoodStoreName { get; set; } = "Leave at current location";
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityWean()
         {
-            this.SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -110,16 +109,16 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(true, true);
 
             // activity is performed in ManageAnimals
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             // check GrazeFoodStoreExists
             grazeStore = "";
             if (GrazeFoodStoreName != null)
             {
-                if (GrazeFoodStoreName.Contains("."))
+                if (GrazeFoodStoreName.Contains('.'))
                 {
                     grazeStore = GrazeFoodStoreName.Split('.').Last();
                 }
@@ -129,8 +128,10 @@ namespace Models.CLEM.Activities
                     {
                         grazeStore = "";
                         ActivitiesHolder ah = Structure.Find<ActivitiesHolder>();
-                        if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Count() != 0)
+                        if (Structure.FindChildren<PastureActivityManage>(relativeTo: ah, recurse: true).Any())
+                        {
                             Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
+                        }
                     }
                 }
             }
@@ -150,17 +151,19 @@ namespace Models.CLEM.Activities
         {
             numberToSkip = 0;
             sucklingToSkip = 0;
-            IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
-            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd, Structure);
+            IEnumerable<Ruminant> sucklingHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsWeaned == false);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingHerd, Structure);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
-            numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
+            numberToDo = uniqueIndividuals.Where(a => (a.AgeInDays >= WeaningAge.InDays && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight.Live >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0;
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
                 if (valueToSupply.Key.identifier == "Number sucklings checked")
+                {
                     number = sucklingsToCheck;
+                }
 
                 switch (valueToSupply.Key.unit)
                 {
@@ -185,12 +188,16 @@ namespace Models.CLEM.Activities
             {
                 // find shortfall by identifiers as these may have different influence on outcome
                 var sucklingShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number sucklings checked").FirstOrDefault();
-                if(sucklingShort != null)
+                if (sucklingShort != null)
+                {
                     sucklingToSkip = Convert.ToInt32(sucklingsToCheck * (1 - sucklingShort.Available / sucklingShort.Required));
+                }
 
                 var weanShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number weaned").FirstOrDefault();
                 if (weanShort != null)
+                {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - weanShort.Available / weanShort.Required));
+                }
 
                 if (numberToSkip == numberToDo || sucklingsToCheck == sucklingToSkip)
                 {
@@ -205,7 +212,7 @@ namespace Models.CLEM.Activities
         {
             if (numberToDo - numberToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
             {
-                ConceptionStatusChangedEventArgs conceptionArgs = new ConceptionStatusChangedEventArgs();
+                ConceptionStatusChangedEventArgs conceptionArgs = new();
                 int weaned = 0;
                 foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
                 {
@@ -214,37 +221,45 @@ namespace Models.CLEM.Activities
                     switch (Style)
                     {
                         case WeaningStyle.AgeOrWeight:
-                            readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
-                            reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
+                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays || ind.Weight.Live >= WeaningWeight);
+                            reason = (ind.AgeInDays >= WeaningAge.InDays) ? ((ind.Weight.Live >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
                             break;
                         case WeaningStyle.AgeOnly:
-                            readyToWean = (ind.Age >= WeaningAge);
+                            readyToWean = (ind.AgeInDays >= WeaningAge.InDays);
                             reason = "Age";
                             break;
                         case WeaningStyle.WeightOnly:
-                            readyToWean = (ind.Weight >= WeaningWeight);
+                            readyToWean = (ind.Weight.Live >= WeaningWeight);
                             reason = "Weight";
                             break;
                     }
 
                     if (readyToWean)
                     {
-                        ind.Wean(true, reason);
+                        ind.Wean(true, reason, clock.Today);
 
                         // leave where weaned or move to specified location
                         if (GrazeFoodStoreName != "Leave at current location")
+                        {
                             if (GrazeFoodStoreName == "Not specified - general yards")
+                            {
                                 ind.Location = "";
+                            }
                             else
+                            {
                                 ind.Location = grazeStore;
+                            }
+                        }
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind);
-                        ind.BreedParams.OnConceptionStatusChanged(conceptionArgs);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), clock.Today, ind);
+                        ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;
                         if (weaned > numberToDo - numberToSkip)
+                        {
                             break;
+                        }
                     }
                 }
                 SetStatusSuccessOrPartial(weaned != numberToDo);
@@ -252,56 +267,23 @@ namespace Models.CLEM.Activities
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            if(GrazeFoodStoreName.Contains("."))
-            {
-                ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
-                if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
-                {
-                    string[] memberNames = new string[] { "Location is not valid" };
-                    results.Add(new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames));
-                }
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            using (StringWriter htmlWriter = new StringWriter())
+            if (GrazeFoodStoreName.Contains('.'))
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
-                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
+                var grazeStore = Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
+                if (grazeStore is null)
                 {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningAge)} months");
-                    if (Style == WeaningStyle.AgeOrWeight)
-                        htmlWriter.Write(" or  ");
+                    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
                 }
-                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WeaningWeight)} kg");
 
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will ");
-                if (GrazeFoodStoreName == "Leave at current location")
-                    htmlWriter.Write("remain at the location they were weaned");
-                else
-                    htmlWriter.Write($"be place in {DisplaySummaryResourceTypeSnippet(GrazeFoodStoreName, nullGeneralYards:true)}");
-
-                htmlWriter.Write("</div>");
-                // ToDo: warn if natural weaning will take place
-                return htmlWriter.ToString();
+                //ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
+                //if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
+                //{
+                //    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                //}
             }
         }
         #endregion

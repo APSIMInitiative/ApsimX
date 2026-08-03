@@ -1,5 +1,7 @@
 ﻿using Models;
 using Models.CLEM;
+using Models.CLEM.DescriptiveSummary;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.Collections.Generic;
@@ -73,15 +75,16 @@ namespace UserInterface.Presenters
             {
                 models.Clear();
                 models.AddRange(this.model.Node.FindChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
-                foreach (var ignoredChildGroup in (model as CLEMModel).GetChildrenInSummary().Where(a => !a.include))
-                    models.RemoveAll(a => ignoredChildGroup.models.Contains(a));
+                
+                IDescriptiveSummaryProvider provider = DescriptiveSummaryResolver.GetProviderInstance(model, null);
+                foreach (ChildComponentGroup ignoredChildGroup in provider.GetChildrenInSummary().Where(a => !a.Include))
+                    models.RemoveAll(a => ignoredChildGroup.SelectedModels.Contains(a));
 
-//                models.AddRange(this.model.FindAllChildren<IModel>().Where(a => a.GetType() != typeof(Memo) && ((model is CLEMModel)?(model as CLEMModel).ChildrenToIgnoreInSummary()?.Where(b => b.IsAssignableFrom(a.GetType())).Any()??false == false : true)));
                 if (models.GroupBy(a => a.GetType()).Count() > 1)
                 {
                     throw new ArgumentException($"The models displayed in a PropertyMultiModelView must all be of the same type");
                 }
-                if (models.Count() >= 1)
+                if (models.Count >= 1)
                 {
                     view.DisplayProperties(GetProperties(models));
                     return;

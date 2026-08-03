@@ -184,7 +184,9 @@ namespace Models.Core
                     }
                     else if (matches.Count == 0)
                     {
-                        string errorMsg = "Cannot find a match for link " + field.Name + " in model " + GetFullName(obj);
+                        string typeOfLinkedModel = field.DataType.ToString().Substring(field.DataType.ToString().LastIndexOf('.')+1);
+                        string errorMsg = $"Cannot find a match for linked property {field.Name} of type {typeOfLinkedModel} in model " + GetFullName(obj);
+                        errorMsg += $"\nTo fix this error, add a model of type {typeOfLinkedModel} to you simulation. If that model already exists, make sure it is within the same simulation as {GetFullName(obj)}.";
                         if (obj is IScript)
                             if ((obj as Model).Node.FindParent<Folder>(recurse: true) != null)
                                 errorMsg += "\nIf the manager script is within a folder, it's linking scope will be limited to that folder.";

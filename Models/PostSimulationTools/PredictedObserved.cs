@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using APSIM.Core;
@@ -10,6 +11,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.PreSimulationTools;
 using Models.Storage;
 
 namespace Models.PostSimulationTools
@@ -301,6 +303,9 @@ namespace Models.PostSimulationTools
                         }
                         dataStore.Writer.AddUnits(Name, unitFieldNames, unitNames);
                     }
+
+                    //write the details of the PO to the datastore as well for POStats to read
+                    WriteMetadataToDataStore();
                 }
                 else
                 {
@@ -358,6 +363,41 @@ namespace Models.PostSimulationTools
             }
 
             return intersect.ToArray();
+        }
+
+        private void WriteMetadataToDataStore()
+        {
+            string fileReference = "";
+            if (Node != null)
+            {
+                Virtual import = Node.FindParent<Virtual>(recurse:true);
+                if (import != null)
+                    fileReference = Path.GetFileNameWithoutExtension(import.FileName);
+            }
+            
+            //Save metadata about predictedObserved
+            DataTable table = new DataTable("_PredictedObserved");
+            table.Columns.Add("name", typeof(string));
+            table.Columns.Add("predicted_table", typeof(string));
+            table.Columns.Add("observed_table", typeof(string));
+            table.Columns.Add("field_match_one", typeof(string));
+            table.Columns.Add("field_match_two", typeof(string));
+            table.Columns.Add("field_match_three", typeof(string));
+            table.Columns.Add("field_match_four", typeof(string));
+            table.Columns.Add("comparison", typeof(string));
+
+            DataRow row = table.NewRow();
+            row["name"] = Name;
+            row["predicted_table"] = PredictedTableName;
+            row["observed_table"] = ObservedTableName;
+            row["field_match_one"] = FieldNameUsedForMatch;
+            row["field_match_two"] = FieldName2UsedForMatch;
+            row["field_match_three"] = FieldName3UsedForMatch;
+            row["field_match_four"] = FieldName4UsedForMatch;
+            row["comparison"] = fileReference;
+            table.Rows.Add(row);
+
+            dataStore.Writer.WriteTable(table, false);
         }
     }
 }

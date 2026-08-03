@@ -20,17 +20,26 @@ namespace UserInterface
         private int lastExecuted = -1;
         private int lastSaved = -1;
         private bool inUndoRedo = false;
-        private ITreeView tree;
+        private ITreeView _tree;
 
         public event ModelChangedDelegate ModelChanged;
 
-        public CommandHistory(ITreeView tree) => this.tree = tree;
+        public CommandHistory(ITreeView tree)
+        {
+            _tree = tree;
+        }
 
         public void Clear()
         {
             commands.Clear();
             lastExecuted = -1;
             lastSaved = -1;
+        }
+
+        public void UpdateTree(ITreeView tree)
+        {
+            commands.Clear();
+            _tree = tree;
         }
 
         public void Save()
@@ -73,7 +82,7 @@ namespace UserInterface
             lastExecuted = commands.Count - 1; 
 
             if (execute)
-                command.Do(tree, InvokeModelChanged);
+                command.Do(_tree, InvokeModelChanged);
         }
 
         public void Undo()
@@ -85,7 +94,7 @@ namespace UserInterface
                     inUndoRedo = true;
                     try
                     {
-                        commands[lastExecuted].Undo(tree, InvokeModelChanged);
+                        commands[lastExecuted].Undo(_tree, InvokeModelChanged);
                         lastExecuted--;
                     }
                     finally
@@ -103,7 +112,7 @@ namespace UserInterface
                 inUndoRedo = true;
                 try
                 {
-                    commands[lastExecuted + 1].Do(tree, InvokeModelChanged);
+                    commands[lastExecuted + 1].Do(_tree, InvokeModelChanged);
                     lastExecuted++;
                 }
                 finally

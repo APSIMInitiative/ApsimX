@@ -7,9 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using System.Linq;
-using APSIM.Shared.Utilities;
 using Docker.DotNet.Models;
 
 namespace Models.CLEM.Activities
@@ -30,7 +28,6 @@ namespace Models.CLEM.Activities
         private IEnumerable<OtherAnimalsGroup> filterGroups;
         private OtherAnimals otherAnimals;
         int numberToDo = 0;
-        double amountToDo = 0;
         double feedEstimated = 0;
 
         /// <summary>
@@ -53,10 +50,10 @@ namespace Models.CLEM.Activities
         /// Feed type
         /// </summary>
         [JsonIgnore]
-        public IFeedType FeedType { get; set; }
+        public IFeed FeedType { get; set; }
 
         /// <summary>
-        /// Provides the redicted other animal name based on filtering 
+        /// Provides the predicted other animal name based on filtering 
         /// </summary>
         public string PredictedAnimalName { get; set; } = "NA";
 
@@ -74,9 +71,7 @@ namespace Models.CLEM.Activities
         {
             otherAnimals = Resources.FindResourceGroup<OtherAnimals>();
             filterGroups = GetCompanionModelsByIdentifier<OtherAnimalsFeedGroup>(true, false);
-
-            // locate FeedType resource
-            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeed;
         }
 
         /// <inheritdoc/>
@@ -110,7 +105,6 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            amountToDo = 0;
             feedEstimated = 0;
             CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
             foreach (var cohort in CohortsToBeFed)
@@ -158,7 +152,7 @@ namespace Models.CLEM.Activities
                                         valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per kg fed":
-                                        amountToDo = feedEstimated;
+                                        //amountToDo = feedEstimated;
                                         valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                                         break;
                                     default:
