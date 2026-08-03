@@ -1,9 +1,11 @@
+using APSIM.Core;
 using Models;
 using Models.DCAPST;
 using Models.DCAPST.Canopy;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace UnitTests.DCaPST
 {
@@ -13,7 +15,8 @@ namespace UnitTests.DCaPST
         [Test]
         public void PublishIntervalOutputsRaisesAnEventForEachInterval()
         {
-            var model = new DCaPSTModelNG();
+            var model = new DCaPSTModelNG { Name = "DCaPST" };
+            Node modelNode = Node.Create(model);
             var clock = new Clock();
             var today = new DateTime(2026, 7, 17);
             Utilities.SetProperty(clock, nameof(Clock.Today), today);
@@ -25,38 +28,24 @@ namespace UnitTests.DCaPST
                 CreateInterval(7, 21, 101)
             };
 
-            var outputs = new List<IntervalOutput>();
-            model.IntervalStep += (_, _) => outputs.Add(new IntervalOutput
+            var outputs = new List<DCaPSTIntervalOutput>();
+            var locatedHours = new List<object>();
+            model.IntervalStep += (_, output) =>
             {
-                DateTime = model.IntervalDateTime,
-                Hour = model.Hour,
-                AirTemperature = model.AirTemperature,
-                SunlitLAI = model.SunlitLAI,
-                ShadedLAI = model.ShadedLAI,
-                CanopyTemperature = model.CanopyTemperature,
-                CanopyVPD = model.CanopyVPD,
-                SunlitAssimilation = model.SunlitAssimilation,
-                SunlitWater = model.SunlitWater,
-                SunlitTemperature = model.SunlitTemperature,
-                SunlitVPD = model.SunlitVPD,
-                SunlitAc1 = model.SunlitAc1,
-                SunlitAc2 = model.SunlitAc2,
-                SunlitAj = model.SunlitAj,
-                ShadedAssimilation = model.ShadedAssimilation,
-                ShadedWater = model.ShadedWater,
-                ShadedTemperature = model.ShadedTemperature,
-                ShadedVPD = model.ShadedVPD,
-                ShadedAc1 = model.ShadedAc1,
-                ShadedAc2 = model.ShadedAc2,
-                ShadedAj = model.ShadedAj
-            });
+                Assert.That(model.CurrentInterval, Is.SameAs(output));
+                outputs.Add(output);
+                locatedHours.Add(modelNode.Get("[DCaPST].CurrentInterval.Hour", relativeTo: model));
+            };
 
             Utilities.CallMethod(model, "PublishIntervalOutputs", Array.Empty<object>());
 
             Assert.That(outputs, Has.Count.EqualTo(2));
+            Assert.That(locatedHours, Is.EqualTo(new object[] { 6.0, 7.0 }));
+            Assert.That(model.CurrentInterval, Is.Null);
+            Assert.That(modelNode.Get("[DCaPST].CurrentInterval.Hour", relativeTo: model), Is.Null);
             Assert.Multiple(() =>
             {
-                Assert.That(outputs[0].DateTime, Is.EqualTo(today.AddHours(6)));
+                Assert.That(outputs[0].IntervalDateTime, Is.EqualTo(today.AddHours(6)));
                 Assert.That(outputs[0].Hour, Is.EqualTo(6));
                 Assert.That(outputs[0].AirTemperature, Is.EqualTo(20));
                 Assert.That(outputs[0].SunlitLAI, Is.EqualTo(1));
@@ -77,7 +66,7 @@ namespace UnitTests.DCaPST
                 Assert.That(outputs[0].ShadedAc1, Is.EqualTo(14));
                 Assert.That(outputs[0].ShadedAc2, Is.EqualTo(15));
                 Assert.That(outputs[0].ShadedAj, Is.EqualTo(16));
-                Assert.That(outputs[1].DateTime, Is.EqualTo(today.AddHours(7)));
+                Assert.That(outputs[1].IntervalDateTime, Is.EqualTo(today.AddHours(7)));
                 Assert.That(outputs[1].Hour, Is.EqualTo(7));
                 Assert.That(outputs[1].SunlitAssimilation, Is.EqualTo(101));
             });
@@ -93,6 +82,26 @@ namespace UnitTests.DCaPST
             Utilities.CallMethod(model, "PublishIntervalOutputs", Array.Empty<object>());
 
             Assert.That(eventCount, Is.Zero);
+        }
+
+        [Test]
+        public void PublishIntervalOutputsClearsCurrentIntervalWhenSubscriberThrows()
+        {
+            var model = new DCaPSTModelNG();
+            var clock = new Clock();
+            Utilities.SetProperty(clock, nameof(Clock.Today), new DateTime(2026, 7, 17));
+            Utilities.InjectLink(model, "clock", clock);
+            model.DcapstModel.Intervals = new[] { CreateInterval(6, 20, 1) };
+            model.IntervalStep += (_, _) => throw new InvalidOperationException("Subscriber failed");
+
+            var error = Assert.Throws<TargetInvocationException>(() =>
+                Utilities.CallMethod(model, "PublishIntervalOutputs", Array.Empty<object>()));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(error.InnerException, Is.TypeOf<InvalidOperationException>());
+                Assert.That(model.CurrentInterval, Is.Null);
+            });
         }
 
         private static IntervalValues CreateInterval(double hour, double airTemperature, double value)
@@ -122,29 +131,5 @@ namespace UnitTests.DCaPST
             };
         }
 
-        private class IntervalOutput
-        {
-            public DateTime DateTime { get; set; }
-            public double Hour { get; set; }
-            public double AirTemperature { get; set; }
-            public double SunlitLAI { get; set; }
-            public double ShadedLAI { get; set; }
-            public double CanopyTemperature { get; set; }
-            public double CanopyVPD { get; set; }
-            public double SunlitAssimilation { get; set; }
-            public double SunlitWater { get; set; }
-            public double SunlitTemperature { get; set; }
-            public double SunlitVPD { get; set; }
-            public double SunlitAc1 { get; set; }
-            public double SunlitAc2 { get; set; }
-            public double SunlitAj { get; set; }
-            public double ShadedAssimilation { get; set; }
-            public double ShadedWater { get; set; }
-            public double ShadedTemperature { get; set; }
-            public double ShadedVPD { get; set; }
-            public double ShadedAc1 { get; set; }
-            public double ShadedAc2 { get; set; }
-            public double ShadedAj { get; set; }
-        }
     }
 }

@@ -153,111 +153,14 @@ namespace Models.DCAPST
         /// Invoked once for each DCaPST calculation interval after the day's
         /// water-limited biomass calculation has completed.
         /// </summary>
-        public event EventHandler IntervalStep;
+        public event EventHandler<DCaPSTIntervalOutput> IntervalStep;
 
-        /// <summary>Date and time of the current DCaPST interval.</summary>
+        /// <summary>
+        /// The interval currently being published. This is non-null only while
+        /// <see cref="IntervalStep"/> subscribers are running.
+        /// </summary>
         [JsonIgnore]
-        public DateTime IntervalDateTime { get; private set; }
-
-        /// <summary>Hour of the current DCaPST interval.</summary>
-        [JsonIgnore]
-        [Units("hours")]
-        public double Hour { get; private set; }
-
-        /// <summary>Air temperature during the current DCaPST interval.</summary>
-        [JsonIgnore]
-        [Units("°C")]
-        public double AirTemperature { get; private set; }
-
-        /// <summary>Leaf area index of the sunlit canopy during the current interval.</summary>
-        [JsonIgnore]
-        [Units("m^2/m^2")]
-        public double SunlitLAI { get; private set; }
-
-        /// <summary>Leaf area index of the shaded canopy during the current interval.</summary>
-        [JsonIgnore]
-        [Units("m^2/m^2")]
-        public double ShadedLAI { get; private set; }
-
-        /// <summary>LAI-weighted canopy temperature during the current interval.</summary>
-        [JsonIgnore]
-        [Units("°C")]
-        public double CanopyTemperature { get; private set; }
-
-        /// <summary>LAI-weighted canopy vapour pressure deficit during the current interval.</summary>
-        [JsonIgnore]
-        [Units("kPa")]
-        public double CanopyVPD { get; private set; }
-
-        /// <summary>Sunlit canopy assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double SunlitAssimilation { get; private set; }
-
-        /// <summary>Sunlit canopy water use during the current interval.</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double SunlitWater { get; private set; }
-
-        /// <summary>Sunlit canopy temperature during the current interval.</summary>
-        [JsonIgnore]
-        [Units("°C")]
-        public double SunlitTemperature { get; private set; }
-
-        /// <summary>Sunlit canopy vapour pressure deficit during the current interval.</summary>
-        [JsonIgnore]
-        [Units("kPa")]
-        public double SunlitVPD { get; private set; }
-
-        /// <summary>Sunlit AC1 pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double SunlitAc1 { get; private set; }
-
-        /// <summary>Sunlit AC2 pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double SunlitAc2 { get; private set; }
-
-        /// <summary>Sunlit AJ pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double SunlitAj { get; private set; }
-
-        /// <summary>Shaded canopy assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double ShadedAssimilation { get; private set; }
-
-        /// <summary>Shaded canopy water use during the current interval.</summary>
-        [JsonIgnore]
-        [Units("mm")]
-        public double ShadedWater { get; private set; }
-
-        /// <summary>Shaded canopy temperature during the current interval.</summary>
-        [JsonIgnore]
-        [Units("°C")]
-        public double ShadedTemperature { get; private set; }
-
-        /// <summary>Shaded canopy vapour pressure deficit during the current interval.</summary>
-        [JsonIgnore]
-        [Units("kPa")]
-        public double ShadedVPD { get; private set; }
-
-        /// <summary>Shaded AC1 pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double ShadedAc1 { get; private set; }
-
-        /// <summary>Shaded AC2 pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double ShadedAc2 { get; private set; }
-
-        /// <summary>Shaded AJ pathway assimilation during the current interval.</summary>
-        [JsonIgnore]
-        [Units("umol CO2/m^2/s")]
-        public double ShadedAj { get; private set; }
+        public DCaPSTIntervalOutput CurrentInterval { get; private set; }
 
         /// <summary>
         /// The biological transpiration limit of a plant
@@ -517,8 +420,9 @@ namespace Models.DCAPST
         }
 
         /// <summary>
-        /// Copies each calculated interval into reportable scalar properties and
-        /// raises <see cref="IntervalStep"/> for the report model.
+        /// Publishes each calculated interval through <see cref="IntervalStep"/>.
+        /// The output is exposed through <see cref="CurrentInterval"/> only for
+        /// the duration of the event so that the report model can read it.
         /// </summary>
         private void PublishIntervalOutputs()
         {
@@ -527,43 +431,16 @@ namespace Models.DCAPST
 
             foreach (IntervalValues interval in DcapstModel.Intervals)
             {
-                Hour = interval.Time;
-                IntervalDateTime = clock.Today.Date.AddHours(Hour);
-                AirTemperature = interval.AirTemperature;
-                SunlitLAI = interval.SunlitLAI;
-                ShadedLAI = interval.ShadedLAI;
-
-                SunlitAssimilation = interval.Sunlit.A;
-                SunlitWater = interval.Sunlit.Water;
-                SunlitTemperature = interval.Sunlit.Temperature;
-                SunlitVPD = interval.Sunlit.VPD;
-                SunlitAc1 = interval.Sunlit.Ac1.Assimilation;
-                SunlitAc2 = interval.Sunlit.Ac2.Assimilation;
-                SunlitAj = interval.Sunlit.Aj.Assimilation;
-
-                ShadedAssimilation = interval.Shaded.A;
-                ShadedWater = interval.Shaded.Water;
-                ShadedTemperature = interval.Shaded.Temperature;
-                ShadedVPD = interval.Shaded.VPD;
-                ShadedAc1 = interval.Shaded.Ac1.Assimilation;
-                ShadedAc2 = interval.Shaded.Ac2.Assimilation;
-                ShadedAj = interval.Shaded.Aj.Assimilation;
-
-                double totalLAI = SunlitLAI + ShadedLAI;
-                CanopyTemperature = LAIWeightedMean(SunlitTemperature, SunlitLAI, ShadedTemperature, ShadedLAI, totalLAI);
-                CanopyVPD = LAIWeightedMean(SunlitVPD, SunlitLAI, ShadedVPD, ShadedLAI, totalLAI);
-
-                IntervalStep.Invoke(this, EventArgs.Empty);
+                CurrentInterval = new DCaPSTIntervalOutput(clock.Today, interval);
+                try
+                {
+                    IntervalStep.Invoke(this, CurrentInterval);
+                }
+                finally
+                {
+                    CurrentInterval = null;
+                }
             }
-        }
-
-        /// <summary>Calculates a canopy mean weighted by sunlit and shaded leaf area.</summary>
-        private static double LAIWeightedMean(double sunlitValue, double sunlitLAI, double shadedValue, double shadedLAI, double totalLAI)
-        {
-            if (totalLAI <= 0)
-                return 0;
-
-            return (sunlitValue * sunlitLAI + shadedValue * shadedLAI) / totalLAI;
         }
 
         private double GetSoilWaterAvailable()
