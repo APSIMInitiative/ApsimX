@@ -450,6 +450,9 @@ namespace Models.DCAPST
         {
             Canopy.DoTimestepAdjustment(Radiation);
 
+            interval.SunlitLAI = Canopy.Sunlit.LAI;
+            interval.ShadedLAI = Canopy.Shaded.LAI;
+
             var totalHeat = Canopy.CalcBoundaryHeatConductance();
             var sunlitHeat = Canopy.CalcSunlitBoundaryHeatConductance();
 
