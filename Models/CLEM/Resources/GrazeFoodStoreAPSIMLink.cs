@@ -226,11 +226,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Converts an amount to units per hectare per day
         /// </summary>
-        /// <param name="amount">Amount to convert</param>
+        /// <param name="amountToConvert">Amount to convert</param>
         /// <param name="daysInTimeStep">Number of days in current time step</param>
-        public double ConvertToPerHaPerDay(double amount, int daysInTimeStep)
+        public double ConvertToPerHaPerDay(double amountToConvert, int daysInTimeStep)
         {
-            return amount / paddock.Area / daysInTimeStep;
+            return amountToConvert / paddock.Area / daysInTimeStep;
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Models.CLEM.Resources
                         [.. groups],
                         greenAge,
                         numberOfTimesteps,
-                        groups.Key
+                        groups.Key.ToString()
                         )
                     ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
                 case "ByForageVSurfaceOM":
@@ -400,7 +400,7 @@ namespace Models.CLEM.Resources
                     .Select(groups => new FoodResourceStore(
                         [.. groups],
                         greenAge,
-                        numberOfTimesteps, 
+                        numberOfTimesteps,
                         (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
                         )
                     ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
@@ -423,8 +423,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public double Report(string grazeProperty, bool tonnes = false, bool hectares = false, int age = -1)
         {
-
-
             double convertToKgInPaddock = 10.0 * paddock.Area;
             double convert = (tonnes ? 1000 : 1) * (hectares ? paddock.Area : 1);
             double valueToUse = 0;
@@ -517,43 +515,28 @@ namespace Models.CLEM.Resources
                 {
                     for (int i = 0; i < foodStore.Pools.Count; i++)
                     {
-                        foodStore.Pools[i].AmountPending += foodStore.Details.Amount * foodStore.PoolProportions[i];
+                        foodStore.Pools[i].SetPending(foodStore.Details.Amount * foodStore.PoolProportions[i]);
                     }
                 }
             }
             return amountToRemove;
         }
 
-        /// <inheritdoc/>
-        public new void DecreasePending(ResourceRequest request, double amount)
+        /// <summary>
+        /// Decrease pending for specified food resource store
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="store"></param>
+        /// <param name="amount"></param>
+        public void DecreasePendingByStore(ResourceRequest request, FoodResourceStore store, double amount)
         {
-            // receives the entire amount to remove from the resource holder that needs to be proportioned to pools
-            if (request.AdditionalDetails is FoodResourceStore foodStore)
+            for (int i = 0; i < store.Pools.Count; i++)
             {
-                for (int i = 0; i < foodStore.Pools.Count; i++)
-                {
-                    foodStore.Pools[i].ReducePending(amount * foodStore.PoolProportions[i]);
-                }
+                store.Pools[i].ReducePending(amount * store.PoolProportions[i]);
             }
-            // do removal from pending
-            base.DecreasePending(request, amount);
-        }
 
-        /// <inheritdoc/>
-        public new void DecreasePendingByProportion(ResourceRequest request, double proportion)
-        {
-            double totalAmount = 0;
-            if (request.AdditionalDetails is FoodResourceStore foodStore)
-            {
-                for (int i = 0; i < foodStore.Pools.Count; i++)
-                {
-                    double amountToRemove = foodStore.Pools[i].AmountPending * proportion;
-                    foodStore.Pools[i].ReducePending(amountToRemove);
-                    totalAmount += amountToRemove;
-                }
-            }
             // do removal from pending
-            base.DecreasePending(request, totalAmount);
+            base.DecreasePending(request, amount * store.NumberOfDaysInTimestep);
         }
 
         /// <inheritdoc/>

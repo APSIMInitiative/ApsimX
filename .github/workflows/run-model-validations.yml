@@ -26,11 +26,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Checkout PR branch code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0  # Fetch all history for all branches and tags
+          allow-unsafe-pr-checkout: true
 
       - name: Merge APSIMInitiative/master into PR branch (ensure PR branch up to date)
         id: merge_upstream
@@ -47,7 +48,7 @@ jobs:
           exit 1
       
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 

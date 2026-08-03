@@ -119,7 +119,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].ThermalTime.Value",
+                      "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
                       "ResourceName": null,
                       "Children": [],

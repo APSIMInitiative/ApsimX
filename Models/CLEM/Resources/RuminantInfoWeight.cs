@@ -242,8 +242,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void SetProteinMassAtSRW()
         {
-            // todo: not sure this is needed anymore as moved to protein and calculated in SetSWR(), but is used one other time in new Ruminant constructor
-
             // update the protein mass at SRW as this only relies on SRW and specified constants.
             Protein?.SetProteinMassAtSRW(ruminant);
         }

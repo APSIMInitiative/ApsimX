@@ -55,7 +55,7 @@ namespace UnitTests
                 throw new AggregateException("Errors: ", errors);
 
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
             DataTable dt = dataStore.Reader.GetData("Observed");
 
             Assert.That(dt.Columns[3].DataType, Is.EqualTo(typeof(DateTime)));

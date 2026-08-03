@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class FilePasture : CLEMModel, IFilePasture
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         /// <summary>
         /// A reference to the text file reader object
@@ -428,8 +428,8 @@ namespace Models.CLEM
             int startYear = ecolCalculationDate.Year;
             int startMonth = ecolCalculationDate.Month;
             DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
-            if(endDate > clock.EndDate)
-                endDate = clock.EndDate;
+            if(endDate > events.Clock.EndDate)
+                endDate = events.Clock.EndDate;
 
             int endYear = endDate.Year;
             int endMonth = endDate.Month;
@@ -493,7 +493,7 @@ namespace Models.CLEM
                         + "For Region: " + region + ", Soil: " + soil
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
-            if (clock.EndDate == clock.Today)
+            if (events.Clock.EndDate == events.TimeStepEnd)
             {
                 return;
             }

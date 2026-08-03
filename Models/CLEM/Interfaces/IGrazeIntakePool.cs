@@ -42,14 +42,19 @@ namespace Models.CLEM.Interfaces
         public double Amount { get; }
 
         /// <summary>
-        /// Amount of biomass in this pool (kg)
+        /// Amount of biomass in this pool without any pending transactions (kg)
         /// </summary>
         public double AmountAvailable { get; }
 
         /// <summary>
         /// Amount of biomass in this pool that is currently a pending take by an activity
         /// </summary>
-        public double AmountPending { get; set; }
+        public double AmountPending { get; }
+
+        /// <summary>
+        /// Amount of biomass in this pool that is currently a pending take by an activity
+        /// </summary>
+        public double AmountInitialPending { get; }
 
         /// <summary>
         /// Reset timestep stores
@@ -74,6 +79,12 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <param name="amountReturned">Amount to reduce from pending (total for time step)</param>
         public void ReducePending(double amountReturned);
+
+        /// <summary>
+        /// Set pending
+        /// </summary>
+        /// <param name="amountPending">Amount to set for pending (total for time step)</param>
+        public void SetPending(double amountPending);
 
         /// <summary>
         /// Detatch a proportion of the pool
