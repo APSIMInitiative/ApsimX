@@ -13,17 +13,4 @@ public class ResourcesHolderSummary : DescriptiveSummaryProviderBase<ResourcesHo
     {
         Generator.Append("<h1>Resources summary</h1>");
     }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryOpeningBlocks()
-    {
-        Generator.OpenBlock("resource", styleString: $"opacity: {SummaryOpacity()};", id: $"{ModelTyped.Name}_main");
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryClosingBlocks()
-    {
-        generator.CloseMostRecentBlock(id: $"{ModelTyped.Name}_main");
-    }
-
 }

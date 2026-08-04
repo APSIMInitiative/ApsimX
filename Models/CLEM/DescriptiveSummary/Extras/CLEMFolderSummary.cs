@@ -15,18 +15,6 @@ public class CLEMFolderSummary : DescriptiveSummaryProviderBase<CLEMFolder>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
+        generator.Append($"<h2>{ModelTyped.Name}</h2>");
     }
-
-    ///// <inheritdoc/>
-    //public override void CreateSummaryOpeningBlocks()
-    //{
-    //    Generator.OpenBlock("resource", styleString: $"opacity: {SummaryOpacity()};", id: $"{ModelTyped.Name}_main");
-    //}
-
-    ///// <inheritdoc/>
-    //public override void CreateSummaryClosingBlocks()
-    //{
-    //    generator.CloseMostRecentBlock(id: $"{ModelTyped.Name}_main");
-    //}
-
 }
