@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
 using Models.PMF.Organs;
-using APSIM.Numerics;
+using Models.GrazPlan.Organs;
 
 namespace Models.AgPasture
 {
@@ -227,6 +228,9 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                    return 1.0;
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
                                             DMTotal, 0.0);
@@ -239,6 +243,9 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                    return 1.0;
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
                                             DMLive, 0.0);
             }
