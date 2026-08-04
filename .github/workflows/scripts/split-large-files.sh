@@ -12,4 +12,4 @@ dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Barley/Barl
 # Split Pinus Validation
 dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Validation/Pinus/Pinus.apsimx -s ./Tests/Validation/Pinus/split.json
 # Split BarleyWinterCereal Validation
-dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Tests/Prototype/BarleyWinterCereal/BarleyWinterCereal.apsimx -s ./Tests/Prototype/BarleyWinterCereal/split.json
+dotnet ./bin/Release/net8.0/APSIM.Workflow.dll -d ./Prototypes/BarleyWinterCereal/BarleyWinterCereal.apsimx -s ./Prototypes/BarleyWinterCereal/split.json
