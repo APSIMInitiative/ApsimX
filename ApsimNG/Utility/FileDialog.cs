@@ -167,7 +167,17 @@ namespace APSIMNG.Utility
             allFilter.Name = "All files";
             fileChooser.AddFilter(allFilter);
 
-            fileChooser.SetCurrentFolder(InitialDirectory);
+            try
+            {
+                fileChooser.SetCurrentFolder(InitialDirectory);
+            }
+            catch (GLib.GException)
+            {
+                // On some platforms (e.g. macOS with certain GtkSharp/.NET combinations),
+                // the native file chooser can fail to navigate to the initial directory
+                // even when that path is valid. Fall back to the chooser's own default
+                // location rather than blocking the user from opening a file at all.
+            }
             fileChooser.DoOverwriteConfirmation = true;
 
             bool tryAgain;
@@ -176,7 +186,24 @@ namespace APSIMNG.Utility
             {
                 fileNames = new string[0];
                 if (fileChooser.Run() == (int)ResponseType.Accept)
-                    fileNames = fileChooser.Filenames;
+                {
+                    try
+                    {
+                        fileNames = fileChooser.Filenames;
+                    }
+                    catch (GLib.GException)
+                    {
+                        // Works around a GtkSharp bug on Apple Silicon (arm64) macOS where a
+                        // P/Invoke signature mismatch (32-bit gssize instead of 64-bit) corrupts
+                        // ALL filename<->UTF-8 marshaling, regardless of the filename's actual
+                        // content. See https://github.com/GtkSharp/GtkSharp/issues/345. Upgrading
+                        // GtkSharp to the version that fixes this is blocked by a strong-naming
+                        // change that breaks the abandoned OxyPlot.GtkSharp3 dependency, so we
+                        // bypass GtkSharp's broken marshaller here and read the selection
+                        // directly from the native GTK API using .NET's own UTF-8 handling.
+                        fileNames = NativeFileChooserWorkaround.GetFilenames(fileChooser.Handle);
+                    }
+                }
 
                 // The Gtk FileChooser does NOT automatically append extensions based on the currently selected filter
                 // We need to do this somewhat manually when saving files.

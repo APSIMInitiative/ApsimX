@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using APSIM.Numerics;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using Models.ForageDigestibility;
 using Models.GrazPlan;
@@ -14,7 +15,7 @@ namespace Models.CLEM.Resources
     /// An adapter to convert an APSIM forage object to a CLEM grazing intake pool
     ///
     /// </summary>
-    public class GrazeAPSIMForagePool: IGrazeIntakePool
+    public class GrazeAPSIMForagePool : IGrazeIntakePool
     {
         private ModelWithDigestibleBiomass biomassModel;
         private IFeed feedDetails;
@@ -63,7 +64,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public double Amount { get => amount - AmountPending; set => throw new NotImplementedException(); }
+        public double Amount { get => amount; }
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get => feedDetails.TypeOfFeed; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
@@ -95,9 +96,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public string Name { get; set; }
         /// <inheritdoc/>
-        public double AmountAvailable => amount - AmountPending;
+        public double AmountAvailable => MathUtilities.RoundToZero(amount - AmountPending, 1e-7);
         /// <inheritdoc/>
-        public double AmountPending { get; set; }
+        public double AmountPending { get; private set; }
+        /// <inheritdoc/>
+        public double AmountInitialPending { get; private set; }
         /// <inheritdoc/>
         public void Add(GrazeFoodStorePool pool)
         {
@@ -114,6 +117,7 @@ namespace Models.CLEM.Resources
             Consumed += AmountPending;
             this.amount -= AmountPending;
             AmountPending = 0;
+            AmountInitialPending = 0;
         }
         /// <inheritdoc/>
         public double Detach(double proportion)
@@ -134,6 +138,12 @@ namespace Models.CLEM.Resources
         public void Reset()
         {
             throw new NotImplementedException();
+        }
+        /// <inheritdoc/>
+        public void SetPending(double amountPending)
+        {
+            AmountPending = amountPending;
+            AmountInitialPending = amountPending;
         }
     }
 }

@@ -48,96 +48,137 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
                     generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} is defined by the following (x,y) points:", "childgrouplabel");
 
                     using StringWriter htmlWriter = new();
-                    htmlWriter.Write(@"
-                    <canvas id=""myChart_" + ModelTyped.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
-                    <script>
-                    var ctx = document.getElementById('myChart_" + ModelTyped.FullPath + @"').getContext('2d');
-                    var myChart = new Chart(ctx, {
-                    responsive:false,
-                    maintainAspectRatio: true,
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            data: [");
-                    string data = "";
+                    // Start without any leading spaces so the first tag (canvas/script) begins at column 0.
+                    // Use \t for indentation inside the script so that formatting uses tabs.
+                    htmlWriter.Write("<canvas id=\"myChart_" + ModelTyped.FullPath + "\"><p>Unable to display graph in browser</p></canvas>");
+                    htmlWriter.WriteLine();
+                    htmlWriter.WriteLine("<script>");
+                    htmlWriter.WriteLine("\tvar ctx = document.getElementById('myChart_" + ModelTyped.FullPath + "').getContext('2d');");
+                    htmlWriter.WriteLine("\tvar myChart = new Chart(ctx, {");
+                    htmlWriter.WriteLine("\t\tresponsive:false,");
+                    htmlWriter.WriteLine("\t\tmaintainAspectRatio: true,");
+                    htmlWriter.WriteLine("\t\ttype: 'scatter',");
+                    htmlWriter.WriteLine("\t\tdata: {");
+                    htmlWriter.WriteLine("\t\t\tdatasets: [{");
+                    htmlWriter.WriteLine("\t\t\t\tdata: [");
+
+                    // build the data points with tabs for indentation inside the script
+                    var dataSb = new System.Text.StringBuilder();
                     for (int i = 0; i < ModelTyped.XValues.Length; i++)
                     {
                         if (ModelTyped.YValues.Length > i)
                         {
-                            data += "{ x: " + ModelTyped.XValues[i].ToString() + ", y: " + ModelTyped.YValues[i] + "},";
+                            dataSb.Append("\t\t\t\t\t{ x: " + ModelTyped.XValues[i].ToString() + ", y: " + ModelTyped.YValues[i] + "},");
+                            dataSb.AppendLine();
                         }
                     }
 
-                    data = data.TrimEnd(',');
-                    htmlWriter.Write(data);
-                    htmlWriter.Write(@"],
-                    pointBackgroundColor: '[GraphPointColour]',
-                    pointBorderColor: '[GraphPointColour]',
-                    borderColor: '[GraphLineColour]',
-                    pointRadius: 5,
-                    pointHoverRadius: 5,
-                    fill: false,
-                    tension: 0,
-                    showLine: true,
-                    steppedLine: " + (ModelTyped.CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
-                    }]
-                    },
-                    options: {
-                        legend: {
-                            display: false
-                        },
-                        scales: {
-                            xAxes: [{
-                                color: 'green',
-                                type: 'linear',
-                                position: 'bottom',
-                                ticks: {
-                                    fontColor: '[GraphLabelColour]',
-                                    fontSize: 13,
-                                    padding: 3
-                                },
-                                gridLines: {
-                                    color: '[GraphGridLineColour]',
-                                    drawOnChartArea: true
-                                }");
-                    if (ModelTyped.NameOfXVariable != null && ModelTyped.NameOfXVariable != "")
+                    string data = dataSb.ToString().TrimEnd(',', '\r', '\n');
+                    if (!string.IsNullOrEmpty(data))
                     {
-                        htmlWriter.Write(@", 
-                        scaleLabel: {
-                        display: true,
-                        fontColor: '[GraphAxisLabelColour]',
-                        labelString: '" + ModelTyped.NameOfXVariable + @"'
-                        }");
+                        htmlWriter.Write(data);
+                        htmlWriter.WriteLine();
                     }
-                    htmlWriter.Write(@"}],
-                    yAxes: [{
-                        type: 'linear',
-                        gridLines: {
-                            zeroLineColor: '[GraphGridZeroLineColour]',
-                            zeroLineWidth: 1,
-                            zeroLineBorderDash: [3, 3],
-                            color: '[GraphGridLineColour]',
-                            drawOnChartArea: true
-                        },
-                        ticks: {
-                            fontColor: '[GraphLabelColour]',
-                            fontSize: 13,
-                            padding: 3
-                        }");
-                    if (ModelTyped.NameOfYVariable != null && ModelTyped.NameOfYVariable != "")
+
+                    htmlWriter.WriteLine("\t\t\t\t],");
+                    htmlWriter.WriteLine("\t\t\t\tpointBackgroundColor: '[GraphPointColour]',");
+                    htmlWriter.WriteLine("\t\t\t\tpointBorderColor: '[GraphPointColour]',");
+                    htmlWriter.WriteLine("\t\t\t\tborderColor: '[GraphLineColour]',");
+                    htmlWriter.WriteLine("\t\t\t\tpointRadius: 5,");
+                    htmlWriter.WriteLine("\t\t\t\tpointHoverRadius: 5,");
+                    htmlWriter.WriteLine("\t\t\t\tfill: false,");
+                    htmlWriter.WriteLine("\t\t\t\ttension: 0,");
+                    htmlWriter.WriteLine("\t\t\t\tshowLine: true,");
+                    htmlWriter.WriteLine("\t\t\t\tsteppedLine: " + (ModelTyped.CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + ",");
+                    htmlWriter.WriteLine("\t\t\t}]");
+                    htmlWriter.WriteLine("\t\t},");
+                    htmlWriter.WriteLine("\t\toptions: {");
+                    htmlWriter.WriteLine("\t\t\tlegend: {");
+                    htmlWriter.WriteLine("\t\t\t\tdisplay: false");
+                    htmlWriter.WriteLine("\t\t\t},");
+                    htmlWriter.WriteLine("\t\t\tscales: {");
+                    htmlWriter.WriteLine("\t\t\t\txAxes: [{");
+                    htmlWriter.WriteLine("\t\t\t\t\tcolor: 'green',");
+                    htmlWriter.WriteLine("\t\t\t\t\ttype: 'linear',");
+                    htmlWriter.WriteLine("\t\t\t\t\tposition: 'bottom',");
+                    htmlWriter.WriteLine("\t\t\t\t\tticks: {");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tfontColor: '[GraphLabelColour]',");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tfontSize: 13,");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tpadding: 3");
+                    htmlWriter.WriteLine("\t\t\t\t\t},");
+                    htmlWriter.WriteLine("\t\t\t\t\tgridLines: {");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tcolor: '[GraphGridLineColour]',");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tdrawOnChartArea: true");
+                    htmlWriter.WriteLine("\t\t\t\t\t}");
+
+                    if (!string.IsNullOrEmpty(ModelTyped.NameOfXVariable))
                     {
-                        htmlWriter.Write(@", scaleLabel: {
-                        display: true,
-                        fontColor: '[GraphAxisLabelColour]',
-                        labelString: '" + ModelTyped.NameOfYVariable + @"'
-                    }");
+                        htmlWriter.WriteLine("\t\t\t\t\t,");
+                        htmlWriter.WriteLine("\t\t\t\t\tscaleLabel: {");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tdisplay: true,");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tfontColor: '[GraphAxisLabelColour]',");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tlabelString: '" + ModelTyped.NameOfXVariable + "'");
+                        htmlWriter.WriteLine("\t\t\t\t\t}");
                     }
-                    htmlWriter.Write(@"}],
+
+                    htmlWriter.WriteLine("\t\t\t\t}],");
+                    htmlWriter.WriteLine("\t\t\t\tyAxes: [{");
+                    htmlWriter.WriteLine("\t\t\t\t\ttype: 'linear',");
+                    htmlWriter.WriteLine("\t\t\t\t\tgridLines: {");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tzeroLineColor: '[GraphGridZeroLineColour]',");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tzeroLineWidth: 1,");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tzeroLineBorderDash: [3, 3],");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tcolor: '[GraphGridLineColour]',");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tdrawOnChartArea: true");
+                    htmlWriter.WriteLine("\t\t\t\t\t},");
+                    htmlWriter.WriteLine("\t\t\t\t\tticks: {");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tfontColor: '[GraphLabelColour]',");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tfontSize: 13,");
+                    htmlWriter.WriteLine("\t\t\t\t\t\tpadding: 3");
+                    htmlWriter.WriteLine("\t\t\t\t\t}");
+
+                    if (!string.IsNullOrEmpty(ModelTyped.NameOfYVariable))
+                    {
+                        htmlWriter.WriteLine("\t\t\t\t\t, scaleLabel: {");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tdisplay: true,");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tfontColor: '[GraphAxisLabelColour]',");
+                        htmlWriter.WriteLine("\t\t\t\t\t\tlabelString: '" + ModelTyped.NameOfYVariable + "'");
+                        htmlWriter.WriteLine("\t\t\t\t\t}");
+                    }
+
+                    htmlWriter.WriteLine("\t\t\t\t}],");
+                    htmlWriter.WriteLine("\t\t\t}");
+                    htmlWriter.WriteLine("\t\t}");
+                    htmlWriter.WriteLine("\t});");
+                    htmlWriter.WriteLine("</script>");
+
+                    // Add 8 tabs to the start of each line before adding to generator, but keep the first non-empty line unindented
+                    string html = htmlWriter.ToString();
+                    string indent = new string('\t', 8);
+                    string[] lines = html.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    var indentedBuilder = new System.Text.StringBuilder();
+                    bool firstNonEmptyLine = true;
+                    for (int li = 0; li < lines.Length; li++)
+                    {
+                        if (li > 0)
+                        {
+                            indentedBuilder.Append(Environment.NewLine);
                         }
+
+                        if (firstNonEmptyLine && !string.IsNullOrWhiteSpace(lines[li]))
+                        {
+                            // Keep the first non-empty line without additional indent (so <canvas> / <script> start at column 0)
+                            indentedBuilder.Append(lines[li]);
+                            firstNonEmptyLine = false;
                         }
-                    });
-                    </script>");
-                    generator.AddBlockWithText(htmlWriter.ToString(), styleString: "width:400px;height:200px;");
+                        else
+                        {
+                            indentedBuilder.Append(indent);
+                            indentedBuilder.Append(lines[li]);
+                        }
+                    }
+
+                    generator.AddBlockWithText(indentedBuilder.ToString(), styleString: "width:400px;height:200px;");
                 }
             }
         }

@@ -11,12 +11,6 @@ public class ActivityFolderSummary : DescriptiveSummaryProviderBase<ActivityFold
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"{ModelTyped.Name} folder {((ModelTyped.Enabled == false) ? " - DISABLED!" : "")}", "folder");
-    }
-
-    /// <inheritdoc/>
-    public override void CreateSummaryOpeningBlocks()
-    {
-        generator.OpenBlock("activityborder", styleString: $"opacity: {SummaryOpacity()};", id: $"{ModelTyped.Name}_main");
+        Generator.Append($"<h3>{ModelTyped.Name} folder {((ModelTyped.Enabled == false) ? " - DISABLED!" : "")}</h3>");
     }
 }

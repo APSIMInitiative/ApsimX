@@ -3,10 +3,10 @@ using APSIM.Shared.Utilities;
 namespace APSIM.Core;
 
 /// <summary>An add command</summary>
-internal partial class AddCommand : IModelCommand
+internal partial class AddCommand : IModelCommand, ICommandReferenceExternalFile
 {
     /// <summary>A reference to a model.</summary>
-    private readonly IModelReference modelReference;
+    private readonly IModelReference _modelReference;
 
     /// <summary>The path of a model to add a model to.</summary>
     private readonly string _toPath;
@@ -26,10 +26,10 @@ internal partial class AddCommand : IModelCommand
     /// <param name="newName">A new name for the added model</param>
     public AddCommand(IModelReference modelReference, string toPath, bool multiple, string newName = null)
     {
-        this.modelReference = modelReference;
-        this._toPath = toPath;
-        this._multiple = multiple;
-        this._newName = newName;
+        _modelReference = modelReference;
+        _toPath = toPath;
+        _multiple = multiple;
+        _newName = newName;
     }
 
     /// <summary>
@@ -37,9 +37,26 @@ internal partial class AddCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner, List<Node> externalFileCache)
     {
-        INodeModel modelToAdd = modelReference.GetModel();
+        INodeModel modelToAdd = null;
+        if (_modelReference is ModelInFileReference fileReference)
+        {
+            if (externalFileCache != null)
+                foreach(Node node in externalFileCache)
+                    if (node.FileName == fileReference.GetFilePath())
+                        modelToAdd = fileReference.GetModelUsingCache(node);
+            //if file wasn't in cache, try loading now
+            if (modelToAdd == null)
+                 modelToAdd = _modelReference.GetModel();
+            //clone to prevent changing cache
+            modelToAdd = ReflectionUtilities.Clone(modelToAdd) as INodeModel;
+        }
+        else
+        {
+            modelToAdd = _modelReference.GetModel();
+        }
+
         if (!string.IsNullOrEmpty(_newName))
             modelToAdd.Rename(_newName);
 
@@ -66,5 +83,16 @@ internal partial class AddCommand : IModelCommand
             toModel.Node.AddChild(ReflectionUtilities.Clone(modelToAdd) as INodeModel);
 
         return relativeTo;
+    }
+
+    /// <summary>
+    /// Returns the potential filepath for this command.
+    /// </summary>
+    public string GetFilePath()
+    {
+        if (_modelReference is ModelInFileReference fileReference)
+            return fileReference.GetFilePath();
+        else
+            return null;
     }
 }

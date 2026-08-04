@@ -32,7 +32,7 @@ namespace Models.PostSimulationTools
             {
                 links.Resolve(tool);
                 tool.Run();
-                storage.Reader.Refresh();
+                storage.Refresh();
             }
         }
     }

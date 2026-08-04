@@ -696,7 +696,11 @@ namespace Models.CLEM.Resources
             for (int i = 0; i < mutibirthrates.Length; i++)
                 number[i+1] = number[i] + Convert.ToInt32(1000 * mutibirthrates[i]*(i+2));
 
-            int rnd = RandomNumberGenerator.Generator.Next(1, number.Last());
+            int rnd = 0;
+            if (RandomNumberGenerator.IsAvailable)
+            {
+                rnd = RandomNumberGenerator.Generator.Next(1, number.Last());
+            }
 
             int j = 0;
             while (j < number.Length && rnd > number[j])

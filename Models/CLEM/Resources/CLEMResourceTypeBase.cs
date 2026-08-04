@@ -502,18 +502,17 @@ namespace Models.CLEM.Resources
             pending[request] -= amount;
         }
 
-        /// <inheritdoc/>
-        public void DecreasePendingByProportion(ResourceRequest request, double proportion)
-        {
-            if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
-            {
-                string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
-                Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
-                return;
-            }
-            pending[request] *= (1 - proportion);
-        }
-
+        ///// <inheritdoc/>
+        //public void DecreasePendingByProportion(ResourceRequest request, double proportion)
+        //{
+        //    if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
+        //    {
+        //        string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
+        //        Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
+        //        return;
+        //    }
+        //    pending[request] *= (1 - proportion);
+        //}
 
         /// <summary>
         /// Performs a transaction by specified amount.

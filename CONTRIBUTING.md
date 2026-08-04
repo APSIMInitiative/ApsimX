@@ -1,4 +1,4 @@
 ## Contributing
 
-Please read our [guide](https://apsimnextgeneration.netlify.app/contribute/).
+Please read our [guide](https://docs.apsim.info/docs/contribute/review-process).
 

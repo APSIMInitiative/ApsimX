@@ -150,6 +150,10 @@ namespace Models.Core.Run
 
                 Node newNode = baseSimulation.Node.Clone();
 
+                //remove readonly from any node so that it can be run correctly.
+                foreach(Node node in newNode.Walk())
+                    node.Model.ReadOnly = false;
+
                 if (string.IsNullOrWhiteSpace(Name))
                     newNode.Rename(baseSimulation.Name);
                 else
