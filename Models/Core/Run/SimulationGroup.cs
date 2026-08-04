@@ -294,7 +294,7 @@ namespace Models.Core.Run
                         {
                             if (job is SimulationDescription simDescription)
                             {
-                                if (simDescription.ToSimulation().Enabled)
+                                if (simDescription.IsEnabled)
                                     Add(simDescription);
                             }
                             else Add(job);
