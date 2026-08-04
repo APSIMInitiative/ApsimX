@@ -58,7 +58,8 @@ public static class PayloadUtilities
                 "/Tests/Validation/Eucalyptus/Eucalyptus.apsimx",
                 "/Tests/Validation/Eucalyptus/EKB.250603b/EKB 250603b.apsimx",
                 "/Tests/Validation/Barley/Barley.apsimx",
-                "/Tests/Validation/Pinus/Pinus.apsimx"
+                "/Tests/Validation/Pinus/Pinus.apsimx",
+                "/Prototypes/BarleyWinterCereal/BarleyWinterCereal.apsimx"
             };
 
     // // Development submit azure URL
