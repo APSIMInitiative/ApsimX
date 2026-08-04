@@ -6,7 +6,7 @@ internal partial class DeleteCommand : IModelCommand
     /// <summary>The name of the model to delete.</summary>
     private readonly string _modelName;
 
-    /// <summary>Do as many replacements as possible?</summary>
+    /// <summary>Do as many deletes as possible?</summary>
     private readonly bool _multiple;
 
     /// <summary>
