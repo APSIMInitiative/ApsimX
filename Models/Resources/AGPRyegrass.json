@@ -260,6 +260,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Live",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.2,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -269,6 +270,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Dead",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 1.0,
               "Children": [],
               "IncludeInDocumentation": true,

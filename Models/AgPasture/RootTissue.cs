@@ -28,16 +28,16 @@ namespace Models.AgPasture
 
         //----------------------- Constants -----------------------
 
-        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        private const double carbonFractionInDM = 0.4;
-
         /// <summary>Minimum significant difference between two values.</summary>
         internal const double Epsilon = 0.000000001;
 
         //---------------------------- Parameters -----------------------
 
+        /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
+        public double CarbonConcentration { get; set; }
+
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
-        public double FractionNRemobilisable { get; set; } = 0.1;
+        public double FractionNRemobilisable { get; set; }
 
         //----------------------- Daily Deltas -----------------------
 
@@ -177,7 +177,7 @@ namespace Models.AgPasture
                     FOMType fomData = new FOMType();
                     fomData.amount = amountDM[layer];
                     fomData.N = amountN[layer];
-                    fomData.C = fomData.amount * carbonFractionInDM;
+                    fomData.C = fomData.amount * CarbonConcentration;
                     fomData.P = 0.0; // P not considered here
                     fomData.AshAlk = 0.0; // Ash not considered here
 
