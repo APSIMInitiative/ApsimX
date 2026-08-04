@@ -108,8 +108,8 @@ namespace Models.AgPasture
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         public double MaximumNUptake { get; set; } = 10.0;
 
-        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        public double ExponentSoilMoisture = 1.50;
+        /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
+        public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         public double MinimumLiveDM { get; set; } = 1.0;
@@ -443,7 +443,7 @@ namespace Models.AgPasture
         ///   limited (e.g. a KNO3 = 0.02 means no limitations if the NO3 concentration is above 50 ppm).
         /// </remarks>
         /// <param name="myZone">The soil information from the zone that contains the roots.</param>
-        /// <param name="soilWaterUptake">Soil water uptake</param>
+        /// <param name="soilWaterUptake">Soil water uptake, per layer</param>
         internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone, double[] soilWaterUptake)
         {
             var thickness = soilPhysical.Thickness;
@@ -463,10 +463,10 @@ namespace Models.AgPasture
                     // get the fraction of this layer that is within the root zone
                     double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
-                // get the soil moisture factor (less N available in drier soil)
-                double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
-                                                 0.0, 1.0);
-                double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
+                    // get the soil moisture factor (less N available in drier soil)
+                    double relativeWaterContent = MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0);
+                    relativeWaterContent = MathUtilities.Bound(relativeWaterContent, 0.0, 1.0);
+                    double moistureFactor = 1.0 - Math.Pow(1.0 - relativeWaterContent, NExtractionSWFactorExponent);
 
                     // get NH4 available
                     double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
