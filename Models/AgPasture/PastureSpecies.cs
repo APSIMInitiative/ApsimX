@@ -555,12 +555,30 @@ namespace Models.AgPasture
         public double InitialRootDepth { get; set; }
 
         /// <summary>Initial fractions of DM for each plant part in grasses (0-1).</summary>
+        /// <remarks>
+        /// Values are the proportion of biomass aboveground in each organ and tissue:
+        ///  Leaf.Emerging, Leaf.Developing, Leaf.Mature, Leaf.Dead;
+        ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
+        ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature (all zeroes);
+        /// </remarks>
         public double[] initialDMFractionsGrasses { get; set; } = { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         /// <summary>Initial fractions of DM for each plant part in legumes (0-1).</summary>
+        /// <remarks>
+        /// Values are the proportion of biomass aboveground in each organ and tissue:
+        ///  Leaf.Emerging, Leaf.Developing, Leaf.Mature, Leaf.Dead;
+        ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
+        ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature;
+        /// </remarks>
         public double[] initialDMFractionsLegumes { get; set; } = { 0.16, 0.23, 0.22, 0.05, 0.03, 0.05, 0.05, 0.01, 0.04, 0.08, 0.08 };
 
         /// <summary>Initial fractions of DM for each plant part in forbs (0-1).</summary>
+        /// <remarks>
+        /// Values are the proportion of biomass aboveground in each organ and tissue:
+        ///  Leaf.Emerging, Leaf.Developing, Leaf.Mature, Leaf.Dead;
+        ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
+        ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature (all zeroes);
+        /// </remarks>
         public double[] initialDMFractionsForbs { get; set; } = { 0.20, 0.20, 0.15, 0.05, 0.10, 0.15, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         ////- Potential growth (photosynthesis) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -576,10 +594,6 @@ namespace Models.AgPasture
         /// <summary>Photosynthesis curvature parameter (J/kg/s).</summary>
         [Units("J/kg/s")]
         public double PhotosynthesisCurveFactor { get; set; } = 0.8;
-
-        /// <summary>Fraction of radiation that is photosynthetically active (0-1).</summary>
-        [Units("0-1")]
-        public double FractionPAR { get; set; } = 0.5;
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
@@ -702,6 +716,12 @@ namespace Models.AgPasture
         public double DegreesDayForGermination { get; set; } = 125;
 
         /// <summary>Fractions of DM for each plant part at emergence, for all plants (0-1).</summary>
+        /// <remarks>
+        /// Values are the proportion of biomass aboveground in each organ and tissue:
+        ///  Leaf.Emerging, Leaf.Developing, Leaf.Mature, Leaf.Dead;
+        ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
+        ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature;
+        /// </remarks>
         private double[] emergenceDMFractions = { 0.60, 0.25, 0.00, 0.00, 0.15, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 };
 
         ////- Allocation of new growth >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1350,6 +1370,9 @@ namespace Models.AgPasture
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         internal const double CarbonFractionInDM = 0.4;
+
+        /// <summary>Fraction of radiation that is photosynthetically active (0-1).</summary>
+        internal const double FractionPAR = 0.5;
 
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         internal const double PotentialMEOfHerbage = 16.0;
@@ -2248,16 +2271,14 @@ namespace Models.AgPasture
         public IBiomass AboveGround
         {
             get
-            {   
-
+            {
                 if(Leaf==null || Stem == null || Stolon == null)
                     return new Biomass();
 
                 Biomass mass = new Biomass();
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
-                mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
+                mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;     // to g/m2
                 return mass;
-
             }
         }
 
@@ -2266,21 +2287,19 @@ namespace Models.AgPasture
         public IBiomass AboveGroundHarvestable
         {
             get
-            {   
-                
+            {
                 if(Leaf==null || Stem == null || Stolon == null)
                     return new Biomass();
                                    
                 Biomass mass = new Biomass();
-                mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
+                mass.StructuralWt = Harvestable.Wt / 10.0;  // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
                 return mass; 
-                
-                
             }
         }
 
         /// <summary>Dry matter and N available for harvesting (kgDM/ha).</summary>
+        [Units("kg/ha")]
 
         public AGPBiomass Harvestable
         {
@@ -2301,6 +2320,7 @@ namespace Models.AgPasture
 
 
         /// <summary>Standing dry matter and N (kgDM/ha).</summary>
+        [Units("kg/ha")]
         public AGPBiomass Standing
         {
             get
@@ -2319,6 +2339,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Standing live dry matter and N (kgDM/ha).</summary>
+        [Units("kg/ha")]
         public AGPBiomass StandingLive
         {
             get
@@ -2337,6 +2358,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Standing dead dry matter and N (kgDM/ha).</summary>
+        [Units("kg/ha")]
         public AGPBiomass StandingDead
         {
             get
@@ -2355,6 +2377,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Live dry matter and N available for harvesting.</summary>
+        [Units("kg/ha")]
         public AGPBiomass HarvestableLive
         {
             get
@@ -2368,6 +2391,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Dead dry matter and N available for harvesting.</summary>
+        [Units("kg/ha")]
         public AGPBiomass HarvestableDead
         {
             get
