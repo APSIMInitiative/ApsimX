@@ -434,7 +434,10 @@ namespace Models.AgPasture
                 // get the N amount fixed through symbiosis - calculates fixedN
                 EvaluateNitrogenFixation();
 
-                // evaluate the use of N remobilised and get N amount demanded from soil
+                // evaluate the use of N remobilised from senesced material
+                EvaluateSenescedNRemobilisation();
+
+                // evaluate the amount of N demanded from soil
                 EvaluateSoilNitrogenDemand();
 
                 // get the amount of soil N demanded
@@ -496,6 +499,7 @@ namespace Models.AgPasture
                 myRoot?.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
             }
             EvaluateNitrogenFixation();
+            EvaluateSenescedNRemobilisation();
             EvaluateSoilNitrogenDemand();
 
             foreach (ZoneWaterAndN zone in zones)
@@ -3422,30 +3426,28 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Evaluates the use of remobilised nitrogen and computes soil nitrogen demand.</summary>
-        internal void EvaluateSoilNitrogenDemand()
+
+        /// <summary>Computes the amount of nitrogen remobilised from senesced biomass into new growth.</summary>
+        internal void EvaluateSenescedNRemobilisation()
         {
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
             {
-                // N demand is fulfilled by fixation alone
+                // N demand is fulfilled by fixation alone, no need to remobilise N from senesced material
                 senescedNRemobilised = 0.0;
-                mySoilNDemand = 0.0;
             }
             else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
             {
-                // N demand is fulfilled by fixation plus N remobilised from senesced material
+                // N demand is fulfilled by fixation plus a fraction of N remobilised from senesced material
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
-                mySoilNDemand = 0.0;
                 fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
-                // N demand is greater than fixation and remobilisation, N uptake is needed
+                // N demand cannot be fulfilled by fixation and remobilisation from senesced material, N uptake will be needed
                 senescedNRemobilised = remobilisableSenescedN;
-                mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
@@ -3464,6 +3466,22 @@ namespace Models.AgPasture
                 Stem.DeadTissue.NRemobilised = 0;
                 Stolon.DeadTissue.NRemobilised = 0;
                 Root.Dead.NRemobilised = 0;
+            }
+        }
+
+        /// <summary>Evaluates the demand for nitrogen from the soil.</summary>
+        internal void EvaluateSoilNitrogenDemand()
+        {
+            double adjNDemand = demandLuxuryN * GlfSoilFertility;
+            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN + senescedNRemobilised, Epsilon))
+            {
+                // N demand is fulfilled by fixation and/or N remobilised from senesced material
+                mySoilNDemand = 0.0;
+            }
+            else
+            {
+                // N demand is greater than fixation and remobilisation, soil N uptake is needed
+                mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
             }
         }
 
