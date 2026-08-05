@@ -90,6 +90,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.8,
@@ -101,6 +102,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.15,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -111,6 +113,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.25,
               "DigestibilityCellWall": 0.55,
               "Children": [],
@@ -121,6 +124,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DeadTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 1.0,
               "DigestibilityCellWall": 0.2,
               "Children": [],
@@ -143,6 +147,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.6,
@@ -154,6 +159,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.15,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -164,6 +170,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.25,
               "DigestibilityCellWall": 0.5,
               "Children": [],
@@ -174,6 +181,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DeadTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 1.0,
               "DigestibilityCellWall": 0.2,
               "Children": [],
@@ -197,6 +205,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "EmergingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.0,
               "FractionSugarNewGrowth": 0.5,
               "DigestibilityCellWall": 0.6,
@@ -208,6 +217,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DevelopingTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.1,
               "DigestibilityCellWall": 0.6,
               "Children": [],
@@ -218,6 +228,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "MatureTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.2,
               "DigestibilityCellWall": 0.5,
               "Children": [],
@@ -228,6 +239,7 @@
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
               "Name": "DeadTissue",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 1.0,
               "DigestibilityCellWall": 0.2,
               "Children": [],
@@ -260,6 +272,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Live",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 0.2,
               "Children": [],
               "IncludeInDocumentation": true,
@@ -269,6 +282,7 @@
             {
               "$type": "Models.AgPasture.RootTissue, Models",
               "Name": "Dead",
+              "CarbonConcentration": 0.4,
               "FractionNRemobilisable": 1.0,
               "Children": [],
               "IncludeInDocumentation": true,
