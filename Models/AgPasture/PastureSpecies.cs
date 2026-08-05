@@ -450,9 +450,6 @@ namespace Models.AgPasture
                     fractionUsed = Math.Min(1.0, MathUtilities.Divide(NDemand, NSupply, 0));
                 }
 
-                mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
-                mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
-
                 // reduce the PotentialUptakes that we pass to the soil arbitrator
                 foreach (ZoneWaterAndN UptakeDemands in zones)
                 {
@@ -507,10 +504,17 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
+                    // do the actual uptake
                     myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
-
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
+
+                    // re-check available N, ensure it conforms with last value from Runge-Kutta iteration
+                    for (int layer = 0; layer <= myRoot.BottomLayer; layer++)
+                    {
+                        myRoot.mySoilNH4Available[layer] = Math.Max(mySoilNH4Uptake[layer], myRoot.mySoilNH4Available[layer]);
+                        myRoot.mySoilNO3Available[layer] = Math.Max(mySoilNO3Uptake[layer], myRoot.mySoilNO3Available[layer]);
+                    }
                 }
             }
         }
