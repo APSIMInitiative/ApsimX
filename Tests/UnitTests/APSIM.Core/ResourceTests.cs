@@ -87,31 +87,38 @@ public class ResourceTests
     /// Checks all resources file in the Validation directory within Tests for released models. 
     /// Ensures that all variable references in the resource files are resolved when the resource is read. 
     /// </summary>
-    [TestCase("AgPasture")]
-    [TestCase("Canola")]
-    // [TestCase("Sorghum")]
-    public void EnsureResourceVariableReferencesAreResolved(string DirectoryName)
+    [Test]
+    public void EnsureResourceVariableReferencesAreResolved()
     {
-        string unitTestsPath = PathUtilities.GetApsimXDirectory() + "/" + "Tests";
-        var validationPaths = Directory.GetFiles(Path.Combine(unitTestsPath, $"Validation/{DirectoryName}"), "*.apsimx", SearchOption.AllDirectories);
+        string modelResourcesPath = PathUtilities.GetApsimXDirectory() + "/" + "Models/Resources";
+        var validationPaths = Directory.GetFiles(modelResourcesPath, $"*.json", SearchOption.AllDirectories);
         foreach (string path in validationPaths)
         {
+            string resourceName = Path.GetFileNameWithoutExtension(path);
             string resourceContent = File.ReadAllText(path);
-            var resourceAsSimulations = FileFormat.ReadFromString<Simulations>(resourceContent).Model as Simulations;
-            var resourceNode = Node.Create(resourceAsSimulations);
-            resourceNode.InitialiseModel();
-            foreach (var variableRef in resourceNode.FindChildren<VariableReference>(recurse: true))
+            Simulations resourceAsSimulations = FileFormat.ReadFromString<Simulations>(resourceContent).Model as Simulations;
+            // Get the resource and put it into another simulation with models that can be linked to.
+            INodeModel resource = resourceAsSimulations.GetChildren().First();
+            Simulations newSim = Utilities.GetRunnableSimWithExtras(true);
+            Zone zone = newSim.Node.FindChild<Zone>("Zone", recurse: true);
+            Models.Soils.Soil soil = newSim.Node.FindChild<Models.Soils.Soil>("Soil", recurse: true);
+            if (resourceName == "WaterBalance")
+                soil.AddChild(resource);
+            else zone.AddChild(resource);
+            Node.Create(newSim);
+
+            foreach (var variableRef in newSim.Node.FindChildren<VariableReference>(recurse: true))
             {
                 try
                 {
                     if (!variableRef.Enabled)
                         continue;
-                    var obj = resourceNode.Locator.GetObject(variableRef.Node, variableRef.VariableName);
+                    var obj = newSim.Node.Locator.GetObject(variableRef.Node, variableRef.VariableName);
                     if (obj == null)
-                        obj = resourceNode.Locator.GetObject(resourceNode, variableRef.VariableName);
+                        obj = newSim.Node.Locator.GetObject(newSim.Node, variableRef.VariableName);
                         if (obj == null)
                             Assert.Fail($"Variable reference '{variableRef.VariableName}' in file '{path}' could not be resolved." + 
-                                $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'.");
+                                $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'. Actual variable reference value: {variableRef.VariableName}");
                 }
                 catch (Exception)
                 {
