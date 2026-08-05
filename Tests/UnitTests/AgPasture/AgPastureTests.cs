@@ -142,6 +142,9 @@ namespace UnitTests
 
             // set some properties in root.
             root.Depth = 300;
+            root.KNH4 = 0.01;
+            root.KNO3 = 0.02;
+            root.MaximumNUptake = 10.0;
 
             root.GetType().GetProperty("BottomLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                           .SetValue(root, 2);
