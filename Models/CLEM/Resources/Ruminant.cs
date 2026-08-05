@@ -57,9 +57,9 @@ namespace Models.CLEM.Resources
                 if (Weight.Base.Change <= 0) return int.MaxValue;
                 if (Sex == Sex.Female)
                 {
-                    return Convert.ToInt32((Parameters.Details.EstimatedAgeAtMaturityFemale - Weight.Base.Amount)/ (Weight.Base.Change / Parameters.Details.CurrentTimeStep.Interval));
+                    return Convert.ToInt32((Parameters.Details.WeightAtMaturityFemale - Weight.Live)/ (Weight.LiveChange / Parameters.Details.CurrentTimeStep.Interval));
                 }
-                return Convert.ToInt32((Parameters.Details.EstimatedAgeAtMaturityMale - Weight.Base.Amount) / (Weight.Base.Change / Parameters.Details.CurrentTimeStep.Interval));
+                return Convert.ToInt32((Parameters.Details.WeightAtMaturityMale - Weight.Live) / (Weight.LiveChange / Parameters.Details.CurrentTimeStep.Interval));
             }
         }
 

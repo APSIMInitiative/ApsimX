@@ -155,6 +155,29 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialiseWeight(object sender, EventArgs e)
+        {
+            // if weight = 0 then calculate weight from ruminant based on normalised weight for age
+            if (Weight == 0)
+            {
+                RuminantType parentRum = this.Node.FindParent<RuminantType>(recurse: true);
+                if (parentRum is null)
+                    return;
+
+                Ruminant ruminant;
+                if (Sex == Sex.Female)
+                    ruminant = new RuminantFemale(new DateTime(1900, 1, 1), parentRum.Parameters, Age, 0, 0, this);
+                else
+                    ruminant = new RuminantMale(new DateTime(1900, 1, 1), parentRum.Parameters, Age, 0, 0, this);
+
+                Weight = ruminant.Weight.NormalisedForAge;
+            }
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
@@ -164,13 +187,6 @@ namespace Models.CLEM.Resources
             {
                 ManagedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
             }
-            //if (ManagedPasture is null)
-            //{
-            //    if (Parent is RuminantInitialCohorts allCohorts && allCohorts.ManagedPasture is not null)
-            //    {
-            //        ManagedPasture = allCohorts.ManagedPasture;
-            //    }
-            //}
         }
 
         /// <summary>

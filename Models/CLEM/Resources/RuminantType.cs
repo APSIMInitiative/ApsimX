@@ -79,6 +79,16 @@ namespace Models.CLEM.Resources
         public double EstimatedAgeAtMaturityMale { get { return meanOfMaleMaturityAge.Mean; } }
 
         /// <summary>
+        /// The calculated live weight at estimated age at maturity for a female
+        /// </summary>
+        public double WeightAtMaturityFemale { get; private set; }
+
+        /// <summary>
+        /// The calculated live weight at estimated age at maturity for a male
+        /// </summary>
+        public double WeightAtMaturityMale { get; private set; }
+
+        /// <summary>
         /// Returns the parent herd of the ruminant type
         /// </summary>
         public RuminantHerd ParentHerd { get { return parentHerd; } }
@@ -136,6 +146,9 @@ namespace Models.CLEM.Resources
             // start mean maturity ages with an estimated age of maturity based on the minsize for maturity as a proportion of the standard reference weight
             meanOfFemaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityFemale * Parameters.General.SRWFemale, Parameters.General.SRWFemale, Parameters.General));
             meanOfMaleMaturityAge.AddValue(Ruminant.EstimateAgeFromNormalisedWeight(Parameters.General.MinimumSizeForMaturityMale * Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General.SRWFemale * Parameters.General.SRWMaleMultiplier, Parameters.General));
+
+            WeightAtMaturityFemale = Parameters.General.MinimumSizeForMaturityFemale * Parameters.General.SRWFemale;
+            WeightAtMaturityMale = WeightAtMaturityFemale * Parameters.General.SRWMaleMultiplier;
 
             // assign any sucklings to available breeders for milk is available at start of simulation
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
