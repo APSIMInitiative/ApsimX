@@ -4672,13 +4672,13 @@
           "MinNConc": null
         },
         {
-          "$type": "Models.Functions.DivideFunction, Models",
+          "$type": "Models.Functions.ProtectedDivideFunction, Models",
+          "NumeratorErrVal": 0.0,
+          "DenominatorErrVal": 0.0,
           "Name": "RootShootRatio",
           "Children": [
             {
-              "$type": "Models.Functions.ProtectedDivideFunction, Models",
-              "NumeratorErrVal": 0.0,
-              "DenominatorErrVal": 0.0,
+              "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Eucalyptus].BelowGround.Wt",
               "Name": "Numerator",
               "Children": [],
