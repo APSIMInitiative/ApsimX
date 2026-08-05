@@ -713,7 +713,7 @@ namespace Models.AgPasture
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
         [Units("oCd")]
-        public double DegreesDayForGermination { get; set; } = 125;
+        public double DegreesDayForGermination { get; set; }
 
         /// <summary>Fractions of DM for each plant part at emergence, for all plants (0-1).</summary>
         /// <remarks>
