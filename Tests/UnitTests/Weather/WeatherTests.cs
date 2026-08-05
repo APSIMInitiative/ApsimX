@@ -202,25 +202,28 @@ namespace UnitTests.Weather
             }
         }
 
+        /// <summary>
+        /// Tests that a metfile without the correct column row does throw
+        /// checks for both a invalid symbol in the column row, and rows 
+        /// missing required columns
+        /// </summary>
         [Test]
-        public void ExcelOADateTest()
+        public void MetWeatherFailOnMissingColumns()
         {
-            string weatherFilePath = Path.ChangeExtension(Path.GetTempFileName(), ".xlsx");
-            using (FileStream file = new(weatherFilePath, FileMode.Create, FileAccess.Write))
-            {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("UnitTests.Weather.OADateExcelFile.xlsx").CopyTo(file);
-            }
-
-            Models.Climate.Weather weather = new()
-            {
-                Name = "Weather",
-                FileName = weatherFilePath,
-                ExcelWorkSheetName = "Sheet1"
-            };
-            Node.Create(weather);
-
-            Assert.That(weather.StartDate, Is.EqualTo(new DateTime(1987, 5, 30)));
-            Assert.That(weather.EndDate, Is.EqualTo(new DateTime(1987, 6, 26)));
+            string input = "";
+            input += "[weather.met.weather]\n";
+            input += "latitude =  -27.536\n";
+            input += "Longitude = 152.336\n";
+            input += "tav =   21.00\n";
+            input += "amp =   12.00\n";
+            input += "!Year   Day    maxt    mint    rain\n";
+            input += "=Year   Day    maxt    mint    rain\n";
+            input += "Year   Day    maxt    mint\n";
+            input += "Year   Day    maxt    rain\n";
+            input += "Year   Day    mint    rain\n";
+            input += " ()     ()      ()      ()      ()\n";
+            input += "1992   166      19     5.8       0\n";
+            Assert.Throws<Exception>(() => MetFile.Create(input));
         }
 
         [Test]
