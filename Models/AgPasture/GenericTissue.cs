@@ -22,7 +22,7 @@ namespace Models.AgPasture
         //----------------------- Constants -----------------------
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        private const double CarbonFractionInDM = 0.4;
+        private const double CarbonConcentration = 0.4;
 
         /// <summary>Carbon to nitrogen ratio of proteins (kg/kg).</summary>
         private const double CNratioProtein = 3.5;
@@ -241,7 +241,7 @@ namespace Models.AgPasture
             Digestibility = 0.0;
             if (DM.Wt > 0.0)
             {
-                double cnTissue = DM.Wt * CarbonFractionInDM / DM.N;
+                double cnTissue = DM.Wt * CarbonConcentration / DM.N;
                 double ratio1 = CNratioCellWall / cnTissue;
                 double ratio2 = CNratioCellWall / CNratioProtein;
                 double fractionSugar = DMTransferredIn * FractionSugarNewGrowth / DM.Wt;
