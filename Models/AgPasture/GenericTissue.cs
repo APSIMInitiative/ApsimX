@@ -40,13 +40,13 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
-        public double FractionNRemobilisable { get; set; } = 0.1;
+        public double FractionNRemobilisable { get; set; }
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
-        public double DigestibilityCellWall { get; set; } = 0.5;
+        public double DigestibilityCellWall { get; set; }
 
         /// <summary>Digestibility of proteins (0-1).</summary>
         public double DigestibilityProtein { get; set; } = 1.0;
