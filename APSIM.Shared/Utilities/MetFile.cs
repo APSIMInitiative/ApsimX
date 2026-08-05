@@ -863,6 +863,9 @@ namespace APSIM.Shared.Utilities
                     metData.Contants.Add(new MetConstant("! "+ trimmed));
                 }
             }
+
+            if (string.IsNullOrEmpty(columnNameLine))
+                throw new Exception("A row without symbols and with the required columns maxt, mint and rain was never found. Unable to read met file.");
             
             //work out our column names and units
             string[] columnParts = columnNameLine.Split(" ");

@@ -41,9 +41,9 @@ internal partial class DeleteCommand : IModelCommand
                 modelsToDelete.Add(model);
             else
                 throw new Exception($"Cannot find model {_modelName}");
+            if (!modelsToDelete.Any())
+                throw new Exception($"Cannot find any models that match: {_modelName}");
         }
-        if (!modelsToDelete.Any())
-            throw new Exception($"Cannot find any models that match: {_modelName}");
 
         foreach (INodeModel model in modelsToDelete)
         {
