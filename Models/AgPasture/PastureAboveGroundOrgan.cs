@@ -44,19 +44,19 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.04;
+        public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.012;
+        public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.05;
+        public double NConcMaximum { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
         public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; set; } = 10.0;
+        public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------
 
