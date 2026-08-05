@@ -47,43 +47,6 @@ namespace Models.CLEM.Groupings
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
-        public object OrderRule<T>(T t) => Parent.GetProperty(PropertyOfIndividual).First().GetValue(t, null);
-
-        ///// <summary>
-        ///// Convert sort to string
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ToString()
-        //{
-        //    return SortString(false);
-        //}
-
-        ///// <summary>
-        ///// Convert sort to html string
-        ///// </summary>
-        ///// <returns></returns>
-        //public string ToHTMLString()
-        //{
-        //    return SortString(true);
-        //}
-
-        //private string SortString(bool htmltags)
-        //{
-        //    string cssSet = "";
-        //    string cssClose = "";
-        //    if (htmltags)
-        //    {
-        //        cssSet = "<span class = \"filterset\">";
-        //        cssClose = "</span>";
-        //    }
-
-        //    using (StringWriter sortWriter = new StringWriter())
-        //    {
-        //        sortWriter.Write($"Sort: ");
-        //        sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-        //        sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
-        //        return sortWriter.ToString();
-        //    }
-        //}
+        public object OrderRule<T>(T t) => Parent.GetPropertyValue(PropertyOfIndividual, t);
     }
 }
