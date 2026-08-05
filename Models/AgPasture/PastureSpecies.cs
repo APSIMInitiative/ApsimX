@@ -589,11 +589,11 @@ namespace Models.AgPasture
 
         /// <summary>Leaf photosynthetic efficiency (mg CO2/J).</summary>
         [Units("mg CO2/J")]
-        public double PhotosyntheticEfficiency { get; set; } = 0.01;
+        public double PhotosyntheticEfficiency { get; set; }
 
         /// <summary>Photosynthesis curvature parameter (J/kg/s).</summary>
         [Units("J/kg/s")]
-        public double PhotosynthesisCurveFactor { get; set; } = 0.8;
+        public double PhotosynthesisCurveFactor { get; set; }
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
@@ -613,23 +613,23 @@ namespace Models.AgPasture
 
         /// <summary>Reference CO2 concentration for photosynthesis (ppm).</summary>
         [Units("ppm")]
-        public double ReferenceCO2 { get; set; } = 380.0;
+        public double ReferenceCO2 { get; set; }
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectScaleFactor { get; set; } = 700.0;
+        public double CO2EffectScaleFactor { get; set; }
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectOffsetFactor { get; set; } = 600.0;
+        public double CO2EffectOffsetFactor { get; set; }
 
         /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
         [Units("0-1")]
-        public double CO2EffectMinimum { get; set; } = 0.7;
+        public double CO2EffectMinimum { get; set; }
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
         [Units("-")]
-        public double CO2EffectExponent { get; set; } = 2.0;
+        public double CO2EffectExponent { get; set; }
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
