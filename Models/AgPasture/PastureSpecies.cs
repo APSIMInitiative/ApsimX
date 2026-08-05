@@ -872,15 +872,14 @@ namespace Models.AgPasture
 
         /// <summary>Coefficient controlling detachment rate as function of moisture (>0.0).</summary>
         [Units("-")]
-        public double DetachmentDroughtCoefficient { get; set; } = 3.0;
+        public double DetachmentDroughtCoefficient { get; set; }
 
         /// <summary>Minimum effect of drought on detachment rate (0-1).</summary>
         [Units("0-1")]
-        public double DetachmentDroughtEffectMin { get; set; } = 0.1;
+        public double DetachmentDroughtEffectMin { get; set; }
 
-        /// <summary>Factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
-        [Units("-")]
-        public double TurnoverStockFactor { get; set; } = 0.01;
+        /// <summary>Factor increasing tissue turnover rate due to stock trampling - NOT IMPLEMENTED.</summary>
+        private double TurnoverStockFactor = 0.0;
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Converts the fraction of biomass removed into potential increase in turnover.</remarks>

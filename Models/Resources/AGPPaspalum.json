@@ -62,6 +62,8 @@
       "TissueTurnoverRefRateShoot": 0.05,
       "TissueTurnoverRefRateRoot": 0.02,
       "DetachmentRefRateShoot": 0.07,
+      "DetachmentDroughtCoefficient": 3.0,
+      "DetachmentDroughtEffectMin": 0.1,
       "TurnoverTemperatureMin": 5.0,
       "TurnoverTemperatureRef": 26.0,
       "TurnoverTemperatureExponent": 1.5,
