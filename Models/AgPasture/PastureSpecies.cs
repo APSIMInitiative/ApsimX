@@ -3481,7 +3481,7 @@ namespace Models.AgPasture
             else
             {
                 // N demand is greater than fixation and remobilisation, soil N uptake is needed
-                mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
+                mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
             }
         }
 
