@@ -20,7 +20,7 @@ AZURE_ENV_CONTENTS=$(echo -e "$AZURE_ENV_CONTENTS" | tr -d '\r' | tr '\n' ' ')
 ENCODED_STRING=$(jq -rn --arg x "$AZURE_ENV_CONTENTS" '$x|@uri')
 
 # Once the azure env contents are url encoded we can send them via curl
-url="https://digitalag.csiro.au/workflo/create-pool?poolId=${POOL_ID}&envString=${ENCODED_STRING}&nodeNumber=30&isAutoscaled=false"
+url="https://digitalag.csiro.au/workflo/create-pool?poolId=${POOL_ID}&envString=${ENCODED_STRING}&nodeNumber=60&isAutoscaled=false"
 response=$(curl -f -s -w "%{http_code}" -X POST "${url}")
 echo "Response from server: $response"
 
