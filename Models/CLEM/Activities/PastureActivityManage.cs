@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
             }
 
             ZoneCLEM clemModel = Structure.FindParent<ZoneCLEM>(recurse: true);
-            filePasture = Structure.FindChildren<IModel>(recurse: true, relativeTo: clemModel).Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+            filePasture = Structure.FindChildren<IFilePasture>(recurse: true, relativeTo: clemModel).Where(a => (a as CLEMModel).Name == PastureDataReader).FirstOrDefault();
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
             {
