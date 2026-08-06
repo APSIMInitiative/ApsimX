@@ -54,37 +54,38 @@ namespace Models.WaterModel
         /// <summary>Perform the movement of water.</summary>
         public void Calculate(double[] swmm)
         {
-            // Lateral flow does not move solutes. We should add this feature one day.
-            if (InFlow == null )
-                InFlow = new double[physical.Thickness.Length];
-
-            if (OutFlow.Length != InFlow.Length)
-                OutFlow = new double[InFlow.Length];
-            double[] SW = MathUtilities.Add(swmm, InFlow);
-            double[] DUL = MathUtilities.Multiply(physical.DUL, physical.Thickness);
-            double[] SAT = MathUtilities.Multiply(physical.SAT, physical.Thickness);
-
-            for (int layer = 0; layer < physical.Thickness.Length; layer++)
+            // TODO: Lateral flow does not move solutes. We should add this feature one day.
+            if (waterBalance.KLAT != null)
             {
-                // Calculate depth of water table (m)
-                double depthWaterTable = physical.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
-                depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
+                if (InFlow == null )
+                    InFlow = new double[physical.Thickness.Length];
 
-                // Calculate out flow (mm)
-                double i, j;
+                if (OutFlow.Length != InFlow.Length)
+                    OutFlow = new double[InFlow.Length];
+                    
+                double[] SW = MathUtilities.Add(swmm, InFlow);
+                double[] DUL = MathUtilities.Multiply(physical.DUL, physical.Thickness);
+                double[] SAT = MathUtilities.Multiply(physical.SAT, physical.Thickness);
 
-                // Convert slope from degrees to m/m (proportion). Should we bound this to [0, 1]?
-                double slope = Math.Tan(field.Slope * Math.PI / 180);
-                if (waterBalance.KLAT == null)
-                    throw new Exception("Lateral Outflow could not be calculated. Check that KLAT values are provided" + 
-                        $" in the WaterBalance model found at: {waterBalance.FullPath}");
-                i = waterBalance.KLAT[layer] * depthWaterTable * (waterBalance.DischargeWidth / UnitConversion.mm2m) * slope;
-                j = (waterBalance.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
-                OutFlow[layer] = MathUtilities.Divide(i, j, 0.0);
+                for (int layer = 0; layer < physical.Thickness.Length; layer++)
+                {
+                    // Calculate depth of water table (m)
+                    double depthWaterTable = physical.Thickness[layer] * MathUtilities.Divide((SW[layer] - DUL[layer]), (SAT[layer] - DUL[layer]), 0.0);
+                    depthWaterTable = Math.Max(0.0, depthWaterTable);  // water table depth in layer must be +ve
 
-                // Bound out flow to max flow
-                double max_flow = Math.Max(0.0, (SW[layer] - DUL[layer]));
-                OutFlow[layer] = MathUtilities.Bound(OutFlow[layer], 0.0, max_flow);
+                    // Calculate out flow (mm)
+                    double i, j;
+
+                    // Convert slope from degrees to m/m (proportion). Should we bound this to [0, 1]?
+                    double slope = Math.Tan(field.Slope * Math.PI / 180);
+                    i = waterBalance.KLAT[layer] * depthWaterTable * (waterBalance.DischargeWidth / UnitConversion.mm2m) * slope;
+                    j = (waterBalance.CatchmentArea * UnitConversion.sm2smm) * (Math.Pow((1.0 + Math.Pow(slope, 2)), 0.5));
+                    OutFlow[layer] = MathUtilities.Divide(i, j, 0.0);
+
+                    // Bound out flow to max flow
+                    double max_flow = Math.Max(0.0, (SW[layer] - DUL[layer]));
+                    OutFlow[layer] = MathUtilities.Bound(OutFlow[layer], 0.0, max_flow);
+                }
             }
             
         }
