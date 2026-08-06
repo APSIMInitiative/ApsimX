@@ -342,7 +342,6 @@ namespace Models.AgPasture
         #region IUptake implementation  ------------------------------------------------------------------------------------
 
         /// <summary>Gets the potential plant water uptake for each layer (mm).</summary>
-        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current water content).</param>
         /// <returns>The potential water uptake (mm).</returns>
         public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
@@ -401,7 +400,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Gets the potential plant N uptake for each layer (mm).</summary>
-        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="soilstate">The soil state (current N contents).</param>
         /// <returns>The potential N uptake (kg/ha).</returns>
         public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
@@ -464,7 +462,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Sets the amount of water taken up by this plant (mm).</summary>
-        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The water uptake from each layer (mm), by zone.</param>
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
@@ -483,7 +480,6 @@ namespace Models.AgPasture
         }
 
         /// <summary>Sets the amount of N taken up by this plant (kg/ha).</summary>
-        /// <remarks>The model can only handle one root zone at present.</remarks>
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone.</param>
         public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
@@ -517,6 +513,13 @@ namespace Models.AgPasture
                     }
                 }
             }
+
+            // adjust the values for N fixation and remobilisation based on actual uptake
+            // TODO - remove the early calls and implement simple adjust here . . .
+            //NOTE: this is needed because the estimation done earlier were based on soil N available computed as
+            //  part of the Runge-Kutta iterations. This means that the estimate for uptake does not fully match
+            //  the final value for soil N demand (and availability). As these were used to compute N fixation and
+            //  remobilisation, the values of these two flows need to be adjusted.
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
