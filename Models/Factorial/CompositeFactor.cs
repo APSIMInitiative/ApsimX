@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
+using Docker.DotNet.Models;
 using Models.Core;
 using Models.Core.Run;
 
@@ -249,27 +250,24 @@ namespace Models.Factorial
         /// </summary>
         private List<CompositeFactorPair> ParseSpecifications()
         {
-            List<CompositeFactorPair> pairs = new List<CompositeFactorPair>();
+            List<CompositeFactorPair> pairs = [];
 
-            //If there are no specifications, return an empty set of pairs.
-            if (Specifications == null)
+            if (Specifications is null)
                 return pairs;
 
-            IEnumerable<string> specifications = Specifications;
-            //remove all blank lines
-            specifications = specifications.Where(specification => specification.Length > 0).ToList();
-            //remove all commented lines
-            specifications = specifications.Where(specification => !specification.StartsWith("//")).ToList();
+            EnsureAModelExistsForEachSpecification(Children);
+            List<string> specifications = RetrieveActiveSpecifications(Children, Specifications);
 
-            if (specifications == null && specifications.Count() == 0)
+            if (specifications.Count == 0)
                 return pairs;
 
-            List<IModel> models = new List<IModel>();
-            foreach(string specification in specifications)
+            List<IModel> models = [];
+            foreach (string specification in specifications)
             {
                 string path = specification;
                 object value = null;
-                if (path.Contains("="))
+
+                if (path.Contains('='))
                 {
                     value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
                     if (value == null || value as string == "")
@@ -295,7 +293,7 @@ namespace Models.Factorial
                     IEnumerable<Type> interfacesToReplace = modelToReplace.GetType().GetInterfaces().Except(interfacesOfModel);
 
                     List<IModel> possibleMatches = new List<IModel>();
-                    foreach(IModel model in modelsToSearch)
+                    foreach (IModel model in modelsToSearch)
                     {
                         if (model.GetType() == modelToReplace.GetType())
                             possibleMatches.Add(model);
@@ -324,7 +322,7 @@ namespace Models.Factorial
                         value = possibleMatches.First();
                     }
                     //if multiple, try and match by name as well
-                    else if (possibleMatches.Count() > 1) 
+                    else if (possibleMatches.Count() > 1)
                     {
                         IModel match = possibleMatches.FirstOrDefault(m => m.Name.ToLower() == modelToReplace.Name.ToLower());
                         if (match == null) //if multiple matches, but none match on name, throw
@@ -346,6 +344,31 @@ namespace Models.Factorial
                     throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
 
             return pairs;
+        }
+
+        internal List<string> RetrieveActiveSpecifications(IEnumerable<IModel> children, string[] specifications)
+        {
+            // Remove specifictions if it makes the name of a disabled child model.
+            HashSet<string> disabledChildNames = children
+                .Where(child => child is { Enabled: false })
+                .Select(child => child.Name)
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            List<string> activeSpecifications = specifications
+                .Where(spec => spec.Length > 0)
+                .Where(spec => !spec.StartsWith("//", StringComparison.Ordinal))
+                .Where(spec => !disabledChildNames.Contains(spec.Replace("[", "").Replace("]", "")))
+                .ToList();
+            return activeSpecifications;
+        }
+
+        internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children)
+        {
+            // Check that there are specifications for each model
+            string[] childModelNames = children.Select(c => c.Name).ToArray();
+            foreach (string childModelName in childModelNames)
+                if (!Specifications.Contains($"[{childModelName}]"))
+                    throw new Exception($"Error in composite factor {Name}: Invalid CompositeFactor configuration. Add a child with the name {childModelName} to make the CompositeFactor valid.");
         }
 
         /// <summary>
