@@ -2534,6 +2534,16 @@ namespace Models.AgPasture
             DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
         /// <summary>Initialises arrays to same length as soil layers.</summary>
         private void InitiliaseSoilArrays()
         {
@@ -3722,14 +3732,7 @@ namespace Models.AgPasture
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            Leaf.ClearDailyTransferredAmounts();
-            Stem.ClearDailyTransferredAmounts();
-            Stolon.ClearDailyTransferredAmounts();
-            foreach (PastureBelowGroundOrgan root in roots)
-            {
-                root.ClearDailyTransferredAmounts();
-            }
-
+            ClearDailyTransferredAmounts();
             SetInitialState();
         }
 
