@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
-using Docker.DotNet.Models;
 using Models.Core;
 using Models.Core.Run;
 
@@ -365,7 +364,10 @@ namespace Models.Factorial
         internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children)
         {
             // Check that there are specifications for each model
-            string[] childModelNames = children.Select(c => c.Name).ToArray();
+            string[] childModelNames = children
+                .Where(child => child is not IText)
+                .Select(child => child.Name)
+                .ToArray();
             foreach (string childModelName in childModelNames)
                 if (!Specifications.Contains($"[{childModelName}]"))
                     throw new Exception($"Error in composite factor {Name}: Invalid CompositeFactor configuration. Add a child with the name {childModelName} to make the CompositeFactor valid.");

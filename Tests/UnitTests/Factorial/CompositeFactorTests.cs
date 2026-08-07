@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Models;
 using Models.Core;
 using Models.Factorial;
 using NUnit.Framework;
@@ -81,6 +82,23 @@ namespace UnitTests.Factorial
             {
                 new MockClock { Name = "Clock" },
                 new MockClock { Name = "Clock2" }
+            };
+
+            Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children));
+        }
+
+        [Test]
+        public void EnsureAModelExistsForEachSpecificationIgnoresITextChildren()
+        {
+            CompositeFactor compositeFactor = new CompositeFactor
+            {
+                Name = "Composite",
+                Specifications = ["[Clock]"]
+            };
+            List<IModel> children = new List<IModel>
+            {
+                new MockClock { Name = "Clock" },
+                new Memo { Name = "Note" }
             };
 
             Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children));
