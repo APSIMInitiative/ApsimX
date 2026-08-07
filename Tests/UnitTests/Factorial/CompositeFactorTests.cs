@@ -65,7 +65,7 @@ namespace UnitTests.Factorial
                 new MockClock { Name = "Clock2" }
             };
 
-            Exception error = Assert.Throws<Exception>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children));
+            Exception error = Assert.Throws<Exception>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
 
             Assert.That(error.Message, Does.Contain("Clock2"));
         }
@@ -84,7 +84,7 @@ namespace UnitTests.Factorial
                 new MockClock { Name = "Clock2" }
             };
 
-            Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children));
+            Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace UnitTests.Factorial
                 new Memo { Name = "Note" }
             };
 
-            Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children));
+            Assert.DoesNotThrow(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
         }
     }
 }

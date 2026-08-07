@@ -8,6 +8,8 @@ using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
+using System.Reflection;
+using Docker.DotNet.Models;
 
 namespace Models.Factorial
 {
@@ -254,7 +256,7 @@ namespace Models.Factorial
             if (Specifications is null)
                 return pairs;
 
-            EnsureAModelExistsForEachSpecification(Children);
+            EnsureAModelExistsForEachSpecification(Children, Specifications);
             List<string> specifications = RetrieveActiveSpecifications(Children, Specifications);
 
             if (specifications.Count == 0)
@@ -361,16 +363,43 @@ namespace Models.Factorial
             return activeSpecifications;
         }
 
-        internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children)
+        internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children, string[] specifications)
         {
-            // Check that there are specifications for each model
-            string[] childModelNames = children
-                .Where(child => child is not IText)
-                .Select(child => child.Name)
-                .ToArray();
-            foreach (string childModelName in childModelNames)
-                if (!Specifications.Contains($"[{childModelName}]"))
-                    throw new Exception($"Error in composite factor {Name}: Invalid CompositeFactor configuration. Add a child with the name {childModelName} to make the CompositeFactor valid.");
+            foreach(IModel compositeChild in children)
+            {
+                bool childHasMatchingSpecType = false;
+                bool childHasMatchingSpecName = false;
+                foreach(string spec in specifications)
+                {
+                    string potentialTypeName = spec.Replace("[", "").Replace("]", "");
+
+                    // Try fully-qualified first, then APSIM's unqualified lookup.
+                    Type potentialType =
+                        Type.GetType(potentialTypeName, throwOnError: false) ??
+                        ReflectionUtilities.GetTypeFromUnqualifiedName(potentialTypeName);
+
+                    bool canConvertToIModel =
+                        potentialType != null &&
+                        typeof(IModel).IsAssignableFrom(potentialType) &&
+                        !potentialType.IsAbstract;
+
+                    if (canConvertToIModel)
+                        childHasMatchingSpecType = true;
+                    if (spec.Contains(compositeChild.Name))
+                        childHasMatchingSpecName = true;
+                }
+
+                if (!childHasMatchingSpecType && !childHasMatchingSpecName)
+                {
+                    
+                    throw new Exception($"Error in composite factor {Name}: " +
+                        $"Invalid CompositeFactor configuration. A specification" +
+                        $" line does not exist for the CompositeFactor" +
+                        $" child named {compositeChild.Name}");
+                }
+
+
+            }
         }
 
         /// <summary>
