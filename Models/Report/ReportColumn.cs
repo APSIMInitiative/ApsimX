@@ -369,6 +369,7 @@ namespace Models
                 events.Subscribe(collectionEventName, OnDoReportCalculations);
 
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
+                events.Subscribe("[Clock].StartOfSimulation", OnStartOfSimulation);
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
                 events.Subscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
                 fromVariable = structure.GetObject(fromString, relativeTo: clock as Model);
@@ -429,8 +430,26 @@ namespace Models
                 events.Unsubscribe(toString, OnToEvent);
             if (!string.IsNullOrEmpty(fromString) && fromVariable == null)
                 events.Unsubscribe(fromString, OnFromEvent);
+            events.Unsubscribe("[Clock].StartOfSimulation", OnStartOfSimulation);
             events.Unsubscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
             events.Unsubscribe("[Simulation].UnsubscribeFromEvents", OnUnsubscribeFromEvents);
+        }
+
+        /// <summary>
+        /// Invoked at start of simulation
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            if (fromVariable != null && fromVariable.Property == null)
+            {
+                DateTime fromDate = (DateTime)fromVariable.Value;
+                if (fromHasNoYear)
+                    fromDate = new DateTime(clock.Today.Year, fromDate.Month, fromDate.Day);
+                if (clock.Today > fromDate)
+                    throw new Exception($"Report aggregation in {Name} has from event/date prior to the start of the simulation");
+            }
         }
 
         /// <summary>
