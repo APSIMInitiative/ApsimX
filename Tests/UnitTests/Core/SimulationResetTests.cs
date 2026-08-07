@@ -82,12 +82,14 @@ namespace UnitTests.Core
             //Get state of sim as JSON again, this should match
             string post = logger.Json;
 
-            // Easiest way to debug this test is to uncomment these two lines
+            // Easiest way to debug this test is to uncomment these four lines
             // and open the two json files in a diff tool.
-            string path = "C:/git/ApsimX/temp/";//Path.GetTempPath();
-            string name = fileName.Replace(".apsimx", "");//;Guid.NewGuid().ToString();
+            /*
+            string path = Path.GetTempPath();
+            string name = Guid.NewGuid().ToString();
             File.WriteAllText(Path.Combine(path, $"{name}-pre.json"), pre);
             File.WriteAllText(Path.Combine(path, $"{name}-post.json"), post);
+            */
 
             Assert.That(post, Is.EqualTo(pre), $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
