@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models;
@@ -9,7 +7,6 @@ using Models.Core;
 using Models.Soils;
 using Models.Storage;
 using NUnit.Framework;
-using UnitTests.Storage;
 
 namespace UnitTests.Core
 {
@@ -46,25 +43,25 @@ namespace UnitTests.Core
         }
 
         [Parallelizable]
-        //[TestCase("AgPasture.apsimx")]
-        //[TestCase("Barley.apsimx")]
-        //[TestCase("Chicory.apsimx")]
-        //[TestCase("Eucalyptus.apsimx")]
-        //[TestCase("FodderBeet.apsimx")]
-        //[TestCase("Maize.apsimx")]
-        //[TestCase("Oats.apsimx")]
+        [TestCase("AgPasture.apsimx")]
+        [TestCase("Barley.apsimx")]
+        [TestCase("Chicory.apsimx")]
+        [TestCase("Eucalyptus.apsimx")]
+        [TestCase("FodderBeet.apsimx")]
+        [TestCase("Maize.apsimx")]
+        [TestCase("Oats.apsimx")]
         [TestCase("OilPalm.apsimx")]
-        //[TestCase("PlantainForage.apsimx")]
-        //[TestCase("Potato.apsimx")]
-        //[TestCase("RedClover.apsimx")]
-        //[TestCase("Rotation.apsimx")]
-        //[TestCase("SCRUM.apsimx")]
-        //[TestCase("SimpleGrazing.apsimx")]
-        //[TestCase("Soybean.apsimx")]
-        //[TestCase("Stock.apsimx")]
-        //[TestCase("Sugarcane.apsimx")]
-        //[TestCase("Wheat.apsimx")]
-        //[TestCase("WhiteClover.apsimx")]
+        [TestCase("PlantainForage.apsimx")]
+        [TestCase("Potato.apsimx")]
+        [TestCase("RedClover.apsimx")]
+        [TestCase("Rotation.apsimx")]
+        [TestCase("SCRUM.apsimx")]
+        [TestCase("SimpleGrazing.apsimx")]
+        [TestCase("Soybean.apsimx")]
+        [TestCase("Stock.apsimx")]
+        [TestCase("Sugarcane.apsimx")]
+        [TestCase("Wheat.apsimx")]
+        [TestCase("WhiteClover.apsimx")]
         public void TestSimulation(string fileName)
         {
             Simulation sim = CreateSimulation(Path.Combine("%root%", "Examples", fileName));
@@ -72,22 +69,25 @@ namespace UnitTests.Core
             sim.Node.AddChild(logger);
             sim.Prepare();
 
-            // 2. Run simulation.
+            // Run full simulation.
             sim.Run();
 
-            // 3. Compare simulation state now vs before running
+            // Get JSON of total state at end of run (including privates)
             string pre = logger.Json;
 
-            // Run a second time.
+            // Run a second time, but only run the first day, then skip to end
             logger.ExitAfterLogging = true;
             sim.Run();
 
+            //Get state of sim as JSON again, this should match
             string post = logger.Json;
 
             // Easiest way to debug this test is to uncomment these two lines
             // and open the two json files in a diff tool.
-            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
-            //File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
+            string path = "C:/git/ApsimX/temp/";//Path.GetTempPath();
+            string name = fileName.Replace(".apsimx", "");//;Guid.NewGuid().ToString();
+            File.WriteAllText(Path.Combine(path, $"{name}-pre.json"), pre);
+            File.WriteAllText(Path.Combine(path, $"{name}-post.json"), post);
 
             Assert.That(post, Is.EqualTo(pre), $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
