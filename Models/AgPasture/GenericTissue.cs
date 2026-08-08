@@ -22,7 +22,7 @@ namespace Models.AgPasture
         //----------------------- Constants -----------------------
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        private const double CarbonFractionInDM = 0.4;
+        private const double CarbonConcentration = 0.4;
 
         /// <summary>Carbon to nitrogen ratio of proteins (kg/kg).</summary>
         private const double CNratioProtein = 3.5;
@@ -40,13 +40,13 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
-        public double FractionNRemobilisable { get; set; } = 0.1;
+        public double FractionNRemobilisable { get; set; }
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
-        public double DigestibilityCellWall { get; set; } = 0.5;
+        public double DigestibilityCellWall { get; set; }
 
         /// <summary>Digestibility of proteins (0-1).</summary>
         public double DigestibilityProtein { get; set; } = 1.0;
@@ -241,7 +241,7 @@ namespace Models.AgPasture
             Digestibility = 0.0;
             if (DM.Wt > 0.0)
             {
-                double cnTissue = DM.Wt * CarbonFractionInDM / DM.N;
+                double cnTissue = DM.Wt * CarbonConcentration / DM.N;
                 double ratio1 = CNratioCellWall / cnTissue;
                 double ratio2 = CNratioCellWall / CNratioProtein;
                 double fractionSugar = DMTransferredIn * FractionSugarNewGrowth / DM.Wt;
