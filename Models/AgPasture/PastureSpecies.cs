@@ -981,10 +981,6 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double MinimumGreenRootProp { get; set; } = 0.5;
 
-        /// <summary>Relative preference for live over dead material during graze (>0.0).</summary>
-        [Units("-")]
-        public double PreferenceForGreenOverDead { get; set; } = 1.0;
-
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
@@ -3846,7 +3842,12 @@ namespace Models.AgPasture
                 if (amountToRemove - Harvestable.Wt > -Epsilon)
                 { // all existing harvestable biomass is removed
                     amountToRemove = Harvestable.Wt;
-                    Array.Fill(fracToRemove, 1.0);
+                    fracToRemove[0] = MathUtilities.Divide(Leaf.DMLiveHarvestable, Leaf.DMLive, 0.0);
+                    fracToRemove[1] = MathUtilities.Divide(Stem.DMLiveHarvestable, Stem.DMLive, 0.0);
+                    fracToRemove[2] = MathUtilities.Divide(Stolon.DMLiveHarvestable, Stolon.DMLive, 0.0);
+                    fracToRemove[3] = MathUtilities.Divide(Leaf.DMDeadHarvestable, Leaf.DMDead, 0.0);
+                    fracToRemove[4] = MathUtilities.Divide(Stem.DMDeadHarvestable, Stem.DMDead, 0.0);
+                    fracToRemove[5] = MathUtilities.Divide(Stolon.DMDeadHarvestable, Stolon.DMDead, 0.0);
                 }
                 else
                 { // only a fraction of biomass is removed, compute partition between organs
