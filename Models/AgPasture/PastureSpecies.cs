@@ -2527,7 +2527,9 @@ namespace Models.AgPasture
         {
             // get the number of layers in the soil profile and initialise soil related variables
             nLayers = soilPhysical.Thickness.Length;
-            InitiliaseSoilArrays();
+            mySoilWaterUptake = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
 
             // set the base, or main, root zone (more zones can be added later)
             roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
@@ -2564,14 +2566,6 @@ namespace Models.AgPasture
             DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
         }
 
-        /// <summary>Initialises arrays to same length as soil layers.</summary>
-        private void InitiliaseSoilArrays()
-        {
-            mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Uptake = new double[nLayers];
-            mySoilNO3Uptake = new double[nLayers];
-        }
-
         /// <summary>
         /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
         /// </summary>
@@ -2592,63 +2586,63 @@ namespace Models.AgPasture
                 initialDMFractions = initialDMFractionsForbs;
             }
 
-            if(InitialShootDM>=0 && InitialRootDM>=0 && InitialRootDepth >=0)
+            if (InitialShootDM >= 0 && InitialRootDM >= 0 && InitialRootDepth >= 0)
             {
 
-            // determine what biomass to reset the organs to. If a negative InitialShootDM
-            //  was specified by user then that means the plant isn't sown yet so reset
-            //  the organs to zero biomass. This is the reason Max is used below.
-            var shootDM = Math.Max(0.0, InitialShootDM);
-            var rootDM = Math.Max(0.0, InitialRootDM);
+                // determine what biomass to reset the organs to. If a negative InitialShootDM
+                //  was specified by user then that means the plant isn't sown yet so reset
+                //  the organs to zero biomass. This is the reason Max is used below.
+                var shootDM = Math.Max(0.0, InitialShootDM);
+                var rootDM = Math.Max(0.0, InitialRootDM);
 
-            // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
-            Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
-                                 emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
-                                 developingWt: shootDM * initialDMFractions[1],
-                                 developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
-                                 matureWt: shootDM * initialDMFractions[2],
-                                 matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
-                                 deadWt: shootDM * initialDMFractions[3],
-                                 deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
-            Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
-                                 emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
-                                 developingWt: shootDM * initialDMFractions[5],
-                                 developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
-                                 matureWt: shootDM * initialDMFractions[6],
-                                 matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
-                                 deadWt: shootDM * initialDMFractions[7],
-                                 deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
-            Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
-                                   emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
-                                   developingWt: shootDM * initialDMFractions[9],
-                                   developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
-                                   matureWt: shootDM * initialDMFractions[10],
-                                   matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
-                                   deadWt: 0.0, deadN: 0.0);
-            roots[0].SetBiomassState(rootWt: rootDM,
-                                     rootN: rootDM * roots[0].NConcOptimum,
-                                     rootDepth: InitialRootDepth);
+                // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
+                Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
+                                     emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
+                                     developingWt: shootDM * initialDMFractions[1],
+                                     developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
+                                     matureWt: shootDM * initialDMFractions[2],
+                                     matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
+                                     deadWt: shootDM * initialDMFractions[3],
+                                     deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
+                Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
+                                     emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
+                                     developingWt: shootDM * initialDMFractions[5],
+                                     developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
+                                     matureWt: shootDM * initialDMFractions[6],
+                                     matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
+                                     deadWt: shootDM * initialDMFractions[7],
+                                     deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
+                Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
+                                       emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
+                                       developingWt: shootDM * initialDMFractions[9],
+                                       developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
+                                       matureWt: shootDM * initialDMFractions[10],
+                                       matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
+                                       deadWt: 0.0, deadN: 0.0);
+                roots[0].SetBiomassState(rootWt: rootDM,
+                                         rootN: rootDM * roots[0].NConcOptimum,
+                                         rootDepth: InitialRootDepth);
 
 
 
-            if (InitialShootDM>0 && InitialRootDM >0 && InitialRootDM >0)
+                if (InitialShootDM > 0 && InitialRootDM > 0 && InitialRootDM > 0)
                 {
-                    phenologicStage=1;
-                    isAlive=true;
+                    phenologicStage = 1;
+                    isAlive = true;
                 }
-            else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth==0)
+                else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth == 0)
                 {
                     EndCrop();
                 }
 
             }
 
-            else throw new Exception("AgPasture: Please enter inital biomasses greater than or equal to zero");
+            else throw new Exception("AgPasture: All initial values for biomass should be greater than or equal to zero");
 
             // Calculate the values for LAI
             EvaluateLAI();
 
-            // re-initialise some variables (needed here to make sure all vars are zeroed!!??)
+            // Initialise some variables (needed all here to make sure they are zeroed, or equal to one)
             glfRadn = 1.0;
             glfCO2 = 1.0;
             glfNc = 1.0;
