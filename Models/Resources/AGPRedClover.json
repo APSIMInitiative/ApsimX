@@ -11,7 +11,7 @@
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
-      "SpeciesFamily": 1,
+      "SpeciesFamily": "Legume",
       "PhotosyntheticPathway": "C3",
       "ReferencePhotosyntheticRate": 1.0,
       "PhotosyntheticEfficiency": 0.01,
@@ -37,7 +37,7 @@
       "GrowthRespirationCoefficient": 0.275,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.55,
-      "DegreesDayForGermination": 110.0,
+      "DegreesDayForGermination": 125.0,
       "TargetShootRootRatio": 3.75,
       "MaxRootAllocation": 0.3,
       "ShootRootGlfFactor": 0.5,
@@ -76,7 +76,7 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 7000.0,
       "PlantHeightExponent": 2.5,
-      "MinimumGreenWt": 50.0,
+      "MinimumGreenWt": 30.0,
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",

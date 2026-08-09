@@ -11,7 +11,7 @@
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
-      "SpeciesFamily": 0,
+      "SpeciesFamily": "Grass",
       "PhotosyntheticPathway": "C4",
       "ReferencePhotosyntheticRate": 1.2,
       "PhotosyntheticEfficiency": 0.01,
@@ -76,7 +76,7 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 12000.0,
       "PlantHeightExponent": 2.6,
-      "MinimumGreenWt": 50.0,
+      "MinimumGreenWt": 40.0,
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
@@ -244,7 +244,7 @@
           "NConcMinimum": 0.004,
           "NConcOptimum": 0.0125,
           "NConcMaximum": 0.015,
-          "MinimumRootingDepth": 50.0,
+          "MinimumRootingDepth": 85.0,
           "MaximumPotentialRootingDepth": 1000.0,
           "ElongationRate": 20.0,
           "DepthDistributionParamTop": 95.0,

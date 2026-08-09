@@ -11,7 +11,7 @@
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
-      "SpeciesFamily": 0,
+      "SpeciesFamily": "Grass",
       "PhotosyntheticPathway": "C3",
       "ReferencePhotosyntheticRate": 1.0,
       "PhotosyntheticEfficiency": 0.01,
@@ -76,7 +76,7 @@
       "PlantHeightMaximum": 250.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.8,
-      "MinimumGreenWt": 75.0,
+      "MinimumGreenWt": 50.0,
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
