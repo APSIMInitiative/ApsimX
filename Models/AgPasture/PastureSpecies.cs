@@ -61,6 +61,10 @@ namespace Models.AgPasture
         [Link]
         private ISoilWater waterBalance = null;
 
+        /// <summary>Link to the soil temperature model.</summary>
+        [Link]
+        private ISoilTemperature soilTemperature = null;
+
         /// <summary>Link to micro climate (aboveground resource arbitrator).</summary>
         [Link]
         private MicroClimate microClimate = null;
@@ -277,6 +281,7 @@ namespace Models.AgPasture
                 ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
+                sownLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, 0.5 * roots[0].MinimumRootingDepth);
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
             }
         }
@@ -1048,6 +1053,9 @@ namespace Models.AgPasture
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
+
+        /// <summary>Index of layer at which the plant was sown.</summary>
+        private int sownLayer;
 
         ////- Defining the plant type >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2800,7 +2808,20 @@ namespace Models.AgPasture
                 if (phenologicStage == 0)
                 {
                     // plant has not emerged yet, check germination progress
-                    double germinationProgress = GerminationAndEmergenceProgress();
+                    double germinationProgress = 0.0;
+                    if (cumulativeDDGermination <= 0.0)
+                    {
+                        // check conditions to start germination
+                        if ((waterBalance.SW[sownLayer] > soilPhysical.LL15[sownLayer]) && (soilTemperature.Value[sownLayer] > GrowthTminimum))
+                        {
+                            germinationProgress = GerminationAndEmergenceProgress();
+                        }
+                    }
+                    else
+                    {
+                        germinationProgress = GerminationAndEmergenceProgress();
+                    }
+
                     if ((germinationProgress >= 0.5) && (Leaf.DMLive <= 0.0))
                     {
                         // germination completed
