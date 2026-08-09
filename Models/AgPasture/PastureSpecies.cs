@@ -2688,12 +2688,6 @@ namespace Models.AgPasture
             roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
                                      rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
                                      rootDepth: roots[0].MinimumRootingDepth);
-
-            // 4. Set phenological stage to vegetative
-            phenologicStage = 1;
-
-            // 5. Calculate the values for LAI
-            EvaluateLAI();
         }
 
         /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
@@ -2808,10 +2802,19 @@ namespace Models.AgPasture
                 if (phenologicStage == 0)
                 {
                     // plant has not emerged yet, check germination progress
-                    if (DailyGerminationProgress() >= 1.0)
+                    double germinationProgress = GerminationAndEmergenceProgress();
+                    if ((germinationProgress >= 0.5) && (Leaf.DMLive <= 0.0))
                     {
                         // germination completed
                         SetEmergenceState();
+                    }
+                    else if (germinationProgress >= 1.0)
+                    {
+                        // emergence completed, move phenological stage to vegetative
+                        phenologicStage = 1;
+
+                        // calculate the values for LAI
+                        EvaluateLAI();
                     }
                 }
                 else if (phenologicStage > 0)
@@ -2866,7 +2869,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the daily progress through germination.</summary>
         /// <returns>The fraction of the germination phase completed (0-1)</returns>
-        internal double DailyGerminationProgress()
+        internal double GerminationAndEmergenceProgress()
         {
             cumulativeDDGermination += Math.Max(0.0, Tmean(0.5) - GrowthTminimum);
             return MathUtilities.Divide(cumulativeDDGermination, DegreesDayForGermination, 1.0);
@@ -3416,7 +3419,6 @@ namespace Models.AgPasture
                 }
             }
         }
-
 
         /// <summary>Computes the amount of nitrogen remobilised from senesced biomass into new growth.</summary>
         internal void EvaluateSenescedNRemobilisation()
