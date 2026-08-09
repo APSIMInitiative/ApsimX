@@ -264,8 +264,8 @@ namespace Models.AgPasture
         /// </remarks>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            if (isAlive==false)
-           
+            if (isAlive == false)
+
             {
 
                 // Find cultivar and apply cultivar overrides.
@@ -616,7 +616,7 @@ namespace Models.AgPasture
 
         /// <summary>Optimum temperature for growth (oC).</summary>
         [Units("oC")]
-        public double GrowthToptimum { get; set; } 
+        public double GrowthToptimum { get; set; }
 
         /// <summary>Curve parameter for growth response to temperature (>0.0).</summary>
         [Units("-")]
@@ -1260,7 +1260,7 @@ namespace Models.AgPasture
         private double[] mySoilNO3Uptake;
 
         /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
-        public IReadOnlyList<double> NitrogenUptake  => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
+        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2278,7 +2278,7 @@ namespace Models.AgPasture
         {
             get
             {
-                if(Leaf==null || Stem == null || Stolon == null)
+                if (Leaf == null || Stem == null || Stolon == null)
                     return new Biomass();
 
                 Biomass mass = new Biomass();
@@ -2294,13 +2294,13 @@ namespace Models.AgPasture
         {
             get
             {
-                if(Leaf==null || Stem == null || Stolon == null)
+                if (Leaf == null || Stem == null || Stolon == null)
                     return new Biomass();
-                                   
+
                 Biomass mass = new Biomass();
                 mass.StructuralWt = Harvestable.Wt / 10.0;  // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
-                return mass; 
+                return mass;
             }
         }
 
@@ -2634,10 +2634,7 @@ namespace Models.AgPasture
                 {
                     EndCrop();
                 }
-
             }
-
-            else throw new Exception("AgPasture: All initial values for biomass should be greater than or equal to zero");
 
             // Calculate the values for LAI
             EvaluateLAI();
@@ -2718,7 +2715,7 @@ namespace Models.AgPasture
             double doyIniPlateau = doyWinterSolstice + 0.5 * 365.25 / (1.0 + reproAux);
 
             // compute the duration of the main phase (minimum of about 15 days, maximum of six months)
-            reproSeasonInterval[1] = (365.25 / 24.0);
+            reproSeasonInterval[1] = 365.25 / 24.0;
             reproSeasonInterval[1] += (365.25 * 11.0 / 24.0) * Math.Pow(1.0 - (Math.Abs(myMetData.Latitude) / 90.0), ReproSeasonDurationCoeff);
 
             // compute the duration of the onset and outset phases (shoulders - maximum of six months)
@@ -2989,7 +2986,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * swardGreenCover*fractionGreenCover / LightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * swardGreenCover * fractionGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC
@@ -3237,7 +3234,7 @@ namespace Models.AgPasture
                 {
                     // Available N was not enough to meet basic demand, allocate N taken up based on optimum N content
                     double Nsum = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                                + (toStolon * Stolon.NConcOptimum) + (toRoot *Root.NConcOptimum);
+                                + (toStolon * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
                         Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
@@ -3291,7 +3288,7 @@ namespace Models.AgPasture
             if (Stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            if(Root.Update() == false)
+            if (Root.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
@@ -3303,10 +3300,10 @@ namespace Models.AgPasture
 
             // Check for loss of mass balance in the whole plant
             if (!MathUtilities.FloatsAreEqual(previousDM + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
-                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
+                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance - DM");
 
             if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
-                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
+                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance - N");
 
             // Update LAI
             EvaluateLAI();
@@ -3883,7 +3880,7 @@ namespace Models.AgPasture
                 }
                 else if (doOutput)
                 {
-                        mySummary.WriteMessage(this, " Biomass removed from " + Name + ": " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
+                    mySummary.WriteMessage(this, " Biomass removed from " + Name + ": " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
                 }
 
                 myDefoliatedFraction = MathUtilities.Divide(HarvestedWt, preRemovalDMShoot, 0.0);
@@ -4114,7 +4111,10 @@ namespace Models.AgPasture
                 }
             }
             else
+            {
                 throw new ApsimXException(this, "Photosynthetic pathway is not valid");
+            }
+
             return result;
         }
 
