@@ -246,7 +246,7 @@
           "NConcMaximum": 0.02,
           "MinimumRootingDepth": 50.0,
           "MaximumPotentialRootingDepth": 1000.0,
-          "ElongationRate": 30.0,
+          "ElongationRate": 22.0,
           "DepthDistributionParamTop": 80.0,
           "DepthDistributionExponent": 3.5,
           "SpecificRootLength": 75.0,
