@@ -127,8 +127,10 @@ namespace Models.AgPasture
             get { return rootingDepth; }
             set
             {
-                rootingDepth = Math.Max(0.0, value);
-                CalculateRootZoneBottomLayer();
+                rootingDepth = MathUtilities.Bound(value, 0.0, MaximumAllowedDepth);
+                BottomLayer = 0;
+                if (soilPhysical !=  null)
+                    BottomLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, rootingDepth);
             }
         }
 
@@ -524,26 +526,6 @@ namespace Models.AgPasture
             }
 
             return fractionInLayer;
-        }
-
-        /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
-        /// <returns>The index of a layer</returns>
-        private void CalculateRootZoneBottomLayer()
-        {
-            BottomLayer = 0;
-            double currentDepth = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (rootingDepth > currentDepth)
-                {
-                    BottomLayer = layer;
-                    currentDepth += soilPhysical.Thickness[layer];
-                }
-                else
-                {
-                    layer = nLayers;
-                }
-            }
         }
 
         /// <summary>Computes the target (or ideal) distribution of roots in the soil profile.</summary>

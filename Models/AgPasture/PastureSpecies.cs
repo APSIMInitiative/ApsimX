@@ -265,9 +265,7 @@ namespace Models.AgPasture
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
             if (isAlive == false)
-
             {
-
                 // Find cultivar and apply cultivar overrides.
                 cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
