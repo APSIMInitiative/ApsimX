@@ -2687,7 +2687,7 @@ namespace Models.AgPasture
                                    deadWt: 0.0, deadN: 0.0);
             roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
                                      rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
-                                     rootDepth: roots[0].MinimumRootingDepth);
+                                     rootDepth: 0.1);
         }
 
         /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
@@ -2813,7 +2813,10 @@ namespace Models.AgPasture
                         // emergence completed, move phenological stage to vegetative
                         phenologicStage = 1;
 
-                        // calculate the values for LAI
+                        // set root depth to minimum (starting) value
+                        roots[0].Depth = roots[0].MinimumRootingDepth;
+
+                        // calculate the initial values for LAI
                         EvaluateLAI();
                     }
                 }
@@ -4344,25 +4347,6 @@ namespace Models.AgPasture
             }
 
             return fractionInLayer;
-        }
-
-        /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
-        private int RootZoneBottomLayer()
-        {
-            int result = 0;
-            double currentDepth = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (roots[0].Depth > currentDepth)
-                {
-                    result = layer;
-                    currentDepth += soilPhysical.Thickness[layer];
-                }
-                else
-                    layer = nLayers;
-            }
-
-            return result;
         }
 
         /// <summary>Computes the vapour pressure deficit.</summary>

@@ -118,8 +118,19 @@ namespace Models.AgPasture
 
         //----------------------- States -----------------------
 
+        /// <summary>Depth of rootzone (mm).</summary>
+        private double rootingDepth = 0.0;
+
         /// <summary>Rooting depth (mm).</summary>
-        public double Depth { get; set; }
+        public double Depth
+        {
+            get { return rootingDepth; }
+            set
+            {
+                rootingDepth = Math.Max(0.0, value);
+                CalculateRootZoneBottomLayer();
+            }
+        }
 
         /// <summary>Soil layer at the bottom of the root zone.</summary>
         internal int BottomLayer { get; private set; }
@@ -323,8 +334,6 @@ namespace Models.AgPasture
         public void SetBiomassState(double rootWt, double rootN, double rootDepth)
         {
             Depth = Math.Min(rootDepth, MaximumAllowedDepth);
-            CalculateRootZoneBottomLayer();
-
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
             var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
             Live.SetBiomass(rootBiomassWt, rootBiomassN);
@@ -461,7 +470,7 @@ namespace Models.AgPasture
                 if (soilWaterUptake[layer] > 0)
                 {
                     // get the fraction of this layer that is within the root zone
-                    double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
+                    double layerFraction = MathUtilities.Bound((rootingDepth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
                     // get the soil moisture factor (less N available in drier soil)
                     double relativeWaterContent = MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0);
@@ -525,11 +534,10 @@ namespace Models.AgPasture
             double currentDepth = 0.0;
             for (int layer = 0; layer < nLayers; layer++)
             {
-                if (Depth > currentDepth)
+                if (rootingDepth > currentDepth)
                 {
                     BottomLayer = layer;
                     currentDepth += soilPhysical.Thickness[layer];
-                    //break;  2025-05-08 VOS needs to consult with RC and see why this was supposed to be here
                 }
                 else
                 {
@@ -612,7 +620,7 @@ namespace Models.AgPasture
                 topLayersDepth += soilPhysical.Thickness[layer];
             }
             // Then consider layer at the bottom of the root zone
-            double layerFrac = Math.Min(1.0, (MaximumAllowedDepth - topLayersDepth) / (Depth - topLayersDepth));
+            double layerFrac = Math.Min(1.0, (MaximumAllowedDepth - topLayersDepth) / (rootingDepth - topLayersDepth));
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // Normalise the weights to be a fraction, adds up to one
@@ -682,12 +690,11 @@ namespace Models.AgPasture
         public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
         {
             // Check changes in root depth
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < MaximumAllowedDepth))
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (rootingDepth < MaximumAllowedDepth))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 var dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * tempFactor;
                 Depth = Math.Min(MaximumAllowedDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
-                CalculateRootZoneBottomLayer();
             }
         }
 
