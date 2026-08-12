@@ -65,6 +65,10 @@ namespace UnitTests
             var root = zone.Node.FindChild<PastureBelowGroundOrgan>(recurse: true);
 
             // set some properties in root.
+            root.MaximumPotentialRootingDepth = 500;
+            root.KNH4 = 0.01;
+            root.KNO3 = 0.02;
+            root.MaximumNUptake = 10.0;
             root.Depth = 300;
 
             root.GetType().GetProperty("BottomLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
@@ -141,6 +145,10 @@ namespace UnitTests
             var root = zone.Node.FindChild<PastureBelowGroundOrgan>(recurse: true);
 
             // set some properties in root.
+            root.MaximumPotentialRootingDepth = 500;
+            root.KNH4 = 0.01;
+            root.KNO3 = 0.02;
+            root.MaximumNUptake = 10.0;
             root.Depth = 300;
 
             root.GetType().GetProperty("BottomLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
