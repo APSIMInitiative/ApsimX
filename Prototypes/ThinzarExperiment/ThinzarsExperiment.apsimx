@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 219,
+  "Version": 220,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -32,7 +32,29 @@
               "AllColumns": false,
               "Name": "PredictedObserved",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Tests, Models",
+                  "AcceptedStats": null,
+                  "AcceptedStatsName": null,
+                  "POName": null,
+                  "Name": "Tests",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                      "Name": "Note",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             }
@@ -8627,7 +8649,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature0",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -11634,7 +11656,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature0",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
