@@ -664,19 +664,16 @@ namespace Models.AgPasture
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
         /// The depth increase rate is of zero-order type, given by the ElongationRate, adjusted for temperature
         ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
-        ///  - The effect of temperature was reduced (average between that of growth DM and one) as soil temp varies less than air
         /// </remarks>
-        /// <param name="dGrowthRootDM">Root growth dry matter (kg/ha).</param>
-        /// <param name="detachedRootDM">DM amount detached from roots, added to soil FOM (kg/ha)</param>
+        /// <param name="netGrowthDM">Net root growth dry matter (kg/ha).</param>
         /// <param name="temperatureLimitingFactor">Growth limiting factor due to temperature.</param>
-        public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
+        public void EvaluateRootElongation(double netGrowthDM, double temperatureLimitingFactor)
         {
             // check changes in root depth
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (rootingDepth < MaximumAllowedRootingDepth))
+            if (netGrowthDM >= 0.0)
             {
-                double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
-                var dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * tempFactor;
-                Depth = Math.Min(MaximumAllowedRootingDepth, Math.Max(MinimumRootingDepth, rootingDepth + dRootDepth));
+                double dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * temperatureLimitingFactor;
+                Depth = Math.Min(MaximumAllowedRootingDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
             }
         }
 

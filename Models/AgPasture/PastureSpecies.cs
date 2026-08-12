@@ -3244,7 +3244,9 @@ namespace Models.AgPasture
                 // evaluate root elongation and allocate new growth in each layer
                 if (phenologicStage > 0)
                 {
-                    Root.EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)));
+                    double netRootGrowth = dGrowthRootDM - detachedRootDM;
+                    double temperatureFactor = TemperatureLimitingFactor(Tmean(0.5));
+                    Root.EvaluateRootElongation(netRootGrowth, temperatureFactor);
                 }
 
                 Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
