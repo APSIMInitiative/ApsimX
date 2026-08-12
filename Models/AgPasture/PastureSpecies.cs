@@ -579,15 +579,15 @@ namespace Models.AgPasture
 
         /// <summary>Reference leaf CO2 assimilation rate for photosynthesis (mg CO2/m^2Leaf/s).</summary>
         [Units("mg/m^2/s")]
-        public double ReferencePhotosyntheticRate { get; set; } = 1.0;
+        public double ReferencePhotosyntheticRate { get; set; }
 
         /// <summary>Leaf photosynthetic efficiency (mg CO2/J).</summary>
         [Units("mg CO2/J")]
-        public double PhotosyntheticEfficiency { get; set; } = 0.01;
+        public double PhotosyntheticEfficiency { get; set; }
 
         /// <summary>Photosynthesis curvature parameter (J/kg/s).</summary>
         [Units("J/kg/s")]
-        public double PhotosynthesisCurveFactor { get; set; } = 0.8;
+        public double PhotosynthesisCurveFactor { get; set; }
 
         /// <summary>Fraction of radiation that is photosynthetically active (0-1).</summary>
         [Units("0-1")]
@@ -595,39 +595,39 @@ namespace Models.AgPasture
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
-        public double LightExtinctionCoefficient { get; set; } = 0.5;
+        public double LightExtinctionCoefficient { get; set; }
 
         /// <summary>Minimum temperature for growth (oC).</summary>
         [Units("oC")]
-        public double GrowthTminimum { get; set; } = 1.0;
+        public double GrowthTminimum { get; set; }
 
         /// <summary>Optimum temperature for growth (oC).</summary>
         [Units("oC")]
-        public double GrowthToptimum { get; set; } = 20.0;
+        public double GrowthToptimum { get; set; }
 
         /// <summary>Curve parameter for growth response to temperature (>0.0).</summary>
         [Units("-")]
-        public double GrowthTEffectExponent { get; set; } = 1.7;
+        public double GrowthTEffectExponent { get; set; }
 
         /// <summary>Reference CO2 concentration for photosynthesis (ppm).</summary>
         [Units("ppm")]
-        public double ReferenceCO2 { get; set; } = 380.0;
+        public double ReferenceCO2 { get; set; }
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectScaleFactor { get; set; } = 700.0;
+        public double CO2EffectScaleFactor { get; set; }
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectOffsetFactor { get; set; } = 600.0;
+        public double CO2EffectOffsetFactor { get; set; }
 
         /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
         [Units("0-1")]
-        public double CO2EffectMinimum { get; set; } = 0.7;
+        public double CO2EffectMinimum { get; set; }
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
         [Units("-")]
-        public double CO2EffectExponent { get; set; } = 2.0;
+        public double CO2EffectExponent { get; set; }
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
@@ -645,19 +645,19 @@ namespace Models.AgPasture
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
         [Units("oC")]
-        public double HeatOnsetTemperature { get; set; } = 28.0;
+        public double HeatOnsetTemperature { get; set; }
 
         /// <summary>Temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
-        public double HeatFullTemperature { get; set; } = 35.0;
+        public double HeatFullTemperature { get; set; }
 
         /// <summary>Cumulative degrees-day for recovery from heat stress (oCd).</summary>
         [Units("oCd")]
-        public double HeatRecoverySumDD { get; set; } = 30.0;
+        public double HeatRecoverySumDD { get; set; }
 
         /// <summary>Reference temperature for recovery from heat stress (oC).</summary>
         [Units("oC")]
-        public double HeatRecoveryTReference { get; set; } = 25.0;
+        public double HeatRecoveryTReference { get; set; }
 
         /// <summary>Enable photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Units("yes/no")]
@@ -675,43 +675,43 @@ namespace Models.AgPasture
 
         /// <summary>Onset temperature for cold effects on photosynthesis (oC).</summary>
         [Units("oC")]
-        public double ColdOnsetTemperature { get; set; } = 1.0;
+        public double ColdOnsetTemperature { get; set; }
 
         /// <summary>Temperature for full cold effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
-        public double ColdFullTemperature { get; set; } = -5.0;
+        public double ColdFullTemperature { get; set; }
 
         /// <summary>Cumulative degrees for recovery from cold stress (oCd).</summary>
         [Units("oCd")]
-        public double ColdRecoverySumDD { get; set; } = 25.0;
+        public double ColdRecoverySumDD { get; set; }
 
         /// <summary>Reference temperature for recovery from cold stress (oC).</summary>
         [Units("oC")]
-        public double ColdRecoveryTReference { get; set; } = 0.0;
+        public double ColdRecoveryTReference { get; set; }
 
         ////- Respiration parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maintenance respiration coefficient (0-1).</summary>
         [Units("0-1")]
-        public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
+        public double MaintenanceRespirationCoefficient { get; set; }
 
         /// <summary>Growth respiration coefficient (0-1).</summary>
         [Units("0-1")]
-        public double GrowthRespirationCoefficient { get; set; } = 0.25;
+        public double GrowthRespirationCoefficient { get; set; }
 
         /// <summary>Reference temperature for maintenance respiration (oC).</summary>
         [Units("oC")]
-        public double RespirationTReference { get; set; } = 20.0;
+        public double RespirationTReference { get; set; }
 
         /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
         [Units("-")]
-        public double RespirationExponent { get; set; } = 1.5;
+        public double RespirationExponent { get; set; }
 
         ////- Germination and emergence >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
         [Units("oCd")]
-        public double DegreesDayForGermination { get; set; } = 125;
+        public double DegreesDayForGermination { get; set; }
 
         /// <summary>Fractions of DM for each plant part at emergence, for all plants (0-1).</summary>
         /// <remarks>
@@ -726,7 +726,7 @@ namespace Models.AgPasture
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
         [Units("-")]
-        public double TargetShootRootRatio { get; set; } = 4.0;
+        public double TargetShootRootRatio { get; set; }
 
         /// <summary>Maximum fraction of DM growth allocated to roots (0-1).</summary>
         [Units("0-1")]
@@ -734,7 +734,7 @@ namespace Models.AgPasture
 
         /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
         [Units("0-1")]
-        public double ShootRootGlfFactor { get; set; } = 0.50;
+        public double ShootRootGlfFactor { get; set; }
 
         // - Effect of reproductive season ....................................
         /// <summary>
@@ -783,23 +783,23 @@ namespace Models.AgPasture
 
         /// <summary>Maximum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double FractionLeafMaximum { get; set; } = 0.7;
+        public double FractionLeafMaximum { get; set; }
 
         /// <summary>Minimum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double FractionLeafMinimum { get; set; } = 0.7;
+        public double FractionLeafMinimum { get; set; }
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double FractionLeafDMThreshold { get; set; } = 500;
+        public double FractionLeafDMThreshold { get; set; }
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double FractionLeafDMFactor { get; set; } = 2000;
+        public double FractionLeafDMFactor { get; set; }
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Units(">0.0")]
-        public double FractionLeafExponent { get; set; } = 3.0;
+        public double FractionLeafExponent { get; set; }
 
         /// <summary>Fraction of new shoot growth to be allocated to stolons (0-1).</summary>
         [Units("0-1")]
@@ -807,7 +807,7 @@ namespace Models.AgPasture
 
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Units("m^2/kg")]
-        public double SpecificLeafArea { get; set; } = 25.0;
+        public double SpecificLeafArea { get; set; }
 
         /// <summary>Fraction of stolon tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
@@ -815,26 +815,26 @@ namespace Models.AgPasture
 
         /// <summary>Maximum aboveground biomass for considering stems when computing LAI (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double ShootMaxEffectOnLAI { get; set; } = 1000;
+        public double ShootMaxEffectOnLAI { get; set; }
 
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
-        public double MaxStemEffectOnLAI { get; set; } = 1.0;
+        public double MaxStemEffectOnLAI { get; set; }
 
         ////- Tissue turnover and senescence >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Number of live leaves per tiller (-).</summary>
         [Units("-")]
-        public double LiveLeavesPerTiller { get; set; } = 3.0;
+        public double LiveLeavesPerTiller { get; set; }
 
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
         [Units("0-1")]
-        public double TissueTurnoverRefRateShoot { get; set; } = 0.05;
+        public double TissueTurnoverRefRateShoot { get; set; }
 
         /// <summary>Reference daily DM turnover rate for root tissues (0-1).</summary>
         [Units("0-1")]
-        public double TissueTurnoverRefRateRoot { get; set; } = 0.02;
+        public double TissueTurnoverRefRateRoot { get; set; }
 
         /// <summary>Relative turnover rate for emerging tissues (>0.0).</summary>
         [Units("-")]
@@ -842,39 +842,39 @@ namespace Models.AgPasture
 
         /// <summary>Reference daily detachment rate for dead tissues (0-1).</summary>
         [Units("0-1")]
-        public double DetachmentRefRateShoot { get; set; } = 0.08;
+        public double DetachmentRefRateShoot { get; set; }
 
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
-        public double TurnoverTemperatureMin { get; set; } = 1.0;
+        public double TurnoverTemperatureMin { get; set; }
 
         /// <summary>Reference temperature for tissue turnover (oC).</summary>
         [Units("oC")]
-        public double TurnoverTemperatureRef { get; set; } = 16.0;
+        public double TurnoverTemperatureRef { get; set; }
 
         /// <summary>Exponent of function for temperature effect on tissue turnover (>0.0).</summary>
         [Units("-")]
-        public double TurnoverTemperatureExponent { get; set; } = 1.5;
+        public double TurnoverTemperatureExponent { get; set; }
 
         /// <summary>Maximum increase in tissue turnover due to water deficit (>0.0).</summary>
         [Units("-")]
-        public double TurnoverDroughtEffectMax { get; set; } = 1.0;
+        public double TurnoverDroughtEffectMax { get; set; }
 
         /// <summary>Minimum GLFwater without effect on tissue turnover (0-1).</summary>
         [Units("0-1")]
-        public double TurnoverDroughtThreshold { get; set; } = 0.6;
+        public double TurnoverDroughtThreshold { get; set; }
 
         /// <summary>Exponent of function for the effect of GLFwater on tissue turnover (>1.0).</summary>
         [Units("-")]
-        public double TurnoverDroughtExponent { get; set; } = 2.0;
+        public double TurnoverDroughtExponent { get; set; }
 
         /// <summary>Coefficient controlling detachment rate as function of moisture (>0.0).</summary>
         [Units("-")]
-        public double DetachmentDroughtCoefficient { get; set; } = 3.0;
+        public double DetachmentDroughtCoefficient { get; set; }
 
         /// <summary>Minimum effect of drought on detachment rate (0-1).</summary>
         [Units("0-1")]
-        public double DetachmentDroughtEffectMin { get; set; } = 0.1;
+        public double DetachmentDroughtEffectMin { get; set; }
 
         /// <summary>Factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
         [Units("-")]
@@ -883,12 +883,12 @@ namespace Models.AgPasture
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Converts the fraction of biomass removed into potential increase in turnover.</remarks>
         [Units("-")]
-        public double TurnoverDefoliationMultiplier { get; set; } = 1.0;
+        public double TurnoverDefoliationMultiplier { get; set; }
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Controls the spread of the effect of time, the smaller the more spread the effect.</remarks>
         [Units("-")]
-        public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
+        public double TurnoverDefoliationCoefficient { get; set; }
 
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
@@ -896,23 +896,23 @@ namespace Models.AgPasture
 
         /// <summary>Coefficient adjusting the effect of defoliation on root turnover rate (0-1).</summary>
         [Units("0-1")]
-        public double TurnoverDefoliationEffectOnRoots { get; set; } = 0.1;
+        public double TurnoverDefoliationEffectOnRoots { get; set; }
 
         ////- N fixation (for legumes) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MinimumNFixation { get; set; } = 0.0;
+        public double MinimumNFixation { get; set; }
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MaximumNFixation { get; set; } = 0.0;
+        public double MaximumNFixation { get; set; }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) (0-1).</summary>
         [Units("0-1")]
-        public double SoilSaturationEffectMax { get; set; } = 0.1;
+        public double SoilSaturationEffectMax { get; set; }
 
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
         /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
@@ -921,11 +921,11 @@ namespace Models.AgPasture
 
         /// <summary>Maximum daily recovery rate from water logging (0-1).</summary>
         [Units("0-1")]
-        public double SoilSaturationRecoveryFactor { get; set; } = 0.25;
+        public double SoilSaturationRecoveryFactor { get; set; }
 
         /// <summary>Exponent to modify the effect of N deficiency on plant growth (>1.0).</summary>
         [Units("-")]
-        public double NDilutionCoefficient { get; set; } = 2.0;
+        public double NDilutionCoefficient { get; set; }
 
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
@@ -941,19 +941,19 @@ namespace Models.AgPasture
 
         /// <summary>Minimum plant height (mm).</summary>
         [Units("mm")]
-        public double PlantHeightMinimum { get; set; } = 25.0;
+        public double PlantHeightMinimum { get; set; }
 
         /// <summary>Maximum plant height (mm).</summary>
         [Units("mm")]
-        public double PlantHeightMaximum { get; set; } = 600.0;
+        public double PlantHeightMaximum { get; set; }
 
         /// <summary>DM weight above ground for maximum plant height (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double PlantHeightMassForMax { get; set; } = 10000;
+        public double PlantHeightMassForMax { get; set; }
 
         /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
         [Units(">1.0")]
-        public double PlantHeightExponent { get; set; } = 2.8;
+        public double PlantHeightExponent { get; set; }
 
         ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
