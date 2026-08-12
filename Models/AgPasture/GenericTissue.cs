@@ -178,7 +178,7 @@ namespace Models.AgPasture
 
                 // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
                 double dmRemaining = DM.Wt - DMTransferredOut;
-                double dmRemainingNConc =  DM.NConc;
+                double dmRemainingNConc = DM.NConc;
                 double dmTransferredInNConc = MathUtilities.Divide(NTransferredIn, DMTransferredIn, 0);
 
                 double potentialRemobilisableN = 0;

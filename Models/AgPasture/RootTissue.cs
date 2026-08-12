@@ -12,7 +12,7 @@ namespace Models.AgPasture
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
-    public class RootTissue: Model
+    public class RootTissue : Model
     {
         /// <summary>Pasture species this tissue belongs to.</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -60,16 +60,16 @@ namespace Models.AgPasture
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get;  set; }
+        public double DMRemoved { get; set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
         public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get;  set; }
+        public double NRemoved { get; set; }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get;  set; }
+        public double NRemobilisable { get; set; }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         public double NRemobilised { get; set; }
@@ -316,7 +316,7 @@ namespace Models.AgPasture
             {
                 var totalFraction = fractionToRemove[layer] + fractionToSoil[layer];
                 var dmToRemove = dmByLayer[layer] * totalFraction;
-                var nToRemove= nByLayer[layer] * totalFraction;
+                var nToRemove = nByLayer[layer] * totalFraction;
                 dmToSoil[layer] = dmByLayer[layer] * fractionToSoil[layer];
                 nToSoil[layer] = nByLayer[layer] * fractionToSoil[layer];
                 dmByLayer[layer] -= dmToRemove;

@@ -154,7 +154,7 @@ namespace Models.AgPasture
         internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NConcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
+        internal double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         internal double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
@@ -297,7 +297,7 @@ namespace Models.AgPasture
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
-                        MaximumAllowedRootingDepth = Math.Min(MaximumAllowedRootingDepth, soilPhysical.ThicknessCumulative[z - 1]); 
+                        MaximumAllowedRootingDepth = Math.Min(MaximumAllowedRootingDepth, soilPhysical.ThicknessCumulative[z - 1]);
                         break;
                     }
                     else
@@ -463,10 +463,10 @@ namespace Models.AgPasture
                     // get the fraction of this layer that is within the root zone
                     double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
-                // get the soil moisture factor (less N available in drier soil)
-                double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
-                                                 0.0, 1.0);
-                double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
+                    // get the soil moisture factor (less N available in drier soil)
+                    double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
+                                                     0.0, 1.0);
+                    double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
                     // get NH4 available
                     double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);

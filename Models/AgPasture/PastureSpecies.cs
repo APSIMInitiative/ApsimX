@@ -264,10 +264,8 @@ namespace Models.AgPasture
         /// </remarks>
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1, double seeds = 0, int tillering = 0, double ftn = 0.0)
         {
-            if (isAlive==false)
-           
+            if (isAlive == false)
             {
-
                 // Find cultivar and apply cultivar overrides.
                 cultivarDefinition = Structure.FindChildren<Cultivar>(recurse: true).FirstOrDefault(c => c.IsKnownAs(cultivar));
                 if (cultivarDefinition != null)
@@ -1234,7 +1232,7 @@ namespace Models.AgPasture
         private double[] mySoilNO3Uptake;
 
         /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
-        public IReadOnlyList<double> NitrogenUptake  => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
+        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2248,16 +2246,14 @@ namespace Models.AgPasture
         public IBiomass AboveGround
         {
             get
-            {   
-
-                if(Leaf==null || Stem == null || Stolon == null)
+            {
+                if (Leaf == null || Stem == null || Stolon == null)
                     return new Biomass();
 
                 Biomass mass = new Biomass();
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
                 return mass;
-
             }
         }
 
@@ -2266,17 +2262,14 @@ namespace Models.AgPasture
         public IBiomass AboveGroundHarvestable
         {
             get
-            {   
-                
-                if(Leaf==null || Stem == null || Stolon == null)
+            {
+                if (Leaf == null || Stem == null || Stolon == null)
                     return new Biomass();
-                                   
+
                 Biomass mass = new Biomass();
                 mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
-                return mass; 
-                
-                
+                return mass;
             }
         }
 
@@ -2387,7 +2380,6 @@ namespace Models.AgPasture
         /// <summary>Fraction of aboveground dry matter actually harvested (0-1).</summary>
         [Units("0-1")]
         public double HarvestedFraction { get { return myDefoliatedFraction; } }
-
 
         /// <summary>Amount of N removed by harvest (kg/ha).</summary>
         [Units("kg/ha")]
@@ -2562,57 +2554,52 @@ namespace Models.AgPasture
                 initialDMFractions = initialDMFractionsForbs;
             }
 
-            if(InitialShootDM>=0 && InitialRootDM>=0 && InitialRootDepth >=0)
+            if (InitialShootDM >= 0 && InitialRootDM >= 0 && InitialRootDepth >= 0)
             {
+                // determine what biomass to reset the organs to. If a negative InitialShootDM
+                //  was specified by user then that means the plant isn't sown yet so reset
+                //  the organs to zero biomass. This is the reason Max is used below.
+                var shootDM = Math.Max(0.0, InitialShootDM);
+                var rootDM = Math.Max(0.0, InitialRootDM);
 
-            // determine what biomass to reset the organs to. If a negative InitialShootDM
-            //  was specified by user then that means the plant isn't sown yet so reset
-            //  the organs to zero biomass. This is the reason Max is used below.
-            var shootDM = Math.Max(0.0, InitialShootDM);
-            var rootDM = Math.Max(0.0, InitialRootDM);
+                // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
+                Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
+                                     emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
+                                     developingWt: shootDM * initialDMFractions[1],
+                                     developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
+                                     matureWt: shootDM * initialDMFractions[2],
+                                     matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
+                                     deadWt: shootDM * initialDMFractions[3],
+                                     deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
+                Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
+                                     emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
+                                     developingWt: shootDM * initialDMFractions[5],
+                                     developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
+                                     matureWt: shootDM * initialDMFractions[6],
+                                     matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
+                                     deadWt: shootDM * initialDMFractions[7],
+                                     deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
+                Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
+                                       emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
+                                       developingWt: shootDM * initialDMFractions[9],
+                                       developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
+                                       matureWt: shootDM * initialDMFractions[10],
+                                       matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
+                                       deadWt: 0.0, deadN: 0.0);
+                roots[0].SetBiomassState(rootWt: rootDM,
+                                         rootN: rootDM * roots[0].NConcOptimum,
+                                         rootDepth: InitialRootDepth);
 
-            // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
-            Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
-                                 emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
-                                 developingWt: shootDM * initialDMFractions[1],
-                                 developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
-                                 matureWt: shootDM * initialDMFractions[2],
-                                 matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
-                                 deadWt: shootDM * initialDMFractions[3],
-                                 deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
-            Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
-                                 emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
-                                 developingWt: shootDM * initialDMFractions[5],
-                                 developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
-                                 matureWt: shootDM * initialDMFractions[6],
-                                 matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
-                                 deadWt: shootDM * initialDMFractions[7],
-                                 deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
-            Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
-                                   emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
-                                   developingWt: shootDM * initialDMFractions[9],
-                                   developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
-                                   matureWt: shootDM * initialDMFractions[10],
-                                   matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
-                                   deadWt: 0.0, deadN: 0.0);
-            roots[0].SetBiomassState(rootWt: rootDM,
-                                     rootN: rootDM * roots[0].NConcOptimum,
-                                     rootDepth: InitialRootDepth);
-
-
-
-            if (InitialShootDM>0 && InitialRootDM >0 && InitialRootDM >0)
+                if (InitialShootDM > 0 && InitialRootDM > 0 && InitialRootDM > 0)
                 {
-                    phenologicStage=1;
-                    isAlive=true;
+                    phenologicStage = 1;
+                    isAlive = true;
                 }
-            else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth==0)
+                else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth == 0)
                 {
                     EndCrop();
                 }
-
             }
-
             else throw new Exception("AgPasture: Please enter inital biomasses greater than or equal to zero");
 
             // Calculate the values for LAI
@@ -2694,7 +2681,7 @@ namespace Models.AgPasture
             double doyIniPlateau = doyWinterSolstice + 0.5 * 365.25 / (1.0 + reproAux);
 
             // compute the duration of the main phase (minimum of about 15 days, maximum of six months)
-            reproSeasonInterval[1] = (365.25 / 24.0);
+            reproSeasonInterval[1] = 365.25 / 24.0;
             reproSeasonInterval[1] += (365.25 * 11.0 / 24.0) * Math.Pow(1.0 - (Math.Abs(myMetData.Latitude) / 90.0), ReproSeasonDurationCoeff);
 
             // compute the duration of the onset and outset phases (shoulders - maximum of six months)
@@ -2824,7 +2811,7 @@ namespace Models.AgPasture
             {
                 if (phenologicStage > 0)
                 {
-                   // Evaluate whether remobilisation of luxury N is needed
+                    // Evaluate whether remobilisation of luxury N is needed
                     EvaluateLuxuryNRemobilisation();
 
                     // Get the actual growth, after nutrient limitations but before senescence
@@ -2968,7 +2955,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * swardGreenCover*fractionGreenCover / LightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * swardGreenCover * fractionGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC
@@ -3216,7 +3203,7 @@ namespace Models.AgPasture
                 {
                     // Available N was not enough to meet basic demand, allocate N taken up based on optimum N content
                     double Nsum = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                                + (toStolon * Stolon.NConcOptimum) + (toRoot *Root.NConcOptimum);
+                                + (toStolon * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
                         Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
@@ -3270,7 +3257,7 @@ namespace Models.AgPasture
             if (Stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            if(Root.Update() == false)
+            if (Root.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
@@ -3655,6 +3642,7 @@ namespace Models.AgPasture
             }
             else
                 TodaysHeight = 0.0;
+
             return TodaysHeight;
         }
 
@@ -3773,6 +3761,7 @@ namespace Models.AgPasture
             {
                 mySummary.WriteMessage(this, " Could not graze due to lack of DM available", MessageType.Warning);
             }
+
             return null;
         }
 
@@ -3959,7 +3948,6 @@ namespace Models.AgPasture
 
             double factorCO2 = Math.Pow((CO2EffectOffsetFactor - ReferenceCO2) / (myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
             double effect = (CO2EffectMinimum + factorCO2) / (1 + factorCO2);
-
             return effect;
         }
 
@@ -4028,6 +4016,7 @@ namespace Models.AgPasture
 
                 return highTempStress;
             }
+
             return 1.0;
         }
 
@@ -4105,6 +4094,7 @@ namespace Models.AgPasture
             }
             else
                 throw new ApsimXException(this, "Photosynthetic pathway is not valid");
+
             return result;
         }
 
@@ -4144,6 +4134,7 @@ namespace Models.AgPasture
             {
                 result = 1.0;
             }
+
             return result;
         }
 
