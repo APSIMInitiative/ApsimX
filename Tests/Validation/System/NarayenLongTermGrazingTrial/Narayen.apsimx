@@ -1809,10 +1809,8 @@
                     },
                     {
                       "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-                      "ExponentSoilMoisture": 1.5,
                       "MinimumRootingDepth": 50.0,
                       "MaximumPotentialRootingDepth": 1500.0,
-                      "MaximumAllowedRootingDepth": 500.0,
                       "ElongationRate": 25.0,
                       "DepthDistributionParamTop": 80.0,
                       "DepthDistributionExponent": 3.5,
@@ -1824,8 +1822,10 @@
                       "KNH4": 0.01,
                       "KNO3": 0.02,
                       "MaximumNUptake": 10.0,
+                      "NExtractionSWFactorExponent": 1.5,
                       "MinimumLiveDM": 1.0,
                       "Depth": 0.0,
+                      "MaximumAllowedRootingDepth": 500.0,
                       "Name": "Root",
                       "ResourceName": null,
                       "Children": [
@@ -2252,10 +2252,8 @@
                     },
                     {
                       "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-                      "ExponentSoilMoisture": 1.5,
                       "MinimumRootingDepth": 50.0,
                       "MaximumPotentialRootingDepth": 1500.0,
-                      "MaximumAllowedRootingDepth": 500.0,
                       "ElongationRate": 25.0,
                       "DepthDistributionParamTop": 80.0,
                       "DepthDistributionExponent": 3.5,
@@ -2267,8 +2265,10 @@
                       "KNH4": 0.01,
                       "KNO3": 0.02,
                       "MaximumNUptake": 10.0,
+                      "NExtractionSWFactorExponent": 1.5,
                       "MinimumLiveDM": 1.0,
                       "Depth": 0.0,
+                      "MaximumAllowedRootingDepth": 500.0,
                       "Name": "Root",
                       "ResourceName": null,
                       "Children": [

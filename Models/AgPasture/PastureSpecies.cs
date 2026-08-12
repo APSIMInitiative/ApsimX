@@ -430,7 +430,10 @@ namespace Models.AgPasture
                 // get the N amount fixed through symbiosis - calculates fixedN
                 EvaluateNitrogenFixation();
 
-                // evaluate the use of N remobilised and get N amount demanded from soil
+                // evaluate the use of N remobilised from senesced tissue
+                EvaluateSenescedNRemobilisation();
+
+                // get the amount of N demanded from soil
                 EvaluateSoilNitrogenDemand();
 
                 // get the amount of soil N demanded
@@ -442,9 +445,6 @@ namespace Models.AgPasture
                 {
                     fractionUsed = Math.Min(1.0, MathUtilities.Divide(NDemand, NSupply, 0));
                 }
-
-                mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
-                mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
 
                 // reduce the PotentialUptakes that we pass to the soil arbitrator
                 foreach (ZoneWaterAndN UptakeDemands in zones)
@@ -490,6 +490,7 @@ namespace Models.AgPasture
                 myRoot?.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
             }
             EvaluateNitrogenFixation();
+            EvaluateSenescedNRemobilisation();
             EvaluateSoilNitrogenDemand();
 
             foreach (ZoneWaterAndN zone in zones)
@@ -497,8 +498,8 @@ namespace Models.AgPasture
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
+                    // do the actual uptake
                     myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
-
                     mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
                     mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
                 }
@@ -2513,7 +2514,9 @@ namespace Models.AgPasture
         {
             // get the number of layers in the soil profile and initialise soil related variables
             nLayers = soilPhysical.Thickness.Length;
-            InitiliaseSoilArrays();
+            mySoilWaterUptake = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
 
             // set the base, or main, root zone (more zones can be added later)
             roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
@@ -2548,14 +2551,6 @@ namespace Models.AgPasture
             DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
             MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
             DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
-        }
-
-        /// <summary>Initialises arrays to same length as soil layers.</summary>
-        private void InitiliaseSoilArrays()
-        {
-            mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Uptake = new double[nLayers];
-            mySoilNO3Uptake = new double[nLayers];
         }
 
         /// <summary>
@@ -3411,30 +3406,27 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Evaluates the use of remobilised nitrogen and computes soil nitrogen demand.</summary>
-        internal void EvaluateSoilNitrogenDemand()
+        /// <summary>Computes the amount of nitrogen remobilised from senesced tissues into new growth.</summary>
+        internal void EvaluateSenescedNRemobilisation()
         {
             double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
             {
-                // N demand is fulfilled by fixation alone
+                // no remobilisation, N demand is fulfilled by fixation alone
                 senescedNRemobilised = 0.0;
-                mySoilNDemand = 0.0;
             }
             else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
             {
-                // N demand is fulfilled by fixation plus N remobilised from senesced material
+                // some remobilisation, N demand is fulfilled by fixation plus some N remobilised
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
-                mySoilNDemand = 0.0;
                 fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
-                // N demand is greater than fixation and remobilisation, N uptake is needed
+                // full utilisation of remobilised N, but demand still not fulfilled
                 senescedNRemobilised = remobilisableSenescedN;
-                mySoilNDemand = adjNDemand * GlfSoilFertility - (fixedN + senescedNRemobilised);
                 fracRemobilised = 1.0;
             }
 
@@ -3453,6 +3445,22 @@ namespace Models.AgPasture
                 Stem.DeadTissue.NRemobilised = 0;
                 Stolon.DeadTissue.NRemobilised = 0;
                 Root.Dead.NRemobilised = 0;
+            }
+        }
+
+        /// <summary>Evaluates the demand for nitrogen from the soil.</summary>
+        internal void EvaluateSoilNitrogenDemand()
+        {
+            double adjNDemand = demandLuxuryN * GlfSoilFertility;
+            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN + senescedNRemobilised, Epsilon))
+            {
+                // N demand is fulfilled by fixation and/or N remobilised from senesced material
+                mySoilNDemand = 0.0;
+            }
+            else
+            {
+                // N demand is greater than fixation and remobilisation, soil N uptake is needed
+                mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
             }
         }
 

@@ -475,9 +475,9 @@ namespace Models.AgPasture
                     double layerFraction = MathUtilities.Bound((rootingDepth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
                     // get the soil moisture factor (less N available in drier soil)
-                    double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
-                                                     0.0, 1.0);
-                    double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, NExtractionSWFactorExponent);
+                    double relativeWaterContent = MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0);
+                    relativeWaterContent = MathUtilities.Bound(relativeWaterContent, 0.0, 1.0);
+                    double moistureFactor = 1.0 - Math.Pow(1.0 - relativeWaterContent, NExtractionSWFactorExponent);
 
                     // get NH4 available
                     double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
