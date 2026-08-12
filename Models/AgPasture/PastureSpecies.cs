@@ -2826,27 +2826,24 @@ namespace Models.AgPasture
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (isAlive)
+            if (phenologicStage > 0)
             {
-                if (phenologicStage > 0)
-                {
-                    // evaluate whether remobilisation of luxury N is needed
-                    EvaluateLuxuryNRemobilisation();
+                // evaluate whether remobilisation of luxury N is needed
+                EvaluateLuxuryNRemobilisation();
 
-                    // get the actual growth, after nutrient limitations but before senescence
-                    CalcGrowthAfterNutrientLimitations();
+                // get the actual growth, after nutrient limitations but before senescence
+                CalcGrowthAfterNutrientLimitations();
 
-                    // evaluate actual allocation of today's growth
-                    EvaluateNewGrowthAllocation();
+                // evaluate the actual allocation of today's growth
+                EvaluateNewGrowthAllocation();
 
-                    // get the effective growth, after all limitations and senescence
-                    DoActualGrowthAndAllocation();
+                // get the effective growth, after all limitations and senescence
+                DoActualGrowthAndAllocation();
 
-                    // send detached material to other modules (litter to surfacesOM, roots to soilFOM)
-                    AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
-                    Root.Dead.DetachBiomass(detachedRootDM, detachedRootN);
-                    // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
-                }
+                // send detached material to other modules (litter to surfacesOM, roots to soilFOM)
+                AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
+                Root.Dead.DetachBiomass(detachedRootDM, detachedRootN);
+                // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             }
         }
 
@@ -3663,7 +3660,7 @@ namespace Models.AgPasture
         {
             double TodaysHeight = PlantHeightMaximum;
 
-            if (isAlive)
+            if (phenologicStage > 0)
             {
                 if (Harvestable.Wt <= PlantHeightMassForMax)
                 {
