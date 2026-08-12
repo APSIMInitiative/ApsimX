@@ -301,7 +301,7 @@ namespace Models.AgPasture
                         break;
                     }
                     else
-                    { // not a soil...
+                    { // soil not yet initialised...
                         MaximumAllowedRootingDepth = 0.0;
                     }
                 }
@@ -340,13 +340,13 @@ namespace Models.AgPasture
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0)
         {
-            // Remove live tissue
+            // remove live tissue
             Live.RemoveBiomass(liveToRemove, liveToResidue);
 
-            // Remove dead tissue
+            // remove dead tissue
             Dead.RemoveBiomass(deadToRemove, deadToResidue);
 
-            // Update LAI and herbage digestibility
+            // update LAI and herbage digestibility
             species.EvaluateLAI();
             species.EvaluateDigestibility();
 
@@ -443,7 +443,7 @@ namespace Models.AgPasture
         ///   limited (e.g. a KNO3 = 0.02 means no limitations if the NO3 concentration is above 50 ppm).
         /// </remarks>
         /// <param name="myZone">The soil information from the zone that contains the roots.</param>
-        /// <param name="soilWaterUptake">Soil water uptake</param>
+        /// <param name="soilWaterUptake">Soil water uptake, for each soil layer</param>
         internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone, double[] soilWaterUptake)
         {
             var thickness = soilPhysical.Thickness;
@@ -546,7 +546,7 @@ namespace Models.AgPasture
         /// <returns>A weighting factor for each soil layer (mm equivalent)</returns>
         public double[] RootDistributionTarget()
         {
-            // 1. Base distribution calculated using a combination of linear and power functions:
+            // Base distribution calculated using a combination of linear and power functions:
             //  It considers homogeneous distribution from surface down to a fraction of root depth (DepthForConstantRootProportion),
             //   below this depth the proportion of root decrease following a power function (with exponent ExponentRootDistribution),
             //   it reaches zero slightly below the MaximumRootDepth (defined by rootBottomDistributionFactor), but the function is
@@ -605,17 +605,17 @@ namespace Models.AgPasture
             double topLayersDepth = 0.0;
             double[] result = new double[nLayers];
 
-            // Get the total weight over the root zone, first layers totally within the root zone
+            // get the total weight over the root zone, first layers totally within the root zone
             for (int layer = 0; layer < BottomLayer; layer++)
             {
                 cumProportion += TargetDistribution[layer];
                 topLayersDepth += soilPhysical.Thickness[layer];
             }
-            // Then consider layer at the bottom of the root zone
+            // then consider layer at the bottom of the root zone
             double layerFrac = Math.Min(1.0, (MaximumAllowedRootingDepth - topLayersDepth) / (Depth - topLayersDepth));
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
-            // Normalise the weights to be a fraction, adds up to one
+            // normalise the weights to be a fraction, adds up to one
             if (MathUtilities.IsGreaterThan(cumProportion, 0))
             {
                 for (int layer = 0; layer < BottomLayer; layer++)
@@ -669,10 +669,10 @@ namespace Models.AgPasture
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }
 
-        /// <summary>Computes the variations in root depth.</summary>
+        /// <summary>Computes the variations in rooting depth.</summary>
         /// <remarks>
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
-        /// The depth increase rate is of zero-order type, given by the RootElongationRate, but it is adjusted for temperature
+        /// The depth increase rate is of zero-order type, given by the ElongationRate, adjusted for temperature
         ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
         ///  - The effect of temperature was reduced (average between that of growth DM and one) as soil temp varies less than air
         /// </remarks>
@@ -681,7 +681,7 @@ namespace Models.AgPasture
         /// <param name="temperatureLimitingFactor">Growth limiting factor due to temperature.</param>
         public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
         {
-            // Check changes in root depth
+            // check changes in root depth
             if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < MaximumAllowedRootingDepth))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;

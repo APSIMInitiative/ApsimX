@@ -291,7 +291,7 @@ namespace Models.AgPasture
             MatureTissue.SetBiomass(matureWt, matureN);
             DeadTissue.SetBiomass(deadWt, deadN);
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
         }
 
@@ -304,28 +304,29 @@ namespace Models.AgPasture
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
-            // The fractions passed in are based on the total biomass
+            // the fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
 
-            // Live removal
+            // remove live tissue
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
                 Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
             }
 
-            // Dead removal
+            // remove dead tissue
             Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
 
-            // Calculate the fraction of DM removed from this organ
+            // calculate the fraction of DM removed from this organ
             double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
             removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0);
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
 
-            // Update LAI and herbage digestibility
+            // update LAI and herbage digestibility
             species.EvaluateLAI();
             species.EvaluateDigestibility();
+
             return removedDM;
         }
 
@@ -352,7 +353,7 @@ namespace Models.AgPasture
                 }
             }
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
         }
 

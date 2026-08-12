@@ -184,17 +184,17 @@ namespace Models.AgPasture
                 double potentialRemobilisableN = 0;
                 if (Name != "DeadTissue")
                 {
-                    // Calculate the N remobilisable as the dry matter (after removing the amount leaving the tissue)
-                    // multiplied by the N concentration above the threshold concentration.
-                    // NOTE: Don't do this for dead material.
+                    // calculate the N remobilisable as the dry matter (after removing the amount leaving the tissue)
+                    //  multiplied by the N concentration above the threshold concentration.
+                    // NOTE: don't do this for dead material.
                     potentialRemobilisableN = dmRemaining * Math.Max(0.0, dmRemainingNConc - nConcThreshold);
                 }
 
-                // The N transferred into this tissue is remobilisable at the same concentration as above
-                // i.e. the concentration of N of the incoming material above the threshold value.
+                // the N transferred into this tissue is remobilisable at the same concentration as above,
+                //  i.e. the concentration of N of the incoming material above the threshold value.
                 potentialRemobilisableN += DMTransferredIn * Math.Max(0.0, dmTransferredInNConc - nConcThreshold);
 
-                // Only a fraction of the above calculated potential remobilisable N is remobilisable per day
+                // only a fraction of the above calculated potential remobilisable N is remobilisable per day
                 NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
             }
         }
