@@ -589,10 +589,6 @@ namespace Models.AgPasture
         [Units("J/kg/s")]
         public double PhotosynthesisCurveFactor { get; set; }
 
-        /// <summary>Fraction of radiation that is photosynthetically active (0-1).</summary>
-        [Units("0-1")]
-        public double FractionPAR { get; set; } = 0.5;
-
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
         public double LightExtinctionCoefficient { get; set; }
@@ -876,9 +872,8 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double DetachmentDroughtEffectMin { get; set; }
 
-        /// <summary>Factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
-        [Units("-")]
-        public double TurnoverStockFactor { get; set; } = 0.01;
+        /// <summary>Factor increasing tissue turnover rate due to stock trampling - NOT IMPLEMENTED.</summary>
+        private double TurnoverStockFactor = 0.0;
 
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Converts the fraction of biomass removed into potential increase in turnover.</remarks>
@@ -1367,7 +1362,10 @@ namespace Models.AgPasture
         #region Constants and enums  ---------------------------------------------------------------------------------------
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        internal const double CarbonFractionInDM = 0.4;
+        internal const double CarbonConcentration = 0.4;
+
+        /// <summary>Fraction of radiation that is photosynthetically active (0-1).</summary>
+        internal const double FractionPAR = 0.5;
 
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         internal const double PotentialMEOfHerbage = 16.0;
@@ -1464,7 +1462,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double TotalC
         {
-            get { return TotalWt * CarbonFractionInDM; }
+            get { return TotalWt * CarbonConcentration; }
         }
 
         /// <summary>Total dry matter weight of plant (kgDM/ha).</summary>
@@ -1795,7 +1793,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double GrossPotentialGrowthWt
         {
-            get { return grossPhotosynthesis / CarbonFractionInDM; }
+            get { return grossPhotosynthesis / CarbonConcentration; }
         }
 
         /// <summary>Net potential growth rate, after respiration (kgDM/ha).</summary>
@@ -2882,7 +2880,7 @@ namespace Models.AgPasture
 
             // calculate the net potential growth (kg/ha/day)
             dGrowthPot = Math.Max(0.0, grossPhotosynthesis - respirationGrowth + remobilisedC - respirationMaintenance);
-            dGrowthPot /= CarbonFractionInDM;
+            dGrowthPot /= CarbonConcentration;
         }
 
         /// <summary>Calculates the growth after water limitations.</summary>
@@ -3021,7 +3019,7 @@ namespace Models.AgPasture
             tempEffectOnRespiration = TemperatureEffectOnRespiration(Tmean(0.5));
 
             // total DM converted to C (kg/ha)
-            double liveBiomassC = (AboveGroundLiveWt + BelowGroundLiveWt) * CarbonFractionInDM;
+            double liveBiomassC = (AboveGroundLiveWt + BelowGroundLiveWt) * CarbonConcentration;
             double result = liveBiomassC * MaintenanceRespirationCoefficient * tempEffectOnRespiration * glfNc;
             return Math.Max(0.0, result);
         }
@@ -3175,7 +3173,7 @@ namespace Models.AgPasture
 
             // C remobilised from senesced tissues to be used in new growth (converted from carbohydrate to C)
             remobilisableC += 0.0;
-            remobilisableC *= CarbonFractionInDM;
+            remobilisableC *= CarbonConcentration;
 
             // get the amounts detached today
             detachedShootDM = Leaf.DMDetached + Stem.DMDetached + Stolon.DMDetached;
@@ -4276,7 +4274,7 @@ namespace Models.AgPasture
         {
             double digestDead = (Leaf.DigestibilityDead * Leaf.DMDead) + (Stem.DigestibilityDead * Stem.DMDead);
             digestDead = MathUtilities.Divide(digestDead, Leaf.DMDead + Stem.DMDead, 0.0);
-            return digestDead / CarbonFractionInDM;
+            return digestDead / CarbonConcentration;
         }
 
         /// <summary>Calculates the factor increasing shoot allocation during reproductive growth.</summary>
@@ -4348,25 +4346,6 @@ namespace Models.AgPasture
             }
 
             return fractionInLayer;
-        }
-
-        /// <summary>Gets the index of the layer at the bottom of the root zone.</summary>
-        private int RootZoneBottomLayer()
-        {
-            int result = 0;
-            double currentDepth = 0.0;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                if (roots[0].Depth > currentDepth)
-                {
-                    result = layer;
-                    currentDepth += soilPhysical.Thickness[layer];
-                }
-                else
-                    layer = nLayers;
-            }
-
-            return result;
         }
 
         /// <summary>Computes the vapour pressure deficit.</summary>

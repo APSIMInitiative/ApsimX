@@ -69,9 +69,6 @@ namespace Models.AgPasture
         /// <summary>Maximum potential rooting depth (mm).</summary>
         public double MaximumPotentialRootingDepth { get; set; }
 
-        /// <summary>Maximum rooting depth allowed by soil condition (mm).</summary>
-        public double MaximumAllowedRootingDepth { get; set; }
-
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
         public double ElongationRate { get; set; }
@@ -108,8 +105,8 @@ namespace Models.AgPasture
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         public double MaximumNUptake { get; set; }
 
-        /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        public double ExponentSoilMoisture = 1.50;
+        /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
+        public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         public double MinimumLiveDM { get; set; }
@@ -123,6 +120,9 @@ namespace Models.AgPasture
 
         /// <summary>Rooting depth (mm).</summary>
         public double Depth { get; set; }
+
+        /// <summary>Maximum rooting depth allowed by soil conditions (mm).</summary>
+        public double MaximumAllowedDepth { get; set; }
 
         /// <summary>Soil layer at the bottom of the root zone.</summary>
         internal int BottomLayer { get; private set; }
@@ -290,19 +290,19 @@ namespace Models.AgPasture
             mySoilWaterAvailable = new double[nLayers];
 
             // check rooting depth
-            MaximumAllowedRootingDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
+            MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
             for (int z = 0; z < soilPhysical.Thickness.Length; z++)
             {
                 if (MathUtilities.FloatsAreEqual(soilCropData.XF[z], 0) || MathUtilities.FloatsAreEqual(soilCropData.KL[z], 0))
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
-                        MaximumAllowedRootingDepth = Math.Min(MaximumAllowedRootingDepth, soilPhysical.ThicknessCumulative[z - 1]);
+                        MaximumAllowedDepth = Math.Min(MaximumAllowedDepth, soilPhysical.ThicknessCumulative[z - 1]);
                         break;
                     }
                     else
                     { // soil not yet initialised...
-                        MaximumAllowedRootingDepth = 0.0;
+                        MaximumAllowedDepth = 0.0;
                     }
                 }
             }
@@ -322,7 +322,7 @@ namespace Models.AgPasture
         /// <param name="rootDepth">The depth of root zone (mm).</param>
         public void SetBiomassState(double rootWt, double rootN, double rootDepth)
         {
-            Depth = Math.Min(rootDepth, MaximumAllowedRootingDepth);
+            Depth = Math.Min(rootDepth, MaximumAllowedDepth);
             CalculateRootZoneBottomLayer();
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
@@ -466,7 +466,7 @@ namespace Models.AgPasture
                     // get the soil moisture factor (less N available in drier soil)
                     double rwc = MathUtilities.Bound(MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0),
                                                      0.0, 1.0);
-                    double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
+                    double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, NExtractionSWFactorExponent);
 
                     // get NH4 available
                     double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
@@ -556,12 +556,12 @@ namespace Models.AgPasture
             double[] result = new double[nLayers];
             double depthTop = 0.0;
             double depthBottom = 0.0;
-            double depthFirstStage = Math.Min(MaximumAllowedRootingDepth, DepthDistributionParamTop);
+            double depthFirstStage = Math.Min(MaximumAllowedDepth, DepthDistributionParamTop);
 
             for (int layer = 0; layer < nLayers; layer++)
             {
                 depthBottom += soilPhysical.Thickness[layer];
-                if (depthTop >= MaximumAllowedRootingDepth)
+                if (depthTop >= MaximumAllowedDepth)
                 {
                     // totally out of root zone
                     result[layer] = 0.0;
@@ -574,9 +574,9 @@ namespace Models.AgPasture
                 else
                 {
                     // at least partially on second stage
-                    double maxRootDepth = MaximumAllowedRootingDepth * DepthDistributionParamBottom;
+                    double maxRootDepth = MaximumAllowedDepth * DepthDistributionParamBottom;
                     result[layer] = Math.Pow(maxRootDepth - Math.Max(depthTop, depthFirstStage), DepthDistributionExponent + 1)
-                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, MaximumAllowedRootingDepth), DepthDistributionExponent + 1);
+                                  - Math.Pow(maxRootDepth - Math.Min(depthBottom, MaximumAllowedDepth), DepthDistributionExponent + 1);
                     result[layer] /= (DepthDistributionExponent + 1) * Math.Pow(maxRootDepth - depthFirstStage, DepthDistributionExponent);
                     if (depthTop < depthFirstStage)
                     {
@@ -612,7 +612,7 @@ namespace Models.AgPasture
                 topLayersDepth += soilPhysical.Thickness[layer];
             }
             // then consider layer at the bottom of the root zone
-            double layerFrac = Math.Min(1.0, (MaximumAllowedRootingDepth - topLayersDepth) / (Depth - topLayersDepth));
+            double layerFrac = Math.Min(1.0, (MaximumAllowedDepth - topLayersDepth) / (Depth - topLayersDepth));
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // normalise the weights to be a fraction, adds up to one
@@ -682,11 +682,11 @@ namespace Models.AgPasture
         public void EvaluateRootElongation(double dGrowthRootDM, double detachedRootDM, double temperatureLimitingFactor)
         {
             // check changes in root depth
-            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < MaximumAllowedRootingDepth))
+            if (MathUtilities.IsGreaterThan(dGrowthRootDM - detachedRootDM, 0.0) && (Depth < MaximumAllowedDepth))
             {
                 double tempFactor = 0.5 + 0.5 * temperatureLimitingFactor;
                 var dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * tempFactor;
-                Depth = Math.Min(MaximumAllowedRootingDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
+                Depth = Math.Min(MaximumAllowedDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
                 CalculateRootZoneBottomLayer();
             }
         }
