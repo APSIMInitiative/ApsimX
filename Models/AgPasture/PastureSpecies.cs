@@ -2619,7 +2619,10 @@ namespace Models.AgPasture
                     EndCrop();
                 }
             }
-            else throw new Exception("AgPasture: Please enter inital biomasses greater than or equal to zero");
+            else
+            {
+                throw new Exception("Initial values for biomass cannot be negative");
+            }
 
             // calculate the values for LAI
             EvaluateLAI();
@@ -2672,13 +2675,7 @@ namespace Models.AgPasture
                                    deadWt: 0.0, deadN: 0.0);
             roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
                                      rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
-                                     rootDepth: roots[0].MinimumRootingDepth);
-
-            // set phenological stage to vegetative
-            phenologicStage = 1;
-
-            // calculate the values for LAI
-            EvaluateLAI();
+                                     rootDepth: 0.1);
         }
 
         /// <summary>Initialises the parameters to compute factor increasing shoot allocation during reproductive growth.</summary>
@@ -2793,10 +2790,20 @@ namespace Models.AgPasture
                 if (phenologicStage == 0)
                 {
                     // plant has not emerged yet, check germination progress
-                    if (DailyGerminationProgress() >= 1.0)
+                    double germinationProgress = DailyGerminationProgress();
+                    if (germinationProgress >= 1.0)
                     {
                         // germination completed
                         SetEmergenceState();
+
+                        // move phenological stage to vegetative
+                        phenologicStage = 1;
+
+                        // set root depth to minimum (starting) value
+                        roots[0].Depth = roots[0].MinimumRootingDepth;
+
+                        // calculate the initial values for LAI
+                        EvaluateLAI();
                     }
                 }
                 else if (phenologicStage > 0)
