@@ -64,55 +64,55 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        public double MinimumRootingDepth { get; set; } = 50.0;
+        public double MinimumRootingDepth { get; set; }
 
         /// <summary>Maximum potential rooting depth (mm).</summary>
-        public double MaximumPotentialRootingDepth { get; set; } = 750.0;
+        public double MaximumPotentialRootingDepth { get; set; }
 
         /// <summary>Maximum rooting depth allowed by soil condition (mm).</summary>
-        public double MaximumAllowedRootingDepth { get; set; } = 500.0;
+        public double MaximumAllowedRootingDepth { get; set; }
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
         [Units("mm/day")]
-        public double ElongationRate { get; set; } = 25.0;
+        public double ElongationRate { get; set; }
 
         /// <summary>Factor for root distribution; depth from surface where root proportion starts to decrease (mm).</summary>
         [Units("mm")]
-        public double DepthDistributionParamTop { get; set; } = 90.0;
+        public double DepthDistributionParamTop { get; set; }
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
         [Units("-")]
-        public double DepthDistributionExponent { get; set; } = 3.2;
+        public double DepthDistributionExponent { get; set; }
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
         public double DepthDistributionParamBottom { get; set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        public double SpecificRootLength { get; set; } = 100.0;
+        public double SpecificRootLength { get; set; }
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.02;
+        public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.006;
+        public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.025;
+        public double NConcMaximum { get; set; }
 
         /// <summary>Ammonium uptake coefficient (/ppm).</summary>
-        public double KNH4 { get; set; } = 0.01;
+        public double KNH4 { get; set; }
 
         /// <summary>Nitrate uptake coefficient (/ppm).</summary>
-        public double KNO3 { get; set; } = 0.02;
+        public double KNO3 { get; set; }
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
-        public double MaximumNUptake { get; set; } = 10.0;
+        public double MaximumNUptake { get; set; }
 
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
         public double ExponentSoilMoisture = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; set; } = 1.0;
+        public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------
 
