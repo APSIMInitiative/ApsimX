@@ -3768,15 +3768,23 @@ namespace Models.AgPasture
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            Leaf.ClearDailyTransferredAmounts();
-            Stem.ClearDailyTransferredAmounts();
-            Stolon.ClearDailyTransferredAmounts();
-            foreach (PastureBelowGroundOrgan root in roots)
+            if (InitialisePlantAtStartOfSimulation)
             {
-                root.ClearDailyTransferredAmounts();
-            }
+                // plant has been initialised at the start of simulation, can be reset
+                Leaf.ClearDailyTransferredAmounts();
+                Stem.ClearDailyTransferredAmounts();
+                Stolon.ClearDailyTransferredAmounts();
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    root.ClearDailyTransferredAmounts();
+                }
 
-            SetInitialState();
+                SetInitialState();
+            }
+            else
+            {
+                mySummary.WriteMessage(this, "This plant cannot be reset because it was sown during the simulation", MessageType.Warning);
+            }
         }
 
         /// <summary>Removes a given amount of biomass (DM and N) from the plant.</summary>
