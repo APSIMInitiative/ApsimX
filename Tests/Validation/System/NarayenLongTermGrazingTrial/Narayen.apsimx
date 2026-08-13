@@ -1446,9 +1446,9 @@
                   "PlantType": "AGPRhodes",
                   "SpeciesFamily": 0,
                   "PhotosyntheticPathway": 1,
-                  "InitialShootDM": 1000.0,
+                  "InitialShootDM": 750.0,
                   "InitialRootDM": 1000.0,
-                  "InitialRootDepth": 100.0,
+                  "InitialRootDepth": 1500.0,
                   "initialDMFractionsGrasses": [
                     0.15,
                     0.25,
@@ -1890,7 +1890,7 @@
                   "PhotosyntheticPathway": 1,
                   "InitialShootDM": 5000.0,
                   "InitialRootDM": 1000.0,
-                  "InitialRootDepth": 100.0,
+                  "InitialRootDepth": 1500.0,
                   "initialDMFractionsGrasses": [
                     0.15,
                     0.25,

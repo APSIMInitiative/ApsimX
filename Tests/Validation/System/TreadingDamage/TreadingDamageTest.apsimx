@@ -1119,7 +1119,7 @@
                   "LightProfile": null,
                   "InitialShootDM": 1500.0,
                   "InitialRootDM": 450.0,
-                  "InitialRootDepth": 750.0,
+                  "InitialRootDepth": 850.0,
                   "initialDMFractionsGrasses": [
                     0.15,
                     0.25,

@@ -125601,16 +125601,16 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "2014-03-30",
+                                      "Date": "2014-03-21",
                                       "Action": "[AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                      "Line": "2014-03-30 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                      "Line": "2014-03-21 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": false,
-                                      "Date": "2014-03-20",
-                                      "Action": "was the actual sowing date",
-                                      "Line": "// was the actual sowing date"
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "// 2014-03-20 was the actual sowing date"
                                     }
                                   ],
                                   "Name": "Sowing",
@@ -136926,16 +136926,16 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "2014-10-30",
+                                      "Date": "2014-10-25",
                                       "Action": "[AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                      "Line": "2014-10-30 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                      "Line": "2014-10-25 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": false,
                                       "Date": null,
-                                      "Action": "sowing date for both species was 2014-10-24",
-                                      "Line": "// sowing date for both species was 2014-10-24"
+                                      "Action": null,
+                                      "Line": "// 2014-10-24 was the actual sowing date"
                                     }
                                   ],
                                   "Name": "Sowing",
@@ -153894,16 +153894,16 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "2014-03-31",
+                                      "Date": "2014-03-21",
                                       "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                      "Line": "2014-03-31 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                      "Line": "2014-03-21 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": false,
-                                      "Date": "2014-03-20",
-                                      "Action": "was the actual sowing date",
-                                      "Line": "// was the actual sowing date"
+                                      "Date": null,
+                                      "Action": null,
+                                      "Line": "// 2014-03-20 was the actual sowing date"
                                     }
                                   ],
                                   "Name": "Sowing",
@@ -165436,16 +165436,16 @@
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": true,
-                                      "Date": "2014-11-10",
+                                      "Date": "2014-10-25",
                                       "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                      "Line": "2014-11-10 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                      "Line": "2014-10-25 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
                                       "Enabled": false,
                                       "Date": null,
-                                      "Action": "sowing date for both species was 2014-10-24",
-                                      "Line": "// sowing date for both species was 2014-10-24"
+                                      "Action": null,
+                                      "Line": "// 2014-10-24 was the actual sowing date"
                                     }
                                   ],
                                   "Name": "Sowing",
@@ -176280,23 +176280,23 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2014-11-01",
+                                  "Date": "2014-10-24",
                                   "Action": "[AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                  "Line": "2014-11-01 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                  "Line": "2014-10-24 [AgPRyegrass].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2014-11-01",
+                                  "Date": "2014-10-24",
                                   "Action": "[AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)",
-                                  "Line": "2014-11-01 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
+                                  "Line": "2014-10-24 [AgPWhiteClover].Sow(population: 1, cultivar: \"W\", depth: 5, rowSpacing: 150)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": false,
-                                  "Date": "24-Oct",
-                                  "Action": "was the actual sowing date for both species, emergence started on 1-Nov, with grass about one day later",
-                                  "Line": "// was the actual sowing date for both species, emergence started on 1-Nov, with grass about one day later"
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": "// 24-Oct was the actual sowing date for both species, emergence started on 1-Nov, with grass about one day later"
                                 }
                               ],
                               "Name": "Sowing",
@@ -178733,7 +178733,7 @@
                             "",
                             "[AgPRyegrass].MinimumGreenWt",
                             "[AgPRyegrass].Root.MaximumPotentialRootingDepth",
-                            "[AgPRyegrass].Root.MaximumAllowedRootingDepth",
+                            "[AgPRyegrass].Root.MaximumAllowedDepth",
                             "",
                             "// biomass state",
                             "[AgPRyegrass].TotalWt",
@@ -178860,7 +178860,7 @@
                             "",
                             "[AgPWhiteClover].MinimumGreenWt",
                             "[AgPWhiteClover].Root.MaximumPotentialRootingDepth",
-                            "[AgPWhiteClover].Root.MaximumAllowedRootingDepth",
+                            "[AgPWhiteClover].Root.MaximumAllowedDepth",
                             "",
                             "// biomass state",
                             "[AgPWhiteClover].TotalWt",
