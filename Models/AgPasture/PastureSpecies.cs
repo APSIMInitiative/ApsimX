@@ -3245,8 +3245,9 @@ namespace Models.AgPasture
                 if (phenologicStage > 0)
                 {
                     double netRootGrowth = dGrowthRootDM - detachedRootDM;
-                    double temperatureFactor = TemperatureLimitingFactor(Tmean(0.5));
-                    Root.EvaluateRootElongation(netRootGrowth, temperatureFactor);
+                    double glfMin = Math.Min(glfWaterSupply, glfNSupply); // root elongation speeds up if soil is limiting
+                    double soilSupplyFactor = 1.0 + Math.Pow(1.0 - glfMin, 1.0 / ShootRootGlfFactor);
+                    Root.EvaluateRootElongation(netRootGrowth, glfTemp, soilSupplyFactor);
                 }
 
                 Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);

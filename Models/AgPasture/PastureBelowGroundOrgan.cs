@@ -662,17 +662,19 @@ namespace Models.AgPasture
         /// <summary>Computes the variations in rooting depth.</summary>
         /// <remarks>
         /// Root depth will increase if it is smaller than maximumRootDepth and there is a positive net DM accumulation.
-        /// The depth increase rate is of zero-order type, given by the ElongationRate, adjusted for temperature
-        ///  in a similar fashion as plant DM growth. Note that currently root depth never decreases.
+        /// The depth increase rate is of zero-order type, given by the ElongationRate, adjusted for temperature, in the
+        ///  same ways as plant DM growth, and soil supply status, increasing root elongation when there is a limitation
+        ///  in the soil (the most limiting of water or N supply). Note that currently root depth never decreases.
         /// </remarks>
         /// <param name="netGrowthDM">Net root growth dry matter (kg/ha).</param>
         /// <param name="temperatureLimitingFactor">Growth limiting factor due to temperature.</param>
-        public void EvaluateRootElongation(double netGrowthDM, double temperatureLimitingFactor)
+        /// <param name="soilSupplyFactor">Adjustment to elongation due to to soil supply issues (drought or N).</param>
+        public void EvaluateRootElongation(double netGrowthDM, double temperatureLimitingFactor, double soilSupplyFactor)
         {
             // check changes in root depth
             if (netGrowthDM >= 0.0)
             {
-                double dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * temperatureLimitingFactor;
+                double dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * temperatureLimitingFactor * soilSupplyFactor;
                 Depth = Math.Min(MaximumAllowedDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
             }
         }
