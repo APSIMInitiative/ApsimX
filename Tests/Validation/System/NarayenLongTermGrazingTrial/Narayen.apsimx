@@ -1824,7 +1824,7 @@
                       "NExtractionSWFactorExponent": 1.5,
                       "MinimumLiveDM": 1.0,
                       "Depth": 0.0,
-                      "MaximumAllowedRootingDepth": 500.0,
+                      "MaximumAllowedDepth": 0.0,
                       "Name": "Root",
                       "ResourceName": null,
                       "Children": [
@@ -2266,7 +2266,7 @@
                       "NExtractionSWFactorExponent": 1.5,
                       "MinimumLiveDM": 1.0,
                       "Depth": 0.0,
-                      "MaximumAllowedRootingDepth": 500.0,
+                      "MaximumAllowedDepth": 0.0,
                       "Name": "Root",
                       "ResourceName": null,
                       "Children": [
