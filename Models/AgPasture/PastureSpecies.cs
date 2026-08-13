@@ -277,6 +277,7 @@ namespace Models.AgPasture
                 ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
+                double test = roots[0].MaximumPotentialRootingDepth;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
             }
         }
@@ -533,21 +534,36 @@ namespace Models.AgPasture
         public PhotosynthesisPathwayType PhotosyntheticPathway { get; set; } = PhotosynthesisPathwayType.C3;
 
         ////- Initial state parameters (replace the default values) >>> - - - - - - - - - - - - - - - - - - - - - - - -
+        ////////////// GUI parameters shown to user //////////////
+
+        /// <summary>Flag whether AgPasture species need to be sown or are initialised already growing.</summary>
+        [Separator("Choose how this species is set at the start of simulation")]
+        [Description(" Plants are alive and growing?")]
+        public bool InitialisePlantAtStartOfSimulation { get; set; } = true;
 
         /// <summary>Initial above ground DM weight (kgDM/ha).</summary>
-        [Description("Initial above ground DM weight")]
+        [Description("   Initial above ground DM weight")]
         [Units("kgDM/ha")]
+        [Display(VisibleCallback = nameof(InitialisePlantAtStartOfSimulation))]
         public double InitialShootDM { get; set; }
 
         /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
-        [Description("Initial below ground DM weight")]
+        [Description("   Initial below ground DM weight")]
         [Units("kgDM/ha")]
+        [Display(VisibleCallback = nameof(InitialisePlantAtStartOfSimulation))]
         public double InitialRootDM { get; set; }
 
         /// <summary>Initial rooting depth (mm).</summary>
-        [Description("Initial rooting depth")]
+        [Description("   Initial rooting depth")]
         [Units("mm")]
+        [Display(VisibleCallback = nameof(InitialisePlantAtStartOfSimulation))]
         public double InitialRootDepth { get; set; }
+
+        /// <summary>Overrides the maximum potential rooting depth (mm).</summary>
+        [Separator("Plant parameters for this simulation (set a negative value to keep defaults)")]
+        [Description(" Maximum potential rooting depth")]
+        [Units("mm")]
+        public double PotentialRootingDepth { get; set; } = -1.0;
 
         /// <summary>Initial fractions of DM for each plant part in grasses (0-1).</summary>
         /// <remarks>
@@ -2515,6 +2531,10 @@ namespace Models.AgPasture
             mySoilNO3Uptake = new double[nLayers];
 
             // set the base, or main, root zone (more zones can be added later)
+            if (PotentialRootingDepth >= 0.0)
+            { // override the default with the value given in the GUI
+                roots[0].MaximumPotentialRootingDepth = PotentialRootingDepth;
+            }
             roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
 
             // add any other zones that have been given at initialisation
@@ -2528,6 +2548,7 @@ namespace Models.AgPasture
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
                 newRootOrgan.Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
+
                 roots.Add(newRootOrgan);
             }
 
@@ -2537,7 +2558,8 @@ namespace Models.AgPasture
             Stolon.Initialise(0.0);
 
             // set initial plant state
-            SetInitialState();
+            if (InitialisePlantAtStartOfSimulation)
+                SetInitialState();
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
