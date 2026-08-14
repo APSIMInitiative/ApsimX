@@ -16,9 +16,9 @@
             "ObservedAll.xlsx"
           ],
           "SheetNames": [
-            "ObservedAveragedAnnual"
+            "ObservedAnnual"
           ],
-          "Name": "ObservedAverageAnnual",
+          "Name": "ObservedAnnual",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -30,9 +30,9 @@
             "ObservedAll.xlsx"
           ],
           "SheetNames": [
-            "ObservedAnnual"
+            "ObservedAveragedAnnual"
           ],
-          "Name": "ObservedAnnual",
+          "Name": "ObservedAverageAnnual",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
@@ -110,6 +110,60 @@
         },
         {
           "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "AnnualReport",
+          "ObservedTableName": "ObservedAnnual",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Date",
+          "FieldName3UsedForMatch": "Location",
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "Annual",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": [
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "AnnualHarvestedWt",
+                  "n": 283,
+                  "Slope": 0.7205798124688064,
+                  "Intercept": 3805.1071644730464,
+                  "SEslope": 0.05786433364739889,
+                  "SEintercept": 617.5428911450091,
+                  "R2": 0.355615686113677,
+                  "RMSE": 3929.860499990058,
+                  "NSE": -0.09167998002478805,
+                  "ME": 1014.3975478300122,
+                  "MAE": 3206.764606900751,
+                  "RSR": 1.0429872739365544,
+                  "RMR": 0.3934778277646608
+                }
+              ],
+              "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
+              "POName": "Annual",
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
           "PredictedTableName": "SummaryReport",
           "ObservedTableName": "ObservedAveragedAnnual",
           "FieldNameUsedForMatch": "SimulationName",
@@ -158,60 +212,6 @@
               ],
               "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
               "POName": "AveAnnual",
-              "Name": "Tests",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
-                  "Name": "Note",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "AnnualReport",
-          "ObservedTableName": "ObservedAnnual",
-          "FieldNameUsedForMatch": "SimulationName",
-          "FieldName2UsedForMatch": "Date",
-          "FieldName3UsedForMatch": "Location",
-          "FieldName4UsedForMatch": null,
-          "AllColumns": false,
-          "Name": "Annual",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Tests, Models",
-              "AcceptedStats": [
-                {
-                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
-                  "Name": "AnnualHarvestedWt",
-                  "n": 283,
-                  "Slope": 0.7205798124688064,
-                  "Intercept": 3805.1071644730464,
-                  "SEslope": 0.05786433364739889,
-                  "SEintercept": 617.5428911450091,
-                  "R2": 0.355615686113677,
-                  "RMSE": 3929.860499990058,
-                  "NSE": -0.09167998002478805,
-                  "ME": 1014.3975478300122,
-                  "MAE": 3206.764606900751,
-                  "RSR": 1.0429872739365544,
-                  "RMR": 0.3934778277646608
-                }
-              ],
-              "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
-              "POName": "Annual",
               "Name": "Tests",
               "ResourceName": null,
               "Children": [
@@ -86621,8 +86621,7 @@
                             "[Weather].Season as Season",
                             "Sum of [AGPWhiteClover].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as TotalHarvestedWt.WhiteClover",
                             "Sum of [AGPRyegrass].HarvestedWt from [Clock].StartOfSimulation to [Clock].EndOfSimulation as TotalHarvestedWt.Ryegrass",
-                            "Mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 0.000001)) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested",
-                            "Mean of ([AGPRyegrass].NetGrowthWt + [AGPWhiteClover].NetGrowthWt) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as AveDailyGrowthRate"
+                            "Mean of ([AGPWhiteClover].HarvestedWt / ([AGPWhiteClover].HarvestedWt + [AGPRyegrass].HarvestedWt + 0.000001)) on [SimpleGrazing].Grazed from [Clock].StartOfSimulation to [Clock].EndOfSimulation as PropCloverHarvested"
                           ],
                           "EventNames": [
                             "[Clock].EndOfSimulation"
@@ -93122,8 +93121,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -214.6,
-                  "Maximum": 21674.6,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 },
                 {
@@ -93133,8 +93132,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -214.6,
-                  "Maximum": 21674.6,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 }
               ],
@@ -93202,8 +93201,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": 1825.083053004835,
-                  "Maximum": 17373.17109148994,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 },
                 {
@@ -93213,8 +93212,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": 1825.083053004835,
-                  "Maximum": 17373.17109148994,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 }
               ],
@@ -93282,8 +93281,8 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -0.004562,
-                  "Maximum": 0.460762,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 },
                 {
@@ -93293,8 +93292,88 @@
                   "Inverted": false,
                   "CrossesAtZero": false,
                   "LabelOnOneLine": false,
-                  "Minimum": -0.004562,
-                  "Maximum": 0.460762,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "PxO_RngAnnualHarv",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Location",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "AveAnnual",
+                  "XFieldName": "Observed.RngAnnualHarvestedWt",
+                  "YFieldName": "Predicted.RngAnnualHarvestedWt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": false,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": "",
+                  "Name": "Series",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "LabelOnOneLine": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
                   "Interval": null
                 }
               ],
@@ -173899,8 +173978,8 @@
                                       "TableName": "BaseReport",
                                       "XFieldName": "Date",
                                       "YFieldName": "TotalPlantBiomass",
-                                      "X2FieldName": "",
-                                      "Y2FieldName": "",
+                                      "X2FieldName": null,
+                                      "Y2FieldName": null,
                                       "ShowInLegend": false,
                                       "IncludeSeriesNameInLegend": false,
                                       "Cumulative": false,
