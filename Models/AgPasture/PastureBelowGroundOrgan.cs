@@ -357,10 +357,6 @@ namespace Models.AgPasture
             // remove dead tissue
             Dead.RemoveBiomass(deadToRemove, deadToResidue);
 
-            // update LAI and herbage digestibility
-            species.EvaluateLAI();
-            species.EvaluateDigestibility();
-
             return Live.DMRemoved + Dead.DMRemoved;
         }
 
