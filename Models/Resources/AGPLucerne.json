@@ -19,7 +19,7 @@
       "LightExtinctionCoefficient": 0.65,
       "GrowthTminimum": 5.0,
       "GrowthToptimum": 25.0,
-      "GrowthTEffectExponent": 1.7,
+      "GrowthTEffectExponent": 1.60,
       "ReferenceCO2": 380.0,
       "CO2EffectScaleFactor": 700.0,
       "CO2EffectOffsetFactor": 600.0,
@@ -37,7 +37,7 @@
       "GrowthRespirationCoefficient": 0.275,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
-      "DegreesDayForGermination": 125.0,
+      "DegreesDayForGermination": 120.0,
       "TargetShootRootRatio": 3.5,
       "MaxRootAllocation": 0.312,
       "ShootRootGlfFactor": 0.5,
@@ -76,7 +76,7 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.6,
-      "MinimumGreenWt": 50.0,
+      "MinimumGreenWt": 30.0,
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
