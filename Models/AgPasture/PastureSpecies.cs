@@ -61,6 +61,10 @@ namespace Models.AgPasture
         [Link]
         private ISoilWater waterBalance = null;
 
+        /// <summary>Link to the soil temperature model.</summary>
+        [Link]
+        private ISoilTemperature soilTemperature = null;
+
         /// <summary>Link to micro climate (aboveground resource arbitrator).</summary>
         [Link]
         private MicroClimate microClimate = null;
@@ -277,7 +281,7 @@ namespace Models.AgPasture
                 ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
-                double test = roots[0].MaximumPotentialRootingDepth;
+                sownLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, 0.5 * roots[0].MinimumRootingDepth);
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
             }
         }
@@ -1050,6 +1054,9 @@ namespace Models.AgPasture
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
+
+        /// <summary>Index of layer at which the plant was sown.</summary>
+        private int sownLayer;
 
         ////- Defining the plant type >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2548,7 +2555,6 @@ namespace Models.AgPasture
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
                 newRootOrgan.Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
-
                 roots.Add(newRootOrgan);
             }
 
@@ -2808,13 +2814,28 @@ namespace Models.AgPasture
                 if (phenologicStage == 0)
                 {
                     // plant has not emerged yet, check germination progress
-                    double germinationProgress = DailyGerminationProgress();
-                    if (germinationProgress >= 1.0)
+                    double germinationProgress = 0.0;
+                    if (cumulativeDDGermination <= 0.0)
+                    {
+                        // check conditions to start germination
+                        if ((waterBalance.SW[sownLayer] > soilPhysical.LL15[sownLayer]) && (soilTemperature.Value[sownLayer] > GrowthTminimum))
+                        {
+                            germinationProgress = GerminationAndEmergenceProgress();
+                        }
+                    }
+                    else
+                    {
+                        germinationProgress = GerminationAndEmergenceProgress();
+                    }
+
+                    if ((germinationProgress >= 0.5) && (Leaf.DMLive <= 0.0))
                     {
                         // germination completed
                         SetEmergenceState();
-
-                        // move phenological stage to vegetative
+                    }
+                    else if (germinationProgress >= 1.0)
+                    {
+                        // emergence completed, move phenological stage to vegetative
                         phenologicStage = 1;
 
                         // set root depth to minimum (starting) value
@@ -2876,7 +2897,7 @@ namespace Models.AgPasture
 
         /// <summary>Computes the daily progress through germination.</summary>
         /// <returns>The fraction of the germination phase completed (0-1)</returns>
-        internal double DailyGerminationProgress()
+        internal double GerminationAndEmergenceProgress()
         {
             cumulativeDDGermination += Math.Max(0.0, Tmean(0.5) - GrowthTminimum);
             return MathUtilities.Divide(cumulativeDDGermination, DegreesDayForGermination, 1.0);
