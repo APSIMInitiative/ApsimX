@@ -3614,7 +3614,7 @@ namespace Models.AgPasture
             if (BelowGroundLiveWt > Epsilon)
             {
                 // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
-                double glfMin = Math.Min(Math.Min(glfWaterSupply, glfWaterLogging), glfNSupply);
+                double glfMin = Math.Min(glfWaterSupply, glfNSupply);
 
                 // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)
                 double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
@@ -4236,9 +4236,10 @@ namespace Models.AgPasture
         private double MoistureEffectOnTissueTurnover()
         {
             double effect = 1.0;
-            if (Math.Min(glfWaterSupply, glfWaterLogging) < TurnoverDroughtThreshold)
+            double waterStressFactor = Math.Min(glfWaterSupply, glfWaterLogging);
+            if (waterStressFactor < TurnoverDroughtThreshold)
             {
-                effect = (TurnoverDroughtThreshold - Math.Min(glfWaterSupply, glfWaterLogging)) / TurnoverDroughtThreshold;
+                effect = (TurnoverDroughtThreshold - waterStressFactor) / TurnoverDroughtThreshold;
                 effect = 1.0 + TurnoverDroughtEffectMax * Math.Pow(effect, TurnoverDroughtExponent);
             }
 
