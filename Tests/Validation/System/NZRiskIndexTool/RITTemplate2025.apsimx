@@ -3574,9 +3574,11 @@
                   },
                   "CanopyType": "PastureSpecies",
                   "LightProfile": null,
+                  "InitialisePlantAtStartOfSimulation": true,
                   "InitialShootDM": 1250.0,
                   "InitialRootDM": 450.0,
                   "InitialRootDepth": 1000.0,
+                  "PotentialRootingDepth": 1000.0,
                   "initialDMFractionsGrasses": [
                     0.15,
                     0.25,
@@ -3657,9 +3659,11 @@
                   },
                   "CanopyType": "PastureSpecies",
                   "LightProfile": null,
+                  "InitialisePlantAtStartOfSimulation": true,
                   "InitialShootDM": 500.0,
                   "InitialRootDM": 150.0,
                   "InitialRootDepth": 350.0,
+                  "PotentialRootingDepth": 350.0,
                   "initialDMFractionsGrasses": [
                     0.15,
                     0.25,
