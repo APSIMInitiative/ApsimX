@@ -58,13 +58,13 @@ namespace Models.LeafWise
             return Enabled && plant != null && string.Equals(CropName, plant.Name, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>Calculates an individual leaf area (cm2).</summary>
+        /// <summary>Calculates an individual leaf area (mm2).</summary>
         public double CalculateIndividualLeafArea(double leafNumber, Culm culm)
         {
             return CalculateIndividualLeafArea(leafNumber, culm, leafNumber);
         }
 
-        /// <summary>Calculates an individual leaf area (cm2) and records it against the unadjusted leaf number.</summary>
+        /// <summary>Calculates an individual leaf area (mm2) and records it against the unadjusted leaf number.</summary>
         public double CalculateIndividualLeafArea(double leafNumber, Culm culm, double reportedLeafNumber)
         {
             double length = CalculateLeafDimension(LeafDimension.Length, leafNumber, culm.FinalLeafNo);
@@ -78,7 +78,7 @@ namespace Models.LeafWise
             }
 
             double shapeFactor = leafNumber < culm.FinalLeafNo ? 0.71 : 0.635;
-            return Math.Max(length * width * shapeFactor / 100.0, 0.0);
+            return Math.Max(length * width * shapeFactor, 0.0);
         }
 
         /// <summary>Calculates leaf length or width (mm).</summary>

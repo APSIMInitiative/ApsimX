@@ -19,7 +19,7 @@ namespace UnitTests.PMF
 
             Assert.That(length, Is.EqualTo(516.544396333045).Within(1e-9));
             Assert.That(width, Is.EqualTo(66.1141434218796).Within(1e-9));
-            Assert.That(area, Is.EqualTo(length * width * 0.71 / 100).Within(1e-9));
+            Assert.That(area, Is.EqualTo(length * width * 0.71).Within(1e-9));
             Assert.That(model.LeafLengthsMain, Is.EqualTo(new[] { length }));
             Assert.That(model.LeafWidthsMain, Is.EqualTo(new[] { width }));
         }
