@@ -16,6 +16,7 @@ namespace Models.LeafWise
     /// <summary>
     /// Calculates the length, width, and area of individual C4 leaves.
     /// Add this model to a zone to opt a crop into the LeafWise calculation.
+    /// Reference: https://doi.org/10.1093/aob/mcaf328
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
