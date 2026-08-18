@@ -668,7 +668,7 @@ namespace Models.AgPasture
         public void EvaluateRootElongation(double netGrowthDM, double temperatureLimitingFactor, double soilSupplyFactor)
         {
             // check changes in root depth
-            if (netGrowthDM >= 0.0)
+            if (netGrowthDM > 0.0)
             {
                 double dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * temperatureLimitingFactor * soilSupplyFactor;
                 Depth = Math.Min(MaximumAllowedDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
