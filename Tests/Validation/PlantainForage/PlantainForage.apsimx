@@ -99494,9 +99494,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": false,
                           "InitialShootDM": 0.0,
                           "InitialRootDM": 0.0,
                           "InitialRootDepth": 0.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -99536,24 +99538,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -117672,9 +117673,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": false,
                           "InitialShootDM": 0.0,
                           "InitialRootDM": 0.0,
                           "InitialRootDepth": 0.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -117714,24 +117717,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -136268,9 +136270,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": false,
                           "InitialShootDM": 0.0,
                           "InitialRootDM": 0.0,
                           "InitialRootDepth": 0.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -136310,24 +136314,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -154518,9 +154521,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": false,
                           "InitialShootDM": 0.0,
                           "InitialRootDM": 0.0,
                           "InitialRootDepth": 0.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -154560,24 +154565,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -170134,225 +170138,225 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2017-08-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2017-08-06 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2017-08-06 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2017-09-20",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2017-09-20 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2017-09-20 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2017-10-25",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2017-10-25 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2017-10-25 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2017-12-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2017-12-06 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2017-12-06 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-01-19",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-01-19 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-01-19 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-02-19",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-02-19 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-02-19 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-03-26",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-03-26 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-03-26 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-05-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-05-21 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-05-21 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-08-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-08-06 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-08-06 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-09-23",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-09-23 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-09-23 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-11-02",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-11-02 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-11-02 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2018-12-10",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2018-12-10 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2018-12-10 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-01-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-01-21 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-01-21 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-02-26",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-02-26 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-02-26 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-04-04",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-04-04 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-04-04 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-05-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-05-24 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-05-24 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-08-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-08-06 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-08-06 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-09-23",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-09-23 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-09-23 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-10-31",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-10-31 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-10-31 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2019-12-16",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2019-12-16 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2019-12-16 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-01-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-01-21 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-01-21 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-02-24",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-02-24 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-02-24 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-04-06",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-04-06 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-04-06 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-06-08",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-06-08 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-06-08 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-08-07",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-08-07 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-08-07 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-09-30",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-09-30 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-09-30 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-11-02",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-11-02 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-11-02 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2020-12-10",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2020-12-10 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2020-12-10 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-01-21",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-01-21 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2021-01-21 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-02-25",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-02-25 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2021-02-25 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-04-01",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-04-01 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2021-04-01 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2021-06-04",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-06-04 [DefoliationManager].Script.Defoliate(amountDM: 10, amountType: \"ResidualDM\", duration: 1)"
+                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)",
+                                  "Line": "2021-06-04 [DefoliationManager].Script.Defoliate(amountDM: 7.5, amountType: \"ResidualDM\", duration: 1)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -189539,7 +189543,7 @@
                           "Interval": null
                         }
                       ],
-                      "LegendPosition": 1,
+                      "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
@@ -190257,7 +190261,7 @@
                           "Interval": null
                         }
                       ],
-                      "LegendPosition": 1,
+                      "LegendPosition": 0,
                       "LegendOrientation": 0,
                       "AnnotationLocation": 0,
                       "DisabledSeries": [],
