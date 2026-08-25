@@ -12,7 +12,7 @@ namespace Models.AgPasture
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
-    public class RootTissue: Model
+    public class RootTissue : Model
     {
         /// <summary>Pasture species this tissue belongs to.</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -29,7 +29,7 @@ namespace Models.AgPasture
         //----------------------- Constants -----------------------
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
-        private const double carbonFractionInDM = 0.4;
+        private const double CarbonConcentration = 0.4;
 
         /// <summary>Minimum significant difference between two values.</summary>
         internal const double Epsilon = 0.000000001;
@@ -37,7 +37,7 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
-        public double FractionNRemobilisable { get; set; } = 0.1;
+        public double FractionNRemobilisable { get; set; }
 
         //----------------------- Daily Deltas -----------------------
 
@@ -60,16 +60,16 @@ namespace Models.AgPasture
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get;  set; }
+        public double DMRemoved { get; set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
         public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get;  set; }
+        public double NRemoved { get; set; }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get;  set; }
+        public double NRemobilisable { get; set; }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         public double NRemobilised { get; set; }
@@ -177,7 +177,7 @@ namespace Models.AgPasture
                     FOMType fomData = new FOMType();
                     fomData.amount = amountDM[layer];
                     fomData.N = amountN[layer];
-                    fomData.C = fomData.amount * carbonFractionInDM;
+                    fomData.C = fomData.amount * CarbonConcentration;
                     fomData.P = 0.0; // P not considered here
                     fomData.AshAlk = 0.0; // Ash not considered here
 
@@ -316,7 +316,7 @@ namespace Models.AgPasture
             {
                 var totalFraction = fractionToRemove[layer] + fractionToSoil[layer];
                 var dmToRemove = dmByLayer[layer] * totalFraction;
-                var nToRemove= nByLayer[layer] * totalFraction;
+                var nToRemove = nByLayer[layer] * totalFraction;
                 dmToSoil[layer] = dmByLayer[layer] * fractionToSoil[layer];
                 nToSoil[layer] = nByLayer[layer] * fractionToSoil[layer];
                 dmByLayer[layer] -= dmToRemove;
