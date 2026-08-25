@@ -1,6 +1,6 @@
 [weather.met.weather]
 
-Site = Ruakura,NZ
+!Location = Ruakura, Waikato, New Zealand
 Latitude = -37.778
 Longitude = 175.325
 
@@ -9,7 +9,7 @@ Longitude = 175.325
 tav = 13.8          ! Annual average ambient temperature
 amp = 9.9           ! annual amplitude in mean monthly temperature
 
-year   month     day    rain     maxt     mint    meant    soilt   rhmean      vp  windspeed       radn
+year   month     day    rain     maxt     mint    meant    soilt   rhmean      vp       wind       radn
   ()      ()      ()    (mm)     (oC)     (oC)     (oC)     (oC)      (%)   (hPa)      (m/s)   (MJ/m^2)
 1970       1       1     0.0     27.8     14.1    20.95     21.6     72.1    20.2       1.12      26.61
 1970       1       2     0.0     28.3     14.7    21.50     22.1     70.8    20.8       1.44      29.28
