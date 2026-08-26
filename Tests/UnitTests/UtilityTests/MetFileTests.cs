@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 
 namespace UnitTests.UtilityTests
@@ -45,6 +46,57 @@ namespace UnitTests.UtilityTests
                         $"Mismatch at day {day} column {col}. Expected {expected} got {row[col]}");
                 }
             }
+        }
+
+        [Test]
+        public void RawData_ReturnsRowsWithDatesAndValues()
+        {
+            string[] columns = ["date", "rain", "mint"];
+            string[] units = ["", "mm", "C"];
+            double[] values = 
+            [
+                0.0, 12.5, 4.2,
+                0.0, 8.0, 3.1
+            ];
+            MetFile met = new MetFile();
+
+            met.Load([], columns, units, values, "2020-01-01");
+
+            List<List<string>> rawData = met.RawData;
+
+            Assert.That(rawData, Has.Count.EqualTo(2));
+            Assert.That(rawData[0], Has.Count.EqualTo(4));
+            Assert.That(DateTime.Parse(rawData[0][0]), Is.EqualTo(new DateTime(2020, 1, 1)));
+            Assert.That(rawData[0][1], Is.EqualTo("2020-01-01"));
+            Assert.That(rawData[0][2], Is.EqualTo("12.5"));
+            Assert.That(rawData[0][3], Is.EqualTo("4.2"));
+            Assert.That(rawData[1][1], Is.EqualTo("2020-01-02"));
+            Assert.That(rawData[1][2], Is.EqualTo("8"));
+            Assert.That(rawData[1][3], Is.EqualTo("3.1"));
+        }
+
+        [Test]
+        public void ColumnsWithType_ReturnsTypesForValidMetFile()
+        {
+            string content = """
+                [weather.met.weather]
+
+                date rain mint maxt
+                () (mm) (C) (C)
+                2020-01-01 12.5 4.2 25.0
+                """;
+
+            MetFile met = MetFile.Create(content);
+
+            Dictionary<string, string> columnsWithType = met.ColumnsWithType;
+
+            Assert.That(columnsWithType, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["date"] = "datetime",
+                ["rain"] = "double",
+                ["mint"] = "double",
+                ["maxt"] = "double"
+            }));
         }
     }
 }
