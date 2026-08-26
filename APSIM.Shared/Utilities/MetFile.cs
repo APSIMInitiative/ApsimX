@@ -512,6 +512,28 @@ namespace APSIM.Shared.Utilities
             }
         }
 
+        /// <summary>List of column /// </summary>
+        public Dictionary<string,string> ColumnsWithType
+        {
+            get
+            {
+                Dictionary<string,string> columnsWithType = [];
+                foreach(MetColumn column in data.Columns)
+                {
+                    string typeString = string.Empty;
+                    Type dataType = column.DataType;
+                    if (dataType == typeof(DateTime))
+                        typeString = "datetime";
+                    else if (dataType == typeof(double))
+                        typeString = "double";
+                    else if (dataType == typeof(string))
+                        typeString = "string";
+                    columnsWithType.Add(column.Name, typeString);
+                }
+                return columnsWithType;
+            }
+        }
+
         /// <summary>Units for each column</summary>
         public string[] Units
         {
