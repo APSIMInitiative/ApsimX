@@ -698,15 +698,15 @@ namespace APSIM.Shared.Utilities
                 List<List<string>> rawData = new();
                 foreach(MetRow row in data.Rows)
                 {
-                    List<string> newRow = new List<string>()
+                    List<string> newRow = new()
                     {
                         row.Date.ToString(),
                     };
                     newRow.AddRange(row.Inputs);
+                    rawData.Add(newRow);
                 }
                 return rawData;
             }
-
         }
 
         ////////////////////////////////////////////////////////////////////////
