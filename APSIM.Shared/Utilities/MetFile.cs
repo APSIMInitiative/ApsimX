@@ -689,6 +689,26 @@ namespace APSIM.Shared.Utilities
             return data.Rows.Count == 0;
         }
 
+        /// <summary>The MetFile data as a list of lists</summary>
+        /// <remarks>Only includes the met data without headers and columns.</remarks>
+        public List<List<string>> RawData
+        {
+            get
+            {
+                List<List<string>> rawData = new();
+                foreach(MetRow row in data.Rows)
+                {
+                    List<string> newRow = new List<string>()
+                    {
+                        row.Date.ToString(),
+                    };
+                    newRow.AddRange(row.Inputs);
+                }
+                return rawData;
+            }
+
+        }
+
         ////////////////////////////////////////////////////////////////////////
         // Private Static Helper Functions
         ////////////////////////////////////////////////////////////////////////
