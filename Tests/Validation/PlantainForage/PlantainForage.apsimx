@@ -190783,13 +190783,6 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2021-07-27",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-07-27 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
                                   "Date": "2021-09-29",
                                   "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
                                   "Line": "2021-09-29 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
@@ -190870,27 +190863,6 @@
                                   "Date": "2023-05-16",
                                   "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
                                   "Line": "2023-05-16 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2023-08-14",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2023-08-14 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2023-10-03",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2023-10-03 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2023-11-09",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2023-11-09 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
                                 }
                               ],
                               "Name": "DefoliationSchedule",
@@ -208661,20 +208633,6 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "2021-06-09",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-06-09 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2021-07-05",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-07-05 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
                                   "Date": "2021-08-16",
                                   "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
                                   "Line": "2021-08-16 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
@@ -226402,13 +226360,6 @@
                             {
                               "$type": "Models.Operations, Models",
                               "OperationsList": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "2021-07-05",
-                                  "Action": "[DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)",
-                                  "Line": "2021-07-05 [DefoliationManager].Script.Defoliate(amountDM: 100, amountType: \"ResidualDM\", duration: 1)"
-                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -279659,7 +279610,7 @@
                   "Children": [
                     {
                       "$type": "Models.Clock, Models",
-                      "Start": "2021-11-01T00:00:00",
+                      "Start": "2021-07-01T00:00:00",
                       "End": "2024-12-05T00:00:00",
                       "Name": "Clock",
                       "ResourceName": null,
