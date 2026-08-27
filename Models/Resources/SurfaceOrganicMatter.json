@@ -1575,6 +1575,60 @@
                 0.3,
                 0.4
               ]
+            },
+                        {
+              "$type": "Models.Surface.ResidueType, Models",
+              "fom_type": "compost_greenWaste",
+              "derived_from": "base_type",
+              "fraction_C": 0.21,
+              "po4ppm": 25.0,
+              "nh4ppm": 192.0,
+              "no3ppm": 311.0,
+              "specific_area": 0.0005,
+              "cf_contrib": 1,
+              "pot_decomp_rate": 0.02,
+              "fr_c": [
+                0.15,
+                0.35,
+                0.5
+              ],
+              "fr_n": [
+                0.15,
+                0.35,
+                0.5
+              ],
+              "fr_p": [
+                0.15,
+                0.35,
+                0.5
+              ]
+            },
+            {
+              "$type": "Models.Surface.ResidueType, Models",
+              "fom_type": "compost_manureGreenWaste",
+              "derived_from": "base_type",
+              "fraction_C": 0.27,
+              "po4ppm": 100.0,
+              "nh4ppm": 1444.0,
+              "no3ppm": 275.0,
+              "specific_area": 0.0003,
+              "cf_contrib": 1,
+              "pot_decomp_rate": 0.04,
+              "fr_c": [
+                0.2,
+                0.4,
+                0.4
+              ],
+              "fr_n": [
+                0.2,
+                0.4,
+                0.4
+              ],
+              "fr_p": [
+                0.2,
+                0.4,
+                0.4
+              ]
             }
           ],
           "Name": "ResidueTypes",
