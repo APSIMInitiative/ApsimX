@@ -1220,6 +1220,9 @@ namespace Models.AgPasture
         /// <summary>Amount of N fixation from atmosphere, for legumes (kg/ha).</summary>
         private double fixedN;
 
+        /// <summary>Nitrogen fixation factor due to soil N supply, for legumes (0-1).</summary>
+        private double nffSoilNSupply;
+
         /// <summary>Amount of senesced N actually remobilised (kg/ha).</summary>
         private double senescedNRemobilised;
 
@@ -2127,6 +2130,13 @@ namespace Models.AgPasture
         public double TemperatureFactorRespiration
         {
             get { return tempEffectOnRespiration; }
+        }
+
+        /// <summary>Soil N factor for biologic N fixation (0-1).</summary>
+        [Units("0-1")]
+        public double SoilNFactorFixation
+        {
+            get { return nffSoilNSupply; }
         }
 
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3436,18 +3446,20 @@ namespace Models.AgPasture
         internal void EvaluateNitrogenFixation()
         {
             double adjNDemand = demandOptimumN * GlfSoilFertility;
+            fixedN = 0.0;
             if (isLegume && adjNDemand > Epsilon)
             {
                 // start with minimum fixation
                 fixedN = MinimumNFixation * adjNDemand;
 
                 // evaluate N stress
-                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0));
+                nffSoilNSupply = MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0);
+                nffSoilNSupply = MathUtilities.Bound(nffSoilNSupply, 0.0, 1.0);
 
                 // update N fixation if under N stress
-                if (Nstress < 0.99)
+                if (nffSoilNSupply < 0.999999)
                 {
-                    fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * adjNDemand;
+                    fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - nffSoilNSupply) * adjNDemand;
                 }
             }
         }
