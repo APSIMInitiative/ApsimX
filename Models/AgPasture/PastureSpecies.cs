@@ -3455,30 +3455,35 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen remobilised from senesced tissues into new growth.</summary>
         internal void EvaluateSenescedNRemobilisation()
         {
-            double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
             {
-                // no remobilisation, N demand is fulfilled by fixation alone
+                // N demand is fulfilled by fixation alone, no remobilisation
                 senescedNRemobilised = 0.0;
             }
             else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
             {
-                // some remobilisation, N demand is fulfilled by fixation plus some N remobilised
+                // N demand is fulfilled by fixation plus some remobilisation
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
-                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
-                // full utilisation of remobilised N, but demand still not fulfilled
+                // N demand is not fulfilled by fixation and remobilisation alone, soil N will be required
                 senescedNRemobilised = remobilisableSenescedN;
-                fracRemobilised = 1.0;
             }
 
             // Update N remobilised in each organ
+            DoSenescedNRemobilisation();
+        }
+
+        internal void DoSenescedNRemobilisation()
+        {
+            double fracRemobilised = 0.0;
+            var remobilisableSenescedN = RemobilisableSenescedN;
             if (senescedNRemobilised > Epsilon)
             {
+                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
                 Leaf.DeadTissue.DoRemobiliseN(fracRemobilised);
                 Stem.DeadTissue.DoRemobiliseN(fracRemobilised);
                 Stolon.DeadTissue.DoRemobiliseN(fracRemobilised);
