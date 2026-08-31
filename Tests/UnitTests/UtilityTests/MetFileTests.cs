@@ -62,17 +62,17 @@ namespace UnitTests.UtilityTests
 
             met.Load([], columns, units, values, "2020-01-01");
 
-            List<List<string>> rawData = met.RawData;
+            string[][] rawData = met.GetData();
 
-            Assert.That(rawData, Has.Count.EqualTo(2));
-            Assert.That(rawData[0], Has.Count.EqualTo(4));
+            Assert.That(rawData, Has.Length.EqualTo(2));
+            Assert.That(rawData[0], Has.Length.EqualTo(3));
             Assert.That(DateTime.Parse(rawData[0][0]), Is.EqualTo(new DateTime(2020, 1, 1)));
-            Assert.That(rawData[0][1], Is.EqualTo("2020-01-01"));
-            Assert.That(rawData[0][2], Is.EqualTo("12.5"));
-            Assert.That(rawData[0][3], Is.EqualTo("4.2"));
-            Assert.That(rawData[1][1], Is.EqualTo("2020-01-02"));
-            Assert.That(rawData[1][2], Is.EqualTo("8"));
-            Assert.That(rawData[1][3], Is.EqualTo("3.1"));
+            Assert.That(rawData[0][0], Is.EqualTo("2020-01-01"));
+            Assert.That(rawData[0][1], Is.EqualTo("12.5"));
+            Assert.That(rawData[0][2], Is.EqualTo("4.2"));
+            Assert.That(rawData[1][0], Is.EqualTo("2020-01-02"));
+            Assert.That(rawData[1][1], Is.EqualTo("8"));
+            Assert.That(rawData[1][2], Is.EqualTo("3.1"));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace UnitTests.UtilityTests
 
             MetFile met = MetFile.Create(content);
 
-            Dictionary<string, string> columnsWithType = met.ColumnsWithType;
+            Dictionary<string, string> columnsWithType = met.GetColumnDataTypes();
 
             Assert.That(columnsWithType, Is.EqualTo(new Dictionary<string, string>
             {
