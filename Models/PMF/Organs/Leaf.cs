@@ -1937,7 +1937,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Harvesting")]
         private void OnHarvesting(object sender, EventArgs e)
         {
-            Clear();
+            CohortsAtInitialisation = 0;
         }
 
         /// <summary>Called when crop is harvested</summary>
