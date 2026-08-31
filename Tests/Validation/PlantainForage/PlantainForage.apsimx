@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 200,
+  "Version": 220,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -236,7 +236,7 @@
             "[PlantainForage].AboveGround.N",
             "[PlantainForage].BelowGround.N",
             "[PlantainForage].TotalLive.Wt",
-            "([PlantainForage].Total.Wt - [PlantainForage].TotalLive.Wt) as PlantainForage.TotalDead.Wt ",
+            "([PlantainForage].Total.Wt - [PlantainForage].TotalLive.Wt) as PlantainForage.TotalDead.Wt",
             "[PlantainForage].AboveGroundLive.NConc",
             "[PlantainForage].BelowGroundLive.NConc",
             "[PlantainForage].Leaf.Wt",
@@ -1577,7 +1577,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "FRNLLincoln",
                   "ResourceName": null,
                   "Children": [
@@ -1680,126 +1679,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -3130,7 +3009,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -4965,6 +4844,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -4977,12 +4857,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -5055,7 +4929,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -20329,7 +20203,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "FRNLRuakura",
                   "ResourceName": null,
                   "Children": [
@@ -20432,126 +20305,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -20783,7 +20536,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -22658,6 +22411,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -22670,12 +22424,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -22748,7 +22496,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -38521,7 +38269,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "FD902",
                   "ResourceName": null,
                   "Children": [
@@ -38624,126 +38371,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -39032,7 +38659,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -40907,6 +40534,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -40919,12 +40547,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -40997,7 +40619,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -54393,7 +54015,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "LincolnRDF",
                   "ResourceName": null,
                   "Children": [
@@ -54496,126 +54117,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -55228,7 +54729,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -57402,6 +56903,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -57414,12 +56916,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -57492,7 +56988,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -70828,8 +70324,7 @@
                             "[DefoliationSchedule]",
                             "[DungAndUrine].Script.UrineNToAdd = 15"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "2wks",
                           "ResourceName": null,
                           "Children": [
@@ -71063,8 +70558,7 @@
                             "[DefoliationSchedule]",
                             "[DungAndUrine].Script.UrineNToAdd = 20"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "4wks",
                           "ResourceName": null,
                           "Children": [
@@ -71218,7 +70712,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "MasseyRDF1",
                   "ResourceName": null,
                   "Children": [
@@ -71321,126 +70814,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -71595,7 +70968,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -73973,6 +73346,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -73985,12 +73359,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -74063,7 +73431,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -88129,8 +87497,7 @@
                               "Specifications": [
                                 "[Sowing]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Lancelot",
                               "ResourceName": null,
                               "Children": [
@@ -88160,8 +87527,7 @@
                               "Specifications": [
                                 "[Sowing]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Tonic",
                               "ResourceName": null,
                               "Children": [
@@ -88398,7 +87764,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "RELARC_01",
                   "ResourceName": null,
                   "Children": [
@@ -88501,126 +87866,6 @@
                           "LiveFractionConsumable": 0.0,
                           "DeadFractionConsumable": 0.0,
                           "LiveMinimumBiomass": 0.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "SurfaceOrganicMatter.Residue",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Leaf",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Stem",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Inflorescence",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Taproot",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
-                          "DeadMinimumBiomass": 0.0
-                        },
-                        {
-                          "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
-                          "Name": "PlantainForage.Root",
-                          "LiveDigestibility": "0.7",
-                          "DeadDigestibility": "0.3",
-                          "LiveFractionConsumable": 1.0,
-                          "DeadFractionConsumable": 1.0,
-                          "LiveMinimumBiomass": 100.0,
                           "DeadMinimumBiomass": 0.0
                         }
                       ],
@@ -88753,7 +87998,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -90620,6 +89865,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -90632,12 +89878,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -90710,7 +89950,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
@@ -103379,8 +102619,7 @@
                           "Specifications": [
                             "[Sowing]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Lancelot",
                           "ResourceName": null,
                           "Children": [
@@ -103410,8 +102649,7 @@
                           "Specifications": [
                             "[Sowing]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Tonic",
                           "ResourceName": null,
                           "Children": [
@@ -103446,7 +102684,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "RELARC_02",
                   "ResourceName": null,
                   "Children": [
@@ -103834,7 +103071,7 @@
                                 "        private double currentPostHarvest;",
                                 "        private double swardPreviousPhenoStage;",
                                 "        private bool aDefoliationHasHappened;",
-                                "        [field:NonSerialized]",
+                                "        ",
                                 "        public IStructure Structure { private get; set; }",
                                 "",
                                 "        //> Links to other Apsim models",
@@ -105701,6 +104938,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -105713,12 +104951,6 @@
                         },
                         {
                           "$type": "Models.PMF.Plant, Models",
-                          "Phenology": null,
-                          "Arbitrator": null,
-                          "structure": null,
-                          "Leaf": null,
-                          "Root": null,
-                          "AboveGround": null,
                           "Name": "PlantainForage",
                           "ResourceName": "PlantainForage",
                           "Children": [],
@@ -105791,7 +105023,7 @@
                             "[Clock].Today as Date",
                             "[Clock].Today.DayOfYear as DayOfYear",
                             "",
-                            "[PlantainForage].Population as Population ",
+                            "[PlantainForage].Population as Population",
                             "[PlantainForage].AboveGround.Wt as AboveGround.Wt",
                             "",
                             "[PlantainForage].Leaf.Live.NConc as Leaf.Live.NConc",
