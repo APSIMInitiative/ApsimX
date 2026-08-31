@@ -62,12 +62,10 @@ namespace UnitTests.Factorial
             List<IModel> children = new List<IModel>
             {
                 new MockClock { Name = "Clock" },
-                new MockClock { Name = "Clock2" }
+                new MockSummary { Name = "Summary" }
             };
 
-            Exception error = Assert.Throws<Exception>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
-
-            Assert.That(error.Message, Does.Contain("Clock2"));
+            ApsimXException error = Assert.Throws<ApsimXException>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
         }
 
         [Test]

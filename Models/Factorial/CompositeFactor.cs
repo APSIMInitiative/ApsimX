@@ -8,8 +8,6 @@ using APSIM.Shared.Extensions.Collections;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
-using System.Reflection;
-using Docker.DotNet.Models;
 
 namespace Models.Factorial
 {
@@ -363,42 +361,16 @@ namespace Models.Factorial
             return activeSpecifications;
         }
 
+        /// <summary>
+        /// Ensure a specification exists for each valid model in the CompositeFactor.
+        /// </summary>
         internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children, string[] specifications)
         {
-            foreach(IModel compositeChild in children)
+            int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("="));
+            if (modelOnlySpecsCount != children.Count(child => child is not IText))
             {
-                bool childHasMatchingSpecType = false;
-                bool childHasMatchingSpecName = false;
-                foreach(string spec in specifications)
-                {
-                    string potentialTypeName = spec.Replace("[", "").Replace("]", "");
-
-                    // Try fully-qualified first, then APSIM's unqualified lookup.
-                    Type potentialType =
-                        Type.GetType(potentialTypeName, throwOnError: false) ??
-                        ReflectionUtilities.GetTypeFromUnqualifiedName(potentialTypeName);
-
-                    bool canConvertToIModel =
-                        potentialType != null &&
-                        typeof(IModel).IsAssignableFrom(potentialType) &&
-                        !potentialType.IsAbstract;
-
-                    if (canConvertToIModel)
-                        childHasMatchingSpecType = true;
-                    if (spec.Contains(compositeChild.Name))
-                        childHasMatchingSpecName = true;
-                }
-
-                if (!childHasMatchingSpecType && !childHasMatchingSpecName)
-                {
-                    
-                    throw new Exception($"Error in composite factor {Name}: " +
-                        $"Invalid CompositeFactor configuration. A specification" +
-                        $" line does not exist for the CompositeFactor" +
-                        $" child named {compositeChild.Name}");
-                }
-
-
+                throw new ApsimXException(this, $"There is disparity between number of specifications and the number of" +
+                    $" children for the composite model located at: {FullPath}. Please check both your specifications and child models.");
             }
         }
 
