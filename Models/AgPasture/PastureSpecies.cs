@@ -2587,14 +2587,6 @@ namespace Models.AgPasture
             Reset();
         }
 
-        /// <summary>Initialises arrays to same length as soil layers.</summary>
-        private void InitiliaseSoilArrays()
-        {
-            mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Uptake = new double[nLayers];
-            mySoilNO3Uptake = new double[nLayers];
-        }
-
         /// <summary>
         /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
         /// </summary>
