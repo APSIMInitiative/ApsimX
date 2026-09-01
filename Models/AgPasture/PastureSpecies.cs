@@ -3493,7 +3493,7 @@ namespace Models.AgPasture
             }
             else
             {
-                // N demand is not fulfilled by fixation and remobilisation alone, soil N will be required
+                // N demand is not fulfilled by fixation plus remobilisation, N uptake will be required
                 senescedNRemobilised = remobilisableSenescedN;
             }
 
@@ -3501,6 +3501,7 @@ namespace Models.AgPasture
             DoSenescedNRemobilisation();
         }
 
+        /// <summary>Removes a fraction of nitrogen remobilisable from senesced tissues (move to new growth).</summary>
         internal void DoSenescedNRemobilisation()
         {
             double fracRemobilised = 0.0;
@@ -3534,7 +3535,7 @@ namespace Models.AgPasture
             }
             else
             {
-                // N demand is greater than fixation and remobilisation, soil N uptake is needed
+                // N demand is not fulfilled by fixation and remobilisation, soil N uptake is needed
                 mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
             }
         }
@@ -3576,7 +3577,7 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    // available luxury N is enough for optimum growth, go through tissues and get what is needed, start on mature
+                    // available luxury N is more than enough for optimum growth, go through tissues and get what is needed, start on mature
                     double Nluxury;
                     double Nusedup;
                     double fracRemobilised;
