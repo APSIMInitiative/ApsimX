@@ -2578,6 +2578,16 @@ namespace Models.AgPasture
         }
 
         /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
+        /// <summary>
         /// Sets the initial parameters for this plant, including DM and N content of various pools plus plant height and root depth.
         /// </summary>
         private void SetInitialState()
