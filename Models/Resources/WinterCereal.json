@@ -747,7 +747,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
@@ -761,7 +761,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -775,7 +775,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -784,7 +784,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -809,7 +809,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -818,23 +818,23 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -851,7 +851,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -861,11 +861,11 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -1393,7 +1393,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Memo, Models",
@@ -4666,7 +4666,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.5,
+              "FixedValue": 0.0,
               "Units": null,
               "Name": "DMRetranslocationFactor",
               "ResourceName": null,
@@ -5541,176 +5541,24 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "Structural",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "DeltaLAIPotential",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "FlagLeafAppearance",
-                          "Name": "Vegetative",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Delta",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].AreaLargestLeaf",
-                                  "Name": "AreaLargestLeaf",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "RelativeArea",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        3.0,
-                                        3.1,
-                                        4.5,
-                                        5.0,
-                                        6.0
-                                      ],
-                                      "Y": [
-                                        0.1,
-                                        0.2,
-                                        0.6,
-                                        1.0,
-                                        1.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Stage",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Plant].SowingData.Population",
-                                  "Name": "PlantNumber",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StemNumberPerPlant",
-                                  "Name": "StemNumberPerPlant",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "LAR",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].ThermalTime",
-                                      "Name": "TT",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Phenology].Phyllochron",
-                                      "Name": "Phyllochron",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].ExpansionStress",
-                                  "Name": "ExpansionStress",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "FlagLeafAppearance",
-                          "End": "EndGrainFill",
-                          "Name": "Reproductive",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SpecificArea",
-                      "Name": "SLA",
+                      "VariableName": "[Leaf].PotentialGrowth",
+                      "Name": "PotentialLeafGrowth",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Growth in leaf area is used to calculate the leaf dry matter demand.  Note that leaf biomass is assumed to consist of entirely structural dry matter.",
-                      "Name": "Memo",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Fraction",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5721,12 +5569,30 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "Storage",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].PotentialGrowth",
+                      "Name": "PotentialLeafGrowth",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
+                      "Expression": "1 - [Leaf].DMDemands.Structural.Fraction",
+                      "Name": "Fraction",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6115,6 +5981,186 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.DivideFunction, Models",
+              "Name": "PotentialGrowth",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "DeltaLAIPotential",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "FlagLeafAppearance",
+                      "Name": "Vegetative",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Delta",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].AreaLargestLeaf",
+                              "Name": "AreaLargestLeaf",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "RelativeArea",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    3.0,
+                                    3.1,
+                                    4.5,
+                                    5.0,
+                                    6.0
+                                  ],
+                                  "Y": [
+                                    0.1,
+                                    0.2,
+                                    0.6,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Stage",
+                                  "Name": "XValue",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Plant].SowingData.Population",
+                              "Name": "PlantNumber",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].StemNumberPerPlant",
+                              "Name": "StemNumberPerPlant",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "LAR",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].ThermalTime",
+                                  "Name": "TT",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Phyllochron",
+                                  "Name": "Phyllochron",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].ExpansionStress",
+                              "Name": "ExpansionStress",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FlagLeafAppearance",
+                      "End": "EndGrainFill",
+                      "Name": "Reproductive",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].SpecificArea",
+                  "Name": "SLA",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Growth in leaf area is used to calculate the leaf dry matter demand.  Note that leaf biomass is assumed to consist of entirely structural dry matter.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
