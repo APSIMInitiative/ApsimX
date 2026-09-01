@@ -43,19 +43,19 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.04;
+        public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.012;
+        public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.05;
+        public double NConcMaximum { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
         public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; set; } = 10.0;
+        public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------
 
@@ -100,7 +100,7 @@ namespace Models.AgPasture
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get { return DeadTissue.DM.Wt; } }     
+        public double DMDead { get { return DeadTissue.DM.Wt; } }
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -227,6 +227,9 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                    return 1.0;
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
                                             DMTotal, 0.0);
@@ -239,6 +242,9 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                    return 1.0;
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
                                             DMLive, 0.0);
             }
@@ -285,7 +291,7 @@ namespace Models.AgPasture
             MatureTissue.SetBiomass(matureWt, matureN);
             DeadTissue.SetBiomass(deadWt, deadN);
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
         }
 
@@ -298,28 +304,29 @@ namespace Models.AgPasture
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
-            // The fractions passed in are based on the total biomass
+            // the fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
 
-            // Live removal
+            // remove live tissue
             for (int t = 0; t < Tissue.Length - 1; t++)
             {
                 Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
             }
 
-            // Dead removal
+            // remove dead tissue
             Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
 
-            // Calculate the fraction of DM removed from this organ
+            // calculate the fraction of DM removed from this organ
             double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
             removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0);
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
 
-            // Update LAI and herbage digestibility
+            // update LAI and herbage digestibility
             species.EvaluateLAI();
             species.EvaluateDigestibility();
+
             return removedDM;
         }
 
@@ -346,7 +353,7 @@ namespace Models.AgPasture
                 }
             }
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
         }
 
