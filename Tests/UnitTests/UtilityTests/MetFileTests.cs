@@ -76,26 +76,48 @@ namespace UnitTests.UtilityTests
         }
 
         [Test]
-        public void ColumnsWithType_ReturnsTypesForValidMetFile()
+        public void CheckConstantAndColumnFunctions()
         {
             string content = """
                 [weather.met.weather]
+                lat=130
+                lon= -30
+                another =constant
 
-                date rain mint maxt
-                () (mm) (C) (C)
-                2020-01-01 12.5 4.2 25.0
+                date rain mint maxt code
+                () (mm) (C) (C) ()
+                2020-01-01 12.0 4.2 25.0 text
+                2020-01-02 13.0 5.2 26.0 text
                 """;
 
             MetFile met = MetFile.Create(content);
 
-            Dictionary<string, string> columnsWithType = met.GetColumnDataTypes();
-
-            Assert.That(columnsWithType, Is.EqualTo(new Dictionary<string, string>
+            Dictionary<string, string> columnsDataTypes = met.GetColumnDataTypes();
+            Assert.That(columnsDataTypes, Is.EqualTo(new Dictionary<string, string>
             {
                 ["date"] = "datetime",
                 ["rain"] = "double",
                 ["mint"] = "double",
-                ["maxt"] = "double"
+                ["maxt"] = "double",
+                ["code"] = "string"
+            }));
+
+            Dictionary<string, string> columnsUnits = met.GetColumnUnits();
+            Assert.That(columnsUnits, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["date"] = "",
+                ["rain"] = "mm",
+                ["mint"] = "C",
+                ["maxt"] = "C",
+                ["code"] = ""
+            }));
+
+            Dictionary<string, string> constants = met.GetConstants();
+            Assert.That(constants, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["lat"] = "130",
+                ["lon"] = "-30",
+                ["another"] = "constant"
             }));
         }
     }

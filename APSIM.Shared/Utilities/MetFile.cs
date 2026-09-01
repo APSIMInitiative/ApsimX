@@ -573,7 +573,7 @@ namespace APSIM.Shared.Utilities
             {
                 List<string> constants = new List<string>();
                 foreach(MetConstant constant in data.Contants)
-                    if (string.IsNullOrEmpty(constant.Name))
+                    if (!string.IsNullOrEmpty(constant.Name))
                         constants.Add(constant.Name);
                 return constants.ToArray();
             }
