@@ -366,7 +366,7 @@ namespace Models.Factorial
         /// </summary>
         internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children, string[] specifications)
         {
-            int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("="));
+            int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("=") && !string.IsNullOrEmpty(spec));
             if (modelOnlySpecsCount != children.Count(child => child is not IText))
             {
                 throw new ApsimXException(this, $"There is disparity between number of specifications and the number of" +
