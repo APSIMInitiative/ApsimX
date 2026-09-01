@@ -60,7 +60,8 @@ namespace UserInterface.Views
 
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
-            notebook1.MapEvent += OnNotebookMapped;
+           
+
 
             reportVariablesVPaned.AddNotification(OnVariablesPanePropertyNotified);
             //reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
@@ -83,43 +84,41 @@ namespace UserInterface.Views
 
             Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
             double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition / 100.0;
-            int horizontalPos = (int)Math.Round(bounds.Width * 0.7);
+            int horizontalPos = (int)Math.Round(bounds.Width * 0.9);
             if (horizontalSplitter != null)
                 if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
                     horizontalPos = (int)(bounds.Width * horizontalSplitter);
 
 
             double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition / 100.0;
-            int verticalPos = (int)Math.Round(bounds.Height * 0.7);
+            int verticalPos = (int)Math.Round(bounds.Height * 0.5);
             if (verticalSplitter != null)
                 if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
                     verticalPos = (int)(bounds.Height * verticalSplitter);
            // panel.Position = verticalPos;
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             dataBox.Add(dataStoreView1.MainWidget);
+            dataStoreView1.MainWidget.MapEvent += OnDataStoreMapped;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
 
-        private void OnNotebookMapped(object o, MapEventArgs args)
+        private void OnDataStoreMapped(object o, MapEventArgs args)
         {
             Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
 
-            // Horizontal splitter
             double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition / 100.0;
-            int horizontalPos = (int)Math.Round(bounds.Width * 0.7);
+            int horizontalPos = (int)Math.Round(bounds.Width * 0.9);
             if (horizontalSplitter != null)
                 if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
                     horizontalPos = (int)(bounds.Width * horizontalSplitter);
 
-            // Vertical splitter
             double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition / 100.0;
-            int verticalPos = (int)Math.Round(bounds.Height * 0.7);
+            int verticalPos = (int)Math.Round(bounds.Height * 0.5);
             if (verticalSplitter != null)
                 if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
                     verticalPos = (int)(bounds.Height * verticalSplitter);
 
-            // Apply splitter positions AFTER the notebook page is mapped
             GLib.Idle.Add(() =>
             {
                 GLib.Idle.Add(() =>
@@ -137,6 +136,7 @@ namespace UserInterface.Views
                 return false;
             });
         }
+
 
 
 
