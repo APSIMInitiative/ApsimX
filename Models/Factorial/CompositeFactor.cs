@@ -254,7 +254,10 @@ namespace Models.Factorial
             if (Specifications is null)
                 return pairs;
 
-            EnsureAModelExistsForEachSpecification(Children, Specifications);
+            if (Children.Count() == 0)
+                EnsureAModelExistsForEachSpecification(_models, Specifications);
+            else EnsureAModelExistsForEachSpecification(Children, Specifications);
+
             List<string> specifications = RetrieveActiveSpecifications(Children, Specifications);
 
             if (specifications.Count == 0)
@@ -369,8 +372,19 @@ namespace Models.Factorial
             int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("=") && !string.IsNullOrEmpty(spec));
             if (modelOnlySpecsCount != children.Count(child => child is not IText))
             {
-                throw new ApsimXException(this, $"There is disparity between number of specifications and the number of" +
-                    $" children for the composite model located at: {FullPath}. Please check both your specifications and child models.");
+                if (this.FullPath is not null)
+                {
+                    throw new ApsimXException(this, $"There is disparity between the number of specifications and the number of" +
+                        $" children for the composite model located at: {FullPath} in file: " +
+                        $"{Node.FindParents<Simulations>().First().FileName}. " +
+                        "Please check both your specifications and child models.");
+                }
+                else
+                {
+                    throw new ApsimXException(this, $"There is disparity between the number of specifications and the number of" +
+                        $" children for the composite model in this simulation." +
+                        " Please check both your specifications and child models for each of your CompositeFactor models.");                    
+                }
             }
         }
 
