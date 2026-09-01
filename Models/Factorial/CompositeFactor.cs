@@ -369,7 +369,7 @@ namespace Models.Factorial
         /// </summary>
         internal void EnsureAModelExistsForEachSpecification(IEnumerable<IModel> children, string[] specifications)
         {
-            int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("=") && !string.IsNullOrEmpty(spec));
+            int modelOnlySpecsCount = specifications.Count(spec => !spec.Contains("=") && !string.IsNullOrEmpty(spec) && !spec.StartsWith("//"));
             if (modelOnlySpecsCount != children.Count(child => child is not IText))
             {
                 if (this.FullPath is not null)
