@@ -65,7 +65,7 @@ namespace UnitTests.Factorial
                 new MockSummary { Name = "Summary" }
             };
 
-            ApsimXException error = Assert.Throws<ApsimXException>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
+            Assert.Throws<ApsimXException>(() => compositeFactor.EnsureAModelExistsForEachSpecification(children, compositeFactor.Specifications));
         }
 
         [Test]
