@@ -107,7 +107,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
                   "Name": "ArbitrationMethod",
                   "ResourceName": null,
                   "Children": [],
@@ -2320,7 +2320,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -2974,7 +2974,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -5628,7 +5628,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6661,7 +6661,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
