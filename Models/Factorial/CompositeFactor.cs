@@ -254,11 +254,17 @@ namespace Models.Factorial
             if (Specifications is null)
                 return pairs;
 
-            if (Children.Count() == 0)
+            List<string> specifications = [];
+            if (Children.Count == 0)
+            {
                 EnsureAModelExistsForEachSpecification(_models, Specifications);
-            else EnsureAModelExistsForEachSpecification(Children, Specifications);
-
-            List<string> specifications = RetrieveActiveSpecifications(Children, Specifications);
+                specifications = RetrieveActiveSpecifications(_models, Specifications);
+            }
+            else 
+            {
+                EnsureAModelExistsForEachSpecification(Children, Specifications);
+                specifications = RetrieveActiveSpecifications(Children, Specifications);
+            }
 
             if (specifications.Count == 0)
                 return pairs;
@@ -359,7 +365,15 @@ namespace Models.Factorial
             List<string> activeSpecifications = specifications
                 .Where(spec => spec.Length > 0)
                 .Where(spec => !spec.StartsWith("//", StringComparison.Ordinal))
-                .Where(spec => !disabledChildNames.Contains(spec.Replace("[", "").Replace("]", "")))
+                 .Where(spec =>
+                 {
+                     int open = spec.IndexOf('[');
+                     int close = spec.IndexOf(']', open + 1);
+                     if (open < 0 || close < 0)
+                         return true;
+                     string referencedName = spec.Substring(open + 1, close - open - 1).Trim();
+                     return !disabledChildNames.Contains(referencedName);
+                 })
                 .ToList();
             return activeSpecifications;
         }
