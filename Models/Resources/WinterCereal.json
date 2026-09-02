@@ -5556,7 +5556,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 0.7,
                       "Units": null,
                       "Name": "Fraction",
                       "ResourceName": null,
@@ -5628,7 +5628,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6157,7 +6157,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Growth in leaf area is used to calculate the leaf dry matter demand.  Note that leaf biomass is assumed to consist of entirely structural dry matter.",
+                  "Text": "Growth in leaf area is used to calculate the leaf dry matter demand.  ",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
