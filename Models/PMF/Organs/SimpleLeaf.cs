@@ -1161,7 +1161,7 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double RetranslocationWt { get; private set; }
 
-        /// <summary>Gets the biomass retranslocation.</summary>
+        /// <summary>Gets the biomass reallocation.</summary>
         [JsonIgnore]
         [Units("g/m^2")]
         public double ReallocationWt { get; private set; }
@@ -1258,9 +1258,10 @@ namespace Models.PMF.Organs
             Biomass Loss = Live * senescedFrac;
             Loss.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Loss.StorageN -= storageNReallocation;
-            Loss.StorageWt -= ReallocationWt;
 
             Live.Subtract(Loss);
+
+            Loss.StorageWt -= ReallocationWt;
             Dead.Add(Loss);
             Senesced.Add(Loss);
 
