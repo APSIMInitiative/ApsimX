@@ -405,6 +405,7 @@ namespace Models.GrazPlan
 
         /// <summary>Potential greasy fleece weight:SRW</summary>
         [Units("-")]
+        [Description("Potential Fleece Ratio")]
         public double FleeceRatio { get; set; }
 
         /// <summary>Peak milk</summary>
