@@ -5661,7 +5661,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].potentialDMAllocation.Structural",
+                      "VariableName": "[Leaf].potentialDMAllocation.Total",
                       "Name": "PotentialDMAllocation",
                       "ResourceName": null,
                       "Children": [],
@@ -5706,7 +5706,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].potentialDMAllocation.Structural",
+                      "VariableName": "[Leaf].potentialDMAllocation.Total",
                       "Name": "PotentialDMAllocation",
                       "ResourceName": null,
                       "Children": [],
