@@ -861,7 +861,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMSupply")]
         private void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.ReAllocation = AvailableDMReallocation();//ggg
+            DMSupply.ReAllocation = AvailableDMReallocation();
             DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = photosynthesis.Value();
@@ -1161,6 +1161,11 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double RetranslocationWt { get; private set; }
 
+        /// <summary>Gets the biomass retranslocation.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double ReallocationWt { get; private set; }
+
         /// <summary>
         /// Sets the dry matter allocation.
         /// </summary>
@@ -1182,6 +1187,7 @@ namespace Models.PMF.Organs
             GrowthRespiration = 0.0;
 
             RetranslocationWt = dryMatter.Retranslocation;
+            ReallocationWt = dryMatter.Reallocation;
 
             // allocate structural DM
             Allocated.StructuralWt = Math.Min(dryMatter.Structural * dMCE, DMDemand.Structural);
@@ -1252,6 +1258,7 @@ namespace Models.PMF.Organs
             Biomass Loss = Live * senescedFrac;
             Loss.MetabolicN -= (nitrogen.Reallocation - storageNReallocation);
             Loss.StorageN -= storageNReallocation;
+            Loss.StorageWt -= ReallocationWt;
 
             Live.Subtract(Loss);
             Dead.Add(Loss);
