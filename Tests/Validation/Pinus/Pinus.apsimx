@@ -8939,7 +8939,7 @@
                           "YearOfSampling": "0",
                           "DataSource": "Generic soil developed for Farm4Prophet project, adapted from a set of generic soils for SA developed by SARDI Climate Applications in discussion with Dr Anthony Whitbread (CSIRO).",
                           "Comments": "Loamy Sand - Soil water properties (BD, CLL, DUL, SAT, AIRDRY) of this soil are based on a generic soil developed as part of Liddicoat C, Hayman P, et al. (2012) Climate change, wheat production and erosion risk in South Australia’s cropping zone: Linking crop simulation modelling to soil landscape mapping, Government of South Australia, through Department of Environment, Water and Natural Resources. http://www.environment.sa.gov.au/files/sharedassets/public/science/soil_and_land/kb-gen-climate-change-wheat-production-and-erosion-risk.pdf (Section 3.3 and Appendix F). These were developed for use with wheat with some level of verification of yield predictions (see report for details).  Other APSIM soil parameters were based on ‘A protocol for the development of soil parameter values for use in APSIM’ by Dalgliesh et al. OC% was estimated based on soil texture and pH set at 7.0. No soil chemical values were estimated. Soil chemical properties may need to be adapted to reflect local conditions and subsoil constraints.",
-                          "Name": "Farm4Prophet profile No 8 Deep Sandy Loam  Modified for Mount Crawford",
+                          "Name": "Farm4Prophet profile No 8 Deep Sandy Loam Modified",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -8952,10 +8952,38 @@
                                 200.0,
                                 200.0
                               ],
-                              "ParticleSizeSand": null,
-                              "ParticleSizeSilt": null,
-                              "ParticleSizeClay": null,
-                              "Rocks": null,
+                              "ParticleSizeSand": [
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                              ],
+                              "ParticleSizeSilt": [
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0,
+                                65.0
+                              ],
+                              "ParticleSizeClay": [
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0,
+                                30.0
+                              ],
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.3,
@@ -9039,43 +9067,92 @@
                                 "Estimated based on local knowledge"
                               ],
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.087,
-                                    0.11,
-                                    0.175,
-                                    0.18,
-                                    0.18,
-                                    0.19
+                                    0.1,
+                                    0.13,
+                                    0.19,
+                                    0.19,
+                                    0.2,
+                                    0.2
                                   ],
                                   "KL": [
-                                    0.07,
-                                    0.07,
                                     0.05,
+                                    0.03,
                                     0.02,
-                                    0.01,
-                                    0.005
+                                    0.02,
+                                    0.02,
+                                    0.02
                                   ],
                                   "XF": [
                                     1.0,
                                     1.0,
                                     1.0,
                                     0.5,
-                                    0.3,
-                                    0.3
+                                    0.0,
+                                    0.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "PinusSoil",
                                   "ResourceName": null,
                                   "Children": [],
@@ -9138,10 +9215,10 @@
                                 200.0
                               ],
                               "Carbon": [
-                                2.5,
-                                1.7,
-                                0.8,
-                                0.3,
+                                3.2,
+                                2.2,
+                                1.2,
+                                0.6,
                                 0.05,
                                 0.05
                               ],
@@ -9163,10 +9240,10 @@
                                 0.015
                               ],
                               "FInert": [
+                                0.15,
+                                0.2,
                                 0.3,
-                                0.35,
                                 0.5,
-                                0.8,
                                 1.0,
                                 1.0
                               ],
@@ -9178,7 +9255,12 @@
                                 47.83117950098136,
                                 26.250307878240648
                               ],
-                              "CarbonMetadata": null,
+                              "CarbonMetadata": [
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "FOMMetadata": null,
                               "Name": "Organic",
                               "ResourceName": null,
@@ -9197,28 +9279,42 @@
                                 200.0
                               ],
                               "PH": [
-                                7.0,
-                                7.0,
-                                7.0,
-                                7.0,
-                                7.0,
-                                7.0
+                                6.9,
+                                6.9,
+                                6.9,
+                                6.9,
+                                6.9,
+                                6.9
                               ],
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                13.97,
+                                12.17,
+                                10.145000000000001,
+                                9.020000000000001,
+                                8.457500000000001,
+                                8.457500000000001
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": [
-                                "Estimated based on local knowledge",
-                                "Estimated based on local knowledge",
-                                "Estimated based on local knowledge",
-                                "Estimated based on local knowledge",
-                                "Estimated based on local knowledge",
-                                "Estimated based on local knowledge"
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
                               ],
                               "Name": "Chemical",
                               "ResourceName": null,
@@ -9371,6 +9467,14 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.CERESSoilTemperature, Models",
+                              "Name": "Temperature",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -9494,7 +9598,7 @@
                             },
                             {
                               "Key": "CultivarName",
-                              "Value": "BFG"
+                              "Value": "BFGCorrImpSCsla"
                             },
                             {
                               "Key": "SowingDate",
@@ -9510,13 +9614,15 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "",
                             "using APSIM.Core;",
                             "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
                             "using System.Xml.Serialization;",
                             "using Models.PMF;",
                             "using Models.Core;",
                             "using System.Collections.Generic;",
+                            "using System.Linq;",
                             "using System;",
                             "using Newtonsoft.Json;",
                             "using Models.PMF.Interfaces;",
@@ -9524,47 +9630,48 @@
                             "namespace Models",
                             "{",
                             "    [Serializable] ",
-                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
                             "    public class Script : Model, IStructureDependency",
                             "    {",
-                            "        [Link] private Plant Pinus;",
-                            "        [Link] private Clock Clock;",
+                            "        [Link] private Plant Tree;",
                             "        ",
                             "        public IStructure Structure { private get; set; }",
                             "",
+                            "        [Description(\"Bias away from average (e.g. 0.5 for thinning from below, and 2 for thinning from above)\")]",
+                            "        public double ThinBias { get; set; } = 0.7;",
                             "",
                             "        ",
-                            "        [EventSubscribe(\"StartOfSimulation\")]",
-                            "        private void OnSimulationCommencing(object sender, EventArgs e)",
-                            "        {",
-                            "            ",
-                            "        }",
-                            "        ",
-                            "        public void DoThin(double ThinFr)",
+                            "        public void DoThin(double ThinFr, double ThinBias)",
                             "        {",
                             "            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.",
+                            "            //Set thinning bias away from average for biomass components (not for population), e.g. 0.5 for thinning from below, and 2 for thinning from above, ",
+                            "            //i.e. average individual tree size changes",
                             "",
-                            "                //Harvest with manager specified removal fractions",
-                            "                Pinus.structure?.DoThin(ThinFr);",
-                            "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
-                            "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
-                            "                var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
-                            "                var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
-                            "                var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
-                            "                Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
+                            "            //Harvest with manager specified removal fractions",
+                            "            Tree.structure?.DoThin(ThinFr*ThinBias);",
+                            "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Tree);",
+                            "            var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Tree);",
+                            "            var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Tree);",
+                            "            var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Tree);",
+                            "            var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Tree);",
+                            "            Leaf.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            Stem.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            Branch.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            FineRoot.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            CoarseRoot.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
                             "",
-                            "                Pinus.Population = Pinus.Population*(1-ThinFr);",
+                            "            Tree.Population = Tree.Population*(1-ThinFr);",
                             "        }",
                             "    }",
                             "}",
                             "",
                             "                "
                           ],
-                          "Parameters": [],
+                          "Parameters": [
+                            {
+                              "Key": "ThinBias",
+                              "Value": "0.5"
+                            }
+                          ],
                           "Name": "TreeThinning",
                           "ResourceName": null,
                           "Children": [],
@@ -9578,113 +9685,113 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1942-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.1107);",
-                              "Line": "1942-07-15 [TreeThinning].Script.DoThin(0.1107);"
+                              "Action": "[TreeThinning].Script.DoThin(0.1107, 1.5);",
+                              "Line": "1942-07-15 [TreeThinning].Script.DoThin(0.1107, 1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1950-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.029718876);",
-                              "Line": "1950-07-15 [TreeThinning].Script.DoThin(0.029718876);"
+                              "Action": "[TreeThinning].Script.DoThin(0.029718876, 1.5);",
+                              "Line": "1950-07-15 [TreeThinning].Script.DoThin(0.029718876, 1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1952-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.171357616);",
-                              "Line": "1952-07-15 [TreeThinning].Script.DoThin(0.171357616);"
+                              "Action": "[TreeThinning].Script.DoThin(0.171357616, 1.5);",
+                              "Line": "1952-07-15 [TreeThinning].Script.DoThin(0.171357616, 1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1954-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0);",
-                              "Line": "1954-07-15 [TreeThinning].Script.DoThin(0);"
+                              "Action": "[TreeThinning].Script.DoThin(0, 1);",
+                              "Line": "1954-07-15 [TreeThinning].Script.DoThin(0, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1959-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.01998002);",
-                              "Line": "1959-07-15 [TreeThinning].Script.DoThin(0.01998002);"
+                              "Action": "[TreeThinning].Script.DoThin(0.01998002, 1.5);",
+                              "Line": "1959-07-15 [TreeThinning].Script.DoThin(0.01998002, 1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1964-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.02039);",
-                              "Line": "1964-07-15 [TreeThinning].Script.DoThin(0.02039);"
+                              "Action": "[TreeThinning].Script.DoThin(0.02039, 1.5);",
+                              "Line": "1964-07-15 [TreeThinning].Script.DoThin(0.02039, 1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1968-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0);",
-                              "Line": "1968-07-15 [TreeThinning].Script.DoThin(0);"
+                              "Action": "[TreeThinning].Script.DoThin(0, 1);",
+                              "Line": "1968-07-15 [TreeThinning].Script.DoThin(0, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1969-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0);",
-                              "Line": "1969-07-15 [TreeThinning].Script.DoThin(0);"
+                              "Action": "[TreeThinning].Script.DoThin(0, 1);",
+                              "Line": "1969-07-15 [TreeThinning].Script.DoThin(0, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1971-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.01769);",
-                              "Line": "1971-07-15 [TreeThinning].Script.DoThin(0.01769);"
+                              "Action": "[TreeThinning].Script.DoThin(0.01769,  1.5);",
+                              "Line": "1971-07-15 [TreeThinning].Script.DoThin(0.01769,  1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1974-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.04449);",
-                              "Line": "1974-07-15 [TreeThinning].Script.DoThin(0.04449);"
+                              "Action": "[TreeThinning].Script.DoThin(0.04449,  1.5);",
+                              "Line": "1974-07-15 [TreeThinning].Script.DoThin(0.04449,  1.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1978-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.06208);",
-                              "Line": "1978-07-15 [TreeThinning].Script.DoThin(0.06208);"
+                              "Action": "[TreeThinning].Script.DoThin(0.06208,  0.5);",
+                              "Line": "1978-07-15 [TreeThinning].Script.DoThin(0.06208,  0.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1982-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.11111);",
-                              "Line": "1982-07-15 [TreeThinning].Script.DoThin(0.11111);"
+                              "Action": "[TreeThinning].Script.DoThin(0.11111,  0.5);",
+                              "Line": "1982-07-15 [TreeThinning].Script.DoThin(0.11111,  0.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1986-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.07580);",
-                              "Line": "1986-07-15 [TreeThinning].Script.DoThin(0.07580);"
+                              "Action": "[TreeThinning].Script.DoThin(0.07580, 0.5);",
+                              "Line": "1986-07-15 [TreeThinning].Script.DoThin(0.07580, 0.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1988-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0);",
-                              "Line": "1988-07-15 [TreeThinning].Script.DoThin(0);"
+                              "Action": "[TreeThinning].Script.DoThin(0, 1);",
+                              "Line": "1988-07-15 [TreeThinning].Script.DoThin(0, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1990-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.05324);",
-                              "Line": "1990-07-15 [TreeThinning].Script.DoThin(0.05324);"
+                              "Action": "[TreeThinning].Script.DoThin(0.05324, 0.5);",
+                              "Line": "1990-07-15 [TreeThinning].Script.DoThin(0.05324, 0.5);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1992-07-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.05775);",
-                              "Line": "1992-07-15 [TreeThinning].Script.DoThin(0.05775);"
+                              "Action": "[TreeThinning].Script.DoThin(0.05775, 0.5);",
+                              "Line": "1992-07-15 [TreeThinning].Script.DoThin(0.05775, 0.5);"
                             }
                           ],
                           "Name": "Management",
@@ -14544,7 +14651,7 @@
                           "YearOfSampling": null,
                           "DataSource": "ISRIC SoilGrids",
                           "Comments": "",
-                          "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
+                          "Name": "Synthetic Soil Derived from ISRIC SoilGrids1",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -14562,16 +14669,16 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                0.14,
-                                0.185,
-                                0.21,
-                                0.21,
-                                0.21,
-                                0.21,
-                                0.21,
-                                0.21,
-                                0.21,
-                                0.21
+                                0.23,
+                                0.273,
+                                0.296,
+                                0.296,
+                                0.296,
+                                0.296,
+                                0.296,
+                                0.296,
+                                0.296,
+                                0.295
                               ],
                               "FilledFromTop": true,
                               "Name": "Water",
@@ -14630,7 +14737,18 @@
                                 38.0,
                                 38.0
                               ],
-                              "Rocks": null,
+                              "Rocks": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
                               "Texture": null,
                               "BD": [
                                 1.321,
@@ -14647,14 +14765,14 @@
                               "AirDry": [
                                 0.047,
                                 0.062,
-                                0.07,
-                                0.07,
-                                0.07,
-                                0.07,
-                                0.07,
-                                0.07,
-                                0.07,
-                                0.07
+                                0.062,
+                                0.062,
+                                0.062,
+                                0.062,
+                                0.062,
+                                0.062,
+                                0.062,
+                                0.062
                               ],
                               "LL15": [
                                 0.14,
@@ -14705,44 +14823,99 @@
                                 4.278
                               ],
                               "BDMetadata": null,
-                              "AirDryMetadata": null,
+                              "AirDryMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "LL15Metadata": null,
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
-                              "RocksMetadata": null,
+                              "RocksMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "TextureMetadata": null,
-                              "ParticleSizeSandMetadata": null,
-                              "ParticleSizeSiltMetadata": null,
-                              "ParticleSizeClayMetadata": null,
+                              "ParticleSizeSandMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeSiltMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "ParticleSizeClayMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Physical",
                               "ResourceName": null,
                               "Children": [
                                 {
                                   "$type": "Models.Soils.SoilCrop, Models",
                                   "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
+                                    0.047,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062,
+                                    0.062
                                   ],
                                   "KL": [
                                     0.06,
                                     0.06,
                                     0.06,
                                     0.055,
-                                    0.048,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
                                     0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
+                                    0.04
                                   ],
                                   "XF": [
                                     1.0,
@@ -14756,1326 +14929,123 @@
                                     1.0,
                                     1.0
                                   ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "RiceSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
                                   ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "WheatSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "TeffSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.214,
-                                    0.22,
-                                    0.227,
-                                    0.233,
-                                    0.24,
-                                    0.248,
-                                    0.258
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.057,
-                                    0.053,
-                                    0.048,
-                                    0.044,
-                                    0.039,
-                                    0.033,
-                                    0.027
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "SugarcaneSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "MaizeSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "SoybeanSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.214,
-                                    0.22,
-                                    0.227,
-                                    0.233,
-                                    0.24,
-                                    0.248,
-                                    0.258
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.057,
-                                    0.053,
-                                    0.048,
-                                    0.044,
-                                    0.039,
-                                    0.033,
-                                    0.027
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "OilPalmSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "CassavaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.214,
-                                    0.22,
-                                    0.227,
-                                    0.233,
-                                    0.24,
-                                    0.248,
-                                    0.258
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.057,
-                                    0.053,
-                                    0.048,
-                                    0.044,
-                                    0.039,
-                                    0.033,
-                                    0.027
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "PlantainForageSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.191,
-                                    0.224,
-                                    0.232,
-                                    0.24,
-                                    0.25,
-                                    0.26,
-                                    0.27,
-                                    0.283,
-                                    0.295
-                                  ],
-                                  "KL": [
-                                    0.1,
-                                    0.093,
-                                    0.084,
-                                    0.075,
-                                    0.065,
-                                    0.053,
-                                    0.041,
-                                    0.029,
-                                    0.015,
-                                    0.001
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "SunflowerSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "CanolaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.215,
-                                    0.223,
-                                    0.231,
-                                    0.24,
-                                    0.249,
-                                    0.259,
-                                    0.272
-                                  ],
-                                  "KL": [
-                                    0.07,
-                                    0.07,
-                                    0.07,
-                                    0.066,
-                                    0.06,
-                                    0.053,
-                                    0.045,
-                                    0.039,
-                                    0.03,
-                                    0.019
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "SorghumSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.215,
-                                    0.223,
-                                    0.231,
-                                    0.24,
-                                    0.249,
-                                    0.259,
-                                    0.272
-                                  ],
-                                  "KL": [
-                                    0.07,
-                                    0.07,
-                                    0.07,
-                                    0.066,
-                                    0.06,
-                                    0.053,
-                                    0.045,
-                                    0.039,
-                                    0.03,
-                                    0.019
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "MilletSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.217,
-                                    0.231,
-                                    0.246,
-                                    0.26,
-                                    0.278,
-                                    0.294
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.045,
-                                    0.035,
-                                    0.025,
-                                    0.012,
-                                    0.001
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "PeanutSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.216,
-                                    0.225,
-                                    0.235,
-                                    0.245,
-                                    0.255,
-                                    0.268,
-                                    0.283
-                                  ],
-                                  "KL": [
-                                    0.07,
-                                    0.07,
-                                    0.07,
-                                    0.065,
-                                    0.058,
-                                    0.049,
-                                    0.041,
-                                    0.033,
-                                    0.023,
-                                    0.01
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "BarleySoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.21,
-                                    0.215,
-                                    0.224,
-                                    0.234,
-                                    0.246,
-                                    0.26
-                                  ],
-                                  "KL": [
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.094,
-                                    0.083,
-                                    0.072,
-                                    0.058,
-                                    0.042
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "CottonSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "OatsSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.217,
-                                    0.23,
-                                    0.243,
-                                    0.256,
-                                    0.272,
-                                    0.291
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.046,
-                                    0.037,
-                                    0.028,
-                                    0.016,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "ChickpeaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.213,
-                                    0.227,
-                                    0.244,
-                                    0.261,
-                                    0.278,
-                                    0.294,
-                                    0.295
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.058,
-                                    0.048,
-                                    0.036,
-                                    0.024,
-                                    0.012,
-                                    0.001,
-                                    0.0
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    0.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "MungbeanSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.217,
-                                    0.231,
-                                    0.246,
-                                    0.26,
-                                    0.278,
-                                    0.294
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.045,
-                                    0.035,
-                                    0.025,
-                                    0.012,
-                                    0.001
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "Pigeon PeaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "CowpeaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.212,
-                                    0.222,
-                                    0.234,
-                                    0.247,
-                                    0.262,
-                                    0.28
-                                  ],
-                                  "KL": [
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.079,
-                                    0.069,
-                                    0.057,
-                                    0.046,
-                                    0.031,
-                                    0.014
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "FababeanSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.21,
-                                    0.21,
-                                    0.21,
-                                    0.21,
-                                    0.211,
-                                    0.22,
-                                    0.231
-                                  ],
-                                  "KL": [
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.1,
-                                    0.099,
-                                    0.089,
-                                    0.075
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "LucerneSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "LupinSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "LentilSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.216,
-                                    0.228,
-                                    0.241,
-                                    0.257,
-                                    0.272,
-                                    0.288,
-                                    0.296,
-                                    0.295
-                                  ],
-                                  "KL": [
-                                    0.07,
-                                    0.07,
-                                    0.065,
-                                    0.056,
-                                    0.045,
-                                    0.032,
-                                    0.019,
-                                    0.006,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    0.0,
-                                    0.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "TriticaleSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.211,
-                                    0.211,
-                                    0.212,
-                                    0.213,
-                                    0.214,
-                                    0.215,
-                                    0.216
-                                  ],
-                                  "KL": [
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.079,
-                                    0.079,
-                                    0.078,
-                                    0.077,
-                                    0.076,
-                                    0.075,
-                                    0.074
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "EucalyptusSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.211,
-                                    0.213,
-                                    0.214,
-                                    0.216,
-                                    0.218,
-                                    0.22,
-                                    0.223
-                                  ],
-                                  "KL": [
-                                    0.08,
-                                    0.08,
-                                    0.08,
-                                    0.079,
-                                    0.077,
-                                    0.076,
-                                    0.074,
-                                    0.072,
-                                    0.07,
-                                    0.068
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
-                                  "Name": "GliricidiaSoil",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilCrop, Models",
-                                  "LL": [
-                                    0.14,
-                                    0.185,
-                                    0.21,
-                                    0.217,
-                                    0.227,
-                                    0.239,
-                                    0.25,
-                                    0.261,
-                                    0.276,
-                                    0.292
-                                  ],
-                                  "KL": [
-                                    0.06,
-                                    0.06,
-                                    0.06,
-                                    0.055,
-                                    0.048,
-                                    0.04,
-                                    0.032,
-                                    0.024,
-                                    0.014,
-                                    0.003
-                                  ],
-                                  "XF": [
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0,
-                                    1.0
-                                  ],
-                                  "LLMetadata": null,
-                                  "KLMetadata": null,
-                                  "XFMetadata": null,
                                   "Name": "PinusSoil",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.SoilCrop, Models",
+                                  "LL": [
+                                    0.047,
+                                    0.062,
+                                    0.07,
+                                    0.07,
+                                    0.07,
+                                    0.07,
+                                    0.07,
+                                    0.07,
+                                    0.07,
+                                    0.07
+                                  ],
+                                  "KL": [
+                                    0.06,
+                                    0.06,
+                                    0.06,
+                                    0.055,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.05,
+                                    0.04,
+                                    0.04
+                                  ],
+                                  "XF": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "LLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "KLMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "XFMetadata": [
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "Name": "EucalyptusSoil",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
@@ -16099,8 +15069,8 @@
                               "CN2Bare": 68.0,
                               "CNRed": 20.0,
                               "CNCov": 0.0,
-                              "DischargeWidth": 5.0,
-                              "CatchmentArea": 10.0,
+                              "DischargeWidth": "NaN",
+                              "CatchmentArea": "NaN",
                               "PSIDul": -100.0,
                               "Thickness": [
                                 150.0,
@@ -16124,7 +15094,7 @@
                                 0.129,
                                 0.129,
                                 0.091,
-                                0.091
+                                0.0
                               ],
                               "KLAT": null,
                               "Name": "SoilWater",
@@ -16135,7 +15105,7 @@
                             },
                             {
                               "$type": "Models.Soils.Organic, Models",
-                              "FOMCNRatio": 40.0,
+                              "FOMCNRatio": 60.0,
                               "Thickness": [
                                 150.0,
                                 150.0,
@@ -16149,12 +15119,12 @@
                                 300.0
                               ],
                               "Carbon": [
+                                6.0,
+                                4.0,
                                 3.0,
                                 2.0,
                                 1.0,
-                                0.68,
-                                0.583,
-                                0.577,
+                                0.6,
                                 0.54,
                                 0.473,
                                 0.389,
@@ -16162,23 +15132,23 @@
                               ],
                               "CarbonUnits": 0,
                               "SoilCNRatio": [
-                                12.0,
-                                12.0,
-                                12.0,
-                                12.0,
-                                12.0,
-                                12.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
+                                10.0,
                                 12.0,
                                 12.0,
                                 12.0,
                                 12.0
                               ],
                               "FBiom": [
+                                0.06,
+                                0.05,
                                 0.04,
-                                0.031,
-                                0.014,
-                                0.01,
-                                0.01,
+                                0.03,
+                                0.02,
                                 0.01,
                                 0.01,
                                 0.01,
@@ -16186,31 +15156,46 @@
                                 0.01
                               ],
                               "FInert": [
-                                0.1,
-                                0.2,
-                                0.3,
-                                0.4,
-                                0.5,
-                                0.6,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
                                 1.0,
                                 1.0,
                                 1.0,
                                 1.0
                               ],
                               "FOM": [
-                                48.51519779263999,
-                                38.74017229374216,
-                                30.934655894085772,
-                                24.70182445316785,
-                                18.299561638987946,
-                                13.556648692650475,
-                                10.043012362896462,
-                                7.440046548965454,
-                                4.743983128996795,
-                                3.024897193867102
+                                5000.0,
+                                2000.0,
+                                1000.0,
+                                500.0,
+                                500.0,
+                                100.0,
+                                50.0,
+                                7.4,
+                                4.7,
+                                3.0
                               ],
-                              "CarbonMetadata": null,
-                              "FOMMetadata": null,
+                              "CarbonMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
+                              "FOMMetadata": [
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null
+                              ],
                               "Name": "Organic",
                               "ResourceName": null,
                               "Children": [],
@@ -16246,10 +15231,32 @@
                               "PHUnits": 0,
                               "EC": null,
                               "ESP": null,
-                              "CEC": null,
+                              "CEC": [
+                                16.2798,
+                                16.797,
+                                16.233900000000002,
+                                15.607099999999999,
+                                15.30875,
+                                15.09525,
+                                14.918700000000001,
+                                14.78135,
+                                14.61245,
+                                14.3986
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
-                              "CECMetadata": null,
+                              "CECMetadata": [
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated",
+                                "Calculated"
+                              ],
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -16281,12 +15288,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
+                                40.0,
+                                20.0,
+                                10.0,
+                                5.0,
+                                2.0,
+                                1.0,
                                 0.0,
                                 0.0,
                                 0.0,
@@ -16323,12 +15330,12 @@
                                 300.0
                               ],
                               "InitialValues": [
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0,
+                                40.0,
+                                20.0,
+                                10.0,
+                                5.0,
+                                2.0,
+                                1.0,
                                 0.0,
                                 0.0,
                                 0.0,
@@ -16525,7 +15532,7 @@
                             },
                             {
                               "Key": "CultivarName",
-                              "Value": "BFG"
+                              "Value": "BFGCorrImpSCsla"
                             },
                             {
                               "Key": "SowingDate",
@@ -16541,84 +15548,15 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Soils;",
-                            "using System;",
-                            "using Models.Core;",
-                            "using Models.PMF;",
-                            "using APSIM.Shared.Utilities;",
-                            "namespace Models",
-                            "{",
-                            "    [Serializable]",
-                            "    public class Script : Model",
-                            "    {",
-                            "        [Link] Clock Clock;",
-                            "        [Link] Fertiliser Fertiliser;",
-                            "        ",
-                            "        [Separator(\"A component to apply fertiliser on one or more dates on every year of the simulation\")]",
-                            "",
-                            "        [Description(\"Type of fertiliser to apply? \")] ",
-                            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
-                            "",
-                            "        [Description(\"Enter the fertilisation dates as dd-mmm with comma separation (any year information entered will be ignored): \")] ",
-                            "        public string[] FertiliserDates { get; set; } ",
-                            "",
-                            "        [Description(\"Amount of fertiliser to be applied (kg /ha)\")] ",
-                            "        public double Amount { get; set; }",
-                            "",
-                            "        [Description(\"Is the above amount to be applied each time? (yes/ticked)? Or is it the total annual amount across all dates (no/unticked)\")] ",
-                            "        public bool AmountType { get; set; }",
-                            "        ",
-                            "        [EventSubscribe(\"DoManagement\")]",
-                            "        private void OnDoManagement(object sender, EventArgs e)",
-                            "        {",
-                            "            foreach (string ddMMM in FertiliserDates)",
-                            "            {",
-                            "                if (DateUtilities.DatesEqual(ddMMM, Clock.Today))",
-                            "                {",
-                            "                    if (AmountType)",
-                            "                        Fertiliser.Apply(amount: Amount, type: FertiliserType);",
-                            "                    else",
-                            "                        Fertiliser.Apply(amount: Amount / FertiliserDates.Length, type: FertiliserType);",
-                            "                }",
-                            "            }",
-                            "        }",
-                            "    }",
-                            "}"
-                          ],
-                          "Parameters": [
-                            {
-                              "Key": "FertiliserType",
-                              "Value": "NH4N"
-                            },
-                            {
-                              "Key": "FertiliserDates",
-                              "Value": "24-aug"
-                            },
-                            {
-                              "Key": "Amount",
-                              "Value": "10"
-                            },
-                            {
-                              "Key": "AmountType",
-                              "Value": "False"
-                            }
-                          ],
-                          "Name": "Fertilise on fixed dates",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
-                          "CodeArray": [
-                            "",
                             "using APSIM.Core;",
                             "using Models.Soils;",
+                            "using Models.Interfaces;",
+                            "using APSIM.Shared.Utilities;",
                             "using System.Xml.Serialization;",
                             "using Models.PMF;",
                             "using Models.Core;",
                             "using System.Collections.Generic;",
+                            "using System.Linq;",
                             "using System;",
                             "using Newtonsoft.Json;",
                             "using Models.PMF.Interfaces;",
@@ -16626,47 +15564,48 @@
                             "namespace Models",
                             "{",
                             "    [Serializable] ",
-                            "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
                             "    public class Script : Model, IStructureDependency",
                             "    {",
-                            "        [Link] private Plant Pinus;",
-                            "        [Link] private Clock Clock;",
+                            "        [Link] private Plant Tree;",
                             "        ",
                             "        public IStructure Structure { private get; set; }",
                             "",
+                            "        [Description(\"Bias away from average (e.g. 0.5 for thinning from below, and 2 for thinning from above)\")]",
+                            "        public double ThinBias { get; set; } = 0.7;",
                             "",
                             "        ",
-                            "        [EventSubscribe(\"StartOfSimulation\")]",
-                            "        private void OnSimulationCommencing(object sender, EventArgs e)",
-                            "        {",
-                            "            ",
-                            "        }",
-                            "        ",
-                            "        public void DoThin(double ThinFr)",
+                            "        public void DoThin(double ThinFr, double ThinBias)",
                             "        {",
                             "            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.",
+                            "            //Set thinning bias away from average for biomass components (not for population), e.g. 0.5 for thinning from below, and 2 for thinning from above, ",
+                            "            //i.e. average individual tree size changes",
                             "",
-                            "                //Harvest with manager specified removal fractions",
-                            "                Pinus.structure?.DoThin(ThinFr);",
-                            "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
-                            "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
-                            "                var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
-                            "                var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
-                            "                var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
-                            "                Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                            "                CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
+                            "            //Harvest with manager specified removal fractions",
+                            "            Tree.structure?.DoThin(ThinFr*ThinBias);",
+                            "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Tree);",
+                            "            var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Tree);",
+                            "            var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Tree);",
+                            "            var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Tree);",
+                            "            var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Tree);",
+                            "            Leaf.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            Stem.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            Branch.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            FineRoot.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
+                            "            CoarseRoot.RemoveBiomass(liveToResidue: ThinFr*ThinBias);",
                             "",
-                            "                Pinus.Population = Pinus.Population*(1-ThinFr);",
+                            "            Tree.Population = Tree.Population*(1-ThinFr);",
                             "        }",
                             "    }",
                             "}",
                             "",
                             "                "
                           ],
-                          "Parameters": [],
+                          "Parameters": [
+                            {
+                              "Key": "ThinBias",
+                              "Value": "0.5"
+                            }
+                          ],
                           "Name": "TreeThinning",
                           "ResourceName": null,
                           "Children": [],
@@ -16680,78 +15619,78 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1948-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.02429);",
-                              "Line": "1948-05-15 [TreeThinning].Script.DoThin(0.02429);"
+                              "Action": "[TreeThinning].Script.DoThin(0.02429, 0.4 );",
+                              "Line": "1948-05-15 [TreeThinning].Script.DoThin(0.02429, 0.4 );"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1952-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.30015);",
-                              "Line": "1952-05-15 [TreeThinning].Script.DoThin(0.30015);"
+                              "Action": "[TreeThinning].Script.DoThin(0.30015, 0.4);",
+                              "Line": "1952-05-15 [TreeThinning].Script.DoThin(0.30015, 0.4);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1955-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.01255);",
-                              "Line": "1955-05-15 [TreeThinning].Script.DoThin(0.01255);"
+                              "Action": "[TreeThinning].Script.DoThin(0.01255, 0.4);",
+                              "Line": "1955-05-15 [TreeThinning].Script.DoThin(0.01255, 0.4);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1957-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.47881);",
-                              "Line": "1957-05-15 [TreeThinning].Script.DoThin(0.47881);"
+                              "Action": "[TreeThinning].Script.DoThin(0.47881, 1);",
+                              "Line": "1957-05-15 [TreeThinning].Script.DoThin(0.47881, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1959-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.02642);",
-                              "Line": "1959-05-15 [TreeThinning].Script.DoThin(0.02642);"
+                              "Action": "[TreeThinning].Script.DoThin(0.02642, 1);",
+                              "Line": "1959-05-15 [TreeThinning].Script.DoThin(0.02642, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1964-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.33403);",
-                              "Line": "1964-05-15 [TreeThinning].Script.DoThin(0.33403);"
+                              "Action": "[TreeThinning].Script.DoThin(0.33403, 1);",
+                              "Line": "1964-05-15 [TreeThinning].Script.DoThin(0.33403, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1966-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.04075);",
-                              "Line": "1966-05-15 [TreeThinning].Script.DoThin(0.04075);"
+                              "Action": "[TreeThinning].Script.DoThin(0.04075, 1);",
+                              "Line": "1966-05-15 [TreeThinning].Script.DoThin(0.04075, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1969-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.30392);",
-                              "Line": "1969-05-15 [TreeThinning].Script.DoThin(0.30392);"
+                              "Action": "[TreeThinning].Script.DoThin(0.30392, 1);",
+                              "Line": "1969-05-15 [TreeThinning].Script.DoThin(0.30392, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1976-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.31455);",
-                              "Line": "1976-05-15 [TreeThinning].Script.DoThin(0.31455);"
+                              "Action": "[TreeThinning].Script.DoThin(0.31455, 1);",
+                              "Line": "1976-05-15 [TreeThinning].Script.DoThin(0.31455, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1981-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.36301);",
-                              "Line": "1981-05-15 [TreeThinning].Script.DoThin(0.36301);"
+                              "Date": "1981-03-15",
+                              "Action": "[TreeThinning].Script.DoThin(0.3643, 1);",
+                              "Line": "1981-03-15 [TreeThinning].Script.DoThin(0.3643, 1);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1994-05-15",
-                              "Action": "[TreeThinning].Script.DoThin(0.43011);",
-                              "Line": "1994-05-15 [TreeThinning].Script.DoThin(0.43011);"
+                              "Date": "1993-03-15",
+                              "Action": "[TreeThinning].Script.DoThin(0.4301, 1);",
+                              "Line": "1993-03-15 [TreeThinning].Script.DoThin(0.4301, 1);"
                             }
                           ],
                           "Name": "Management",
@@ -28179,7 +27118,7 @@
                               "YearOfSampling": "2020",
                               "DataSource": "Soil and Landscape Grid of Australia. This soil parameter file was automatically generated from the GSM National Surfaces using pedotransfer functions.",
                               "Comments": "Landuse is Production forestry",
-                              "Name": "SynthSoilTowerHill",
+                              "Name": "SynthSoilTowerHill1",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -28192,10 +27131,38 @@
                                     200.0,
                                     200.0
                                   ],
-                                  "ParticleSizeSand": null,
-                                  "ParticleSizeSilt": null,
-                                  "ParticleSizeClay": null,
-                                  "Rocks": null,
+                                  "ParticleSizeSand": [
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0,
+                                    5.0
+                                  ],
+                                  "ParticleSizeSilt": [
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0,
+                                    65.0
+                                  ],
+                                  "ParticleSizeClay": [
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0,
+                                    30.0
+                                  ],
+                                  "Rocks": [
+                                    0.407916765925583,
+                                    0.3611215501650761,
+                                    0.34332682944219806,
+                                    0.33738696581760064,
+                                    0.3902802026712495,
+                                    0.40084079406972606
+                                  ],
                                   "Texture": null,
                                   "BD": [
                                     1.10996659842146,
@@ -28243,44 +27210,95 @@
                                   "LL15Metadata": null,
                                   "DULMetadata": null,
                                   "SATMetadata": null,
-                                  "KSMetadata": null,
-                                  "RocksMetadata": null,
+                                  "KSMetadata": [
+                                    null
+                                  ],
+                                  "RocksMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "TextureMetadata": null,
-                                  "ParticleSizeSandMetadata": null,
-                                  "ParticleSizeSiltMetadata": null,
-                                  "ParticleSizeClayMetadata": null,
+                                  "ParticleSizeSandMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeSiltMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
+                                  "ParticleSizeClayMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "Name": "Physical",
                                   "ResourceName": null,
                                   "Children": [
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.15,
-                                        0.15,
-                                        0.15,
-                                        0.2,
-                                        0.24,
-                                        0.24
+                                        0.1,
+                                        0.08,
+                                        0.08,
+                                        0.08,
+                                        0.08,
+                                        0.08
                                       ],
                                       "KL": [
                                         0.06,
                                         0.05,
-                                        0.01,
-                                        0.01,
-                                        0.01,
-                                        0.01
+                                        0.04,
+                                        0.03,
+                                        0.02,
+                                        0.02
                                       ],
                                       "XF": [
                                         1.0,
                                         1.0,
-                                        0.0,
-                                        0.0,
+                                        0.5,
+                                        0.4,
                                         0.0,
                                         0.0
                                       ],
-                                      "LLMetadata": null,
-                                      "KLMetadata": null,
-                                      "XFMetadata": null,
+                                      "LLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "KLMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
+                                      "XFMetadata": [
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null
+                                      ],
                                       "Name": "PinusSoil",
                                       "ResourceName": null,
                                       "Children": [],
@@ -28302,7 +27320,7 @@
                                   "DiffusConst": 80.19349566517488,
                                   "DiffusSlope": 29.00996583251588,
                                   "Salb": 0.13,
-                                  "CN2Bare": 60.0,
+                                  "CN2Bare": 50.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.0,
                                   "DischargeWidth": "NaN",
@@ -28317,12 +27335,12 @@
                                     200.0
                                   ],
                                   "SWCON": [
+                                    0.8,
+                                    0.7,
+                                    0.6,
                                     0.5,
-                                    0.5,
-                                    0.316559891232109,
-                                    0.250234107090682,
-                                    0.197590979509071,
-                                    0.209950358040699
+                                    0.3,
+                                    0.0
                                   ],
                                   "KLAT": null,
                                   "Name": "SoilWater",
@@ -28370,46 +27388,54 @@
                                   "Carbon": [
                                     3.9,
                                     2.6,
-                                    0.01,
+                                    0.5,
                                     0.01,
                                     0.01,
                                     0.01
                                   ],
                                   "CarbonUnits": 0,
                                   "SoilCNRatio": [
-                                    19.0,
-                                    19.0,
-                                    20.0,
+                                    15.0,
+                                    15.0,
+                                    15.0,
                                     18.0,
                                     18.0,
                                     18.0
                                   ],
                                   "FBiom": [
+                                    0.04,
+                                    0.03,
                                     0.02,
-                                    0.02,
-                                    0.01404,
                                     0.01,
                                     0.01,
                                     0.01
                                   ],
                                   "FInert": [
+                                    0.2,
+                                    0.2,
                                     0.4,
-                                    0.6,
-                                    1.0,
                                     1.0,
                                     1.0,
                                     1.0
                                   ],
                                   "FOM": [
-                                    475.4746586022116,
-                                    303.1760277075219,
-                                    193.3135701631787,
-                                    123.26217442655363,
-                                    67.64771561554412,
-                                    37.12585348499021
+                                    2000.0,
+                                    1000.0,
+                                    500.0,
+                                    123.3,
+                                    67.6,
+                                    37.1
                                   ],
-                                  "CarbonMetadata": null,
-                                  "FOMMetadata": null,
+                                  "CarbonMetadata": [
+                                    null,
+                                    null,
+                                    null
+                                  ],
+                                  "FOMMetadata": [
+                                    null,
+                                    null,
+                                    null
+                                  ],
                                   "Name": "Organic",
                                   "ResourceName": null,
                                   "Children": [],
@@ -28437,10 +27463,24 @@
                                   "PHUnits": 0,
                                   "EC": null,
                                   "ESP": null,
-                                  "CEC": null,
+                                  "CEC": [
+                                    17.12,
+                                    14.195,
+                                    8.367500000000001,
+                                    8.367500000000001,
+                                    8.367500000000001,
+                                    8.367500000000001
+                                  ],
                                   "ECMetadata": null,
                                   "CLMetadata": null,
-                                  "CECMetadata": null,
+                                  "CECMetadata": [
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated",
+                                    "Calculated"
+                                  ],
                                   "ESPMetadata": null,
                                   "PHMetadata": null,
                                   "Name": "Chemical",
@@ -28569,6 +27609,14 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                                  "Name": "Temperature",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -28684,7 +27732,7 @@
                                 },
                                 {
                                   "Key": "CultivarName",
-                                  "Value": "TowerHill"
+                                  "Value": "BFGCorrImpSCsla"
                                 },
                                 {
                                   "Key": "SowingDate",
