@@ -1,14 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 0,
   "Version": 220,
   "Name": "Simulations",
+  "ResourceName": null,
   "Children": [
     {
       "$type": "Models.PMF.Plant, Models",
       "PlantType": "Sorghum",
-      "IsEnding": false,
-      "DaysAfterEnding": 0,
       "Name": "Sorghum",
       "ResourceName": null,
       "Children": [
@@ -34,7 +32,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -77,7 +74,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -113,7 +109,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "PotentialPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -132,7 +127,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "ActualPartitioningMethods",
                   "ResourceName": null,
                   "Children": [
@@ -159,7 +153,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "AllocationMethods",
                   "ResourceName": null,
                   "Children": [
@@ -265,15 +258,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "VariableName": "[Arbitrator].WaterUptakeMethod.WDemand",
               "Name": "WDemand",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Arbitrator].WaterUptakeMethod.WSupply",
-              "Name": "WSupply",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -436,7 +420,6 @@
                         19.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "Response",
                       "ResourceName": null,
                       "Children": [],
@@ -584,7 +567,6 @@
                     0.0,
                     17.8
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -599,6 +581,7 @@
               "$type": "Models.PMF.Phen.GerminatingPhase, Models",
               "Start": "Sowing",
               "End": "Germination",
+              "IsEmerged": false,
               "Name": "Germinating",
               "ResourceName": null,
               "Children": [
@@ -620,6 +603,7 @@
               "$type": "Models.PMF.Phen.EmergingPhase, Models",
               "Start": "Germination",
               "End": "Emergence",
+              "IsEmerged": false,
               "TTForTimeStep": 0.0,
               "Name": "Emerging",
               "ResourceName": null,
@@ -688,6 +672,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Emergence",
               "End": "EndJuvenile",
+              "IsEmerged": true,
               "Name": "Juvenile",
               "ResourceName": null,
               "Children": [
@@ -718,6 +703,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndJuvenile",
               "End": "FloralInitiation",
+              "IsEmerged": true,
               "Name": "JuvenileToFloralInit",
               "ResourceName": null,
               "Children": [
@@ -747,6 +733,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FloralInitiation",
               "End": "FlagLeaf",
+              "IsEmerged": true,
               "Name": "FloralInitToFlagLeaf",
               "ResourceName": null,
               "Children": [
@@ -803,6 +790,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "FlagLeaf",
               "End": "Flowering",
+              "IsEmerged": true,
               "Name": "FlagLeafToFlowering",
               "ResourceName": null,
               "Children": [
@@ -833,6 +821,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Flowering",
               "End": "StartGrainFill",
+              "IsEmerged": true,
               "Name": "FloweringToGrainFilling",
               "ResourceName": null,
               "Children": [
@@ -863,6 +852,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "StartGrainFill",
               "End": "EndGrainFill",
+              "IsEmerged": true,
               "Name": "GrainFilling",
               "ResourceName": null,
               "Children": [
@@ -919,6 +909,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "EndGrainFill",
               "End": "Maturity",
+              "IsEmerged": true,
               "Name": "Maturing",
               "ResourceName": null,
               "Children": [
@@ -948,6 +939,7 @@
               "$type": "Models.PMF.Phen.GenericPhase, Models",
               "Start": "Maturity",
               "End": "HarvestRipe",
+              "IsEmerged": true,
               "Name": "MaturityToHarvestRipe",
               "ResourceName": null,
               "Children": [
@@ -978,6 +970,7 @@
               "$type": "Models.PMF.Phen.EndPhase, Models",
               "Start": "HarvestRipe",
               "End": "Unused",
+              "IsEmerged": true,
               "Name": "ReadyForHarvesting",
               "ResourceName": null,
               "Children": [
@@ -1270,7 +1263,6 @@
                     0.0,
                     23.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1535,7 +1527,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -1581,7 +1572,6 @@
                     0.5,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -2296,7 +2286,6 @@
                                 0.23,
                                 0.65
                               ],
-                              "XVariableName": null,
                               "Name": "XYPairs",
                               "ResourceName": null,
                               "Children": [],
@@ -2517,15 +2506,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 1.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.0,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 1.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.0,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -2637,9 +2626,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.Root, Models",
@@ -2648,6 +2635,10 @@
           "DMDemand": null,
           "NDemand": null,
           "potentialDMAllocation": null,
+          "WaterUptakeSupply": null,
+          "NitrogenUptakeSupply": null,
+          "WaterTakenUp": null,
+          "NitrogenTakenUp": null,
           "GrowthRespiration": 0.0,
           "MaintenanceRespiration": 0.0,
           "Name": "Root",
@@ -2685,7 +2676,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -2904,7 +2894,6 @@
                         0.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -2964,7 +2953,6 @@
                     0.03,
                     0.03
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3001,7 +2989,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3036,7 +3023,6 @@
                     0.03,
                     0.03
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -3068,15 +3054,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.2,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.2,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -3526,14 +3512,11 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.SorghumLeaf, Models",
           "TilleringMethod": 0,
-          "FertileTillerNumber": 0.0,
           "InitialDMWeight": 0.1,
           "InitialLAI": 200.0,
           "InitialSLN": 1.5,
@@ -3574,6 +3557,7 @@
                 },
                 {
                   "$type": "Models.PMF.Struct.DynamicTillering, Models",
+                  "TillerNumberOverride": -1.0,
                   "Name": "DynamicTillering",
                   "ResourceName": null,
                   "Children": [
@@ -3943,7 +3927,6 @@
                             0.0,
                             1.0
                           ],
-                          "XVariableName": null,
                           "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
@@ -4085,7 +4068,6 @@
                         0.4,
                         0.4
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4146,7 +4128,6 @@
                         1.0,
                         0.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -4278,7 +4259,6 @@
                     0.0,
                     2000.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -4594,7 +4574,6 @@
                         1.0,
                         1.0
                       ],
-                      "XVariableName": null,
                       "Name": "XYPairs",
                       "ResourceName": null,
                       "Children": [],
@@ -5473,6 +5452,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": null,
                   "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                   "Name": "RelativeCO2Gradient",
                   "ResourceName": null,
@@ -5486,6 +5466,7 @@
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": null,
               "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
               "Name": "CO2internal",
               "ResourceName": null,
@@ -5495,15 +5476,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.3,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.3,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.LightSenescenceFunction, Models",
@@ -5693,7 +5674,6 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Parameters",
               "ResourceName": null,
               "Children": [
@@ -6179,7 +6159,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 20,
+                  "FixedValue": 20.0,
                   "Units": "%",
                   "Name": "maxSLAAdjustment",
                   "ResourceName": null,
@@ -6223,10 +6203,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -6773,7 +6750,6 @@
                     1.0,
                     1.0
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -6782,7 +6758,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Sorghum].Leaf.Fw",
+                  "VariableName": "[Sorghum].Leaf.Photosynthesis.Fw",
                   "Name": "XValue",
                   "ResourceName": null,
                   "Children": [],
@@ -6825,15 +6801,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.5,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.5,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -6946,7 +6922,7 @@
                                   "Name": "DMFixationSupply",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 },
                                 {
@@ -6955,15 +6931,15 @@
                                   "Name": "Stem2FlowerFrac",
                                   "ResourceName": null,
                                   "Children": [],
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "ReadOnly": false
                                 }
                               ],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
@@ -7388,10 +7364,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.PMF.Organs.GenericOrgan, Models",
@@ -8410,15 +8383,15 @@
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
+              "HarvestFractionLiveToRemove": 0.0,
+              "HarvestFractionDeadToRemove": 0.0,
+              "HarvestFractionLiveToResidue": 0.1,
+              "HarvestFractionDeadToResidue": 0.0,
               "Name": "BiomassRemovalDefaults",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
-              "ReadOnly": false,
-              "HarvestFractionLiveToRemove": 0.0,
-              "HarvestFractionDeadToRemove": 0.0,
-              "HarvestFractionLiveToResidue": 0.1,
-              "HarvestFractionDeadToResidue": 0.0
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -8842,7 +8815,6 @@
                     0.005,
                     0.0015
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -8881,7 +8853,6 @@
                     0.01,
                     0.005
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -8920,7 +8891,6 @@
                     0.01,
                     0.005
                   ],
-                  "XVariableName": null,
                   "Name": "XYPairs",
                   "ResourceName": null,
                   "Children": [],
@@ -9046,10 +9016,7 @@
             }
           ],
           "Enabled": true,
-          "ReadOnly": false,
-          "MaxNConc": null,
-          "MinNConc": null,
-          "CritNConc": null
+          "ReadOnly": false
         },
         {
           "$type": "Models.Functions.AddFunction, Models",
@@ -9062,7 +9029,7 @@
               "Name": "LeafDemand",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9071,7 +9038,7 @@
               "Name": "StemDemand",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9080,7 +9047,7 @@
               "Name": "RachisDemand",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9089,11 +9056,11 @@
               "Name": "GrainDemand",
               "ResourceName": null,
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9231,23 +9198,18 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Cultivars",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Australia",
               "ResourceName": null,
               "Children": [
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Parameters.aX0.FixedValue = 0.687"
-                  ],
-                  "Lines": [
                     "[Leaf].Parameters.aX0.FixedValue = 0.687"
                   ],
                   "Name": "Buster",
@@ -9259,14 +9221,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].TTEndJuvToInit.FixedValue = 114",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
-                  ],
-                  "Lines": [
                     "[Phenology].TTEndJuvToInit.FixedValue = 114",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
@@ -9290,14 +9244,6 @@
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
-                  "Lines": [
-                    "[Phenology].TTEndJuvToInit.FixedValue = 157",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
-                  ],
                   "Name": "medium",
                   "ResourceName": null,
                   "Children": [],
@@ -9314,14 +9260,6 @@
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.786"
                   ],
-                  "Lines": [
-                    "[Phenology].TTEndJuvToInit.FixedValue = 201",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.786"
-                  ],
                   "Name": "late",
                   "ResourceName": null,
                   "Children": [],
@@ -9331,16 +9269,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 202",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
                     "[Phenology].TTEndJuvToInit.FixedValue = 202",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
@@ -9370,18 +9298,6 @@
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 134.4",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-                  ],
                   "Name": "A35xQL36",
                   "ResourceName": null,
                   "Children": [],
@@ -9391,14 +9307,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 179",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 450",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
                     "[Phenology].TTEndJuvToInit.FixedValue = 179",
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
@@ -9427,19 +9335,6 @@
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 11.8",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.265",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.247",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-                  ],
                   "Name": "QL39xQL36",
                   "ResourceName": null,
                   "Children": [],
@@ -9449,23 +9344,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 252",
-                    "[Grain].DMPerSeed.FixedValue = 0.001427844",
-                    "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 10",
-                    "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                    "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
-                    "[Leaf].Parameters.leafInitRate.FixedValue = 26.1",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -1.363",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.206",
-                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
                     "[Phenology].TTEndJuvToInit.FixedValue = 252",
                     "[Grain].DMPerSeed.FixedValue = 0.001427844",
@@ -9505,21 +9383,6 @@
                     "[Leaf].Parameters.aX0I.FixedValue = 0.0",
                     "[Leaf].Parameters.aX0S.FixedValue = 0.687"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 34",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 228",
-                    "[Grain].DMPerSeed.FixedValue = 0.0015",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
-                    "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
-                    "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                    "[Leaf].Parameters.leafInitRate.FixedValue = 23.2",
-                    "[Leaf].Parameters.tillerSdIntercept.FixedValue = -0.818",
-                    "[Leaf].Parameters.tillerSdSlope.FixedValue = 0.159",
-                    "[Leaf].Parameters.maxSLAAdjustment.FixedValue = 25",
-                    "[Leaf].Parameters.slaLeafNoCoefficient.FixedValue = 9.079",
-                    "[Leaf].Parameters.aX0I.FixedValue = 0.0",
-                    "[Leaf].Parameters.aX0S.FixedValue = 0.687"
-                  ],
                   "Name": "CSH13R",
                   "ResourceName": null,
                   "Children": [],
@@ -9529,18 +9392,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 11",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 13",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 205",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
-                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 11",
                     "[Phenology].PhotoModifier.XYPairs.X[2] = 13",
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
@@ -9572,18 +9423,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 88.32",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 120",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
-                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
-                  ],
                   "Name": "texas_RS610",
                   "ResourceName": null,
                   "Children": [],
@@ -9593,18 +9432,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 57.5",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 115",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
-                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
                     "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 57.5",
@@ -9636,18 +9463,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
                     "[Leaf].Parameters.aX0.FixedValue = 0.786"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.X[1] = 12.3",
-                    "[Phenology].PhotoModifier.XYPairs.X[2] = 14.6",
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 34.96",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 159",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
-                    "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.786"
-                  ],
                   "Name": "texas_671",
                   "ResourceName": null,
                   "Children": [],
@@ -9657,17 +9472,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 130",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.00065",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.83",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 2.3",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 514",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 130",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
@@ -9696,16 +9500,6 @@
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 185",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.71",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
-                  ],
                   "Name": "Apollo",
                   "ResourceName": null,
                   "Children": [],
@@ -9715,16 +9509,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 185",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.71",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 185",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
@@ -9752,16 +9536,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 1",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 451"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 118",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.00065",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.8",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 1",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 451"
-                  ],
                   "Name": "Taurus",
                   "ResourceName": null,
                   "Children": [],
@@ -9771,16 +9545,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 118",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0006",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.86",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 542"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 118",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
@@ -9807,15 +9571,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 578"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0006",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.81",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 578"
-                  ],
                   "Name": "P84G22",
                   "ResourceName": null,
                   "Children": [],
@@ -9825,16 +9580,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 135",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0005",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.84",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 135",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
@@ -9862,16 +9607,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 138",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0005",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.84",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
-                  ],
                   "Name": "P86G56",
                   "ResourceName": null,
                   "Children": [],
@@ -9889,15 +9624,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = -101"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 118",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.71",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = -101"
-                  ],
                   "Name": "MR43",
                   "ResourceName": null,
                   "Children": [],
@@ -9907,16 +9633,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 180",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0007",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.82",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 180",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
@@ -9944,16 +9660,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 20",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 174",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.0006",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.82",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
-                  ],
                   "Name": "N_14NUS02",
                   "ResourceName": null,
                   "Children": [],
@@ -9972,16 +9678,6 @@
                     "[Leaf].Parameters.aMaxSlope.FixedValue = 9.3",
                     "[Leaf].Parameters.aMaxIntercept.FixedValue = 384"
                   ],
-                  "Lines": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 15",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 110",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.00045",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.84",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 9.3",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 384"
-                  ],
                   "Name": "N_14NUS03",
                   "ResourceName": null,
                   "Children": [],
@@ -9991,16 +9687,6 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
-                    "[Phenology].TTEndJuvToInit.FixedValue = 120",
-                    "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
-                    "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                    "[Grain].DMPerSeed.FixedValue = 0.00045",
-                    "[Leaf].Parameters.aX0.FixedValue = 0.81",
-                    "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
-                    "[Leaf].Parameters.aMaxIntercept.FixedValue = 445"
-                  ],
-                  "Lines": [
                     "[Phenology].PhotoModifier.XYPairs.Y[2] = 0",
                     "[Phenology].TTEndJuvToInit.FixedValue = 120",
                     "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
@@ -10049,7 +9735,6 @@
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

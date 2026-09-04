@@ -6574,7 +6574,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[STRUM].Leaf.RadiationIntercepted",
+              "VariableName": "[STRUM].Leaf.Canopy.RadiationIntercepted",
               "Name": "LeafInterception",
               "ResourceName": null,
               "Children": [],
@@ -6744,7 +6744,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[RootUptakesArbitrator].WaterUptake.amount",
+              "VariableName": "[RootUptakesArbitrator].WaterUptake.Amount",
               "Name": "Transpiration",
               "ResourceName": null,
               "Children": [],
