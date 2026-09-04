@@ -1135,6 +1135,9 @@ namespace Models.PMF.Organs
         /// </summary>
         public double AvailableDMReallocation()
         {
+            if (senescenceRate.Value() > 0)
+            { 
+            }
             double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM reallocation value computed for " + Name);
@@ -1153,6 +1156,16 @@ namespace Models.PMF.Organs
             potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
+        /// <summary>Gets the biomass retranslocation.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double RetranslocationWt { get; private set; }
+
+        /// <summary>Gets the biomass reallocation.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double ReallocationWt { get; private set; }
+
         /// <summary>
         /// Sets the dry matter allocation.
         /// </summary>
@@ -1169,17 +1182,26 @@ namespace Models.PMF.Organs
             // Allocated CH2O from photosynthesis "1 / DMConversionEfficiency.Value()", converted
             // into carbon through (12 / 30), then minus the carbon in the biomass, finally converted into
             // CO2 (44/12).
-            double growthRespFactor = ((1.0 / dmConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
+            double dMCE = dmConversionEfficiency.Value();
+            double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * carbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = 0.0;
 
+            RetranslocationWt = dryMatter.Retranslocation;
+            ReallocationWt = dryMatter.Reallocation;
+
             // allocate structural DM
-            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dmConversionEfficiency.Value(), DMDemand.Structural);
+            Allocated.StructuralWt = Math.Min(dryMatter.Structural * dMCE, DMDemand.Structural);
             Live.StructuralWt += Allocated.StructuralWt;
             GrowthRespiration += Allocated.StructuralWt * growthRespFactor;
 
             // allocate non structural DM
-            if (MathUtilities.IsGreaterThan(dryMatter.Storage * dmConversionEfficiency.Value(), DMDemand.Storage))
+            if (MathUtilities.IsGreaterThan(dryMatter.Storage * dMCE, DMDemand.Storage))
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
+
+            if (dryMatter.Retranslocation!=0 || dryMatter.Reallocation!=0)
+            {
+
+            }
 
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
             double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
@@ -1238,6 +1260,8 @@ namespace Models.PMF.Organs
             Loss.StorageN -= storageNReallocation;
 
             Live.Subtract(Loss);
+
+            Loss.StorageWt -= ReallocationWt;
             Dead.Add(Loss);
             Senesced.Add(Loss);
 
