@@ -736,12 +736,12 @@ namespace Models.GrazPlan
         /// <summary>
         /// Conversion factor
         /// </summary>
-        public const double FatE2DM = 36.0;
+        public const double FatE2DM = 39.3;
 
         /// <summary>
         /// Conversion factor
         /// </summary>
-        public const double ProteinE2DM = 14.0;
+        public const double ProteinE2DM = 23.6;
 
         // Various constants with biological meanings
 
