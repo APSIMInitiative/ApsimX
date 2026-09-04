@@ -23,8 +23,7 @@ namespace Models.AgPasture
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-
-        /// <summary>Nutrient model.</summary>
+        /// <summary>Plant model.</summary>
         [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
 
@@ -63,10 +62,24 @@ namespace Models.AgPasture
 
         //---------------------------- Parameters -----------------------
 
+        /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        [Units("kg/kg")]
+        public double NConcOptimum { get; set; }
+
+        /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        [Units("kg/kg")]
+        public double NConcMinimum { get; set; }
+
+        /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [Units("kg/kg")]
+        public double NConcMaximum { get; set; }
+
         /// <summary>Minimum rooting depth (mm).</summary>
+        [Units("mm")]
         public double MinimumRootingDepth { get; set; }
 
         /// <summary>Maximum potential rooting depth (mm).</summary>
+        [Units("mm")]
         public double MaximumPotentialRootingDepth { get; set; }
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
@@ -82,33 +95,31 @@ namespace Models.AgPasture
         public double DepthDistributionExponent { get; set; }
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
+        [Units("-")]
         public double DepthDistributionParamBottom { get; set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
+        [Units("m/g")]
         public double SpecificRootLength { get; set; }
 
-        /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; }
-
-        /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; }
-
-        /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; }
-
         /// <summary>Ammonium uptake coefficient (/ppm).</summary>
+        [Units("/ppm")]
         public double KNH4 { get; set; }
 
         /// <summary>Nitrate uptake coefficient (/ppm).</summary>
+        [Units("/ppm")]
         public double KNO3 { get; set; }
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
+        [Units("kg/ha")]
         public double MaximumNUptake { get; set; }
 
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
+        [Units("-")]
         public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------
@@ -122,6 +133,7 @@ namespace Models.AgPasture
         private double rootingDepth = 0.0;
 
         /// <summary>Rooting depth (mm).</summary>
+        [Units("mm")]
         public double Depth
         {
             get { return rootingDepth; }
@@ -135,83 +147,105 @@ namespace Models.AgPasture
         }
 
         /// <summary>Soil layer at the bottom of the root zone.</summary>
-        internal int BottomLayer { get; private set; }
+        public int BottomLayer { get; private set; }
 
         /// <summary>Maximum rooting depth allowed by soil conditions (mm).</summary>
+        [Units("mm")]
         public double MaximumAllowedDepth { get; set; }
 
         /// <summary>Target (idealised) DM fractions for each layer (0-1).</summary>
-        internal double[] TargetDistribution { get; set; }
+        public double[] TargetDistribution { get; set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
-        internal double DMTotal { get { return Live.DM.Wt + Dead.DM.Wt; } }
+        [Units("kg/ha")]
+        public double DMTotal { get { return DMLive + DMDead; } }
 
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
-        internal double DMLive { get { return Live.DM.Wt; } }
+        [Units("kg/ha")]
+        public double DMLive { get { return Live.DM.Wt; } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
-        /// <remarks>Last tissue is assumed to represent dead material.</remarks>
-        internal double DMDead { get { return Dead.DM.Wt; } }
+        [Units("kg/ha")]
+        public double DMDead { get { return Dead.DM.Wt; } }
 
         /// <summary>Proportion of dry matter in each soil layer (0-1).</summary>
-        internal double[] DMFractions { get { return Live.FractionWt; } }
+        [Units("kg/kg")]
+        public double[] DMFractions { get { return Live.FractionWt; } }
 
         /// <summary>Total N amount in this organ (kg/ha).</summary>
-        internal double NTotal { get { return Live.DM.N + Dead.DM.N; } }
+        [Units("kg/ha")]
+        public double NTotal { get { return NLive + NDead; } }
 
         /// <summary>N amount in the live (green) tissues (kg/ha).</summary>
-        internal double NLive { get { return Live.DM.N; } }
+        [Units("kg/ha")]
+        public double NLive { get { return Live.DM.N; } }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
-        /// <remarks>Last tissues is assumed to represent dead material.</remarks>
-        internal double NDead { get { return Dead.DM.N; } }
+        [Units("kg/ha")]
+        public double NDead { get { return Dead.DM.N; } }
 
-        /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
+        /// <summary>Average total N concentration in this organ (kg/kg).</summary>
+        [Units("kg/kg")]
+        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
+        [Units("kg/kg")]
+        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
+        [Units("kg/kg")]
+        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
-        /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
-        internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
+        /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
 
         /// <summary>Luxury N remobilised into new growth (kg/ha).</summary>
-        internal double NLuxuryRemobilised { get { return Live.NRemobilised; } }
+        [Units("kg/ha")]
+        public double NLuxuryRemobilised { get { return Live.NRemobilised; } }
 
-        /// <summary>Amount of senesced N available for remobilisation (kg/ha).</summary>
-        internal double NSenescedRemobilisable { get { return Dead.NRemobilisable; } }
+        /// <summary>Senesced N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
+        public double NSenescedRemobilisable { get { return Dead.NRemobilisable; } }
 
         /// <summary>Senesced N remobilised into new growth (kg/ha).</summary>
-        internal double NSenescedRemobilised { get { return Dead.NRemobilised; } }
+        [Units("kg/ha")]
+        public double NSenescedRemobilised { get { return Dead.NRemobilised; } }
 
         /// <summary>DM senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMSenesced { get { return Live.DMTransferredOut; } }
 
         /// <summary>N senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenesced { get { return Live.NTransferredOut; } }
 
         /// <summary>DM detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMDetached { get { return Dead.DMTransferredOut; } }
 
         /// <summary>N detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NDetached { get { return Dead.NTransferredOut; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMRemoved { get { return Live.DMRemoved + Dead.DMRemoved; } }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NRemoved { get { return Live.NRemoved + Dead.NRemoved; } }
 
         /// <summary>DM added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMGrowth { get { return Live.DMTransferredIn; } }
 
         /// <summary>N added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NGrowth { get { return Live.NTransferredIn; } }
 
         /// <summary>Root length density by volume (mm/mm^3).</summary>
+        [Units("mm/mm^3")]
         public double[] LengthDensity
         {
             get

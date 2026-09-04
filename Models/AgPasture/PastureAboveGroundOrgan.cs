@@ -15,8 +15,9 @@ namespace Models.AgPasture
     [Serializable]
     public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
+        /// <summary>Plant model.</summary>
         [Link(Type = LinkType.Ancestor)]
-        PastureSpecies species = null;
+        private PastureSpecies species = null;
 
         /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
@@ -43,18 +44,23 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        [Units("kg/kg")]
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
+        [Units("kg/kg")]
         public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------
@@ -63,6 +69,9 @@ namespace Models.AgPasture
         internal const double Epsilon = 0.000000001;
 
         //----------------------- States -----------------------
+
+        /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
+        public bool IsAboveGround { get { return true; } }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
@@ -74,19 +83,18 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
-        public bool IsAboveGround { get { return true; } }
-
-        /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Live biomass. Used by STOCK (g/m2).</summary>
         public Biomass Live { get; private set; } = new Biomass();
 
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
 
-        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Digestibility of live biomass. Used by STOCK (g/g).</summary>
+        [Units("g/g")]
         public double LiveDigestibility { get; private set; }
 
-        /// <summary>Digestibility of dead biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Digestibility of dead biomass. Used by STOCK (g/g).</summary>
+        [Units("g/g")]
         public double DeadDigestibility { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
@@ -96,11 +104,10 @@ namespace Models.AgPasture
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double DMLive { get; private set; }
-        //public double DMLive { get { return LiveTissue.Sum(tissue => tissue.DM.Wt); } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get { return DeadTissue.DM.Wt; } }
+        public double DMDead { get; private set; }
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -111,9 +118,11 @@ namespace Models.AgPasture
         public double StandingLiveHerbageWt { get { return DMLive * FractionStanding; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
+        [Units("kg/kg")]
         public double StandingLiveDigestibility { get { return DigestibilityLive; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
+        [Units("kg/kg")]
         public double StandingDeadDigestibility { get { return DigestibilityDead; } }
 
         /// <summary>Standing dead herbage weight (kg/ha).</summary>
@@ -156,20 +165,19 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
 
-        /// <summary>Total N in this tissue (kg/ha).</summary>
+        /// <summary>Total N amount in this organ (kg/ha).</summary>
         [Units("kg/ha")]
         public double NTotal { get { return NLive + NDead; } }
 
-        /// <summary>N in the live (green) tissues (kg/ha).</summary>
+        /// <summary>N amount in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double NLive { get; private set; }
-        //public double NLive { get { return LiveTissue.Sum(tissue => tissue.DM.N); } }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDead { get { return DeadTissue.DM.N; } }
+        public double NDead { get; private set; }
 
-        /// <summary>Average total N concentration.</summary>
+        /// <summary>Average total N concentration in this organ (kg/kg).</summary>
         [Units("kg/kg")]
         public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
@@ -182,33 +190,43 @@ namespace Models.AgPasture
         public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
 
         /// <summary>Luxury N remobilised into new growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NLuxuryRemobilised { get { return LiveTissue.Sum(tissue => tissue.NRemobilised); } }
 
         /// <summary>Senesced N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenescedRemobilisable { get { return DeadTissue.NRemobilisable; } }
 
         /// <summary>Senesced N remobilised into new growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenescedRemobilised { get { return DeadTissue.NRemobilised; } }
 
         /// <summary>DM senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMSenesced { get { return MatureTissue.DMTransferredOut; } }
 
         /// <summary>N senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenesced { get { return MatureTissue.NTransferredOut; } }
 
         /// <summary>DM detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMDetached { get { return DeadTissue.DMTransferredOut; } }
 
         /// <summary>N detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NDetached { get { return DeadTissue.NTransferredOut; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMRemoved { get { return LiveTissue.Sum(tissue => tissue.DMRemoved) + DeadTissue.DMRemoved; } }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NRemoved { get { return LiveTissue.Sum(tissue => tissue.NRemoved) + DeadTissue.NRemoved; } }
 
         /// <summary>Fraction of DM removed from organ.</summary>
@@ -216,9 +234,11 @@ namespace Models.AgPasture
         public double FractionRemoved { get { return removedFraction; } }
 
         /// <summary>DM added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMGrowth { get { return EmergingTissue.DMTransferredIn; } }
 
         /// <summary>N added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NGrowth { get { return EmergingTissue.NTransferredIn; } }
 
         /// <summary>Average digestibility of all biomass.</summary>
@@ -393,7 +413,9 @@ namespace Models.AgPasture
         private void CalculateStates()
         {
             DMLive = LiveTissue.Sum(tissue => tissue.DM.Wt);
+            DMDead = DeadTissue.DM.Wt;
             NLive = LiveTissue.Sum(tissue => tissue.DM.N);
+            NDead = DeadTissue.DM.N;
 
             Live.StructuralWt = DMLive / 10.0;  // to g/m2
             Live.StructuralN = NLive / 10.0;    // to g/m2

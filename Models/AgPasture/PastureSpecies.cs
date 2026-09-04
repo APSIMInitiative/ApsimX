@@ -1220,6 +1220,9 @@ namespace Models.AgPasture
         /// <summary>Amount of N fixation from atmosphere, for legumes (kg/ha).</summary>
         private double fixedN;
 
+        /// <summary>Nitrogen fixation factor due to soil N supply, for legumes (0-1).</summary>
+        private double nffSoilNSupply;
+
         /// <summary>Amount of senesced N actually remobilised (kg/ha).</summary>
         private double senescedNRemobilised;
 
@@ -1345,6 +1348,9 @@ namespace Models.AgPasture
 
         /// <summary>Temperature effects on respiration (0-1).</summary>
         private double tempEffectOnRespiration = 0.0;
+
+        /// <summary>Effect of CO2 on optimum N content (>0).</summary>
+        private double ccfOptimumN = 1.0;
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2127,6 +2133,20 @@ namespace Models.AgPasture
         public double TemperatureFactorRespiration
         {
             get { return tempEffectOnRespiration; }
+        }
+
+        /// <summary>Soil N factor for biologic N fixation (0-1).</summary>
+        [Units("0-1")]
+        public double SoilNFactorFixation
+        {
+            get { return nffSoilNSupply; }
+        }
+
+        /// <summary>Variation in optimum N content in plant tissues due to atmospheric CO2 (0-1).</summary>
+        [Units("0-1")]
+        public double CO2EffectOnNConcentration
+        {
+            get { return ccfOptimumN; }
         }
 
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2991,6 +3011,9 @@ namespace Models.AgPasture
             // CO2 effects on Pmax
             glfCO2 = CO2EffectOnPhotosynthesis();
 
+            // CO2 effects on N requirements
+            ccfOptimumN = NOptimumVariationDueToCO2();
+
             // N concentration effects on Pmax
             glfNc = NConcEffectOnPhotosynthesis();
 
@@ -3432,9 +3455,8 @@ namespace Models.AgPasture
             demandOptimumN = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
                            + (toStol * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
 
-            // get the factor to reduce the demand under elevated CO2
-            double fN = NOptimumVariationDueToCO2();
-            demandOptimumN *= fN;
+            // adjust the demand under elevated CO2
+            demandOptimumN *= ccfOptimumN;
 
             // N demand for new growth, with luxury uptake (maximum [N])
             demandLuxuryN = (toLeaf * Leaf.NConcMaximum) + (toStem * Stem.NConcMaximum)
@@ -3446,18 +3468,20 @@ namespace Models.AgPasture
         internal void EvaluateNitrogenFixation()
         {
             double adjNDemand = demandOptimumN * GlfSoilFertility;
+            fixedN = 0.0;
             if (isLegume && adjNDemand > Epsilon)
             {
                 // start with minimum fixation
                 fixedN = MinimumNFixation * adjNDemand;
 
                 // evaluate N stress
-                double Nstress = Math.Max(0.0, MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0));
+                nffSoilNSupply = MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0);
+                nffSoilNSupply = MathUtilities.Bound(nffSoilNSupply, 0.0, 1.0);
 
                 // update N fixation if under N stress
-                if (Nstress < 0.99)
+                if (nffSoilNSupply < 0.999999)
                 {
-                    fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * adjNDemand;
+                    fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - nffSoilNSupply) * adjNDemand;
                 }
             }
         }
@@ -3465,30 +3489,36 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen remobilised from senesced tissues into new growth.</summary>
         internal void EvaluateSenescedNRemobilisation()
         {
-            double fracRemobilised = 0.0;
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
             {
-                // no remobilisation, N demand is fulfilled by fixation alone
+                // N demand is fulfilled by fixation alone, no remobilisation
                 senescedNRemobilised = 0.0;
             }
             else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
             {
-                // some remobilisation, N demand is fulfilled by fixation plus some N remobilised
+                // N demand is fulfilled by fixation plus some remobilisation
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
-                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
             }
             else
             {
-                // full utilisation of remobilised N, but demand still not fulfilled
+                // N demand is not fulfilled by fixation plus remobilisation, N uptake will be required
                 senescedNRemobilised = remobilisableSenescedN;
-                fracRemobilised = 1.0;
             }
 
             // Update N remobilised in each organ
+            DoSenescedNRemobilisation();
+        }
+
+        /// <summary>Removes a fraction of nitrogen remobilisable from senesced tissues (move to new growth).</summary>
+        internal void DoSenescedNRemobilisation()
+        {
+            double fracRemobilised = 0.0;
+            var remobilisableSenescedN = RemobilisableSenescedN;
             if (senescedNRemobilised > Epsilon)
             {
+                fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
                 Leaf.DeadTissue.DoRemobiliseN(fracRemobilised);
                 Stem.DeadTissue.DoRemobiliseN(fracRemobilised);
                 Stolon.DeadTissue.DoRemobiliseN(fracRemobilised);
@@ -3515,7 +3545,7 @@ namespace Models.AgPasture
             }
             else
             {
-                // N demand is greater than fixation and remobilisation, soil N uptake is needed
+                // N demand is not fulfilled by fixation and remobilisation, soil N uptake is needed
                 mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
             }
         }
@@ -3557,7 +3587,7 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    // available luxury N is enough for optimum growth, go through tissues and get what is needed, start on mature
+                    // available luxury N is more than enough for optimum growth, go through tissues and get what is needed, start on mature
                     double Nluxury;
                     double Nusedup;
                     double fracRemobilised;
@@ -3988,22 +4018,20 @@ namespace Models.AgPasture
         /// <summary>Computes the relative effect of leaf N concentration on photosynthesis.</summary>
         /// <remarks>
         /// This mimics the effect that N concentration have on the amount of chlorophyll (assumed directly proportional to N conc.).
-        /// The effect is itself adjusted by a factor function of atmospheric CO2 (plants need less N at high CO2).
+        /// The effect is itself adjusted by a factor that is function of atmospheric CO2 (plants need less N at high CO2).
         /// </remarks>
         /// <returns>A factor to adjust photosynthesis (0-1)</returns>
         private double NConcEffectOnPhotosynthesis()
         {
-            // get variation in N optimum due to CO2
-            double fN = NOptimumVariationDueToCO2();
-
             // get chlorophyll effect
             double effect = 0.0;
             if (Leaf.NConcLive > Leaf.NConcMinimum)
             {
-                if (Leaf.NConcLive < Leaf.NConcOptimum * fN)
-                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, (Leaf.NConcOptimum * fN) - Leaf.NConcMinimum, 1.0);
-                else
-                    effect = 1.0;
+                effect = 1.0;
+                if (Leaf.NConcLive < Leaf.NConcOptimum * ccfOptimumN)
+                {
+                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, (Leaf.NConcOptimum * ccfOptimumN) - Leaf.NConcMinimum, 1.0);
+                }
             }
 
             effect = MathUtilities.Bound(effect, 0.0, 1.0);
@@ -4011,15 +4039,16 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2.</summary>
-        /// <returns>A factor to adjust optimum N in leaves (0-1)</returns>
+        /// <returns>A factor to adjust optimum N in leaves</returns>
         private double NOptimumVariationDueToCO2()
         {
-            if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
+            if (MathUtilities.FloatsAreEqual(myMetData.CO2, ReferenceCO2, Epsilon))
                 return 1.0;
 
             double factorCO2 = Math.Pow((CO2EffectOffsetFactor - ReferenceCO2) / (myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
             double effect = (CO2EffectMinimum + factorCO2) / (1 + factorCO2);
             return effect;
+            // TODO: need to revise this function, it returns wild different values for CO2<refCO2 depending on the value of exponent
         }
 
         /// <summary>Computes the variation in stomata conductance due to variation in atmospheric CO2.</summary>
