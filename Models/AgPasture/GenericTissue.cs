@@ -33,10 +33,6 @@ namespace Models.AgPasture
         /// <summary>Minimum significant difference between two values.</summary>
         internal const double Epsilon = 0.000000001;
 
-        //----------------------- Backing fields for states -----------------------
-
-        private AGPBiomass dryMatter = new AGPBiomass();
-
         //---------------------------- Parameters -----------------------
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
@@ -83,8 +79,11 @@ namespace Models.AgPasture
 
         //----------------------- States -----------------------
 
+        /// <summary>Tissue dry matter biomass.</summary>
+        private AGPBiomass biomass = new AGPBiomass();
+
         /// <summary>Dry matter biomass.</summary>
-        public IAGPBiomass DM { get { return dryMatter; } }
+        public IAGPBiomass DM { get { return biomass; } }
 
         /// <summary>Digestibility of this tissue (kg/kg).</summary>
         public double Digestibility { get; private set; }
@@ -96,8 +95,8 @@ namespace Models.AgPasture
         /// <param name="nAmount">The amount of N to set to (kg/ha).</param>
         public void SetBiomass(double dmAmount, double nAmount)
         {
-            dryMatter.Wt = dmAmount;
-            dryMatter.N = nAmount;
+            biomass.Wt = dmAmount;
+            biomass.N = nAmount;
             calculateDigestibility();
         }
 
@@ -106,8 +105,8 @@ namespace Models.AgPasture
         /// <param name="nAmount">The amount of nitrogen to add (kg/ha).</param>
         public void AddBiomass(double dmAmount, double nAmount)
         {
-            dryMatter.Wt += dmAmount;
-            dryMatter.N += nAmount;
+            biomass.Wt += dmAmount;
+            biomass.N += nAmount;
 
             calculateDigestibility();
         }
@@ -117,18 +116,18 @@ namespace Models.AgPasture
         /// <param name="fractionToSoil">The fraction of removed biomass to send to soil surface.</param>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
-            var dmToSoil = fractionToSoil * dryMatter.Wt;
-            var nToSoil = fractionToSoil * dryMatter.N;
+            var dmToSoil = fractionToSoil * biomass.Wt;
+            var nToSoil = fractionToSoil * biomass.N;
             var totalFraction = fractionToRemove + fractionToSoil;
 
-            DMRemoved = totalFraction * dryMatter.Wt;
-            NRemoved = totalFraction * dryMatter.N;
+            DMRemoved = totalFraction * biomass.Wt;
+            NRemoved = totalFraction * biomass.N;
             FractionRemoved = totalFraction;
 
             if (totalFraction > 0.0)
             {
-                dryMatter.Wt *= (1.0 - totalFraction);
-                dryMatter.N *= (1.0 - totalFraction);
+                biomass.Wt *= (1.0 - totalFraction);
+                biomass.N *= (1.0 - totalFraction);
                 NRemobilisable *= (1.0 - totalFraction);
             }
 
@@ -143,58 +142,67 @@ namespace Models.AgPasture
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         public void Update()
         {
-            dryMatter.Wt += DMTransferredIn - DMTransferredOut;
-            if (dryMatter.Wt < 0 && MathUtilities.FloatsAreEqual(dryMatter.Wt, 0))
-                dryMatter.Wt = 0;
+            // update values
+            biomass.Wt += DMTransferredIn - DMTransferredOut;
+            biomass.N += NTransferredIn - (NTransferredOut + NRemobilised);
 
-            dryMatter.N += NTransferredIn - (NTransferredOut + NRemobilised);
-            if (dryMatter.N < 0 && MathUtilities.FloatsAreEqual(dryMatter.N, 0))
-                dryMatter.N = 0;
+            // ensure values near zero are zeroed (prevent small negatives)
+            if (MathUtilities.FloatsAreEqual(biomass.Wt, 0.0, Epsilon))
+            {
+                biomass.Wt = 0.0;
+            }
+            if (MathUtilities.FloatsAreEqual(biomass.N, 0.0, Epsilon))
+            {
+                biomass.N = 0.0;
+            }
 
-            if (dryMatter.Wt < 0)
+            // check that biomass doesn't go negative
+            if (biomass.Wt < 0.0)
+            {
                 throw new Exception($"{species.Name} {Name} tissue has negative dry matter");
-            if (dryMatter.N < 0)
+            }
+            if (biomass.N < 0.0)
+            {
                 throw new Exception($"{species.Name} {Name} tissue has negative N content");
+            }
+
             calculateDigestibility();
         }
 
-        /// <summary>Computes the DM and N amounts turned over for this tissue.</summary>
+        /// <summary>Computes the DM and N amounts turned over for this tissue, also estimates remobilisable N.</summary>
         /// <param name="turnoverRate">The turnover rate for the tissue today.</param>
         /// <param name="receivingTissue">The tissue to move the turned over biomass to.</param>
         /// <param name="nConcThreshold">The N concentration threshold, below which no remobilisation will occur.</param>
-        /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
+        /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum.</remarks>
         public void DoTissueTurnover(double turnoverRate, GenericTissue receivingTissue, double nConcThreshold)
         {
-            if (DM.Wt > 0.0 && turnoverRate > 0.0)
+            if (biomass.Wt > 0.0 && turnoverRate > 0.0)
             {
-                var turnedoverDM = DM.Wt * turnoverRate;
-                var turnedoverN = DM.N * turnoverRate;
+                // get the amounts turned over
+                var turnedoverDM = biomass.Wt * turnoverRate;
+                var turnedoverN = biomass.N * turnoverRate;
                 DMTransferredOut += turnedoverDM;
                 NTransferredOut += turnedoverN;
-                if (receivingTissue != null)
+
+                // pass the amounts from this to the receiving tissue
+                if ((receivingTissue != null) && (turnedoverDM > 0.0))
                 {
                     receivingTissue.SetBiomassTransferIn(turnedoverDM, turnedoverN);
                 }
 
                 // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
-                double dmRemaining = DM.Wt - DMTransferredOut;
-                double dmRemainingNConc = DM.NConc;
-                double dmTransferredInNConc = MathUtilities.Divide(NTransferredIn, DMTransferredIn, 0);
-
-                double potentialRemobilisableN = 0;
+                double potentialRemobilisableN = 0.0;
+                // first, get the available N in the tissue
                 if (Name != "DeadTissue")
                 {
-                    // calculate the N remobilisable as the dry matter (after removing the amount leaving the tissue)
-                    //  multiplied by the N concentration above the threshold concentration.
-                    // NOTE: don't do this for dead material.
-                    potentialRemobilisableN = dmRemaining * Math.Max(0.0, dmRemainingNConc - nConcThreshold);
+                    potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+                    // NOTE: N already in dead tissue is no longer available for remobilisation
                 }
 
-                // the N transferred into this tissue is remobilisable at the same concentration as above,
-                //  i.e. the concentration of N of the incoming material above the threshold value.
-                potentialRemobilisableN += DMTransferredIn * Math.Max(0.0, dmTransferredInNConc - nConcThreshold);
+                // then get the N that is available in the material being transferred in (includes N into dead, i.e. senesced)
+                potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
 
-                // only a fraction of the above calculated potential remobilisable N is remobilisable per day
+                // only a fraction of the above calculated potential remobilisable N can be remobilised each day
                 NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
             }
         }
@@ -212,8 +220,10 @@ namespace Models.AgPasture
         /// <param name="fraction">The fraction to remove (0-1)</param>
         public void DoRemobiliseN(double fraction)
         {
-            if (fraction > 1)
+            if (fraction > 1.0)
+            {
                 throw new Exception($"{species.Name} {Name} fraction of N remobilised is > 1");
+            }
 
             NRemobilised = NRemobilisable * fraction;
         }
@@ -239,18 +249,20 @@ namespace Models.AgPasture
         private void calculateDigestibility()
         {
             Digestibility = 0.0;
-            if (DM.Wt > 0.0)
+            if (biomass.Wt > 0.0)
             {
-                double cnTissue = DM.Wt * CarbonConcentration / DM.N;
+                double cnTissue = biomass.Wt * CarbonConcentration / biomass.N;
                 double ratio1 = CNratioCellWall / cnTissue;
                 double ratio2 = CNratioCellWall / CNratioProtein;
-                double fractionSugar = DMTransferredIn * FractionSugarNewGrowth / DM.Wt;
+                double fractionSugar = DMTransferredIn * FractionSugarNewGrowth / biomass.Wt;
                 double fractionProtein = (ratio1 - (1.0 - fractionSugar)) / (ratio2 - 1.0);
                 double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
                 Digestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);
 
-                if (Digestibility < 0)
+                if (Digestibility < 0.0)
+                {
                     throw new Exception($"{species.Name} {Name} digestibility is negative");
+                }
             }
         }
     }

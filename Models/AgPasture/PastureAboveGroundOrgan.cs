@@ -248,7 +248,9 @@ namespace Models.AgPasture
             get
             {
                 if (LiveTissue == null)
+                {
                     return 1.0;
+                }
 
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
@@ -263,7 +265,9 @@ namespace Models.AgPasture
             get
             {
                 if (LiveTissue == null)
+                {
                     return 1.0;
+                }
 
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
                                             DMLive, 0.0);
@@ -328,13 +332,13 @@ namespace Models.AgPasture
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
 
             // remove live tissue
-            for (int t = 0; t < Tissue.Length - 1; t++)
+            foreach (GenericTissue tissue in LiveTissue)
             {
-                Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
+                tissue.RemoveBiomass(liveToRemove, liveToResidue);
             }
 
             // remove dead tissue
-            Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
+            DeadTissue.RemoveBiomass(deadToRemove, deadToResidue);
 
             // calculate the fraction of DM removed from this organ
             double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
@@ -354,9 +358,9 @@ namespace Models.AgPasture
         public void ClearDailyTransferredAmounts()
         {
             removedFraction = 0.0;
-            for (int t = 0; t < Tissue.Length; t++)
+            foreach (GenericTissue tissue in Tissue)
             {
-                Tissue[t].ClearDailyTransferredAmounts();
+                tissue.ClearDailyTransferredAmounts();
             }
         }
 
@@ -366,10 +370,10 @@ namespace Models.AgPasture
         {
             if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
             {
-                for (int t = 0; t < Tissue.Length - 1; t++)
+                foreach (GenericTissue tissue in LiveTissue)
                 {
-                    DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
-                    Tissue[t].AddBiomass(-Tissue[t].DM.Wt * fractionToRemove, -Tissue[t].DM.N * fractionToRemove);
+                    DeadTissue.AddBiomass(tissue.DM.Wt * fractionToRemove, tissue.DM.N * fractionToRemove);
+                    tissue.AddBiomass(-tissue.DM.Wt * fractionToRemove, -tissue.DM.N * fractionToRemove);
                 }
             }
 
@@ -396,10 +400,10 @@ namespace Models.AgPasture
             double previousN = NTotal;
 
             // update all tissues
-            EmergingTissue.Update();
-            DevelopingTissue.Update();
-            MatureTissue.Update();
-            DeadTissue.Update();
+            foreach (GenericTissue tissue in Tissue)
+            {
+                tissue.Update();
+            }
 
             CalculateStates();
 

@@ -142,7 +142,9 @@ namespace Models.AgPasture
                 rootingDepth = MathUtilities.Bound(value, 0.0, MaximumAllowedDepth);
                 BottomLayer = 0;
                 if (soilPhysical != null)
+                {
                     BottomLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, rootingDepth);
+                }
             }
         }
 
@@ -170,7 +172,7 @@ namespace Models.AgPasture
 
         /// <summary>Proportion of dry matter in each soil layer (0-1).</summary>
         [Units("kg/kg")]
-        public double[] DMFractions { get { return Live.FractionWt; } }
+        public double[] DMFraction { get { return Live.DMFraction; } }
 
         /// <summary>Total N amount in this organ (kg/ha).</summary>
         [Units("kg/ha")]
@@ -245,17 +247,18 @@ namespace Models.AgPasture
         public double NGrowth { get { return Live.NTransferredIn; } }
 
         /// <summary>Root length density by volume (mm/mm^3).</summary>
+        /// <remarks>Values are for live tissue only.</remarks>
         [Units("mm/mm^3")]
         public double[] LengthDensity
         {
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = Tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2
+                double totalRootLength = Live.DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
-                    result[layer] = Tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
+                    result[layer] = Live.DMFraction[layer] * totalRootLength / soilPhysical.Thickness[layer];
                 }
                 return result;
             }
@@ -271,7 +274,7 @@ namespace Models.AgPasture
         internal double[] mySoilNO3Available { get; private set; }
 
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
-        private bool IsKLModiferDueToDamageActive { get; set; } = false;
+        private bool IsKLModifierDueToDamageActive { get; set; } = false;
 
         /// <summary>Name of zone where roots are growing.</summary>
         private string zoneName;
@@ -397,9 +400,9 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void ClearDailyTransferredAmounts()
         {
-            for (int t = 0; t < Tissue.Length; t++)
+            foreach (RootTissue tissue in Tissue)
             {
-                Tissue[t].ClearDailyTransferredAmounts();
+                tissue.ClearDailyTransferredAmounts();
             }
         }
 
@@ -407,8 +410,8 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         internal void KillOrgan(double fractionToRemove)
         {
-            double[] dmKilled = MathUtilities.Multiply_Value(Live.FractionWt, Live.DM.Wt * fractionToRemove);
-            double[] nKilled = MathUtilities.Multiply_Value(Live.FractionWt, Live.DM.N * fractionToRemove);
+            double[] dmKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.Wt * fractionToRemove);
+            double[] nKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.N * fractionToRemove);
             Dead.AddBiomass(dmKilled, nKilled);
             Live.AddBiomass(MathUtilities.Multiply_Value(dmKilled, -1.0), MathUtilities.Multiply_Value(nKilled, -1.0));
         }
@@ -429,8 +432,10 @@ namespace Models.AgPasture
             double previousN = NTotal;
 
             // update all tissues
-            Live.Update();
-            Dead.Update();
+            foreach (RootTissue tissue in Tissue)
+            {
+                tissue.Update();
+            }
 
             // check mass balance
             bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
@@ -453,7 +458,7 @@ namespace Models.AgPasture
         private double KLModiferDueToDamage(int layerIndex)
         {
             var threshold = 0.01;
-            if (!IsKLModiferDueToDamageActive)
+            if (!IsKLModifierDueToDamageActive)
             {
                 return 1.0;
             }
@@ -497,15 +502,15 @@ namespace Models.AgPasture
             double depthAtTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                mySoilNO3Available[layer] = 0;
-                mySoilNH4Available[layer] = 0;
-                if (soilWaterUptake[layer] > 0)
+                mySoilNO3Available[layer] = 0.0;
+                mySoilNH4Available[layer] = 0.0;
+                if (soilWaterUptake[layer] > 0.0)
                 {
                     // get the fraction of this layer that is within the root zone
                     double layerFraction = MathUtilities.Bound((rootingDepth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
                     // get the soil moisture factor (less N available in drier soil)
-                    double relativeWaterContent = MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0);
+                    double relativeWaterContent = MathUtilities.Divide(swMM[layer] - llMM[layer], dulMM[layer] - llMM[layer], 0.0);
                     relativeWaterContent = MathUtilities.Bound(relativeWaterContent, 0.0, 1.0);
                     double moistureFactor = 1.0 - Math.Pow(1.0 - relativeWaterContent, NExtractionSWFactorExponent);
 
@@ -527,7 +532,7 @@ namespace Models.AgPasture
             double potentialAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
             if (potentialAvailableN > MaximumNUptake)
             {
-                double upFraction = MathUtilities.Divide(MaximumNUptake, potentialAvailableN, 0);
+                double upFraction = MathUtilities.Divide(MaximumNUptake, potentialAvailableN, 0.0);
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
@@ -550,7 +555,9 @@ namespace Models.AgPasture
             {
                 double depthTillTopThisLayer = 0.0;
                 for (int z = 0; z < layer; z++)
+                {
                     depthTillTopThisLayer += soilPhysical.Thickness[z];
+                }
                 fractionInLayer = (rootingDepth - depthTillTopThisLayer) / soilPhysical.Thickness[layer];
                 fractionInLayer = Math.Min(1.0, Math.Max(0.0, fractionInLayer));
             }
@@ -639,7 +646,9 @@ namespace Models.AgPasture
             if (MathUtilities.IsGreaterThan(cumProportion, 0))
             {
                 for (int layer = 0; layer < BottomLayer; layer++)
+                {
                     result[layer] = TargetDistribution[layer] / cumProportion;
+                }
                 result[BottomLayer] = TargetDistribution[BottomLayer] * layerFrac / cumProportion;
             }
 
@@ -656,15 +665,15 @@ namespace Models.AgPasture
         /// <param name="rootNToAdd">Nitrogen in root grown (kg/ha).</param>
         public void DoRootGrowthAllocation(double rootDMToAdd, double rootNToAdd)
         {
-            if (MathUtilities.IsGreaterThan(rootDMToAdd, 0))
+            if (MathUtilities.IsGreaterThan(rootDMToAdd, 0.0))
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] newGrowthFraction;
                 double[] currentRootTarget = CurrentRootDistributionTarget();
-                if (MathUtilities.AreEqual(Live.FractionWt, currentRootTarget))
+                if (MathUtilities.AreEqual(Live.DMFraction, currentRootTarget))
                 {
                     // no need to change the distribution
-                    newGrowthFraction = Live.FractionWt;
+                    newGrowthFraction = Live.DMFraction;
                 }
                 else
                 {
@@ -672,7 +681,7 @@ namespace Models.AgPasture
                     newGrowthFraction = new double[nLayers];
                     for (int layer = 0; layer <= BottomLayer; layer++)
                     {
-                        newGrowthFraction[layer] = 0.5 * (Live.FractionWt[layer] + currentRootTarget[layer]);
+                        newGrowthFraction[layer] = 0.5 * (Live.DMFraction[layer] + currentRootTarget[layer]);
                     }
 
                     // normalise distribution of allocation
@@ -683,8 +692,11 @@ namespace Models.AgPasture
                     }
                 }
 
-                Live.SetBiomassTransferIn(dm: MathUtilities.Multiply_Value(newGrowthFraction, rootDMToAdd),
-                                           n: MathUtilities.Multiply_Value(newGrowthFraction, rootNToAdd));
+                // split the amounts into values for each layer (based on new distribution)
+                var newDMLayered = MathUtilities.Multiply_Value(newGrowthFraction, rootDMToAdd);
+                var newNLayered = MathUtilities.Multiply_Value(newGrowthFraction, rootNToAdd);
+
+                Live.SetBiomassTransferIn(newDMLayered, newNLayered);
             }
             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
         }
@@ -713,8 +725,10 @@ namespace Models.AgPasture
         /// <param name="amount">Amount of water to remove.</param>
         public void PerformWaterUptake(double[] amount)
         {
-            if (MathUtilities.IsGreaterThan(amount.Sum(), 0))
+            if (MathUtilities.IsGreaterThan(amount.Sum(), 0.0))
+            {
                 waterBalance.RemoveWater(amount);
+            }
         }
 
         /// <summary>Remove nutrients from soil - uptake.</summary>
