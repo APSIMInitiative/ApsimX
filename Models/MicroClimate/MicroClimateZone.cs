@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
-using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models
 {
-
     /// <summary>
     /// A micro climate wrapper around a Zone instance.
     /// </summary>
@@ -174,16 +170,15 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        /// <param name="structure">Structure instance</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, IStructure structure, double minHeightDiffForNewLayer)
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = structure.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
-            modelsThatHaveCanopies = structure.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
-            SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
-            SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
+            canopyModels = zoneModel.Node.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
+            modelsThatHaveCanopies = zoneModel.Node.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
+            SoilWater = zoneModel.Node.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = zoneModel.Node.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }
 
         /// <summary>Constructor. for blank zone</summary>

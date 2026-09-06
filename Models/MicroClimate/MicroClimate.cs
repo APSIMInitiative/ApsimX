@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.CLEM;
-using Models.Climate;
 using Models.Core;
 using Models.Interfaces;
 using Models.Zones;
@@ -22,13 +20,8 @@ namespace Models
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class MicroClimate : Model, IStructureDependency
+    public class MicroClimate : Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
-
         /// <summary>The clock</summary>
         [Link]
         private IClock clock = null;
@@ -36,10 +29,6 @@ namespace Models
         /// <summary>The weather</summary>
         [Link]
         private IWeather weather = null;
-
-        /// <summary>The soil water model</summary>
-        [Link]
-        private ISoilWater soilWater = null;
 
         [Link]
         private ICalculateEo eoCalculator = null;
@@ -243,10 +232,10 @@ namespace Models
             if (ReferenceHeight < 1 || ReferenceHeight > 10)
                 throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
-            foreach (Zone newZone in Structure.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).Where(a => a is not ZoneCLEM))
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone, Structure, MinimumHeightDiffForNewLayer));
+            foreach (Zone newZone in Node.FindChildren<Zone>(relativeTo: Parent as INodeModel, recurse: true).Where(a => a is not ZoneCLEM))
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, Structure, MinimumHeightDiffForNewLayer));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -312,9 +301,9 @@ namespace Models
             }
 
             // Light distribution is now complete so calculate remaining micromet equations
-            foreach (var zoneMC in microClimatesZones)
+            foreach (MicroClimateZone zoneMC in microClimatesZones)
             {
-                zoneMC.CalculateEnergyTerms(soilWater.Salb);
+                zoneMC.CalculateEnergyTerms(zoneMC.SoilWater.Salb);
                 zoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
                 zoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
                 zoneMC.CalculateGc(dayLengthEvap);
@@ -335,11 +324,6 @@ namespace Models
         /// <param name="alleyZone"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone treeZone, ref MicroClimateZone alleyZone)
         {
-            if (DateUtilities.DatesAreEqual("02/01/2008",clock.Today))
-            {
-
-            }
-
             double TreeCanopyHeight = treeZone.DeltaZ.Sum();
             double TreeZoneWidth = (treeZone.Zone as Zones.RectangularZone).Width;
             double AlleyZoneWidth = (alleyZone.Zone as Zones.RectangularZone).Width;
