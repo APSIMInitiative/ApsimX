@@ -126,7 +126,14 @@ namespace Models
         [Units("mm")]
         public double PrecipitationInterception
         {
-            get { return microClimatesZones[0].PrecipitationInterception; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                return microClimatesZones[0].PrecipitationInterception; 
+            }
         }
 
         /// <summary>Gets the amount of radiation intercepted by the canopy (MJ/m2).</summary>
@@ -134,14 +141,30 @@ namespace Models
         [Units("MJ/m^2")]
         public double RadiationInterception
         {
-            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterception; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].RadiationInterception; 
+            }
         }
 
         /// <summary>Gets the amount of radiation intercepted by the green elements of canopy (MJ/m2).</summary>
         [Units("MJ/m^2")]
         public double RadiationInterceptionOnGreen
         {
-            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterceptionOnGreen; }
+            get 
+            {
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].RadiationInterceptionOnGreen;
+            }
         }
 
         /// <summary>Gets the total Penman-Monteith potential evapotranspiration (MJ/m2).</summary>
@@ -149,7 +172,15 @@ namespace Models
         [Units("MJ/m^2")]
         public double PetTotal
         {
-            get { return PetRadiationTerm + PetAerodynamicTerm; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return PetRadiationTerm + PetAerodynamicTerm; 
+            }
         }
 
         /// <summary>Gets the radiation term of for the Penman-Monteith PET (mm).</summary>
@@ -157,7 +188,15 @@ namespace Models
         [Units("mm")]
         public double PetRadiationTerm
         {
-            get { return microClimatesZones[0].petr; }
+            get 
+            {
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].petr;
+            }
         }
 
         /// <summary>Gets the aerodynamic term of for the Penman-Monteith PET (mm).</summary>
@@ -165,7 +204,15 @@ namespace Models
         [Units("mm")]
         public double PetAerodynamicTerm
         {
-            get { return microClimatesZones[0].peta; }
+            get 
+            {
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].peta;
+            }
         }
 
         /// <summary>Gets the fraction of the daytime in which the leaves are dry (0-1).</summary>
@@ -173,7 +220,15 @@ namespace Models
         [Units("-")]
         public double DryLeafTimeFraction
         {
-            get { return microClimatesZones[0].DryLeafFraction; }
+            get 
+            {
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].DryLeafFraction;
+            }
         }
 
         /// <summary>Gets the total net radiation, long and short waves (MJ/m2).</summary>
@@ -189,7 +244,15 @@ namespace Models
         [Units("MJ/m^2")]
         public double NetShortWaveRadiation
         {
-            get { return weather.Radn * (1.0 - microClimatesZones[0].Albedo); }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return weather.Radn * (1.0 - microClimatesZones[0].Albedo); 
+            }
         }
 
         /// <summary>Gets the net long wave radiation (MJ/m2).</summary>
@@ -197,7 +260,15 @@ namespace Models
         [Units("MJ/m^2")]
         public double NetLongWaveRadiation
         {
-            get { return microClimatesZones[0].NetLongWaveRadiation; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].NetLongWaveRadiation;
+            }
         }
 
         /// <summary>Gets the flux of heat into the soil (MJ/m2).</summary>
@@ -205,7 +276,15 @@ namespace Models
         [Units("MJ/m^2")]
         public double SoilHeatFlux
         {
-            get { return microClimatesZones[0].SoilHeatFlux; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].SoilHeatFlux; 
+            }
         }
 
         /// <summary>Gets the total plant cover (0-1).</summary>
@@ -213,14 +292,30 @@ namespace Models
         [Units("-")]
         public double CanopyCover
         {
-            get { return microClimatesZones[0].CanopyCover; }
+            get 
+            { 
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].CanopyCover;
+            }
         }
 
         /// <summary>The number of canopy layers.</summary>
         [Description("Number of canopy layers")]
         public int NumLayers
         {
-            get { return microClimatesZones[0].DeltaZ.Length; }
+            get 
+            {
+                if (microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].DeltaZ.Length;
+            }
         }
 
         /// <summary>Called when simulation starts.</summary>
