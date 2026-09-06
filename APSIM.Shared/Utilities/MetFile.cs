@@ -396,6 +396,74 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Returns a dictionary of constant names to constant values
+        /// </summary>
+        public Dictionary<string,string> GetConstants()
+        {
+            Dictionary<string,string> constants = new Dictionary<string, string>();
+            foreach(string constant in Contants)
+                constants.Add(constant, GetConstant(constant));
+            return constants;
+        }
+
+        /// <summary>
+        /// Returns the unit string for the given column name
+        /// </summary>
+        /// <param name="name"></param>
+        public string GetColumnUnit(string name)
+        {
+            foreach(MetColumn column in data.Columns)
+                if (column.Name == name)
+                    return column.Unit;
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a dictionary of column name to column unit
+        /// </summary>
+        public Dictionary<string,string> GetColumnUnits()
+        {
+            Dictionary<string,string> columns = new Dictionary<string, string>();
+            foreach(string column in Columns)
+                columns.Add(column, GetColumnUnit(column));
+            return columns;
+        }
+
+        /// <summary>
+        /// Returns the data type as a string for the given column name
+        /// </summary>
+        /// <param name="name"></param>
+        public string GetColumnDataType(string name)
+        {
+            Type dataType = null;
+            foreach(MetColumn column in data.Columns)
+                if (column.Name == name)
+                    dataType = column.DataType;
+
+            if (dataType == typeof(DateTime))
+                return "datetime";
+            else if (dataType == typeof(double))
+                return "double";
+            else if (dataType == typeof(int))
+                return "int";
+            else if (dataType == typeof(string))
+                return "string";
+            else
+                return dataType.ToString();
+        }
+
+        /// <summary>
+        /// Returns a dictionary of column name to column data type
+        /// </summary>
+        public Dictionary<string,string> GetColumnDataTypes()
+        {
+            Dictionary<string,string> columns = new Dictionary<string, string>();
+            foreach(string column in Columns)
+                columns.Add(column, GetColumnDataType(column));
+            return columns;
+        }
+
+        /// <summary>
         /// Returns the double values for the given date
         /// </summary>
         public double[] GetDay(DateTime date)
@@ -406,10 +474,21 @@ namespace APSIM.Shared.Utilities
             else
             {
                 foreach(MetRow row in data.Rows)
-                if (date == row.Date)
-                    return row.Values.ToArray();
+                    if (date == row.Date)
+                        return row.Values.ToArray();
             }
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
+        }
+
+        /// <summary>
+        /// Returns all data in a 2D array of string
+        /// </summary>
+        public string[][] GetData()
+        {
+            List<string[]> output = new List<string[]>();
+            foreach(MetRow row in data.Rows)
+                output.Add(row.Inputs.ToArray());
+            return output.ToArray();
         }
 
         /// <summary>
@@ -494,7 +573,7 @@ namespace APSIM.Shared.Utilities
             {
                 List<string> constants = new List<string>();
                 foreach(MetConstant constant in data.Contants)
-                    if (string.IsNullOrEmpty(constant.Name))
+                    if (!string.IsNullOrEmpty(constant.Name))
                         constants.Add(constant.Name);
                 return constants.ToArray();
             }

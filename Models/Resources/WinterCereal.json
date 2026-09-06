@@ -107,7 +107,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
                   "Name": "ArbitrationMethod",
                   "ResourceName": null,
                   "Children": [],
@@ -747,7 +747,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
@@ -761,7 +761,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -775,7 +775,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -784,7 +784,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -809,7 +809,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -818,23 +818,23 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -851,7 +851,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -861,11 +861,11 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
-              "ReadOnly": true
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Phen.GenericPhase, Models",
@@ -1393,7 +1393,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Memo, Models",
@@ -2320,7 +2320,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "Storage",
                   "ResourceName": null,
@@ -2974,7 +2974,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -5762,7 +5762,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,
@@ -6615,7 +6615,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "QStoragePriority",
                   "ResourceName": null,

@@ -101,7 +101,7 @@ namespace Models.PMF
         {
             if (commands != null)
             {
-                foreach (SetPropertyCommand command in commands)
+                foreach (SetPropertyCommand command in commands.Reverse())
                     command.Undo();
                 commands = null;
             }

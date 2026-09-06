@@ -228,20 +228,34 @@ namespace Models.PMF
             }
         }
 
+
+        /// <summary>Gets the partitioning mass balance error.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double DMPartitioningMassBalanceError { get; private set; }
+
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantPartioning")]
         virtual protected void OnDoActualPlantPartioning(object sender, EventArgs e)
         {
+
             if (plant.IsEmerged)
             {
+                double totalBiomassStart = Organs.Sum(o => o.Total.Wt);
                 //ordering within the arbitration items is important - uses the order in the tree
                 //Do the rest of the N partitioning, revise DM allocations if N is limited and do DM and N allocations
                 nArbitration.DoActualPartitioning(Organs.ToArray(), N);
 
                 dmArbitration.DoAllocations(Organs.ToArray(), DM);
                 nArbitration.DoAllocations(Organs.ToArray(), N);
+
+                double totalBiomassEnd = Organs.Sum(o => o.Total.Wt);
+                double change = totalBiomassEnd - totalBiomassStart;
+                double fixation = DM.Fixation.Sum();
+                DMPartitioningMassBalanceError = change - fixation;
+
             }
         }
 
