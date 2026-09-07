@@ -558,7 +558,6 @@ namespace Models
                         lightProfile[i].AmountOnDead = CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, 1 - RadnGreenFraction(j));
                         lightProfile[i].AmountOnGreenTotal = totalGreen;
                         lightProfile[i].AmountOnDeadTotal = totalDead;
-                        totalDead += lightProfile[i].AmountOnDead;
                         totalPETa += Canopies[j].PETa[i];
                         totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];

@@ -143,7 +143,7 @@ namespace Models
         {
             get 
             { 
-                if (microClimatesZones.Count() == 0)
+                if (microClimatesZones == null || microClimatesZones.Count() == 0)
                     return 0;
                 else if (microClimatesZones.Count() > 1)
                     throw new Exception("This property cannot be used in a multi-zone simulation");
