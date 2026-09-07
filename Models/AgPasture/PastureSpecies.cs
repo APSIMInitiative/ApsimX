@@ -809,29 +809,29 @@ namespace Models.AgPasture
         [Units("-")]
         public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
 
-        /// <summary>Maximum target allocation of new growth to leaves (0-1).</summary>
+        /// <summary>Maximum target allocation of shoot new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double FractionLeafMaximum { get; set; }
+        public double LeafProportionMaximum { get; set; }
 
-        /// <summary>Minimum target allocation of new growth to leaves (0-1).</summary>
+        /// <summary>Minimum target allocation of shoot new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double FractionLeafMinimum { get; set; }
+        public double LeafProportionMinimum { get; set; }
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double FractionLeafDMThreshold { get; set; }
+        public double LeafPropDMThreshold { get; set; }
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double FractionLeafDMFactor { get; set; }
+        public double LeafPropDMFactor { get; set; }
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Units(">0.0")]
-        public double FractionLeafExponent { get; set; }
+        public double LeafPropExponent { get; set; }
 
-        /// <summary>Fraction of new shoot growth to be allocated to stolons (0-1).</summary>
+        /// <summary>Target allocation of shoot new shoot growth to stolons (0-1).</summary>
         [Units("0-1")]
-        public double FractionToStolon { get; set; } = 0.0;
+        public double StolonProportionTarget { get; set; } = 0.0;
 
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Units("m^2/kg")]
@@ -1154,11 +1154,23 @@ namespace Models.AgPasture
         /// <summary>Fraction of new growth allocated to shoot (0-1).</summary>
         private double fractionToShoot;
 
-        /// <summary>Fraction of new shoot growth allocated to leaves (0-1).</summary>
+        /// <summary>Fraction of new growth allocated to leaves (0-1).</summary>
         private double fractionToLeaf;
+
+        /// <summary>Fraction of new growth allocated to stems (0-1).</summary>
+        private double fractionToStem;
+
+        /// <summary>Fraction of new growth allocated to stolons (0-1).</summary>
+        private double fractionToStolon;
+
+        /// <summary>Fraction of new growth allocated to roots (0-1).</summary>
+        private double fractionToRoot;
 
         /// <summary>Flag whether the factor adjusting Shoot:Root ratio during reproductive season is being used.</summary>
         private bool usingReproSeasonFactor = true;
+
+        /// <summary>Factor for adjusting shoot:root partition during reproductive season.</summary>
+        private double reproFactor = 1.0;
 
         /// <summary>Intervals defining the three reproductive season phases (onset, main phase, and outset).</summary>
         private double[] reproSeasonInterval;
@@ -2213,24 +2225,38 @@ namespace Models.AgPasture
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Fraction of new growth allocated to shoot (0-1).</summary>
-        [Units("0-1")]
+        [Units("kg/kg")]
         public double FractionGrowthToShoot
         {
             get { return fractionToShoot; }
         }
 
-        /// <summary>Fraction of new growth allocated to roots (0-1).</summary>
-        [Units("0-1")]
-        public double FractionGrowthToRoot
-        {
-            get { return 1 - fractionToShoot; }
-        }
-
         /// <summary>Fraction of new shoot growth allocated to leaves (0-1).</summary>
-        [Units("0-1")]
+        [Units("kg/kg")]
         public double FractionGrowthToLeaf
         {
             get { return fractionToLeaf; }
+        }
+
+        /// <summary>Fraction of new growth allocated to stems (0-1).</summary>
+        [Units("kg/kg")]
+        public double FractionGrowthToStem
+        {
+            get { return fractionToStem; }
+        }
+
+        /// <summary>Fraction of new growth allocated to stolons (0-1).</summary>
+        [Units("kg/kg")]
+        public double FractionGrowthToStolon
+        {
+            get { return fractionToStolon; }
+        }
+
+        /// <summary>Fraction of new growth allocated to roots (0-1).</summary>
+        [Units("kg/kg")]
+        public double FractionGrowthToRoot
+        {
+            get { return fractionToRoot; }
         }
 
         /// <summary>Turnover rate for live shoot tissues (leaves and stem) (0-1).</summary>
@@ -2966,8 +2992,7 @@ namespace Models.AgPasture
                     CalcDailyPotentialGrowth();
 
                     // evaluate potential allocation of today's growth
-                    EvaluateAllocationToShoot();
-                    EvaluateAllocationToLeaf();
+                    GetAllocationFractions();
 
                     // get the potential growth after water limitations
                     CalcGrowthAfterWaterLimitations();
@@ -3354,30 +3379,24 @@ namespace Models.AgPasture
                 dGrowthRootDM = Math.Max(0.0, dGrowthAfterNutrientLimitations - dGrowthShootDM);
                 dGrowthRootN = 0.0;
 
-                // get the fractions of new growth to allocate to each plant organ
-                double toLeaf = fractionToShoot * fractionToLeaf;
-                double toStem = fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
-                double toStolon = fractionToShoot * FractionToStolon;
-                double toRoot = 1.0 - fractionToShoot;
-
                 // allocate new DM growth to the growing tissues
-                Leaf.EmergingTissue.DMTransferredIn += toLeaf * dGrowthAfterNutrientLimitations;
-                Stem.EmergingTissue.DMTransferredIn += toStem * dGrowthAfterNutrientLimitations;
-                Stolon.EmergingTissue.DMTransferredIn += toStolon * dGrowthAfterNutrientLimitations;
+                Leaf.EmergingTissue.DMTransferredIn += fractionToLeaf * dGrowthAfterNutrientLimitations;
+                Stem.EmergingTissue.DMTransferredIn += fractionToStem * dGrowthAfterNutrientLimitations;
+                Stolon.EmergingTissue.DMTransferredIn += fractionToStolon * dGrowthAfterNutrientLimitations;
 
                 // evaluate allocation of N
                 if (dNewGrowthN > demandOptimumN)
                 {
                     // available N was more than enough to meet basic demand (i.e. there is luxury uptake),
                     //   allocate N taken up based on maximum N content
-                    double Nsum = (toLeaf * Leaf.NConcMaximum) + (toStem * Stem.NConcMaximum)
-                                + (toStolon * Stolon.NConcMaximum) + (toRoot * Root.NConcMaximum);
+                    double Nsum = (fractionToLeaf * Leaf.NConcMaximum) + (fractionToStem * Stem.NConcMaximum)
+                                + (fractionToStolon * Stolon.NConcMaximum) + (fractionToRoot * Root.NConcMaximum);
                     if (Nsum > Epsilon)
                     {
-                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcMaximum / Nsum;
-                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * toStem * Stem.NConcMaximum / Nsum;
-                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * toStolon * Stolon.NConcMaximum / Nsum;
-                        dGrowthRootN += dNewGrowthN * toRoot * Root.NConcMaximum / Nsum;
+                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToLeaf * Leaf.NConcMaximum / Nsum;
+                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStem * Stem.NConcMaximum / Nsum;
+                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStolon * Stolon.NConcMaximum / Nsum;
+                        dGrowthRootN += dNewGrowthN * fractionToRoot * Root.NConcMaximum / Nsum;
                     }
                     else
                     {
@@ -3388,14 +3407,14 @@ namespace Models.AgPasture
                 else
                 {
                     // available N was not enough to meet basic demand, allocate N taken up based on optimum N content
-                    double Nsum = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                                + (toStolon * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
+                    double Nsum = (fractionToLeaf * Leaf.NConcOptimum) + (fractionToStem * Stem.NConcOptimum)
+                                + (fractionToStolon * Stolon.NConcOptimum) + (fractionToRoot * Root.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
-                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
-                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * toStem * Stem.NConcOptimum / Nsum;
-                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * toStolon * Stolon.NConcOptimum / Nsum;
-                        dGrowthRootN += dNewGrowthN * toRoot * Root.NConcOptimum / Nsum;
+                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToLeaf * Leaf.NConcOptimum / Nsum;
+                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStem * Stem.NConcOptimum / Nsum;
+                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStolon * Stolon.NConcOptimum / Nsum;
+                        dGrowthRootN += dNewGrowthN * fractionToRoot * Root.NConcOptimum / Nsum;
                     }
                     else
                     {
@@ -3544,21 +3563,22 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
-            double toRoot = dGrowthAfterWaterLimitations * (1.0 - fractionToShoot);
-            double toStol = dGrowthAfterWaterLimitations * fractionToShoot * FractionToStolon;
-            double toLeaf = dGrowthAfterWaterLimitations * fractionToShoot * fractionToLeaf;
-            double toStem = dGrowthAfterWaterLimitations * fractionToShoot * (1.0 - FractionToStolon - fractionToLeaf);
+            // get the amounts of new growth in each organ
+            double dmToLeaf = dGrowthAfterWaterLimitations * fractionToLeaf;
+            double dmToStem = dGrowthAfterWaterLimitations * fractionToStem;
+            double dmToStolon = dGrowthAfterWaterLimitations * fractionToStolon;
+            double dmToRoot = dGrowthAfterWaterLimitations * fractionToRoot;
 
             // N demand for new growth, with optimum N (kg/ha)
-            demandOptimumN = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                           + (toStol * Stolon.NConcOptimum) + (toRoot * Root.NConcOptimum);
+            demandOptimumN = (dmToLeaf * Leaf.NConcOptimum) + (dmToStem * Stem.NConcOptimum)
+                           + (dmToStolon * Stolon.NConcOptimum) + (dmToRoot * Root.NConcOptimum);
 
             // adjust the demand under elevated CO2
             demandOptimumN *= ccfOptimumN;
 
             // N demand for new growth, with luxury uptake (maximum [N])
-            demandLuxuryN = (toLeaf * Leaf.NConcMaximum) + (toStem * Stem.NConcMaximum)
-                          + (toStol * Stolon.NConcMaximum) + (toRoot * Root.NConcMaximum);
+            demandLuxuryN = (dmToLeaf * Leaf.NConcMaximum) + (dmToStem * Stem.NConcMaximum)
+                          + (dmToStolon * Stolon.NConcMaximum) + (dmToRoot * Root.NConcMaximum);
             // It is assumed that luxury uptake is not affected by CO2 variations
         }
 
@@ -3755,12 +3775,27 @@ namespace Models.AgPasture
 
         #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the allocations into shoot and leaves of today's growth.</summary>
+        /// <summary>Gets the allocations into shoot and specific organs of today's growth.</summary>
         internal void GetAllocationFractions()
         {
-            // this is used when Sward is controlling growth. TODO: delete this when removing control from SWARD
-            EvaluateAllocationToShoot();
-            EvaluateAllocationToLeaf();
+            // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
+            reproFactor = 1.0;
+            if (usingReproSeasonFactor && !isAnnual)
+            {
+                reproFactor = CalcReproductiveGrowthFactor();
+            }
+
+            // get the fraction of todays growth to be allocated to shoot
+            fractionToShoot = allocationToShoot();
+
+            // get the proportion of aboveground growth that goes into leaves
+            double fracLeaf = allocationToLeaf();
+
+            // get the fractions of new growth to allocate to each plant organ
+            fractionToLeaf = fractionToShoot * fracLeaf;
+            fractionToStem = fractionToShoot * (1.0 - StolonProportionTarget - fracLeaf);
+            fractionToStolon = fractionToShoot * StolonProportionTarget;
+            fractionToRoot = 1.0 - fractionToShoot;
         }
 
         /// <summary>Calculates the fraction of new growth allocated to shoot.</summary>
@@ -3771,81 +3806,73 @@ namespace Models.AgPasture
         ///  the reproductive season if usingReproSeasonFactor.
         /// The allocation to shoot may be further modified to ensure a minimum allocation (= 1.0 - MaxRootAllocation).
         /// </remarks>
-        private void EvaluateAllocationToShoot()
+        private double allocationToShoot()
         {
-            if (BelowGroundLiveWt > Epsilon)
+            if (BelowGroundLiveWt < Epsilon)
             {
-                // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
-                double glfMin = Math.Min(glfWaterSupply, glfNSupply);
-
-                // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)
-                double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
-
-                // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
-                double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, double.MaxValue);
-
-                // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
-                double reproFac = 1.0;
-                if (usingReproSeasonFactor && !isAnnual)
-                {
-                    reproFac = CalcReproductiveGrowthFactor();
-                }
-
-                // get today's target SR
-                double targetSR = TargetShootRootRatio * reproFac;
-
-                // update today's shoot:root partition
-                double growthSR = MathUtilities.Divide(targetSR * glfFactor * targetSR, currentSR, double.MaxValue - 1.5);
-
-                // compute fraction to shoot
-                fractionToShoot = growthSR / (1.0 + growthSR);
+                return 1.0;
             }
-            else
-            {
-                // use default value, this should not happen (might happen if plant is dead)
-                fractionToShoot = 1.0;
-            }
+
+            // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
+            double glfMin = Math.Min(glfWaterSupply, glfNSupply);
+
+            // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)
+            double glfFactor = 1.0 - ShootRootGlfFactor * (1.0 - Math.Pow(glfMin, 1.0 / ShootRootGlfFactor));
+
+            // get the current shoot/root ratio (partition will try to make this value closer to targetSR)
+            double currentSR = MathUtilities.Divide(AboveGroundLiveWt, BelowGroundLiveWt, double.MaxValue);
+
+            // get today's target SR (adjust for reproductive season)
+            double targetSR = TargetShootRootRatio * reproFactor;
+
+            // update today's shoot:root partition
+            double growthSR = MathUtilities.Divide(targetSR * glfFactor * targetSR, currentSR, double.MaxValue - 1.5);
+
+            // compute fraction to shoot
+            double fracToAllocate = growthSR / (1.0 + growthSR);
 
             // check for maximum root allocation (kept here mostly for backward compatibility)
-            if ((1.0 - fractionToShoot) > MaxRootAllocation)
-                fractionToShoot = 1.0 - MaxRootAllocation;
+            if ((1.0 - fracToAllocate) > MaxRootAllocation)
+                fracToAllocate = 1.0 - MaxRootAllocation;
+            // TODO: need to remove this, not in original (Ecomod) code
+
+            return fracToAllocate;
         }
 
-        /// <summary>Computes the fraction of new shoot DM that is allocated to leaves.</summary>
+        /// <summary>Computes the proportion of new shoot growth that is allocated to leaves.</summary>
         /// <remarks>
         /// This method is used to reduce the proportion of leaves as plants grow, this is used for species that
         ///  allocate proportionally more DM to stolon/stems when the whole plant's DM is high.
         /// To avoid too little allocation to leaves in case of grazing, the current leaf:stem ratio is evaluated
         ///  and used to modify the targeted value in a similar way as shoot:root ratio.
         /// </remarks>
-        private void EvaluateAllocationToLeaf()
+        private double allocationToLeaf()
         {
+            double fracToAllocate = LeafProportionMaximum;
+            if (Leaf.DMLive < Epsilon)
+            {
+                return LeafProportionMaximum;
+            }
+
             // compute new target FractionLeaf
-            double targetFLeaf = FractionLeafMaximum;
-            if ((FractionLeafMinimum < FractionLeafMaximum) && (AboveGroundLiveWt > FractionLeafDMThreshold))
+            double targetFLeaf = LeafProportionMaximum;
+            if ((LeafProportionMinimum < LeafProportionMaximum) && (AboveGroundLiveWt > LeafPropDMThreshold))
             {
-                double fLeafAux = (AboveGroundLiveWt - FractionLeafDMThreshold) / (FractionLeafDMFactor - FractionLeafDMThreshold);
-                fLeafAux = Math.Pow(fLeafAux, FractionLeafExponent);
-                targetFLeaf = FractionLeafMinimum + (FractionLeafMaximum - FractionLeafMinimum) / (1.0 + fLeafAux);
+                double fLeafAux = (AboveGroundLiveWt - LeafPropDMThreshold) / (LeafPropDMFactor - LeafPropDMThreshold);
+                fLeafAux = Math.Pow(fLeafAux, LeafPropExponent);
+                targetFLeaf = LeafProportionMinimum + (LeafProportionMaximum - LeafProportionMinimum) / (1.0 + fLeafAux);
             }
 
-            if (Leaf.DMLive > 0.0)
-            {
-                // get current leaf:stem ratio
-                double currentLS = MathUtilities.Divide(Leaf.DMLive, Stem.DMLive + Stolon.DMLive, double.MaxValue);
+            // get current leaf:stem ratio
+            double currentLS = MathUtilities.Divide(Leaf.DMLive, Stem.DMLive + Stolon.DMLive, double.MaxValue);
 
-                // get today's target leaf:stem ratio
-                double targetLS = targetFLeaf / (1.0 - targetFLeaf);
+            // get today's target leaf:stem ratio
+            double targetLS = targetFLeaf / (1.0 - targetFLeaf);
 
-                // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
-                double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
+            // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
+            double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
 
-                fractionToLeaf = newLS / (1.0 + newLS);
-            }
-            else
-            {
-                fractionToLeaf = FractionLeafMaximum;
-            }
+            return newLS / (1.0 + newLS);
         }
 
         /// <summary>Calculates the plant height as function of DM.</summary>
@@ -3853,7 +3880,6 @@ namespace Models.AgPasture
         internal double HeightfromDM()
         {
             double TodaysHeight = PlantHeightMaximum;
-
             if (phenologicStage > 0)
             {
                 if (Harvestable.Wt <= PlantHeightMassForMax)
@@ -3896,10 +3922,10 @@ namespace Models.AgPasture
                      - thinner leaves during growth burst following unfavoured conditions
                      » TODO: It would be better if variations in SLA or ext. coeff. would be explicitly considered (RCichota, 2014)
                 */
-            }
+        }
 
-            // get the leaf area index for all green tissues
-            greenLAI = greenTissue * SpecificLeafArea;
+        // get the leaf area index for all green tissues
+        greenLAI = greenTissue * SpecificLeafArea;
 
             // get the leaf area index for dead tissues
             deadLAI = (Leaf.DMDead / 10000.0) * SpecificLeafArea;
