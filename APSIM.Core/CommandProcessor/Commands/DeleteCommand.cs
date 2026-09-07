@@ -46,7 +46,7 @@ internal partial class DeleteCommand : IModelCommand
         {
             modelsToDelete = parentModel.Node.GetAllObjects(_modelName, LocatorFlags.ModelsOnly)
                 .Select(match => match.Value as INodeModel)
-                .Where(model => model != null)
+                .Where(model => model != null && model.Node.WalkParents().Contains(parentModel.Node))
                 .ToArray();
         }
         else
