@@ -3628,7 +3628,6 @@
                   "ReproSeasonOnsetDurationFactor": 0.6,
                   "ReproSeasonMaxAllocationIncrease": 0.5,
                   "ReproSeasonAllocationCoeff": 0.1,
-                  "StolonProportionTarget": 0.0,
                   "RelativeTurnoverEmerging": 2.0,
                   "TurnoverDefoliationEffectMin": 0.025,
                   "GlfGeneric": 1.0,

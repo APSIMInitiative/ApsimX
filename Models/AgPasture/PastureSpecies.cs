@@ -3922,10 +3922,10 @@ namespace Models.AgPasture
                      - thinner leaves during growth burst following unfavoured conditions
                      » TODO: It would be better if variations in SLA or ext. coeff. would be explicitly considered (RCichota, 2014)
                 */
-            }
+        }
 
-            // get the leaf area index for all green tissues
-            greenLAI = greenTissue * SpecificLeafArea;
+        // get the leaf area index for all green tissues
+        greenLAI = greenTissue * SpecificLeafArea;
 
             // get the leaf area index for dead tissues
             deadLAI = (Leaf.DMDead / 10000.0) * SpecificLeafArea;
