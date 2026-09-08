@@ -3787,7 +3787,7 @@ namespace Models.AgPasture
 
         #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the fraction to allocate into shoot and specific organs of today's growth.</summary>
+        /// <summary>Gets the fractions to allocate into shoot and specific organs of today's growth.</summary>
         internal void GetAllocationFractions()
         {
             // get the factor for the reproductive season of perennials (increases shoot allocation during spring)

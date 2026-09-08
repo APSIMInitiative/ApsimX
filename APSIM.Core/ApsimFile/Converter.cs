@@ -8088,6 +8088,27 @@ internal class Converter
                     JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].CERESSoilTemperature", "[ISoilTemperature]");
         }
     }
+
+    /// <summary>
+    /// Change a few parameter names in AgPasture.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion221(JObject root, string fileName)
+    {
+        Tuple<string, string>[] changes =
+        {
+            new Tuple<string, string>("FractionLeafMaximum","LeafProportionMaximum"),
+            new Tuple<string, string>("FractionLeafMinimum","LeafProportionMinimum"),
+            new Tuple<string, string>("FractionLeafDMThreshold","LeafPropDMThreshold"),
+            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMFactor"),
+            new Tuple<string, string>("FractionLeafExponent", "LeafPropExponent"),
+            new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
+            new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
+        };
+
+        JsonUtilities.RenameVariables(root, changes);
+    }
 }
 
 
