@@ -21,7 +21,7 @@ namespace Models.Functions
         [Link]
         IPhysical physical = null;
 
-        [Link(Type = LinkType.Child)] 
+        [Link(Type = LinkType.Child, ByName = true)] 
         IFunction CriticalAerationForDenitrification = null;
 
         /// <summary>Gets the value.</summary>

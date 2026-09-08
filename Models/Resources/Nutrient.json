@@ -1307,7 +1307,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Physical].DUL",
-                      "Name": "VariableReference",
+                      "Name": "CriticalAerationForDenitrification",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
