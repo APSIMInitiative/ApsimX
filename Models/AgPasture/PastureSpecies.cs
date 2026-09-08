@@ -1115,14 +1115,17 @@ namespace Models.AgPasture
         /// <summary>Amount of C remobilised from senesced tissue (kg C/ha/day).</summary>
         private double remobilisedC;
 
-        /// <summary>Daily net growth potential (kg DM/ha).</summary>
+        /// <summary>Net biomass growth potential, gross potential minus respiration (kg DM/ha).</summary>
         private double dGrowthPotential;
 
-        /// <summary>Daily potential growth after water stress (kg DM/ha).</summary>
+        /// <summary>Potential biomass growth after water stress (kg DM/ha).</summary>
         private double dGrowthAfterWaterLimitations;
 
-        /// <summary>Daily growth after nutrient stress, actual growth (kg DM/ha).</summary>
+        /// <summary>Biomass growth after nutrient stress, i.e. actual growth (kg DM/ha).</summary>
         private double dGrowthAfterNutrientLimitations;
+
+        /// <summary>Actual biomass accumulated in new growth (kg DM/ha).</summary>
+        private double dNewGrowthWt;
 
         /// <summary>Effective plant growth, actual growth minus senescence (kg DM/ha).</summary>
         private double dGrowthNet;
@@ -1646,12 +1649,12 @@ namespace Models.AgPasture
         {
             get
             {
-                double rootWt = roots[0].DMTotal;
+                double dmTotal = roots[0].DMTotal;
                 //foreach (PastureBelowGroundOrgan root in roots)
-                //    rootWt += root.DMTotal;
+                //    dmTotal += root.DMTotal;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
 
-                return rootWt;
+                return dmTotal;
             }
         }
 
@@ -2224,6 +2227,13 @@ namespace Models.AgPasture
 
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+        /// <summary>Reproductive season effects on allocation of new growth (0-1).</summary>
+        [Units("0-1")]
+        public double ReproductiveSeasonFactor
+        {
+            get { return reproFactor; }
+        }
+
         /// <summary>Fraction of new growth allocated to shoot (0-1).</summary>
         [Units("kg/kg")]
         public double FractionGrowthToShoot
@@ -2231,7 +2241,7 @@ namespace Models.AgPasture
             get { return fractionToShoot; }
         }
 
-        /// <summary>Fraction of new shoot growth allocated to leaves (0-1).</summary>
+        /// <summary>Fraction of new growth allocated to leaves (0-1).</summary>
         [Units("kg/kg")]
         public double FractionGrowthToLeaf
         {
@@ -2896,6 +2906,7 @@ namespace Models.AgPasture
             dGrowthPotential = 0.0;
             dGrowthAfterWaterLimitations = 0.0;
             dGrowthAfterNutrientLimitations = 0.0;
+            dNewGrowthWt = 0.0;
             dGrowthNet = 0.0;
             dNewGrowthN = 0.0;
             dGrowthShootDM = 0.0;
@@ -3111,6 +3122,7 @@ namespace Models.AgPasture
 
             // adjust today's growth for limitations related to soil nutrient supply
             dGrowthAfterNutrientLimitations = dGrowthAfterWaterLimitations * Math.Min(glfNit, GlfSoilFertility);
+            dNewGrowthWt = dGrowthAfterNutrientLimitations;
         }
 
         /// <summary>Computes the plant's gross potential growth rate.</summary>
@@ -3372,17 +3384,17 @@ namespace Models.AgPasture
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
         internal void EvaluateNewGrowthAllocation()
         {
-            if (dGrowthAfterNutrientLimitations > Epsilon)
+            if (dNewGrowthWt > Epsilon)
             {
                 // get the actual growth above and below ground
-                dGrowthShootDM = dGrowthAfterNutrientLimitations * fractionToShoot;
-                dGrowthRootDM = Math.Max(0.0, dGrowthAfterNutrientLimitations - dGrowthShootDM);
+                dGrowthShootDM = dNewGrowthWt * fractionToShoot;
+                dGrowthRootDM = Math.Max(0.0, dNewGrowthWt - dGrowthShootDM);
                 dGrowthRootN = 0.0;
 
                 // allocate new DM growth to the growing tissues
-                Leaf.EmergingTissue.DMTransferredIn += fractionToLeaf * dGrowthAfterNutrientLimitations;
-                Stem.EmergingTissue.DMTransferredIn += fractionToStem * dGrowthAfterNutrientLimitations;
-                Stolon.EmergingTissue.DMTransferredIn += fractionToStolon * dGrowthAfterNutrientLimitations;
+                Leaf.EmergingTissue.DMTransferredIn += fractionToLeaf * dNewGrowthWt;
+                Stem.EmergingTissue.DMTransferredIn += fractionToStem * dNewGrowthWt;
+                Stolon.EmergingTissue.DMTransferredIn += fractionToStolon * dNewGrowthWt;
 
                 // evaluate allocation of N
                 if (dNewGrowthN > demandOptimumN)
@@ -3481,7 +3493,7 @@ namespace Models.AgPasture
             //     Examples\Tutorials\Sensitivity_SobolMethod.apsimx
 
             // check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(previousDM + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
+            if (!MathUtilities.FloatsAreEqual(previousDM + dNewGrowthWt - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
             {
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance - DM");
             }
@@ -3775,7 +3787,7 @@ namespace Models.AgPasture
 
         #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Gets the allocations into shoot and specific organs of today's growth.</summary>
+        /// <summary>Gets the fraction to allocate into shoot and specific organs of today's growth.</summary>
         internal void GetAllocationFractions()
         {
             // get the factor for the reproductive season of perennials (increases shoot allocation during spring)
@@ -3922,10 +3934,10 @@ namespace Models.AgPasture
                      - thinner leaves during growth burst following unfavoured conditions
                      » TODO: It would be better if variations in SLA or ext. coeff. would be explicitly considered (RCichota, 2014)
                 */
-        }
+            }
 
-        // get the leaf area index for all green tissues
-        greenLAI = greenTissue * SpecificLeafArea;
+            // get the leaf area index for all green tissues
+            greenLAI = greenTissue * SpecificLeafArea;
 
             // get the leaf area index for dead tissues
             deadLAI = (Leaf.DMDead / 10000.0) * SpecificLeafArea;
