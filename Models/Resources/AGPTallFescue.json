@@ -46,6 +46,7 @@
       "LeafPropDMThreshold": 500.0,
       "LeafPropDMFactor": 2000.0,
       "LeafPropExponent": 3.0,
+      "StolonProportionTarget": 0.0,
       "SpecificLeafArea": 22.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 1000.0,
