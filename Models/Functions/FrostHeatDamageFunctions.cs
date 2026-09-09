@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Phen;
@@ -95,6 +96,14 @@ namespace Models.Functions
             get => cropType;
             set
             {
+                // Keep the model's name in sync with the crop type, but only while it still has an
+                // auto-generated name. This avoids two `FrostHeatDamageFunctions` instances under
+                // different crops in a rotation ending up with the same name (see OnDoCommencing),
+                // while still respecting a name the user has deliberately chosen.
+                string previousAutoName = (cropType == CropTypes.SelectCrop ? string.Empty : cropType.ToString()) + nameof(FrostHeatDamageFunctions);
+                if (Name == nameof(FrostHeatDamageFunctions) || Name == previousAutoName)
+                    Name = (value == CropTypes.SelectCrop ? string.Empty : value.ToString()) + nameof(FrostHeatDamageFunctions);
+
                 cropType = value;
                 SetDefaultValues();
             }
@@ -481,6 +490,25 @@ namespace Models.Functions
                     throw new Exception($"The selected crop type '{selectedCropType}' in the `FrostHeatDamageFunctions` does not match the plant type '{actualPlantType}' in the simulation. " +
                         $"Please select the correct crop type in the `FrostHeatDamageFunctions`.");
                 }
+            }
+
+            // In a crop rotation, more than one crop (e.g. Wheat and Canola) can each have their own
+            // `FrostHeatDamageFunctions` child. If those instances share the same name (the default when
+            // added via a resource Replacements folder), a variable reference that uses the bare name
+            // (e.g. "[FrostHeatDamageFunctions].FrostHeatYield" in a Report) will always resolve to
+            // whichever instance is found first in scope - silently ignoring the other crop's values for
+            // the entire simulation, even while that crop is the one actually growing. Fail loudly here
+            // instead of letting that happen unnoticed.
+            Node simulationNode = Node.WalkParents().FirstOrDefault(n => n.Model is Simulation) ?? Node;
+            bool ambiguousName = simulationNode.Walk().Any(n => n.Model is FrostHeatDamageFunctions other && other != this
+                && n.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
+            if (ambiguousName)
+            {
+                throw new Exception($"More than one `FrostHeatDamageFunctions` model named '{Name}' was found in scope, " +
+                    "most likely one under each crop in a rotation. Any variable reference using the ambiguous name " +
+                    $"'[{Name}]' would always resolve to the same instance, silently ignoring the other crop's values. " +
+                    $"Give each `FrostHeatDamageFunctions` instance a unique name (e.g. '{selectedCropType}{Name}') and " +
+                    $"reference it with a fully qualified path, e.g. '[{Plant.Name}].{Name}.FrostHeatYield'.");
             }
         }
 
