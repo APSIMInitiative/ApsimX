@@ -97,12 +97,30 @@ namespace Models.Functions
             set
             {
                 // Keep the model's name in sync with the crop type, but only while it still has an
-                // auto-generated name. This avoids two `FrostHeatDamageFunctions` instances under
-                // different crops in a rotation ending up with the same name (see OnDoCommencing),
-                // while still respecting a name the user has deliberately chosen.
+                // auto-generated name (a name the user has deliberately chosen is never touched). If
+                // this is the only `FrostHeatDamageFunctions` in the simulation it keeps the simple
+                // plain name; as soon as a second one turns up (e.g. a rotation), every instance that
+                // still has an auto-generated name - this one and any siblings - gets the crop prefix,
+                // so all of them end up disambiguated the same way. This avoids two instances under
+                // different crops in a rotation ending up with the same name (see OnDoCommencing).
                 string previousAutoName = (cropType == CropTypes.SelectCrop ? string.Empty : cropType.ToString()) + nameof(FrostHeatDamageFunctions);
                 if (Name == nameof(FrostHeatDamageFunctions) || Name == previousAutoName)
-                    Name = (value == CropTypes.SelectCrop ? string.Empty : value.ToString()) + nameof(FrostHeatDamageFunctions);
+                {
+                    List<FrostHeatDamageFunctions> siblings = Node == null
+                        ? []
+                        : (Node.WalkParents().LastOrDefault() ?? Node).Walk()
+                            .Select(n => n.Model).OfType<FrostHeatDamageFunctions>().Where(other => other != this).ToList();
+
+                    if (siblings.Count > 0 && value != CropTypes.SelectCrop)
+                    {
+                        Name = value.ToString() + nameof(FrostHeatDamageFunctions);
+                        foreach (FrostHeatDamageFunctions sibling in siblings)
+                            if (sibling.Name == nameof(FrostHeatDamageFunctions) && sibling.CropType != CropTypes.SelectCrop)
+                                sibling.Name = sibling.CropType.ToString() + nameof(FrostHeatDamageFunctions);
+                    }
+                    else
+                        Name = nameof(FrostHeatDamageFunctions);
+                }
 
                 cropType = value;
                 SetDefaultValues();
@@ -499,8 +517,8 @@ namespace Models.Functions
             // whichever instance is found first in scope - silently ignoring the other crop's values for
             // the entire simulation, even while that crop is the one actually growing. Fail loudly here
             // instead of letting that happen unnoticed.
-            Node simulationNode = Node.WalkParents().FirstOrDefault(n => n.Model is Simulation) ?? Node;
-            bool ambiguousName = simulationNode.Walk().Any(n => n.Model is FrostHeatDamageFunctions other && other != this
+            Node root = Node.WalkParents().LastOrDefault() ?? Node;
+            bool ambiguousName = root.Walk().Any(n => n.Model is FrostHeatDamageFunctions other && other != this
                 && n.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
             if (ambiguousName)
             {
