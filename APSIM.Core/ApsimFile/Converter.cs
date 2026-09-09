@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 220; } }
+    public static int LatestVersion { get { return 221; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8106,6 +8106,14 @@ internal class Converter
             new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
             new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
         };
+
+        foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpecies"))
+        {
+            foreach (Tuple<string, string> change in changes)
+            {
+                pasture[change.Item2] = pasture[change.Item1];
+            }
+        }
 
         JsonUtilities.RenameVariables(root, changes);
     }
