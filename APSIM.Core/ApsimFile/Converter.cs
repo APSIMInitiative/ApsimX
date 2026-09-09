@@ -8111,7 +8111,8 @@ internal class Converter
         {
             foreach (Tuple<string, string> change in changes)
             {
-                pasture[change.Item2] = pasture[change.Item1];
+                if (pasture[change.Item1] != null)
+                    pasture[change.Item2] = pasture[change.Item1];
             }
         }
 

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 220,
+  "Version": 221,
   "Name": "Simulations",
   "Children": [
     {
@@ -19,7 +19,7 @@
       "LightExtinctionCoefficient": 0.5,
       "GrowthTminimum": 2.8,
       "GrowthToptimum": 21.5,
-      "GrowthTEffectExponent": 1.40,
+      "GrowthTEffectExponent": 1.4,
       "ReferenceCO2": 380.0,
       "CO2EffectScaleFactor": 700.0,
       "CO2EffectOffsetFactor": 600.0,
