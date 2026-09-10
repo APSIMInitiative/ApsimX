@@ -8115,6 +8115,7 @@ internal class Converter
                     pasture[change.Item2] = pasture[change.Item1];
             }
         }
+        
         JsonUtilities.RenameVariables(root, changes);
     }
 }
