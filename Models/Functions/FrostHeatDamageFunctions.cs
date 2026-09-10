@@ -657,8 +657,18 @@ evaluation. Agricultural and Forest Meteorology 386, 111239.
                 throw new Exception("Error: `FrostHeatDamageFunctions` has linked with a Plant that is not its parent");
 
             if (!Plant.IsAlive)
+            {
+                FrostPotentialReductionRatio = 0;
+                FrostSensitivity = 0;
+                FrostReductionRatio = 0;
+                HeatPotentialReductionRatio = 0;
+                HeatSensitivity = 0;
+                HeatReductionRatio = 0;
+                FrostHeatReductionRatio = 0;
+                FrostHeatYield = 0;
                 return;
-    
+            }
+
             Phenology phen = Plant.Phenology;
             ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
