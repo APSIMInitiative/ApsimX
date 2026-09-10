@@ -65,10 +65,6 @@ namespace Models.AgPasture
         [Link]
         private ISoilTemperature soilTemperature = null;
 
-        /// <summary>Link to micro climate (aboveground resource arbitrator).</summary>
-        [Link]
-        private MicroClimate microClimate = null;
-
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating surface OM.</summary>
@@ -193,9 +189,11 @@ namespace Models.AgPasture
                 {
                     InterceptedRadn = 0.0;
                     myLightProfile = value;
+                    double totalRadiationInterceptionOnGreen = 0;
                     foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
                     {
                         InterceptedRadn += canopyLayer.AmountOnGreen;
+                        totalRadiationInterceptionOnGreen = canopyLayer.AmountOnGreenTotal;
                     }
 
                     // stuff required to calculate photosynthesis using Ecomod approach
@@ -204,7 +202,7 @@ namespace Models.AgPasture
                     swardGreenCover = 0.0;
                     if (InterceptedRadn > 0.0)
                     {
-                        fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
+                        fractionGreenCover = InterceptedRadn / totalRadiationInterceptionOnGreen;
                         swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
                     }
                 }
