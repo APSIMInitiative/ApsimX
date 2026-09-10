@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Models;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Phen;
@@ -59,6 +60,83 @@ namespace Models.Functions
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        private const string HowToUseThisModelText =
+@"## About the Frost and Heat Damage Functions model
+
+This model reduces simulated crop yield in response to daily frost and heat events. Each day it
+combines two things: (1) the *potential* yield-reduction ratio caused by an extreme minimum
+(frost) or maximum (heat) temperature on that day - a piece-wise linear function of temperature
+between a lower and upper threshold - and (2) the *sensitivity* of yield to the crop's growth
+stage on the day the event occurs - a piece-wise linear function of growth stage, ramping up to
+full sensitivity around flowering and back down again. The product of these two gives the actual
+daily yield-reduction ratio, which is then compounded over the season to estimate a frost- and
+heat-limited yield. Parameter values have been statistically calibrated for wheat and canola (see
+this model's `Description` citation for how the model was formulated, calibrated, and evaluated); 
+barley support is planned. 
+
+### Outputs produced
+
+- **FrostReductionRatio** - daily actual yield reduction ratio caused by a frost event
+- **HeatReductionRatio** - daily actual yield reduction ratio caused by a heat event
+- **FrostHeatReductionRatio** - daily actual yield reduction ratio from combined frost and heat events
+- **CumulativeFrostReductionRatio** - season-to-date cumulative yield reduction ratio from frost events
+- **CumulativeHeatReductionRatio** - season-to-date cumulative yield reduction ratio from heat events
+- **CumulativeFrostHeatReductionRatio** - season-to-date cumulative yield reduction ratio from combined frost and heat events
+- **FrostEventNumber** - number of frost events counted during the frost-sensitive period
+- **HeatEventNumber** - number of heat events counted during the heat-sensitive period
+- **FrostHeatYield** (g/m2) - final frost- and heat-limited grain yield
+- **FrostSensitivePeriodStartDAS** / **FrostSensitivePeriodEndDAS** (days) - start/end of the frost-sensitive period, in days after sowing
+- **HeatSensitivePeriodStartDAS** / **HeatSensitivePeriodEndDAS** (days) - start/end of the heat-sensitive period, in days after sowing
+
+### How to use it
+
+1. Add this model as a child of the **Plant** model you want it to affect - it is only valid under
+   a Plant, and its `CropType` must match that Plant's crop type (Wheat or Canola).
+2. Open this model and set **Crop to be simulated (CropType)** to `Wheat` or `Canola`. Selecting a
+   crop automatically fills in the published, calibrated threshold and sensitivity-period
+   parameters below for that crop.
+3. Only change the auto-filled parameters if you have your own calibration:
+   - **Frost damage**: `FrostLowTT`, `FrostUpTT` (lower/upper minimum-temperature thresholds, degC)
+     and `FrostMaxReductionRatio`, `FrostMinReductionRatio` (yield-reduction ratio at each threshold).
+   - **Frost sensitive period**: `FrostStartSensitiveGS`, `FrostStartMostSensitiveGS`,
+     `FrostEndMostSensitiveGS`, `FrostEndSensitiveGS` (growth stages bounding when frost sensitivity
+     ramps up to 1, stays at 1, and ramps back down).
+   - **Heat damage**: `HeatLowTT`, `HeatUpTT` (lower/upper maximum-temperature thresholds, degC) and
+     `HeatMinReductionRatio`, `HeatMaxReductionRatio` (yield-reduction ratio at each threshold).
+   - **Heat sensitive period**: `HeatStartSensitiveGS`, `HeatStartMostSensitiveGS`,
+     `HeatEndMostSensitiveGS`, `HeatEndSensitiveGS` (same idea as frost, for heat).
+4. Run the simulation - the outputs listed above become available for Report/graphing once a crop
+   has been sown (they reset at each sowing event).
+
+### Using this with more than one crop (e.g. a rotation)
+
+If this model is added under more than one crop in the same simulation (for example, Wheat and
+Canola both present and sown in rotation), give each instance a **unique name** - e.g.
+`WheatFrostHeatDamageFunctions` and `CanolaFrostHeatDamageFunctions` - rather than leaving both at
+the default `FrostHeatDamageFunctions`. Then reference outputs in a Report or Graph using the
+**fully qualified path** for the crop you mean, e.g. `[Wheat].WheatFrostHeatDamageFunctions.FrostHeatYield`,
+rather than the bare `[FrostHeatDamageFunctions]`. This matters because a bare-name lookup from
+outside both crops resolves to whichever instance is found first and stays pinned to it for the
+whole run - if both instances share a name, any Report using the bare name will silently report
+the wrong crop's values, even while the other crop is actively growing. If two instances do end up
+with the same name, this model will raise a clear error at the start of the run rather than
+silently mis-reporting.
+
+### Funding and citation
+
+The development of frost and heat damage functions for canola and wheat was supported by the
+Frost and Heat Management Analytics (FAHMA) project via funding from the Grains Research and
+Development Corporation (GRDC; Grant No. CSP2204-009RTX).
+
+When using the damage functions, please use the following reference for more information:
+Hu, P., He, D., Zheng, B., Whish, J., Kirkegaard, J., Bell, L., Leske, B., Chen, S., Uppal, R.,
+Biddulph, B., Trethowan, R., Beletse, Y., Lilley, J., 2026. Event-based frost and heat damage
+functions improve yield predictions of APSIM canola and wheat: formulation, calibration, and
+evaluation. Agricultural and Forest Meteorology 386, 111239.
+[https://doi.org/10.1016/j.agrformet.2026.111239](https://doi.org/10.1016/j.agrformet.2026.111239)
+
+*(You can safely edit or delete this note; it will not reappear once removed.)*";
+
         //[Link]
         //Clock Clock;
         [Link]
@@ -67,6 +145,25 @@ namespace Models.Functions
         Plant Plant = null;
         [Link]
         private ISummary Summary = null;
+
+        /// <summary>
+        /// Called when the model has been newly created in memory (fresh Add-Model/drag-drop/paste,
+        /// or file load/clone). Ensures every FrostHeatDamageFunctions instance carries a short
+        /// how-to Memo.
+        /// </summary>
+        public override void OnCreated()
+        {
+            base.OnCreated();
+            if (Node != null && Node.FindChild<Memo>("How To Use This Model") == null)
+            {
+                Memo howTo = new Memo
+                {
+                    Name = "How To Use This Model",
+                    Text = HowToUseThisModelText
+                };
+                Node.AddChild(howTo);
+            }
+        }
 
         // Define parameters
 
@@ -96,32 +193,6 @@ namespace Models.Functions
             get => cropType;
             set
             {
-                // Keep the model's name in sync with the crop type, but only while it still has an
-                // auto-generated name (a name the user has deliberately chosen is never touched). If
-                // this is the only `FrostHeatDamageFunctions` in the simulation it keeps the simple
-                // plain name; as soon as a second one turns up (e.g. a rotation), every instance that
-                // still has an auto-generated name - this one and any siblings - gets the crop prefix,
-                // so all of them end up disambiguated the same way. This avoids two instances under
-                // different crops in a rotation ending up with the same name (see OnDoCommencing).
-                string previousAutoName = (cropType == CropTypes.SelectCrop ? string.Empty : cropType.ToString()) + nameof(FrostHeatDamageFunctions);
-                if (Name == nameof(FrostHeatDamageFunctions) || Name == previousAutoName)
-                {
-                    List<FrostHeatDamageFunctions> siblings = Node == null
-                        ? []
-                        : (Node.WalkParents().LastOrDefault() ?? Node).Walk()
-                            .Select(n => n.Model).OfType<FrostHeatDamageFunctions>().Where(other => other != this).ToList();
-
-                    if (siblings.Count > 0 && value != CropTypes.SelectCrop)
-                    {
-                        Name = value.ToString() + nameof(FrostHeatDamageFunctions);
-                        foreach (FrostHeatDamageFunctions sibling in siblings)
-                            if (sibling.Name == nameof(FrostHeatDamageFunctions) && sibling.CropType != CropTypes.SelectCrop)
-                                sibling.Name = sibling.CropType.ToString() + nameof(FrostHeatDamageFunctions);
-                    }
-                    else
-                        Name = nameof(FrostHeatDamageFunctions);
-                }
-
                 cropType = value;
                 SetDefaultValues();
             }
@@ -478,6 +549,22 @@ namespace Models.Functions
             return sens;
         }
 
+        /// <summary>
+        /// Find the node whose subtree should be searched for other `FrostHeatDamageFunctions` instances
+        /// when checking for a name collision. Prefers the nearest enclosing Simulation - matching how a
+        /// Report's bare-name variable lookup is actually scoped, so unrelated Simulations elsewhere in
+        /// the same file are never treated as colliding - and falls back to the whole file's root only
+        /// when there is no enclosing Simulation, which is the case for a model living in a Replacements
+        /// folder (that sits outside every Simulation but can be merged into any of them). Returns null if
+        /// this model is not yet attached to a tree.
+        /// </summary>
+        private Node FindAmbiguityScopeRoot()
+        {
+            if (Node == null)
+                return null;
+            return Node.WalkParents().FirstOrDefault(n => n.Model is Simulation) ?? Node.WalkParents().LastOrDefault() ?? Node;
+        }
+
         //// <summary>Validate inputs</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -515,9 +602,8 @@ namespace Models.Functions
             // added via a resource Replacements folder), a variable reference that uses the bare name
             // (e.g. "[FrostHeatDamageFunctions].FrostHeatYield" in a Report) will always resolve to
             // whichever instance is found first in scope - silently ignoring the other crop's values for
-            // the entire simulation, even while that crop is the one actually growing. Fail loudly here
-            // instead of letting that happen unnoticed.
-            Node root = Node.WalkParents().LastOrDefault() ?? Node;
+            // the entire simulation, even while that crop is the one actually growing. 
+            Node root = FindAmbiguityScopeRoot() ?? Node;
             bool ambiguousName = root.Walk().Any(n => n.Model is FrostHeatDamageFunctions other && other != this
                 && n.Name.Equals(Name, StringComparison.OrdinalIgnoreCase));
             if (ambiguousName)
@@ -526,7 +612,8 @@ namespace Models.Functions
                     "most likely one under each crop in a rotation. Any variable reference using the ambiguous name " +
                     $"'[{Name}]' would always resolve to the same instance, silently ignoring the other crop's values. " +
                     $"Give each `FrostHeatDamageFunctions` instance a unique name (e.g. '{selectedCropType}{Name}') and " +
-                    $"reference it with a fully qualified path, e.g. '[{Plant.Name}].{Name}.FrostHeatYield'.");
+                    $"reference it with a fully qualified path, e.g. '[{Plant.Name}].{Name}.FrostHeatYield'. " +
+                    "See the 'How To Use This Model' note under this model for more information.");
             }
         }
 
