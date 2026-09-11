@@ -60,9 +60,10 @@ namespace UserInterface.Views
 
             mainWidget = notebook1;
             notebook1.SwitchPage += OnSwitchPage;
+            notebook1.MapEvent += OnNotebookMapped;
 
             reportVariablesVPaned.AddNotification(OnVariablesPanePropertyNotified);
-            reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
+            //reportFrequencyVPaned.AddNotification(OnFrequencyPanePropertyNotified);
 
             variableEditor = new EditorView(this);
             variableEditor.StyleChanged += OnStyleChanged;
@@ -86,21 +87,60 @@ namespace UserInterface.Views
             if (horizontalSplitter != null)
                 if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
                     horizontalPos = (int)(bounds.Width * horizontalSplitter);
-            reportVariablesVPaned.Position = horizontalPos;
-            reportFrequencyVPaned.Position = horizontalPos;
+
 
             double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition / 100.0;
             int verticalPos = (int)Math.Round(bounds.Height * 0.7);
             if (verticalSplitter != null)
                 if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
                     verticalPos = (int)(bounds.Height * verticalSplitter);
-            panel.Position = verticalPos;
-
+           // panel.Position = verticalPos;
             dataStoreView1 = new ViewBase(this, "ApsimNG.Resources.Glade.DataStoreView.glade");
             dataBox.Add(dataStoreView1.MainWidget);
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
         }
+
+        private void OnNotebookMapped(object o, MapEventArgs args)
+        {
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+
+            // Horizontal splitter
+            double? horizontalSplitter = Configuration.Settings.ReportSplitterPosition / 100.0;
+            int horizontalPos = (int)Math.Round(bounds.Width * 0.7);
+            if (horizontalSplitter != null)
+                if (horizontalSplitter > 0.1 && horizontalSplitter < 0.9)
+                    horizontalPos = (int)(bounds.Width * horizontalSplitter);
+
+            // Vertical splitter
+            double? verticalSplitter = Configuration.Settings.ReportSplitterVerticalPosition / 100.0;
+            int verticalPos = (int)Math.Round(bounds.Height * 0.7);
+            if (verticalSplitter != null)
+                if (verticalSplitter > 0.1 && verticalSplitter < 0.9)
+                    verticalPos = (int)(bounds.Height * verticalSplitter);
+
+            // Apply splitter positions AFTER the notebook page is mapped
+            GLib.Idle.Add(() =>
+            {
+                GLib.Idle.Add(() =>
+                {
+                    reportVariablesVPaned.Position = horizontalPos;
+                    reportFrequencyVPaned.Position = horizontalPos;
+                    panel.Position = verticalPos;
+
+                    reportVariablesVPaned.QueueResize();
+                    reportFrequencyVPaned.QueueResize();
+                    panel.QueueResize();
+
+                    return false;
+                });
+                return false;
+            });
+        }
+
+
+
+
 
         /// <summary>
         /// Invoked when the selected tab is changed.
@@ -124,35 +164,60 @@ namespace UserInterface.Views
             }
         }
 
+        // /// <summary> Updates The position of either common variable listView.</summary>
+        // /// <param name="sender"></param>
+        // /// <param name="args"></param>
+        // private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
+        // {
+        //     this.reportVariablesVPaned.Position = reportFrequencyVPaned.Position;
+        //     if (args.Property == "position")
+        //     {
+        //         Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+        //         double percentage = (double)reportVariablesVPaned.Position / (double)bounds.Width;
+        //         Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
+        //         Configuration.Settings.Save();
+        //     }
+
+        // }
+
+        // /// <summary> Updates The position of either common variable listView.</summary>
+        // /// <param name="sender"></param>
+        // /// <param name="args"></param>
+        // private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
+        // {
+        //     this.reportFrequencyVPaned.Position = reportVariablesVPaned.Position;
+        //     if (args.Property == "position")
+        //     {
+        //         Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+        //         double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
+        //         Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
+        //         Configuration.Settings.Save();
+        //     }
+        // }
+
         /// <summary> Updates The position of either common variable listView.</summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        private void OnFrequencyPanePropertyNotified(object sender, NotifyArgs args)
-        {
-            this.reportVariablesVPaned.Position = reportFrequencyVPaned.Position;
-            if (args.Property == "position")
-            {
-                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
-                double percentage = (double)reportVariablesVPaned.Position / (double)bounds.Width;
-                Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
-                Configuration.Settings.Save();
-            }
+        private bool updatingSplitter = false;
 
-        }
-
-        /// <summary> Updates The position of either common variable listView.</summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
         private void OnVariablesPanePropertyNotified(object sender, NotifyArgs args)
         {
-            this.reportFrequencyVPaned.Position = reportVariablesVPaned.Position;
-            if (args.Property == "position")
-            {
-                Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
-                double percentage = (double)reportFrequencyVPaned.Position / (double)bounds.Width;
-                Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
-                Configuration.Settings.Save();
-            }
+            if (args.Property != "position")
+                return;
+
+            if (updatingSplitter)
+                return;   // ignore programmatic changes
+
+            // Mirror the other pane
+            updatingSplitter = true;
+            reportFrequencyVPaned.Position = reportVariablesVPaned.Position;
+            updatingSplitter = false;
+
+            // Save user-driven change
+            Rectangle bounds = GtkUtilities.GetBorderOfRightHandView(owner);
+            double percentage = (double)reportVariablesVPaned.Position / (double)bounds.Width;
+            Configuration.Settings.ReportSplitterPosition = (int)(percentage * 100);
+            Configuration.Settings.Save();
         }
 
         /// <summary>
