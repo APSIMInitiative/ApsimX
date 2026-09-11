@@ -86,9 +86,17 @@ namespace APSIM.Workflow
 
             //load in apsim file
             Simulations? sims = FileFormat.ReadFromFile<Simulations>(apsimFilepath).Model as Simulations;
-
             if (sims == null)
                 throw new Exception("File Could not be loaded.");
+
+            //remove virtuals
+            List<Virtual> virtuals = sims.Node.FindChildren<Virtual>(recurse: true).ToList();
+            foreach (Virtual virt in virtuals)
+            {
+                foreach(Model childOfVirtual in virt.Children)
+                    virt.Parent.Node.AddChild(childOfVirtual.DeepClone());
+                virt.Parent.Node.RemoveChild(virt);
+            }
 
             List<Simulation> simulations = sims.Node.FindChildren<Simulation>(recurse: true).Where(exp => exp.Enabled == true && exp.Parent.GetType() != typeof(Experiment)).ToList();
             List<Experiment> experiments = sims.Node.FindChildren<Experiment>(recurse: true).Where(sim => sim.Enabled == true).ToList();
@@ -268,8 +276,6 @@ namespace APSIM.Workflow
                         input.FileNames = files.ToArray();
                     }
                     RemoveUnusedPO(copiedSims, allSheetNames);
-
-
 
                     copiedSims.FileName = fullFilePath;
                     copiedSims.ResetSimulationFileNames();

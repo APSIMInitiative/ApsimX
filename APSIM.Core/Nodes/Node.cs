@@ -565,7 +565,7 @@ public class Node : IStructure
                             generateNodes.Add(generateNode);
             }
                 
-            string directory = Path.GetDirectoryName(Walk().First().FileName);
+            string directory = Path.GetDirectoryName(Path.GetFullPath(Walk().First().FileName));
             foreach (IGenerateNodes model in generateNodes)
             {
                 model.FilePath.SetStartDirectory(directory);
