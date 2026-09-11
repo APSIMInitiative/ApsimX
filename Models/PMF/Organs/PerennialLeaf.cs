@@ -372,7 +372,7 @@ namespace Models.PMF.Organs
         private void SetNDemand(object sender, EventArgs e)
         {
             NDemand.Structural = nDemands.Structural.Value();
-            NDemand.Metabolic = 0.0; // nDemands.Metabolic.Value();
+            NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
         }
 

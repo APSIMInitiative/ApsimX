@@ -6,6 +6,9 @@ using Models.Core;
 using Newtonsoft.Json.Linq;
 using Models.PMF;
 using System.Linq;
+using Models.Functions;
+using System;
+using APSIM.Shared.Utilities;
 
 namespace UnitTests.APSIM.Core.Tests;
 
@@ -78,5 +81,50 @@ public class ResourceTests
 
         Assert.That(root, Is.Not.Null);
         Assert.That(JsonUtilities.Children(root).Count, Is.EqualTo(0));
+    }
+
+    /// <summary>
+    /// Checks all resources file in the Validation directory within Tests for released models. 
+    /// Ensures that all variable references in the resource files are resolved when the resource is read. 
+    /// </summary>
+    [Test]
+    public void EnsureResourceVariableReferencesAreResolved()
+    {
+        string modelResourcesPath = PathUtilities.GetApsimXDirectory() + "/" + "Models/Resources";
+        var validationPaths = Directory.GetFiles(modelResourcesPath, $"*.json", SearchOption.AllDirectories);
+        foreach (string path in validationPaths)
+        {
+            string resourceName = Path.GetFileNameWithoutExtension(path);
+            string resourceContent = File.ReadAllText(path);
+            Simulations resourceAsSimulations = FileFormat.ReadFromString<Simulations>(resourceContent).Model as Simulations;
+            // Get the resource and put it into another simulation with models that can be linked to.
+            INodeModel resource = resourceAsSimulations.GetChildren().First();
+            Simulations newSim = Utilities.GetRunnableSimWithExtras(true);
+            Zone zone = newSim.Node.FindChild<Zone>("Zone", recurse: true);
+            Models.Soils.Soil soil = newSim.Node.FindChild<Models.Soils.Soil>("Soil", recurse: true);
+            if (resourceName == "WaterBalance")
+                soil.AddChild(resource);
+            else zone.AddChild(resource);
+            Node.Create(newSim);
+
+            foreach (var variableRef in newSim.Node.FindChildren<VariableReference>(recurse: true))
+            {
+                try
+                {
+                    if (!variableRef.Enabled)
+                        continue;
+                    var obj = newSim.Node.Locator.GetObject(variableRef.Node, variableRef.VariableName);
+                    if (obj == null)
+                        obj = newSim.Node.Locator.GetObject(newSim.Node, variableRef.VariableName);
+                        if (obj == null)
+                            Assert.Fail($"Variable reference '{variableRef.VariableName}' in file '{path}' could not be resolved." + 
+                                $" Apsim Path to model containing variable reference is '{variableRef.FullPath}'. Actual variable reference value: {variableRef.VariableName}");
+                }
+                catch (Exception)
+                {
+                    // do nothing.
+                }
+            }
+        }
     }
 }
