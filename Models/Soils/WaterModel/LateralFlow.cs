@@ -54,11 +54,15 @@ namespace Models.WaterModel
         /// <summary>Perform the movement of water.</summary>
         public void Calculate(double[] swmm)
         {
-            // Lateral flow does not move solutes. We should add this feature one day.
-            if (InFlow != null)
+            // TODO: Lateral flow does not move solutes. We should add this feature one day.
+            if (waterBalance.KLAT != null)
             {
+                if (InFlow == null )
+                    InFlow = new double[physical.Thickness.Length];
+
                 if (OutFlow.Length != InFlow.Length)
                     OutFlow = new double[InFlow.Length];
+                    
                 double[] SW = MathUtilities.Add(swmm, InFlow);
                 double[] DUL = MathUtilities.Multiply(physical.DUL, physical.Thickness);
                 double[] SAT = MathUtilities.Multiply(physical.SAT, physical.Thickness);
@@ -83,6 +87,7 @@ namespace Models.WaterModel
                     OutFlow[layer] = MathUtilities.Bound(OutFlow[layer], 0.0, max_flow);
                 }
             }
+            
         }
     }
 }
