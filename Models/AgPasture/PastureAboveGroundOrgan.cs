@@ -385,10 +385,19 @@ namespace Models.AgPasture
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
         public void CalculateTissueTurnover(double[] turnoverRate)
         {
-            EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue, NConcOptimum);
-            DevelopingTissue.DoTissueTurnover(turnoverRate[1], MatureTissue, NConcOptimum);
-            MatureTissue.DoTissueTurnover(turnoverRate[2], DeadTissue, NConcOptimum);
-            DeadTissue.DoTissueTurnover(turnoverRate[3], null, NConcMinimum);
+            EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue);
+            DevelopingTissue.DoTissueTurnover(turnoverRate[1], MatureTissue);
+            MatureTissue.DoTissueTurnover(turnoverRate[2], DeadTissue);
+            DeadTissue.DoTissueTurnover(turnoverRate[3], null);
+        }
+
+        /// <summary>Computes the N amount that is potentially remobilisable for all tissues.</summary>
+        public void CalculateRemobilisableN()
+        {
+            EmergingTissue.GetRemobilisableN(NConcOptimum);
+            DevelopingTissue.GetRemobilisableN(NConcOptimum);
+            MatureTissue.GetRemobilisableN(NConcOptimum);
+            DeadTissue.GetRemobilisableN(NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>

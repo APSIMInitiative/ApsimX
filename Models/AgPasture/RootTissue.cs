@@ -208,41 +208,26 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Computes the DM and N amounts turned over for this tissue, also estimates remobilisable N.</summary>
+        /// <summary>Computes the DM and N amounts turned over for this tissue.</summary>
         /// <param name="turnoverRate">The turnover rate for the tissue today.</param>
         /// <param name="receivingTissue">The tissue to move the turned over biomass to.</param>
-        /// <param name="nConcThreshold">The N concentration threshold, below which no remobilisation will occur.</param>
-        /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
-        public void DoTissueTurnover(double turnoverRate, RootTissue receivingTissue, double nConcThreshold)
+        public void DoTissueTurnover(double turnoverRate, RootTissue receivingTissue)
         {
             if (biomass.Wt > 0.0 && turnoverRate > 0.0)
             {
                 // get the amounts turned over
-                var turnedoverDM = biomass.Wt * turnoverRate;
-                var turnedoverN = biomass.N * turnoverRate;
-                DMTransferredOut += turnedoverDM;
-                NTransferredOut += turnedoverN;
+                DMTransferredOut = biomass.Wt * turnoverRate;
+                NTransferredOut = biomass.N * turnoverRate;
 
                 // pass the amounts from this to the receiving tissue
-                if ((receivingTissue != null) && (turnedoverDM > 0.0))
+                if (receivingTissue != null)
                 {
                     // split the amounts into values for each layer (keep current distribution)
-                    var turnedoverDMLayered = MathUtilities.Multiply_Value(DMFraction, turnedoverDM);
-                    var turnedoverNLayered = MathUtilities.Multiply_Value(DMFraction, turnedoverN);
+                    var turnedoverDMLayered = MathUtilities.Multiply_Value(DMFraction, DMTransferredOut);
+                    var turnedoverNLayered = MathUtilities.Multiply_Value(DMFraction, NTransferredOut);
 
                     receivingTissue.SetBiomassTransferIn(turnedoverDMLayered, turnedoverNLayered);
                 }
-
-                // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
-                double potentialRemobilisableN = 0.0;
-                // first, get the available N in the tissue
-                potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
-
-                // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
-                potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
-
-                // only a fraction of the above calculated potential remobilisable N can be remobilised each day
-                NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
             }
         }
 
@@ -259,6 +244,27 @@ namespace Models.AgPasture
 
             DMTransferredIn = dmTransferredInByLayer.Sum();
             NTransferredIn = nTransferredInByLayer.Sum();
+        }
+
+        /// <summary>Computes the N amount that is potentially remobilisable.</summary>
+        /// <param name="nConcThreshold">The N concentration above which remobilisation can occur.</param>
+        /// <remarks>The nConc threshold should be the optimum for live tissue and for dead is the minimum.</remarks>
+        public void GetRemobilisableN(double nConcThreshold)
+        {
+            if ((DMTransferredOut + DMTransferredIn > 0.0) || (NTransferredOut + NTransferredIn > 0.0))
+            {
+                // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
+                double potentialRemobilisableN = 0.0;
+
+                // first, get the available N in the tissue
+                potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+
+                // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
+                potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
+
+                // only a fraction of the above calculated potential remobilisable N can be remobilised each day
+                NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
+            }
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>

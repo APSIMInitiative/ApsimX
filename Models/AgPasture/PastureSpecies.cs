@@ -3006,6 +3006,9 @@ namespace Models.AgPasture
                     // get the potential growth after water limitations
                     CalcGrowthAfterWaterLimitations();
 
+                    // get the N amount potentially remobilisable
+                    EvaluateNitrogenRemobilisable();
+
                     // get the N amount demanded for optimum growth and luxury uptake
                     EvaluateNitrogenDemand();
                 }
@@ -3612,6 +3615,15 @@ namespace Models.AgPasture
                     fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - nffSoilNSupply) * adjNDemand;
                 }
             }
+        }
+
+        /// <summary>Computes the amount of nitrogen potentially remobilisable from each organ.</summary>
+        internal void EvaluateNitrogenRemobilisable()
+        {
+            Leaf.CalculateRemobilisableN();
+            Stem.CalculateRemobilisableN();
+            Stolon.CalculateRemobilisableN();
+            Root.CalculateRemobilisableN();
         }
 
         /// <summary>Computes the amount of nitrogen remobilised from senesced tissues into new growth.</summary>
