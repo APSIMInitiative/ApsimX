@@ -216,7 +216,7 @@ namespace Models.AgPasture
                 //  sward cover (which agrees with the implementation in Ecomod).
                 //  (note that these values are only used in the calculation of photosynthesis).
                 // TODO: this approach will have to be amended when enabling variation in plant height, i.e. multi-layered canopies.
-                // In that case, things like shading (which would reduce radiation on top of canopy will become quite relevant.
+                // In that case, things like shading (which would reduce radiation on top of canopy) will become quite relevant.
             }
         }
 
@@ -1281,9 +1281,6 @@ namespace Models.AgPasture
         /// <summary>Amount of soil water taken up (mm).</summary>
         private double[] mySoilWaterUptake;
 
-        /// <summary>Amount of soil water taken up (mm).</summary>
-        public IReadOnlyList<double> WaterUptake => mySoilWaterUptake;
-
         /// <summary>Amount of N demanded from the soil (kg/ha).</summary>
         private double mySoilNDemand;
 
@@ -1326,9 +1323,6 @@ namespace Models.AgPasture
 
         /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
         private double[] mySoilNO3Uptake;
-
-        /// <summary>Amount of nitrogen taken up (kg/ha).</summary>
-        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2111,6 +2105,9 @@ namespace Models.AgPasture
             get { return mySoilNO3Uptake; }
         }
 
+        /// <summary>Amount of nitrogen taken up by the plant from each layer (kgN/ha).</summary>
+        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
+
         ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of water demanded by the plant (mm).</summary>
@@ -2128,6 +2125,9 @@ namespace Models.AgPasture
         {
             get { return mySoilWaterAvailable; }
         }
+
+        /// <summary>Amount of soil water taken up by the plant from each layer (mm).</summary>
+        public IReadOnlyList<double> WaterUptake => mySoilWaterUptake;
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2225,8 +2225,8 @@ namespace Models.AgPasture
 
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Reproductive season effects on allocation of new growth (0-1).</summary>
-        [Units("0-1")]
+        /// <summary>Factor modifying the allocation to shoot due to reproductive season (0-1).</summary>
+        [Units("-")]
         public double ReproductiveSeasonFactor
         {
             get { return reproFactor; }
