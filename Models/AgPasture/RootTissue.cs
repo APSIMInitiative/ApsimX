@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 using Models.Core;
 using Models.Soils;
 using Models.Soils.Nutrients;
-using APSIM.Shared.Utilities;
 using Models.Surface;
-using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
@@ -183,8 +183,8 @@ namespace Models.AgPasture
         {
             if (amountDM.Sum() + amountN.Sum() > 0.0)
             {
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[dmByLayer.Length];
-                for (int layer = 0; layer < dmByLayer.Length; layer++)
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[nLayers];
+                for (int layer = 0; layer < nLayers; layer++)
                 {
                     FOMType fomData = new FOMType();
                     fomData.amount = amountDM[layer];
@@ -279,7 +279,7 @@ namespace Models.AgPasture
         /// <param name="nAmount">The amount of N, by layer, to set to (kg/ha).</param>
         public void SetBiomass(double[] dmAmount, double[] nAmount)
         {
-            for (int layer = 0; layer < dmByLayer.Length; layer++)
+            for (int layer = 0; layer < nLayers; layer++)
             {
                 dmByLayer[layer] = dmAmount[layer];
                 nByLayer[layer] = nAmount[layer];
@@ -293,7 +293,7 @@ namespace Models.AgPasture
         /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
         public void AddBiomass(double[] dmToAdd, double[] nToAdd)
         {
-            for (int layer = 0; layer < dmByLayer.Length; layer++)
+            for (int layer = 0; layer < nLayers; layer++)
             {
                 dmByLayer[layer] += dmToAdd[layer];
                 nByLayer[layer] += nToAdd[layer];
@@ -303,12 +303,11 @@ namespace Models.AgPasture
         }
 
         /// <summary>Removes a fraction of the biomass from this tissue.</summary>
-        /// <param name="fractionToRemove">The fraction of biomass to remove.</param>
+        /// <param name="fractionToRemove">The fraction of biomass to remove off field.</param>
         /// <param name="fractionToSoil">The fraction of biomass to sent to soil.</param>
         /// <remarks>The same removal fractions are used for all layers.</remarks>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
-            var nLayers = dmByLayer.Length;
             double[] dmToSoil = new double[nLayers];
             double[] nToSoil = new double[nLayers];
             var totalFraction = fractionToRemove + fractionToSoil;
@@ -338,10 +337,10 @@ namespace Models.AgPasture
         /// <remarks>The fraction should be give for each layer, if array is short no biomass is removed at bottom of profile.</remarks>
         public void RemoveBiomass(double[] fractionToRemove, double[] fractionToSoil)
         {
-            var nLayers = Math.Min(fractionToRemove.Length, fractionToSoil.Length);
-            double[] dmToSoil = new double[nLayers];
-            double[] nToSoil = new double[nLayers];
-            for (int layer = 0; layer < nLayers; layer++)
+            var numLayers = Math.Min(fractionToRemove.Length, fractionToSoil.Length);
+            double[] dmToSoil = new double[numLayers];
+            double[] nToSoil = new double[numLayers];
+            for (int layer = 0; layer < numLayers; layer++)
             {
                 var totalFraction = fractionToRemove[layer] + fractionToSoil[layer];
                 var dmToRemove = dmByLayer[layer] * totalFraction;

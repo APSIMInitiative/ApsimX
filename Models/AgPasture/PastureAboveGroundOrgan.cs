@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using APSIM.Numerics;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
-using Models.PMF.Organs;
-using APSIM.Numerics;
 
 namespace Models.AgPasture
 {

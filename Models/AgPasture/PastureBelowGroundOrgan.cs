@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
-using Models.PMF;
-using Models.Core;
-using Models.Soils;
-using Models.Interfaces;
-using Models.Soils.Nutrients;
-using Models.Soils.Arbitrator;
-using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using APSIM.Core;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Interfaces;
+using Models.Soils.Arbitrator;
+using Models.Soils.Nutrients;
+using Models.PMF.Interfaces;
 
 namespace Models.AgPasture
 {
@@ -413,7 +413,7 @@ namespace Models.AgPasture
             double[] dmKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.Wt * fractionToRemove);
             double[] nKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.N * fractionToRemove);
             Dead.AddBiomass(dmKilled, nKilled);
-            Live.AddBiomass(MathUtilities.Multiply_Value(dmKilled, -1.0), MathUtilities.Multiply_Value(nKilled, -1.0));
+            Live.RemoveBiomass(fractionToRemove, 0.0);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -743,8 +743,8 @@ namespace Models.AgPasture
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
         {
-            no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
             nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
+            no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
         }
 
         /// <summary>Flag indicating whether roots are in the specified zone.</summary>

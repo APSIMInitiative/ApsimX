@@ -2,16 +2,16 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Models.PMF;
+using APSIM.Shared.Utilities;
+using APSIM.Numerics;
+using APSIM.Core;
 using Models.Core;
+using Models.PMF;
 using Models.Soils;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
-using APSIM.Shared.Utilities;
-using APSIM.Numerics;
-using APSIM.Core;
 
 namespace Models.AgPasture
 {
@@ -185,11 +185,10 @@ namespace Models.AgPasture
                 {
                     InterceptedRadn = 0.0;
                     myLightProfile = value;
-                    double totalRadiationInterceptionOnGreen = 0;
+                    double totalRadiationInterceptionOnGreen = myLightProfile[0].AmountOnGreenTotal;
                     foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
                     {
                         InterceptedRadn += canopyLayer.AmountOnGreen;
-                        totalRadiationInterceptionOnGreen = canopyLayer.AmountOnGreenTotal;
                     }
 
                     // stuff required to calculate photosynthesis using Ecomod approach
@@ -1377,8 +1376,8 @@ namespace Models.AgPasture
         /// <summary>Temperature effects on respiration (0-1).</summary>
         private double tempEffectOnRespiration = 0.0;
 
-        /// <summary>Effect of CO2 on optimum N content (>0).</summary>
-        private double ccfOptimumN = 1.0;
+        /// <summary>Effect of CO2 on N requirements (0-1).</summary>
+        private double co2EffectOnOptimumN = 1.0;
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2216,11 +2215,11 @@ namespace Models.AgPasture
             get { return nffSoilNSupply; }
         }
 
-        /// <summary>Variation in optimum N content in plant tissues due to atmospheric CO2 (0-1).</summary>
+        /// <summary>Factor to modify N content in plant tissues due to atmospheric CO2 (0-1).</summary>
         [Units("0-1")]
         public double CO2EffectOnNConcentration
         {
-            get { return ccfOptimumN; }
+            get { return co2EffectOnOptimumN; }
         }
 
         ////- DM allocation and turnover rates >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3134,7 +3133,7 @@ namespace Models.AgPasture
             glfCO2 = CO2EffectOnPhotosynthesis();
 
             // CO2 effects on N requirements
-            ccfOptimumN = NOptimumVariationDueToCO2();
+            co2EffectOnOptimumN = NOptimumVariationDueToCO2();
 
             // N concentration effects on Pmax
             glfNc = NConcEffectOnPhotosynthesis();
@@ -3587,7 +3586,7 @@ namespace Models.AgPasture
                            + (dmToStolon * Stolon.NConcOptimum) + (dmToRoot * Root.NConcOptimum);
 
             // adjust the demand under elevated CO2
-            demandOptimumN *= ccfOptimumN;
+            demandOptimumN *= co2EffectOnOptimumN;
 
             // N demand for new growth, with luxury uptake (maximum [N])
             demandLuxuryN = (dmToLeaf * Leaf.NConcMaximum) + (dmToStem * Stem.NConcMaximum)
@@ -3699,29 +3698,26 @@ namespace Models.AgPasture
             // for the purpose of remobilisation, consider live root alongside 'developing' shoot tissue:
             int eqTissue = 1;
 
-            // check whether there is any luxury N remobilisable
+            // check whether there is any luxury N that can and needs to be remobilised
             if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
             {
-                // all N already considered is not enough to match demand for growth, check remobilisation of luxury N
-                if (Nmissing >= RemobilisableLuxuryN)
+                // there is still unfulfilled N demand for growth, remobilise some luxury N
+                if (MathUtilities.IsLessThanOrEqual(RemobilisableLuxuryN, Nmissing, Epsilon))
                 {
-                    // N luxury is just or not enough for optimum growth, use up all there is
-                    if (RemobilisableLuxuryN > Epsilon)
-                    {
-                        luxuryNRemobilised = RemobilisableLuxuryN;
-                        Nmissing -= luxuryNRemobilised;
+                    // all luxury N available can be used up
+                    luxuryNRemobilised = RemobilisableLuxuryN;
+                    Nmissing -= luxuryNRemobilised;
 
-                        // remove the luxury N
-                        for (int tissue = 0; tissue < 3; tissue++)
+                    // go over all tissues in each organ and remove the luxury N
+                    for (int t = 0; t < 3; t++)
+                    {
+                        Leaf.Tissue[t].DoRemobiliseN(1.0);
+                        Stem.Tissue[t].DoRemobiliseN(1.0);
+                        Stolon.Tissue[t].DoRemobiliseN(1.0);
+                        if (t == eqTissue)
                         {
-                            Leaf.Tissue[tissue].DoRemobiliseN(1.0);
-                            Stem.Tissue[tissue].DoRemobiliseN(1.0);
-                            Stolon.Tissue[tissue].DoRemobiliseN(1.0);
-                            if (tissue == eqTissue)
-                            {
-                                Root.Live.DoRemobiliseN(1.0);
-                                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
-                            }
+                            Root.Live.DoRemobiliseN(1.0);
+                            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                         }
                     }
                 }
@@ -3739,9 +3735,9 @@ namespace Models.AgPasture
                             Nluxury += Root.Live.NRemobilisable;
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                         }
+
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
-
                         Leaf.Tissue[t].DoRemobiliseN(fracRemobilised);
                         Stem.Tissue[t].DoRemobiliseN(fracRemobilised);
                         Stolon.Tissue[t].DoRemobiliseN(fracRemobilised);
@@ -4185,9 +4181,9 @@ namespace Models.AgPasture
             if (Leaf.NConcLive > Leaf.NConcMinimum)
             {
                 effect = 1.0;
-                if (Leaf.NConcLive < Leaf.NConcOptimum * ccfOptimumN)
+                if (Leaf.NConcLive < Leaf.NConcOptimum * co2EffectOnOptimumN)
                 {
-                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, (Leaf.NConcOptimum * ccfOptimumN) - Leaf.NConcMinimum, 1.0);
+                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, (Leaf.NConcOptimum * co2EffectOnOptimumN) - Leaf.NConcMinimum, 1.0);
                 }
             }
 
