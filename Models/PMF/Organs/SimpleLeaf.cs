@@ -1135,6 +1135,9 @@ namespace Models.PMF.Organs
         /// </summary>
         public double AvailableDMReallocation()
         {
+            if (senescenceRate.Value() > 0)
+            { 
+            }
             double availableDM = startLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
             if (MathUtilities.IsNegative(availableDM))
                 throw new Exception("Negative DM reallocation value computed for " + Name);
@@ -1194,6 +1197,11 @@ namespace Models.PMF.Organs
             // allocate non structural DM
             if (MathUtilities.IsGreaterThan(dryMatter.Storage * dMCE, DMDemand.Storage))
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
+
+            if (dryMatter.Retranslocation!=0 || dryMatter.Reallocation!=0)
+            {
+
+            }
 
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
             double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
