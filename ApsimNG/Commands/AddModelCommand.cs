@@ -102,20 +102,29 @@
         {
             // The strategy here is to try and add the string as if it was a APSIM Next Gen.
             // string (json or xml). If that throws an exception then try adding it as if
-            // it was an APSIM 7.10 string (xml). If that doesn't work throw 'invalid format' exception.
+            // it was an APSIM 7.10 string (xml). If that doesn't work throw the original error message.
             IModel modelToAdd = null;
+            string errorMessage = null;
             try
             {
                 modelToAdd = FileFormat.ReadFromString<IModel>(st).Model as IModel;
             }
             catch (Exception err)
             {
-                if (err.Message.StartsWith("Unknown string encountered"))
-                    throw;
+                errorMessage = err.Message;
             }
 
-            if (modelToAdd == null)
-                modelToAdd = Importer.StringToModel(st);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                try
+                {
+                    modelToAdd = Importer.StringToModel(st);
+                }
+                catch
+                {
+                    throw new Exception(errorMessage);
+                }
+            }
 
             return modelToAdd;
         }

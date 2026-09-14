@@ -126,10 +126,52 @@ public class CommandTests
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new DeleteCommand(modelName: "Report");
+        IModelCommand cmd = new DeleteCommand(modelName: "Report", false);
         cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(0));
+    }
+
+    /// <summary>Ensure the delete command works.</summary>
+    [Test]
+    public void EnsureDeleteMultipleWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Models.Report() { Name = "NewReport" },
+                new Models.Report() { Name = "NewReport1" },
+                new Models.Report() { Name = "NewReport2" }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new DeleteCommand(modelName: "[Report]", true);
+        cmd.Run(simulation, null, null);
+
+        Assert.That(simulation.Children.Count, Is.EqualTo(0));
+    }
+
+    /// <summary>Ensure the delete command works.</summary>
+    [Test]
+    public void EnsureDeleteMultipleWorksWithNoMatches()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Models.Report() { Name = "NewReport" },
+                new Models.Report() { Name = "NewReport1" },
+                new Models.Report() { Name = "NewReport2" }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new DeleteCommand(modelName: "[Clock]", true);
+        cmd.Run(simulation, null, null);
+
+        Assert.That(simulation.Children.Count, Is.EqualTo(3));
     }
 
     /// <summary>Ensure the duplicate command works.</summary>

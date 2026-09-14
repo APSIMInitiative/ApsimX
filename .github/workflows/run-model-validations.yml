@@ -122,7 +122,7 @@ jobs:
       # This is required to give the Azure jobs time to start before enabling autoscaling on the pool.
       # If we don't do this, the autoscaling script may run before the jobs have started, resulting in the pool being scaled down to 0 nodes.
       - name: Give Azure jobs time to start
-        run: sleep 600
+        run: sleep 480
 
       - name: Enable autoscaling on Azure pool
         env:

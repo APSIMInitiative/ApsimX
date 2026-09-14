@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 
@@ -83,6 +84,68 @@ namespace Models.CLEM
                 return new List<PropertyInfo>();
             }
         }
+
+        // add field
+        [NonSerialized]
+        private Dictionary<string, Func<object, object>> propertyAccessors;
+
+        /// <inheritdoc/>
+        public object GetPropertyValue(string name, object parentTopLevel)
+        {
+            if (properties is null)
+                InitialiseFilters(false);
+
+            if (!properties.TryGetValue(name, out List<PropertyInfo> value))
+                return 0;
+
+            propertyAccessors ??= new Dictionary<string, Func<object, object>>(StringComparer.Ordinal);
+
+            if (!propertyAccessors.TryGetValue(name, out Func<object, object> accessor))
+            {
+                accessor = BuildAccessor(value);
+                propertyAccessors[name] = accessor;
+            }
+
+            return accessor(parentTopLevel);
+        }
+
+        private static Func<object, object> BuildAccessor(IReadOnlyList<PropertyInfo> chain)
+        {
+            var input = Expression.Parameter(typeof(object), "input");
+            Expression current = input;
+
+            foreach (var prop in chain)
+                current = Expression.Property(Expression.Convert(current, prop.DeclaringType), prop);
+
+            return Expression.Lambda<Func<object, object>>(
+                Expression.Convert(current, typeof(object)),
+                input).Compile();
+        }
+
+
+        ///// <inheritdoc/>
+        //public object GetPropertyValue(string name, object parentTopLevel)
+        //{
+        //    if (properties is null)
+        //    {
+        //        InitialiseFilters(false);
+        //    }
+
+        //    if (properties.TryGetValue(name, out List<PropertyInfo> value))
+        //    {
+        //        var parentLevel = parentTopLevel;
+        //        foreach (var propInfo in value[..1])
+        //        {
+        //            parentLevel = propInfo.GetValue(parentLevel, null);
+        //        }
+        //        return value.Last().GetValue(parentLevel, null);
+        //    }
+        //    else
+        //    {
+        //        int number = 0;
+        //        return number;
+        //    }
+        //}
 
         /// <summary>
         /// Clear all rules

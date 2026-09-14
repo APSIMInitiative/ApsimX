@@ -153,13 +153,10 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
 
         if (Model is CLEMActivityBase cmab)
         {
-            //string tooltip = "";
             string divText = "";
-
             switch (cmab.OnPartialResourcesAvailableAction)
             {
                 case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                    //tooltip = "Error and Stop on insufficient resources";
                     divText = "Stop";
                     break;
                 case OnPartialResourcesAvailableActionTypes.SkipActivity:
@@ -217,6 +214,10 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             {
                 SummaryStyle = HTMLSummaryStyle.Helper;
             }
+            else if (Model.GetType() == typeof(ActivitiesHolder))
+                SummaryStyle = HTMLSummaryStyle.Activity;
+            else if (Model.GetType() == typeof(ResourcesHolder))
+                SummaryStyle = HTMLSummaryStyle.Resource;
             else if (Model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 SummaryStyle = HTMLSummaryStyle.Activity;
             else if (Model is CLEMEvents)
@@ -224,7 +225,6 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                 SummaryStyle = HTMLSummaryStyle.Default;
                 sub = true;
             }
-
         }
 
         switch (SummaryStyle)
@@ -270,18 +270,31 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
                 break;
         }
 
+        bool folder = false;
+        string classString = "";
+        if (Model.GetType().Name.Contains("Folder") || Model.GetType().Name.Contains("Holder"))
+        {
+            overall = $"{((SummaryStyle == HTMLSummaryStyle.Resource)?"resource":"activity")}border";
+            folder = true;
+        }
+        else
+        {
+            classString = $"holder{((sub == false) ? "main" : "sub")}";
+        }
+
         bool firstDisabledBlock = !Model.Enabled && generator.CurrentlyDisabled == false;
 
-        generator.OpenBlock($"holder{((sub == false) ? "main" : "sub")} {overall} {(firstDisabledBlock ? "disabledcomponent" : "")}", id: $"{Model.Name}_opening", disabled: !Model.Enabled);
+        generator.OpenBlock($"{classString} {overall} {(firstDisabledBlock ? "disabledcomponent" : "")}", id: $"{Model.Name}_opening", disabled: !Model.Enabled);
         openingBlocks.Add($"{Model.Name}_opening");
-        //using (generator.OpenBlock($"clearfix {overall}banner{extra}"))
-        using (generator.OpenBlock($"componentBanner {extra} clearfix")) //{extra}
+        if (folder == false)
         {
-            GetSummaryNameTypeHeader(firstDisabledBlock);
+            using (generator.OpenBlock($"componentBanner {extra} clearfix")) 
+            {
+                GetSummaryNameTypeHeader(firstDisabledBlock);
+            }
+            generator.OpenBlock($"componentContent {overall} {extra}", id: $"{Model.Name}_content");
+            openingBlocks.Add($"{Model.Name}_content");
         }
-        //generator.OpenBlock($"{overall}content{((extra != "") ? extra : "")}", id: $"{Model.Name}_content");
-        generator.OpenBlock($"componentContent {extra}", id: $"{Model.Name}_content");
-        openingBlocks.Add($"{Model.Name}_content");
     }
 
     /// <summary>

@@ -43,6 +43,11 @@ namespace Models.Core.Run
         }
 
         /// <summary>
+        /// Is the baseSimulation enabled?
+        /// </summary>
+        public bool IsEnabled => baseSimulation.Enabled;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="sim">The simulation to run.</param>

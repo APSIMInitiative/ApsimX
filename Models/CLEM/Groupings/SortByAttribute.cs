@@ -76,43 +76,5 @@ namespace Models.CLEM.Groupings
             }
             return 0;
         }
-
-        ///// <summary>
-        ///// Convert sort to string
-        ///// </summary>
-        ///// <returns></returns>
-        //public override string ToString()
-        //{
-        //    return SortString(false);
-        //}
-
-        ///// <summary>
-        ///// Convert sort to html string
-        ///// </summary>
-        ///// <returns></returns>
-        //public string ToHTMLString()
-        //{
-        //    return SortString(true);
-        //}
-
-        //private string SortString(bool htmlTags)
-        //{
-        //    string cssSet = "";
-        //    string cssClose = "";
-        //    if (htmlTags)
-        //    {
-        //        cssSet = "<span class = \"filterset\">";
-        //        cssClose = "</span>";
-        //    }
-
-        //    using (StringWriter sortWriter = new StringWriter())
-        //    {
-        //        sortWriter.Write($"Sort: Attribute-");
-        //        sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmlTags)}");
-        //        sortWriter.Write($" {cssSet}{FilterStyle.ToString().ToLower()}{cssClose}");
-        //        sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
-        //        return sortWriter.ToString();
-        //    }
-        //}
     }
 }
