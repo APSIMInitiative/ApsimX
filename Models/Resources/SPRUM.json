@@ -4239,40 +4239,6 @@
           ],
           "Enabled": true,
           "ReadOnly": false
-        },
-        {
-          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "Name": "WaterStressFactor",
-          "ResourceName": null,
-          "Children": [
-            {
-              "$type": "Models.Functions.XYPairs, Models",
-              "X": [
-                0.0,
-                1.0
-              ],
-              "Y": [
-                0.0,
-                1.0
-              ],
-              "Name": "XYPairs",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Leaf].Fw",
-              "Name": "XValue",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
         }
       ],
       "Enabled": true,
