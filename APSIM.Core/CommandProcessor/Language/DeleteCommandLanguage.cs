@@ -34,7 +34,7 @@ internal partial class DeleteCommand: IModelCommand
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
-        string all = " ";
+        string all = "";
         if (_multiple)
             all = "all ";
 
