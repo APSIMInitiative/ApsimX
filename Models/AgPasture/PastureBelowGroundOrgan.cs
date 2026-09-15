@@ -591,6 +591,29 @@ namespace Models.AgPasture
             indexRungeKutta += 1;
         }
 
+        /// <summary>Adjusts the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
+        /// <remarks>
+        /// This is a hack to get an evaluation of availability after the Runge-Kutta iteration process.
+        /// This is needed to output values consistent with uptake (i.e. not smaller as can happen), and
+        ///  because the model needs to re-evaluate the amount of N fixed (the 'current' value is simply
+        ///  based on the last iteration of the Runge-Kutta process and not necessarily in agreement with
+        ///  its outcome... This can lead to perceive loss in mass balance in outputs.
+        /// </remarks>
+        internal void ReEvaluateSoilNitrogenAvailability()
+        {
+            // update soil N available (average of Runge-Kutta estimates, but no less than uptake)
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                double avgAvailableNH4 = (nh4DuringRungeKutta[0][layer] + nh4DuringRungeKutta[1][layer]
+                                       + nh4DuringRungeKutta[2][layer] + nh4DuringRungeKutta[3][layer]) / 4.0;
+                mySoilNH4Available[layer] = Math.Max(avgAvailableNH4, mySoilNH4Uptake[layer]);
+
+                double avgAvailableNO3 = (no3DuringRungeKutta[0][layer] + no3DuringRungeKutta[1][layer]
+                                       + no3DuringRungeKutta[2][layer] + no3DuringRungeKutta[3][layer]) / 4.0;
+                mySoilNO3Available[layer] = Math.Max(avgAvailableNO3, mySoilNO3Uptake[layer]);
+            }
+        }
+
         /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
         /// <param name="layer">The index for the layer being considered</param>
         /// <returns>The fraction of the layer that is explored by roots (0-1)</returns>
