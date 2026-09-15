@@ -415,7 +415,7 @@ namespace Models.AgPasture
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailability(zone, (double[])WaterUptake);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
@@ -463,15 +463,12 @@ namespace Models.AgPasture
         /// <param name="zones">The water uptake from each layer (mm), by zone.</param>
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
-            Array.Clear(mySoilWaterUptake, 0, WaterUptake.Count);
-
             foreach (ZoneWaterAndN zone in zones)
             {
                 // find the zone in our root zones.
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
-                    mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
                     // do the actual uptake
                     myRoot.PerformWaterUptake(zone.Water);
                 }
@@ -488,7 +485,7 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
-                myRoot?.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
+                myRoot?.EvaluateSoilNitrogenAvailability(zone, (double[])WaterUptake);
             }
             EvaluateNitrogenFixation();
             EvaluateSenescedNRemobilisation();
@@ -1260,26 +1257,6 @@ namespace Models.AgPasture
 
         /// <summary>Amount of water demanded for new growth (mm).</summary>
         private double myWaterDemand;
-
-        /// <summary>Amount of plant available water in the soil (mm).</summary>
-        private double[] mySoilWaterAvailable
-        {
-            get
-            {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        available[layer] += root.mySoilWaterAvailable[layer];
-                    }
-                }
-                return available;
-            }
-        }
-
-        /// <summary>Amount of soil water taken up (mm).</summary>
-        private double[] mySoilWaterUptake;
 
         /// <summary>Amount of N demanded from the soil (kg/ha).</summary>
         private double mySoilNDemand;
@@ -2123,11 +2100,36 @@ namespace Models.AgPasture
         [Units("mm")]
         public double[] WaterAvailable
         {
-            get { return mySoilWaterAvailable; }
+            get
+            {
+                double[] wValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        wValues[layer] += root.mySoilWaterAvailable[layer];
+                    }
+                }
+                return wValues;
+            }
         }
 
         /// <summary>Amount of soil water taken up by the plant from each layer (mm).</summary>
-        public IReadOnlyList<double> WaterUptake => mySoilWaterUptake;
+        public IReadOnlyList<double> WaterUptake
+        {
+            get
+            {
+                double[] wValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        wValues[layer] += root.mySoilWaterUptake[layer];
+                    }
+                }
+                return wValues;
+            }
+        }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2661,7 +2663,6 @@ namespace Models.AgPasture
         {
             // get the number of layers in the soil profile and initialise soil related variables
             nLayers = soilPhysical.Thickness.Length;
-            mySoilWaterUptake = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
 
@@ -2929,8 +2930,6 @@ namespace Models.AgPasture
 
             myDefoliatedFraction = 0.0;
 
-            Array.Clear(mySoilWaterAvailable, 0, nLayers);
-            Array.Clear(mySoilWaterUptake, 0, nLayers);
             Array.Clear(mySoilNH4Uptake, 0, nLayers);
             Array.Clear(mySoilNO3Uptake, 0, nLayers);
 

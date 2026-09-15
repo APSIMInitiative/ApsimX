@@ -267,6 +267,9 @@ namespace Models.AgPasture
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         internal double[] mySoilWaterAvailable { get; private set; }
 
+        /// <summary>Amount of soil water taken up by the plant (mm).</summary>
+        internal double[] mySoilWaterUptake { get; private set; }
+
         /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
         internal double[] mySoilNH4Available { get; private set; }
 
@@ -335,9 +338,10 @@ namespace Models.AgPasture
             // initialise soil related variables
             zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
+            mySoilWaterAvailable = new double[nLayers];
+            mySoilWaterUptake = new double[nLayers];
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
-            mySoilWaterAvailable = new double[nLayers];
 
             // check rooting depth
             MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
@@ -400,6 +404,8 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void ClearDailyTransferredAmounts()
         {
+            Array.Clear(mySoilWaterAvailable, 0, nLayers);
+            Array.Clear(mySoilWaterUptake, 0, nLayers);
             foreach (RootTissue tissue in Tissue)
             {
                 tissue.ClearDailyTransferredAmounts();
@@ -734,6 +740,7 @@ namespace Models.AgPasture
         {
             if (MathUtilities.IsGreaterThan(amount.Sum(), 0.0))
             {
+                Array.Copy(amount, mySoilWaterUptake, nLayers);
                 waterBalance.RemoveWater(amount);
             }
         }
