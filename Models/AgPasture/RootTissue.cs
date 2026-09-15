@@ -53,6 +53,12 @@ namespace Models.AgPasture
         /// <summary>Amount of nitrogen transferred out of this tissue, for each layer (kg/ha).</summary>
         private double[] nTransferredOutByLayer;
 
+        /// <summary>Amount of dry matter removed from this tissue, for each layer (kg/ha).</summary>
+        private double[] dmRemovedByLayer;
+
+        /// <summary>Amount of nitrogen removed from this tissue, for each layer (kg/ha).</summary>
+        private double[] nRemovedByLayer;
+
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
         public double DMTransferredIn { get { return dmTransferredInByLayer.Sum(); } }
 
@@ -66,13 +72,13 @@ namespace Models.AgPasture
         public double NTransferredOut { get { return nTransferredOutByLayer.Sum(); } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get; set; }
+        public double DMRemoved { get { return dmRemovedByLayer.Sum(); } }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get; set; }
+        public double NRemoved { get { return nRemovedByLayer.Sum(); } }
 
         /// <summary>Fraction of DM removed from this tissue.</summary>
-        public double FractionRemoved { get; private set; }
+        public double FractionRemoved { get { return MathUtilities.Divide(DMRemoved, DM.Wt, 0.0); } }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
         public double NRemobilisable { get; set; }
@@ -119,6 +125,8 @@ namespace Models.AgPasture
             nTransferredInByLayer = new double[nLayers];
             dmTransferredOutByLayer = new double[nLayers];
             nTransferredOutByLayer = new double[nLayers];
+            dmRemovedByLayer = new double[nLayers];
+            nRemovedByLayer = new double[nLayers];
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -320,8 +328,8 @@ namespace Models.AgPasture
                 nToSoil[layer] = nByLayer[layer] * fractionToSoil;
                 dmByLayer[layer] -= dmToRemove;
                 nByLayer[layer] -= nToRemove;
-                DMRemoved += dmToRemove;
-                NRemoved += nToRemove;
+                dmRemovedByLayer[layer] += dmToRemove;
+                nRemovedByLayer[layer] += nToRemove;
             }
 
             UpdateDM();
@@ -350,8 +358,8 @@ namespace Models.AgPasture
                 nToSoil[layer] = nByLayer[layer] * fractionToSoil[layer];
                 dmByLayer[layer] -= dmToRemove;
                 nByLayer[layer] -= nToRemove;
-                DMRemoved += dmToRemove;
-                NRemoved += nToRemove;
+                dmRemovedByLayer[layer] += dmToRemove;
+                nRemovedByLayer[layer] += nToRemove;
             }
 
             UpdateDM();
@@ -367,15 +375,14 @@ namespace Models.AgPasture
         {
             NRemobilisable = 0.0;
             NRemobilised = 0.0;
-            DMRemoved = 0.0;
-            NRemoved = 0.0;
-            FractionRemoved = 0.0;
             if (dmTransferredInByLayer != null)
             {
                 Array.Clear(dmTransferredInByLayer, 0, nLayers);
                 Array.Clear(nTransferredInByLayer, 0, nLayers);
                 Array.Clear(dmTransferredOutByLayer, 0, nLayers);
                 Array.Clear(nTransferredOutByLayer, 0, nLayers);
+                Array.Clear(dmRemovedByLayer, 0, nLayers);
+                Array.Clear(nRemovedByLayer, 0, nLayers);
             }
         }
     }
