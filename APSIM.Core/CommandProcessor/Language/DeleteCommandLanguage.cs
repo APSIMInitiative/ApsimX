@@ -1,14 +1,11 @@
-using System.Text.RegularExpressions;
-
 namespace APSIM.Core;
 
 internal partial class DeleteCommand: IModelCommand
 {
-    private const string KEYWORD_DELETE = "delete";
+    private const string KEYWORD_DELETE = "delete ";
     private const string KEYWORD_FROM = " from ";
-    private const string KEYWORD_ALL = " all ";
-    private const string PATTERN_DELETE = $@"{KEYWORD_DELETE}(?<all>{KEYWORD_ALL})*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
-    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<parent>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_DELETE = $@"{KEYWORD_DELETE}(?<all>all )*(?<model>{CommandLanguage.PATTERN_MODEL_PATH})";
+    private const string PATTERN_FROM = $@"{KEYWORD_FROM}(?<from>{CommandLanguage.PATTERN_MODEL_PATH})";
 
     /// <summary>
     /// Create a delete command.
@@ -25,7 +22,7 @@ internal partial class DeleteCommand: IModelCommand
         CommandSegment[] segments = CommandLanguage.ReadCommand(command, keywords, patterns);
         string model = CommandSegment.GetValue(segments, "model");
         bool usesAll = CommandSegment.ContainsKey(segments, "all");
-        string parentModel = CommandSegment.GetValue(segments, "parent");
+        string parentModel = CommandSegment.GetValue(segments, "from");
         if (string.IsNullOrEmpty(model))
             throw new Exception($"Invalid command: {command}");
         return new DeleteCommand(model, usesAll, parentModel);
@@ -37,8 +34,14 @@ internal partial class DeleteCommand: IModelCommand
     /// <returns>A command language string.</returns>
     public override string ToString()
     {
-        string all = _multiple ? KEYWORD_ALL : " ";
-        string from = string.IsNullOrEmpty(_parentModelName) ? "" : $"{KEYWORD_FROM}{_parentModelName}";
+        string all = " ";
+        if (_multiple)
+            all = "all ";
+
+        string from = "";
+        if (!string.IsNullOrEmpty(_parentModelName))
+            from = $"{KEYWORD_FROM}{_parentModelName}";
+
         return $"{KEYWORD_DELETE}{all}{_modelName}{from}";
     } 
 }
