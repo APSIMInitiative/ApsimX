@@ -3079,44 +3079,20 @@ namespace Models.AgPasture
 
         /// <summary>Calculates the actual plant growth (after all growth limitations, before senescence).</summary>
         /// <remarks>
-        /// Here the limitation due to soil fertility are considered, the model simulates N deficiency only, but a generic user-settable
-        ///  limitation factor (GlfSFertility) can be used to mimic limitation due to other soil related factors (e.g. phosphorus)
-        /// The GLF due to N stress is modified here to account for N dilution effects:
-        /// Many plants, especially grasses, can keep growth even when N supply is below optimum; the N concentration is reduced
-        ///  in the plant tissues. This is represented hereby adjusting the effect of N deficiency using a power function. When the exponent
-        ///  is 1.0, the reduction in growth is linearly proportional to N deficiency, a greater value results in less reduction in growth.
-        /// For many plants the value should be smaller than 1.0. For grasses, the exponent is typically around 0.5.
+        /// At this stage,we consider the limitations related to soil N supply, or fertility in general. As APSIM only simulates nitrogen,
+        ///  a generic, user-settable, limitation factor (GlfSoilFertility) can be used here to mimic limitations due to other soil related
+        ///  factors (e.g. phosphorus). Ultimately, only the most limiting factor is used (minimum between N and generic fertility).
         /// </remarks>
         internal void CalcGrowthAfterNutrientLimitations()
         {
             // get total N to allocate in new growth
             dNewGrowthN = fixedN + senescedNRemobilised + SoilUptakeN + luxuryNRemobilised;
 
-            // get the limitation factor due to soil N deficiency
-            double glfNit = 1.0;
-            if (dGrowthAfterWaterLimitations > Epsilon)
-            {
-                if (dNewGrowthN > Epsilon)
-                {
-                    glfNSupply = MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0);
-                    glfNSupply = MathUtilities.Bound(glfNSupply, 0.0, 1.0);
-
-                    // adjust the glf to consider N dilution
-                    glfNit = 1.0 - Math.Pow(1.0 - glfNSupply, NDilutionCoefficient);
-                }
-                else
-                {
-                    glfNSupply = 0.0;
-                    glfNit = 0.0;
-                }
-            }
-            else
-            {
-                glfNSupply = 1.0;
-            }
+            // get the limitation factor due to N supply
+            glfNSupply = NSupplyLimitingFactor();
 
             // adjust today's growth for limitations related to soil nutrient supply
-            dGrowthAfterNutrientLimitations = dGrowthAfterWaterLimitations * Math.Min(glfNit, GlfSoilFertility);
+            dGrowthAfterNutrientLimitations = dGrowthAfterWaterLimitations * Math.Min(glfNSupply, GlfSoilFertility);
             dNewGrowthWt = dGrowthAfterNutrientLimitations;
         }
 
@@ -3126,9 +3102,6 @@ namespace Models.AgPasture
         {
             // CO2 effects on Pmax
             glfCO2 = CO2EffectOnPhotosynthesis();
-
-            // CO2 effects on N requirements
-            co2EffectOnOptimumN = NOptimumVariationDueToCO2();
 
             // N concentration effects on Pmax
             glfNc = NConcEffectOnPhotosynthesis();
@@ -4177,6 +4150,37 @@ namespace Models.AgPasture
 
             effect = MathUtilities.Bound(effect, 0.0, 1.0);
             return effect;
+        }
+
+        /// <summary>Growth limiting factor due to nitrogen supply.</summary>
+        /// <remarks>
+        /// The GLF due to N stress is modified here to account for N dilution effects:
+        /// Many plants, especially grasses, can keep growth even when N supply is below optimum, which leads to a decrease
+        ///  in N concentration the plant tissues. This is represented here by adjusting the effect of N deficiency using a
+        ///  power function. When the exponent (NDilutionCoefficient) is 1.0, the reduction in growth is simply proportional
+        ///  to N deficiency, but a greater value results in a smaller reduction in growth (and thus a decrease in N conc).
+        /// For legumes the parameter is about 1.0, but for most plants the value should be greater that that. For grasses,
+        ///  the exponent seems to be typically around 2.0.
+        /// </remarks>
+        /// <returns>A factor to adjust growth rates (0-1)</returns>
+        private double NSupplyLimitingFactor()
+        {
+            if (dNewGrowthN < Epsilon)
+            {
+                return 0.0;
+            }
+            else if ((dNewGrowthN >= demandOptimumN) || (demandOptimumN < Epsilon))
+            {
+                return 1.0;
+            }
+
+            // get the basic glf value
+            double baseGLF = MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0);
+
+            // adjust the glf for N dilution
+            double adjustedGLF = 1.0 - Math.Pow(1.0 - baseGLF, NDilutionCoefficient);
+
+            return adjustedGLF;
         }
 
         /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2.</summary>
