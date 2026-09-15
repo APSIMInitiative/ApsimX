@@ -314,7 +314,7 @@ namespace Models.AgPasture
             MatureTissue.SetBiomass(matureWt, matureN);
             DeadTissue.SetBiomass(deadWt, deadN);
 
-            // tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate states at organ level.
             CalculateStates();
         }
 

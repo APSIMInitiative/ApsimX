@@ -342,7 +342,7 @@ namespace Models.AgPasture
         /// <returns>The potential water uptake (mm).</returns>
         public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
-            if (IsAlive)
+            if (phenologicStage > 0)
             {
                 // 1. get all water supplies.
                 double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -400,7 +400,7 @@ namespace Models.AgPasture
         /// <returns>The potential N uptake (kg/ha).</returns>
         public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            if (IsAlive)
+            if (phenologicStage > 0)
             {
                 double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
@@ -415,7 +415,7 @@ namespace Models.AgPasture
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailability(zone, (double[])WaterUptake);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
@@ -425,16 +425,16 @@ namespace Models.AgPasture
                     }
                 }
 
-                // get the N amount fixed through symbiosis - calculates fixedN
+                // get the N amount fixed through symbiosis
                 EvaluateNitrogenFixation();
 
-                // evaluate the use of N remobilised from senesced tissue
+                // get the N remobilised from senesced tissue
                 EvaluateSenescedNRemobilisation();
 
                 // get the amount of N demanded from soil
                 EvaluateSoilNitrogenDemand();
 
-                // get the amount of soil N demanded
+                // get the soil N demand
                 double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // estimate fraction of N used up
@@ -463,15 +463,13 @@ namespace Models.AgPasture
         /// <param name="zones">The water uptake from each layer (mm), by zone.</param>
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
-            Array.Clear(mySoilWaterUptake, 0, WaterUptake.Count);
-
             foreach (ZoneWaterAndN zone in zones)
             {
                 // find the zone in our root zones.
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
-                    mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
+                    // do the actual uptake
                     myRoot.PerformWaterUptake(zone.Water);
                 }
             }
@@ -481,18 +479,6 @@ namespace Models.AgPasture
         /// <param name="zones">The N uptake from each layer (kg/ha), by zone.</param>
         public void SetActualNitrogenUptakes(List<ZoneWaterAndN> zones)
         {
-            Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
-            Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
-
-            foreach (ZoneWaterAndN zone in zones)
-            {
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
-                myRoot?.EvaluateSoilNitrogenAvailability(zone, mySoilWaterUptake);
-            }
-            EvaluateNitrogenFixation();
-            EvaluateSenescedNRemobilisation();
-            EvaluateSoilNitrogenDemand();
-
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
@@ -500,10 +486,18 @@ namespace Models.AgPasture
                 {
                     // do the actual uptake
                     myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
-                    mySoilNH4Uptake = MathUtilities.Add(mySoilNH4Uptake, zone.NH4N);
-                    mySoilNO3Uptake = MathUtilities.Add(mySoilNO3Uptake, zone.NO3N);
+
+                    // check the value for soil available N
+                    myRoot?.ReEvaluateSoilNitrogenAvailability();
                 }
             }
+
+            // re-check the values for fixation and remobilisation
+            EvaluateNitrogenFixation();
+            EvaluateSenescedNRemobilisation();
+            // Note: need to do this again as these depend on soil available N, which changes each iteration of
+            //  the Runge-Kutta process to determine N uptake. As the value of available N is recalculated above,
+            //  we need to re-estimate these tow to ensure outputs will have mass balance.
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -1260,68 +1254,8 @@ namespace Models.AgPasture
         /// <summary>Amount of water demanded for new growth (mm).</summary>
         private double myWaterDemand;
 
-        /// <summary>Amount of plant available water in the soil (mm).</summary>
-        private double[] mySoilWaterAvailable
-        {
-            get
-            {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        available[layer] += root.mySoilWaterAvailable[layer];
-                    }
-                }
-                return available;
-            }
-        }
-
-        /// <summary>Amount of soil water taken up (mm).</summary>
-        private double[] mySoilWaterUptake;
-
         /// <summary>Amount of N demanded from the soil (kg/ha).</summary>
         private double mySoilNDemand;
-
-        /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNH4Available
-        {
-            get
-            {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        available[layer] += root.mySoilNH4Available[layer];
-                    }
-                }
-                return available;
-            }
-        }
-
-        /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
-        private double[] mySoilNO3Available
-        {
-            get
-            {
-                double[] available = new double[nLayers];
-                foreach (PastureBelowGroundOrgan root in roots)
-                {
-                    for (int layer = 0; layer < nLayers; layer++)
-                    {
-                        available[layer] += root.mySoilNO3Available[layer];
-                    }
-                }
-                return available;
-            }
-        }
-
-        /// <summary>Amount of soil NH4-N taken up by the plant (kg/ha).</summary>
-        private double[] mySoilNH4Uptake;
-
-        /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
-        private double[] mySoilNO3Uptake;
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2024,14 +1958,14 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double SoilAvailableN
         {
-            get { return mySoilNH4Available.Sum() + mySoilNO3Available.Sum(); }
+            get { return SoilNH4Available.Sum() + SoilNO3Available.Sum(); }
         }
 
         /// <summary>Amount of N taken up from the soil (kgN/ha).</summary>
         [Units("kg/ha")]
         public double SoilUptakeN
         {
-            get { return mySoilNH4Uptake.Sum() + mySoilNO3Uptake.Sum(); }
+            get { return SoilNH4Uptake.Sum() + SoilNO3Uptake.Sum(); }
         }
 
         /// <summary>Amount of N in detached dead material deposited onto soil surface (kgN/ha).</summary>
@@ -2080,32 +2014,76 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double[] SoilNH4Available
         {
-            get { return mySoilNH4Available; }
+            get
+            {
+                double[] nValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        nValues[layer] += root.mySoilNH4Available[layer];
+                    }
+                }
+                return nValues;
+            }
         }
 
         /// <summary>Amount of plant available NO3-N in each soil layer (kgN/ha).</summary>
         [Units("kg/ha")]
         public double[] SoilNO3Available
         {
-            get { return mySoilNO3Available; }
+            get
+            {
+                double[] nValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        nValues[layer] += root.mySoilNO3Available[layer];
+                    }
+                }
+                return nValues;
+            }
         }
 
         /// <summary>Amount of NH4-N taken up from each soil layer (kgN/ha).</summary>
         [Units("kg/ha")]
         public double[] SoilNH4Uptake
         {
-            get { return mySoilNH4Uptake; }
+            get
+            {
+                double[] nValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        nValues[layer] += root.mySoilNH4Uptake[layer];
+                    }
+                }
+                return nValues;
+            }
         }
 
         /// <summary>Amount of NO3-N taken up from each soil layer (kgN/ha).</summary>
         [Units("kg/ha")]
         public double[] SoilNO3Uptake
         {
-            get { return mySoilNO3Uptake; }
+            get
+            {
+                double[] nValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        nValues[layer] += root.mySoilNO3Uptake[layer];
+                    }
+                }
+                return nValues;
+            }
         }
 
         /// <summary>Amount of nitrogen taken up by the plant from each layer (kgN/ha).</summary>
-        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
+        public IReadOnlyList<double> NitrogenUptake => MathUtilities.Add(SoilNH4Uptake, SoilNO3Uptake);
 
         ////- Water related outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2122,11 +2100,36 @@ namespace Models.AgPasture
         [Units("mm")]
         public double[] WaterAvailable
         {
-            get { return mySoilWaterAvailable; }
+            get
+            {
+                double[] wValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        wValues[layer] += root.mySoilWaterAvailable[layer];
+                    }
+                }
+                return wValues;
+            }
         }
 
         /// <summary>Amount of soil water taken up by the plant from each layer (mm).</summary>
-        public IReadOnlyList<double> WaterUptake => mySoilWaterUptake;
+        public IReadOnlyList<double> WaterUptake
+        {
+            get
+            {
+                double[] wValues = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    for (int layer = 0; layer < nLayers; layer++)
+                    {
+                        wValues[layer] += root.mySoilWaterUptake[layer];
+                    }
+                }
+                return wValues;
+            }
+        }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2186,7 +2189,7 @@ namespace Models.AgPasture
             get { return glfWaterLogging; }
         }
 
-        /// <summary>Growth limiting factor due to soil N availability (0-1).</summary>
+        /// <summary>Growth limiting factor due to N availability (0-1).</summary>
         [Units("0-1")]
         public double GlfNSupply
         {
@@ -2658,11 +2661,8 @@ namespace Models.AgPasture
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            // get the number of layers in the soil profile and initialise soil related variables
+            // get the number of layers in the soil profile
             nLayers = soilPhysical.Thickness.Length;
-            mySoilWaterUptake = new double[nLayers];
-            mySoilNH4Uptake = new double[nLayers];
-            mySoilNO3Uptake = new double[nLayers];
 
             // set the base, or main, root zone (more zones can be added later)
             if (PotentialRootingDepth >= 0.0)
@@ -2928,11 +2928,6 @@ namespace Models.AgPasture
 
             myDefoliatedFraction = 0.0;
 
-            Array.Clear(mySoilWaterAvailable, 0, nLayers);
-            Array.Clear(mySoilWaterUptake, 0, nLayers);
-            Array.Clear(mySoilNH4Uptake, 0, nLayers);
-            Array.Clear(mySoilNO3Uptake, 0, nLayers);
-
             // reset transfer variables for all tissues in each organ
             Leaf.ClearDailyTransferredAmounts();
             Stem.ClearDailyTransferredAmounts();
@@ -2993,8 +2988,8 @@ namespace Models.AgPasture
                 }
                 else if (phenologicStage > 0)
                 {
-                    // evaluate tissue turnover and get remobilisation (C and N)
-                    EvaluateTissueTurnoverRates();
+                    // evaluate tissue turnover in all organs
+                    EvaluateTissueTurnover();
 
                     // get the potential gross growth
                     CalcDailyPotentialGrowth();
@@ -3232,7 +3227,7 @@ namespace Models.AgPasture
         ///  per tiller (LiveLeavesPerTiller, a parameter specific for each species) also influences the turnover rate.
         /// The C and N amounts potentially available for remobilisation are also computed in here.
         /// </remarks>
-        internal void EvaluateTissueTurnoverRates()
+        internal void EvaluateTissueTurnover()
         {
             // get the temperature factor for tissue turnover
             ttfTemperature = TempFactorForTissueTurnover(Tmean(0.5));
@@ -3664,13 +3659,6 @@ namespace Models.AgPasture
                 Root.Dead.DoRemobiliseN(fracRemobilised);
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
             }
-            else
-            {
-                Leaf.DeadTissue.NRemobilised = 0;
-                Stem.DeadTissue.NRemobilised = 0;
-                Stolon.DeadTissue.NRemobilised = 0;
-                Root.Dead.NRemobilised = 0;
-            }
         }
 
         /// <summary>Evaluates the demand for nitrogen from the soil.</summary>
@@ -3831,7 +3819,7 @@ namespace Models.AgPasture
                 return 1.0;
             }
 
-            // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
+            // get the soil related growth limiting factor (higher allocation to roots if soil resources are limiting)
             double glfMin = Math.Min(glfWaterSupply, glfNSupply);
 
             // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)

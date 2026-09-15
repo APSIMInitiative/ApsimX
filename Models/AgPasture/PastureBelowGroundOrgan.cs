@@ -256,7 +256,7 @@ namespace Models.AgPasture
                 double[] result = new double[nLayers];
                 double totalRootLength = Live.DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
-                for (int layer = 0; layer < result.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                 {
                     result[layer] = Live.DMFraction[layer] * totalRootLength / soilPhysical.Thickness[layer];
                 }
@@ -267,11 +267,32 @@ namespace Models.AgPasture
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         internal double[] mySoilWaterAvailable { get; private set; }
 
+        /// <summary>Amount of soil water taken up by the plant (mm).</summary>
+        internal double[] mySoilWaterUptake { get; private set; }
+
         /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
         internal double[] mySoilNH4Available { get; private set; }
 
         /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
         internal double[] mySoilNO3Available { get; private set; }
+
+        /// <summary>Amount of soil NH4-N taken up by the plant (kg/ha).</summary>
+        internal double[] mySoilNH4Uptake { get; private set; }
+
+        /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
+        internal double[] mySoilNO3Uptake { get; private set; }
+
+        /// <summary>Amounts of available soil water computed during Runge-Kutta process (mm).</summary>
+        private double[][] waterDuringRungeKutta;
+
+        /// <summary>Amounts of available soil NH4-N computed during Runge-Kutta process (kg/ha).</summary>
+        private double[][] nh4DuringRungeKutta;
+
+        /// <summary>Amounts of available soil NO3-N computed during Runge-Kutta process (kg/ha).</summary>
+        private double[][] no3DuringRungeKutta;
+
+        /// <summary>Index for each iteration of the Runge-Kutta process (from zero to three).</summary>
+        private int indexRungeKutta = 0;
 
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
         private bool IsKLModifierDueToDamageActive { get; set; } = false;
@@ -335,13 +356,19 @@ namespace Models.AgPasture
             // initialise soil related variables
             zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
             mySoilWaterAvailable = new double[nLayers];
+            mySoilWaterUptake = new double[nLayers];
+            mySoilNH4Available = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
+            waterDuringRungeKutta = new double[4][];
+            nh4DuringRungeKutta = new double[4][];
+            no3DuringRungeKutta = new double[4][];
 
             // check rooting depth
-            MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
-            for (int z = 0; z < soilPhysical.Thickness.Length; z++)
+            MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[nLayers - 1]);
+            for (int z = 0; z < nLayers; z++)
             {
                 if (MathUtilities.FloatsAreEqual(soilCropData.XF[z], 0) || MathUtilities.FloatsAreEqual(soilCropData.KL[z], 0))
                 { // root depth limited by some soil issue
@@ -400,6 +427,13 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
         internal void ClearDailyTransferredAmounts()
         {
+            Array.Clear(mySoilWaterAvailable, 0, nLayers);
+            Array.Clear(mySoilWaterUptake, 0, nLayers);
+            Array.Clear(mySoilNH4Available, 0, nLayers);
+            Array.Clear(mySoilNH4Uptake, 0, nLayers);
+            Array.Clear(mySoilNO3Available, 0, nLayers);
+            Array.Clear(mySoilNO3Uptake, 0, nLayers);
+
             foreach (RootTissue tissue in Tissue)
             {
                 tissue.ClearDailyTransferredAmounts();
@@ -459,6 +493,10 @@ namespace Models.AgPasture
                 mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]);
                 mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
             }
+
+            // save N availability values to use later // FIX, remove min()
+            waterDuringRungeKutta[Math.Min(3, indexRungeKutta)] = (double[])mySoilWaterAvailable.Clone();
+            indexRungeKutta += 1;
         }
 
         /// <summary>KL modifier due to root damage (0-1).</summary>
@@ -546,6 +584,39 @@ namespace Models.AgPasture
                     mySoilNO3Available[layer] *= upFraction;
                 }
             }
+
+            // save N availability values to use later // FIX, remove min()
+            nh4DuringRungeKutta[Math.Min(3, indexRungeKutta)] = (double[])mySoilNH4Available.Clone();
+            no3DuringRungeKutta[Math.Min(3, indexRungeKutta)] = (double[])mySoilNO3Available.Clone();
+            indexRungeKutta += 1;
+        }
+
+        /// <summary>Adjusts the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
+        /// <remarks>
+        /// This is a hack to get an evaluation of availability after the Runge-Kutta iteration process.
+        /// This is needed to output values consistent with uptake (i.e. not smaller as can happen), and
+        ///  because the model needs to re-evaluate the amount of N fixed (the 'current' value is simply
+        ///  based on the last iteration of the Runge-Kutta process and not necessarily in agreement with
+        ///  its outcome... This can lead to perceive loss in mass balance in outputs.
+        /// </remarks>
+        internal void ReEvaluateSoilNitrogenAvailability()
+        {
+            // update soil N available (average of Runge-Kutta estimates, but no less than uptake)
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                double avgAvailableNH4 = (nh4DuringRungeKutta[0][layer] + nh4DuringRungeKutta[1][layer]
+                                       + nh4DuringRungeKutta[2][layer] + nh4DuringRungeKutta[3][layer]) / 4.0;
+                mySoilNH4Available[layer] = Math.Max(avgAvailableNH4, mySoilNH4Uptake[layer]);
+
+                double avgAvailableNO3 = (no3DuringRungeKutta[0][layer] + no3DuringRungeKutta[1][layer]
+                                       + no3DuringRungeKutta[2][layer] + no3DuringRungeKutta[3][layer]) / 4.0;
+                mySoilNO3Available[layer] = Math.Max(avgAvailableNO3, mySoilNO3Uptake[layer]);
+            }
+
+            // clear info from Runge-Kutta
+            indexRungeKutta = 0;
+            Array.Clear(nh4DuringRungeKutta, 0, 4);
+            Array.Clear(no3DuringRungeKutta, 0, 4);
         }
 
         /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
@@ -734,8 +805,13 @@ namespace Models.AgPasture
         {
             if (MathUtilities.IsGreaterThan(amount.Sum(), 0.0))
             {
+                Array.Copy(amount, mySoilWaterUptake, nLayers);
                 waterBalance.RemoveWater(amount);
             }
+
+            // clear info from Runge-Kutta
+            indexRungeKutta = 0;
+            Array.Clear(waterDuringRungeKutta, 0, 4);
         }
 
         /// <summary>Remove nutrients from soil - uptake.</summary>
@@ -743,8 +819,16 @@ namespace Models.AgPasture
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
         {
-            nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
-            no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
+            if (MathUtilities.IsGreaterThan(nh4Amount.Sum(), 0.0))
+            {
+                Array.Copy(nh4Amount, mySoilNH4Uptake, nLayers);
+                nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
+            }
+            if (MathUtilities.IsGreaterThan(no3Amount.Sum(), 0.0))
+            {
+                Array.Copy(no3Amount, mySoilNO3Uptake, nLayers);
+                no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
+            }
         }
 
         /// <summary>Flag indicating whether roots are in the specified zone.</summary>
