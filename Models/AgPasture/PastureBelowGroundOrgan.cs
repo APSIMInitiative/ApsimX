@@ -276,6 +276,11 @@ namespace Models.AgPasture
         /// <summary>Amount of NO3-N in the soil available to the plant (kg/ha).</summary>
         internal double[] mySoilNO3Available { get; private set; }
 
+        /// <summary>Amount of soil NH4-N taken up by the plant (kg/ha).</summary>
+        internal double[] mySoilNH4Uptake { get; private set; }
+
+        /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
+        internal double[] mySoilNO3Uptake { get; private set; }
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
         private bool IsKLModifierDueToDamageActive { get; set; } = false;
 
@@ -341,7 +346,9 @@ namespace Models.AgPasture
             mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
             mySoilNH4Available = new double[nLayers];
+            mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
+            mySoilNO3Uptake = new double[nLayers];
 
             // check rooting depth
             MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
@@ -406,6 +413,11 @@ namespace Models.AgPasture
         {
             Array.Clear(mySoilWaterAvailable, 0, nLayers);
             Array.Clear(mySoilWaterUptake, 0, nLayers);
+            Array.Clear(mySoilNH4Available, 0, nLayers);
+            Array.Clear(mySoilNH4Uptake, 0, nLayers);
+            Array.Clear(mySoilNO3Available, 0, nLayers);
+            Array.Clear(mySoilNO3Uptake, 0, nLayers);
+
             foreach (RootTissue tissue in Tissue)
             {
                 tissue.ClearDailyTransferredAmounts();
@@ -750,8 +762,16 @@ namespace Models.AgPasture
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
         {
-            nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
-            no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
+            if (MathUtilities.IsGreaterThan(nh4Amount.Sum(), 0.0))
+            {
+                Array.Copy(nh4Amount, mySoilNH4Uptake, nLayers);
+                nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
+            }
+            if (MathUtilities.IsGreaterThan(no3Amount.Sum(), 0.0))
+            {
+                Array.Copy(no3Amount, mySoilNO3Uptake, nLayers);
+                no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
+            }
         }
 
         /// <summary>Flag indicating whether roots are in the specified zone.</summary>
