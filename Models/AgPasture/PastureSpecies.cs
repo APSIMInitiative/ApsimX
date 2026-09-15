@@ -342,7 +342,7 @@ namespace Models.AgPasture
         /// <returns>The potential water uptake (mm).</returns>
         public List<ZoneWaterAndN> GetWaterUptakeEstimates(SoilState soilstate)
         {
-            if (IsAlive)
+            if (phenologicStage > 0)
             {
                 // 1. get all water supplies.
                 double waterSupply = 0;  //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
@@ -400,7 +400,7 @@ namespace Models.AgPasture
         /// <returns>The potential N uptake (kg/ha).</returns>
         public List<ZoneWaterAndN> GetNitrogenUptakeEstimates(SoilState soilstate)
         {
-            if (IsAlive)
+            if (phenologicStage > 0)
             {
                 double NSupply = 0.0;  //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
@@ -425,16 +425,16 @@ namespace Models.AgPasture
                     }
                 }
 
-                // get the N amount fixed through symbiosis - calculates fixedN
+                // get the N amount fixed through symbiosis
                 EvaluateNitrogenFixation();
 
-                // evaluate the use of N remobilised from senesced tissue
+                // get the N remobilised from senesced tissue
                 EvaluateSenescedNRemobilisation();
 
                 // get the amount of N demanded from soil
                 EvaluateSoilNitrogenDemand();
 
-                // get the amount of soil N demanded
+                // get the soil N demand
                 double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // estimate fraction of N used up
@@ -482,21 +482,22 @@ namespace Models.AgPasture
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
-                myRoot?.EvaluateSoilNitrogenAvailability(zone, (double[])WaterUptake);
-            }
-            EvaluateNitrogenFixation();
-            EvaluateSenescedNRemobilisation();
-            EvaluateSoilNitrogenDemand();
-
-            foreach (ZoneWaterAndN zone in zones)
-            {
-                PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
                     // do the actual uptake
                     myRoot.PerformNutrientUptake(zone.NO3N, zone.NH4N);
+
+                    // check the value for soil available N
+                    myRoot?.ReEvaluateSoilNitrogenAvailability();
                 }
             }
+
+            // re-check the values for fixation and remobilisation
+            EvaluateNitrogenFixation();
+            EvaluateSenescedNRemobilisation();
+            // Note: need to do this again as these depend on soil available N, which changes each iteration of
+            //  the Runge-Kutta process to determine N uptake. As the value of available N is recalculated above,
+            //  we need to re-estimate these tow to ensure outputs will have mass balance.
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------

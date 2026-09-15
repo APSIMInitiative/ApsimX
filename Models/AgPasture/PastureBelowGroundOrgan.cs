@@ -612,6 +612,11 @@ namespace Models.AgPasture
                                        + no3DuringRungeKutta[2][layer] + no3DuringRungeKutta[3][layer]) / 4.0;
                 mySoilNO3Available[layer] = Math.Max(avgAvailableNO3, mySoilNO3Uptake[layer]);
             }
+
+            // clear info from Runge-Kutta
+            indexRungeKutta = 0;
+            Array.Clear(nh4DuringRungeKutta, 0, 4);
+            Array.Clear(no3DuringRungeKutta, 0, 4);
         }
 
         /// <summary>Computes how much of the layer is actually explored by roots (considering depth only).</summary>
@@ -824,11 +829,6 @@ namespace Models.AgPasture
                 Array.Copy(no3Amount, mySoilNO3Uptake, nLayers);
                 no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));
             }
-
-            // clear info from Runge-Kutta
-            indexRungeKutta = 0;
-            Array.Clear(nh4DuringRungeKutta, 0, 4);
-            Array.Clear(no3DuringRungeKutta, 0, 4);
         }
 
         /// <summary>Flag indicating whether roots are in the specified zone.</summary>
