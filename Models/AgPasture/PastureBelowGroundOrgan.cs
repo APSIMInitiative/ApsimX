@@ -256,7 +256,7 @@ namespace Models.AgPasture
                 double[] result = new double[nLayers];
                 double totalRootLength = Live.DM.Wt * SpecificRootLength * 0.1; // m root/m2
                 totalRootLength *= 0.001; // convert into mm root/mm2 soil)
-                for (int layer = 0; layer < result.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                 {
                     result[layer] = Live.DMFraction[layer] * totalRootLength / soilPhysical.Thickness[layer];
                 }
@@ -367,8 +367,8 @@ namespace Models.AgPasture
             no3DuringRungeKutta = new double[4][];
 
             // check rooting depth
-            MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[soilPhysical.Thickness.Length - 1]);
-            for (int z = 0; z < soilPhysical.Thickness.Length; z++)
+            MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[nLayers - 1]);
+            for (int z = 0; z < nLayers; z++)
             {
                 if (MathUtilities.FloatsAreEqual(soilCropData.XF[z], 0) || MathUtilities.FloatsAreEqual(soilCropData.KL[z], 0))
                 { // root depth limited by some soil issue

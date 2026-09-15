@@ -47,17 +47,23 @@ namespace Models.AgPasture
         /// <summary>Amount of nitrogen transferred into this tissue, for each layer (kg/ha).</summary>
         private double[] nTransferredInByLayer;
 
+        /// <summary>Amount of dry matter transferred out of this tissue, for each layer (kg/ha).</summary>
+        private double[] dmTransferredOutByLayer;
+
+        /// <summary>Amount of nitrogen transferred out of this tissue, for each layer (kg/ha).</summary>
+        private double[] nTransferredOutByLayer;
+
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
-        public double DMTransferredIn { get; private set; }
+        public double DMTransferredIn { get { return dmTransferredInByLayer.Sum(); } }
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
-        public double NTransferredIn { get; private set; }
+        public double NTransferredIn { get { return nTransferredInByLayer.Sum(); } }
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferredOut = 0.0;
+        public double DMTransferredOut { get { return dmTransferredOutByLayer.Sum(); } }
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
-        public double NTransferredOut { get; private set; }
+        public double NTransferredOut { get { return nTransferredOutByLayer.Sum(); } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get; set; }
@@ -111,6 +117,8 @@ namespace Models.AgPasture
             pByLayer = new double[nLayers];
             dmTransferredInByLayer = new double[nLayers];
             nTransferredInByLayer = new double[nLayers];
+            dmTransferredOutByLayer = new double[nLayers];
+            nTransferredOutByLayer = new double[nLayers];
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -120,11 +128,11 @@ namespace Models.AgPasture
             double[] rootFraction = DMFraction;
             if (DMTransferredOut > 0.0 || NTransferredOut > 0.0)
             {
-                for (int layer = 0; layer < dmByLayer.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                 {
                     // update values
-                    dmByLayer[layer] -= DMTransferredOut * rootFraction[layer];
-                    nByLayer[layer] -= NTransferredOut * rootFraction[layer];
+                    dmByLayer[layer] -= dmTransferredOutByLayer[layer];
+                    nByLayer[layer] -= nTransferredOutByLayer[layer];
 
                     // ensure values near zero are zeroed (prevent small negatives)
                     if (MathUtilities.FloatsAreEqual(dmByLayer[layer], 0.0, Epsilon))
@@ -141,7 +149,7 @@ namespace Models.AgPasture
             // additions need to consider distribution over the profile
             if (DMTransferredIn > 0.0 || NTransferredIn > 0.0)
             {
-                for (int layer = 0; layer < dmByLayer.Length; layer++)
+                for (int layer = 0; layer < nLayers; layer++)
                 {
                     dmByLayer[layer] += dmTransferredInByLayer[layer];
                     nByLayer[layer] += nTransferredInByLayer[layer] - (NRemobilised * (nTransferredInByLayer[layer] / NTransferredIn));
@@ -216,17 +224,16 @@ namespace Models.AgPasture
             if (biomass.Wt > 0.0 && turnoverRate > 0.0)
             {
                 // get the amounts turned over
-                DMTransferredOut = biomass.Wt * turnoverRate;
-                NTransferredOut = biomass.N * turnoverRate;
+                for (int layer = 0; layer < nLayers; layer++)
+                {
+                    dmTransferredOutByLayer[layer] = dmByLayer[layer] * turnoverRate;
+                    nTransferredOutByLayer[layer] = nByLayer[layer] * turnoverRate;
+                }
 
                 // pass the amounts from this to the receiving tissue
                 if (receivingTissue != null)
                 {
-                    // split the amounts into values for each layer (keep current distribution)
-                    var turnedoverDMLayered = MathUtilities.Multiply_Value(DMFraction, DMTransferredOut);
-                    var turnedoverNLayered = MathUtilities.Multiply_Value(DMFraction, NTransferredOut);
-
-                    receivingTissue.SetBiomassTransferIn(turnedoverDMLayered, turnedoverNLayered);
+                    receivingTissue.SetBiomassTransferIn(dmTransferredOutByLayer, nTransferredOutByLayer);
                 }
             }
         }
@@ -241,9 +248,6 @@ namespace Models.AgPasture
                 dmTransferredInByLayer[layer] += dm[layer];
                 nTransferredInByLayer[layer] += n[layer];
             }
-
-            DMTransferredIn = dmTransferredInByLayer.Sum();
-            NTransferredIn = nTransferredInByLayer.Sum();
         }
 
         /// <summary>Computes the N amount that is potentially remobilisable.</summary>
@@ -361,10 +365,6 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
-            DMTransferredIn = 0.0;
-            DMTransferredOut = 0.0;
-            NTransferredIn = 0.0;
-            NTransferredOut = 0.0;
             NRemobilisable = 0.0;
             NRemobilised = 0.0;
             DMRemoved = 0.0;
@@ -372,8 +372,10 @@ namespace Models.AgPasture
             FractionRemoved = 0.0;
             if (dmTransferredInByLayer != null)
             {
-                Array.Clear(dmTransferredInByLayer, 0, dmTransferredInByLayer.Length);
-                Array.Clear(nTransferredInByLayer, 0, nTransferredInByLayer.Length);
+                Array.Clear(dmTransferredInByLayer, 0, nLayers);
+                Array.Clear(nTransferredInByLayer, 0, nLayers);
+                Array.Clear(dmTransferredOutByLayer, 0, nLayers);
+                Array.Clear(nTransferredOutByLayer, 0, nLayers);
             }
         }
     }
