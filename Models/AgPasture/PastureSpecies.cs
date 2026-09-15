@@ -472,6 +472,7 @@ namespace Models.AgPasture
                 if (myRoot != null)
                 {
                     mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
+                    // do the actual uptake
                     myRoot.PerformWaterUptake(zone.Water);
                 }
             }
@@ -2186,7 +2187,7 @@ namespace Models.AgPasture
             get { return glfWaterLogging; }
         }
 
-        /// <summary>Growth limiting factor due to soil N availability (0-1).</summary>
+        /// <summary>Growth limiting factor due to N availability (0-1).</summary>
         [Units("0-1")]
         public double GlfNSupply
         {
@@ -2993,8 +2994,8 @@ namespace Models.AgPasture
                 }
                 else if (phenologicStage > 0)
                 {
-                    // evaluate tissue turnover and get remobilisation (C and N)
-                    EvaluateTissueTurnoverRates();
+                    // evaluate tissue turnover in all organs
+                    EvaluateTissueTurnover();
 
                     // get the potential gross growth
                     CalcDailyPotentialGrowth();
@@ -3232,7 +3233,7 @@ namespace Models.AgPasture
         ///  per tiller (LiveLeavesPerTiller, a parameter specific for each species) also influences the turnover rate.
         /// The C and N amounts potentially available for remobilisation are also computed in here.
         /// </remarks>
-        internal void EvaluateTissueTurnoverRates()
+        internal void EvaluateTissueTurnover()
         {
             // get the temperature factor for tissue turnover
             ttfTemperature = TempFactorForTissueTurnover(Tmean(0.5));
@@ -3831,7 +3832,7 @@ namespace Models.AgPasture
                 return 1.0;
             }
 
-            // get the soil related growth limiting factor (the smaller this is the higher the allocation of DM to roots)
+            // get the soil related growth limiting factor (higher allocation to roots if soil resources are limiting)
             double glfMin = Math.Min(glfWaterSupply, glfNSupply);
 
             // get the actual effect of limiting factors on SR (varies between one and ShootRootGlfFactor)

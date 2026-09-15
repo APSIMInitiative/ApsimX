@@ -251,20 +251,17 @@ namespace Models.AgPasture
         /// <remarks>The nConc threshold should be the optimum for live tissue and for dead is the minimum.</remarks>
         public void GetRemobilisableN(double nConcThreshold)
         {
-            if ((DMTransferredOut + DMTransferredIn > 0.0) || (NTransferredOut + NTransferredIn > 0.0))
-            {
-                // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
-                double potentialRemobilisableN = 0.0;
+            // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
+            double potentialRemobilisableN = 0.0;
 
-                // first, get the available N in the tissue
-                potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+            // first, get the available N in the tissue
+            potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
 
-                // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
-                potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
+            // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
+            potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
 
-                // only a fraction of the above calculated potential remobilisable N can be remobilised each day
-                NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
-            }
+            // only a fraction of the potentially remobilisable N can actually be remobilised each day
+            NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
@@ -373,7 +370,7 @@ namespace Models.AgPasture
             DMRemoved = 0.0;
             NRemoved = 0.0;
             FractionRemoved = 0.0;
-            if (dmTransferredInByLayer != null && nTransferredInByLayer != null)
+            if (dmTransferredInByLayer != null)
             {
                 Array.Clear(dmTransferredInByLayer, 0, dmTransferredInByLayer.Length);
                 Array.Clear(nTransferredInByLayer, 0, nTransferredInByLayer.Length);
