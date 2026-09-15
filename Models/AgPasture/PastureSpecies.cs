@@ -3658,13 +3658,6 @@ namespace Models.AgPasture
                 Root.Dead.DoRemobiliseN(fracRemobilised);
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
             }
-            else
-            {
-                Leaf.DeadTissue.NRemobilised = 0;
-                Stem.DeadTissue.NRemobilised = 0;
-                Stolon.DeadTissue.NRemobilised = 0;
-                Root.Dead.NRemobilised = 0;
-            }
         }
 
         /// <summary>Evaluates the demand for nitrogen from the soil.</summary>

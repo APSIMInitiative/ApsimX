@@ -90,7 +90,7 @@ namespace Models.AgPasture
         public double NRemobilisable { get { return nRemobilisableByLayer.Sum(); } }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
-        public double NRemobilised { get; set; }
+        public double NRemobilised { get { return nRemobilisedByLayer.Sum(); } }
 
         /// <summary>Fraction of N from this tissue that was remobilised to new growth.</summary>
         public double FractionRemobilised { get { return MathUtilities.Divide(NRemobilised, DM.N, 0.0); } }
@@ -178,7 +178,7 @@ namespace Models.AgPasture
                 for (int layer = 0; layer < nLayers; layer++)
                 {
                     dmByLayer[layer] += dmTransferredInByLayer[layer];
-                    nByLayer[layer] += nTransferredInByLayer[layer] - (NRemobilised * (nTransferredInByLayer[layer] / NTransferredIn));
+                    nByLayer[layer] += nTransferredInByLayer[layer] - nRemobilisedByLayer[layer];
                 }
             }
 
@@ -282,17 +282,23 @@ namespace Models.AgPasture
         public void GetRemobilisableN(double nConcThreshold)
         {
             // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
-            double potentialRemobilisableN = 0.0;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                double potentialRemobilisableN = 0.0;
 
-            // first, get the available N in the tissue
-            potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+                // first, get the available N in the tissue
+                if (this.Name != "Dead")
+                {
+                    potentialRemobilisableN = (dmByLayer[layer] - dmTransferredOutByLayer[layer]) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+                    // NOTE: N already in dead tissue is no longer available for remobilisation
+                }
 
-            // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
-            potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
+                // then get the N that is available in the material being transferred in (includes into dead, i.e. senesced)
+                potentialRemobilisableN += Math.Max(0.0, nTransferredInByLayer[layer] - dmTransferredInByLayer[layer] * nConcThreshold);
 
-            // only a fraction of the potentially remobilisable N can actually be remobilised each day
-            double totalRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
-            nRemobilisableByLayer = MathUtilities.Multiply_Value(dmFractions, totalRemobilisable);
+                // only a fraction of the potentially remobilisable N can actually be remobilised each day
+                nRemobilisableByLayer[layer] = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
+            }
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
@@ -303,8 +309,6 @@ namespace Models.AgPasture
             {
                 nRemobilisedByLayer[layer] = nRemobilisableByLayer[layer] * fraction;
             }
-
-            NRemobilised = nRemobilisedByLayer.Sum(); // FIX, remove sum from here
         }
 
         /// <summary>Sets the biomass of this tissue.</summary>
@@ -397,7 +401,6 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
-            NRemobilised = 0.0;
             if (dmTransferredInByLayer != null)
             {
                 Array.Clear(dmTransferredInByLayer, 0, nLayers);
