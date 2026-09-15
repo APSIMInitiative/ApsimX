@@ -150,17 +150,15 @@ namespace Models.AgPasture
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         public void Update()
         {
-            // removals first as they do not change distribution over the profile
-            double[] rootFraction = DMFraction;
-            if (DMTransferredOut > 0.0 || NTransferredOut > 0.0)
+            if ((DMTransferredIn + DMTransferredOut > 0.0) || (NTransferredIn + NTransferredOut > 0.0))
             {
                 for (int layer = 0; layer < nLayers; layer++)
                 {
                     // update values
-                    dmByLayer[layer] -= dmTransferredOutByLayer[layer];
-                    nByLayer[layer] -= nTransferredOutByLayer[layer];
+                    dmByLayer[layer] += dmTransferredInByLayer[layer] - dmTransferredOutByLayer[layer];
+                    nByLayer[layer] += nTransferredInByLayer[layer] - (nTransferredOutByLayer[layer] + nRemobilisedByLayer[layer]);
 
-                    // ensure values near zero are zeroed (prevent small negatives)
+                    // ensure that small values are zeroed (prevent small negatives)
                     if (MathUtilities.FloatsAreEqual(dmByLayer[layer], 0.0, Epsilon))
                     {
                         dmByLayer[layer] = 0.0;
@@ -169,20 +167,20 @@ namespace Models.AgPasture
                     {
                         nByLayer[layer] = 0.0;
                     }
-                }
-            }
 
-            // additions need to consider distribution over the profile
-            if (DMTransferredIn > 0.0 || NTransferredIn > 0.0)
-            {
-                for (int layer = 0; layer < nLayers; layer++)
-                {
-                    dmByLayer[layer] += dmTransferredInByLayer[layer];
-                    nByLayer[layer] += nTransferredInByLayer[layer] - nRemobilisedByLayer[layer];
+                    // check that biomass doesn't go negative
+                    if (dmByLayer[layer] < 0.0)
+                    {
+                        throw new Exception($"{species.Name} {Name} tissue has negative dry matter");
+                    }
+                    if (nByLayer[layer] < 0.0)
+                    {
+                        throw new Exception($"{species.Name} {Name} tissue has negative N content");
+                    }
                 }
-            }
 
-            UpdateDM();
+                UpdateDM();
+            }
         }
 
         /// <summary>Update dry matter.</summary>
