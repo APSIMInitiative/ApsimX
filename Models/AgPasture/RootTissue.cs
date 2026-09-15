@@ -59,6 +59,12 @@ namespace Models.AgPasture
         /// <summary>Amount of nitrogen removed from this tissue, for each layer (kg/ha).</summary>
         private double[] nRemovedByLayer;
 
+        /// <summary>Amount of nitrogen in this tissue that is potentially remobilisable, for each layer (kg/ha).</summary>
+        private double[] nRemobilisableByLayer;
+
+        /// <summary>Amount of nitrogen remobilised from this tissue, for each layer (kg/ha).</summary>
+        private double[] nRemobilisedByLayer;
+
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
         public double DMTransferredIn { get { return dmTransferredInByLayer.Sum(); } }
 
@@ -81,7 +87,7 @@ namespace Models.AgPasture
         public double FractionRemoved { get { return MathUtilities.Divide(DMRemoved, DM.Wt, 0.0); } }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; set; }
+        public double NRemobilisable { get { return nRemobilisableByLayer.Sum(); } }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         public double NRemobilised { get; set; }
@@ -94,20 +100,29 @@ namespace Models.AgPasture
         /// <summary>Tissue dry matter biomass.</summary>
         private AGPBiomass biomass = new AGPBiomass();
 
-        /// <summary>Dry matter amount for each layer (kg/ha).</summary>
+        /// <summary>Dry matter amount of tissue biomass within each layer (kg/ha).</summary>
         private double[] dmByLayer;
 
-        /// <summary>Nitrogen content for each layer (kg/ha).</summary>
+        /// <summary>Nitrogen content of tissue biomass within each layer (kg/ha).</summary>
         private double[] nByLayer;
 
-        /// <summary>Phosphorus content for each layer (kg/ha).</summary>
+        /// <summary>Phosphorus content of tissue biomass within each layer (kg/ha).</summary>
         private double[] pByLayer;
+
+        /// <summary>Fraction of tissue biomass within each soil layer (0-1).</summary>
+        private double[] dmFractions;
 
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return biomass; } }
 
-        /// <summary>Dry matter fraction for this tissue within each layer (0-1).</summary>
-        public double[] DMFraction { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
+        /// <summary>Dry matter amount in this tissue within each soil layer (kg/ha).</summary>
+        public double[] DMLayered { get { return dmByLayer; } }
+
+        /// <summary>Nitrogen content in this tissue within each soil layer (kg/ha).</summary>
+        public double[] NLayered { get { return nByLayer; } }
+
+        /// <summary>Fraction of dry matter for this tissue within each soil layer (0-1).</summary>
+        public double[] DMFraction { get { return dmFractions; } }
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
@@ -121,12 +136,15 @@ namespace Models.AgPasture
             dmByLayer = new double[nLayers];
             nByLayer = new double[nLayers];
             pByLayer = new double[nLayers];
+            dmFractions = new double[nLayers];
             dmTransferredInByLayer = new double[nLayers];
             nTransferredInByLayer = new double[nLayers];
             dmTransferredOutByLayer = new double[nLayers];
             nTransferredOutByLayer = new double[nLayers];
             dmRemovedByLayer = new double[nLayers];
             nRemovedByLayer = new double[nLayers];
+            nRemobilisableByLayer = new double[nLayers];
+            nRemobilisedByLayer = new double[nLayers];
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -172,6 +190,7 @@ namespace Models.AgPasture
         {
             biomass.Wt = dmByLayer.Sum();
             biomass.N = nByLayer.Sum();
+            dmFractions = MathUtilities.Divide_Value(dmByLayer, biomass.Wt);
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
@@ -183,9 +202,8 @@ namespace Models.AgPasture
             if (amountDM + amountN > 0.0)
             {
                 // split the amounts into values for each layer
-                var rootFraction = DMFraction;
-                var amountDMLayered = MathUtilities.Multiply_Value(rootFraction, amountDM);
-                var amountNLayered = MathUtilities.Multiply_Value(rootFraction, amountN);
+                var amountDMLayered = MathUtilities.Multiply_Value(dmFractions, amountDM);
+                var amountNLayered = MathUtilities.Multiply_Value(dmFractions, amountN);
 
                 // do the actual detachment
                 DetachBiomass(amountDMLayered, amountNLayered);
@@ -273,14 +291,20 @@ namespace Models.AgPasture
             potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
 
             // only a fraction of the potentially remobilisable N can actually be remobilised each day
-            NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
+            double totalRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
+            nRemobilisableByLayer = MathUtilities.Multiply_Value(dmFractions, totalRemobilisable);
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
         /// <param name="fraction">The fraction to remove (0-1)</param>
         public void DoRemobiliseN(double fraction)
         {
-            NRemobilised = NRemobilisable * fraction;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                nRemobilisedByLayer[layer] = nRemobilisableByLayer[layer] * fraction;
+            }
+
+            NRemobilised = nRemobilisedByLayer.Sum(); // FIX, remove sum from here
         }
 
         /// <summary>Sets the biomass of this tissue.</summary>
@@ -373,7 +397,6 @@ namespace Models.AgPasture
         /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
-            NRemobilisable = 0.0;
             NRemobilised = 0.0;
             if (dmTransferredInByLayer != null)
             {
@@ -383,6 +406,8 @@ namespace Models.AgPasture
                 Array.Clear(nTransferredOutByLayer, 0, nLayers);
                 Array.Clear(dmRemovedByLayer, 0, nLayers);
                 Array.Clear(nRemovedByLayer, 0, nLayers);
+                Array.Clear(nRemobilisableByLayer, 0, nLayers);
+                Array.Clear(nRemobilisedByLayer, 0, nLayers);
             }
         }
     }
