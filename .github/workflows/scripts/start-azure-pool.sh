@@ -11,7 +11,7 @@ test -z "$INCOMING_COMMIT_SHA" && echo "INCOMING_COMMIT_SHA is empty" && exit 1
 pr_number=${DOCKER_METADATA_OUTPUT_VERSION:3}
 cleaned_pr_number=$(echo "$pr_number" | tr -d '[:space:]')
 POOL_ID="${cleaned_pr_number}-${INCOMING_COMMIT_SHA:0:6}"
-VM_SIZE="Standard_D2d_v5"
+VM_SIZE="Standard_D4d_v5"
 
 echo "Combined pool id: ${POOL_ID}"
 
@@ -25,4 +25,3 @@ ENCODED_STRING=$(jq -rn --arg x "$AZURE_ENV_CONTENTS" '$x|@uri')
 url="https://digitalag.csiro.au/workflo/create-pool?poolId=${POOL_ID}&envString=${ENCODED_STRING}&nodeNumber=60&isAutoscaled=false&vmsize=${VM_SIZE}"
 response=$(curl -f -s -w "%{http_code}" -X POST "${url}")
 echo "Response from server: $response"
-
