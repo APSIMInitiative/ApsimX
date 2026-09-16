@@ -167,6 +167,20 @@ namespace Models.AgPasture
                 throw new Exception($"{species.Name} {Name} tissue has negative N content");
             }
 
+            // check that N concentration are within bounds
+            if (biomass.Wt > 0.0)
+            {
+                double nConc = biomass.N / biomass.Wt;
+                if (MathUtilities.IsLessThan(nConc, (Parent as PastureAboveGroundOrgan).NConcMinimum, Epsilon))
+                {
+                    throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum");
+                }
+                if (MathUtilities.IsGreaterThan(nConc, (Parent as PastureAboveGroundOrgan).NConcMaximum, Epsilon))
+                {
+                    throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum");
+                }
+            }
+
             calculateDigestibility();
         }
 
