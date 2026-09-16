@@ -3387,16 +3387,16 @@ namespace Models.AgPasture
         {
             if (dNewGrowthWt > Epsilon)
             {
-                // get the actual growth above and below ground
+                // get the actual growth in above and below ground organs
                 dGrowthShootDM = dNewGrowthWt * fractionToShoot;
+                double dGrowthLeafDM = dNewGrowthWt * fractionToLeaf;
+                double dGrowthStemDM = dNewGrowthWt * fractionToStem;
+                double dGrowthStolonDM = dNewGrowthWt * fractionToStolon;
                 dGrowthRootDM = Math.Max(0.0, dNewGrowthWt - dGrowthShootDM);
                 dGrowthRootN = 0.0;
-
-                // allocate new DM growth to the growing tissues
-                Leaf.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToLeaf;
-                Stem.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToStem;
-                Stolon.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToStolon;
-                // note that DM transfer for roots is done at the end, with N (as needs to be split by layers)
+                double dGrowthLeafN = 0.0;
+                double dGrowthStemN = 0.0;
+                double dGrowthStolonN = 0.0;
 
                 // allocation fractions for N
                 double fractionToLeafN = 0.0;
@@ -3404,14 +3404,18 @@ namespace Models.AgPasture
                 double fractionToStolonN = 0.0;
                 double fractionToRootN = 0.0;
 
+                // adjust the N demands (need to account for reduction in growth due to soil nutrient limitations)
+                double optimumNDemand = demandOptimumN * Math.Min(glfNSupply, GlfSoilFertility);
+                double luxuryNDemand = demandLuxuryN * Math.Min(glfNSupply, GlfSoilFertility);
+
                 // allocate new N to growing tissues
-                if (MathUtilities.IsLessThan(dNewGrowthN, demandOptimumN, Epsilon))
+                if (MathUtilities.IsLessThan(dNewGrowthN, optimumNDemand, Epsilon))
                 {
                     // N available for new growth is not enough to meet basic demand (to optimum N conc)
                     // start by allocating N at minimum concentration
-                    Leaf.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToLeaf * Leaf.NConcMinimum;
-                    Stem.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStem * Stem.NConcMinimum;
-                    Stolon.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStolon * Stolon.NConcMinimum;
+                    dGrowthLeafN += dNewGrowthWt * fractionToLeaf * Leaf.NConcMinimum;
+                    dGrowthStemN += dNewGrowthWt * fractionToStem * Stem.NConcMinimum;
+                    dGrowthStolonN += dNewGrowthWt * fractionToStolon * Stolon.NConcMinimum;
                     dGrowthRootN += dNewGrowthWt * fractionToRoot * Root.NConcMinimum;
 
                     // get the amount of N allocated so far
@@ -3440,24 +3444,18 @@ namespace Models.AgPasture
                     }
 
                     // allocate the remaining N
-                    Leaf.EmergingTissue.NTransferredIn += remainingN * fractionToLeafN;
-                    Stem.EmergingTissue.NTransferredIn += remainingN * fractionToStemN;
-                    Stolon.EmergingTissue.NTransferredIn += remainingN * fractionToStolonN;
+                    dGrowthLeafN += remainingN * fractionToLeafN;
+                    dGrowthStemN += remainingN * fractionToStemN;
+                    dGrowthStolonN += remainingN * fractionToStolonN;
                     dGrowthRootN += remainingN * fractionToRootN;
-
-                    // recalculate fractions (for tests)
-                    fractionToLeafN = (dNewGrowthWt * fractionToLeaf * Leaf.NConcMinimum + remainingN * fractionToLeafN) / dNewGrowthN;
-                    fractionToStemN = (dNewGrowthWt * fractionToStem * Stem.NConcMinimum + remainingN * fractionToStemN) / dNewGrowthN;
-                    fractionToStolonN = (dNewGrowthWt * fractionToStolon * Stolon.NConcMinimum + remainingN * fractionToStolonN) / dNewGrowthN;
-                    fractionToRootN = (dNewGrowthWt * fractionToRoot * Root.NConcMinimum + remainingN * fractionToRootN) / dNewGrowthN;
                 }
-                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, demandLuxuryN, Epsilon))
+                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, luxuryNDemand, Epsilon))
                 {
                     // N available meets demand for optimum growth and then some luxury uptake
                     // start by allocating N at optimum concentration
-                    Leaf.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToLeaf * Leaf.NConcOptimum;
-                    Stem.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStem * Stem.NConcOptimum;
-                    Stolon.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStolon * Stolon.NConcOptimum;
+                    dGrowthLeafN += dNewGrowthWt * fractionToLeaf * Leaf.NConcOptimum;
+                    dGrowthStemN += dNewGrowthWt * fractionToStem * Stem.NConcOptimum;
+                    dGrowthStolonN += dNewGrowthWt * fractionToStolon * Stolon.NConcOptimum;
                     dGrowthRootN += dNewGrowthWt * fractionToRoot * Root.NConcOptimum;
 
                     // get the amount of N remaining to allocate
@@ -3484,16 +3482,10 @@ namespace Models.AgPasture
                     }
 
                     // allocate the remaining N
-                    Leaf.EmergingTissue.NTransferredIn += remainingN * fractionToLeafN;
-                    Stem.EmergingTissue.NTransferredIn += remainingN * fractionToStemN;
-                    Stolon.EmergingTissue.NTransferredIn += remainingN * fractionToStolonN;
+                    dGrowthLeafN += remainingN * fractionToLeafN;
+                    dGrowthStemN += remainingN * fractionToStemN;
+                    dGrowthStolonN += remainingN * fractionToStolonN;
                     dGrowthRootN += remainingN * fractionToRootN;
-
-                    // recalculate fractions (for tests)
-                    fractionToLeafN = (dNewGrowthWt * fractionToLeaf * Leaf.NConcOptimum + remainingN * fractionToLeafN) / dNewGrowthN;
-                    fractionToStemN = (dNewGrowthWt * fractionToStem * Stem.NConcOptimum + remainingN * fractionToStemN) / dNewGrowthN;
-                    fractionToStolonN = (dNewGrowthWt * fractionToStolon * Stolon.NConcOptimum + remainingN * fractionToStolonN) / dNewGrowthN;
-                    fractionToRootN = (dNewGrowthWt * fractionToRoot * Root.NConcOptimum + remainingN * fractionToRootN) / dNewGrowthN;
                 }
                 else
                 {
@@ -3502,41 +3494,44 @@ namespace Models.AgPasture
                 }
 
                 // check that N concentrations are within bounds
-                if (dNewGrowthWt * fractionToLeaf > 0.0)
+                if (dGrowthLeafDM > 0.0)
                 {
-                    double nConc = dNewGrowthN * fractionToLeafN / (dNewGrowthWt * fractionToLeaf);
+                    double nConc = dGrowthLeafN / dGrowthLeafDM;
                     if (MathUtilities.IsLessThan(nConc, Leaf.NConcMinimum))
                         throw new Exception($"{Name} Leaf has N content in new growth lower than minimum");
                     if (MathUtilities.IsGreaterThan(nConc, Leaf.NConcMaximum))
                         throw new Exception($"{Name} Leaf has N content in new growth greater than maximum");
                 }
-                if (dNewGrowthWt * fractionToStem > 0.0)
+                if (dGrowthStemDM > 0.0)
                 {
-                    double nConc = dNewGrowthN * fractionToStemN / (dNewGrowthWt * fractionToStem);
+                    double nConc = dGrowthStemN / dGrowthStemDM;
                     if (MathUtilities.IsLessThan(nConc, Stem.NConcMinimum))
                         throw new Exception($"{Name} Stem has N content in new growth lower than minimum");
                     if (MathUtilities.IsGreaterThan(nConc, Stem.NConcMaximum))
                         throw new Exception($"{Name} Stem has N content in new growth greater than maximum");
                 }
-                if (dNewGrowthWt * fractionToStolon > 0.0)
+                if (dGrowthStolonDM > 0.0)
                 {
-                    double nConc = dNewGrowthN * fractionToStolonN / (dNewGrowthWt * fractionToStolon);
+                    double nConc = dGrowthStolonN / dGrowthStolonDM;
                     if (MathUtilities.IsLessThan(nConc, Stolon.NConcMinimum))
                         throw new Exception($"{Name} Stolon has N content in new growth lower than minimum");
                     if (MathUtilities.IsGreaterThan(nConc, Stolon.NConcMaximum))
                         throw new Exception($"{Name} Stolon has N content in new growth greater than maximum");
                 }
-                if (dNewGrowthWt * fractionToRoot > 0.0)
+                if (dGrowthRootDM > 0.0)
                 {
-                    double nConc = dNewGrowthN * fractionToRootN / (dNewGrowthWt * fractionToRoot);
+                    double nConc = dGrowthRootN / dGrowthRootDM;
                     if (MathUtilities.IsLessThan(nConc, Root.NConcMinimum))
                         throw new Exception($"{Name} Root has N content in new growth lower than minimum");
                     if (MathUtilities.IsGreaterThan(nConc, Root.NConcMaximum))
                         throw new Exception($"{Name} Root has N content in new growth greater than maximum");
                 }
 
-                // update N variables
-                dGrowthShootN = Leaf.EmergingTissue.NTransferredIn + Stem.EmergingTissue.NTransferredIn + Stolon.EmergingTissue.NTransferredIn;
+                // allocate the new growth to aboveground organs
+                Leaf.EmergingTissue.SetBiomassTransferIn(dGrowthLeafDM, dGrowthLeafN);
+                Stem.EmergingTissue.SetBiomassTransferIn(dGrowthStemDM, dGrowthStemN);
+                Stolon.EmergingTissue.SetBiomassTransferIn(dGrowthStolonDM, dGrowthStolonN);
+                dGrowthShootN = dGrowthLeafN + dGrowthStemN + dGrowthStolonN;
 
                 // evaluate root elongation and allocate new growth in each layer
                 double netRootGrowth = dGrowthRootDM - detachedRootDM;
