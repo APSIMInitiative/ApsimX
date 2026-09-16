@@ -68,14 +68,13 @@ namespace Models.Sensor
         private void DoDailyCalculations(object sender, EventArgs e)
         {
             double SoilNDVI = DrySoilNDVI + (WetSoilNDVI - DrySoilNDVI) * SurfaceRWC;
+            double coverGreen = microClimate.CanopyCoverGreen;
+            double coverTotal = microClimate.CanopyCover;
 
-            if (canopyModels.Count > 1)
-                throw new Exception("NDVI not currently programmed to work with more than one canopy");
-            ICanopy canopy = canopyModels[0];
             double CropNDVI = 0;
-            if (canopy.CoverTotal > 0)
-                CropNDVI = (canopy.CoverGreen / canopy.CoverTotal) * GreenCropNDVI + (1.0 - canopy.CoverGreen / canopy.CoverTotal) * DeadCropNDVI;
-            NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(canopy.CoverTotal, (1.0 - SoilNDVI));
+            if (coverTotal > 0)
+                CropNDVI = (coverGreen / coverTotal) * GreenCropNDVI + (1.0 - coverGreen / coverTotal) * DeadCropNDVI;
+            NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(coverTotal, (1.0 - SoilNDVI));
         }
 
         [Units("mm")]
@@ -90,6 +89,9 @@ namespace Models.Sensor
 
         [Link]
         ISoilWater waterBalance = null;
+
+        [Link]
+        MicroClimate microClimate = null;
 
         [NonSerialized]
         private List<IrrigationApplicationType> irrigations;
