@@ -3393,61 +3393,124 @@ namespace Models.AgPasture
                 dGrowthRootN = 0.0;
 
                 // allocate new DM growth to the growing tissues
-                Leaf.EmergingTissue.DMTransferredIn += fractionToLeaf * dNewGrowthWt;
-                Stem.EmergingTissue.DMTransferredIn += fractionToStem * dNewGrowthWt;
-                Stolon.EmergingTissue.DMTransferredIn += fractionToStolon * dNewGrowthWt;
+                Leaf.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToLeaf;
+                Stem.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToStem;
+                Stolon.EmergingTissue.DMTransferredIn += dNewGrowthWt * fractionToStolon;
+                // note that DM transfer for roots is done at the end, with N (as needs to be split by layers)
 
-                // evaluate allocation of N
-                if (dNewGrowthN > demandOptimumN)
+                // allocation fractions for N
+                double fractionToLeafN = 0.0;
+                double fractionToStemN = 0.0;
+                double fractionToStolonN = 0.0;
+                double fractionToRootN = 0.0;
+
+                // allocate new N to growing tissues
+                if (MathUtilities.IsLessThan(dNewGrowthN, demandOptimumN, Epsilon))
                 {
-                    // available N was more than enough to meet basic demand (i.e. there is luxury uptake),
-                    //   allocate N taken up based on maximum N content
-                    double Nsum = (fractionToLeaf * Leaf.NConcMaximum) + (fractionToStem * Stem.NConcMaximum)
-                                + (fractionToStolon * Stolon.NConcMaximum) + (fractionToRoot * Root.NConcMaximum);
+                    // N available for new growth is not enough to meet basic demand (to optimum N conc)
+                    // start by allocating N at minimum concentration
+                    Leaf.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToLeaf * Leaf.NConcMinimum;
+                    Stem.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStem * Stem.NConcMinimum;
+                    Stolon.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStolon * Stolon.NConcMinimum;
+                    dGrowthRootN += dNewGrowthWt * fractionToRoot * Root.NConcMinimum;
+
+                    // get the amount of N allocated so far
+                    double allocatedN = dNewGrowthWt * (fractionToLeaf * Leaf.NConcMinimum + fractionToStem * Stem.NConcMinimum
+                                      + fractionToStolon * Stolon.NConcMinimum + fractionToRoot * Root.NConcMinimum);
+
+                    // get the amount N that remains to be allocated
+                    double remainingN = dNewGrowthN - allocatedN;
+
+                    // get basic allocation fractions for N, proportional to optimum N content
+                    double Nsum = fractionToLeaf * Math.Max(0.0, Leaf.NConcOptimum - Leaf.NConcMinimum)
+                                + fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum)
+                                + fractionToStolon * Math.Max(0.0, Stolon.NConcOptimum - Stolon.NConcMinimum)
+                                + fractionToRoot * Math.Max(0.0, Root.NConcOptimum - Root.NConcMinimum);
                     if (Nsum > Epsilon)
                     {
-                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToLeaf * Leaf.NConcMaximum / Nsum;
-                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStem * Stem.NConcMaximum / Nsum;
-                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStolon * Stolon.NConcMaximum / Nsum;
-                        dGrowthRootN += dNewGrowthN * fractionToRoot * Root.NConcMaximum / Nsum;
+                        fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcOptimum - Leaf.NConcMinimum) / Nsum;
+                        fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum) / Nsum;
+                        fractionToStolonN = fractionToStolon * Math.Max(0.0, Stolon.NConcOptimum - Stolon.NConcMinimum) / Nsum;
+                        fractionToRootN = fractionToRoot * Math.Max(0.0, Root.NConcOptimum - Root.NConcMinimum) / Nsum;
                     }
                     else
                     {
                         // something went horribly wrong to get here
                         throw new ApsimXException(this, "Allocation of new growth could not be completed");
                     }
+
+                    // allocate the remaining N
+                    Leaf.EmergingTissue.NTransferredIn += remainingN * fractionToLeafN;
+                    Stem.EmergingTissue.NTransferredIn += remainingN * fractionToStemN;
+                    Stolon.EmergingTissue.NTransferredIn += remainingN * fractionToStolonN;
+                    dGrowthRootN += remainingN * fractionToRootN;
+
+                    // recalculate fractions (for tests)
+                    fractionToLeafN = (dNewGrowthWt * fractionToLeaf * Leaf.NConcMinimum + remainingN * fractionToLeafN) / dNewGrowthN;
+                    fractionToStemN = (dNewGrowthWt * fractionToStem * Stem.NConcMinimum + remainingN * fractionToStemN) / dNewGrowthN;
+                    fractionToStolonN = (dNewGrowthWt * fractionToStolon * Stolon.NConcMinimum + remainingN * fractionToStolonN) / dNewGrowthN;
+                    fractionToRootN = (dNewGrowthWt * fractionToRoot * Root.NConcMinimum + remainingN * fractionToRootN) / dNewGrowthN;
+                }
+                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, demandLuxuryN, Epsilon))
+                {
+                    // N available meets demand for optimum growth and then some luxury uptake
+                    // start by allocating N at optimum concentration
+                    Leaf.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToLeaf * Leaf.NConcOptimum;
+                    Stem.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStem * Stem.NConcOptimum;
+                    Stolon.EmergingTissue.NTransferredIn += dNewGrowthWt * fractionToStolon * Stolon.NConcOptimum;
+                    dGrowthRootN += dNewGrowthWt * fractionToRoot * Root.NConcOptimum;
+
+                    // get the amount of N remaining to allocate
+                    double allocatedN = dNewGrowthWt * (fractionToLeaf * Leaf.NConcOptimum + fractionToStem * Stem.NConcOptimum
+                                      + fractionToStolon * Stolon.NConcOptimum + fractionToRoot * Root.NConcOptimum);
+                    double remainingN = dNewGrowthN - allocatedN;
+
+                    // get allocation fractions for luxury N, proportional to maximum N concentration
+                    double Nsum = fractionToLeaf * Math.Max(0.0, Leaf.NConcMaximum - Leaf.NConcOptimum)
+                                + fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum)
+                                + fractionToStolon * Math.Max(0.0, Stolon.NConcMaximum - Stolon.NConcOptimum)
+                                + fractionToRoot * Math.Max(0.0, Root.NConcMaximum - Root.NConcOptimum);
+                    if (Nsum > Epsilon)
+                    {
+                        fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcMaximum - Leaf.NConcOptimum) / Nsum;
+                        fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum) / Nsum;
+                        fractionToStolonN = fractionToStolon * Math.Max(0.0, Stolon.NConcMaximum - Stolon.NConcOptimum) / Nsum;
+                        fractionToRootN = fractionToRoot * Math.Max(0.0, Root.NConcMaximum - Root.NConcOptimum) / Nsum;
+                    }
+                    else
+                    {
+                        // something went horribly wrong to get here
+                        throw new ApsimXException(this, "Allocation of new growth could not be completed");
+                    }
+
+                    // allocate the remaining N
+                    Leaf.EmergingTissue.NTransferredIn += remainingN * fractionToLeafN;
+                    Stem.EmergingTissue.NTransferredIn += remainingN * fractionToStemN;
+                    Stolon.EmergingTissue.NTransferredIn += remainingN * fractionToStolonN;
+                    dGrowthRootN += remainingN * fractionToRootN;
+
+                    // recalculate fractions (for tests)
+                    fractionToLeafN = (dNewGrowthWt * fractionToLeaf * Leaf.NConcOptimum + remainingN * fractionToLeafN) / dNewGrowthN;
+                    fractionToStemN = (dNewGrowthWt * fractionToStem * Stem.NConcOptimum + remainingN * fractionToStemN) / dNewGrowthN;
+                    fractionToStolonN = (dNewGrowthWt * fractionToStolon * Stolon.NConcOptimum + remainingN * fractionToStolonN) / dNewGrowthN;
+                    fractionToRootN = (dNewGrowthWt * fractionToRoot * Root.NConcOptimum + remainingN * fractionToRootN) / dNewGrowthN;
                 }
                 else
                 {
-                    // available N was not enough to meet basic demand, allocate N taken up based on optimum N content
-                    double Nsum = (fractionToLeaf * Leaf.NConcOptimum) + (fractionToStem * Stem.NConcOptimum)
-                                + (fractionToStolon * Stolon.NConcOptimum) + (fractionToRoot * Root.NConcOptimum);
-                    if (Nsum > Epsilon)
-                    {
-                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToLeaf * Leaf.NConcOptimum / Nsum;
-                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStem * Stem.NConcOptimum / Nsum;
-                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * fractionToStolon * Stolon.NConcOptimum / Nsum;
-                        dGrowthRootN += dNewGrowthN * fractionToRoot * Root.NConcOptimum / Nsum;
-                    }
-                    else
-                    {
-                        // something went horribly wrong to get here
-                        throw new ApsimXException(this, "Allocation of new growth could not be completed");
-                    }
+                    // something went horribly wrong to get here
+                    throw new ApsimXException(this, "Allocation of new growth could not be completed, there is more N to allocate than demand");
                 }
 
                 // update N variables
                 dGrowthShootN = Leaf.EmergingTissue.NTransferredIn + Stem.EmergingTissue.NTransferredIn + Stolon.EmergingTissue.NTransferredIn;
 
                 // evaluate root elongation and allocate new growth in each layer
-                if (phenologicStage > 0)
-                {
-                    double netRootGrowth = dGrowthRootDM - detachedRootDM;
-                    double glfMin = Math.Min(glfWaterSupply, glfNSupply); // root elongation speeds up if soil is limiting
-                    double soilSupplyFactor = 1.0 + Math.Pow(1.0 - glfMin, 1.0 / ShootRootGlfFactor);
-                    Root.EvaluateRootElongation(netRootGrowth, glfTemp, soilSupplyFactor);
-                }
+                double netRootGrowth = dGrowthRootDM - detachedRootDM;
+                double glfMin = Math.Min(glfWaterSupply, glfNSupply); // root elongation speeds up if soil resources are limiting
+                double soilSupplyFactor = 1.0 + Math.Pow(1.0 - glfMin, 1.0 / ShootRootGlfFactor);
+                Root.EvaluateRootElongation(netRootGrowth, glfTemp, soilSupplyFactor);
 
+                // allocate the new growth in roots (split by layers)
                 Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
             }
             else
