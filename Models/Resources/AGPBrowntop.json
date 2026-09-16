@@ -13,18 +13,17 @@
       "R50": 200.0,
       "SpeciesFamily": "Grass",
       "PhotosyntheticPathway": "C3",
-      "ReferencePhotosyntheticRate": 1.0,
-      "PhotosyntheticEfficiency": 0.01,
+      "ReferencePhotosyntheticRate": 0.9,
+      "PhotosyntheticEfficiency": 0.009,
       "PhotosynthesisCurveFactor": 0.8,
       "LightExtinctionCoefficient": 0.5,
       "GrowthTminimum": 1.5,
       "GrowthToptimum": 18.5,
       "GrowthTEffectExponent": 1.35,
-      "ReferenceCO2": 380.0,
-      "CO2EffectScaleFactor": 700.0,
-      "CO2EffectOffsetFactor": 600.0,
-      "CO2EffectMinimum": 0.7,
-      "CO2EffectExponent": 2.0,
+      "ReferenceCO2": 350.0,
+      "CO2EffectOnPhotoScaleFactor": 700.0,
+      "CO2EffectScaleFactorOnNConc": 610.0,
+      "CO2EffectExponentOnNConc": 2.2,
       "HeatOnsetTemperature": 26.0,
       "HeatFullTemperature": 35.0,
       "HeatRecoverySumDD": 20.0,
@@ -84,6 +83,7 @@
           "NConcMinimum": 0.009,
           "NConcOptimum": 0.034,
           "NConcMaximum": 0.04,
+          "MaxCO2EffectOnNRequirement": 0.3,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -137,6 +137,7 @@
           "NConcMinimum": 0.0057,
           "NConcOptimum": 0.017,
           "NConcMaximum": 0.023,
+          "MaxCO2EffectOnNRequirement": 0.2,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -187,10 +188,11 @@
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
           "Name": "Stolon",
-          "FractionStanding": 0.0,
           "NConcMinimum": 0.0,
           "NConcOptimum": 0.0,
           "NConcMaximum": 0.0,
+          "MaxCO2EffectOnNRequirement": 0.0,
+          "FractionStanding": 0.0,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -244,6 +246,7 @@
           "NConcMinimum": 0.005,
           "NConcOptimum": 0.016,
           "NConcMaximum": 0.022,
+          "MaxCO2EffectOnNRequirement": 0.1,
           "MinimumRootingDepth": 40.0,
           "MaximumPotentialRootingDepth": 600.0,
           "ElongationRate": 12.5,

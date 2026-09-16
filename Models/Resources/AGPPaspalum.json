@@ -13,18 +13,17 @@
       "R50": 200.0,
       "SpeciesFamily": "Grass",
       "PhotosyntheticPathway": "C4",
-      "ReferencePhotosyntheticRate": 1.2,
-      "PhotosyntheticEfficiency": 0.01,
+      "ReferencePhotosyntheticRate": 1.25,
+      "PhotosyntheticEfficiency": 0.012,
       "PhotosynthesisCurveFactor": 0.8,
       "LightExtinctionCoefficient": 0.5,
       "GrowthTminimum": 10.0,
       "GrowthToptimum": 32.0,
       "GrowthTEffectExponent": 1.4,
-      "ReferenceCO2": 380.0,
-      "CO2EffectScaleFactor": 700.0,
-      "CO2EffectOffsetFactor": 600.0,
-      "CO2EffectMinimum": 0.7,
-      "CO2EffectExponent": 2.0,
+      "ReferenceCO2": 350.0,
+      "CO2EffectOnPhotoScaleFactor": 700.0,
+      "CO2EffectScaleFactorOnNConc": 610.0,
+      "CO2EffectExponentOnNConc": 2.2,
       "HeatOnsetTemperature": 35.0,
       "HeatFullTemperature": 40.0,
       "HeatRecoverySumDD": 20.0,
@@ -84,6 +83,7 @@
           "NConcMinimum": 0.0076,
           "NConcOptimum": 0.025,
           "NConcMaximum": 0.0325,
+          "MaxCO2EffectOnNRequirement": 0.12,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -137,6 +137,7 @@
           "NConcMinimum": 0.004,
           "NConcOptimum": 0.0125,
           "NConcMaximum": 0.0175,
+          "MaxCO2EffectOnNRequirement": 0.05,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -190,6 +191,7 @@
           "NConcMinimum": 0.0,
           "NConcOptimum": 0.0,
           "NConcMaximum": 0.0,
+          "MaxCO2EffectOnNRequirement": 0.0,
           "FractionStanding": 0.0,
           "Children": [
             {
@@ -244,6 +246,7 @@
           "NConcMinimum": 0.004,
           "NConcOptimum": 0.0125,
           "NConcMaximum": 0.015,
+          "MaxCO2EffectOnNRequirement": 0.01,
           "MinimumRootingDepth": 85.0,
           "MaximumPotentialRootingDepth": 1000.0,
           "ElongationRate": 20.0,
