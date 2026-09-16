@@ -3501,6 +3501,40 @@ namespace Models.AgPasture
                     throw new ApsimXException(this, "Allocation of new growth could not be completed, there is more N to allocate than demand");
                 }
 
+                // check that N concentrations are within bounds
+                if (dNewGrowthWt * fractionToLeaf > 0.0)
+                {
+                    double nConc = dNewGrowthN * fractionToLeafN / (dNewGrowthWt * fractionToLeaf);
+                    if (MathUtilities.IsLessThan(nConc, Leaf.NConcMinimum))
+                        throw new Exception($"{Name} Leaf has N content in new growth lower than minimum");
+                    if (MathUtilities.IsGreaterThan(nConc, Leaf.NConcMaximum))
+                        throw new Exception($"{Name} Leaf has N content in new growth greater than maximum");
+                }
+                if (dNewGrowthWt * fractionToStem > 0.0)
+                {
+                    double nConc = dNewGrowthN * fractionToStemN / (dNewGrowthWt * fractionToStem);
+                    if (MathUtilities.IsLessThan(nConc, Stem.NConcMinimum))
+                        throw new Exception($"{Name} Stem has N content in new growth lower than minimum");
+                    if (MathUtilities.IsGreaterThan(nConc, Stem.NConcMaximum))
+                        throw new Exception($"{Name} Stem has N content in new growth greater than maximum");
+                }
+                if (dNewGrowthWt * fractionToStolon > 0.0)
+                {
+                    double nConc = dNewGrowthN * fractionToStolonN / (dNewGrowthWt * fractionToStolon);
+                    if (MathUtilities.IsLessThan(nConc, Stolon.NConcMinimum))
+                        throw new Exception($"{Name} Stolon has N content in new growth lower than minimum");
+                    if (MathUtilities.IsGreaterThan(nConc, Stolon.NConcMaximum))
+                        throw new Exception($"{Name} Stolon has N content in new growth greater than maximum");
+                }
+                if (dNewGrowthWt * fractionToRoot > 0.0)
+                {
+                    double nConc = dNewGrowthN * fractionToRootN / (dNewGrowthWt * fractionToRoot);
+                    if (MathUtilities.IsLessThan(nConc, Root.NConcMinimum))
+                        throw new Exception($"{Name} Root has N content in new growth lower than minimum");
+                    if (MathUtilities.IsGreaterThan(nConc, Root.NConcMaximum))
+                        throw new Exception($"{Name} Root has N content in new growth greater than maximum");
+                }
+
                 // update N variables
                 dGrowthShootN = Leaf.EmergingTissue.NTransferredIn + Stem.EmergingTissue.NTransferredIn + Stolon.EmergingTissue.NTransferredIn;
 
@@ -3721,6 +3755,11 @@ namespace Models.AgPasture
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (senescedNRemobilised > Epsilon)
             {
+                if (MathUtilities.IsGreaterThan(senescedNRemobilised, remobilisableSenescedN, Epsilon))
+                {
+                    throw new Exception($"{Name} is trying to remobilise more N than is available");
+                }
+
                 fracRemobilised = MathUtilities.Divide(senescedNRemobilised, remobilisableSenescedN, 0.0);
                 Leaf.DeadTissue.DoRemobiliseN(fracRemobilised);
                 Stem.DeadTissue.DoRemobiliseN(fracRemobilised);

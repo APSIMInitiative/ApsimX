@@ -147,6 +147,93 @@ namespace Models.AgPasture
             nRemobilisedByLayer = new double[nLayers];
         }
 
+        /// <summary>Sets the biomass of this tissue.</summary>
+        /// <param name="dmAmount">The DM amount, by layer, to set to (kg/ha).</param>
+        /// <param name="nAmount">The amount of N, by layer, to set to (kg/ha).</param>
+        public void SetBiomass(double[] dmAmount, double[] nAmount)
+        {
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                dmByLayer[layer] = dmAmount[layer];
+                nByLayer[layer] = nAmount[layer];
+            }
+
+            UpdateDM();
+        }
+
+        /// <summary>Adds an amount of biomass to this tissue.</summary>
+        /// <param name="dmToAdd">Dry matter amount to add (kg/ha).</param>
+        /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
+        public void AddBiomass(double[] dmToAdd, double[] nToAdd)
+        {
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                dmByLayer[layer] += dmToAdd[layer];
+                nByLayer[layer] += nToAdd[layer];
+            }
+
+            UpdateDM();
+        }
+
+        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
+        /// <param name="fractionToRemove">The fraction of biomass to remove off field.</param>
+        /// <param name="fractionToSoil">The fraction of biomass to sent to soil.</param>
+        /// <remarks>The same removal fractions are used for all layers.</remarks>
+        public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
+        {
+            double[] dmToSoil = new double[nLayers];
+            double[] nToSoil = new double[nLayers];
+            var totalFraction = fractionToRemove + fractionToSoil;
+            for (int layer = 0; layer < nLayers; layer++)
+            {
+                var dmToRemove = dmByLayer[layer] * totalFraction;
+                var nToRemove = nByLayer[layer] * totalFraction;
+                dmToSoil[layer] = dmByLayer[layer] * fractionToSoil;
+                nToSoil[layer] = nByLayer[layer] * fractionToSoil;
+                dmByLayer[layer] -= dmToRemove;
+                nByLayer[layer] -= nToRemove;
+                dmRemovedByLayer[layer] += dmToRemove;
+                nRemovedByLayer[layer] += nToRemove;
+            }
+
+            UpdateDM();
+
+            if (fractionToSoil > 0.0)
+            {
+                DetachBiomass(dmToSoil, nToSoil);
+            }
+        }
+
+        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
+        /// <param name="fractionToRemove">The fraction of biomass to remove, for each layer.</param>
+        /// <param name="fractionToSoil">The fraction of biomass to sent to soil, for each layer.</param>
+        /// <remarks>The fraction should be give for each layer, if array is short no biomass is removed at bottom of profile.</remarks>
+        public void RemoveBiomass(double[] fractionToRemove, double[] fractionToSoil)
+        {
+            var numLayers = Math.Min(fractionToRemove.Length, fractionToSoil.Length);
+            double[] dmToSoil = new double[numLayers];
+            double[] nToSoil = new double[numLayers];
+            for (int layer = 0; layer < numLayers; layer++)
+            {
+                var totalFraction = fractionToRemove[layer] + fractionToSoil[layer];
+                var dmToRemove = dmByLayer[layer] * totalFraction;
+                var nToRemove = nByLayer[layer] * totalFraction;
+                dmToSoil[layer] = dmByLayer[layer] * fractionToSoil[layer];
+                nToSoil[layer] = nByLayer[layer] * fractionToSoil[layer];
+                dmByLayer[layer] -= dmToRemove;
+                nByLayer[layer] -= nToRemove;
+                dmRemovedByLayer[layer] += dmToRemove;
+                nRemovedByLayer[layer] += nToRemove;
+            }
+
+            UpdateDM();
+
+            if (fractionToSoil.Sum() > 0.0)
+            {
+                DetachBiomass(dmToSoil, nToSoil);
+            }
+        }
+
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         public void Update()
         {
@@ -176,6 +263,20 @@ namespace Models.AgPasture
                     if (nByLayer[layer] < 0.0)
                     {
                         throw new Exception($"{species.Name} {Name} tissue has negative N content");
+                    }
+
+                    // check that N concentration are within bounds
+                    if (dmByLayer[layer] > 0.0)
+                    {
+                        double nConcLayer = nByLayer[layer] / dmByLayer[layer];
+                        if (MathUtilities.IsLessThan(nConcLayer, (Parent as PastureBelowGroundOrgan).NConcMinimum, Epsilon))
+                        {
+                            throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum in layer {layer}");
+                        }
+                        if (MathUtilities.IsGreaterThan(nConcLayer, (Parent as PastureBelowGroundOrgan).NConcMaximum, Epsilon))
+                        {
+                            throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum in layer {layer}");
+                        }
                     }
                 }
 
@@ -306,93 +407,6 @@ namespace Models.AgPasture
             for (int layer = 0; layer < nLayers; layer++)
             {
                 nRemobilisedByLayer[layer] = nRemobilisableByLayer[layer] * fraction;
-            }
-        }
-
-        /// <summary>Sets the biomass of this tissue.</summary>
-        /// <param name="dmAmount">The DM amount, by layer, to set to (kg/ha).</param>
-        /// <param name="nAmount">The amount of N, by layer, to set to (kg/ha).</param>
-        public void SetBiomass(double[] dmAmount, double[] nAmount)
-        {
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                dmByLayer[layer] = dmAmount[layer];
-                nByLayer[layer] = nAmount[layer];
-            }
-
-            UpdateDM();
-        }
-
-        /// <summary>Adds an amount of biomass to this tissue.</summary>
-        /// <param name="dmToAdd">Dry matter amount to add (kg/ha).</param>
-        /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
-        public void AddBiomass(double[] dmToAdd, double[] nToAdd)
-        {
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                dmByLayer[layer] += dmToAdd[layer];
-                nByLayer[layer] += nToAdd[layer];
-            }
-
-            UpdateDM();
-        }
-
-        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
-        /// <param name="fractionToRemove">The fraction of biomass to remove off field.</param>
-        /// <param name="fractionToSoil">The fraction of biomass to sent to soil.</param>
-        /// <remarks>The same removal fractions are used for all layers.</remarks>
-        public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
-        {
-            double[] dmToSoil = new double[nLayers];
-            double[] nToSoil = new double[nLayers];
-            var totalFraction = fractionToRemove + fractionToSoil;
-            for (int layer = 0; layer < nLayers; layer++)
-            {
-                var dmToRemove = dmByLayer[layer] * totalFraction;
-                var nToRemove = nByLayer[layer] * totalFraction;
-                dmToSoil[layer] = dmByLayer[layer] * fractionToSoil;
-                nToSoil[layer] = nByLayer[layer] * fractionToSoil;
-                dmByLayer[layer] -= dmToRemove;
-                nByLayer[layer] -= nToRemove;
-                dmRemovedByLayer[layer] += dmToRemove;
-                nRemovedByLayer[layer] += nToRemove;
-            }
-
-            UpdateDM();
-
-            if (fractionToSoil > 0.0)
-            {
-                DetachBiomass(dmToSoil, nToSoil);
-            }
-        }
-
-        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
-        /// <param name="fractionToRemove">The fraction of biomass to remove, for each layer.</param>
-        /// <param name="fractionToSoil">The fraction of biomass to sent to soil, for each layer.</param>
-        /// <remarks>The fraction should be give for each layer, if array is short no biomass is removed at bottom of profile.</remarks>
-        public void RemoveBiomass(double[] fractionToRemove, double[] fractionToSoil)
-        {
-            var numLayers = Math.Min(fractionToRemove.Length, fractionToSoil.Length);
-            double[] dmToSoil = new double[numLayers];
-            double[] nToSoil = new double[numLayers];
-            for (int layer = 0; layer < numLayers; layer++)
-            {
-                var totalFraction = fractionToRemove[layer] + fractionToSoil[layer];
-                var dmToRemove = dmByLayer[layer] * totalFraction;
-                var nToRemove = nByLayer[layer] * totalFraction;
-                dmToSoil[layer] = dmByLayer[layer] * fractionToSoil[layer];
-                nToSoil[layer] = nByLayer[layer] * fractionToSoil[layer];
-                dmByLayer[layer] -= dmToRemove;
-                nByLayer[layer] -= nToRemove;
-                dmRemovedByLayer[layer] += dmToRemove;
-                nRemovedByLayer[layer] += nToRemove;
-            }
-
-            UpdateDM();
-
-            if (fractionToSoil.Sum() > 0.0)
-            {
-                DetachBiomass(dmToSoil, nToSoil);
             }
         }
 

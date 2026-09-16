@@ -97,6 +97,7 @@ namespace Models.AgPasture
         {
             biomass.Wt = dmAmount;
             biomass.N = nAmount;
+
             calculateDigestibility();
         }
 
@@ -223,11 +224,6 @@ namespace Models.AgPasture
         /// <param name="fraction">The fraction to remove (0-1)</param>
         public void DoRemobiliseN(double fraction)
         {
-            if (fraction > 1.0)
-            {
-                throw new Exception($"{species.Name} {Name} fraction of N remobilised is > 1");
-            }
-
             NRemobilised = NRemobilisable * fraction;
         }
 
