@@ -37,6 +37,12 @@ public class FertiliserPool : Model
     /// <summary>Age of associated fertiliser pool.</summary>
     public int Age { get; private set; }
 
+    /// <summary>Solute names and fractions in pool.</summary>
+    public IEnumerable<(string name, double fraction)> SoluteInfo
+    {
+        get => solutesToApply.Select(t => (t.solute.Name, t.fraction));
+    }
+
     /// <summary>
     /// Constructor
     /// </summary>
