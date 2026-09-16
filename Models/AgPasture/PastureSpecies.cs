@@ -1060,6 +1060,10 @@ namespace Models.AgPasture
         /// <summary>Index of layer at which the plant was sown.</summary>
         private int sownLayer;
 
+        /// <summary>Current value of CO2 concentration in the atmosphere.</summary>
+        /// <remarks>To test whether CO2 effects need to be calculated.</remarks>
+        private double currentCO2;
+
         ////- Defining the plant type >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Flag whether this species is annual or perennial.</summary>
@@ -3046,9 +3050,34 @@ namespace Models.AgPasture
             return MathUtilities.Divide(cumulativeDDGermination, DegreesDayForGermination, 1.0);
         }
 
+        /// <summary>Computes the daily progress through germination.</summary>
+        internal void UpdateNConcentrationsDueToCO2()
+        {
+            if (!MathUtilities.FloatsAreEqual(myMetData.CO2, currentCO2, Epsilon))
+            {
+                // get the CO2 effects on N requirements (optimum N)
+                co2EffectOnOptimumN = CO2EffectsOnOptimumN();
+
+                // adjust the values of optimum and maximum N conc of each organ
+                Leaf.UpdateNConcentrations(co2EffectOnOptimumN);
+                Stem.UpdateNConcentrations(co2EffectOnOptimumN);
+                Stolon.UpdateNConcentrations(co2EffectOnOptimumN);
+                foreach (PastureBelowGroundOrgan root in roots)
+                {
+                    root.UpdateNConcentrations(co2EffectOnOptimumN);
+                }
+
+                // record the current value of CO2 (so no need to update if it does not change)
+                currentCO2 = myMetData.CO2;
+            }
+        }
+
         /// <summary>Calculates the daily potential plant growth.</summary>
         internal void CalcDailyPotentialGrowth()
         {
+            // update N concentrations thresholds due to CO2
+            UpdateNConcentrationsDueToCO2 ();
+
             // get today's gross potential photosynthetic rate (kgC/ha/day)
             grossPhotosynthesis = DailyPotentialPhotosynthesis();
 
@@ -4142,9 +4171,9 @@ namespace Models.AgPasture
             if (Leaf.NConcLive > Leaf.NConcMinimum)
             {
                 effect = 1.0;
-                if (Leaf.NConcLive < Leaf.NConcOptimum * co2EffectOnOptimumN)
+                if (Leaf.NConcLive < Leaf.NConcOptimum)
                 {
-                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, (Leaf.NConcOptimum * co2EffectOnOptimumN) - Leaf.NConcMinimum, 1.0);
+                    effect = MathUtilities.Divide(Leaf.NConcLive - Leaf.NConcMinimum, Leaf.NConcOptimum - Leaf.NConcMinimum, 1.0);
                 }
             }
 
@@ -4183,19 +4212,21 @@ namespace Models.AgPasture
             return adjustedGLF;
         }
 
-        /// <summary>Computes the variation in optimum N in leaves due to atmospheric CO2.</summary>
+        /// <summary>Computes the relative variation in optimum N due to atmospheric CO2.</summary>
+        /// <remarks>The factor will be greater than one at low CO2 and less than one for high CO2 levels.</remarks>
         /// <returns>A factor to adjust optimum N in leaves</returns>
-        private double NOptimumVariationDueToCO2()
+        private double CO2EffectsOnOptimumN()
         {
-            if (MathUtilities.FloatsAreEqual(myMetData.CO2, ReferenceCO2, Epsilon))
+            double factorReferenceCO2 = Math.Pow(CO2EffectOffsetFactor - ReferenceCO2, CO2EffectExponent);
+            double factorActualCO2 = Math.Pow(Math.Abs(myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
+            if (myMetData.CO2 <= ReferenceCO2)
             {
-                return 1.0;
+                return 1.0 + factorActualCO2 / factorReferenceCO2;
             }
-
-            double factorCO2 = Math.Pow((CO2EffectOffsetFactor - ReferenceCO2) / (myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
-            double effect = (CO2EffectMinimum + factorCO2) / (1 + factorCO2);
-            return effect;
-            // TODO: need to revise this function, it returns wild different values for CO2<refCO2 depending on the value of exponent
+            else
+            {
+                return 1.0 / (1.0 + factorActualCO2 / factorReferenceCO2);
+            }
         }
 
         /// <summary>Computes the variation in stomata conductance due to variation in atmospheric CO2.</summary>
