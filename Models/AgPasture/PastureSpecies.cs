@@ -622,19 +622,15 @@ namespace Models.AgPasture
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectScaleFactor { get; set; }
+        public double CO2EffectOnPhotoScaleFactor { get; set; }
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectOffsetFactor { get; set; }
-
-        /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
-        [Units("0-1")]
-        public double CO2EffectMinimum { get; set; }
+        public double CO2EffectScaleFactorOnNConc { get; set; }
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
         [Units("-")]
-        public double CO2EffectExponent { get; set; }
+        public double CO2EffectExponentOnNConc { get; set; }
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
@@ -3076,7 +3072,7 @@ namespace Models.AgPasture
         internal void CalcDailyPotentialGrowth()
         {
             // update N concentrations thresholds due to CO2
-            UpdateNConcentrationsDueToCO2 ();
+            UpdateNConcentrationsDueToCO2();
 
             // get today's gross potential photosynthetic rate (kgC/ha/day)
             grossPhotosynthesis = DailyPotentialPhotosynthesis();
@@ -3130,7 +3126,10 @@ namespace Models.AgPasture
         private double DailyPotentialPhotosynthesis()
         {
             // CO2 effects on Pmax
-            glfCO2 = CO2EffectOnPhotosynthesis();
+            if (!MathUtilities.FloatsAreEqual(myMetData.CO2, currentCO2, Epsilon))
+            {
+                glfCO2 = CO2EffectOnPhotosynthesis();
+            }
 
             // N concentration effects on Pmax
             glfNc = NConcEffectOnPhotosynthesis();
@@ -4145,17 +4144,14 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the relative effect of atmospheric CO2 on photosynthesis.</summary>
+        /// <remarks>This was rearranged from original to be explicitly a Michaelis-Menten function</remarks>
         /// <returns>A factor to adjust photosynthesis (0-1)</returns>
         private double CO2EffectOnPhotosynthesis()
         {
-            if (Math.Abs(myMetData.CO2 - ReferenceCO2) < 0.01)
-            {
-                return 1.0;
-            }
-
-            double termActual = myMetData.CO2 / (myMetData.CO2 + CO2EffectScaleFactor);
-            double termReference = (ReferenceCO2 + CO2EffectScaleFactor) / ReferenceCO2;
-            return termActual * termReference;
+            double maximumValue = (ReferenceCO2 + CO2EffectOnPhotoScaleFactor) / ReferenceCO2;
+            double concForHalfEffect = CO2EffectOnPhotoScaleFactor;
+            double baseEffect = myMetData.CO2 / (myMetData.CO2 + concForHalfEffect);
+            return baseEffect * maximumValue;
         }
 
         /// <summary>Computes the relative effect of leaf N concentration on photosynthesis.</summary>
@@ -4217,8 +4213,8 @@ namespace Models.AgPasture
         /// <returns>A factor to adjust optimum N in leaves</returns>
         private double CO2EffectsOnOptimumN()
         {
-            double factorReferenceCO2 = Math.Pow(CO2EffectOffsetFactor - ReferenceCO2, CO2EffectExponent);
-            double factorActualCO2 = Math.Pow(Math.Abs(myMetData.CO2 - ReferenceCO2), CO2EffectExponent);
+            double factorReferenceCO2 = Math.Pow(CO2EffectScaleFactorOnNConc - ReferenceCO2, CO2EffectExponentOnNConc);
+            double factorActualCO2 = Math.Pow(Math.Abs(myMetData.CO2 - ReferenceCO2), CO2EffectExponentOnNConc);
             if (myMetData.CO2 <= ReferenceCO2)
             {
                 return 1.0 + factorActualCO2 / factorReferenceCO2;

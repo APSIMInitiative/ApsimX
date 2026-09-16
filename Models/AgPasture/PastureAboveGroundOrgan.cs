@@ -56,7 +56,7 @@ namespace Models.AgPasture
 
         /// <summary>Maximum reduction in N concentration due to elevated CO2 (0-1).</summary>
         [Units("kg/kg")]
-        public double MaxCO2EffectOnNRequirement { get; set; } = 0.3;
+        public double MaxCO2EffectOnNRequirement { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
         [Units("kg/kg")]
