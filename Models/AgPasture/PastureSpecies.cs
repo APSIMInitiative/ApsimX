@@ -1234,6 +1234,10 @@ namespace Models.AgPasture
         /// <summary>Amount of N demanded for new growth, at optimum N content (kg/ha).</summary>
         private double demandOptimumN;
 
+        /// <summary>Amount of N demanded for new growth, at minimum N content (kg/ha).</summary>
+        /// <remarks>This is used to limit N dilution, as biomass cannot have less N than minimum.</remarks>
+        private double demandMinimumN;
+
         /// <summary>Amount of N fixation from atmosphere, for legumes (kg/ha).</summary>
         private double fixedN;
 
@@ -2920,6 +2924,7 @@ namespace Models.AgPasture
             respirationGrowth = 0.0;
             remobilisedC = 0.0;
 
+            demandMinimumN = 0.0;
             demandOptimumN = 0.0;
             demandLuxuryN = 0.0;
             fixedN = 0.0;
@@ -3577,17 +3582,17 @@ namespace Models.AgPasture
             double dmToStolon = dGrowthAfterWaterLimitations * fractionToStolon;
             double dmToRoot = dGrowthAfterWaterLimitations * fractionToRoot;
 
+            // N demand for new growth, to ensure minimum N (kg/ha)
+            demandMinimumN = (dmToLeaf * Leaf.NConcMinimum) + (dmToStem * Stem.NConcMinimum)
+                           + (dmToStolon * Stolon.NConcMinimum) + (dmToRoot * Root.NConcMinimum);
+
             // N demand for new growth, with optimum N (kg/ha)
             demandOptimumN = (dmToLeaf * Leaf.NConcOptimum) + (dmToStem * Stem.NConcOptimum)
                            + (dmToStolon * Stolon.NConcOptimum) + (dmToRoot * Root.NConcOptimum);
 
-            // adjust the demand under elevated CO2
-            demandOptimumN *= co2EffectOnOptimumN;
-
             // N demand for new growth, with luxury uptake (maximum [N])
             demandLuxuryN = (dmToLeaf * Leaf.NConcMaximum) + (dmToStem * Stem.NConcMaximum)
                           + (dmToStolon * Stolon.NConcMaximum) + (dmToRoot * Root.NConcMaximum);
-            // It is assumed that luxury uptake is not affected by CO2 variations
         }
 
         /// <summary>Computes the amount of atmospheric nitrogen fixed through symbiosis.</summary>
@@ -4202,8 +4207,14 @@ namespace Models.AgPasture
             // get the basic glf value
             double baseGLF = MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0);
 
+            //get the maximum glf (avoid N conc going below minimum)
+            double maxGLF = baseGLF * MathUtilities.Divide(demandOptimumN, demandMinimumN, 1.0);
+
             // adjust the glf for N dilution
             double adjustedGLF = 1.0 - Math.Pow(1.0 - baseGLF, NDilutionCoefficient);
+
+            // ensure the adjusted value is below max
+            adjustedGLF = Math.Min(adjustedGLF, maxGLF);
 
             return adjustedGLF;
         }
