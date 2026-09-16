@@ -3905,10 +3905,17 @@ namespace Models.AgPasture
             // get the proportion of aboveground growth that goes into leaves
             double fracLeaf = allocationToLeaf();
 
+            // get the maximum proportion of aboveground growth that can go into stolons
+            double stolonMax = 0.0;
+            if (StolonProportionTarget >= Epsilon)
+            {
+                stolonMax = StolonProportionTarget / (1.0 - LeafProportionMaximum);
+            }
+
             // get the fractions of new growth to allocate to each plant organ
             fractionToLeaf = fractionToShoot * fracLeaf;
-            fractionToStem = fractionToShoot * (1.0 - StolonProportionTarget - fracLeaf);
-            fractionToStolon = fractionToShoot * StolonProportionTarget;
+            fractionToStem = fractionToShoot * (1.0 - stolonMax) * (1.0 - fracLeaf);
+            fractionToStolon = fractionToShoot * stolonMax * (1.0 - fracLeaf);
             fractionToRoot = 1.0 - fractionToShoot;
         }
 
@@ -3986,14 +3993,17 @@ namespace Models.AgPasture
             // adjust leaf:stem ratio, to avoid excess allocation to stem/stolons
             double newLS = MathUtilities.Divide(targetLS * targetLS, currentLS, double.MaxValue - 1.5);
 
-            return newLS / (1.0 + newLS);
+            // get today's allocation to leaves
+            double todaysLeafFraction = newLS / (1.0 + newLS);
+
+            return todaysLeafFraction;
         }
 
         /// <summary>Calculates the plant height as function of DM.</summary>
         /// <returns>The plant height (mm)</returns>
         internal double HeightfromDM()
         {
-            double TodaysHeight = PlantHeightMaximum;
+            double todaysHeight = PlantHeightMaximum;
             if (phenologicStage > 0)
             {
                 if (Harvestable.Wt <= PlantHeightMassForMax)
@@ -4001,15 +4011,15 @@ namespace Models.AgPasture
                     double massRatio = Harvestable.Wt / PlantHeightMassForMax;
                     double heightF = PlantHeightExponent - (PlantHeightExponent * massRatio) + massRatio;
                     heightF *= Math.Pow(massRatio, PlantHeightExponent - 1);
-                    TodaysHeight = Math.Max(TodaysHeight * heightF, PlantHeightMinimum);
+                    todaysHeight = Math.Max(todaysHeight * heightF, PlantHeightMinimum);
                 }
             }
             else
             {
-                TodaysHeight = 0.0;
+                todaysHeight = 0.0;
             }
 
-            return TodaysHeight;
+            return todaysHeight;
         }
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
