@@ -13887,7 +13887,7 @@
                 "[LifeCycle].Adult.TotalPopulation",
                 "[LifeCycle].Adult.Mortalities",
                 "[weather].MeanT",
-                "[ThermalTime]"
+                "[LifeCycle].ThermalTime"
               ],
               "EventNames": [
                 "[Clock].DoReport"
