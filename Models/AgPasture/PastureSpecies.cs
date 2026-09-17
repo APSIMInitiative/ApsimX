@@ -499,6 +499,28 @@ namespace Models.AgPasture
             //  the Runge-Kutta process to determine N uptake. As the value of available N is recalculated above,
             //  we need to re-estimate these tow to ensure outputs will have mass balance.
 
+            // check for mass balance and adjust flows if needed
+            double newGrowthN = fixedN + senescedNRemobilised + SoilUptakeN;
+            double excessN = newGrowthN - DemandAtLuxuryN * GlfSoilFertility;
+            if (excessN > 0.0)
+            {
+                if (excessN > fixedN)
+                {
+                    excessN -= fixedN;
+                    fixedN = 0.0;
+                    nffSoilNSupply = 1.0;
+                    if (excessN > senescedNRemobilised)
+                    {
+                        throw new Exception($"Mass balance error while computing N uptake and fixation in {Name}");
+                    }
+                    senescedNRemobilised -= excessN;
+                }
+                else
+                {
+                    fixedN -= excessN;
+                }
+            }
+
             // update N remobilised from senesced tissues in each organ
             DoSenescedNRemobilisation();
         }
