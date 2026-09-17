@@ -87,13 +87,13 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[StartDate]",
-                "[EndDate]",
-                "[StartAndEndDate]",
-                "[ReduceAnnual]",
-                "[ReduceOnce]",
-                "[ReduceTwice]"
+                "[Field].Basic",
+                "[Field].StartDate",
+                "[Field].EndDate",
+                "[Field].StartAndEndDate",
+                "[Field].ReduceAnnual",
+                "[Field].ReduceOnce",
+                "[Field].ReduceTwice"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1410,11 +1410,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[Start]",
-                "[End]",
-                "[StartAndEnd]",
-                "[Reduce]"
+                "[Field].Basic",
+                "[Field].Start",
+                "[Field].End",
+                "[Field].StartAndEnd",
+                "[Field].Reduce"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -2592,11 +2592,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[Start]",
-                "[End]",
-                "[StartAndEnd]",
-                "[Reduce]"
+                "[Field].Basic",
+                "[Field].Start",
+                "[Field].End",
+                "[Field].StartAndEnd",
+                "[Field].Reduce"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"

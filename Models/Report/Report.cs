@@ -8,6 +8,7 @@ using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.Core;
+using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
 
@@ -142,6 +143,22 @@ namespace Models
 
             // Locate reporting variables.
             FindVariableMembers();
+
+            //check for ambigous references in reporting variables
+            foreach(IReportColumn column in Columns)
+            {
+                if (column is ReportColumn col)
+                {
+                    IEnumerable<VariableComposite> allMatchingModels = Node.GetAllObjects(col.VariableName, LocatorFlags.ThrowOnError);
+                    List<VariableComposite> allMatchingModelsExcludingUnderFactors = new List<VariableComposite>();
+                    foreach(VariableComposite variable in allMatchingModels)
+                        if (variable.FirstModel != null)
+                            if (variable.FirstModel.Node.FindParent<Factors>(recurse:true) == null)
+                                allMatchingModelsExcludingUnderFactors.Add(variable);
+                    if (allMatchingModelsExcludingUnderFactors.Count() > 1)
+                        throw new Exception($"Reporting variable {col.VariableName} is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.");
+                }
+            }
 
             // Parse the report frequency lines
             foreach (string line in EventNames)
