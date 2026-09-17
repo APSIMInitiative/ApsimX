@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 197,
+  "Version": 221,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -15,7 +15,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "UseDates",
       "ResourceName": null,
       "Children": [
@@ -41,7 +40,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
+          "FileName": "WeatherFiles/AU_Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -87,13 +86,13 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[StartDate]",
-                "[EndDate]",
-                "[StartAndEndDate]",
-                "[ReduceAnnual]",
-                "[ReduceOnce]",
-                "[ReduceTwice]"
+                "[Field].Basic",
+                "[Field].StartDate",
+                "[Field].EndDate",
+                "[Field].StartAndEndDate",
+                "[Field].ReduceAnnual",
+                "[Field].ReduceOnce",
+                "[Field].ReduceTwice"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -552,6 +551,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
@@ -580,12 +580,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "Phenology": null,
-              "Arbitrator": null,
-              "structure": null,
-              "Leaf": null,
-              "Root": null,
-              "AboveGround": null,
               "Name": "Wheat",
               "ResourceName": "Wheat",
               "Children": [],
@@ -1338,7 +1332,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "UseEvents",
       "ResourceName": null,
       "Children": [
@@ -1364,7 +1357,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
+          "FileName": "WeatherFiles/AU_Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -1410,11 +1403,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[Start]",
-                "[End]",
-                "[StartAndEnd]",
-                "[Reduce]"
+                "[Field].Basic",
+                "[Field].Start",
+                "[Field].End",
+                "[Field].StartAndEnd",
+                "[Field].Reduce"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -1873,6 +1866,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
@@ -1901,12 +1895,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "Phenology": null,
-              "Arbitrator": null,
-              "structure": null,
-              "Leaf": null,
-              "Root": null,
-              "AboveGround": null,
               "Name": "Wheat",
               "ResourceName": "Wheat",
               "Children": [],
@@ -2520,7 +2508,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "CropStages",
       "ResourceName": null,
       "Children": [
@@ -2546,7 +2533,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/AU_Dalby.met",
+          "FileName": "WeatherFiles/AU_Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -2592,11 +2579,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Basic]",
-                "[Start]",
-                "[End]",
-                "[StartAndEnd]",
-                "[Reduce]"
+                "[Field].Basic",
+                "[Field].Start",
+                "[Field].End",
+                "[Field].StartAndEnd",
+                "[Field].Reduce"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -3055,6 +3042,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
@@ -3083,12 +3071,6 @@
             },
             {
               "$type": "Models.PMF.Plant, Models",
-              "Phenology": null,
-              "Arbitrator": null,
-              "structure": null,
-              "Leaf": null,
-              "Root": null,
-              "AboveGround": null,
               "Name": "Wheat",
               "ResourceName": "Wheat",
               "Children": [],
