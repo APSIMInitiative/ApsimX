@@ -242,7 +242,17 @@ namespace Models
         /// <summary>Gets the Green canopy cover.</summary>
         [Description("Green canopy cover (0-1)")]
         [Units("0-1")]
-        public double GreenCanopyCover { get { return RadiationInterceptionOnGreen / Radn; } }
+        public double GreenCanopyCover 
+        { 
+            get 
+            {
+                double totalgreencover = 0.0;
+                for (int i = 0; i <= numLayers - 1; i++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                        totalgreencover += (1 - totalgreencover) * (1 - Math.Exp(-Canopies[j].K * Canopies[j].LAI[i]));
+                return totalgreencover;
+            } 
+        }
 
 
         /// <summary>Gets the radiation term of PET.</summary>
