@@ -151,9 +151,6 @@ namespace Models.AgPasture
             if (MathUtilities.FloatsAreEqual(biomass.Wt, 0.0, Epsilon))
             {
                 biomass.Wt = 0.0;
-            }
-            if (MathUtilities.FloatsAreEqual(biomass.N, 0.0, 0.01 * Epsilon))
-            {
                 biomass.N = 0.0;
             }
 
