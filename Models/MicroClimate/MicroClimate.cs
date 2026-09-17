@@ -303,6 +303,22 @@ namespace Models
             }
         }
 
+        /// <summary>Gets the total plant cover (0-1).</summary>
+        [Description("Total canopy cover")]
+        [Units("-")]
+        public double CanopyCoverTotal
+        {
+            get
+            {
+                if (microClimatesZones == null || microClimatesZones.Count() == 0)
+                    return 0;
+                else if (microClimatesZones.Count() > 1)
+                    throw new Exception("This property cannot be used in a multi-zone simulation");
+                else
+                    return microClimatesZones[0].TotalCanopyCover;
+            }
+        }
+
         /// <summary>Gets the green plant cover (0-1).</summary>
         [Description("Green canopy cover")]
         [Units("-")]

@@ -69,7 +69,7 @@ namespace Models.Sensor
         {
             double SoilNDVI = DrySoilNDVI + (WetSoilNDVI - DrySoilNDVI) * SurfaceRWC;
             double coverGreen = microClimate.CanopyCoverGreen;
-            double coverTotal = microClimate.CanopyCover;
+            double coverTotal = microClimate.CanopyCoverTotal;
 
             double CropNDVI = 0;
             if (coverTotal > 0)

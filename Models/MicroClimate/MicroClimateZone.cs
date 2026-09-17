@@ -254,6 +254,20 @@ namespace Models
             } 
         }
 
+        /// <summary>Gets the Total canopy cover.</summary>
+        [Description("Total canopy cover (0-1)")]
+        [Units("0-1")]
+        public double TotalCanopyCover
+        {
+            get
+            {
+                double totalcover = 0.0;
+                for (int i = 0; i <= numLayers - 1; i++)
+                    for (int j = 0; j <= Canopies.Count - 1; j++)
+                        totalcover += (1 - totalcover) * (1 - Math.Exp(-Canopies[j].Ktot * Canopies[j].LAItot[i]));
+                return totalcover;
+            }
+        }
 
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
