@@ -250,7 +250,7 @@ namespace Models.AgPasture
                     {
                         dmByLayer[layer] = 0.0;
                     }
-                    if (MathUtilities.FloatsAreEqual(nByLayer[layer], 0.0, Epsilon))
+                    if (MathUtilities.FloatsAreEqual(nByLayer[layer], 0.0, 0.01 * Epsilon))
                     {
                         nByLayer[layer] = 0.0;
                     }

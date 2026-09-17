@@ -439,7 +439,7 @@ namespace Models.AgPasture
 
                 // estimate fraction of N used up
                 double fractionUsed = 0.0;
-                if (NSupply > Epsilon)
+                if (NSupply > EpsilonN)
                 {
                     fractionUsed = Math.Min(1.0, MathUtilities.Divide(NDemand, NSupply, 0));
                 }
@@ -1389,8 +1389,11 @@ namespace Models.AgPasture
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         internal const double PotentialMEOfHerbage = 16.0;
 
-        /// <summary>Minimum significant difference between two values.</summary>
+        /// <summary>Minimum significant difference between two values, of DM or water.</summary>
         internal const double Epsilon = 0.000000001;
+
+        /// <summary>Minimum significant difference between two values of N.</summary>
+        internal const double EpsilonN = 0.00000000001;
 
         /// <summary>A yes or no answer.</summary>
         public enum YesNoAnswer
@@ -3434,7 +3437,7 @@ namespace Models.AgPasture
                 double luxuryNDemand = demandLuxuryN * Math.Min(glfNSupply, GlfSoilFertility);
 
                 // allocate new N to growing tissues
-                if (MathUtilities.IsLessThan(dNewGrowthN, optimumNDemand, Epsilon))
+                if (MathUtilities.IsLessThan(dNewGrowthN, optimumNDemand, EpsilonN))
                 {
                     // N available for new growth is not enough to meet basic demand (to optimum N conc)
                     // start by allocating N at minimum concentration
@@ -3455,7 +3458,7 @@ namespace Models.AgPasture
                                 + fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum)
                                 + fractionToStolon * Math.Max(0.0, Stolon.NConcOptimum - Stolon.NConcMinimum)
                                 + fractionToRoot * Math.Max(0.0, Root.NConcOptimum - Root.NConcMinimum);
-                    if (Nsum > Epsilon)
+                    if (Nsum > 0.001 * Epsilon)
                     {
                         fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcOptimum - Leaf.NConcMinimum) / Nsum;
                         fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum) / Nsum;
@@ -3474,7 +3477,7 @@ namespace Models.AgPasture
                     dGrowthStolonN += remainingN * fractionToStolonN;
                     dGrowthRootN += remainingN * fractionToRootN;
                 }
-                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, luxuryNDemand, Epsilon))
+                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, luxuryNDemand, EpsilonN))
                 {
                     // N available meets demand for optimum growth and then some luxury uptake
                     // start by allocating N at optimum concentration
@@ -3493,7 +3496,7 @@ namespace Models.AgPasture
                                 + fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum)
                                 + fractionToStolon * Math.Max(0.0, Stolon.NConcMaximum - Stolon.NConcOptimum)
                                 + fractionToRoot * Math.Max(0.0, Root.NConcMaximum - Root.NConcOptimum);
-                    if (Nsum > Epsilon)
+                    if (Nsum > 0.001 * Epsilon)
                     {
                         fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcMaximum - Leaf.NConcOptimum) / Nsum;
                         fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum) / Nsum;
@@ -3718,13 +3721,13 @@ namespace Models.AgPasture
             double adjNDemand = demandOptimumN * GlfSoilFertility;
             fixedN = 0.0;
             nffSoilNSupply = 1.0;
-            if (isLegume && adjNDemand > Epsilon)
+            if (isLegume && adjNDemand > EpsilonN)
             {
                 // start with minimum fixation
                 fixedN = MinimumNFixation * adjNDemand;
 
                 // check whether more fixation is needed
-                if (MathUtilities.IsGreaterThan(adjNDemand - fixedN, 0.0, Epsilon))
+                if (MathUtilities.IsGreaterThan(adjNDemand - fixedN, 0.0, EpsilonN))
                 {
                     // evaluate N stress
                     nffSoilNSupply = SoilAvailableN / (adjNDemand - fixedN);
@@ -3750,12 +3753,12 @@ namespace Models.AgPasture
         {
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, Epsilon))
+            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, EpsilonN))
             {
                 // N demand is fulfilled by fixation alone, no remobilisation
                 senescedNRemobilised = 0.0;
             }
-            else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, Epsilon))
+            else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, EpsilonN))
             {
                 // N demand is fulfilled by fixation plus some remobilisation
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
@@ -3772,9 +3775,9 @@ namespace Models.AgPasture
         {
             double fracRemobilised = 0.0;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if (senescedNRemobilised > Epsilon)
+            if (senescedNRemobilised > EpsilonN)
             {
-                if (MathUtilities.IsGreaterThan(senescedNRemobilised, remobilisableSenescedN, Epsilon))
+                if (MathUtilities.IsGreaterThan(senescedNRemobilised, remobilisableSenescedN, EpsilonN))
                 {
                     throw new Exception($"{Name} is trying to remobilise more N than is available");
                 }
@@ -3792,7 +3795,7 @@ namespace Models.AgPasture
         internal void EvaluateSoilNitrogenDemand()
         {
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
-            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN + senescedNRemobilised, Epsilon))
+            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN + senescedNRemobilised, EpsilonN))
             {
                 // N demand is fulfilled by fixation and/or N remobilised from senesced material
                 mySoilNDemand = 0.0;
@@ -3814,10 +3817,10 @@ namespace Models.AgPasture
             int eqTissue = 1;
 
             // check whether there is any luxury N that can and needs to be remobilised
-            if ((Nmissing > Epsilon) && (RemobilisableLuxuryN > Epsilon))
+            if ((Nmissing > EpsilonN) && (RemobilisableLuxuryN > EpsilonN))
             {
                 // there is still unfulfilled N demand for growth, remobilise some luxury N
-                if (MathUtilities.IsLessThanOrEqual(RemobilisableLuxuryN, Nmissing, Epsilon))
+                if (MathUtilities.IsLessThanOrEqual(RemobilisableLuxuryN, Nmissing, EpsilonN))
                 {
                     // all luxury N available can be used up
                     luxuryNRemobilised = RemobilisableLuxuryN;
@@ -3864,7 +3867,7 @@ namespace Models.AgPasture
 
                         luxuryNRemobilised += Nusedup;
                         Nmissing -= Nusedup;
-                        if (Nmissing <= Epsilon)
+                        if (Nmissing <= EpsilonN)
                         {
                             t = 0;
                         }
@@ -4326,11 +4329,11 @@ namespace Models.AgPasture
         /// <returns>A factor to adjust growth rates (0-1)</returns>
         private double NSupplyLimitingFactor()
         {
-            if (dNewGrowthN < Epsilon)
+            if (dNewGrowthN < EpsilonN)
             {
                 return 0.0;
             }
-            else if ((dNewGrowthN >= demandOptimumN) || (demandOptimumN < Epsilon))
+            if (MathUtilities.IsGreaterThanOrEqual(dNewGrowthN, demandOptimumN, EpsilonN))
             {
                 return 1.0;
             }
@@ -4597,7 +4600,7 @@ namespace Models.AgPasture
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += waterBalance.SWmm[layer] * fractionLayer;
                 myWSat += soilPhysical.SATmm[layer] * fractionLayer;
-                if (MinimumWaterFreePorosity <= -Epsilon)
+                if (MathUtilities.IsLessThan(MinimumWaterFreePorosity, 0.0, Epsilon))
                 {
                     myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
                 }
