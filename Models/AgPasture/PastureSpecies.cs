@@ -2682,7 +2682,7 @@ namespace Models.AgPasture
                 Zone zone = Structure.Find<Zone>(rootZone.ZoneName);
                 if (zone == null)
                 {
-                    throw new Exception("Cannot find zone: " + rootZone.ZoneName);
+                    throw new Exception($"{Name} cannot find zone: " + rootZone.ZoneName);
                 }
 
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
@@ -2789,7 +2789,7 @@ namespace Models.AgPasture
             }
             else
             {
-                throw new Exception("Initial values for biomass cannot be negative");
+                throw new Exception($"Initial values for biomass in {Name} are negative");
             }
 
             // calculate the values for LAI
@@ -3287,11 +3287,11 @@ namespace Models.AgPasture
 
             if ((gama > 1.0) || (gamaS > 1.0) || (gamaD > 1.0) || (gamaR > 1.0))
             {
-                throw new ApsimXException(this, " AgPasture computed a tissue turnover rate greater than one");
+                throw new Exception($"{Name} computed a tissue turnover rate greater than one");
             }
             if ((gama < 0.0) || (gamaS < 0.0) || (gamaD < 0.0) || (gamaR < 0.0))
             {
-                throw new ApsimXException(this, " AgPasture computed a negative tissue turnover rate");
+                throw new Exception($"{Name} computed a negative tissue turnover rate");
             }
 
             // check phenology effect for annuals
@@ -3440,7 +3440,7 @@ namespace Models.AgPasture
                     else
                     {
                         // something went horribly wrong to get here
-                        throw new ApsimXException(this, "Allocation of new growth could not be completed");
+                        throw new Exception($"Allocation of new growth could not be completed for {Name}");
                     }
 
                     // allocate the remaining N
@@ -3478,7 +3478,7 @@ namespace Models.AgPasture
                     else
                     {
                         // something went horribly wrong to get here
-                        throw new ApsimXException(this, "Allocation of new growth could not be completed");
+                        throw new Exception($"Allocation of new growth could not be completed for {Name}");
                     }
 
                     // allocate the remaining N
@@ -3490,7 +3490,7 @@ namespace Models.AgPasture
                 else
                 {
                     // something went horribly wrong to get here
-                    throw new ApsimXException(this, "Allocation of new growth could not be completed, there is more N to allocate than demand");
+                    throw new Exception($"Allocation of new growth in {Name} is trying to allocate more N than demand");
                 }
 
                 // check that N concentrations are within bounds
@@ -3563,19 +3563,19 @@ namespace Models.AgPasture
             // update each organ, returns test for mass balance
             if (Leaf.Update() == false)
             {
-                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for leaves");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance for leaves in {Name}");
             }
             if (Stem.Update() == false)
             {
-                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stems");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance for stems in {Name}");
             }
             if (Stolon.Update() == false)
             {
-                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance for stolons in {Name}");
             }
             if (Root.Update() == false)
             {
-                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance for roots in {Name}");
             }
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below had to
@@ -3588,11 +3588,11 @@ namespace Models.AgPasture
             // check for loss of mass balance in the whole plant
             if (!MathUtilities.FloatsAreEqual(previousDM + dNewGrowthWt - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
             {
-                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance - DM");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance (DM amounts) in {Name}");
             }
             if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
             {
-                throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance - N");
+                throw new Exception($"Growth and tissue turnover resulted in loss of mass balance (N amounts) in {Name}");
             }
 
             // update LAI
@@ -4122,7 +4122,7 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    throw new ApsimXException(this, "Type of amount to remove was not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
+                    throw new Exception($"{Name} did not recognised the type of amount to remove (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
                 }
 
                 // get the actual amount to remove
@@ -4211,7 +4211,7 @@ namespace Models.AgPasture
                 defoliatedN = preRemovalNShoot - AboveGroundN;
                 if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove, 0.000001))
                 {
-                    throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
+                    throw new Exception($"Removal of DM from {Name} resulted in loss of mass balance");
                 }
                 else if (doOutput)
                 {
@@ -4495,7 +4495,7 @@ namespace Models.AgPasture
             }
             else
             {
-                throw new ApsimXException(this, "Photosynthetic pathway is not valid");
+                throw new Exception("Photosynthetic pathway for {Name} is not valid");
             }
 
             return result;
@@ -4864,7 +4864,7 @@ namespace Models.AgPasture
         /// <summary>Reduces the plant population.</summary>
         public void ReducePopulation()
         {
-            throw new Exception("AgPasture does not simulate a plant population and so plant population cannot be reduced.");
+            throw new Exception($"{Name} does not simulate plant population and so plant population cannot be reduced.");
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
