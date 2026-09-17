@@ -167,9 +167,9 @@ namespace Models
                     {
                         if (variable.FirstModel != null)
                         {
-                            //Edge case. Zone.Name is added to reports by default, but will break this check if something 
-                            //else has the same name. So we want to exclude it to avoid user confusion
-                            if (variable.FirstModel is Zone && variable.Name == "Name")
+                            //Edge case. Names are often inserted as factors (simulation, zone etc), and if two things 
+                            // share the same name, we don't care which is reported
+                            if (variable.Name == "Name")
                                 skipTest = true;
 
                             //SimpleGrazing can create more ones at runtime which just straight breaks this test
