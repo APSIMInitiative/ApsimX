@@ -425,16 +425,16 @@ namespace Models.AgPasture
                     }
                 }
 
-                // get the N amount fixed through symbiosis
+                // get the amount of N fixed through symbiosis
                 EvaluateNitrogenFixation();
 
-                // get the N remobilised from senesced tissue
+                // get the amount of N remobilised from senesced tissue
                 EvaluateSenescedNRemobilisation();
 
-                // get the amount of N demanded from soil
+                // get the amount of N demanded from the soil
                 EvaluateSoilNitrogenDemand();
 
-                // get the soil N demand
+                // get the total soil N demand
                 double NDemand = mySoilNDemand * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 // estimate fraction of N used up
@@ -498,6 +498,9 @@ namespace Models.AgPasture
             // Note: need to do this again as these depend on soil available N, which changes each iteration of
             //  the Runge-Kutta process to determine N uptake. As the value of available N is recalculated above,
             //  we need to re-estimate these tow to ensure outputs will have mass balance.
+
+            // update N remobilised from senesced tissues in each organ
+            DoSenescedNRemobilisation();
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
@@ -3692,18 +3695,20 @@ namespace Models.AgPasture
         {
             double adjNDemand = demandOptimumN * GlfSoilFertility;
             fixedN = 0.0;
+            nffSoilNSupply = 1.0;
             if (isLegume && adjNDemand > Epsilon)
             {
                 // start with minimum fixation
                 fixedN = MinimumNFixation * adjNDemand;
 
-                // evaluate N stress
-                nffSoilNSupply = MathUtilities.Divide(SoilAvailableN, adjNDemand - fixedN, 1.0);
-                nffSoilNSupply = MathUtilities.Bound(nffSoilNSupply, 0.0, 1.0);
-
-                // update N fixation if under N stress
-                if (nffSoilNSupply < 0.999999)
+                // check whether more fixation is needed
+                if (MathUtilities.IsGreaterThan(adjNDemand - fixedN, 0.0, Epsilon))
                 {
+                    // evaluate N stress
+                    nffSoilNSupply = SoilAvailableN / (adjNDemand - fixedN);
+                    nffSoilNSupply = Math.Min(nffSoilNSupply, 1.0);
+
+                    // update N fixation
                     fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - nffSoilNSupply) * adjNDemand;
                 }
             }
@@ -3738,9 +3743,6 @@ namespace Models.AgPasture
                 // N demand is not fulfilled by fixation plus remobilisation, N uptake will be required
                 senescedNRemobilised = remobilisableSenescedN;
             }
-
-            // Update N remobilised in each organ
-            DoSenescedNRemobilisation();
         }
 
         /// <summary>Removes a fraction of nitrogen remobilisable from senesced tissues (move to new growth).</summary>
