@@ -496,29 +496,34 @@ namespace Models.AgPasture
             EvaluateNitrogenFixation();
             EvaluateSenescedNRemobilisation();
             // Note: need to do this again as these depend on soil available N, which changes each iteration of
-            //  the Runge-Kutta process to determine N uptake. As the value of available N is recalculated above,
-            //  we need to re-estimate these tow to ensure outputs will have mass balance.
+            //  the Runge-Kutta process used to determine N uptake. As soil available N is recalculated above,
+            //  we need to re-estimate these two to ensure outputs will conform to the final soil N estimate.
+            // This does not seem to be sufficient to ensure that mass balance is maintained (i.e. the sum of
+            //  fixation, remobilisation, and uptake can be greater than N demand). This imbalance seems to be
+            //  small in general and to happen rarely. Adding the checks below to ensure balance is restored.
 
             // check for mass balance and adjust flows if needed
             double newGrowthN = fixedN + senescedNRemobilised + SoilUptakeN;
-            double excessN = newGrowthN - DemandAtLuxuryN * GlfSoilFertility;
-            if (excessN > 0.0)
+            double excessN = newGrowthN - DemandAtLuxuryN * GlfSoilFertility; // should be <= 0.0
+            if (MathUtilities.IsGreaterThan(excessN, fixedN + senescedNRemobilised, EpsilonN))
             {
-                if (excessN > fixedN)
-                {
-                    excessN -= fixedN;
-                    fixedN = 0.0;
-                    nffSoilNSupply = 1.0;
-                    if (excessN > senescedNRemobilised)
-                    {
-                        throw new Exception($"Mass balance error while computing N uptake and fixation in {Name}");
-                    }
-                    senescedNRemobilised -= excessN;
-                }
-                else
-                {
-                    fixedN -= excessN;
-                }
+                // imbalance is too large to fix. Something must have gone horribly wrong
+                throw new Exception($"Mass balance error while computing N uptake and fixation in {Name}");
+            }
+            if (MathUtilities.IsGreaterThan(excessN, fixedN, EpsilonN))
+            {
+                // reduce fixation first (plants prioritise remobilisation and uptake)
+                double remainderN = excessN - fixedN;
+                fixedN = 0.0;
+                nffSoilNSupply = 1.0;
+
+                // reduce the remainder from remobilisation
+                senescedNRemobilised -= remainderN;
+            }
+            else
+            {
+                // reduce fixation only (plants prioritise remobilisation and uptake)
+                fixedN -= excessN;
             }
 
             // update N remobilised from senesced tissues in each organ
