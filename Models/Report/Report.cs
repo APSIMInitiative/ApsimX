@@ -149,14 +149,41 @@ namespace Models
             {
                 if (column is ReportColumn col)
                 {
-                    IEnumerable<VariableComposite> allMatchingModels = Node.GetAllObjects(col.VariableName, LocatorFlags.ThrowOnError);
+
+                    List<VariableComposite> allMatchingModels = new List<VariableComposite>();
+                    try
+                    {
+                        allMatchingModels = Node.GetAllObjects(col.VariableName).ToList();
+                    }
+                    catch
+                    {
+                        allMatchingModels.Clear();
+                    }
                     List<VariableComposite> allMatchingModelsExcludingUnderFactors = new List<VariableComposite>();
+
+                    bool skipTest = false;
                     foreach(VariableComposite variable in allMatchingModels)
+                    {
                         if (variable.FirstModel != null)
+                        {
+                            //Edge case. Zone.Name is added to reports by default, but will break this check if something 
+                            //else has the same name. So we want to exclude it to avoid user confusion
+                            if (variable.FirstModel is Zone && variable.Name == "Name")
+                                skipTest = true;
+                            
+                            //Remove any matches that are under a factorial, as these are replacing, not duplicates.
                             if (variable.FirstModel.Node.FindParent<Factors>(recurse:true) == null)
-                                allMatchingModelsExcludingUnderFactors.Add(variable);
-                    if (allMatchingModelsExcludingUnderFactors.Count() > 1)
-                        throw new Exception($"Reporting variable {col.VariableName} is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.");
+                                allMatchingModelsExcludingUnderFactors.Add(variable);                                
+                        }
+                    }
+                        
+                    if (!skipTest && allMatchingModelsExcludingUnderFactors.Count() > 1)
+                    {
+                        string error = $"Reporting variable {col.VariableName} is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.\nDuplicates are: \n";
+                        foreach(VariableComposite variable in allMatchingModelsExcludingUnderFactors)
+                            error += $"{variable.FirstModel.FullPath}\n";
+                        throw new Exception(error);
+                    }
                 }
             }
 
