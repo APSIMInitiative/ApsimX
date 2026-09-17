@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using APSIM.Core;
+using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.CLEM;
 using Models.Core;
@@ -342,7 +343,16 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        Columns.Add(new ReportColumn(fullVariableName, clock, Structure, events, GroupByVariableName, from, to));
+                    {
+                        IReportColumn newColumn = new ReportColumn(fullVariableName, clock, Structure, events, GroupByVariableName, from, to);
+                        Columns.Add(newColumn);
+                        if (newColumn is ReportColumn column)
+                        {
+                            IEnumerable<VariableComposite> allMatchingModels = Node.GetAllObjects(column.VariableName, LocatorFlags.ThrowOnError);
+                            if (allMatchingModels.Count() > 1)
+                                throw new Exception($"Reporting variable {column.VariableName} is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.");
+                        }
+                    }
                 }
                 catch (Exception err)
                 {
