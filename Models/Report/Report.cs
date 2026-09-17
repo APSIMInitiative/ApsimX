@@ -150,7 +150,6 @@ namespace Models
             {
                 if (column is ReportColumn col)
                 {
-
                     List<VariableComposite> allMatchingModels = new List<VariableComposite>();
                     try
                     {
@@ -185,7 +184,6 @@ namespace Models
                                 allMatchingModelsExcludingUnderFactors.Add(variable);                                
                         }
                     }
-                        
                     if (!skipTest && allMatchingModelsExcludingUnderFactors.Count() > 1)
                     {
                         string error = $"Reporting variable '{col.VariableName}' in Report '{FullPath}' is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.\nDuplicates are: \n";
