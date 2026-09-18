@@ -168,7 +168,7 @@ namespace Models
                         {
                             //Edge case. Names are often inserted as factors (simulation, zone etc), and if two things 
                             // share the same name, we don't care which is reported
-                            if (variable.Name == "Name")
+                            if (variable.Name == "Name" && (variable.FirstModel is Zone || variable.FirstModel is Simulation))
                                 skipTest = true;
 
                             //SimpleGrazing can create more ones at runtime which just straight breaks this test
