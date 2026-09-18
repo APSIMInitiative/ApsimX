@@ -6779,7 +6779,10 @@
     {
       "$type": "Models.PreSimulationTools.Virtual, Models",
       "FileName": "%root%/Tests/Validation/Pinus/Pinus.apsimx",
-      "ModelPath": "[Simulations]",
+      "ModelPaths": [
+        "[DataStore]",
+        "[Validation].Temperate.BFG"
+      ],
       "Name": "Virtual",
       "ResourceName": null,
       "Children": [],
