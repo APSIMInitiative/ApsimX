@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using APSIM.Core;
-using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
+using Models.AgPasture;
 using Models.CLEM;
 using Models.Core;
 using Models.Factorial;
@@ -150,14 +150,48 @@ namespace Models
             {
                 if (column is ReportColumn col)
                 {
-                    IEnumerable<VariableComposite> allMatchingModels = Node.GetAllObjects(col.VariableName, LocatorFlags.ThrowOnError);
-                    List<VariableComposite> allMatchingModelsExcludingUnderFactors = new List<VariableComposite>();
+                    List<VariableComposite> allMatchingModels = new List<VariableComposite>();
+                    try
+                    {
+                        allMatchingModels = Node.GetAllObjects(col.VariableName).ToList();
+                    }
+                    catch
+                    {
+                        allMatchingModels.Clear();
+                    }
+
+                    List<IVariable> allMatchingModelsExcludingUnderFactors = new List<IVariable>();
+                    bool skipTest = false;
                     foreach(VariableComposite variable in allMatchingModels)
-                        if (variable.FirstModel != null)
-                            if (variable.FirstModel.Node.FindParent<Factors>(recurse:true) == null)
-                                allMatchingModelsExcludingUnderFactors.Add(variable);
-                    if (allMatchingModelsExcludingUnderFactors.Count() > 1)
-                        throw new Exception($"Reporting variable {col.VariableName} is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.");
+                    {
+                        foreach(IVariable modelVariable in variable.AllModels)
+                        {
+                            INodeModel model = modelVariable.Value as INodeModel;
+                            //Edge case. Names are often inserted as factors (simulation, zone etc), and if two things 
+                            // share the same name, we don't care which is reported
+                            if (variable.Name == "Name" && (model is Zone || model is Simulation))
+                                skipTest = true;
+
+                            //SimpleGrazing can create more ones at runtime which just straight breaks this test
+                            //If simple graing can be rewritten to avoid putting those zones into scope, this should be 
+                            //removed.
+                            SimpleGrazing grazing = model.Node.FindInScope<SimpleGrazing>();
+                            if (grazing != null)
+                                if (grazing.PseudoPatches == false && model.Node.FindParent<Zone>(recurse:true) != null)
+                                    skipTest = true;
+                            
+                            //Remove any matches that are under a factorial, as these are replacing, not duplicates.
+                            if (model.Node.FindParent<Factors>(recurse:true) == null)
+                                allMatchingModelsExcludingUnderFactors.Add(modelVariable);                                
+                        }
+                    }
+                    if (!skipTest && allMatchingModelsExcludingUnderFactors.Count() > 1)
+                    {
+                        string error = $"Reporting variable '{col.VariableName}' in Report '{FullPath}' is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.\nDuplicates are: \n";
+                        foreach(IVariable variable in allMatchingModelsExcludingUnderFactors)
+                            error += $"{(variable.Value as INodeModel).FullPath}\n";
+                        throw new Exception(error);
+                    }
                 }
             }
 
