@@ -159,36 +159,37 @@ namespace Models
                     {
                         allMatchingModels.Clear();
                     }
-                    List<VariableComposite> allMatchingModelsExcludingUnderFactors = new List<VariableComposite>();
 
+                    List<IVariable> allMatchingModelsExcludingUnderFactors = new List<IVariable>();
                     bool skipTest = false;
                     foreach(VariableComposite variable in allMatchingModels)
                     {
-                        if (variable.FirstModel != null)
+                        foreach(IVariable modelVariable in variable.AllModels)
                         {
+                            INodeModel model = modelVariable.Value as INodeModel;
                             //Edge case. Names are often inserted as factors (simulation, zone etc), and if two things 
                             // share the same name, we don't care which is reported
-                            if (variable.Name == "Name" && (variable.FirstModel is Zone || variable.FirstModel is Simulation))
+                            if (variable.Name == "Name" && (model is Zone || model is Simulation))
                                 skipTest = true;
 
                             //SimpleGrazing can create more ones at runtime which just straight breaks this test
                             //If simple graing can be rewritten to avoid putting those zones into scope, this should be 
                             //removed.
-                            SimpleGrazing grazing = variable.FirstModel.Node.FindInScope<SimpleGrazing>();
+                            SimpleGrazing grazing = model.Node.FindInScope<SimpleGrazing>();
                             if (grazing != null)
-                                if (grazing.PseudoPatches == false && variable.FirstModel.Node.FindParent<Zone>(recurse:true) != null)
+                                if (grazing.PseudoPatches == false && model.Node.FindParent<Zone>(recurse:true) != null)
                                     skipTest = true;
                             
                             //Remove any matches that are under a factorial, as these are replacing, not duplicates.
-                            if (variable.FirstModel.Node.FindParent<Factors>(recurse:true) == null)
-                                allMatchingModelsExcludingUnderFactors.Add(variable);                                
+                            if (model.Node.FindParent<Factors>(recurse:true) == null)
+                                allMatchingModelsExcludingUnderFactors.Add(modelVariable);                                
                         }
                     }
                     if (!skipTest && allMatchingModelsExcludingUnderFactors.Count() > 1)
                     {
                         string error = $"Reporting variable '{col.VariableName}' in Report '{FullPath}' is ambigious and could refer to multiple models. Either rename one of the models you are trying to report, or give a longer path to differentiate between models with the same name/type.\nDuplicates are: \n";
-                        foreach(VariableComposite variable in allMatchingModelsExcludingUnderFactors)
-                            error += $"{variable.FirstModel.FullPath}\n";
+                        foreach(IVariable variable in allMatchingModelsExcludingUnderFactors)
+                            error += $"{(variable.Value as INodeModel).FullPath}\n";
                         throw new Exception(error);
                     }
                 }
