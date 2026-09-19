@@ -148,7 +148,7 @@ namespace Models.AgPasture
             biomass.N += NTransferredIn - (NTransferredOut + NRemobilised);
 
             // ensure that small values are zeroed (prevent small negatives)
-            if (MathUtilities.FloatsAreEqual(biomass.Wt, 0.0, Epsilon))
+            if (Math.Abs(biomass.Wt) < Epsilon)
             {
                 biomass.Wt = 0.0;
                 biomass.N = 0.0;
@@ -168,11 +168,11 @@ namespace Models.AgPasture
             if (biomass.Wt > 0.0)
             {
                 double nConc = biomass.N / biomass.Wt;
-                if (MathUtilities.IsLessThan(nConc, (Parent as PastureAboveGroundOrgan).NConcMinimum, Epsilon))
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMinimum < -Epsilon)
                 {
                     throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum");
                 }
-                if (MathUtilities.IsGreaterThan(nConc, (Parent as PastureAboveGroundOrgan).NConcMaximum, Epsilon))
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMaximum > Epsilon)
                 {
                     throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum");
                 }

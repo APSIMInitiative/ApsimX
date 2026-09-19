@@ -246,7 +246,7 @@ namespace Models.AgPasture
                     nByLayer[layer] += nTransferredInByLayer[layer] - (nTransferredOutByLayer[layer] + nRemobilisedByLayer[layer]);
 
                     // ensure that small values are zeroed (prevent small negatives)
-                    if (MathUtilities.FloatsAreEqual(dmByLayer[layer], 0.0, Epsilon))
+                    if (Math.Abs(dmByLayer[layer]) < Epsilon)
                     {
                         dmByLayer[layer] = 0.0;
                         nByLayer[layer] = 0.0;
@@ -266,11 +266,11 @@ namespace Models.AgPasture
                     if (dmByLayer[layer] > 0.0)
                     {
                         double nConcLayer = nByLayer[layer] / dmByLayer[layer];
-                        if (MathUtilities.IsLessThan(nConcLayer, (Parent as PastureBelowGroundOrgan).NConcMinimum, Epsilon))
+                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMinimum < -Epsilon)
                         {
                             throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum in layer {layer}");
                         }
-                        if (MathUtilities.IsGreaterThan(nConcLayer, (Parent as PastureBelowGroundOrgan).NConcMaximum, Epsilon))
+                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMaximum > Epsilon)
                         {
                             throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum in layer {layer}");
                         }

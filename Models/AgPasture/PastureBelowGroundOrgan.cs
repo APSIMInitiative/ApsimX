@@ -383,7 +383,7 @@ namespace Models.AgPasture
             MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[nLayers - 1]);
             for (int z = 0; z < nLayers; z++)
             {
-                if (MathUtilities.FloatsAreEqual(soilCropData.XF[z], 0) || MathUtilities.FloatsAreEqual(soilCropData.KL[z], 0))
+                if (soilCropData.XF[z] < Epsilon || soilCropData.KL[z] < Epsilon)
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
@@ -527,8 +527,10 @@ namespace Models.AgPasture
             }
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
-            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
+            double prevTotal = previousDM + DMGrowth - DMDetached;
+            bool dmIsOk = Math.Abs(prevTotal - DMTotal) < 0.000001;
+            prevTotal = previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached;
+            bool nIsOk = Math.Abs(prevTotal - NTotal) < 0.000001;
             return (dmIsOk || nIsOk);
         }
 
@@ -769,7 +771,7 @@ namespace Models.AgPasture
             cumProportion += TargetDistribution[BottomLayer] * layerFrac;
 
             // normalise the weights to be a fraction, adds up to one
-            if (MathUtilities.IsGreaterThan(cumProportion, 0))
+            if (cumProportion > 0.0)
             {
                 for (int layer = 0; layer < BottomLayer; layer++)
                 {
@@ -791,7 +793,7 @@ namespace Models.AgPasture
         /// <param name="rootNToAdd">Nitrogen in root grown (kg/ha).</param>
         public void DoRootGrowthAllocation(double rootDMToAdd, double rootNToAdd)
         {
-            if (MathUtilities.IsGreaterThan(rootDMToAdd, 0.0))
+            if (rootDMToAdd > Epsilon)
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] newGrowthFraction;
@@ -851,7 +853,7 @@ namespace Models.AgPasture
         /// <param name="amount">Amount of water to remove.</param>
         public void PerformWaterUptake(double[] amount)
         {
-            if (MathUtilities.IsGreaterThan(amount.Sum(), 0.0))
+            if (amount.Sum() > Epsilon)
             {
                 Array.Copy(amount, mySoilWaterUptake, nLayers);
                 waterBalance.RemoveWater(amount);
@@ -867,12 +869,12 @@ namespace Models.AgPasture
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
         {
-            if (MathUtilities.IsGreaterThan(nh4Amount.Sum(), 0.0))
+            if (nh4Amount.Sum() > 0.01 * Epsilon)
             {
                 Array.Copy(nh4Amount, mySoilNH4Uptake, nLayers);
                 nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
             }
-            if (MathUtilities.IsGreaterThan(no3Amount.Sum(), 0.0))
+            if (no3Amount.Sum() > 0.01 * Epsilon)
             {
                 Array.Copy(no3Amount, mySoilNO3Uptake, nLayers);
                 no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));

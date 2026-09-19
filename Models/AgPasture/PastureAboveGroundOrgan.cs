@@ -415,12 +415,12 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         public void KillOrgan(double fractionToRemove)
         {
-            if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
+            if (1.0 - fractionToRemove > Epsilon)
             {
                 foreach (GenericTissue tissue in LiveTissue)
                 {
                     DeadTissue.AddBiomass(tissue.DM.Wt * fractionToRemove, tissue.DM.N * fractionToRemove);
-                    tissue.AddBiomass(-tissue.DM.Wt * fractionToRemove, -tissue.DM.N * fractionToRemove);
+                    tissue.RemoveBiomass(fractionToRemove, 0.0);
                 }
             }
 
@@ -464,8 +464,10 @@ namespace Models.AgPasture
             CalculateStates();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
-            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
+            double prevTotal = previousDM + DMGrowth - DMDetached;
+            bool dmIsOk = Math.Abs(prevTotal - DMTotal) < 0.000001;
+            prevTotal = previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached;
+            bool nIsOk = Math.Abs(prevTotal - NTotal) < 0.000001;
             return (dmIsOk || nIsOk);
         }
 

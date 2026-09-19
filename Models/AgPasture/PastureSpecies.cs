@@ -507,12 +507,12 @@ namespace Models.AgPasture
             // check for mass balance and adjust flows if needed
             double newGrowthN = fixedN + senescedNRemobilised + SoilUptakeN;
             double excessN = newGrowthN - DemandAtLuxuryN * GlfSoilFertility; // should be <= 0.0
-            if (MathUtilities.IsGreaterThan(excessN, fixedN + senescedNRemobilised, EpsilonN))
+            if (excessN - (fixedN + senescedNRemobilised) > EpsilonN)
             {
                 // imbalance is too large to fix. Something must have gone horribly wrong
                 throw new Exception($"Mass balance error while computing N uptake and fixation in {Name}");
             }
-            if (MathUtilities.IsGreaterThan(excessN, fixedN, EpsilonN))
+            if (excessN - fixedN > EpsilonN)
             {
                 // reduce fixation first (plants prioritise remobilisation and uptake)
                 double remainderN = excessN - fixedN;
@@ -2416,8 +2416,8 @@ namespace Models.AgPasture
         [Units("mm")]
         public double RootDepth
         {
-            get 
-            { 
+            get
+            {
                 double depthTotal = roots[0].Depth;
                 //foreach (PastureBelowGroundOrgan root in roots)
                 //    depthTotal = Math.Max(root.Depth, depthTotal);
@@ -3089,7 +3089,7 @@ namespace Models.AgPasture
         /// <summary>Computes the daily progress through germination.</summary>
         internal void UpdateNConcentrationsDueToCO2()
         {
-            if (!MathUtilities.FloatsAreEqual(myMetData.CO2, currentCO2, Epsilon))
+            if (Math.Abs(myMetData.CO2 - currentCO2) > Epsilon)
             {
                 // get the CO2 effects on N requirements (optimum N)
                 co2EffectOnOptimumN = CO2EffectsOnOptimumN();
@@ -3166,7 +3166,7 @@ namespace Models.AgPasture
         private double DailyPotentialPhotosynthesis()
         {
             // CO2 effects on Pmax
-            if (!MathUtilities.FloatsAreEqual(myMetData.CO2, currentCO2, Epsilon))
+            if (Math.Abs(myMetData.CO2 - currentCO2) > Epsilon)
             {
                 glfCO2 = CO2EffectOnPhotosynthesis();
             }
@@ -3444,7 +3444,7 @@ namespace Models.AgPasture
                 double luxuryNDemand = demandLuxuryN * Math.Min(glfNSupply, GlfSoilFertility);
 
                 // allocate new N to growing tissues
-                if (MathUtilities.IsLessThan(dNewGrowthN, optimumNDemand, EpsilonN))
+                if (dNewGrowthN - optimumNDemand < EpsilonN)
                 {
                     // N available for new growth is not enough to meet basic demand (to optimum N conc)
                     // start by allocating N at minimum concentration
@@ -3484,7 +3484,7 @@ namespace Models.AgPasture
                     dGrowthStolonN += remainingN * fractionToStolonN;
                     dGrowthRootN += remainingN * fractionToRootN;
                 }
-                else if (MathUtilities.IsLessThanOrEqual(dNewGrowthN, luxuryNDemand, EpsilonN))
+                else if ((dNewGrowthN - luxuryNDemand < EpsilonN) || (Math.Abs(dNewGrowthN - luxuryNDemand) < EpsilonN))
                 {
                     // N available meets demand for optimum growth and then some luxury uptake
                     // start by allocating N at optimum concentration
@@ -3532,33 +3532,33 @@ namespace Models.AgPasture
                 if (dGrowthLeafDM > 0.0)
                 {
                     double nConc = dGrowthLeafN / dGrowthLeafDM;
-                    if (MathUtilities.IsLessThan(nConc, Leaf.NConcMinimum))
+                    if (nConc - Leaf.NConcMinimum < -EpsilonN)
                         throw new Exception($"{Name} Leaf has N content in new growth lower than minimum");
-                    if (MathUtilities.IsGreaterThan(nConc, Leaf.NConcMaximum))
+                    if (nConc - Leaf.NConcMaximum > EpsilonN)
                         throw new Exception($"{Name} Leaf has N content in new growth greater than maximum");
                 }
                 if (dGrowthStemDM > 0.0)
                 {
                     double nConc = dGrowthStemN / dGrowthStemDM;
-                    if (MathUtilities.IsLessThan(nConc, Stem.NConcMinimum))
+                    if (nConc - Stem.NConcMinimum < -EpsilonN)
                         throw new Exception($"{Name} Stem has N content in new growth lower than minimum");
-                    if (MathUtilities.IsGreaterThan(nConc, Stem.NConcMaximum))
+                    if (nConc - Stem.NConcMaximum > EpsilonN)
                         throw new Exception($"{Name} Stem has N content in new growth greater than maximum");
                 }
                 if (dGrowthStolonDM > 0.0)
                 {
                     double nConc = dGrowthStolonN / dGrowthStolonDM;
-                    if (MathUtilities.IsLessThan(nConc, Stolon.NConcMinimum))
+                    if (nConc - Stolon.NConcMinimum < -EpsilonN)
                         throw new Exception($"{Name} Stolon has N content in new growth lower than minimum");
-                    if (MathUtilities.IsGreaterThan(nConc, Stolon.NConcMaximum))
+                    if (nConc - Stolon.NConcMaximum > EpsilonN)
                         throw new Exception($"{Name} Stolon has N content in new growth greater than maximum");
                 }
                 if (dGrowthRootDM > 0.0)
                 {
                     double nConc = dGrowthRootN / dGrowthRootDM;
-                    if (MathUtilities.IsLessThan(nConc, Root.NConcMinimum))
+                    if (nConc - Root.NConcMinimum < -EpsilonN)
                         throw new Exception($"{Name} Root has N content in new growth lower than minimum");
-                    if (MathUtilities.IsGreaterThan(nConc, Root.NConcMaximum))
+                    if (nConc - Root.NConcMaximum > EpsilonN)
                         throw new Exception($"{Name} Root has N content in new growth greater than maximum");
                 }
 
@@ -3621,11 +3621,13 @@ namespace Models.AgPasture
             //     Examples\Tutorials\Sensitivity_SobolMethod.apsimx
 
             // check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(previousDM + dNewGrowthWt - detachedShootDM - detachedRootDM, TotalWt, 0.00001))
+            double prevTotal = previousDM + dNewGrowthWt - detachedShootDM - detachedRootDM;
+            if (Math.Abs(prevTotal - TotalWt) > 0.00001)
             {
                 throw new Exception($"Growth and tissue turnover resulted in loss of mass balance (DM amounts) in {Name}");
             }
-            if (!MathUtilities.FloatsAreEqual(previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
+            prevTotal = previousN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN;
+            if (Math.Abs(prevTotal - TotalN) > 0.00001)
             {
                 throw new Exception($"Growth and tissue turnover resulted in loss of mass balance (N amounts) in {Name}");
             }
@@ -3734,7 +3736,7 @@ namespace Models.AgPasture
                 fixedN = MinimumNFixation * adjNDemand;
 
                 // check whether more fixation is needed
-                if (MathUtilities.IsGreaterThan(adjNDemand - fixedN, 0.0, EpsilonN))
+                if (adjNDemand - fixedN > EpsilonN)
                 {
                     // evaluate N stress
                     nffSoilNSupply = SoilAvailableN / (adjNDemand - fixedN);
@@ -3760,12 +3762,12 @@ namespace Models.AgPasture
         {
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN, EpsilonN))
+            if ((adjNDemand - fixedN < EpsilonN) || (Math.Abs(adjNDemand - fixedN) < EpsilonN))
             {
                 // N demand is fulfilled by fixation alone, no remobilisation
                 senescedNRemobilised = 0.0;
             }
-            else if (MathUtilities.IsLessThan(adjNDemand, fixedN + remobilisableSenescedN, EpsilonN))
+            else if (adjNDemand - (fixedN + remobilisableSenescedN) < EpsilonN)
             {
                 // N demand is fulfilled by fixation plus some remobilisation
                 senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
@@ -3784,7 +3786,7 @@ namespace Models.AgPasture
             var remobilisableSenescedN = RemobilisableSenescedN;
             if (senescedNRemobilised > EpsilonN)
             {
-                if (MathUtilities.IsGreaterThan(senescedNRemobilised, remobilisableSenescedN, EpsilonN))
+                if (senescedNRemobilised - remobilisableSenescedN > EpsilonN)
                 {
                     throw new Exception($"{Name} is trying to remobilise more N than is available");
                 }
@@ -3802,7 +3804,7 @@ namespace Models.AgPasture
         internal void EvaluateSoilNitrogenDemand()
         {
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
-            if (MathUtilities.IsLessThanOrEqual(adjNDemand, fixedN + senescedNRemobilised, EpsilonN))
+            if ((adjNDemand - (fixedN + senescedNRemobilised) < EpsilonN) || (Math.Abs(adjNDemand - (fixedN + senescedNRemobilised)) < EpsilonN))
             {
                 // N demand is fulfilled by fixation and/or N remobilised from senesced material
                 mySoilNDemand = 0.0;
@@ -3827,7 +3829,7 @@ namespace Models.AgPasture
             if ((Nmissing > EpsilonN) && (RemobilisableLuxuryN > EpsilonN))
             {
                 // there is still unfulfilled N demand for growth, remobilise some luxury N
-                if (MathUtilities.IsLessThanOrEqual(RemobilisableLuxuryN, Nmissing, EpsilonN))
+                if ((RemobilisableLuxuryN - Nmissing < EpsilonN) || (Math.Abs(RemobilisableLuxuryN - Nmissing) < EpsilonN))
                 {
                     // all luxury N available can be used up
                     luxuryNRemobilised = RemobilisableLuxuryN;
@@ -4137,7 +4139,7 @@ namespace Models.AgPasture
         /// <summary>Removes a given amount of biomass (DM and N) from the plant.</summary>
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
         /// <param name="amount">The biomass amount (kg DM/ha)</param>
-        /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount')</exception>
+        /// <exception cref="System.Exception"> Did not recognise the type of amount to remove (use 'SetResidueAmount' or 'SetRemoveAmount')</exception>
         public Biomass RemoveBiomass(string type, double amount)
         {
             if (isAlive && Harvestable.Wt > Epsilon)
@@ -4156,14 +4158,14 @@ namespace Models.AgPasture
                 }
                 else
                 {
-                    throw new Exception($"{Name} did not recognised the type of amount to remove (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
+                    throw new Exception($"{Name} did not recognise the type of amount to remove (use \'SetResidueAmount\' or \'SetRemoveAmount\')");
                 }
 
                 // get the actual amount to remove
                 double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
 
                 // do the actual removal
-                if (!MathUtilities.FloatsAreEqual(amountToRemove, 0.0, 0.0001))
+                if (amountToRemove > Epsilon)
                 {
                     return RemoveBiomass(amountToRemove);
                 }
@@ -4243,7 +4245,7 @@ namespace Models.AgPasture
                 // set output values and check balance
                 defoliatedDM = preRemovalDMShoot - AboveGroundWt;
                 defoliatedN = preRemovalNShoot - AboveGroundN;
-                if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove, 0.000001))
+                if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove, 0.0000001))
                 {
                     throw new Exception($"Removal of DM from {Name} resulted in loss of mass balance");
                 }
@@ -4340,7 +4342,7 @@ namespace Models.AgPasture
             {
                 return 0.0;
             }
-            if (MathUtilities.IsGreaterThanOrEqual(dNewGrowthN, demandOptimumN, EpsilonN))
+            if ((dNewGrowthN - demandOptimumN > EpsilonN) || (Math.Abs(dNewGrowthN - demandOptimumN) < EpsilonN))
             {
                 return 1.0;
             }
@@ -4607,7 +4609,7 @@ namespace Models.AgPasture
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += waterBalance.SWmm[layer] * fractionLayer;
                 myWSat += soilPhysical.SATmm[layer] * fractionLayer;
-                if (MathUtilities.IsLessThan(MinimumWaterFreePorosity, 0.0, Epsilon))
+                if (MinimumWaterFreePorosity < Epsilon)
                 {
                     myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
                 }
