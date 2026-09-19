@@ -501,6 +501,8 @@ namespace Models.AgPasture
             // This does not seem to be sufficient to ensure that mass balance is maintained (i.e. the sum of
             //  fixation, remobilisation, and uptake can be greater than N demand). This imbalance seems to be
             //  small in general and to happen rarely. Adding the checks below to ensure balance is restored.
+            // Guessing that the imbalance arises because there is no guarantee that the amount of N available
+            //  in th soil re-evaluated above is 'harmonised' with the values used to compute N fixation...
 
             // check for mass balance and adjust flows if needed
             double newGrowthN = fixedN + senescedNRemobilised + SoilUptakeN;
@@ -520,7 +522,7 @@ namespace Models.AgPasture
                 // reduce the remainder from remobilisation
                 senescedNRemobilised -= remainderN;
             }
-            else
+            else if (excessN > EpsilonN)
             {
                 // reduce fixation only (plants prioritise remobilisation and uptake)
                 fixedN -= excessN;
