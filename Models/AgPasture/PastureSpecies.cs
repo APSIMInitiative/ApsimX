@@ -2776,7 +2776,17 @@ namespace Models.AgPasture
                 initialDMFractions = initialDMFractionsForbs;
             }
 
-            if (InitialShootDM >= 0 && InitialRootDM >= 0 && InitialRootDepth >= 0)
+            if ((InitialShootDM < 0.0) || (InitialRootDM < 0.0) || (InitialRootDepth < 0.0))
+            {
+                throw new Exception($"Initial values for biomass of {Name} are negative");
+            }
+
+            if (InitialShootDM + InitialRootDM < ToleranceForDM)
+            {
+                // when initial biomass is set to zero, plant is dead
+                EndCrop();
+            }
+            else
             {
                 // determine what biomass to reset the organs to. If a negative InitialShootDM
                 //  was specified by user then that means the plant isn't sown yet so reset
@@ -2812,19 +2822,8 @@ namespace Models.AgPasture
                                          rootN: rootDM * roots[0].NConcOptimum,
                                          rootDepth: InitialRootDepth);
 
-                if (InitialShootDM > 0 && InitialRootDM > 0 && InitialRootDM > 0)
-                {
-                    phenologicStage = 1;
-                    isAlive = true;
-                }
-                else if (InitialShootDM == 0 && InitialRootDM == 0 && InitialRootDepth == 0)
-                {
-                    EndCrop();
-                }
-            }
-            else
-            {
-                throw new Exception($"Initial values for biomass in {Name} are negative");
+                phenologicStage = 1;
+                isAlive = true;
             }
 
             // calculate the values for LAI
