@@ -78,7 +78,7 @@ namespace Models.AgPasture
         //----------------------- Constants -----------------------
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //----------------------- States -----------------------
 

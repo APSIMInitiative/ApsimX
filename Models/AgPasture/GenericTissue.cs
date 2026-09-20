@@ -31,7 +31,7 @@ namespace Models.AgPasture
         private const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //---------------------------- Parameters -----------------------
 
@@ -148,7 +148,7 @@ namespace Models.AgPasture
             biomass.N += NTransferredIn - (NTransferredOut + NRemobilised);
 
             // ensure that small values are zeroed (prevent small negatives)
-            if (Math.Abs(biomass.Wt) < Epsilon)
+            if (Math.Abs(biomass.Wt) < Tolerance)
             {
                 biomass.Wt = 0.0;
                 biomass.N = 0.0;
@@ -165,14 +165,14 @@ namespace Models.AgPasture
             }
 
             // check that N concentration are within bounds
-            if (biomass.Wt > 0.0)
+            if (biomass.Wt > Tolerance)
             {
                 double nConc = biomass.N / biomass.Wt;
-                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMinimum < -Epsilon)
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMinimum < -Tolerance)
                 {
                     throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum");
                 }
-                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMaximum > Epsilon)
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMaximum > Tolerance)
                 {
                     throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum");
                 }

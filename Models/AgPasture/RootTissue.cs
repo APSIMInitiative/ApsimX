@@ -32,7 +32,7 @@ namespace Models.AgPasture
         private const double CarbonConcentration = 0.4;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //---------------------------- Parameters -----------------------
 
@@ -246,7 +246,7 @@ namespace Models.AgPasture
                     nByLayer[layer] += nTransferredInByLayer[layer] - (nTransferredOutByLayer[layer] + nRemobilisedByLayer[layer]);
 
                     // ensure that small values are zeroed (prevent small negatives)
-                    if (Math.Abs(dmByLayer[layer]) < Epsilon)
+                    if (Math.Abs(dmByLayer[layer]) < Tolerance)
                     {
                         dmByLayer[layer] = 0.0;
                         nByLayer[layer] = 0.0;
@@ -263,14 +263,14 @@ namespace Models.AgPasture
                     }
 
                     // check that N concentration are within bounds
-                    if (dmByLayer[layer] > 0.0)
+                    if (dmByLayer[layer] > Tolerance)
                     {
                         double nConcLayer = nByLayer[layer] / dmByLayer[layer];
-                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMinimum < -Epsilon)
+                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMinimum < -Tolerance)
                         {
                             throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum in layer {layer}");
                         }
-                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMaximum > Epsilon)
+                        if (nConcLayer - (Parent as PastureBelowGroundOrgan).NConcMaximum > Tolerance)
                         {
                             throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum in layer {layer}");
                         }

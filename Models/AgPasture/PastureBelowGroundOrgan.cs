@@ -138,7 +138,7 @@ namespace Models.AgPasture
         //----------------------- Constants -----------------------
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //----------------------- States -----------------------
 
@@ -383,7 +383,7 @@ namespace Models.AgPasture
             MaximumAllowedDepth = Math.Min(MaximumPotentialRootingDepth, soilPhysical.ThicknessCumulative[nLayers - 1]);
             for (int z = 0; z < nLayers; z++)
             {
-                if (soilCropData.XF[z] < Epsilon || soilCropData.KL[z] < Epsilon)
+                if (soilCropData.XF[z] < Tolerance || soilCropData.KL[z] < Tolerance)
                 { // root depth limited by some soil issue
                     if (z > 0)
                     {
@@ -797,7 +797,7 @@ namespace Models.AgPasture
         /// <param name="rootNToAdd">Nitrogen in root grown (kg/ha).</param>
         public void DoRootGrowthAllocation(double rootDMToAdd, double rootNToAdd)
         {
-            if (rootDMToAdd > Epsilon)
+            if (rootDMToAdd > 0.0)
             {
                 // root DM is changing due to growth, check potential changes in distribution
                 double[] newGrowthFraction;
@@ -846,7 +846,7 @@ namespace Models.AgPasture
         public void EvaluateRootElongation(double netGrowthDM, double temperatureLimitingFactor, double soilSupplyFactor)
         {
             // check changes in root depth
-            if (netGrowthDM > 0.0)
+            if (netGrowthDM > Tolerance)
             {
                 double dRootDepth = ElongationRate * soilCropData.XF[BottomLayer] * temperatureLimitingFactor * soilSupplyFactor;
                 Depth = Math.Min(MaximumAllowedDepth, Math.Max(MinimumRootingDepth, Depth + dRootDepth));
@@ -857,7 +857,7 @@ namespace Models.AgPasture
         /// <param name="amount">Amount of water to remove.</param>
         public void PerformWaterUptake(double[] amount)
         {
-            if (amount.Sum() > Epsilon)
+            if (amount.Sum() > 0.0)
             {
                 Array.Copy(amount, mySoilWaterUptake, nLayers);
                 waterBalance.RemoveWater(amount);
@@ -873,12 +873,12 @@ namespace Models.AgPasture
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
         {
-            if (nh4Amount.Sum() > 0.01 * Epsilon)
+            if (nh4Amount.Sum() > 0.0)
             {
                 Array.Copy(nh4Amount, mySoilNH4Uptake, nLayers);
                 nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
             }
-            if (no3Amount.Sum() > 0.01 * Epsilon)
+            if (no3Amount.Sum() > 0.0)
             {
                 Array.Copy(no3Amount, mySoilNO3Uptake, nLayers);
                 no3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(no3.kgha, no3Amount));

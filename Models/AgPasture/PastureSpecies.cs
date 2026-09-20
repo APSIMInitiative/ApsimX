@@ -370,7 +370,7 @@ namespace Models.AgPasture
 
                 // 3. estimate fraction of water used up
                 double fractionUsed = 0.0;
-                if (waterSupply > Epsilon)
+                if (waterSupply > 0.0)
                 {
                     fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
                 }
@@ -439,9 +439,9 @@ namespace Models.AgPasture
 
                 // estimate fraction of N used up
                 double fractionUsed = 0.0;
-                if (NSupply > EpsilonN)
+                if (NSupply > ToleranceForN)
                 {
-                    fractionUsed = Math.Min(1.0, MathUtilities.Divide(NDemand, NSupply, 0));
+                    fractionUsed = Math.Min(1.0, NDemand / NSupply);
                 }
 
                 // reduce the PotentialUptakes that we pass to the soil arbitrator
@@ -507,25 +507,25 @@ namespace Models.AgPasture
             // check for mass balance and adjust flows if needed
             double newGrowthN = fixedN + senescedNRemobilised + SoilUptakeN;
             double excessN = newGrowthN - DemandAtLuxuryN * GlfSoilFertility; // should be <= 0.0
-            if (excessN - (fixedN + senescedNRemobilised) > EpsilonN)
+            if (excessN - (fixedN + senescedNRemobilised) > ToleranceForN)
             {
                 // imbalance is too large to fix. Something must have gone horribly wrong
                 throw new Exception($"Mass balance error while computing N uptake and fixation in {Name}");
             }
-            if (excessN - fixedN > EpsilonN)
+            if (excessN - fixedN > ToleranceForN)
             {
                 // reduce fixation first (plants prioritise remobilisation and uptake)
-                double remainderN = excessN - fixedN;
+                double remainderN = Math.Max(excessN - fixedN, 0.0);
                 fixedN = 0.0;
                 nffSoilNSupply = 1.0;
 
                 // reduce the remainder from remobilisation
-                senescedNRemobilised -= remainderN;
+                senescedNRemobilised = Math.Max(senescedNRemobilised - remainderN, 0.0);
             }
-            else if (excessN > EpsilonN)
+            else if (excessN > ToleranceForN)
             {
                 // reduce fixation only (plants prioritise remobilisation and uptake)
-                fixedN -= excessN;
+                fixedN = Math.Max(fixedN - excessN, 0.0);
             }
 
             // update N remobilised from senesced tissues in each organ
@@ -1396,11 +1396,11 @@ namespace Models.AgPasture
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         internal const double PotentialMEOfHerbage = 16.0;
 
-        /// <summary>Minimum significant difference between two values, of DM or water.</summary>
-        internal const double Epsilon = 0.000000001;
+        /// <summary>Minimum significant difference between two DM values.</summary>
+        internal const double ToleranceForDM = 0.000000001;
 
         /// <summary>Minimum significant difference between two values of N.</summary>
-        internal const double EpsilonN = 0.00000000001;
+        internal const double ToleranceForN = 0.01 * ToleranceForDM;
 
         /// <summary>A yes or no answer.</summary>
         public enum YesNoAnswer
@@ -3089,7 +3089,7 @@ namespace Models.AgPasture
         /// <summary>Computes the daily progress through germination.</summary>
         internal void UpdateNConcentrationsDueToCO2()
         {
-            if (Math.Abs(myMetData.CO2 - currentCO2) > Epsilon)
+            if (Math.Abs(myMetData.CO2 - currentCO2) > 0.001)
             {
                 // get the CO2 effects on N requirements (optimum N)
                 co2EffectOnOptimumN = CO2EffectsOnOptimumN();
@@ -3127,6 +3127,12 @@ namespace Models.AgPasture
             // calculate the net potential growth (kg/ha/day)
             dGrowthPotential = Math.Max(0.0, grossPhotosynthesis - respirationGrowth + remobilisedC - respirationMaintenance);
             dGrowthPotential /= CarbonConcentration;
+
+            // check for and eliminate very small values
+            if (dGrowthPotential < ToleranceForDM)
+            {
+                dGrowthPotential = 0.0;
+            }
         }
 
         /// <summary>Calculates the growth after water limitations.</summary>
@@ -3140,6 +3146,12 @@ namespace Models.AgPasture
 
             // adjust today's growth for limitations related to soil water
             dGrowthAfterWaterLimitations = dGrowthPotential * Math.Min(glfWaterSupply, glfWaterLogging);
+
+            // check for and eliminate very small values
+            if (dGrowthAfterWaterLimitations < ToleranceForDM)
+            {
+                dGrowthAfterWaterLimitations = 0.0;
+            }
         }
 
         /// <summary>Calculates the actual plant growth (after all growth limitations, before senescence).</summary>
@@ -3159,6 +3171,13 @@ namespace Models.AgPasture
             // adjust today's growth for limitations related to soil nutrient supply
             dGrowthAfterNutrientLimitations = dGrowthAfterWaterLimitations * Math.Min(glfNSupply, GlfSoilFertility);
             dNewGrowthWt = dGrowthAfterNutrientLimitations;
+
+            // check for and eliminate very small values
+            if (dGrowthAfterNutrientLimitations < ToleranceForDM)
+            {
+                dGrowthAfterNutrientLimitations = 0.0;
+                dNewGrowthWt = 0.0;
+            }
         }
 
         /// <summary>Computes the plant's gross potential growth rate.</summary>
@@ -3166,7 +3185,7 @@ namespace Models.AgPasture
         private double DailyPotentialPhotosynthesis()
         {
             // CO2 effects on Pmax
-            if (Math.Abs(myMetData.CO2 - currentCO2) > Epsilon)
+            if (Math.Abs(myMetData.CO2 - currentCO2) > 0.001)
             {
                 glfCO2 = CO2EffectOnPhotosynthesis();
             }
@@ -3302,14 +3321,11 @@ namespace Models.AgPasture
             gama = TissueTurnoverRefRateShoot * ttfTemperature * ttfMoistureShoot * ttfLeafNumber;
 
             // get the turnover rate for stolons
+            gamaS = 0.0;
             if (isLegume)
             {
                 // base rate is the same as for the other aboveground organs, but consider defoliation effect
                 gamaS = gama + ttfDefoliationEffect * (1.0 - gama);
-            }
-            else
-            {
-                gamaS = 0.0;
             }
 
             // get the turnover rate for roots
@@ -3420,7 +3436,7 @@ namespace Models.AgPasture
         /// <summary>Computes the allocation of new growth to all tissues in each organ.</summary>
         internal void EvaluateNewGrowthAllocation()
         {
-            if (dNewGrowthWt > Epsilon)
+            if (dNewGrowthWt > ToleranceForDM)
             {
                 // get the actual growth in above and below ground organs
                 dGrowthShootDM = dNewGrowthWt * fractionToShoot;
@@ -3444,7 +3460,7 @@ namespace Models.AgPasture
                 double luxuryNDemand = demandLuxuryN * Math.Min(glfNSupply, GlfSoilFertility);
 
                 // allocate new N to growing tissues
-                if (dNewGrowthN - optimumNDemand < EpsilonN)
+                if (dNewGrowthN - optimumNDemand < ToleranceForN)
                 {
                     // N available for new growth is not enough to meet basic demand (to optimum N conc)
                     // start by allocating N at minimum concentration
@@ -3458,14 +3474,14 @@ namespace Models.AgPasture
                                       + fractionToStolon * Stolon.NConcMinimum + fractionToRoot * Root.NConcMinimum);
 
                     // get the amount N that remains to be allocated
-                    double remainingN = dNewGrowthN - allocatedN;
+                    double remainingN = Math.Max(dNewGrowthN - allocatedN, 0.0);
 
                     // get basic allocation fractions for N, proportional to optimum N content
                     double Nsum = fractionToLeaf * Math.Max(0.0, Leaf.NConcOptimum - Leaf.NConcMinimum)
                                 + fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum)
                                 + fractionToStolon * Math.Max(0.0, Stolon.NConcOptimum - Stolon.NConcMinimum)
                                 + fractionToRoot * Math.Max(0.0, Root.NConcOptimum - Root.NConcMinimum);
-                    if (Nsum > 0.001 * Epsilon)
+                    if (Nsum > 0.0)
                     {
                         fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcOptimum - Leaf.NConcMinimum) / Nsum;
                         fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcOptimum - Stem.NConcMinimum) / Nsum;
@@ -3484,7 +3500,7 @@ namespace Models.AgPasture
                     dGrowthStolonN += remainingN * fractionToStolonN;
                     dGrowthRootN += remainingN * fractionToRootN;
                 }
-                else if ((dNewGrowthN - luxuryNDemand < EpsilonN) || (Math.Abs(dNewGrowthN - luxuryNDemand) < EpsilonN))
+                else if ((dNewGrowthN - luxuryNDemand < ToleranceForN) || (Math.Abs(dNewGrowthN - luxuryNDemand) < ToleranceForN))
                 {
                     // N available meets demand for optimum growth and then some luxury uptake
                     // start by allocating N at optimum concentration
@@ -3496,14 +3512,14 @@ namespace Models.AgPasture
                     // get the amount of N remaining to allocate
                     double allocatedN = dNewGrowthWt * (fractionToLeaf * Leaf.NConcOptimum + fractionToStem * Stem.NConcOptimum
                                       + fractionToStolon * Stolon.NConcOptimum + fractionToRoot * Root.NConcOptimum);
-                    double remainingN = dNewGrowthN - allocatedN;
+                    double remainingN = Math.Max(dNewGrowthN - allocatedN, 0.0);
 
                     // get allocation fractions for luxury N, proportional to maximum N concentration
                     double Nsum = fractionToLeaf * Math.Max(0.0, Leaf.NConcMaximum - Leaf.NConcOptimum)
                                 + fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum)
                                 + fractionToStolon * Math.Max(0.0, Stolon.NConcMaximum - Stolon.NConcOptimum)
                                 + fractionToRoot * Math.Max(0.0, Root.NConcMaximum - Root.NConcOptimum);
-                    if (Nsum > 0.001 * Epsilon)
+                    if (Nsum > 0.0)
                     {
                         fractionToLeafN = fractionToLeaf * Math.Max(0.0, Leaf.NConcMaximum - Leaf.NConcOptimum) / Nsum;
                         fractionToStemN = fractionToStem * Math.Max(0.0, Stem.NConcMaximum - Stem.NConcOptimum) / Nsum;
@@ -3529,36 +3545,36 @@ namespace Models.AgPasture
                 }
 
                 // check that N concentrations are within bounds
-                if (dGrowthLeafDM > 0.0)
+                if (dGrowthLeafDM > ToleranceForDM)
                 {
                     double nConc = dGrowthLeafN / dGrowthLeafDM;
-                    if (nConc - Leaf.NConcMinimum < -EpsilonN)
+                    if (nConc - Leaf.NConcMinimum < -ToleranceForN)
                         throw new Exception($"{Name} Leaf has N content in new growth lower than minimum");
-                    if (nConc - Leaf.NConcMaximum > EpsilonN)
+                    if (nConc - Leaf.NConcMaximum > ToleranceForN)
                         throw new Exception($"{Name} Leaf has N content in new growth greater than maximum");
                 }
-                if (dGrowthStemDM > 0.0)
+                if (dGrowthStemDM > ToleranceForDM)
                 {
                     double nConc = dGrowthStemN / dGrowthStemDM;
-                    if (nConc - Stem.NConcMinimum < -EpsilonN)
+                    if (nConc - Stem.NConcMinimum < -ToleranceForN)
                         throw new Exception($"{Name} Stem has N content in new growth lower than minimum");
-                    if (nConc - Stem.NConcMaximum > EpsilonN)
+                    if (nConc - Stem.NConcMaximum > ToleranceForN)
                         throw new Exception($"{Name} Stem has N content in new growth greater than maximum");
                 }
-                if (dGrowthStolonDM > 0.0)
+                if (dGrowthStolonDM > ToleranceForDM)
                 {
                     double nConc = dGrowthStolonN / dGrowthStolonDM;
-                    if (nConc - Stolon.NConcMinimum < -EpsilonN)
+                    if (nConc - Stolon.NConcMinimum < -ToleranceForN)
                         throw new Exception($"{Name} Stolon has N content in new growth lower than minimum");
-                    if (nConc - Stolon.NConcMaximum > EpsilonN)
+                    if (nConc - Stolon.NConcMaximum > ToleranceForN)
                         throw new Exception($"{Name} Stolon has N content in new growth greater than maximum");
                 }
-                if (dGrowthRootDM > 0.0)
+                if (dGrowthRootDM > ToleranceForDM)
                 {
                     double nConc = dGrowthRootN / dGrowthRootDM;
-                    if (nConc - Root.NConcMinimum < -EpsilonN)
+                    if (nConc - Root.NConcMinimum < -ToleranceForN)
                         throw new Exception($"{Name} Root has N content in new growth lower than minimum");
-                    if (nConc - Root.NConcMaximum > EpsilonN)
+                    if (nConc - Root.NConcMaximum > ToleranceForN)
                         throw new Exception($"{Name} Root has N content in new growth greater than maximum");
                 }
 
@@ -3576,12 +3592,6 @@ namespace Models.AgPasture
 
                 // allocate the new growth in roots (split by layers)
                 Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
-            }
-            else
-            {
-                // no actual growth, just zero out some variables
-                dGrowthShootDM = 0.0;
-                dGrowthRootDM = 0.0;
             }
         }
 
@@ -3705,23 +3715,26 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen demand for optimum N content as well as luxury uptake.</summary>
         internal void EvaluateNitrogenDemand()
         {
-            // get the amounts of new growth in each organ
-            double dmToLeaf = dGrowthAfterWaterLimitations * fractionToLeaf;
-            double dmToStem = dGrowthAfterWaterLimitations * fractionToStem;
-            double dmToStolon = dGrowthAfterWaterLimitations * fractionToStolon;
-            double dmToRoot = dGrowthAfterWaterLimitations * fractionToRoot;
+            if (dGrowthAfterWaterLimitations > ToleranceForDM)
+            {
+                // get the amounts of new growth in each organ
+                double dmToLeaf = dGrowthAfterWaterLimitations * fractionToLeaf;
+                double dmToStem = dGrowthAfterWaterLimitations * fractionToStem;
+                double dmToStolon = dGrowthAfterWaterLimitations * fractionToStolon;
+                double dmToRoot = dGrowthAfterWaterLimitations * fractionToRoot;
 
-            // N demand for new growth, to ensure minimum N (kg/ha)
-            demandMinimumN = (dmToLeaf * Leaf.NConcMinimum) + (dmToStem * Stem.NConcMinimum)
-                           + (dmToStolon * Stolon.NConcMinimum) + (dmToRoot * Root.NConcMinimum);
+                // N demand for new growth, to ensure minimum N (kg/ha)
+                demandMinimumN = (dmToLeaf * Leaf.NConcMinimum) + (dmToStem * Stem.NConcMinimum)
+                               + (dmToStolon * Stolon.NConcMinimum) + (dmToRoot * Root.NConcMinimum);
 
-            // N demand for new growth, with optimum N (kg/ha)
-            demandOptimumN = (dmToLeaf * Leaf.NConcOptimum) + (dmToStem * Stem.NConcOptimum)
-                           + (dmToStolon * Stolon.NConcOptimum) + (dmToRoot * Root.NConcOptimum);
+                // N demand for new growth, with optimum N (kg/ha)
+                demandOptimumN = (dmToLeaf * Leaf.NConcOptimum) + (dmToStem * Stem.NConcOptimum)
+                               + (dmToStolon * Stolon.NConcOptimum) + (dmToRoot * Root.NConcOptimum);
 
-            // N demand for new growth, with luxury uptake (maximum [N])
-            demandLuxuryN = (dmToLeaf * Leaf.NConcMaximum) + (dmToStem * Stem.NConcMaximum)
-                          + (dmToStolon * Stolon.NConcMaximum) + (dmToRoot * Root.NConcMaximum);
+                // N demand for new growth, with luxury uptake (maximum [N])
+                demandLuxuryN = (dmToLeaf * Leaf.NConcMaximum) + (dmToStem * Stem.NConcMaximum)
+                              + (dmToStolon * Stolon.NConcMaximum) + (dmToRoot * Root.NConcMaximum);
+            }
         }
 
         /// <summary>Computes the amount of atmospheric nitrogen fixed through symbiosis.</summary>
@@ -3730,16 +3743,17 @@ namespace Models.AgPasture
             double adjNDemand = demandOptimumN * GlfSoilFertility;
             fixedN = 0.0;
             nffSoilNSupply = 1.0;
-            if (isLegume && adjNDemand > EpsilonN)
+            if (isLegume && adjNDemand > ToleranceForN)
             {
                 // start with minimum fixation
                 fixedN = MinimumNFixation * adjNDemand;
 
                 // check whether more fixation is needed
-                if (adjNDemand - fixedN > EpsilonN)
+                double soilNSupply = SoilAvailableN;
+                if (adjNDemand - (fixedN + soilNSupply) > ToleranceForN)
                 {
                     // evaluate N stress
-                    nffSoilNSupply = SoilAvailableN / (adjNDemand - fixedN);
+                    nffSoilNSupply = soilNSupply / (adjNDemand - fixedN);
                     nffSoilNSupply = Math.Min(nffSoilNSupply, 1.0);
 
                     // update N fixation
@@ -3769,9 +3783,9 @@ namespace Models.AgPasture
         {
             double fracRemobilised = 0.0;
             var remobilisableSenescedN = RemobilisableSenescedN;
-            if (senescedNRemobilised > EpsilonN)
+            if (senescedNRemobilised > ToleranceForN)
             {
-                if (senescedNRemobilised - remobilisableSenescedN > EpsilonN)
+                if (senescedNRemobilised - remobilisableSenescedN > ToleranceForN)
                 {
                     throw new Exception($"{Name} is trying to remobilise more N than is available");
                 }
@@ -3796,66 +3810,69 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
         internal void EvaluateLuxuryNRemobilisation()
         {
-            // check whether there is N demand after fixation, senescence and soil uptake (only match demand for growth at optimum N conc.)
-            double Nmissing = demandOptimumN * GlfSoilFertility - (fixedN + senescedNRemobilised + SoilUptakeN);
-
-            // for the purpose of remobilisation, consider live root alongside 'developing' shoot tissue:
-            int eqTissue = 1;
-
-            // check whether there is any luxury N that can and needs to be remobilised
-            if ((Nmissing > EpsilonN) && (RemobilisableLuxuryN > EpsilonN))
+            if (dGrowthAfterWaterLimitations > ToleranceForDM)
             {
-                // there is still unfulfilled N demand for growth, remobilise some luxury N
-                if ((RemobilisableLuxuryN - Nmissing < EpsilonN) || (Math.Abs(RemobilisableLuxuryN - Nmissing) < EpsilonN))
-                {
-                    // all luxury N available can be used up
-                    luxuryNRemobilised = RemobilisableLuxuryN;
-                    Nmissing -= luxuryNRemobilised;
+                // check whether there is N demand after fixation, senescence and soil uptake (only match demand for growth at optimum N conc.)
+                double Nmissing = demandOptimumN * GlfSoilFertility - (fixedN + senescedNRemobilised + SoilUptakeN);
 
-                    // go over all tissues in each organ and remove the luxury N
-                    for (int t = 0; t < 3; t++)
+                // for the purpose of remobilisation, consider live root alongside 'developing' shoot tissue:
+                int eqTissue = 1;
+
+                // check whether there is any luxury N that can and needs to be remobilised
+                if ((Nmissing > ToleranceForN) && (RemobilisableLuxuryN > ToleranceForN))
+                {
+                    // there is still unfulfilled N demand for growth, remobilise some luxury N
+                    if ((RemobilisableLuxuryN - Nmissing < ToleranceForN) || (Math.Abs(RemobilisableLuxuryN - Nmissing) < ToleranceForN))
                     {
-                        Leaf.Tissue[t].DoRemobiliseN(1.0);
-                        Stem.Tissue[t].DoRemobiliseN(1.0);
-                        Stolon.Tissue[t].DoRemobiliseN(1.0);
-                        if (t == eqTissue)
+                        // all luxury N available can be used up
+                        luxuryNRemobilised = RemobilisableLuxuryN;
+                        Nmissing -= luxuryNRemobilised;
+
+                        // go over all tissues in each organ and remove the luxury N
+                        for (int t = 0; t < 3; t++)
                         {
-                            Root.Live.DoRemobiliseN(1.0);
-                            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                            Leaf.Tissue[t].DoRemobiliseN(1.0);
+                            Stem.Tissue[t].DoRemobiliseN(1.0);
+                            Stolon.Tissue[t].DoRemobiliseN(1.0);
+                            if (t == eqTissue)
+                            {
+                                Root.Live.DoRemobiliseN(1.0);
+                                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                            }
                         }
                     }
-                }
-                else
-                {
-                    // available luxury N is more than enough for optimum growth, go through tissues and get what is needed, start on mature
-                    double Nluxury;
-                    double Nusedup;
-                    double fracRemobilised;
-                    for (int t = 2; t >= 0; t--)
+                    else
                     {
-                        Nluxury = Leaf.Tissue[t].NRemobilisable + Stem.Tissue[t].NRemobilisable + Stolon.Tissue[t].NRemobilisable;
-                        if (t == eqTissue)
+                        // available luxury N is more than enough for optimum growth, go through tissues and get what is needed, start on mature
+                        double Nluxury;
+                        double Nusedup;
+                        double fracRemobilised;
+                        for (int t = 2; t >= 0; t--)
                         {
-                            Nluxury += Root.Live.NRemobilisable;
-                            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
-                        }
+                            Nluxury = Leaf.Tissue[t].NRemobilisable + Stem.Tissue[t].NRemobilisable + Stolon.Tissue[t].NRemobilisable;
+                            if (t == eqTissue)
+                            {
+                                Nluxury += Root.Live.NRemobilisable;
+                                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                            }
 
-                        Nusedup = Math.Min(Nluxury, Nmissing);
-                        fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
-                        Leaf.Tissue[t].DoRemobiliseN(fracRemobilised);
-                        Stem.Tissue[t].DoRemobiliseN(fracRemobilised);
-                        Stolon.Tissue[t].DoRemobiliseN(fracRemobilised);
-                        if (t == eqTissue)
-                        {
-                            Root.Live.DoRemobiliseN(fracRemobilised);
-                            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
-                        }
+                            Nusedup = Math.Min(Nluxury, Nmissing);
+                            fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
+                            Leaf.Tissue[t].DoRemobiliseN(fracRemobilised);
+                            Stem.Tissue[t].DoRemobiliseN(fracRemobilised);
+                            Stolon.Tissue[t].DoRemobiliseN(fracRemobilised);
+                            if (t == eqTissue)
+                            {
+                                Root.Live.DoRemobiliseN(fracRemobilised);
+                                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                            }
 
-                        luxuryNRemobilised += Nusedup;
-                        Nmissing -= Nusedup;
-                        if (Nmissing <= EpsilonN)
-                        {
-                            t = 0;
+                            luxuryNRemobilised += Nusedup;
+                            Nmissing -= Nusedup;
+                            if (Nmissing <= ToleranceForN)
+                            {
+                                t = 0;
+                            }
                         }
                     }
                 }
@@ -3915,7 +3932,7 @@ namespace Models.AgPasture
 
             // get the maximum proportion of aboveground growth that can go into stolons
             double stolonMax = 0.0;
-            if (StolonProportionTarget >= Epsilon)
+            if (StolonProportionTarget >= ToleranceForDM)
             {
                 stolonMax = StolonProportionTarget / (1.0 - LeafProportionMaximum);
             }
@@ -3937,7 +3954,7 @@ namespace Models.AgPasture
         /// </remarks>
         private double allocationToShoot()
         {
-            if (BelowGroundLiveWt < Epsilon)
+            if (BelowGroundLiveWt < ToleranceForDM)
             {
                 return 1.0;
             }
@@ -3978,7 +3995,7 @@ namespace Models.AgPasture
         private double allocationToLeaf()
         {
             double fracToAllocate = LeafProportionMaximum;
-            if (Leaf.DMLive < Epsilon)
+            if (Leaf.DMLive < ToleranceForDM)
             {
                 return LeafProportionMaximum;
             }
@@ -4119,7 +4136,7 @@ namespace Models.AgPasture
         /// <exception cref="System.Exception"> Did not recognise the type of amount to remove (use 'SetResidueAmount' or 'SetRemoveAmount')</exception>
         public Biomass RemoveBiomass(string type, double amount)
         {
-            if (isAlive && Harvestable.Wt > Epsilon)
+            if (isAlive && Harvestable.Wt > ToleranceForDM)
             {
                 // get the amount required to remove
                 double amountRequired;
@@ -4142,7 +4159,7 @@ namespace Models.AgPasture
                 double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
 
                 // do the actual removal
-                if (amountToRemove > Epsilon)
+                if (amountToRemove > ToleranceForDM)
                 {
                     return RemoveBiomass(amountToRemove);
                 }
@@ -4167,7 +4184,7 @@ namespace Models.AgPasture
             var defoliatedDM = 0.0;
             var defoliatedN = 0.0;
             myDefoliatedFraction = 0.0;
-            if (amountToRemove > Epsilon)
+            if (amountToRemove > ToleranceForDM)
             {
                 // get existing DM and N amounts
                 double preRemovalDMShoot = AboveGroundWt;
@@ -4175,7 +4192,7 @@ namespace Models.AgPasture
 
                 // compute the fraction of each tissue to be removed
                 double[] fracToRemove = new double[6];
-                if (amountToRemove - Harvestable.Wt > -Epsilon)
+                if (amountToRemove - Harvestable.Wt > -ToleranceForDM)
                 { // all existing harvestable biomass is removed
                     amountToRemove = Harvestable.Wt;
                     fracToRemove[0] = MathUtilities.Divide(Leaf.DMLiveHarvestable, Leaf.DMLive, 0.0);
@@ -4315,11 +4332,7 @@ namespace Models.AgPasture
         /// <returns>A factor to adjust growth rates (0-1)</returns>
         private double NSupplyLimitingFactor()
         {
-            if (dNewGrowthN < EpsilonN)
-            {
-                return 0.0;
-            }
-            if ((dNewGrowthN - demandOptimumN > EpsilonN) || (Math.Abs(dNewGrowthN - demandOptimumN) < EpsilonN))
+            if ((dNewGrowthN < ToleranceForN) || (dNewGrowthN - demandOptimumN > 0.0))
             {
                 return 1.0;
             }
@@ -4586,7 +4599,7 @@ namespace Models.AgPasture
                 fractionLayer = FractionLayerWithRoots(layer);
                 mySWater += waterBalance.SWmm[layer] * fractionLayer;
                 myWSat += soilPhysical.SATmm[layer] * fractionLayer;
-                if (MinimumWaterFreePorosity < Epsilon)
+                if (MinimumWaterFreePorosity < 0.0)
                 {
                     myWMinP += soilPhysical.DULmm[layer] * fractionLayer;
                 }
@@ -4732,11 +4745,6 @@ namespace Models.AgPasture
         /// <returns>The fraction of light effectively intercepted (MJ/MJ)</returns>
         private double CalcPlantCover(double givenLAI)
         {
-            if (givenLAI < Epsilon)
-            {
-                return 0.0;
-            }
-
             return (1.0 - Math.Exp(-LightExtinctionCoefficient * givenLAI));
         }
 
@@ -4791,7 +4799,7 @@ namespace Models.AgPasture
         public void EvaluateDigestibility()
         {
             double result = 0.0;
-            if (AboveGroundWt > Epsilon)
+            if (AboveGroundWt > ToleranceForDM)
             {
                 result = (Leaf.DigestibilityTotal * Leaf.DMTotal)
                        + (Stem.DigestibilityTotal * Stem.DMTotal)
@@ -4812,7 +4820,7 @@ namespace Models.AgPasture
         {
             double result = 0.0;
             double removedWt = leafLiveWt + leafDeadWt + stemLiveWt + stemDeadWt + stolonLiveWt + stolonDeadWt;
-            if (removedWt > Epsilon)
+            if (removedWt > ToleranceForDM)
             {
                 result = (Leaf.DigestibilityLive * leafLiveWt) + (Leaf.DigestibilityDead * leafDeadWt)
                        + (Stem.DigestibilityLive * stemLiveWt) + (Stem.DigestibilityDead * stemDeadWt)
@@ -4867,7 +4875,7 @@ namespace Models.AgPasture
         /// <param name="deltaLAI">Delta LAI.</param>
         public void ReduceCanopy(double deltaLAI)
         {
-            if (LAI > 0)
+            if (LAI > 0.0)
             {
                 var prop = deltaLAI / LAI;
                 Leaf.RemoveBiomass(liveToRemove: prop * Leaf.DMLive);
