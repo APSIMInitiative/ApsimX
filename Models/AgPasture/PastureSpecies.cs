@@ -3760,23 +3760,8 @@ namespace Models.AgPasture
         /// <summary>Computes the amount of nitrogen remobilised from senesced tissues into new growth.</summary>
         internal void EvaluateSenescedNRemobilisation()
         {
-            double adjNDemand = demandLuxuryN * GlfSoilFertility;
-            var remobilisableSenescedN = RemobilisableSenescedN;
-            if ((adjNDemand - fixedN < EpsilonN) || (Math.Abs(adjNDemand - fixedN) < EpsilonN))
-            {
-                // N demand is fulfilled by fixation alone, no remobilisation
-                senescedNRemobilised = 0.0;
-            }
-            else if (adjNDemand - (fixedN + remobilisableSenescedN) < EpsilonN)
-            {
-                // N demand is fulfilled by fixation plus some remobilisation
-                senescedNRemobilised = Math.Max(0.0, adjNDemand - fixedN);
-            }
-            else
-            {
-                // N demand is not fulfilled by fixation plus remobilisation, N uptake will be required
-                senescedNRemobilised = remobilisableSenescedN;
-            }
+            double adjNDemand = demandLuxuryN * GlfSoilFertility - fixedN;
+            senescedNRemobilised = Math.Max(0.0, Math.Min(adjNDemand, RemobilisableSenescedN));
         }
 
         /// <summary>Removes a fraction of nitrogen remobilisable from senesced tissues (move to new growth).</summary>
@@ -3804,16 +3789,8 @@ namespace Models.AgPasture
         internal void EvaluateSoilNitrogenDemand()
         {
             double adjNDemand = demandLuxuryN * GlfSoilFertility;
-            if ((adjNDemand - (fixedN + senescedNRemobilised) < EpsilonN) || (Math.Abs(adjNDemand - (fixedN + senescedNRemobilised)) < EpsilonN))
-            {
-                // N demand is fulfilled by fixation and/or N remobilised from senesced material
-                mySoilNDemand = 0.0;
-            }
-            else
-            {
-                // N demand is not fulfilled by fixation and remobilisation, soil N uptake is needed
-                mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
-            }
+            mySoilNDemand = adjNDemand - (fixedN + senescedNRemobilised);
+            mySoilNDemand = Math.Max(mySoilNDemand, 0.0);
         }
 
         /// <summary>Computes the amount of luxury nitrogen remobilised into new growth.</summary>
