@@ -771,10 +771,6 @@ namespace Models.AgPasture
         [Units("-")]
         public double TargetShootRootRatio { get; set; }
 
-        /// <summary>Maximum fraction of DM growth allocated to roots (0-1).</summary>
-        [Units("0-1")]
-        public double MaxRootAllocation { get; set; } = 0.25;
-
         /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
         [Units("0-1")]
         public double ShootRootGlfFactor { get; set; }
@@ -3953,9 +3949,13 @@ namespace Models.AgPasture
         /// </remarks>
         private double allocationToShoot()
         {
-            if (BelowGroundLiveWt < ToleranceForDM)
+            if (AboveGroundLiveWt < ToleranceForDM)
             {
                 return 1.0;
+            }
+            if (BelowGroundLiveWt < ToleranceForDM)
+            {
+                return 0.0;
             }
 
             // get the soil related growth limiting factor (higher allocation to roots if soil resources are limiting)
@@ -3975,11 +3975,6 @@ namespace Models.AgPasture
 
             // compute fraction to shoot
             double fracToAllocate = growthSR / (1.0 + growthSR);
-
-            // check for maximum root allocation (kept here mostly for backward compatibility)
-            if ((1.0 - fracToAllocate) > MaxRootAllocation)
-                fracToAllocate = 1.0 - MaxRootAllocation;
-            // TODO: need to remove this, not in original (Ecomod) code
 
             return fracToAllocate;
         }

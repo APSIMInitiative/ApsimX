@@ -38,7 +38,6 @@
       "RespirationExponent": 1.55,
       "DegreesDayForGermination": 115.0,
       "TargetShootRootRatio": 3.5,
-      "MaxRootAllocation": 0.3,
       "ShootRootGlfFactor": 0.5,
       "LeafProportionMaximum": 0.56,
       "LeafProportionMinimum": 0.28,
