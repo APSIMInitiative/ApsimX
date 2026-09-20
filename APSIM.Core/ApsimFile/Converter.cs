@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 220; } }
+    public static int LatestVersion { get { return 221; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8087,6 +8087,36 @@ internal class Converter
                 foreach (JObject report in JsonUtilities.ChildrenOfType(simulation, "Report"))
                     JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].CERESSoilTemperature", "[ISoilTemperature]");
         }
+    }
+
+    /// <summary>
+    /// Change a few parameter names in AgPasture.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion221(JObject root, string fileName)
+    {
+        Tuple<string, string>[] changes =
+        {
+            new Tuple<string, string>("FractionLeafMaximum","LeafProportionMaximum"),
+            new Tuple<string, string>("FractionLeafMinimum","LeafProportionMinimum"),
+            new Tuple<string, string>("FractionLeafDMThreshold","LeafPropDMThreshold"),
+            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMFactor"),
+            new Tuple<string, string>("FractionLeafExponent", "LeafPropExponent"),
+            new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
+            new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
+        };
+
+        foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpecies"))
+        {
+            foreach (Tuple<string, string> change in changes)
+            {
+                if (pasture[change.Item1] != null)
+                    pasture[change.Item2] = pasture[change.Item1];
+            }
+        }
+        
+        JsonUtilities.RenameVariables(root, changes);
     }
 }
 
