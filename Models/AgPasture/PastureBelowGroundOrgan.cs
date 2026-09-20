@@ -492,10 +492,14 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         internal void KillOrgan(double fractionToRemove)
         {
-            double[] dmKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.Wt * fractionToRemove);
-            double[] nKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.N * fractionToRemove);
-            Dead.AddBiomass(dmKilled, nKilled);
-            Live.RemoveBiomass(fractionToRemove, 0.0);
+            if (fractionToRemove > Tolerance)
+            {
+                fractionToRemove = Math.Min(fractionToRemove, 1.0);
+                double[] dmKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.Wt * fractionToRemove);
+                double[] nKilled = MathUtilities.Multiply_Value(Live.DMFraction, Live.DM.N * fractionToRemove);
+                Dead.AddBiomass(dmKilled, nKilled);
+                Live.RemoveBiomass(fractionToRemove, 0.0);
+            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>

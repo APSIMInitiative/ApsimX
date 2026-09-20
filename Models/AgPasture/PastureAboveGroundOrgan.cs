@@ -415,17 +415,18 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         public void KillOrgan(double fractionToRemove)
         {
-            if (1.0 - fractionToRemove > Epsilon)
+            if (fractionToRemove > Tolerance)
             {
+                fractionToRemove = Math.Min(fractionToRemove, 1.0);
                 foreach (GenericTissue tissue in LiveTissue)
                 {
                     DeadTissue.AddBiomass(tissue.DM.Wt * fractionToRemove, tissue.DM.N * fractionToRemove);
                     tissue.RemoveBiomass(fractionToRemove, 0.0);
                 }
-            }
 
-            // tissue states have changed so recalculate our states.
-            CalculateStates();
+                // tissue states have changed so recalculate our states.
+                CalculateStates();
+            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
