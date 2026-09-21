@@ -69,7 +69,7 @@
       "SoilSaturationEffectMax": 0.2,
       "MinimumWaterFreePorosity": -1.0,
       "SoilSaturationRecoveryFactor": 0.2,
-      "NDilutionCoefficient": 2.00,
+      "NDilutionCoefficient": 1.50,
       "PlantHeightMinimum": 300.0,
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 12000.0,
