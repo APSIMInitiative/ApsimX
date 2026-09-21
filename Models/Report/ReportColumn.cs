@@ -94,9 +94,6 @@ namespace Models
         /// <summary>Reference to the events model.</summary>
         private readonly IEvent events;
 
-        /// <summary>The full name of the variable we are retrieving from APSIM.</summary>
-        private string variableName;
-
         /// <summary>The aggregation function.</summary>
         private string aggregationFunction;
 
@@ -169,6 +166,11 @@ namespace Models
         /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// The column heading.
+        /// </summary>
+        public string VariableName { get; private set; }
+
         /// <summary>Retrieve the current value for the specified group number to be stored in the report.</summary>
         public int NumberOfGroups { get { return groups.Count; } }
 
@@ -179,12 +181,12 @@ namespace Models
         public virtual object GetValue(int groupNumber)
         {
             if (groupNumber >= groups.Count)
-                groups.Add(new VariableGroup(structure, null, variableName, aggregationFunction));
+                groups.Add(new VariableGroup(structure, null, VariableName, aggregationFunction));
 
             if (!possibleRecursion)
             {
                 possibleRecursion = true;
-                var var = structure.GetObject(variableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
+                var var = structure.GetObject(VariableName, LocatorFlags.IncludeReportVars | LocatorFlags.ThrowOnError);
                 if (var == null)
                 {
                     possibleRecursion = false;
@@ -223,7 +225,7 @@ namespace Models
 
             if (group == null)
             {
-                group = new VariableGroup(structure, value, variableName, aggregationFunction);
+                group = new VariableGroup(structure, value, VariableName, aggregationFunction);
                 groups.Add(group);
             }
             group.StoreValue();
@@ -309,7 +311,7 @@ namespace Models
                                 string from, string to)
         {
             aggregationFunction = aggFunction;
-            variableName = varName;
+            VariableName = varName;
             fromString = from;
             toString = to;
             Name = alias;
@@ -326,7 +328,7 @@ namespace Models
 
                 string pattern = @"\[([0-9]+(?:mm)*):*[0-9]*(?:mm)*\]";
 
-                Name = Regex.Replace(variableName.Replace("[:", "[1:"), pattern, match =>
+                Name = Regex.Replace(VariableName.Replace("[:", "[1:"), pattern, match =>
                 {
                     string returnString;
                     if (match.Groups[1].ToString().Contains("mm") || isExpression)
@@ -345,7 +347,7 @@ namespace Models
             // Try and get units.
             try
             {
-                var var = structure.GetObject(variableName, LocatorFlags.PropertiesOnly);
+                var var = structure.GetObject(VariableName, LocatorFlags.PropertiesOnly);
                 if (var != null)
                 {
                     Units = var.GetUnitsLabel();
