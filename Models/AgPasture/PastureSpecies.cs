@@ -4326,24 +4326,31 @@ namespace Models.AgPasture
         /// <returns>A factor to adjust growth rates (0-1)</returns>
         private double NSupplyLimitingFactor()
         {
-            if ((dNewGrowthN < ToleranceForN) || (dNewGrowthN - demandOptimumN > 0.0))
-            {
+            // check some base conditions
+            if (dGrowthAfterWaterLimitations < ToleranceForDM)
+            { // no growth
+                return 1.0;
+            }
+            if (dNewGrowthN < ToleranceForN)
+            { // no N supply
+                return 0.0;
+            }
+            if (dNewGrowthN - demandOptimumN > 0.0)
+            { // no N stress
                 return 1.0;
             }
 
             // get the basic glf value
-            double baseGLF = MathUtilities.Divide(dNewGrowthN, demandOptimumN, 1.0);
+            double baseGLF = dNewGrowthN / demandOptimumN;
 
             //get the maximum glf (avoid N conc going below minimum)
-            double maxGLF = baseGLF * MathUtilities.Divide(demandOptimumN, demandMinimumN, 1.0);
+            double maxGLF = baseGLF * (demandOptimumN / demandMinimumN);
 
             // adjust the glf for N dilution
             double adjustedGLF = 1.0 - Math.Pow(1.0 - baseGLF, NDilutionCoefficient);
 
-            // ensure the adjusted value is below max
-            adjustedGLF = Math.Min(adjustedGLF, maxGLF);
-
-            return adjustedGLF;
+            // final value is the minimum of the two computed
+            return Math.Min(adjustedGLF, maxGLF);
         }
 
         /// <summary>Computes the relative variation in optimum N due to atmospheric CO2.</summary>
