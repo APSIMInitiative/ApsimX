@@ -43,6 +43,11 @@ namespace Models.Core.Run
         }
 
         /// <summary>
+        /// Is the baseSimulation enabled?
+        /// </summary>
+        public bool IsEnabled => baseSimulation.Enabled;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
@@ -149,6 +154,10 @@ namespace Models.Core.Run
                 AddReplacements();
 
                 Node newNode = baseSimulation.Node.Clone();
+
+                //remove readonly from any node so that it can be run correctly.
+                foreach(Node node in newNode.Walk())
+                    node.Model.ReadOnly = false;
 
                 if (string.IsNullOrWhiteSpace(Name))
                     newNode.Rename(baseSimulation.Name);

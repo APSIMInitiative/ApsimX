@@ -1372,6 +1372,8 @@ namespace Models.CLEM.Activities
                         foreach (var removeFilter in reduceBreedersFilters)
                         {
                             // sell excess from breeders from oldest (by default)
+                            //var test = removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder));
+
                             foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder).Take(excessBreeders).ToList()))
                             {
                                 female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -1379,23 +1381,7 @@ namespace Models.CLEM.Activities
                                 excessBreeders--;
                             }
 
-                            // determine if there a prebreeders that will mature in next 12 months and therefore exceed max breeder number
-                            var preBreedersToMature = removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (!a.IsMature && !a.Attributes.Exists("GrowOut") && (a.EstimatedDaysToMaturity <= 465)))).ToList();
-                            if (preBreedersToMature.Count > 0)
-                            {
-                                // calculate the number of females that will age to max breeder age 
-                                int numberAtMaxAgeNextYear = 0;
-                                if (MarkOldBreedersForSale && PerformFemaleDestocking)
-                                {
-                                    numberAtMaxAgeNextYear = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.AgeInDays + 365 > MaximumBreederAge.InDays).Count();
-                                }
-
-                                foreach (RuminantFemale female in preBreedersToMature)
-                                {
-                                    // Sell all pre-breeders that are expected to mature before the next year except those skipped to replace breeders expected to read max age and be sold in next year
-                                    female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
-                                }
-                            }
+                            // moved reduction of excess pre-breeders to the end of this section as it may also be necessary for herds with breeders needed this time step
                         }
                     }
 
@@ -1672,9 +1658,43 @@ namespace Models.CLEM.Activities
                 // Breeders can be sold in seasonal and ENSO destocking.
                 // The destocking groups will define the order individuals are sold
                 // All keeping and removing tasks now obey the ruminant groups provided specifying individuals and order
+
+                // now we need to sell excess pre breeders as these will flood the breeder numbers next year
+                // this is regardless of whether we are in need of females or have excess.
+                // remove excess pre breeders that will mature in the next 12 months
+                if (excessBreeders >= 0)
+                {
+                    IEnumerable<RuminantGroup> reducePreBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, false, "RemoveFemalePreBreeders");
+                    if (reducePreBreedersFilters is null)
+                    {
+                        reducePreBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemalePreBreeders");
+                        // try taking from oldest to youngest.
+                        SortByProperty srt = new SortByProperty() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
+                        reducePreBreedersFilters.FirstOrDefault().Children.Add(srt);
+                    }
+                    foreach (var removeFilter in reducePreBreedersFilters)
+                    {
+                        // determine if there a prebreeders that will mature in next 12 months and therefore exceed max breeder number
+                        var preBreedersToMature = removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (!a.IsMature && !a.Attributes.Exists("GrowOut") && (a.EstimatedDaysToMaturity <= 465)))).ToList();
+                        if (preBreedersToMature.Count > 0)
+                        {
+                            // calculate the number of females that will age to max breeder age 
+                            int numberAtMaxAgeNextYear = 0;
+                            if (MarkOldBreedersForSale && PerformFemaleDestocking)
+                            {
+                                numberAtMaxAgeNextYear = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.AgeInDays + 365 > MaximumBreederAge.InDays).Count();
+                            }
+
+                            foreach (RuminantFemale female in preBreedersToMature.Take(Math.Max(0, preBreedersToMature.Count - femaleBreedersRequired - numberAtMaxAgeNextYear)))
+                            {
+                                // Sell all pre-breeders that are expected to mature before the next year except those skipped to replace breeders expected to read max age and be sold in next year
+                                female.SaleFlag = HerdChangeReason.ExcessPreBreederSale;
+                            }
+                        }
+                    }
+                }
+
             }
-
-
         }
 
         /// <inheritdoc />

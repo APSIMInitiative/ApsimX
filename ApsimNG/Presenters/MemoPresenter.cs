@@ -82,7 +82,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/memo/");
+                ProcessUtilities.ProcessStart("https://docs.apsim.info/docs/usage/memo");
             }
             catch (Exception err)
             {
@@ -99,6 +99,16 @@ namespace UserInterface.Presenters
         private void OnTextHasChanged(object sender, EventArgs e)
         {
             List<ICitation> cites = WebDocs.ProcessCitations(textView.Text, out string text);
+
+            //replace redirects to "References" with urls so the gui works better
+            foreach(ICitation cite in cites)
+            {
+                if (string.IsNullOrEmpty(cite.URL))
+                    text = text.Replace($"[{cite.InTextCite}](#{cite.Name})", $"{cite.InTextCite}");
+                else
+                    text = text.Replace($"[{cite.InTextCite}](#{cite.Name})", $"[{cite.InTextCite}]({cite.URL})");
+            }
+                
             if (cites.Count > 0)
             {
                 text += "\n\n# References\n.";

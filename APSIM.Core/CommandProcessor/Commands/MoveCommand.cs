@@ -30,7 +30,7 @@ internal partial class MoveCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner, List<Node> externalFileCache)
     {
         INodeModel modelToMove = (INodeModel)relativeTo.Node.Get(_fromPath, relativeTo: relativeTo);
         if (modelToMove == null)

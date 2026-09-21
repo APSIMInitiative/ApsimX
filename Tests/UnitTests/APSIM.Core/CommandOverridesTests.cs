@@ -149,7 +149,7 @@ namespace UnitTests.APSIM.Core.Tests
         public void SetPropertyInTypeMatchedModels()
         {
             SetPropertyCommand command = new("[Report].VariableNames", "=", "x,y,z", multiple: true);
-            (command as IModelCommand).Run(sims1, runner: null);
+            (command as IModelCommand).Run(sims1, null, null);
 
             foreach (var report in sims1.Node.FindAll<Models.Report>())
                 Assert.That(report.VariableNames, Is.EqualTo(new[] { "x", "y", "z" }));
@@ -168,7 +168,7 @@ namespace UnitTests.APSIM.Core.Tests
         public void SetPropertyInNameMatchedModels()
         {
             SetPropertyCommand command = new("[Report1].VariableNames", "=", "x,y,z", multiple: true);
-            (command as IModelCommand).Run(sims1, runner: null);
+            (command as IModelCommand).Run(sims1, null, null);
 
             // It should have changed all Report1 models.
             foreach (var report1 in sims1.Node.FindAll<Models.Report>("Report1"))
@@ -195,7 +195,7 @@ namespace UnitTests.APSIM.Core.Tests
         public void SetDateProperty()
         {
             SetPropertyCommand command = new("[Clock].StartDate", "=", "2000-01-01");
-            (command as IModelCommand).Run(sims1, runner: null);
+            (command as IModelCommand).Run(sims1, null, null);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2000, 01, 01)));
@@ -209,11 +209,12 @@ namespace UnitTests.APSIM.Core.Tests
         [Test]
         public void SetModelFromExternalFileFirstMatchingModel()
         {
+            Node externalRootNode = FileFormat.ReadFromFile(extFile, typeof(Simulations));
             IModelCommand cmd = new ReplaceCommand(modelReference: new ModelInFileReference(extFile, "[Clock1]"),
                                                    replacementPath: "[Clock]",
                                                    multiple: false,
                                                    matchType: ReplaceCommand.MatchType.Name);
-            cmd.Run(sims1, runner: null);
+            cmd.Run(sims1, null, [externalRootNode]);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2020, 01, 01)));
@@ -223,11 +224,12 @@ namespace UnitTests.APSIM.Core.Tests
         [Test]
         public void SetModelFromExternalFileSpecificModel()
         {
+            Node externalRootNode = FileFormat.ReadFromFile(extFile, typeof(Simulations));
             IModelCommand cmd = new ReplaceCommand(modelReference: new ModelInFileReference(extFile, "[Clock2]"),
                                                    replacementPath: "[Clock]",
                                                    multiple: false,
                                                    matchType: ReplaceCommand.MatchType.NameOrType);
-            cmd.Run(sims1, runner: null);
+            cmd.Run(sims1, null, [externalRootNode]);
 
             var clock = sims1.Node.Find<Clock>();
             Assert.That(clock.StartDate, Is.EqualTo(new DateTime(2021, 01, 01)));
@@ -243,7 +245,7 @@ namespace UnitTests.APSIM.Core.Tests
                                                    replacementPath: "[Report1]",
                                                    multiple: true,
                                                    matchType: ReplaceCommand.MatchType.Name);
-            cmd.Run(sims1, runner: null);
+            cmd.Run(sims1, null, null);
 
             // It should have changed all Report1 models to Report4
             var reports = sims1.Node.FindAll<Models.Report>().ToArray();
@@ -278,7 +280,7 @@ namespace UnitTests.APSIM.Core.Tests
             ];
 
             foreach (var cmd in overrides)
-                cmd.Run(sims1, runner: null);
+                cmd.Run(sims1, null, null);
 
             var stringList = (ListClass<string>)sims1.Node.Find<ListClass<string>>();
 
@@ -302,7 +304,7 @@ namespace UnitTests.APSIM.Core.Tests
         public void TestOverridesErrorsIfNotFound()
         {
             IModelCommand badOverride = new SetPropertyCommand("[Does].Not", "=", "Exist");
-            Assert.Throws<Exception>(() => badOverride.Run(sims1, runner:null));
+            Assert.Throws<Exception>(() => badOverride.Run(sims1, null, null));
         }
     }
 }

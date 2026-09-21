@@ -508,6 +508,16 @@ namespace Models.Surface
             surfaceResidue.SetLayerFraction(layerFractions);
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
         /// <summary>Called at start of each day.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The event data.</param>

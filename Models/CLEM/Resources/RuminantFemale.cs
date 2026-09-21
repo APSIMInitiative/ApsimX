@@ -304,27 +304,11 @@ namespace Models.CLEM.Resources
         /// Knows whether the fetus(es) have survived
         /// </summary>
         public bool IsBirthDue { get; private set; }
-        //{
-        //    get
-        //    {
-        //        if (IsPregnant)
-        //            return Parameters.Details.CurrentTimeStep.IsDateInTimeStep(BirthDueDate ?? default);
-        //        return false;
-        //    }
-        //}
 
         /// <summary>
         /// The date births are due or null if not pregnant. 
         /// </summary>
-        public DateTime BirthDueDate { get; private set; } = default; // ToDO: trying default if not pregnant
-        //{
-        //    get
-        //    {
-        //        if (DaysPregnantInTimeStep == 0)
-        //            return null;
-        //        return DateLastConceived.AddDays(Parameters.General.GestationLength.InDays);
-        //    }
-        //}
+        public DateTime BirthDueDate { get; private set; } = default; 
 
         /// <summary>
         /// Proportion of pregnancy achieved
@@ -339,7 +323,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Days since last birth
         /// </summary>
-        public double? DaysSinceLastBirth
+        [FilterByProperty]
+        public double DaysSinceLastBirth
         {
             get
             {
@@ -350,6 +335,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Days since last birth
         /// </summary>
+        [FilterByProperty]
         public double DaysSinceLastConceived
         {
             get

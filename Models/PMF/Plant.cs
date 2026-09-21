@@ -265,6 +265,16 @@ namespace Models.PMF
                 ZonesToGrowRootsIn[z.Name] = true;
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
         /// <summary>Called when [phase changed].</summary>
         /// <param name="phaseChange">The phase change.</param>
         /// <param name="sender">Sender plant.</param>

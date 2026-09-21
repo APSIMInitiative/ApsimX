@@ -486,8 +486,8 @@ namespace Models.CLEM.Activities
             double desiredTotal = DailyPastureDesired * events.Interval;
             double requiredTotal = DailyPastureRequired * events.Interval;
 
-            double amountPriorToPending = MathUtilities.RoundSignificant(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountInitialPending), 6);
-            double amountPending = MathUtilities.RoundSignificant(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending), 6);
+            double amountPriorToPending = MathUtilities.Round(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountInitialPending), 6);
+            double amountPending = MathUtilities.Round(DigestiblePasturePoolGroups.SelectMany(a => a.Pools).Sum(a => a.AmountPending), 6);
             pastureRequest.Provided = Math.Min(pastureRequest.Required, amountPending);
 
             PotentialIntakePastureQualityLimiter = amountPending / requiredTotal;

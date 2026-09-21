@@ -31,11 +31,11 @@ public partial class SetPropertyCommand : IModelCommand
     /// <param name="multiple">Perform property set for multiple instances?</param>
     public SetPropertyCommand(string name, string oper, string value, string fileName = null, bool multiple = false)
     {
-        this._name = name;
-        this._oper = oper;
-        this._value = value;
-        this._fileName = fileName;
-        this._multiple = multiple;
+        _name = name;
+        _oper = oper;
+        _value = value;
+        _fileName = fileName;
+        _multiple = multiple;
     }
 
     /// <summary>Property value.</summary>
@@ -46,7 +46,7 @@ public partial class SetPropertyCommand : IModelCommand
     /// </summary>
     /// <param name="relativeTo">The model the commands are relative to.</param>
     /// <param name="runner">An instance of an APSIM runner.</param>
-    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner)
+    INodeModel IModelCommand.Run(INodeModel relativeTo, IRunner runner, List<Node> externalFileCache)
     {
         // Read the property value from an external file if necessary.
         string propertyValue = _value;
