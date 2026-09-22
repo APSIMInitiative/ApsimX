@@ -4,14 +4,17 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>
-    /// 
+    /// Utilities calss for IFunctions
     /// </summary>
     public class FunctionUtilities
     {
         /// <summary>
-        /// 
+        /// Static function for checking that the only children of an IFunction 
+        /// are functions or memos themselves. This prevents a replacements 
+        /// accidently replacing an IFunction with something that won't be 
+        /// computed, and hiding a silent failure.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="node">Node of Model to check</param>
         public static void ValidateFunctionChildren(Node node)
         {
             IModel model = node.Model as IModel;
