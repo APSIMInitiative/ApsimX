@@ -2718,6 +2718,10 @@ namespace Models.AgPasture
             {
                 throw new Exception($"Minimum proportion of leaves is greater than maximum for {Name}");
             }
+            if (LeafPropDMThreshold > LeafPropDMForHalfEffect)
+            {
+                throw new Exception($"DM threshold is greater than DM for half effect on proportion of leaves for {Name}");
+            }
             if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionTargetMax) > 1.0))
             {
                 throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
@@ -4026,8 +4030,8 @@ namespace Models.AgPasture
             if (AboveGroundLiveWt > LeafPropDMThreshold)
             {
                 double biomassRatio = (AboveGroundLiveWt - LeafPropDMThreshold) / (LeafPropDMForHalfEffect - LeafPropDMThreshold);
-                biomassRatio = Math.Pow(biomassRatio, LeafPropExponent);
-                targetFLeaf = LeafProportionTargetMin + (LeafProportionTargetMax - LeafProportionTargetMin) / (1.0 + biomassRatio);
+                double biomassFactor = 1.0 / (1.0 - Math.Pow(biomassRatio, LeafPropExponent));
+                targetFLeaf = LeafProportionTargetMin + (LeafProportionTargetMax - LeafProportionTargetMin) * biomassFactor;
             }
 
             // get current leaf:stem ratio
