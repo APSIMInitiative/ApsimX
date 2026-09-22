@@ -1808,6 +1808,20 @@ namespace Models.AgPasture
             get { return respirationMaintenance + respirationGrowth; }
         }
 
+        /// <summary>Respiration costs expressed in carbon equivalent (kgC/ha).</summary>
+        [Units("kg/ha")]
+        public double RespirationMaintenanceLossC
+        {
+            get { return respirationMaintenance; }
+        }
+
+        /// <summary>Respiration costs expressed in carbon equivalent (kgC/ha).</summary>
+        [Units("kg/ha")]
+        public double RespirationGrowthLossC
+        {
+            get { return respirationGrowth; }
+        }
+
         /// <summary>N fixation costs expressed in carbon equivalent (kgC/ha).</summary>
         [Units("kg/ha")]
         public double NFixationCostC
@@ -2698,6 +2712,20 @@ namespace Models.AgPasture
         {
             // get the number of layers in the soil profile
             nLayers = soilPhysical.Thickness.Length;
+
+            // check the value of some parameters
+            if (LeafProportionMinimum > LeafProportionMaximum)
+            {
+                throw new Exception($"Minimum proportion of leaves is greater than maximum for {Name}");
+            }
+            if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionMaximum) > 1.0))
+            {
+                throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
+            }
+            if (isLegume && (MinimumNFixation > MaximumNFixation))
+            {
+                throw new Exception($"Minimum N fixation is greater than maximum for {Name}");
+            }
 
             // set the base, or main, root zone (more zones can be added later)
             if (PotentialRootingDepth >= 0.0)
