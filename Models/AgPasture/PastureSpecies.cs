@@ -856,13 +856,13 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double StolonEffectOnLAI { get; set; } = 0.0;
 
-        /// <summary>Maximum aboveground biomass for considering stems when computing LAI (kgDM/ha).</summary>
+        /// <summary>Aboveground biomass below which stems are used for computing LAI (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double ShootMaxEffectOnLAI { get; set; }
+        public double ShootDMThresholdForLAI { get; set; }
 
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
-        public double MaxStemEffectOnLAI { get; set; }
+        public double StemMaxEffectOnLAI { get; set; }
 
         ////- Tissue turnover and senescence >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -4076,27 +4076,30 @@ namespace Models.AgPasture
         /// <remarks>This method considers leaves plus an additional effect of stems and stolons</remarks>
         public void EvaluateLAI()
         {
-            // get the amount of green tissue of leaves (converted from kg/ha to kg/m2)
-            double greenTissue = Leaf.DMLive / 10000.0;
+            // get the amount of green tissue of leaves
+            double greenTissue = Leaf.DMLive;
 
             // get a proportion of green tissue from stolons
-            greenTissue += Stolon.DMLive * StolonEffectOnLAI / 10000.0;
+            greenTissue += Stolon.DMLive * StolonEffectOnLAI;
 
-            // consider some green tissue from stems (if DM is very low)
-            if (!isLegume && AboveGroundLiveWt < ShootMaxEffectOnLAI)
+            // consider some green tissue from stems (if DM is very low - only for non legumes)
+            if (!isLegume && (AboveGroundLiveWt < ShootDMThresholdForLAI))
             {
-                double shootFactor = MaxStemEffectOnLAI * Math.Sqrt(1.0 - (AboveGroundLiveWt / ShootMaxEffectOnLAI));
-                greenTissue += Stem.DMLive * shootFactor / 10000.0;
+                double shootFactor = StemMaxEffectOnLAI * Math.Sqrt(1.0 - (AboveGroundLiveWt / ShootDMThresholdForLAI));
+                greenTissue += Stem.DMLive * shootFactor;
 
                 /* This adjust helps on resilience after unfavoured conditions (implemented by F.Li, not present in EcoMod)
-                   It is assumed that green cover will be bigger for the same amount of DM when compared to using only leaves
+                   It is assumed that green cover will be larger for the same amount of DM when compared to using only leaves
                      due to the recruitment of green tissue from stems. Thus it mimics:
                      - greater light extinction coefficient, leaves will be more horizontal than in dense high swards
-                     - more parts (stems) turning green for photosynthesis
+                     - more parts (stems) turning green when exposed to direct sunshine and contributing to photosynthesis
                      - thinner leaves during growth burst following unfavoured conditions
                      » TODO: It would be better if variations in SLA or ext. coeff. would be explicitly considered (RCichota, 2014)
                 */
             }
+
+            // convert green DM from kg/ha to kg/m2
+            greenTissue = Leaf.DMLive / 10000.0;
 
             // get the leaf area index for all green tissues
             greenLAI = greenTissue * SpecificLeafArea;
