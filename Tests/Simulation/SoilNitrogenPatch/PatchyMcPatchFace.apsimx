@@ -8999,7 +8999,7 @@
                 "                throw new Exception(\"No data found\");",
                 "                ",
                 "            var stats = MathUtilities.CalcRegressionStats(Name, y, x);",
-                "            double tolerance = 0.1;",
+                "            double tolerance = 0.001;",
                 "            if (FailBeyondTolerance)",
                 "            {",
                 "                if (!MathUtilities.FloatsAreEqual(stats.Slope, AcceptedSlope, Math.Abs(tolerance * AcceptedSlope)) ||",
