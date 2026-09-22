@@ -826,11 +826,11 @@ namespace Models.AgPasture
 
         /// <summary>Maximum target allocation of shoot new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double LeafProportionMaximum { get; set; }
+        public double LeafProportionTargetMax { get; set; }
 
         /// <summary>Minimum target allocation of shoot new growth to leaves (0-1).</summary>
         [Units("0-1")]
-        public double LeafProportionMinimum { get; set; }
+        public double LeafProportionTargetMin { get; set; }
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Units("kg/ha")]
@@ -838,7 +838,7 @@ namespace Models.AgPasture
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double LeafPropDMFactor { get; set; }
+        public double LeafPropDMForHalfEffect { get; set; }
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Units(">0.0")]
@@ -2714,11 +2714,11 @@ namespace Models.AgPasture
             nLayers = soilPhysical.Thickness.Length;
 
             // check the value of some parameters
-            if (LeafProportionMinimum > LeafProportionMaximum)
+            if (LeafProportionTargetMin > LeafProportionTargetMax)
             {
                 throw new Exception($"Minimum proportion of leaves is greater than maximum for {Name}");
             }
-            if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionMaximum) > 1.0))
+            if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionTargetMax) > 1.0))
             {
                 throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
             }
@@ -3957,7 +3957,7 @@ namespace Models.AgPasture
             double stolonMax = 0.0;
             if (StolonProportionTarget >= ToleranceForDM)
             {
-                stolonMax = StolonProportionTarget / (1.0 - LeafProportionMaximum);
+                stolonMax = StolonProportionTarget / (1.0 - LeafProportionTargetMax);
             }
 
             // get the fractions of new growth to allocate to each plant organ
@@ -4016,19 +4016,18 @@ namespace Models.AgPasture
         /// </remarks>
         private double allocationToLeaf()
         {
-            double fracToAllocate = LeafProportionMaximum;
             if (Leaf.DMLive < ToleranceForDM)
             {
-                return LeafProportionMaximum;
+                return LeafProportionTargetMax;
             }
 
             // compute new target FractionLeaf
-            double targetFLeaf = LeafProportionMaximum;
-            if ((LeafProportionMinimum < LeafProportionMaximum) && (AboveGroundLiveWt > LeafPropDMThreshold))
+            double targetFLeaf = LeafProportionTargetMax;
+            if (AboveGroundLiveWt > LeafPropDMThreshold)
             {
-                double fLeafAux = (AboveGroundLiveWt - LeafPropDMThreshold) / (LeafPropDMFactor - LeafPropDMThreshold);
-                fLeafAux = Math.Pow(fLeafAux, LeafPropExponent);
-                targetFLeaf = LeafProportionMinimum + (LeafProportionMaximum - LeafProportionMinimum) / (1.0 + fLeafAux);
+                double biomassRatio = (AboveGroundLiveWt - LeafPropDMThreshold) / (LeafPropDMForHalfEffect - LeafPropDMThreshold);
+                biomassRatio = Math.Pow(biomassRatio, LeafPropExponent);
+                targetFLeaf = LeafProportionTargetMin + (LeafProportionTargetMax - LeafProportionTargetMin) / (1.0 + biomassRatio);
             }
 
             // get current leaf:stem ratio
