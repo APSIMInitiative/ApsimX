@@ -138,14 +138,22 @@ namespace Gtk.Sheet
                     try
                     {
                         sheet.DataProvider.SetCellContent(columnIndex, rowIndex, entry.Text);
+                        sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                     }
                     catch (Exception ex)
                     {
                         //error was thrown, restore original value
-                        sheet.DataProvider.SetCellContent(columnIndex, rowIndex, value);
-                        sheet.OnException(ex);
+                        try
+                        {
+                            sheet.DataProvider.SetCellContent(columnIndex, rowIndex, value);
+                            sheet.OnException(ex);
+                        }
+                        catch
+                        {
+                            Exception ex2 = new Exception("Error while updating cell value", ex);
+                            sheet.OnException(ex2);
+                        }
                     }
-                    sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }
 
                 entry.KeyPressEvent -= OnEntryKeyPress;
