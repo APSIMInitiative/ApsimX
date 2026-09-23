@@ -147,10 +147,9 @@ namespace Gtk.Sheet
                             sheet.DataProvider.SetCellContent(columnIndex, rowIndex, value);
                             sheet.OnException(ex);
                         }
-                        catch
+                        catch (Exception ex2)
                         {
-                            Exception ex2 = new Exception("Error while updating cell value", ex);
-                            sheet.OnException(ex2);
+                            sheet.OnException(new Exception("Error while updating cell value", ex2));
                         }
                     }
                     sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
