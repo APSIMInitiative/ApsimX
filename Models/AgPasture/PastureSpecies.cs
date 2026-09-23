@@ -2714,10 +2714,6 @@ namespace Models.AgPasture
             nLayers = soilPhysical.Thickness.Length;
 
             // check the value of some parameters
-            if (LeafProportionTargetMin > LeafProportionTargetMax)
-            {
-                throw new Exception($"Minimum proportion of leaves is greater than maximum for {Name}");
-            }
             if (LeafPropDMThreshold > LeafPropDMForHalfEffect)
             {
                 throw new Exception($"DM threshold is greater than DM for half effect on proportion of leaves for {Name}");
@@ -2725,10 +2721,6 @@ namespace Models.AgPasture
             if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionTargetMax) > 1.0))
             {
                 throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
-            }
-            if (isLegume && (MinimumNFixation > MaximumNFixation))
-            {
-                throw new Exception($"Minimum N fixation is greater than maximum for {Name}");
             }
 
             // set the base, or main, root zone (more zones can be added later)
@@ -4027,10 +4019,10 @@ namespace Models.AgPasture
 
             // compute new target FractionLeaf
             double targetFLeaf = LeafProportionTargetMax;
-            if (AboveGroundLiveWt > LeafPropDMThreshold)
+            if ((AboveGroundLiveWt > LeafPropDMThreshold) && (LeafProportionTargetMax > LeafProportionTargetMin))
             {
                 double biomassRatio = (AboveGroundLiveWt - LeafPropDMThreshold) / (LeafPropDMForHalfEffect - LeafPropDMThreshold);
-                double biomassFactor = 1.0 / (1.0 - Math.Pow(biomassRatio, LeafPropExponent));
+                double biomassFactor = 1.0 / (1.0 + Math.Pow(biomassRatio, LeafPropExponent));
                 targetFLeaf = LeafProportionTargetMin + (LeafProportionTargetMax - LeafProportionTargetMin) * biomassFactor;
             }
 
