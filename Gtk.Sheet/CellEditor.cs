@@ -138,7 +138,6 @@ namespace Gtk.Sheet
                     try
                     {
                         sheet.DataProvider.SetCellContent(columnIndex, rowIndex, entry.Text);
-                        sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                     }
                     catch (Exception ex)
                     {
@@ -154,6 +153,7 @@ namespace Gtk.Sheet
                             sheet.OnException(ex2);
                         }
                     }
+                    sheet.CalculateBounds(selectedColumnIndex, selectedRowIndex);
                 }
 
                 entry.KeyPressEvent -= OnEntryKeyPress;
