@@ -42,7 +42,7 @@
       "LeafProportionTargetMax": 0.70,
       "LeafProportionTargetMin": 0.65,
       "LeafPropDMThreshold": 500.0,
-      "LeafPropDMForHalfEffect": 2000.0,
+      "LeafPropDMForHalfEffect": 2250.0,
       "LeafPropExponent": 3.0,
       "StolonProportionTarget": 0.0,
       "SpecificLeafArea": 25.0,

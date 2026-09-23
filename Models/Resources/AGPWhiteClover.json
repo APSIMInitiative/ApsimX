@@ -40,7 +40,7 @@
       "TargetShootRootRatio": 3.5,
       "ShootRootGlfFactor": 0.5,
       "LeafProportionTargetMax": 0.56,
-      "LeafProportionTargetMin": 0.28,
+      "LeafProportionTargetMin": 0.30,
       "LeafPropDMThreshold": 500.0,
       "LeafPropDMForHalfEffect": 2000.0,
       "LeafPropExponent": 3.0,
