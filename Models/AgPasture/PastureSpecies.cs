@@ -4065,7 +4065,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Computes the values of LAI (leaf area index) for green and dead plant material.</summary>
-        /// <remarks>This method considers leaves plus an additional effect of stems and stolons</remarks>
+        /// <remarks>This method considers leaves plus additional contribution from stems and stolons.</remarks>
         public void EvaluateLAI()
         {
             // get the amount of green tissue of leaves
@@ -4074,8 +4074,8 @@ namespace Models.AgPasture
             // get a proportion of green tissue from stolons
             greenTissue += Stolon.DMLive * StolonEffectOnLAI;
 
-            // consider some green tissue from stems (if DM is very low - only for non legumes)
-            if (!isLegume && (AboveGroundLiveWt < ShootDMThresholdForLAI))
+            // consider some green tissue from stems (if DM is very low)
+            if (AboveGroundLiveWt < ShootDMThresholdForLAI)
             {
                 double shootFactor = StemMaxEffectOnLAI * Math.Sqrt(1.0 - (AboveGroundLiveWt / ShootDMThresholdForLAI));
                 greenTissue += Stem.DMLive * shootFactor;
@@ -4086,12 +4086,12 @@ namespace Models.AgPasture
                      - greater light extinction coefficient, leaves will be more horizontal than in dense high swards
                      - more parts (stems) turning green when exposed to direct sunshine and contributing to photosynthesis
                      - thinner leaves during growth burst following unfavoured conditions
-                     » TODO: It would be better if variations in SLA or ext. coeff. would be explicitly considered (RCichota, 2014)
+                     » TODO: It would be better if variations in SLA or ext. coeff. were explicitly considered (RCichota, 2014)
                 */
             }
 
             // convert green DM from kg/ha to kg/m2
-            greenTissue = Leaf.DMLive / 10000.0;
+            greenTissue /= 10000.0;
 
             // get the leaf area index for all green tissues
             greenLAI = greenTissue * SpecificLeafArea;
