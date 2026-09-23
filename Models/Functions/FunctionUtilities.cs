@@ -4,7 +4,7 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>
-    /// Utilities calss for IFunctions
+    /// Utilities class for IFunctions
     /// </summary>
     public class FunctionUtilities
     {

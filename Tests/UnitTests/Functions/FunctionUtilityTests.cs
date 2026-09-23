@@ -28,7 +28,7 @@ namespace UnitTests.Functions
             Assert.Throws<Exception>(() => FunctionUtilities.ValidateFunctionChildren(addFunction.Node));
         }
 
-        /// <summary>Ensure the tracker function actually works.</summary>
+        /// <summary>Ensure the ValidateFunctionChildren works when given a child that is a memo</summary>
         [Test]
         public void ValidateFunctionChildrenWorks()
         {
