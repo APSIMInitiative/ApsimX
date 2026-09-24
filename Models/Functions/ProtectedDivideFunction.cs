@@ -19,12 +19,8 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    public class ProtectedDivideFunction : Model, IFunction, IStructureDependency
+    public class ProtectedDivideFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>Value to return if numerator is 0.</summary>
         [Description("Value to return if numerator is 0:")]
         public double NumeratorErrVal { get; set; }
@@ -33,12 +29,18 @@ namespace Models.Functions
         [Description("Value to return if denominator is 0:")]
         public double DenominatorErrVal { get; set; }
 
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
+
         /// <summary>
         /// Returns the value of the function.
         /// </summary>
         public double Value(int arrayIndex = -1)
         {
-            IFunction[] children = Structure.FindChildren<IFunction>().ToArray();
+            IFunction[] children = Node.FindChildren<IFunction>().ToArray();
             int n = children?.Length ?? 0;
             if (n < 2)
                 throw new Exception($"Error in ProtectedDivideFunction {Name}: 2 child functions required, only found {n}");
