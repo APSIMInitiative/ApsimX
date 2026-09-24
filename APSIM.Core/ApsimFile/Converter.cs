@@ -8098,12 +8098,17 @@ internal class Converter
     {
         Tuple<string, string>[] changes =
         {
-            new Tuple<string, string>("FractionLeafMaximum","LeafProportionMaximum"),
-            new Tuple<string, string>("FractionLeafMinimum","LeafProportionMinimum"),
-            new Tuple<string, string>("FractionLeafDMThreshold","LeafPropDMThreshold"),
-            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMFactor"),
+            new Tuple<string, string>("CO2EffectScaleFactor", "CO2EffectOnPhotoScaleFactor"),
+            new Tuple<string, string>("CO2EffectOffsetFactor", "CO2EffectOnNConcScaleFactor"),
+            new Tuple<string, string>("CO2EffectExponent", "CO2EffectOnNConcExponent"),
+            new Tuple<string, string>("FractionLeafMaximum", "LeafProportionTargetMax"),
+            new Tuple<string, string>("FractionLeafMinimum", "LeafProportionTargetMin"),
+            new Tuple<string, string>("FractionLeafDMThreshold", "LeafPropDMThreshold"),
+            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMForHalfEffect"),
             new Tuple<string, string>("FractionLeafExponent", "LeafPropExponent"),
             new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
+            new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
+            new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI"),
             new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
         };
 

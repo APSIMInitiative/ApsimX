@@ -54,6 +54,10 @@ namespace Models.AgPasture
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
+        /// <summary>Maximum reduction in N concentration due to elevated CO2 (0-1).</summary>
+        [Units("kg/kg")]
+        public double MaxCO2EffectOnNRequirement { get; set; }
+
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
         [Units("kg/kg")]
         public double FractionStanding { get; set; } = 1.0;
@@ -62,10 +66,19 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 
+        /// <summary>Value of minimum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcMinimum = 0.0;
+
+        /// <summary>Value of optimum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcOptimum = 0.0;
+
+        /// <summary>Value of maximum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcMaximum = 0.0;
+
         //----------------------- Constants -----------------------
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //----------------------- States -----------------------
 
@@ -293,6 +306,16 @@ namespace Models.AgPasture
         {
             LiveTissue = new GenericTissue[] { EmergingTissue, DevelopingTissue, MatureTissue };
             MinimumLiveDM = minimumLiveWt;
+
+            // record base N concentration values (to be used on reset)
+            baseNConcMinimum = NConcMinimum;
+            baseNConcOptimum = NConcOptimum;
+            baseNConcMaximum = NConcMaximum;
+
+            // check the maximum potential reduction in N conc that can result from elevated CO2
+            double maxNGap = MathUtilities.Divide(baseNConcOptimum - baseNConcMinimum, baseNConcOptimum, 0.0);
+            MaxCO2EffectOnNRequirement = Math.Min(MaxCO2EffectOnNRequirement, 0.99 * maxNGap);
+            // Note: using 99% of gap between minimum and optimum to avoid potential errors if difference is needed
         }
 
         /// <summary>Set this organ's biomass state.</summary>
@@ -314,8 +337,33 @@ namespace Models.AgPasture
             MatureTissue.SetBiomass(matureWt, matureN);
             DeadTissue.SetBiomass(deadWt, deadN);
 
-            // tissue states have changed so recalculate our states.
+            // reset the N concentrations to base values
+            NConcMinimum = baseNConcMinimum;
+            NConcOptimum = baseNConcOptimum;
+            NConcMaximum = baseNConcMaximum;
+
+            // tissue states have changed so recalculate states at organ level.
             CalculateStates();
+        }
+
+        /// <summary>Adjust the values of N concentration as function of atmospheric CO2.</summary>
+        /// <param name="co2Factor">Value representing the extent of CO2 effect (>=0.0).</param>
+        /// <remarks>The CO2 factor is above one for low CO2 (higher N), and less than one with elevated CO2 (lower N conc).</remarks>
+        public void UpdateNConcentrations(double co2Factor)
+        {
+            // adjust CO2 factor for maximum concentration
+            double co2FactorForMaximum = 1.0 + 0.5 * (co2Factor - 1.0);
+            // maximum N was reduced in Ecomod (same as optimum), but not in classic AgPasture. Using half of effect here...
+
+            // adjust the value for optimum N concentration
+            double adjustment = 1.0 - MaxCO2EffectOnNRequirement + MaxCO2EffectOnNRequirement * co2Factor;
+            NConcOptimum = baseNConcOptimum * adjustment;
+
+            // adjust the value for maximum N concentration
+            adjustment = 1.0 - MaxCO2EffectOnNRequirement + MaxCO2EffectOnNRequirement * co2FactorForMaximum;
+            NConcMaximum = Math.Max(NConcOptimum, baseNConcMaximum * adjustment); // cannot go below optimum
+
+            // NConcMinimum is not modified, it represents 'structural N' and this is assumed not to change with CO2...
         }
 
         /// <summary>Remove biomass from organ.</summary>
@@ -367,17 +415,18 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         public void KillOrgan(double fractionToRemove)
         {
-            if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
+            if (fractionToRemove > Tolerance)
             {
+                fractionToRemove = Math.Min(fractionToRemove, 1.0);
                 foreach (GenericTissue tissue in LiveTissue)
                 {
                     DeadTissue.AddBiomass(tissue.DM.Wt * fractionToRemove, tissue.DM.N * fractionToRemove);
-                    tissue.AddBiomass(-tissue.DM.Wt * fractionToRemove, -tissue.DM.N * fractionToRemove);
+                    tissue.RemoveBiomass(fractionToRemove, 0.0);
                 }
-            }
 
-            // tissue states have changed so recalculate our states.
-            CalculateStates();
+                // tissue states have changed so recalculate our states.
+                CalculateStates();
+            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -416,8 +465,10 @@ namespace Models.AgPasture
             CalculateStates();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
-            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
+            double prevTotal = previousDM + DMGrowth - DMDetached;
+            bool dmIsOk = Math.Abs(prevTotal - DMTotal) < 0.000001;
+            prevTotal = previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached;
+            bool nIsOk = Math.Abs(prevTotal - NTotal) < 0.000001;
             return (dmIsOk || nIsOk);
         }
 
