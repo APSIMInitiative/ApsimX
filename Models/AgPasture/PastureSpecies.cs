@@ -4045,20 +4045,17 @@ namespace Models.AgPasture
         /// <returns>The plant height (mm)</returns>
         internal double HeightfromDM()
         {
-            double todaysHeight = PlantHeightMaximum;
+            double todaysHeight = 0.0;
             if (phenologicStage > 0)
             {
-                if (Harvestable.Wt <= PlantHeightMassForMax)
+                todaysHeight = PlantHeightMaximum;
+                if ((Harvestable.Wt <= PlantHeightMassForMax) && (PlantHeightMaximum > PlantHeightMinimum))
                 {
-                    double massRatio = Harvestable.Wt / PlantHeightMassForMax;
-                    double heightF = PlantHeightExponent - (PlantHeightExponent * massRatio) + massRatio;
-                    heightF *= Math.Pow(massRatio, PlantHeightExponent - 1);
-                    todaysHeight = Math.Max(todaysHeight * heightF, PlantHeightMinimum);
+                    double biomassRatio = Harvestable.Wt / PlantHeightMassForMax;
+                    double biomassFactor = PlantHeightExponent - (PlantHeightExponent * biomassRatio) + biomassRatio;
+                    biomassFactor *= Math.Pow(biomassRatio, PlantHeightExponent - 1);
+                    todaysHeight = PlantHeightMinimum + (PlantHeightMaximum - PlantHeightMinimum) * biomassFactor;
                 }
-            }
-            else
-            {
-                todaysHeight = 0.0;
             }
 
             return todaysHeight;
