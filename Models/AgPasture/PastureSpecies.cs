@@ -658,11 +658,11 @@ namespace Models.AgPasture
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
         [Units("ppm")]
-        public double CO2EffectScaleFactorOnNConc { get; set; }
+        public double CO2EffectOnNConcScaleFactor { get; set; }
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
         [Units("-")]
-        public double CO2EffectExponentOnNConc { get; set; }
+        public double CO2EffectOnNConcExponent { get; set; }
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
@@ -2713,16 +2713,6 @@ namespace Models.AgPasture
             // get the number of layers in the soil profile
             nLayers = soilPhysical.Thickness.Length;
 
-            // check the value of some parameters
-            if (LeafPropDMThreshold > LeafPropDMForHalfEffect)
-            {
-                throw new Exception($"DM threshold is greater than DM for half effect on proportion of leaves for {Name}");
-            }
-            if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionTargetMax) > 1.0))
-            {
-                throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
-            }
-
             // set the base, or main, root zone (more zones can be added later)
             if (PotentialRootingDepth >= 0.0)
             { // override the default with the value given in the GUI
@@ -2765,6 +2755,16 @@ namespace Models.AgPasture
             DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
             MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
             DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
+
+            // check the value of some parameters
+            if (LeafPropDMThreshold > LeafPropDMForHalfEffect)
+            {
+                throw new Exception($"DM threshold is greater than DM for half effect on proportion of leaves for {Name}");
+            }
+            if ((StolonProportionTarget > ToleranceForDM) && (StolonProportionTarget / (1.0 - LeafProportionTargetMax) > 1.0))
+            {
+                throw new Exception($"Stolon proportion target and/or maximum leaf proportion for {Name} are too high");
+            }
         }
 
         /// <summary>Performs some clean up procedures. Make sure that any command or setting is reset to default.</summary>
@@ -4381,8 +4381,8 @@ namespace Models.AgPasture
         /// <returns>A factor to adjust optimum N in leaves</returns>
         private double CO2EffectsOnOptimumN()
         {
-            double factorReferenceCO2 = Math.Pow(CO2EffectScaleFactorOnNConc - ReferenceCO2, CO2EffectExponentOnNConc);
-            double factorActualCO2 = Math.Pow(Math.Abs(myMetData.CO2 - ReferenceCO2), CO2EffectExponentOnNConc);
+            double factorReferenceCO2 = Math.Pow(CO2EffectOnNConcScaleFactor - ReferenceCO2, CO2EffectOnNConcExponent);
+            double factorActualCO2 = Math.Pow(Math.Abs(myMetData.CO2 - ReferenceCO2), CO2EffectOnNConcExponent);
             if (myMetData.CO2 <= ReferenceCO2)
             {
                 return 1.0 + factorActualCO2 / factorReferenceCO2;
