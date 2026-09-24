@@ -71,9 +71,9 @@
       "SoilSaturationRecoveryFactor": 0.25,
       "NDilutionCoefficient": 1.25,
       "PlantHeightMinimum": 150.0,
-      "PlantHeightMaximum": 150.0,
-      "PlantHeightMassForMax": 7500.0,
-      "PlantHeightExponent": 2.5,
+      "PlantHeightMaximum": 250.0,
+      "PlantHeightMassForMax": 600.0,
+      "PlantHeightExponent": 2.0,
       "MinimumGreenWt": 40.0,
       "Children": [
         {

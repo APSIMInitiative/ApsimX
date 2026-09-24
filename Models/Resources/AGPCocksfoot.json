@@ -70,10 +70,10 @@
       "MinimumWaterFreePorosity": -1.0,
       "SoilSaturationRecoveryFactor": 0.25,
       "NDilutionCoefficient": 1.65,
-      "PlantHeightMinimum": 250.0,
-      "PlantHeightMaximum": 250.0,
-      "PlantHeightMassForMax": 9000.0,
-      "PlantHeightExponent": 2.6,
+      "PlantHeightMinimum": 230.0,
+      "PlantHeightMaximum": 500.0,
+      "PlantHeightMassForMax": 1500.0,
+      "PlantHeightExponent": 2.0,
       "MinimumGreenWt": 30.0,
       "Children": [
         {
