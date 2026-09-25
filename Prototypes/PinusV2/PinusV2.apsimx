@@ -68,6 +68,12 @@
             "[Pinus].Stem.WoodWt",
             "[Pinus].Stem.Wt",
             "[Pinus].Stem.Live.Wt",
+            "[Pinus].Stem.SizeClass.DBH50thPercentile",
+            "[Pinus].Stem.SizeClass.DBH10thPercentile",
+            "[Pinus].Stem.SizeClass.DBH90thPercentile",
+            "[Pinus].Stem.SizeClass.Location",
+            "[Pinus].Stem.SizeClass.WeibullScale",
+            "[Pinus].Stem.SizeClass.WeibullShape",
             "[Pinus].FineRoot.Wt",
             "[Pinus].CoarseRoot.Wt",
             "[Pinus].Cone.Wt",
@@ -4203,6 +4209,66 @@
                   "Name": "SenescenceRate",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Forestry.StemSizeDistribution, Models",
+                  "SizeClassNumber": 10,
+                  "SizeClassInterval": 5.0,
+                  "Name": "SizeClass",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "",
+                      "Expression": "[Pinus].Stem.DBH * [Fraction].FixedValue",
+                      "Name": "Location",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Fraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Pinus].Stem.DBH",
+                      "Name": "MeanDBH",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Pinus].Stem.BA",
+                      "Name": "BasalArea",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "",
+                      "Expression": "[Pinus].Population * 10000.0",
+                      "Name": "StemPopulation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
