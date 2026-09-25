@@ -57,7 +57,7 @@ namespace UnitTests.PMF.Phenology.Scales
             sim.Prepare();
             sim.Run();
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             // Read the Report table
             var dataTable = storage.Reader.GetData("Report");

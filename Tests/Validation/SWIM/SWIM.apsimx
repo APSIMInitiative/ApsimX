@@ -1,12 +1,12 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 220,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM SWIM3 Model\n\nNeil Huth, Dean Holzworth, Eric Zurcher (CSIRO, Australia)\n\nRogerio Cichota (Plant and Food Research, New Zealand)\n\nVal Snow (AgResearch, New Zealand)\n\n## Acknowledgements\n\nThe addition of SWIM3 into APSIM NextGeneration was completed using funding from CSIRO’s internal funding (SIP) and AgResearch’s Strategic Science Investment Fund. We also acknowledge the valuable data and simulations supplied for validation from Laura Buckthought (Auckland Council, New Zealand) and Sotirios Archontoulis (Iowa State University, USA). SWIM3 builds on the work of Peter Ross and Kirsten Verburg (CSIRO).\n\n## Introduction\n\nSWIM3 is a model that stores and moves water and chemicals through the soil. It's function is analogous to the SoilWater model (so the two models would never appear in the same zone in a simulation). However, the underlying methods used to calculate water and solute movement are very different in teh two models and those methods give SWIM3 much more flexibility that SoilWater – particularly when needing complex boundary conditions (e.g., tile drained soils).\n\nSWIM3’s origins lie in a standalone model from Peter Ross (CSIRO) developed in the 1980s. The underlying functions are based on Richards’ equation for water movement and the convection-dispersion equation with a Freundlich solute isotherm for the movement of chemicals (nutrients and other species). The model, still as a standalone model, was extensively documented in [verburg_methodology_1996] and that reference remains the source of definitive information about the functioning of the model itself. Since that time there have been changes in the user interface, some changes in the scope of the standalone version model to make it compatible with APSIM ([Huth_1996]), and more recently the method for supplying the hydraulic parameters for the model ([Huth2012SWIM3]).\n\nBecause [verburg_methodology_1996], and also [cichota_protocol_2021], document the processes and parameters in detail, this document only covers major differences to those publications and some tricks and tips on using the model.\n\n## Special features – why use SWIM3 rather than SoilWater?\n\nSWIM3 is not as easy to use as SoilWater, is slower and will sometimes and frustratingly crash during a simulation with a numerical convergence error (see more below). Given that, why use SWIM3 at all? Essentially these boil down to needing features that SWIM3 can provide that SoilWater cannot. These include:\n* Needing a seepage boundary condition while modelling a lysimeter experiment. Experimentally, the lower boundary is open to atmospheric pressure and that materially affects water and solute movement. \n* Needing to incorporate the effects of tile drainage or a regional water table into the simulation.\n* SWIM3 has a more realistic treatment of solute mobility and adsorption than SoilWater (in which solute are either mobile or immobile) and this may be important depending on the purpose of the simulation.\n* SoilWater requires as relatively thick (15-20 mm) layer at the soil surface and this can be problematic for questions related to surface processes that change quickly with depth in the soil. Here SWIM3’s thinner layers at the soil surface may be a better solution.\n* SWIM3 actually has fewer parameters because evaporative losses and water redistribution within the soil are calculated from soil hydraulic properties rather than requiring extra parameters as in SoilWater (e.g. U, cona, diffusivity slope and constant).\n\n\n## Major differences compared to the Verburg report\n\nSWIM3 was developed from a standalone model. Because it was a standalone model, it included some functionality already provided by crop or other models in APSIM and so that were discarded when ported into APSIM. These included:\n\n* Initial conditions are given by the UI or other models as volumetric water content rather than soil water potential;\n* The constant potential top boundary condition was not enabled\n* Surface sealing functions were not enabled\n\n*For the top boundary conditions and infiltration:*\n\n* No infiltration is achieved by setting a curve number of 100\n* No runoff is handled with a curve number of 0 (except if infiltration is restricted by sub-surface hydraulic properites)\n* The power-law function option is set using the Manager script “SWIMSetSurfaceBC” – that script is found in the Soil folder of the Management toolbox\n* The subsurface downslope runoff function was not enabled\n\n*For the lower boundary conditions the Manager script “SWIMSetLowerBC” (in the Soil toolbox) was written:*\n\n* The “given matric potential gradient” boundary condition is enabled as the default with unit gradient (“gradient” in the Manager script)\n* The “given potential” is enabled as “potential” in the Manager. For this boundary condition the value sets a potential relative to the lower depth of the soil. If the soil is 1000 mm deep and a potential of +200 mm is set then a water table will be set at 800 mm deep and water continually added or removed to/from the lowest soil layer to maintain that water table. Setting a value of -1000 mm as the constant potential would continually add or remove water to maintain that matric potential.\n* The “zero flux” boundary condition was not enabled\n* The “seepage” was enabled with a threshold suction of zero to mimic lysimeter conditions.\n\n*Other differences*\n\n* In SWIM3 in APSIM NextGeneration there is no water or solute uptake as these functions are handled by the combination of the SoilArbitrator and the crop models\n* “Potential subsurface downslope flow” was not enabled\n* The methods for specifying the conductivity and soil water retention were replaced as described in [Huth2012SWIM3] to provide greater accessibility for users unfamiliar with the functional forms used in SWIM2\n* Hysteresis was not enabled\n* Because SWIM3 does not perform the soil water or solute uptake, osmotic effects on these processes are of course not enabled\n* Evapotranspiration is not enabled as this is handled by other APSIM models\n* Rainfall is assumed to arrive evenly during the day \n* Irrigation duration is taken from the irrigation command and the start time is taken as midnight \n* Rainfall/irrigation intensity effects on soil surface roughness are not enabled\n* Cultivation effects on soil physical properties are not enabled\n\n## Units \n\nNote that [verburg_methodology_1996] and the more interior parts of the SWIM3 code work in units of cm and hours but from the user’s perspective (inputs and outputs when used in APSIM) the standard APSIM units of mm and days are used.\n\n## Layering for APSIM and nodes for SWIM3\n\nNumerical solutions for problems such as the Richards’ equation work on the basis of a network (here a one-dimensional array with depth) of nodes. A node is a notional point in space that contain all the mass in the simulation. There are known/set distances between the nodes and calculated resistances to flow of mass between the nodes. This is quite different to the layering approach used in APSIM so a conversion or mapping between the two systems is essential. The conversion in handled in the software so, in most circumstances, the user does not need to understand the mechanism. The exception is when there are numerical convergence issues and then understanding the layering and its effects is important.\n\nNode-based systems require nodes to be placed at each end of the simulated space (ie top and bottom boundary).  The remainder are currently placed in the middle of each internal layer.   The placement of nodes is diagrammed in Figure 1. \nUsers should take care to extend the base of the soil profile well below the depth of interest (usually the rooting depth). In particular the soil depth should be well below any water table or tile drain depth AND there should be several (more than two) layers placed between the water table depth or tile drain depth and the base of the soil profile.\n\nUnderstanding the node concept is important when using REPORT, when specifying initial water contents by layer and when trying to align measured soil water to predicted soil water values. For example, when you output SW[1] you get soil water content at node 1 (the surface). Likewise SW[7] will be at the bottom of the profile. The same applies when you specify initial water in the GUI. Internally to SWIM, sw = theta. There are no back calculations to convert from nodes to layers. \n\n\n![](Swim-layers.png)\n\nFigure 1. Relationship between APSIM layers and SWIM3 nodes\n\n\n\n## Convergence issues\n\nThe numerical solution methods in SWIM3 give the model considerable flexibility in the boundary conditions but come at a cost of increased execution time and the possibility of some simulations failing when the equations do not numerically converge. See [verburg_methodology_1996] for more information on stability but here are some quick tips or approaches:\n\n* Put more layers (i.e., make them thinner) near the soil surface, at the base of the profile, around the interfaces of soil horizons with sharp changes in hydraulic parameters, and around features such as tile drains. The use of the LayerStructure model is highly recommended. The top layer should not be greater than 10 mm thick and the deepest layer should not be greater than 200 mm thick.\n* Default values of the maximum timestep and maximum water increment are 1440 min and 10 mm. Reducing these, to say 30 min and 2 mm, will fix many convergence problems.\n* There are space weighting factors available on the user interface that can assist with stability but these require careful usage as they can generate a simulation that runs but that gives unreliable results. See [verburg_methodology_1996] for details.\n* If the error message on non-convergence is related to solutes, consider reducing the nonlinearity (i.e., move the value of fip closer to 1.0) of the solute adsorption isotherm.\n\n\n## Issues and further development needs\n\nMuch of the inner code of SWIM3 is very old. The original code was in an early version of Fortran (maybe Fortran 66, possibly even some legacy Fortran IV). Because of the complexities of:\n* short variable names (a feature of early Fortran) as well as;\n* complex code to manage memory usage (these days not an issue) and execution time and the known;\n* near impossibility find and fix any introduced errors; \neach of the four major modifications of the code was done with the lightest touch possible. Thus, while the code is now all in C#, there are substantial important parts of the model that still look Fortran-like. Finding the source of errors is challenging even with a modern debugger because of the code structure. At some point in the future the code will become unsupportable. Addressing this issue would be advisable but would require substantial funding.\n\nIn the current state of SWIM3, simulations are quite unstable when the exponent on the Freundlich solute isotherm is much less then about 0.75 (lower values make the isotherm more nonlinear). This is something that should be addressed in the future along with alternative isotherm formulations.\n",
+      "Text": "# The APSIM SWIM3 Model\n\nNeil Huth, Dean Holzworth, Eric Zurcher (CSIRO, Australia)\n\nRogerio Cichota (Plant and Food Research, New Zealand)\n\nVal Snow (AgResearch, New Zealand)\n\n## Acknowledgements\n\nThe addition of SWIM3 into APSIM NextGeneration was completed using funding from CSIRO’s internal funding (SIP) and AgResearch’s Strategic Science Investment Fund. We also acknowledge the valuable data and simulations supplied for validation from Laura Buckthought (Auckland Council, New Zealand) and Sotirios Archontoulis (Iowa State University, USA). SWIM3 builds on the work of Peter Ross and Kirsten Verburg (CSIRO).\n\n## Introduction\n\nSWIM3 is a model that stores and moves water and chemicals through the soil. It's function is analogous to the SoilWater model (so the two models would never appear in the same zone in a simulation). However, the underlying methods used to calculate water and solute movement are very different in teh two models and those methods give SWIM3 much more flexibility that SoilWater – particularly when needing complex boundary conditions (e.g., tile drained soils).\n\nSWIM3’s origins lie in a standalone model from Peter Ross (CSIRO) developed in the 1980s. The underlying functions are based on Richards’ equation for water movement and the convection-dispersion equation with a Freundlich solute isotherm for the movement of chemicals (nutrients and other species). The model, still as a standalone model, was extensively documented in [#verburg_methodology_1996] and that reference remains the source of definitive information about the functioning of the model itself. Since that time there have been changes in the user interface, some changes in the scope of the standalone version model to make it compatible with APSIM ([#Huth_1996]), and more recently the method for supplying the hydraulic parameters for the model ([#Huth2012SWIM3]).\n\nBecause [#verburg_methodology_1996], and also [#cichota_protocol_2021], document the processes and parameters in detail, this document only covers major differences to those publications and some tricks and tips on using the model.\n\n## Special features – why use SWIM3 rather than SoilWater?\n\nSWIM3 is not as easy to use as SoilWater, is slower and will sometimes and frustratingly crash during a simulation with a numerical convergence error (see more below). Given that, why use SWIM3 at all? Essentially these boil down to needing features that SWIM3 can provide that SoilWater cannot. These include:\n* Needing a seepage boundary condition while modelling a lysimeter experiment. Experimentally, the lower boundary is open to atmospheric pressure and that materially affects water and solute movement. \n* Needing to incorporate the effects of tile drainage or a regional water table into the simulation.\n* SWIM3 has a more realistic treatment of solute mobility and adsorption than SoilWater (in which solute are either mobile or immobile) and this may be important depending on the purpose of the simulation.\n* SoilWater requires as relatively thick (15-20 mm) layer at the soil surface and this can be problematic for questions related to surface processes that change quickly with depth in the soil. Here SWIM3’s thinner layers at the soil surface may be a better solution.\n* SWIM3 actually has fewer parameters because evaporative losses and water redistribution within the soil are calculated from soil hydraulic properties rather than requiring extra parameters as in SoilWater (e.g. U, cona, diffusivity slope and constant).\n\n\n## Major differences compared to the Verburg report\n\nSWIM3 was developed from a standalone model. Because it was a standalone model, it included some functionality already provided by crop or other models in APSIM and so that were discarded when ported into APSIM. These included:\n\n* Initial conditions are given by the UI or other models as volumetric water content rather than soil water potential;\n* The constant potential top boundary condition was not enabled\n* Surface sealing functions were not enabled\n\n*For the top boundary conditions and infiltration:*\n\n* No infiltration is achieved by setting a curve number of 100\n* No runoff is handled with a curve number of 0 (except if infiltration is restricted by sub-surface hydraulic properites)\n* The power-law function option is set using the Manager script “SWIMSetSurfaceBC” – that script is found in the Soil folder of the Management toolbox\n* The subsurface downslope runoff function was not enabled\n\n*For the lower boundary conditions the Manager script “SWIMSetLowerBC” (in the Soil toolbox) was written:*\n\n* The “given matric potential gradient” boundary condition is enabled as the default with unit gradient (“gradient” in the Manager script)\n* The “given potential” is enabled as “potential” in the Manager. For this boundary condition the value sets a potential relative to the lower depth of the soil. If the soil is 1000 mm deep and a potential of +200 mm is set then a water table will be set at 800 mm deep and water continually added or removed to/from the lowest soil layer to maintain that water table. Setting a value of -1000 mm as the constant potential would continually add or remove water to maintain that matric potential.\n* The “zero flux” boundary condition was not enabled\n* The “seepage” was enabled with a threshold suction of zero to mimic lysimeter conditions.\n\n*Other differences*\n\n* In SWIM3 in APSIM NextGeneration there is no water or solute uptake as these functions are handled by the combination of the SoilArbitrator and the crop models\n* “Potential subsurface downslope flow” was not enabled\n* The methods for specifying the conductivity and soil water retention were replaced as described in [#Huth2012SWIM3] to provide greater accessibility for users unfamiliar with the functional forms used in SWIM2\n* Hysteresis was not enabled\n* Because SWIM3 does not perform the soil water or solute uptake, osmotic effects on these processes are of course not enabled\n* Evapotranspiration is not enabled as this is handled by other APSIM models\n* Rainfall is assumed to arrive evenly during the day \n* Irrigation duration is taken from the irrigation command and the start time is taken as midnight \n* Rainfall/irrigation intensity effects on soil surface roughness are not enabled\n* Cultivation effects on soil physical properties are not enabled\n\n## Units \n\nNote that [#verburg_methodology_1996] and the more interior parts of the SWIM3 code work in units of cm and hours but from the user’s perspective (inputs and outputs when used in APSIM) the standard APSIM units of mm and days are used.\n\n## Layering for APSIM and nodes for SWIM3\n\nNumerical solutions for problems such as the Richards’ equation work on the basis of a network (here a one-dimensional array with depth) of nodes. A node is a notional point in space that contain all the mass in the simulation. There are known/set distances between the nodes and calculated resistances to flow of mass between the nodes. This is quite different to the layering approach used in APSIM so a conversion or mapping between the two systems is essential. The conversion in handled in the software so, in most circumstances, the user does not need to understand the mechanism. The exception is when there are numerical convergence issues and then understanding the layering and its effects is important.\n\nNode-based systems require nodes to be placed at each end of the simulated space (ie top and bottom boundary).  The remainder are currently placed in the middle of each internal layer.   The placement of nodes is diagrammed in Figure 1. \nUsers should take care to extend the base of the soil profile well below the depth of interest (usually the rooting depth). In particular the soil depth should be well below any water table or tile drain depth AND there should be several (more than two) layers placed between the water table depth or tile drain depth and the base of the soil profile.\n\nUnderstanding the node concept is important when using REPORT, when specifying initial water contents by layer and when trying to align measured soil water to predicted soil water values. For example, when you output SW[#1] you get soil water content at node 1 (the surface). Likewise SW[#7] will be at the bottom of the profile. The same applies when you specify initial water in the GUI. Internally to SWIM, sw = theta. There are no back calculations to convert from nodes to layers. \n\n\n![](Swim-layers.png)\n\nFigure 1. Relationship between APSIM layers and SWIM3 nodes\n\n\n\n## Convergence issues\n\nThe numerical solution methods in SWIM3 give the model considerable flexibility in the boundary conditions but come at a cost of increased execution time and the possibility of some simulations failing when the equations do not numerically converge. See [#verburg_methodology_1996] for more information on stability but here are some quick tips or approaches:\n\n* Put more layers (i.e., make them thinner) near the soil surface, at the base of the profile, around the interfaces of soil horizons with sharp changes in hydraulic parameters, and around features such as tile drains. The use of the LayerStructure model is highly recommended. The top layer should not be greater than 10 mm thick and the deepest layer should not be greater than 200 mm thick.\n* Default values of the maximum timestep and maximum water increment are 1440 min and 10 mm. Reducing these, to say 30 min and 2 mm, will fix many convergence problems.\n* There are space weighting factors available on the user interface that can assist with stability but these require careful usage as they can generate a simulation that runs but that gives unreliable results. See [#verburg_methodology_1996] for details.\n* If the error message on non-convergence is related to solutes, consider reducing the nonlinearity (i.e., move the value of fip closer to 1.0) of the solute adsorption isotherm.\n\n\n## Issues and further development needs\n\nMuch of the inner code of SWIM3 is very old. The original code was in an early version of Fortran (maybe Fortran 66, possibly even some legacy Fortran IV). Because of the complexities of:\n* short variable names (a feature of early Fortran) as well as;\n* complex code to manage memory usage (these days not an issue) and execution time and the known;\n* near impossibility find and fix any introduced errors; \neach of the four major modifications of the code was done with the lightest touch possible. Thus, while the code is now all in C#, there are substantial important parts of the model that still look Fortran-like. Finding the source of errors is challenging even with a modern debugger because of the code structure. At some point in the future the code will become unsupportable. Addressing this issue would be advisable but would require substantial funding.\n\nIn the current state of SWIM3, simulations are quite unstable when the exponent on the Freundlich solute isotherm is much less then about 0.75 (lower values make the isotherm more nonlinear). This is something that should be addressed in the future along with alternative isotherm formulations.\n",
       "Name": "README",
       "ResourceName": null,
       "Children": [],
@@ -226,7 +226,78 @@
           "AllColumns": true,
           "Name": "PredictedObservedCl",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": [
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "Cl110",
+                  "n": 11,
+                  "Slope": 0.4511608830638988,
+                  "Intercept": 37.38751711311804,
+                  "SEslope": 0.4166114355589364,
+                  "SEintercept": 66.25675877680764,
+                  "R2": 0.11528231801489774,
+                  "RMSE": 92.01314331393766,
+                  "NSE": -1.4024823314987858,
+                  "ME": -43.58966145983235,
+                  "MAE": 74.265279146461,
+                  "RSR": 1.4778615790448977,
+                  "RMR": 0.6236375879340114
+                },
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "Cl210",
+                  "n": 11,
+                  "Slope": 1.1030612928875132,
+                  "Intercept": 14.849601427430116,
+                  "SEslope": 0.3490670380444555,
+                  "SEintercept": 461.98725342773815,
+                  "R2": 0.5259607876225332,
+                  "RMSE": 491.4331967834672,
+                  "NSE": -0.21006173811894113,
+                  "ME": 143.24460267243873,
+                  "MAE": 452.35226364884966,
+                  "RSR": 1.04883560464101,
+                  "RMR": 0.3944681657169798
+                },
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "Cl310",
+                  "n": 11,
+                  "Slope": 0.057015166024954884,
+                  "Intercept": 2858.4989606810873,
+                  "SEslope": 0.6997803421141151,
+                  "SEintercept": 2555.6247686385545,
+                  "R2": 0.000737045989625873,
+                  "RMSE": 1023.8439816068484,
+                  "NSE": -6.6462007059699415,
+                  "ME": -567.5727536005083,
+                  "MAE": 780.6450119802946,
+                  "RSR": 2.6364922815896437,
+                  "RMR": 0.2818006823929925
+                }
+              ],
+              "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
+              "POName": "PredictedObservedCl",
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -241,7 +312,78 @@
           "AllColumns": true,
           "Name": "PredictedObservedSW",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": [
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "SW110",
+                  "n": 59,
+                  "Slope": 0.6369549753573837,
+                  "Intercept": 191.1611675494202,
+                  "SEslope": 0.035603237351114744,
+                  "SEintercept": 16.721483547747457,
+                  "R2": 0.8488325192715158,
+                  "RMSE": 36.71367095011462,
+                  "NSE": 0.6770924679783827,
+                  "ME": 22.27379058239153,
+                  "MAE": 26.883962993412005,
+                  "RSR": 0.5634132790450556,
+                  "RMR": 0.0789207329414997
+                },
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "SW210",
+                  "n": 59,
+                  "Slope": 0.6744897901662192,
+                  "Intercept": 161.48014768383388,
+                  "SEslope": 0.07161169965749356,
+                  "SEintercept": 33.043644927544086,
+                  "R2": 0.6088176271622112,
+                  "RMSE": 22.109268499610838,
+                  "NSE": 0.45064560500195994,
+                  "ME": 11.594797376866337,
+                  "MAE": 18.03651331839017,
+                  "RSR": 0.7348763865830739,
+                  "RMR": 0.04801531713299916
+                },
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "SW310",
+                  "n": 59,
+                  "Slope": 0.37500933528771946,
+                  "Intercept": 281.27430038698424,
+                  "SEslope": 0.09475508539136748,
+                  "SEintercept": 42.85009754430314,
+                  "R2": 0.21555836615800417,
+                  "RMSE": 13.668052065253336,
+                  "NSE": 0.09040279686208585,
+                  "ME": -1.216706392743898,
+                  "MAE": 10.753546473839656,
+                  "RSR": 0.9456110730050774,
+                  "RMR": 0.03023956423591801
+                }
+              ],
+              "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
+              "POName": "PredictedObservedSW",
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -256,7 +398,62 @@
           "AllColumns": true,
           "Name": "PredictedObservedLeachingDrainage",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": [
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "CumulativeDrainage",
+                  "n": 756,
+                  "Slope": 0.9302777136250907,
+                  "Intercept": 17.921988800396207,
+                  "SEslope": 0.008385124486223229,
+                  "SEintercept": 5.050203444889427,
+                  "R2": 0.9422776465354624,
+                  "RMSE": 75.19522025745013,
+                  "NSE": 0.9384535696932789,
+                  "ME": -18.365223413788776,
+                  "MAE": 55.48721072711537,
+                  "RSR": 0.247921398198345,
+                  "RMR": 0.14448017251556303
+                },
+                {
+                  "$type": "APSIM.Numerics.MathUtilities+RegrStats, APSIM.Numerics",
+                  "Name": "CumulativeLeachNO3",
+                  "n": 756,
+                  "Slope": 0.9852706478742395,
+                  "Intercept": 26.898717673034866,
+                  "SEslope": 0.01761212248328172,
+                  "SEintercept": 2.6890957731671508,
+                  "R2": 0.8058498322921459,
+                  "RMSE": 69.03742221707212,
+                  "NSE": 0.7279769097371713,
+                  "ME": 25.777801838187138,
+                  "MAE": 38.31365820104674,
+                  "RSR": 0.5212132685958453,
+                  "RMR": 0.907183635092746
+                }
+              ],
+              "AcceptedStatsName": "Name n Slope Intercept SEslope SEintercept R2 RMSE NSE ME MAE RSR RMR",
+              "POName": "PredictedObservedLeachingDrainage",
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -271,7 +468,29 @@
           "AllColumns": true,
           "Name": "PredictedObservedKellyWater",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": null,
+              "AcceptedStatsName": null,
+              "POName": null,
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -286,7 +505,29 @@
           "AllColumns": true,
           "Name": "PredictedObservedKana",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": null,
+              "AcceptedStatsName": null,
+              "POName": null,
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         },
@@ -301,7 +542,29 @@
           "AllColumns": true,
           "Name": "PredictedObservedInSpace",
           "ResourceName": null,
-          "Children": [],
+          "Children": [
+            {
+              "$type": "Models.Tests, Models",
+              "AcceptedStats": null,
+              "AcceptedStatsName": null,
+              "POName": null,
+              "Name": "Tests",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nWhere:\r\n - n: The number of PO (predicted-observed) pairs for the given variable;  \r\n - Slope: The slope of the straight line linear regression. A perfect fit would have a value of 1;  \r\n - Intercept: The intercept of the straight line linear regression. A perfect fit would have a value of 0;  \r\n - SEslope: Standard error in the slope;  \r\n - SEintercept: Standard error in the intercept.;  \r\n - R2: The value for the coefficient of determination. It varies between 0 and 1, where 1 is a perfect fit;  \r\n - RMSE: Root Mean Squared Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - NSE: Nash-Sutcliffe Efficiency. Indicates how well the PO data fits the 1:1 line. Ranges from -infinity to 1 with 1 being the optimal value while values  between 0 and 1 are generally viewed as acceptable. Values < 0 indicate unacceptable model performance;  \r\n - ME: Mean Error between predicted and observed values. 0 is a perfect fit;  \r\n - MAE: Mean Absolute Error. 0 is a perfect fit. Values less than half the standard deviation of the observed data are acceptable;  \r\n - RSR: Ratio between the RMSE and the standard deviation of observations. 0 is a perfect fit;  \r\n - RMR: Ratio between the RMSE and the mean of observations. 0 indicates a perfect fit;  \r\n",
+                  "Name": "Note",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
           "Enabled": true,
           "ReadOnly": false
         }
@@ -973,7 +1236,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "The Hudson experiment was conducted in the Liverpool Plains region of New South Wales, Australia (31o 45' S, 150o 45' E) to explore the water balance and productivity of nine different cropping systems including six treatments of continuous cropping of wheat ( Triticum aestivum ), sorghum ( Sorghum bicolor ), mungbeans ( Phaseolus aureus ), and chickpeas ( Cicer arietinum ) with differing cropping frequencies ([paydar_deep_2005]). The remaining three treatments involved continuous perennial pastures of lucerne ( Medicago sativa ), grass ( Panicum coloratum ), and a lucerne-grass mixture. Only the continuous wheat cropping has been chosen. The soil profile is classified as an endocalcareous, self-mulching, black vertosol (Isbell, 1996) or Ug5.15 (Northcote, 1979). The soil to around 1 m depth consists of colluvial material with 75% to 80% clay. This overlies >5 m of brown clay with variable amounts of calcium carbonate concretions. Groundwater occurs 15 m below the surface above basalt rock. Further detail on soil properties is provided by [ringrose-voase_deep_2003]. Soil water content to 3.1 m depth was measured with a calibrated neutron moisture meter (CPN 503 DR Hydroprobe moisture gauge, Boart Longyear Co., South Jordan, Utah) at regular intervals from December 1994 until January 2000. Crop and pasture growth and development and soil and crop nitrogen contents were also monitored for the duration of the trial. \n\nModel predictions are compared to measurements of soil water and naturally occurring soil chloride. Comparison of soil water data demonstrates the model's ability to simulate the water balance of two contrasting farming systems, while the soil chloride data provide an inert environmental tracer for testing model predictions of solute transport. ",
+              "Text": "The Hudson experiment was conducted in the Liverpool Plains region of New South Wales, Australia (31o 45' S, 150o 45' E) to explore the water balance and productivity of nine different cropping systems including six treatments of continuous cropping of wheat ( Triticum aestivum ), sorghum ( Sorghum bicolor ), mungbeans ( Phaseolus aureus ), and chickpeas ( Cicer arietinum ) with differing cropping frequencies ([#paydar_deep_2005]). The remaining three treatments involved continuous perennial pastures of lucerne ( Medicago sativa ), grass ( Panicum coloratum ), and a lucerne-grass mixture. Only the continuous wheat cropping has been chosen. The soil profile is classified as an endocalcareous, self-mulching, black vertosol (Isbell, 1996) or Ug5.15 (Northcote, 1979). The soil to around 1 m depth consists of colluvial material with 75% to 80% clay. This overlies >5 m of brown clay with variable amounts of calcium carbonate concretions. Groundwater occurs 15 m below the surface above basalt rock. Further detail on soil properties is provided by [#ringrose-voase_deep_2003]. Soil water content to 3.1 m depth was measured with a calibrated neutron moisture meter (CPN 503 DR Hydroprobe moisture gauge, Boart Longyear Co., South Jordan, Utah) at regular intervals from December 1994 until January 2000. Crop and pasture growth and development and soil and crop nitrogen contents were also monitored for the duration of the trial. \n\nModel predictions are compared to measurements of soil water and naturally occurring soil chloride. Comparison of soil water data demonstrates the model's ability to simulate the water balance of two contrasting farming systems, while the soil chloride data provide an inert environmental tracer for testing model predictions of solute transport. ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -982,7 +1245,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "HudsonW1",
               "ResourceName": null,
               "Children": [
@@ -1658,6 +1920,8 @@
                         },
                         {
                           "$type": "Models.Soils.Swim3, Models",
+                          "hydrol_effective_depth": 450.0,
+                          "hydrol_effective_exponent": 4.16,
                           "Salb": 0.13,
                           "CN2Bare": 75.0,
                           "CNRed": 20.0,
@@ -2081,6 +2345,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -3305,7 +3570,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "These simulations mimic the experimental work of Laura Buckthought done as part of her PhD ([buckthought_interactive_2013]) and reported in [buckthought_urine_2015]. Differring timings of urine depositions (none, 800 kg N /ha in autumn, 800 kg N /ha in spring) and amounts of fertiliser (0, 200 and 400 kg N /ha /year applied in eight applications) were used in a complete factorial experimnet with four replicates. A ryegrass - white clover pasture was grown in seepage lysimeters that contained intact cores of a Horotiu Silt Loam. \n\nThe simulation mimics the experimental set up with standard values and components used. The exception to this was the inclusion of a Manager componed used to address known issues in the simulation of denitrification, mineralisation and nitrification in these high-organic matter allophanic soils in New Zealand's temperate regions. The quality of the C and N simulation is not the target of this test but the excessive denitrification was depressing plant growth so denitrification parameters were adjusted downwards.\n\nThe primary results used here include the amount of pasture harvested and the amount of drainage measured from the lysimeters. Data on the leachoing of nitrate is included for reference. Drainage is slightly over-estimated ccompared to the measurements and it is highly likely that this is a result of the underestimation of pasture growth, which again is likely caused by the C and N simulation (leaching of N is too high). \n\nThe fourth graph shows the reults of the water mass balance checks. Over the 18 months of the experiment a there was a gain of less than 0.002 mm of water which is considered to be acceptable.\n\n",
+              "Text": "These simulations mimic the experimental work of Laura Buckthought done as part of her PhD ([#buckthought_interactive_2013]) and reported in [#buckthought_urine_2015]. Differring timings of urine depositions (none, 800 kg N /ha in autumn, 800 kg N /ha in spring) and amounts of fertiliser (0, 200 and 400 kg N /ha /year applied in eight applications) were used in a complete factorial experimnet with four replicates. A ryegrass - white clover pasture was grown in seepage lysimeters that contained intact cores of a Horotiu Silt Loam. \n\nThe simulation mimics the experimental set up with standard values and components used. The exception to this was the inclusion of a Manager componed used to address known issues in the simulation of denitrification, mineralisation and nitrification in these high-organic matter allophanic soils in New Zealand's temperate regions. The quality of the C and N simulation is not the target of this test but the excessive denitrification was depressing plant growth so denitrification parameters were adjusted downwards.\n\nThe primary results used here include the amount of pasture harvested and the amount of drainage measured from the lysimeters. Data on the leachoing of nitrate is included for reference. Drainage is slightly over-estimated ccompared to the measurements and it is highly likely that this is a result of the underestimation of pasture growth, which again is likely caused by the C and N simulation (leaching of N is too high). \n\nThe fourth graph shows the reults of the water mass balance checks. Over the 18 months of the experiment a there was a gain of less than 0.002 mm of water which is considered to be acceptable.\n\n",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -3356,7 +3621,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "BaseBuckthought",
                   "ResourceName": null,
                   "Children": [
@@ -5008,9 +5272,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 2500.0,
                           "InitialRootDM": 500.0,
                           "InitialRootDepth": 500.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -5050,24 +5316,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -5092,9 +5357,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 500.0,
                           "InitialRootDM": 250.0,
                           "InitialRootDepth": 250.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -5134,24 +5401,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPWhiteClover",
                           "ResourceName": "AGPWhiteClover",
                           "Children": [],
@@ -5423,6 +5689,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 0.0,
                               "CNRed": 20.0,
@@ -5481,6 +5749,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -6033,7 +6302,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\nExperiment with a range of  tile drainage spacings\n\n\n### Status of the simulation (as at Sept 2022):\n1. Management is 80% - final checking is needed\n4. Cultivars: fixed corn and soy cultivar for all years, to improve that as we convert cultivars from classic to NG \n\n\n### Relevant publications\n1. [pasley_rotating_2021]\n2. [kladivko_nitrate_2004]\n\n\n ",
+              "Text": "\nExperiment with a range of  tile drainage spacings\n\n\n### Status of the simulation (as at Sept 2022):\n1. Management is 80% - final checking is needed\n4. Cultivars: fixed corn and soy cultivar for all years, to improve that as we convert cultivars from classic to NG \n\n\n### Relevant publications\n1. [#pasley_rotating_2021]\n2. [#kladivko_nitrate_2004]\n\n\n ",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -6066,7 +6335,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base",
                   "ResourceName": null,
                   "Children": [
@@ -6719,6 +6987,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 70.0,
                               "CNRed": 20.0,
@@ -7306,6 +7576,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -8021,7 +8292,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "IA_Kanawha",
               "ResourceName": null,
               "Children": [
@@ -9068,6 +9338,8 @@
                         },
                         {
                           "$type": "Models.Soils.Swim3, Models",
+                          "hydrol_effective_depth": 450.0,
+                          "hydrol_effective_exponent": 4.16,
                           "Salb": 0.13,
                           "CN2Bare": 70.0,
                           "CNRed": 20.0,
@@ -9398,6 +9670,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -9830,7 +10103,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\nCentral Iowa experiment with different cropping systems. System_13 refers to a corn-soy and System_14 refers to a soy-corn rotation. Exp data collected from 3-replications. Soil moisture and WT data were collected using Decagon sesnors. WT well depth about 2.5m.     \n\n### Status of the simulation (as at Sept 2022):\n1. Management 80% final \n2. Cultivars: we used a fixed corn and a fixed soy cultivar for all years \n3. Additional measured data to be added (work in progress)\n\n### Relevant publications\n[ARCHONTOULIS2020721]\n\n[martinez_feria_linking_2018]\n\n[martinez_feria_rye_2016]\n\n[dietzel_how_2016]\n",
+              "Text": "\nCentral Iowa experiment with different cropping systems. System_13 refers to a corn-soy and System_14 refers to a soy-corn rotation. Exp data collected from 3-replications. Soil moisture and WT data were collected using Decagon sesnors. WT well depth about 2.5m.     \n\n### Status of the simulation (as at Sept 2022):\n1. Management 80% final \n2. Cultivars: we used a fixed corn and a fixed soy cultivar for all years \n3. Additional measured data to be added (work in progress)\n\n### Relevant publications\n[#ARCHONTOULIS2020721]\n\n[#martinez_feria_linking_2018]\n\n[#martinez_feria_rye_2016]\n\n[#dietzel_how_2016]\n",
               "Name": "Memo",
               "ResourceName": null,
               "Children": [],
@@ -9839,7 +10112,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "System_14",
               "ResourceName": null,
               "Children": [
@@ -11237,6 +11509,8 @@
                         },
                         {
                           "$type": "Models.Soils.Swim3, Models",
+                          "hydrol_effective_depth": 450.0,
+                          "hydrol_effective_exponent": 4.16,
                           "Salb": 0.13,
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
@@ -11582,6 +11856,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -12578,7 +12853,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "System_13",
               "ResourceName": null,
               "Children": [
@@ -13657,6 +13931,8 @@
                         },
                         {
                           "$type": "Models.Soils.Swim3, Models",
+                          "hydrol_effective_depth": 450.0,
+                          "hydrol_effective_exponent": 4.16,
                           "Salb": 0.13,
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
@@ -13994,6 +14270,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -14878,7 +15155,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 ([Huth2012SWIM3]) allows three of the four lower boundary conditions described in [verburg_methodology_1996] as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by [verburg_methodology_1996] of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SWIM3_SetLowerBC\" Manager script (to be found in both the SWIM3 example and in the Manager toolbox) for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from the soil. This option is ibbc = 0 in SWIM3. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the lines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is bbcGradient = 0.0 which means that there is no gradient of soil water potential. In this case, water moves under the influence of gravity alone at the lower boundary. This is the default for SWIM3 and will prevail unless the user intervenes.\nOther gradients can be set. For example, setting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary (which is likely to result in an unstable simulation). \n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that soil water potential is in units of cm (although units of mm are used on the user interface) and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the water table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation at the lower boundary as needed to maintain the user set soil water potential.\nSee the Manager script \"SWIM3_SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SWIM3_SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nThe simulation below runs a simple pasture simulation in an irrigated environment with lower boundary conditions of a unit gradient (“Gradient”), zero-tension seepage as in a lysimeter (“Seepage”), and a set water potential of -500 mm (so wetter than the drained upper limit, “Potential”). \n\nThe simulation contains a Manager component to check for preservation of mass in the water balance (“CalculateRollingWaterBalance”). This component calculates daily and cumulative water balances to test for errors and drift. First the component adds up the daily water inputs (rain, irrigation), outputs (drainage, **tile drainage**, soil water evaporation, runoff, plant water uptake), and change in water storage from the start to the end of the day. Here, storage is both the water in the soil and that in any surface pond. The water balance is the water added, minus water removed, minus the increase in water stored. Note that this water balance component is generic and can be added to any simulation.\n\nSeveral plots have been produced.\n\n**Daily WaterBalance** shows that the largest absolute daily error in the water balance is less than 0.0003 mm and that there are more positive errors (water ‘lost’ in the simulation) than negative errors. Following this to the **Cumulative WaterBalance** shows the effect of the lop-sided daily errors but is reassuring in that the cumulative error is less than 0.02 mm even after six years of simulation.\n\n**WaterStored** shows the amount of water stored in the soil (none of these simulations included ponding conditions). As expected, the Potential simulation has the highest water storage because the lower boundary potential of -500 mm is wetter than the drained upper limit and water is regularly being added into the simulation to maintain that water potential. The Seepage simulation holds slightly more water in the soil than the Gradient simulation because in Seepage drainage cannot occur until the lower boundary soil water potential rises to zero. That need to the water potential to rise to zero before draining means that some water must accumulate at the base of the soil while the potential is rising and so it allows more time for plants to access the water before it eventually drains. The outcome is that there will generally be somewhat less drainage when a seepage lower boundary condition is set compared to the default unit gradient boundary condition.\n\n**PsiOfLowestLayer** shows the time series of soil water potential in the lower layer. In Potential it is the prescribed -50 cm (note that SWIM3’s outputs of psi are in cm rather than mm – something that might be fixed in the future perhaps). Seepage maintains a higher value of Psi than Gradient for most of the simulation as expected.\n\n**Gradient**, **Seepage** and **Potential** detail the time series of soil water potential in the lowest layer against drainage for each boundary condition type. Close examination of **Seepage** shows that drainage is only present when the potential is zero. Note that the drainage is the sum of that during the day while the potential is that at the end of the day so it is possible that there was some drainage during the day but a slightly negative potential at the end of the day. One feature of this boundary condition is the absence of the almost-daily small (< 1mm /day) drainage amounts that are seen in **Gradient**. The negative drainage in **Potential** is the result of inflow to maintain the -500 mm soil water potential at the lower boundary. **Drainage** and **CumulativeDrainage** show the effects of the boundary conditions more clearly.\n\nIn these simulations there is no difference in **WaterUptake** across the boundary conditions (because the simulations are well irrigated). In the absence of irrigation it would be expected that their would be higher water uptake in the seepage and potential (given a value of -500 mm) boundary conditions as they hold more water in the soil (see **WaterStored**) for the bulk of the simulation duration.\n\nOnly the constant potential boundary condition resulted in any **Runoff** (the simulations are in a relatively dry environment with a highly permeable soil). The irrigation setting for the simulations was based on soil water deficit. Therefore, as might be expected, **Irrigation** (see also ** CumulativeIrrigation**) commenced later in each season for the constant potential boundary condition and less irrigation was applied. Also as expected, slightly more irrigation was applied to the constant gradient simulation than the seepage simulation.\n\n",
+                  "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 ([#Huth2012SWIM3]) allows three of the four lower boundary conditions described in [#verburg_methodology_1996] as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by [#verburg_methodology_1996] of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SWIM3_SetLowerBC\" Manager script (to be found in both the SWIM3 example and in the Manager toolbox) for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from the soil. This option is ibbc = 0 in SWIM3. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the lines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is bbcGradient = 0.0 which means that there is no gradient of soil water potential. In this case, water moves under the influence of gravity alone at the lower boundary. This is the default for SWIM3 and will prevail unless the user intervenes.\nOther gradients can be set. For example, setting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary (which is likely to result in an unstable simulation). \n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that soil water potential is in units of cm (although units of mm are used on the user interface) and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the water table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation at the lower boundary as needed to maintain the user set soil water potential.\nSee the Manager script \"SWIM3_SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SWIM3_SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nThe simulation below runs a simple pasture simulation in an irrigated environment with lower boundary conditions of a unit gradient (“Gradient”), zero-tension seepage as in a lysimeter (“Seepage”), and a set water potential of -500 mm (so wetter than the drained upper limit, “Potential”). \n\nThe simulation contains a Manager component to check for preservation of mass in the water balance (“CalculateRollingWaterBalance”). This component calculates daily and cumulative water balances to test for errors and drift. First the component adds up the daily water inputs (rain, irrigation), outputs (drainage, **tile drainage**, soil water evaporation, runoff, plant water uptake), and change in water storage from the start to the end of the day. Here, storage is both the water in the soil and that in any surface pond. The water balance is the water added, minus water removed, minus the increase in water stored. Note that this water balance component is generic and can be added to any simulation.\n\nSeveral plots have been produced.\n\n**Daily WaterBalance** shows that the largest absolute daily error in the water balance is less than 0.0003 mm and that there are more positive errors (water ‘lost’ in the simulation) than negative errors. Following this to the **Cumulative WaterBalance** shows the effect of the lop-sided daily errors but is reassuring in that the cumulative error is less than 0.02 mm even after six years of simulation.\n\n**WaterStored** shows the amount of water stored in the soil (none of these simulations included ponding conditions). As expected, the Potential simulation has the highest water storage because the lower boundary potential of -500 mm is wetter than the drained upper limit and water is regularly being added into the simulation to maintain that water potential. The Seepage simulation holds slightly more water in the soil than the Gradient simulation because in Seepage drainage cannot occur until the lower boundary soil water potential rises to zero. That need to the water potential to rise to zero before draining means that some water must accumulate at the base of the soil while the potential is rising and so it allows more time for plants to access the water before it eventually drains. The outcome is that there will generally be somewhat less drainage when a seepage lower boundary condition is set compared to the default unit gradient boundary condition.\n\n**PsiOfLowestLayer** shows the time series of soil water potential in the lower layer. In Potential it is the prescribed -50 cm (note that SWIM3’s outputs of psi are in cm rather than mm – something that might be fixed in the future perhaps). Seepage maintains a higher value of Psi than Gradient for most of the simulation as expected.\n\n**Gradient**, **Seepage** and **Potential** detail the time series of soil water potential in the lowest layer against drainage for each boundary condition type. Close examination of **Seepage** shows that drainage is only present when the potential is zero. Note that the drainage is the sum of that during the day while the potential is that at the end of the day so it is possible that there was some drainage during the day but a slightly negative potential at the end of the day. One feature of this boundary condition is the absence of the almost-daily small (< 1mm /day) drainage amounts that are seen in **Gradient**. The negative drainage in **Potential** is the result of inflow to maintain the -500 mm soil water potential at the lower boundary. **Drainage** and **CumulativeDrainage** show the effects of the boundary conditions more clearly.\n\nIn these simulations there is no difference in **WaterUptake** across the boundary conditions (because the simulations are well irrigated). In the absence of irrigation it would be expected that their would be higher water uptake in the seepage and potential (given a value of -500 mm) boundary conditions as they hold more water in the soil (see **WaterStored**) for the bulk of the simulation duration.\n\nOnly the constant potential boundary condition resulted in any **Runoff** (the simulations are in a relatively dry environment with a highly permeable soil). The irrigation setting for the simulations was based on soil water deficit. Therefore, as might be expected, **Irrigation** (see also ** CumulativeIrrigation**) commenced later in each season for the constant potential boundary condition and less irrigation was applied. Also as expected, slightly more irrigation was applied to the constant gradient simulation than the seepage simulation.\n\n",
                   "Name": "Memo Lower BC",
                   "ResourceName": null,
                   "Children": [],
@@ -14896,8 +15173,7 @@
                         "[SWIM3_SetLowerBC].Script.LowerBCType=gradient",
                         "[SWIM3].MaxWaterIncrement=1"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Gradient",
                       "ResourceName": null,
                       "Children": [],
@@ -14911,8 +15187,7 @@
                         "[SWIM3].MaxWaterIncrement=5",
                         "[SWIM3].DTMax = 30"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Seepage",
                       "ResourceName": null,
                       "Children": [],
@@ -14927,8 +15202,7 @@
                         "[SWIM3].MaxWaterIncrement=5",
                         "[SWIM3].DTMax = 30"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Potential",
                       "ResourceName": null,
                       "Children": [],
@@ -14941,7 +15215,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_LowerBC",
                   "ResourceName": null,
                   "Children": [
@@ -15808,6 +16081,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -15910,6 +16185,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -16145,9 +16421,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 2500.0,
                           "InitialRootDM": 500.0,
                           "InitialRootDepth": 350.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -16187,24 +16465,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -16229,9 +16506,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 500.0,
                           "InitialRootDM": 250.0,
                           "InitialRootDepth": 300.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -16271,24 +16550,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPWhiteClover",
                           "ResourceName": "AGPWhiteClover",
                           "Children": [],
@@ -17073,8 +17351,7 @@
                         "[SWIM3_SetLowerBC].Script.LowerBCValue=0",
                         "[Swim3].MaxWaterIncrement = 1.0"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Potential_0",
                       "ResourceName": null,
                       "Children": [],
@@ -17087,8 +17364,7 @@
                         "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
                         "[SWIM3_SetLowerBC].Script.LowerBCValue=-1000"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Potential_1000",
                       "ResourceName": null,
                       "Children": [],
@@ -17101,8 +17377,7 @@
                         "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
                         "[SWIM3_SetLowerBC].Script.LowerBCValue=-10000"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Potential_10000",
                       "ResourceName": null,
                       "Children": [],
@@ -17115,8 +17390,7 @@
                         "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
                         "[SWIM3_SetLowerBC].Script.LowerBCValue=-100000"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Potential_100000",
                       "ResourceName": null,
                       "Children": [],
@@ -17129,7 +17403,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_LowerBC_Potentials",
                   "ResourceName": null,
                   "Children": [
@@ -17895,6 +18168,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 0.0,
                               "CNRed": 0.0,
@@ -17997,6 +18272,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -18232,9 +18508,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 2500.0,
                           "InitialRootDM": 500.0,
                           "InitialRootDepth": 350.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -18274,24 +18552,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -18316,9 +18593,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 500.0,
                           "InitialRootDM": 250.0,
                           "InitialRootDepth": 300.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -18358,24 +18637,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPWhiteClover",
                           "ResourceName": "AGPWhiteClover",
                           "Children": [],
@@ -19009,7 +19287,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "See the \"SetSurfaceBoundaryCondition\" manager script for examples of how to change the surface boundary conditions.\n\n## SetSurfaceBoundaryCondition(CurveNumber)\n\nThe curve number approach for calculating runoff is the default surface boundary condition and is applicable to most 'open field' simulations. This option is ISBC = 0 in SWIM. This surface boundary condition relies on the value of **bare soil runoff curve number** in the SWIM3 component. Setting this surface boundary condition is done using a command in a Manager script:\n\n\tSetSurfaceBCForCurveNumber();\n\n**NOTE: If bare soil runoff curve number is set to zero then SWIM will enable ponding and excess water at the surface will go into a pond instead of runoff.** This is equivalent to ISBC = 1 in SWIM.\n\n## SetSurfaceBoundaryCondition(PowerFunction)\n\nA simple power-law function for calculating runoff can be defined. This option is ISBC = 2 in the SWIM manual. This function requires 6 arguments to be specified. The first three arguments define the minimum, maximum and initial size of the pond (mm). The last three arguments define the parameters (hrc, roff0, roff1) to the runoff equation as defined in the SWIM manual [verburg_methodology_1996].\n\n\nSetting this surface boundary condition is done using a command in a Manager script:\n\n\tswim.SetSurfaceBCForPowerFunction(minimumSurfaceStorage: 10, \n                    \t\t  maximumSurfaceStorage: 20, \n                    \t\t  initialSurfaceStorage: 15, \n                    \t\t  precipitationConstant: 50, \n                    \t\t  runoffRateFactor: 0.2, \n                    \t\t  runoffRatePower: 2);\n\n## Testing\n\nAn experiment has been set up to show the impacts of using these two methods for setting the surface boundary condition. The first three experiment factors use the curve number approach with 3 different curve numbers (0, 50 and 90). The fouth factor uses the power-rate function.\n\nThe graphs show the following characteristics:\n* When curve number is zero there is no runoff. Instead ponding occurs at serveral points during the simulation. The lack of runoff results in more water stored in the profile.\n* Using the power function (with the above arguments) results in the lowest rate of runoff. \n* As expected, using a curve number of 90 results in the highest rate of runoff.\n* Mass balance is maintained for all options.\n\n",
+                  "Text": "See the \"SetSurfaceBoundaryCondition\" manager script for examples of how to change the surface boundary conditions.\n\n## SetSurfaceBoundaryCondition(CurveNumber)\n\nThe curve number approach for calculating runoff is the default surface boundary condition and is applicable to most 'open field' simulations. This option is ISBC = 0 in SWIM. This surface boundary condition relies on the value of **bare soil runoff curve number** in the SWIM3 component. Setting this surface boundary condition is done using a command in a Manager script:\n\n\tSetSurfaceBCForCurveNumber();\n\n**NOTE: If bare soil runoff curve number is set to zero then SWIM will enable ponding and excess water at the surface will go into a pond instead of runoff.** This is equivalent to ISBC = 1 in SWIM.\n\n## SetSurfaceBoundaryCondition(PowerFunction)\n\nA simple power-law function for calculating runoff can be defined. This option is ISBC = 2 in the SWIM manual. This function requires 6 arguments to be specified. The first three arguments define the minimum, maximum and initial size of the pond (mm). The last three arguments define the parameters (hrc, roff0, roff1) to the runoff equation as defined in the SWIM manual [#verburg_methodology_1996].\n\n\nSetting this surface boundary condition is done using a command in a Manager script:\n\n\tswim.SetSurfaceBCForPowerFunction(minimumSurfaceStorage: 10, \n                    \t\t  maximumSurfaceStorage: 20, \n                    \t\t  initialSurfaceStorage: 15, \n                    \t\t  precipitationConstant: 50, \n                    \t\t  runoffRateFactor: 0.2, \n                    \t\t  runoffRatePower: 2);\n\n## Testing\n\nAn experiment has been set up to show the impacts of using these two methods for setting the surface boundary condition. The first three experiment factors use the curve number approach with 3 different curve numbers (0, 50 and 90). The fouth factor uses the power-rate function.\n\nThe graphs show the following characteristics:\n* When curve number is zero there is no runoff. Instead ponding occurs at serveral points during the simulation. The lack of runoff results in more water stored in the profile.\n* Using the power function (with the above arguments) results in the lowest rate of runoff. \n* As expected, using a curve number of 90 results in the highest rate of runoff.\n* Mass balance is maintained for all options.\n\n",
                   "Name": "Memo Surface BC",
                   "ResourceName": null,
                   "Children": [],
@@ -19027,8 +19305,7 @@
                         "[SetSurfaceBoundaryCondition].Script.SurfaceBCType = CurveNumber",
                         "[Swim3].CN2Bare = 0"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "CurveNumber0",
                       "ResourceName": null,
                       "Children": [],
@@ -19041,8 +19318,7 @@
                         "[SetSurfaceBoundaryCondition].Script.SurfaceBCType = CurveNumber",
                         "[Swim3].CN2Bare = 50"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "CurveNumber50",
                       "ResourceName": null,
                       "Children": [],
@@ -19055,8 +19331,7 @@
                         "[SetSurfaceBoundaryCondition].Script.SurfaceBCType = CurveNumber",
                         "[Swim3].CN2Bare = 90"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "CurveNumber90",
                       "ResourceName": null,
                       "Children": [],
@@ -19068,8 +19343,7 @@
                       "Specifications": [
                         "[SetSurfaceBoundaryCondition].Script.SurfaceBCType = PowerFunction"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "PowerFunction",
                       "ResourceName": null,
                       "Children": [],
@@ -19082,7 +19356,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_SurfaceBC",
                   "ResourceName": null,
                   "Children": [
@@ -19600,6 +19873,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -19702,6 +19977,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -19937,9 +20213,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 2500.0,
                           "InitialRootDM": 500.0,
                           "InitialRootDepth": 350.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -19979,24 +20257,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPRyegrass",
                           "ResourceName": "AGPRyegrass",
                           "Children": [],
@@ -20021,9 +20298,11 @@
                           },
                           "CanopyType": "PastureSpecies",
                           "LightProfile": null,
+                          "InitialisePlantAtStartOfSimulation": true,
                           "InitialShootDM": 500.0,
                           "InitialRootDM": 250.0,
                           "InitialRootDepth": 300.0,
+                          "PotentialRootingDepth": -1.0,
                           "initialDMFractionsGrasses": [
                             0.15,
                             0.25,
@@ -20063,24 +20342,23 @@
                             0.0,
                             0.0
                           ],
-                          "PhotosyntheticEfficiency": 0.01,
-                          "PhotosynthesisCurveFactor": 0.8,
-                          "FractionPAR": 0.5,
-                          "ReferenceCO2": 380.0,
-                          "CO2EffectScaleFactor": 700.0,
-                          "CO2EffectOffsetFactor": 600.0,
-                          "CO2EffectMinimum": 0.7,
-                          "CO2EffectExponent": 2.0,
+                          "UseHeatStressFactor": 0,
+                          "UseColdStressFactor": 0,
+                          "UseReproSeasonFactor": 0,
+                          "ReproSeasonReferenceLatitude": 41.0,
+                          "ReproSeasonTimingCoeff": 0.14,
                           "ReproSeasonDurationCoeff": 2.0,
                           "ReproSeasonShouldersLengthFactor": 1.0,
                           "ReproSeasonOnsetDurationFactor": 0.6,
+                          "ReproSeasonMaxAllocationIncrease": 0.5,
+                          "ReproSeasonAllocationCoeff": 0.1,
                           "RelativeTurnoverEmerging": 2.0,
-                          "DetachmentDroughtCoefficient": 3.0,
-                          "DetachmentDroughtEffectMin": 0.1,
-                          "TurnoverStockFactor": 0.01,
                           "TurnoverDefoliationEffectMin": 0.025,
+                          "GlfGeneric": 1.0,
+                          "GlfSoilFertility": 1.0,
                           "MinimumGreenLeafProp": 0.8,
                           "MinimumGreenRootProp": 0.5,
+                          "PreferenceForLeafOverStems": 1.0,
                           "Name": "AGPWhiteClover",
                           "ResourceName": "AGPWhiteClover",
                           "Children": [],
@@ -20949,7 +21227,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "TileDrainage1",
                   "ResourceName": null,
                   "Children": [
@@ -21818,6 +22095,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 0.0,
                               "CNRed": 20.0,
@@ -21947,6 +22226,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -22924,7 +23204,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "TileDrainage2",
                   "ResourceName": null,
                   "Children": [
@@ -23793,6 +24072,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 0.0,
                               "CNRed": 20.0,
@@ -23922,6 +24203,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -24967,7 +25249,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "TileDrainage3",
                   "ResourceName": null,
                   "Children": [
@@ -25836,6 +26117,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 0.0,
                               "CNRed": 20.0,
@@ -25965,6 +26248,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -27343,7 +27627,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_SoluteLinear",
                   "ResourceName": null,
                   "Children": [
@@ -28502,6 +28785,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -28631,6 +28916,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -29573,7 +29859,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_SoluteNonlinear",
                   "ResourceName": null,
                   "Children": [
@@ -30826,6 +31111,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -30955,6 +31242,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -31415,7 +31703,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth2012SWIM3) allows three of the four lower boundary conditions described in [verburg_methodology_1996] as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by [verburg_methodology_1996] of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nThis test ensures that the code to initialise psi from initial values of theta is providing a close enough estimate.",
+              "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth2012SWIM3) allows three of the four lower boundary conditions described in [#verburg_methodology_1996] as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by [#verburg_methodology_1996] of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nThis test ensures that the code to initialise psi from initial values of theta is providing a close enough estimate.",
               "Name": "Memo Initial Conditions",
               "ResourceName": null,
               "Children": [],
@@ -31716,6 +32004,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -31812,6 +32102,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -32231,6 +32522,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -32327,6 +32620,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -32746,6 +33040,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -32842,6 +33138,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -32994,7 +33291,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_InitialConditions",
                   "ResourceName": null,
                   "Children": [
@@ -33438,6 +33734,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -33540,6 +33838,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -34000,7 +34299,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Irrigation",
                   "ResourceName": null,
                   "Children": [
@@ -34402,6 +34700,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 50.0,
                               "CNRed": 20.0,
@@ -34498,6 +34798,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "SoilTemperature",
                               "ResourceName": null,
                               "Children": [],
@@ -34924,7 +35225,6 @@
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "HydraulicPropertyTests",
           "ResourceName": null,
           "Children": [
@@ -35700,6 +36000,8 @@
                     },
                     {
                       "$type": "Models.Soils.Swim3, Models",
+                      "hydrol_effective_depth": 450.0,
+                      "hydrol_effective_exponent": 4.16,
                       "Salb": 0.13,
                       "CN2Bare": 75.0,
                       "CNRed": 20.0,
@@ -36123,6 +36425,7 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Thickness": null,
                       "InitialValues": null,
+                      "InteractionsPerDay": 8,
                       "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
@@ -36391,7 +36694,6 @@
           "Children": [
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "PoreInteractionIndexBase",
               "ResourceName": null,
               "Children": [
@@ -37167,6 +37469,8 @@
                         },
                         {
                           "$type": "Models.Soils.Swim3, Models",
+                          "hydrol_effective_depth": 450.0,
+                          "hydrol_effective_exponent": 4.16,
                           "Salb": 0.13,
                           "CN2Bare": 75.0,
                           "CNRed": 20.0,
@@ -37590,6 +37894,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],

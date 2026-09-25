@@ -16,7 +16,7 @@ using APSIM.Numerics;
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant predictive stocking activity using ENSO predictions</summary>
-    /// <summary>This activity will undertake stocking and destocking based on future season predictions (La Nini or El Nino)</summary>
+    /// <summary>This activity will undertake stocking and destocking based on future season predictions (La Nina or El Nino)</summary>
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     [Serializable]
@@ -31,7 +31,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
         private Relationship pastureToStockingChangeElNino { get; set; }
         private Relationship pastureToStockingChangeLaNina { get; set; }
 
@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("SOI monthly data file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "SOI monthly data filename required")]
-        [Models.Core.Display(Type = DisplayType.FileName)]
+        [Core.Display(Type = DisplayType.FileName)]
         public string MonthlySOIFile { get; set; }
 
         /// <summary>
@@ -118,7 +118,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityPredictiveStockingENSO()
         {
-            this.SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -129,18 +128,24 @@ namespace Models.CLEM.Activities
             // if average >= 7 assumed La Nina. If <= 7 El Nino, else Neutral
             // http://www.bom.gov.au/climate/influences/timeline/
 
-            DateTime date = new DateTime(clock.Today.Year, clock.Today.Month, 1);
+            DateTime date = new(clock.Today.Year, clock.Today.Month, 1);
             int monthsAvailable = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Count();
             // get sum of previous 6 months
             double ensoValue = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Sum(a => a.Value);
             // get average SIOIndex
             ensoValue /= monthsAvailable;
             if (ensoValue <= SOIForElNino)
+            {
                 return ENSOState.ElNino;
+            }
             else if (ensoValue >= SOIForLaNina)
+            {
                 return ENSOState.LaNina;
+            }
             else
+            {
                 return ENSOState.Neutral;
+            }
         }
 
         /// <inheritdoc/>
@@ -188,15 +193,19 @@ namespace Models.CLEM.Activities
 
             Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
-                fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySOIFile, simulation.FileName);
+            {
+                fullFilename = PathUtilities.GetAbsolutePath(MonthlySOIFile, simulation.FileName);
+            }
             else
-                fullFilename = this.MonthlySOIFile;
+            {
+                fullFilename = MonthlySOIFile;
+            }
 
             //check file exists
             if (File.Exists(fullFilename))
             {
                 // load ENSO file into memory
-                using (StreamReader ensoStream = new StreamReader(MonthlySOIFile))
+                using (StreamReader ensoStream = new(MonthlySOIFile))
                 {
                     string line = "";
                     while ((line = ensoStream.ReadLine()) != null)
@@ -216,9 +225,11 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name), MessageType.Error);
+            {
+                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, Name), MessageType.Error);
+            }
 
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
 
             // try attach relationships
             pastureToStockingChangeElNino = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
@@ -227,7 +238,10 @@ namespace Models.CLEM.Activities
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             var grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
             if (grazeFoodStore != null)
+            {
                 paddocks = Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
+            }
+
             paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
         }
 
@@ -253,7 +267,7 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (a.Location ?? "") != "");
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
 
-            // Get ENSO forcase for current time
+            // Get ENSO forecast for current time
             ENSOState forecastEnsoState = GetENSOMeasure();
 
             foreach (GrazeFoodStoreType pasture in paddocks)
@@ -263,10 +277,10 @@ namespace Models.CLEM.Activities
                 double aELocationNeeded = 0;
 
                 // total adult equivalents of all breeds on pasture for utilisation
-                double totalAE = paddockIndividuals.Sum(a => a.AdultEquivalent);
+                double totalAE = paddockIndividuals.Sum(a => a.Weight.AdultEquivalent);
                 // determine AE marked for sale and purchase of managed herd
-                double markedForSaleAE = paddockIndividuals.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-                double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == pasture.Name).Sum(a => a.AdultEquivalent);
+                double markedForSaleAE = paddockIndividuals.Where(a => a.IsReadyForSale).Sum(a => a.Weight.AdultEquivalent);
+                double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == pasture.Name).Sum(a => a.Weight.AdultEquivalent);
 
                 double herdChange = 1.0;
                 bool relationshipFound = false;
@@ -275,7 +289,7 @@ namespace Models.CLEM.Activities
                     case ENSOState.Neutral:
                         break;
                     case ENSOState.ElNino:
-                        if (!(pastureToStockingChangeElNino is null))
+                        if (pastureToStockingChangeElNino is not null)
                         {
                             double kgha = pasture.TonnesPerHectare * 1000;
                             herdChange = pastureToStockingChangeElNino.SolveY(kgha);
@@ -283,7 +297,7 @@ namespace Models.CLEM.Activities
                         }
                         break;
                     case ENSOState.LaNina:
-                        if (!(pastureToStockingChangeLaNina is null))
+                        if (pastureToStockingChangeLaNina is not null)
                         {
                             double kgha = pasture.TonnesPerHectare * 1000;
                             herdChange = pastureToStockingChangeLaNina.SolveY(kgha);
@@ -295,8 +309,8 @@ namespace Models.CLEM.Activities
                 }
                 if (!relationshipFound)
                 {
-                    string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState == ENSOState.ElNino) ? "El Niño" : "La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
-                    this.Status = ActivityStatus.Warning;
+                    string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState == ENSOState.ElNino) ? "El Niño" : "La Niña")} phase in [a={Name}]\r\nNo stock management will be performed in this phase.";
+                    Status = ActivityStatus.Warning;
                     Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
 
@@ -410,7 +424,7 @@ namespace Models.CLEM.Activities
 
                         if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                         {
-                            destockDone += ruminant.AdultEquivalent;
+                            destockDone += ruminant.Weight.AdultEquivalent;
                             ruminant.SaleFlag = HerdChangeReason.DestockSale;
                         }
                     }
@@ -431,8 +445,8 @@ namespace Models.CLEM.Activities
                         var specifyComponents = Structure.FindChildren<SpecifyRuminant>();
                         if (specifyComponents.Count() == 0)
                         {
-                            string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
-                            this.Status = ActivityStatus.Warning;
+                            string warn = $"No [f=SpecifyRuminant]s were provided in [a={Name}]\r\nNo restocking will be performed.";
+                            Status = ActivityStatus.Warning;
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
 
@@ -445,20 +459,21 @@ namespace Models.CLEM.Activities
 
                             while (MathUtilities.IsLessThanOrEqual(restockDone, restockToDo - restockToSkip) && MathUtilities.IsLessThan(sumAE, limitAE) && MathUtilities.IsPositive(aEToBuy))
                             {
-                                Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
+                                Ruminant newIndividual = item.Details.CreateIndividuals(1, null, clock.Today).FirstOrDefault();
                                 newIndividual.Location = pasture.Name;
-                                newIndividual.BreedParams = item.BreedParams;
-                                newIndividual.HerdName = item.BreedParams.Name;
-                                newIndividual.PurchaseAge = newIndividual.Age;
+                                newIndividual.Parameters = item.BreedType.Parameters;
+                                newIndividual.DateOfPurchase = clock.Today;
+                                //newIndividual.DateEnteredSimulation = clock.Today;
+
                                 newIndividual.SaleFlag = HerdChangeReason.RestockPurchase;
 
-                                if (MathUtilities.FloatsAreEqual(newIndividual.Weight, 0))
+                                if (MathUtilities.FloatsAreEqual(newIndividual.Weight.Live, 0))
                                 {
-                                    throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
+                                    throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{Name}]");
                                 }
 
                                 HerdResource.PurchaseIndividuals.Add(newIndividual);
-                                double indAE = newIndividual.AdultEquivalent;
+                                double indAE = newIndividual.Weight.AdultEquivalent;
                                 aEToBuy -= indAE;
                                 sumAE += indAE;
                                 restockDone += indAE;
@@ -479,102 +494,6 @@ namespace Models.CLEM.Activities
                 // fire event to allow reporting of findings
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                bool extracomps = false;
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Monthly SOI data are provided by {CLEMModel.DisplaySummaryValueSnippet(MonthlySOIFile, "File not set", HTMLSummaryStyle.FileReader)}");
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The mean of the previous ");
-                if(AssessMonths == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">Not set</span>");
-                else
-                    htmlWriter.Write($"<span class=\"setvalue\">{AssessMonths}</span>");
-
-                htmlWriter.Write($" months will determine the current ENSO phase where:");
-                htmlWriter.Write("</div>");
-
-                // when in El Nino
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">El Ni&ntilde;o phase</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI less than <span class=\"setvalue\">{SOIForElNino}</span></div>");
-
-                // relationship to use
-                var relationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeElNino").FirstOrDefault();
-                if (relationship is null)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
-                }
-
-                htmlWriter.Write("</div>");
-
-
-                // when in La Nina
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">La Ni&ntilde;a phase</div>");
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Mean SOI greater than <span class=\"setvalue\">{SOIForLaNina}</span></div>");
-
-                // relationship to use
-                relationship = Structure.FindChildren<Relationship>().Where(a => a.Identifier == "PastureToStockingChangeLaNina").FirstOrDefault();
-                if (relationship is null)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Herd change will be calculated from <span class=\"otherlink\">Relationship.{relationship.Name}</span> provided below</div>");
-                }
-
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
-                // Destock
-                htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                var rumGrps = Structure.FindChildren<RuminantGroup>();
-                if (rumGrps.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Destocking will be performed in the order of <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> provided below</div>");
-                }
-
-                // restock
-                // pasture
-                var specs = Structure.FindChildren<SpecifyRuminant>();
-                if(specs.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">SpecifyRuminant</span> were provided</span>. No restocking will be performed</div>");
-                else
-                {
-                    extracomps = true;
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be performed in the order of <span class=\"resourcelink\">SpecifyRuminant</span> provided below</div>");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Restocking will be only take place when pasture biomass is above {MinimumFeedBeforeRestock} kg per hectare</div>");
-                }
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">");
-                if (extracomps)
-                    htmlWriter.Write("<div class=\"labournote\">Additional components used by this activity</div>");
-                else
-                    htmlWriter.Write("<div class=\"labournote\">No additional components have been supplied</div>");
-
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "</div>";
-        }
-        #endregion
     }
 
     /// <summary>

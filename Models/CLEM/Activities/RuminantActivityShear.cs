@@ -8,7 +8,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
-using APSIM.Shared.Utilities;
 using System.IO;
 using APSIM.Numerics;
 
@@ -16,8 +15,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant shear activity</summary>
     /// <summary>This activity shears the specified ruminants and placed clip in a store</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -46,12 +43,19 @@ namespace Models.CLEM.Activities
         public string WoolProductStoreName { get; set; }
 
         /// <summary>
-        /// Name of Product store to place cahsmere clip (with Resource Group name appended to the front [separated with a '.'])
+        /// Name of Product store to place cashmere clip (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Store to place cashmere clip")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
         public string CashmereProductStoreName { get; set; }
+
+        /// <summary>
+        /// The proportion of the fleece weight clipped and removed (i.e. fleece taken)
+        /// </summary>
+        [Description("Proportion fleece clipped")]
+        [Required, Proportion]
+        public double ProportionFleeceRemoved { get; set; } = 1.0;
 
         /// <summary>
         /// Product store for wool clip
@@ -100,7 +104,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(true, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
             // locate StoreType resource
@@ -115,7 +119,9 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             numberToDo = 0;
             numberToSkip = 0;
-            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Wool + a.Cashmere > 0);
+
+            // no filters applied here as we don't want to assume anything. User can filter based on ruminant.ProportionFleeceAttained or fleece weight and allow MarkedForSale in time-step.
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>();
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
@@ -145,7 +151,7 @@ namespace Models.CLEM.Activities
                                 valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per kg fleece":
-                                amountToDo = uniqueIndividuals.Sum(a => a.Wool + a.Cashmere);
+                                amountToDo = uniqueIndividuals.Sum(a => (a.Weight.Wool.Amount + a.Weight.Cashmere.Amount)*ProportionFleeceRemoved);
                                 valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
@@ -168,14 +174,20 @@ namespace Models.CLEM.Activities
                 // find shortfall by identifiers as these may have different influence on outcome
                 var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number shorn").FirstOrDefault();
                 if (numberShort != null)
+                {
                     numberToSkip = Convert.ToInt32(numberToDo * (1 - numberShort.Available / numberShort.Required));
+                }
 
                 var kgShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Weight of fleece").FirstOrDefault();
                 if (kgShort != null)
+                {
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - kgShort.Available / kgShort.Required));
+                }
 
-                if(numberToSkip + amountToSkip > 0)
+                if (numberToSkip + amountToSkip > 0)
+                {
                     Status = ActivityStatus.Partial;
+                }
                 else if(MathUtilities.FloatsAreEqual(numberToSkip + amountToSkip, numberToDo + amountToDo) == false)
                 {
                     Status = ActivityStatus.Critical;
@@ -195,40 +207,28 @@ namespace Models.CLEM.Activities
                 int shorn = 0;
                 foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    kgWoolShorn += ruminant.Wool;
-                    amountToDo -= ruminant.Wool;
-                    kgCashmereShorn += ruminant.Cashmere;
-                    amountToDo -= ruminant.Cashmere;
-                    ruminant.Wool = 0;
-                    ruminant.Cashmere = 0;
+                    double amount = ruminant.Weight.Wool.Amount * ProportionFleeceRemoved;
+                    kgWoolShorn += amount;
+                    amountToDo -= amount;
+                    ruminant.Weight.Wool.Adjust(amount*-1.0);
+                    ruminant.Weight.WoolClean.Adjust(ruminant.Weight.WoolClean.Amount * ProportionFleeceRemoved);
+
+                    amount = ruminant.Weight.Cashmere.Amount * ProportionFleeceRemoved;
+                    kgCashmereShorn += amount;
+                    amountToDo -= amount;
+                    ruminant.Weight.Cashmere.Adjust(amount*-1.0);
                     shorn++;
                     if (amountToDo <= 0)
+                    {
                         break;
+                    }
                 }
                 // add clip to stores
-                (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
-                (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (WoolStoreType as IResourceType).AddToResource(kgWoolShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (CashmereStoreType as IResourceType).AddToResource(kgCashmereShorn, this, this.PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial(shorn != numberToDo || MathUtilities.IsPositive(amountToDo));
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Shear selected herd and place wool clip in ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set")}");
-                htmlWriter.Write(" and cashmere clip in ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set")}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

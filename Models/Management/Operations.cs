@@ -329,36 +329,44 @@ namespace Models
                             throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
 
                         object[] parameterValues = null;
-                        foreach (MethodInfo method in methods)
-                        {
-                            if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                parameterValues = GetArgumentsForMethod(arguments, method);
+                        List<MethodInfo> matchingMethods = methods.
+                            Where(methodInfo => methodInfo.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase)).
+                            ToList();
 
-                                // invoke method.
-                                if (parameterValues != null)
+                        if (matchingMethods.Count < 1)
+                            if (parameterValues == null)
+                                throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+
+                        for(int i = 0; i < matchingMethods.Count; i++)
+                        {
+                            MethodInfo method = matchingMethods[i];
+                            parameterValues = GetArgumentsForMethod(arguments, method);
+                                
+                            // check if there are more methods to check.
+                            bool hasMore = i < matchingMethods.Count - 1;
+                            if (hasMore && parameterValues == null)
+                                continue;
+
+                            // invoke method.
+                            if (parameterValues != null)
+                            {
+                                try
                                 {
-                                    try
-                                    {
-                                        method.Invoke(model, parameterValues);
-                                    }
-                                    catch (Exception err)
-                                    {
-                                        throw err.InnerException;
-                                    }
-                                    break;
+                                    method.Invoke(model, parameterValues);
                                 }
-                                else if (parameterValues == null)
+                                catch (Exception err)
                                 {
-                                    throw new ApsimXException(this, 
-                                        "There is an issue with the arguments provided a method in the operation location at \'" + this.FullPath + 
-                                        "\'. The method with argument issue(s) is : " + modelName + "." + methodName + "().\nIf you are using named arguments, please ensure the argument names are correct.");
+                                    throw err.InnerException;
                                 }
+                                break;
+                            }
+                            else if (parameterValues == null)
+                            {
+                                throw new ApsimXException(this, 
+                                    "There is an issue with the arguments provided a method in the operation location at \'" + this.FullPath + 
+                                    "\'. The method with argument issue(s) is : " + modelName + "." + methodName + "().\nIf you are using named arguments, please ensure the argument names are correct.");
                             }
                         }
-
-                        if (parameterValues == null)
-                            throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
                     }
                 }
             }

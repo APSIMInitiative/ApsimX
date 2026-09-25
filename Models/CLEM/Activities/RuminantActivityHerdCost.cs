@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
@@ -23,6 +22,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
@@ -31,14 +31,6 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityHerdCost()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -98,7 +90,7 @@ namespace Models.CLEM.Activities
                         valuesForCompanionModels[valueToSupply.Key] = number;
                         break;
                     case "per AE":
-                        amountToDo = uniqueIndividuals.Sum(a => a.AdultEquivalent);
+                        amountToDo = uniqueIndividuals.Sum(a => a.Weight.AdultEquivalent);
                         valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:

@@ -18,7 +18,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// List of common binary (office '03) excel file extensions.
         /// </summary>
-        private static readonly string[] oldExcelFormats = new string[]
+        public static readonly string[] EXCEL_FORMATS_OLD = new string[]
         {
             ".xls"
         };
@@ -26,7 +26,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// List of common OpenXML (office '07) excel file extensions.
         /// </summary>
-        private static readonly string[] openXmlExtensions = new string[]
+        public static readonly string[] EXCEL_FORMATS_OPEN = new string[]
         {
             ".xlsx",
             ".xlsm"
@@ -40,7 +40,7 @@ namespace APSIM.Shared.Utilities
         public static bool IsExcelFile(string fileName)
         {
             string extension = Path.GetExtension(fileName).ToLower();
-            return openXmlExtensions.Contains(extension) || oldExcelFormats.Contains(extension);
+            return EXCEL_FORMATS_OPEN.Contains(extension) || EXCEL_FORMATS_OLD.Contains(extension);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace APSIM.Shared.Utilities
             {
                 string fileExtension = Path.GetExtension(fileName);
                 IExcelDataReader excelReader;
-                if (oldExcelFormats.Contains(fileExtension))
+                if (EXCEL_FORMATS_OLD.Contains(fileExtension))
                     // Reading from a binary Excel file ('97-2003 format; *.xls)
                     excelReader = ExcelReaderFactory.CreateBinaryReader(stream);
                 else
@@ -172,8 +172,7 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>Returns true if extension matches an OpenXML Excel extension.</summary>
-        public static bool IsOpenXMLExcelFile(string filename)
-            => openXmlExtensions.Contains(Path.GetExtension(filename).ToLower());
+        public static bool IsOpenXMLExcelFile(string filename) => EXCEL_FORMATS_OPEN.Contains(Path.GetExtension(filename).ToLower());
 
     }
 }

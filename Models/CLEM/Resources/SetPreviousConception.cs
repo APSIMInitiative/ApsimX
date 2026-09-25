@@ -17,27 +17,21 @@ namespace Models.CLEM.Resources
     [Description("Specify the conception status of a new female")]
     [HelpUri(@"Content/Features/Resources/SetPreviousConception.htm")]
     [Version(1, 0, 1, "")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class SetPreviousConception : CLEMModel, IValidatableObject
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Number of months pregnant
         /// </summary>
-        [Description("Number of months pregnant")]
-        [GreaterThanValue(0)]
-        public int NumberMonthsPregnant { get; set; }
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public SetPreviousConception()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
+        [Description("Number of days pregnant")]
+        [GreaterThanEqualValue(0)]
+        public int NumberDaysPregnant { get; set; }
 
         /// <summary>
         /// Set the conception details of the female provided
@@ -46,28 +40,24 @@ namespace Models.CLEM.Resources
         public void SetConceptionDetails(RuminantFemale female)
         {
             // if female can breed
-            if (NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
+            // estimated age at maturity is determined from the min size at maturity and the age for this normalised weight.
+            if (NumberDaysPregnant < female.Parameters.General.GestationLength.InDays && female.TimeSince(RuminantTimeSpanTypes.Birth,  clock.Today.AddDays(-NumberDaysPregnant)).TotalDays >= female.Parameters.Details.EstimatedAgeAtMaturityFemale)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
                 if (offspring > 0)
                 {
-                    female.UpdateConceptionDetails(offspring, 1, -1 * NumberMonthsPregnant);
+                    female.UpdateConceptionDetails(offspring, 1, -1 * NumberDaysPregnant, clock.Today);
                     // report conception status changed
-                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddMonths(-1 * NumberMonthsPregnant)));
+                    female.Parameters.Details.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddDays(-1 * NumberDaysPregnant)));
                 }
             }
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             RuminantTypeCohort ruminantCohort = Parent as RuminantTypeCohort;
-            var results = new List<ValidationResult>();
             if ((Parent as RuminantTypeCohort).Sex == Sex.Female)
             {
                 // get the breed to check gestation
@@ -77,93 +67,35 @@ namespace Models.CLEM.Resources
                     // find type from a specify ruminant component
                     var specifyRuminant = Structure.FindParent<SpecifyRuminant>(recurse: true);
                     if (specifyRuminant != null)
-                        ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this as Model, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                        ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this, specifyRuminant.RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                     if (ruminantType != null)
                     {
-                        if (NumberMonthsPregnant < ruminantType.GestationLength)
+                        if (NumberDaysPregnant < ruminantType.Parameters.General.GestationLength.InDays)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            results.Add(new ValidationResult($"The number of months pregant [{NumberMonthsPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.GestationLength}]", memberNames));
+                            yield return new ValidationResult($"The number of days pregant [{NumberDaysPregnant}] for [r=SetPreviousConception] must be less than the gestation length of the breed [{ruminantType.Parameters.General.GestationLength.InDays}]", memberNames);
                         }
                         // get the individual to check female and suitable age for conception supplied.
-                        if (ruminantCohort.Age - NumberMonthsPregnant >= ruminantType.MinimumAge1stMating)
+                        if (ruminantCohort.Age - NumberDaysPregnant >= ruminantType.Parameters.Details.EstimatedAgeAtMaturityFemale)
                         {
                             string[] memberNames = new string[] { "Ruminant cohort details" };
-                            results.Add(new ValidationResult($"The individual specified must be at least [{ruminantType.MinimumAge1stMating}] month old at the time of conception [r=SetPreviousConception]", memberNames));
+                            yield return new ValidationResult($"The individual specified must be at least [{ruminantType.EstimatedAgeAtMaturityFemale}] days old at the time of conception [r=SetPreviousConception] based on estimated age at minimum size for maturity", memberNames);
                         }
                     }
                     else
                     {
                         string[] memberNames = new string[] { "Ruminant cohort details" };
-                        results.Add(new ValidationResult($"Cannot locate a [r=RuminantType] in tree structure above [r=SetPreviousConception]", memberNames));
+                        yield return new ValidationResult($"Cannot locate a [r=RuminantType] in tree structure above [r=SetPreviousConception]", memberNames);
                     }
                 }
             }
             else
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Previous conception status can only be calculated for female ruminants", memberNames));
-            }
-
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (FormatForParentControl)
-                {
-                    // skip if this is inside the table summary of Initial Chohort
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
-                    {
-                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
-                        htmlWriter.Write($"These individuals will be ");
-                        if (NumberMonthsPregnant == 0)
-                            htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                        else
-                            htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                        htmlWriter.Write($" months pregnant</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"Set last conception age to make these females ");
-                    if (NumberMonthsPregnant == 0)
-                        htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                    htmlWriter.Write($" months pregnant</div>");
-                }
-                return htmlWriter.ToString();
+                yield return new ValidationResult("Previous conception status can only be calculated for female ruminants", memberNames);
             }
         }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
-        }
-
         #endregion
-
     }
 }

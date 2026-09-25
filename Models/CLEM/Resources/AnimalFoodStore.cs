@@ -14,6 +14,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all animal food store types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/AnimalFoodStore.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalFoodStore : ResourceBaseWithTransactions
     {
 

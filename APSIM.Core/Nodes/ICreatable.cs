@@ -1,4 +1,4 @@
-﻿namespace APSIM.Core;
+﻿namespace Models.Core;
 
 public interface ICreatable
 {

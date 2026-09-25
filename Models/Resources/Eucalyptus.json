@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 216,
+  "Version": 221,
   "Name": "Simulations",
   "Children": [
     {
@@ -4672,7 +4672,9 @@
           "MinNConc": null
         },
         {
-          "$type": "Models.Functions.DivideFunction, Models",
+          "$type": "Models.Functions.ProtectedDivideFunction, Models",
+          "NumeratorErrVal": 0.0,
+          "DenominatorErrVal": 0.0,
           "Name": "RootShootRatio",
           "Children": [
             {

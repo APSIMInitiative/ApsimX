@@ -25,7 +25,7 @@ namespace Models.CLEM.Interfaces
         public void PrepareForTimestep();
 
         /// <summary>
-        /// Method to provide the resource requests from this comapnion model and pass to parent for processing
+        /// Method to provide the resource requests from this companion model and pass to parent for processing
         /// </summary>
         /// <returns>A list of resource requests</returns>
         List<ResourceRequest> RequestResourcesForTimestep(double argument = 0);
@@ -37,13 +37,13 @@ namespace Models.CLEM.Interfaces
         void PerformTasksForTimestep(double argument = 0);
 
         /// <summary>
-        /// A method to return the list of identifiers relavent to this parent activity
+        /// A method to return the list of identifiers relevant to this parent activity
         /// </summary>
         /// <returns>A list of identifiers as stings</returns>
         List<string> ParentSuppliedIdentifiers();
 
         /// <summary>
-        /// A method to return the list of unit types relavent to the parent activity
+        /// A method to return the list of unit types relevant to the parent activity
         /// </summary>
         /// <returns>A list of units as stings</returns>
         List<string> ParentSuppliedMeasures();

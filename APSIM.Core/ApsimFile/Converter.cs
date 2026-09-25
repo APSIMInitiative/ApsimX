@@ -1,15 +1,18 @@
+using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text.Json.Nodes;
+using Newtonsoft.Json;
+using APSIM.Soils;
 
 namespace APSIM.Core;
 
@@ -19,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 216; } }
+    public static int LatestVersion { get { return 221; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -65,7 +68,7 @@ internal class Converter
             int fileVersion = (int)returnData.Root["Version"];
 
             if (fileVersion > LatestVersion)
-                throw new Exception(string.Format("Unable to open file '{0}'. This file has a version number of "+ fileVersion.ToString() + " but the version of apsim trying to run it is "+LatestVersion.ToString()+".  " +
+                throw new Exception(string.Format("Unable to open file '{0}'. This file has a version number of " + fileVersion.ToString() + " but the version of apsim trying to run it is " + LatestVersion.ToString() + ".  " +
                     "Files can only be run on an equal or greater versions of apsim. Was this file previously opened in a more recent version of Apsim?", fileName));
 
             // Run converters if not at the latest version.
@@ -809,7 +812,7 @@ internal class Converter
 
         // Get sample thickness and bulk density.
         var sampleThickness = sample["Thickness"].Values<double>().ToArray();
-        var sampleBD = SoilUtilities.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
+        var sampleBD = Shared.Utilities.SoilUtilities.MapConcentration(soilBD, soilThickness, sampleThickness, soilBD.Last(), true);
 
         for (int i = 0; i < values.Count; i++)
             values[i] = values[i].Value<double>() * 100 / (sampleBD[i] * sampleThickness[i]);
@@ -862,7 +865,7 @@ internal class Converter
                     var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                     var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = no3Values.Values<double>().ToArray();
-                    var mappedValues = SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 1.0, true);
                     no3Values = new JArray(mappedValues);
 
                     // Move from sample to analysis
@@ -889,7 +892,7 @@ internal class Converter
                     var analysisThickness = analysis["Thickness"].Values<double>().ToArray();
                     var sampleThickness = sample["Thickness"].Values<double>().ToArray();
                     var values = nh4Values.Values<double>().ToArray();
-                    var mappedValues = SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, sampleThickness, analysisThickness, 0.2, true);
                     nh4Values = new JArray(mappedValues);
 
                     // Move from sample to analysis
@@ -1259,7 +1262,7 @@ internal class Converter
                     var values = chemical["ParticleSizeSand"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeSand"] = new JArray(mappedValues);
                 }
 
@@ -1268,7 +1271,7 @@ internal class Converter
                     var values = chemical["ParticleSizeSilt"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeSilt"] = new JArray(mappedValues);
                 }
 
@@ -1277,7 +1280,7 @@ internal class Converter
                     var values = chemical["ParticleSizeClay"].Values<double>().ToArray();
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["ParticleSizeClay"] = new JArray(mappedValues);
                 }
 
@@ -1292,7 +1295,7 @@ internal class Converter
                     }
                     if (values.Length != chemicalThickness.Length)
                         Array.Resize(ref values, chemicalThickness.Length);
-                    var mappedValues = SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
+                    var mappedValues = Shared.Utilities.SoilUtilities.MapConcentration(values, chemicalThickness, physicalThickness, values.Last(), true);
                     physical["Rocks"] = new JArray(mappedValues);
                 }
 
@@ -4631,11 +4634,11 @@ internal class Converter
                     if (thicknessToReturn != null)
                     {
                         if (units == "kgha")
-                            values = SoilUtilities.MapMass(values, valuesThickness,
+                            values = Shared.Utilities.SoilUtilities.MapMass(values, valuesThickness,
                                                            thicknessToReturn,
                                                            allowMissingValues: true);
                         else
-                            values = SoilUtilities.MapConcentration(values, valuesThickness,
+                            values = Shared.Utilities.SoilUtilities.MapConcentration(values, valuesThickness,
                                                                     thicknessToReturn,
                                                                     defaultValue,
                                                                     allowMissingValues: true);
@@ -6828,7 +6831,6 @@ internal class Converter
         }
     }
 
-
     /// <summary>
     /// Change all FindSibling, FindChild, FindChildren, FindDescendent, FindAncestor methods to
     /// Structure.FindSibling, Structure.Child, Structure.FindChildren, Structure.Parent
@@ -7014,6 +7016,7 @@ internal class Converter
     /// <param name="_">The name of the apsimx file.</param>
     private static void UpgradeToVersion202(JObject root, string _)
     {
+
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
             bool isChanged = manager.Replace("[field:NonSerialized]", string.Empty);
@@ -7047,6 +7050,7 @@ internal class Converter
                 }
             }
         }
+
     }
 
     /// <summary>
@@ -7097,7 +7101,6 @@ internal class Converter
         }
     }
 
-    /// <summary>
     /// Searches for managers that may have been impacted by a bug from upgrade to 200, and tries to fix this bug if any are encountered.
     /// Looks for a parenthetic 'as' cast followed by a Structure... invocation, and moves the as cast to the relativeTo argument, with
     /// an additional appropriate cast that was intended to be added in UpgradeToVersion200.
@@ -7301,7 +7304,7 @@ internal class Converter
             Regex regex = new Regex(@"\[([^\#\]]+)\](?!\()");
             MatchCollection matches = regex.Matches(text);
             int offset = 0;
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
                 string value = match.Groups[0].Value;
                 string reference = match.Groups[1].Value;
@@ -7313,7 +7316,7 @@ internal class Converter
 
             regex = new Regex(@"<a href=""?([^\s<>]+)"">([^<>]+)<\/a>");
             matches = regex.Matches(text);
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
                 string value = match.Groups[0].Value;
                 string url = match.Groups[1].Value;
@@ -7366,8 +7369,8 @@ internal class Converter
         {
             ["$type"] = "Models.Functions.XYPairs, Models",
             ["Name"] = "XYPairs",
-            ["X"] = new JArray(new double[] {4.3,  4.9, 5.0,  6.0,  7.0,  8.0,  9.0}),
-            ["Y"] = new JArray(new double[] {30.0, 33,  39.0, 65.0, 71.0, 87.0, 90.0})
+            ["X"] = new JArray(new double[] { 4.3, 4.9, 5.0, 6.0, 7.0, 8.0, 9.0 }),
+            ["Y"] = new JArray(new double[] { 30.0, 33, 39.0, 65.0, 71.0, 87.0, 90.0 })
         };
         JObject linearInterpPMF = new JObject()
         {
@@ -7380,7 +7383,7 @@ internal class Converter
 
         //Replace all ZadokPMFs with new Zadok
         List<JObject> zadokPMFs = JsonUtilities.ChildrenRecursively(root, "ZadokPMF");
-        foreach(JObject zadok in zadokPMFs)
+        foreach (JObject zadok in zadokPMFs)
         {
             zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
             (zadok["Children"] as JArray).Add(VegetativePhasePMF);
@@ -7393,8 +7396,8 @@ internal class Converter
             ["$type"] = "Models.Functions.XYPairs, Models",
             ["Name"] = "XYPairs",
             ["ResourceName"] = null,
-            ["X"] = new JArray(new double[] {5.0,  5.99, 6.0,  7.0,  8.0,  9.0,  10.0, 11.0}),
-            ["Y"] = new JArray(new double[] {30.0, 34,   39.0, 55.0, 65.0, 71.0, 87.0, 90.0})
+            ["X"] = new JArray(new double[] { 5.0, 5.99, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0 }),
+            ["Y"] = new JArray(new double[] { 30.0, 34, 39.0, 55.0, 65.0, 71.0, 87.0, 90.0 })
         };
         JObject linearInterpWheat = new JObject()
         {
@@ -7415,7 +7418,7 @@ internal class Converter
 
         //Replace all ZadokPMFWheats with new Zadok
         List<JObject> zadokPMFWheats = JsonUtilities.ChildrenRecursively(root, "ZadokPMFWheat");
-        foreach(JObject zadok in zadokPMFWheats)
+        foreach (JObject zadok in zadokPMFWheats)
         {
             zadok["$type"] = "Models.PMF.Phen.Zadok, Models";
             (zadok["Children"] as JArray).Add(VegetativePhaseWheat);
@@ -7463,7 +7466,7 @@ internal class Converter
 
         //Add child to BBCH
         List<JObject> bbchs = JsonUtilities.ChildrenRecursively(root, "BBCH");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             JObject plant = JsonUtilities.Ancestor(bbch, "IPlant");
             if (plant != null && plant["Name"].ToString() == "Canola")
@@ -7474,7 +7477,7 @@ internal class Converter
 
         //do the same for all BBCHCanola
         bbchs = JsonUtilities.ChildrenRecursively(root, "BBCHCanola");
-        foreach(JObject bbch in bbchs)
+        foreach (JObject bbch in bbchs)
         {
             bbch["$type"] = "Models.PMF.Phen.BBCH, Models";
             (bbch["Children"] as JArray).Add(bbchCalculationCanola);
@@ -7580,6 +7583,7 @@ internal class Converter
                 }
             }
         }
+
         // 5) Manager script renames
         foreach (var manager in JsonUtilities.ChildManagers(root))
         {
@@ -7658,12 +7662,12 @@ internal class Converter
     /// <param name="fileName"></param>
     private static void UpgradeToVersion215(JObject root, string fileName)
     {
-        foreach(JObject supplement in JsonUtilities.ChildrenOfType(root, "Supplement"))
+        foreach (JObject supplement in JsonUtilities.ChildrenOfType(root, "Supplement"))
         {
             var stores = supplement["Stores"];
             if (stores != null)
             {
-                foreach(JObject store in stores.Cast<JObject>())
+                foreach (JObject store in stores.Cast<JObject>())
                 {
                     // Fodder StoreTypes have historically been a hidden StoreType property of Supplement.
                     // Now that they are children and not in a Stores property we only want them to exist
@@ -7695,16 +7699,16 @@ internal class Converter
                             newChildStore["Name"] = newChildStore["Name"].ToString().Replace(".", "");
                         }
                         JObject supplementStoreParent = JsonUtilities.Parent(store) as JObject;
-                        JsonUtilities.AddChild(supplementStoreParent, newChildStore);  
+                        JsonUtilities.AddChild(supplementStoreParent, newChildStore);
                     }
                 }
-                supplement.Remove("Stores");                
+                supplement.Remove("Stores");
             }
         }
 
-        foreach(JObject operations in JsonUtilities.ChildrenOfType(root, "Operations"))
+        foreach (JObject operations in JsonUtilities.ChildrenOfType(root, "Operations"))
         {
-            foreach(JObject operation in operations["OperationsList"])
+            foreach (JObject operation in operations["OperationsList"])
             {
                 // Remove period from supplement names in the Actions and 
                 // Line properties.
@@ -7782,4 +7786,340 @@ internal class Converter
             return string.Join('.', [$"[{plant}]", organ, .. parts[1..]]);
         }
     }
+
+    /// <summary>
+    /// Removes invalid character "/" in alias 
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion217(JObject root, string fileName)
+    {
+        foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+        {
+            var variableNames = JsonUtilities.Values(report, "VariableNames");
+
+            if (variableNames == null || variableNames.Count == 0)
+                continue;
+            bool changed = false;
+           
+            for (int i = 0; i < variableNames.Count; i++)
+            {
+                string reportVariable = variableNames[i];
+                // Only rewrite if BOTH patterns exist
+                if (reportVariable.Contains(" as "))
+                {   
+                    if(!reportVariable.Contains("//"))
+                    {
+                            // Remove all invalid characters the variable expression
+                        int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
+                        string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
+                        string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
+                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
+                        string rewritten = expr + " as " + cleanedAlias;
+                        if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
+                        {
+                            variableNames[i] = rewritten;
+                            changed = true;
+                        }
+                    }
+                    
+                }
+            }
+            if (changed)
+                JsonUtilities.SetValues(report, "VariableNames", variableNames);
+            }
+    }
+
+    /// Change CLEM to work with new custom time-step rather than months and method of handling age and dates
+    /// </summary>
+    /// <param name="root">The root JSON token.</param>
+    /// <param name="_">The name of the apsimx file.</param>
+    private static void UpgradeToVersion218(JObject root, string _)
+    {
+        Dictionary<string, string> searchReplaceStrings = new Dictionary<string, string>()
+            {
+                { "Models.CLEM.Resources.LabourAvailabilityItemMonthly", "Models.CLEM.Groupings.LabourAvailabilityGroupMonthly" },
+                { "Models.CLEM.Resources.LabourAvailabilityItem", "Models.CLEM.Groupings.LabourAvailabilityGroup" },
+            };
+
+        foreach (var item in searchReplaceStrings)
+            JsonUtilities.ReplaceChildModelType(root, item.Key, item.Value);
+
+        // replace all Grow24 with GrowPF
+
+        var rumCompUpdated = new Tuple<string, string, string>[]
+        {
+                    new ("Activities", "RuminantActivityGrow24", "RuminantActivityGrowPF"),
+                    new ("Resources", "RuminantParametersGrow24", "RuminantParametersGrowPF"),
+                    new ("Resources", "RuminantParametersGrow24CACRD", "RuminantParametersGrowPFCACRD"),
+                    new ("Resources", "RuminantParametersGrow24CD", "RuminantParametersGrowPFCD"),
+                    new ("Resources", "RuminantParametersGrow24CG", "RuminantParametersGrowPFCG"),
+                    new ("Resources", "RuminantParametersGrow24CI", "RuminantParametersGrowPFCI"),
+                    new ("Resources", "RuminantParametersGrow24CKCL", "RuminantParametersGrowPFCKCL"),
+                    new ("Resources", "RuminantParametersGrow24CM", "RuminantParametersGrowPFCM"),
+                    new ("Resources", "RuminantParametersGrow24CP", "RuminantParametersGrowPFCP"),
+                    new ("Resources", "RuminantParametersGrow24CW", "RuminantParametersGrowPFCW"),
+        };
+
+        foreach (var update in rumCompUpdated)
+        {
+            foreach (JObject rumComponent in JsonUtilities.ChildrenRecursively(root, $"Models.CLEM.{update.Item1}.{update.Item2}"))
+            {
+                rumComponent["$type"] = $"Models.CLEM.{update.Item1}.{update.Item3}, Models";
+            }
+        }
+
+        // Pseudocode plan:
+        // 1. Loop through each tuple in propertyUpdates (model type, property name).
+        // 2. For each tuple, find all nodes of the given model type in the JSON root.
+        // 3. For each node, check if the property exists and is not already an AgeSpecifier (i.e., not an object).
+        // 4. If so, replace the property value with a new AgeSpecifier object, using the existing value as input.
+        // 5. For "LabourType", multiply the value by 12 (years to months); otherwise, use the value as-is (already in months).
+
+        var propertyUpdates = new Tuple<string, string>[]
+        {
+                    new("RuminantActivityControlledMating", "MaximumAgeMating"),
+                    new("RuminantActivityWean", "WeaningAge"),
+                    new("RuminantActivityManage", "MaximumBreederAge"),
+                    new("RuminantActivityManage", "MaximumSireAge"),
+                    new("RuminantActivityManage", "MaleSellingAge"),
+                    new("RuminantActivityManage", "FemaleSellingAge"),
+                    new("ProductStoreTypeManure", "MaximumAge"),
+                    new("OtherAnimalsActivityBreed", "InitialAge")
+        };
+
+        foreach (var item in propertyUpdates)
+        {
+            foreach (var node in JsonUtilities.ChildrenOfType(root, item.Item1))
+            {
+                // Only update if AgeSpecifier is not already present
+                if (JsonUtilities.ChildrenOfType(node, "AgeSpecifier").Count == 0)
+                {
+                    var propValue = node[item.Item2];
+                    if (propValue is not null && propValue.Type.ToString() != "Object")
+                    {
+                        decimal value = node.Value<decimal>(item.Item2);
+                        if (item.Item1 == "LabourType")
+                            value *= 12;
+                        node[item.Item2] = JContainer.FromObject(createCLEMAgeSpecifier(value));   //(new Models.CLEM.AgeSpecifier(value));
+
+
+                    }
+                }
+            }
+        }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "RuminantTypeCohort"))
+        {
+            if (!node.Properties().Where(a => a.Name == "AgeDetails").Any())
+            {
+                decimal value = node.Value<decimal>("Age");
+                node.Add(new JProperty("AgeDetails", JContainer.FromObject(createCLEMAgeSpecifier(value))));   //JContainer.FromObject(new AgeSpecifier(node.Value<decimal>("Age")))));
+            }
+        }
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "FilterByProperty").Where(a => a.GetValue("PropertyOfIndividual").ToString() == "Age"))
+        {
+            node["PropertyOfIndividual"] = "AgeInYears";
+            node["Value"] = JContainer.FromObject(node.Value<decimal>("Value") / 12.0m);
+        }
+
+        if (JsonUtilities.ChildrenOfType(root, "ZoneCLEM").Any())  // make sure there is a CLEM component before adding the CLEMEvents
+        {
+            foreach (JObject clk in JsonUtilities.ChildrenRecursively(root, "Clock"))
+            {
+                //check if child already has a CLEMEvents
+                if (JsonUtilities.ChildWithName(clk, "CLEMEvents") == null)
+                {
+                    string newCLEMEvents = @"{
+                                ""$type"": ""Models.CLEM.CLEMEvents, Models"",
+                                ""TimeStep"": 30, 
+                                ""CustomTimeStep"": 0,
+                                ""EcologicalIndicatorsCalculationInterval"": 12,
+                                ""EcologicalIndicatorsCalculationMonth"": 7,
+                                ""Interval"": 0,
+                                ""Notes"": null,
+                                ""SelectedTab"": null,
+                                ""Name"": ""CLEMEvents"",
+                                ""ResourceName"": null,
+                                ""Children"": [],
+                                ""Enabled"": true,
+                                ""ReadOnly"": false
+                                }";
+
+                    //JsonUtilities.AddModel(clk, new CLEMEvents());
+                    JsonUtilities.AddChild(clk, JObject.Parse(newCLEMEvents));
+                }
+            }
+        }
+
+        // replace ActivityTimerDateRange with new ActivityTimerCalendar details
+        // set start ymd to start.Year, Start.Month, Start.Day
+        // set end ymd to end.Year, end.Month, end.Day
+
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerDateRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var decmonth = node.Value<DateTime>("StartDate");
+            decimal months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(months)))); //new AgeSpecifier(months))));
+            decmonth = node.Value<DateTime>("EndDate");
+            months = decmonth.Year * 12 + decmonth.Month + (decmonth.Day / DateTime.DaysInMonth(decmonth.Year, decmonth.Month));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(months))));  //new AgeSpecifier(months))));
+        }
+
+        // replace ActivityTimerInterval with new ActivityTimerCalendar
+        // place interval in the repeatDetails
+        // set start and end ymd to 0, MonthDue, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerInterval"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var monthDue = node.Value<decimal>("MonthDue");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(monthDue))));  //new AgeSpecifier(monthDue))));
+            var interval = node.Value<decimal>("Interval");
+            node.Add(new JProperty("RepeatDetails", JContainer.FromObject(createCLEMAgeSpecifier(interval)))); //new AgeSpecifier(interval))));
+        }
+
+        // replace ActivityTimerMonthRange with new ActivityTimerCalendar
+        // set start ymd to 0, Start.Month, 0
+        // set end ymd to 0, end.Month, 0
+        foreach (var node in JsonUtilities.ChildrenOfType(root, "ActivityTimerMonthRange"))
+        {
+            node["$type"] = "Models.CLEM.Timers.ActivityTimerCalendar, Models";
+            var startMonth = node.Value<decimal>("StartMonth");
+            node.Add(new JProperty("StartDetails", JContainer.FromObject(createCLEMAgeSpecifier(startMonth)))); //new AgeSpecifier(startMonth))));
+            var endMonth = node.Value<decimal>("EndMonth");
+            node.Add(new JProperty("EndDetails", JContainer.FromObject(createCLEMAgeSpecifier(endMonth)))); //new AgeSpecifier(endMonth))));
+        }
+    }
+
+
+    private static JObject createCLEMAgeSpecifier(decimal value)
+    {
+        int[] parts;
+        if (value >= 12)
+        {
+            decimal years = Math.Floor(value / 12);
+            decimal remainingMonths = value - (years * 12);
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partmonths * 30.4M)];
+        }
+        else
+        {
+            decimal partmonths = value - decimal.Floor(value);
+            parts = [0, Convert.ToInt32(value), Convert.ToInt32(partmonths * 30.4M)];
+        }
+
+        string partsString = string.Join($",{Environment.NewLine}", parts);
+
+        string newAgeSpecifier = @"{
+            ""$type"": ""Models.CLEM.AgeSpecifier, Models"",
+            ""Parts"": [
+                [VALUE]
+            ]
+            }";
+        newAgeSpecifier = newAgeSpecifier.Replace("[VALUE]", partsString);
+        return JObject.Parse(newAgeSpecifier);
+    }
+
+
+    /// <summary>
+    /// Rounds out of range InitialStandingFraction values to either 0 or 1.
+    /// Also changes any NaN values to 0.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion219(JObject root, string fileName)
+    {
+        foreach (JObject surfaceOrganicMatter in JsonUtilities.ChildrenOfType(root, "SurfaceOrganicMatter"))
+        {
+            // APSIMTests.cs fails if you look for InitialStandingFraction in SurfaceOrganicMatter.
+            // The Simulations version is retrieved from an old XML version and doesn't appear to have this property,
+            // so we should skip these models.
+            if (surfaceOrganicMatter["InitialStandingFraction"] == null)
+                continue;
+            // Check if the value is NaN and correct.
+            JToken token = surfaceOrganicMatter["InitialStandingFraction"];
+            double value;
+            if (token.Type == JTokenType.Float || token.Type == JTokenType.Integer)
+                value = token.Value<double>();
+            else if (token.Type == JTokenType.String && string.Equals(token.ToString(), "NaN", StringComparison.OrdinalIgnoreCase))
+                value = 0.0;
+            else if (!double.TryParse(token.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                continue;
+            // Constrains the value to within the lower and upper values.
+            surfaceOrganicMatter["InitialStandingFraction"] = Math.Clamp(value, 0.0, 1.0);
+        }
+    }
+
+    /// <summary>
+    /// In situations where both a SoilTemperature and CERESSoilTemperature model are present under a soil node,
+    /// and the CERESSoilTemperature is named 'Temperature' and SoilTemperature is named CERESSoilTemperature then
+    /// delete the CERESSoilTemperature model and rename the SoilTemperature model to Temperature.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion220(JObject root, string fileName)
+    {
+        foreach (JObject simulation in JsonUtilities.ChildrenOfType(root, "Simulation"))
+        {
+            bool soilSituationFoundAndCorrected = false;
+            foreach (JObject soil in JsonUtilities.ChildrenOfType(simulation, "Soil"))
+            {
+                // Check for the specific case of the 
+                bool soilTemperatureNamedCERESSoilTempPresent = false;
+                bool ceresSoilTempNamedTemperature = false;
+                foreach(JObject soilTemp in JsonUtilities.ChildrenOfType(soil, "SoilTemperature"))
+                    if(soilTemp["Name"].ToString() == "CERESSoilTemperature")
+                        soilTemperatureNamedCERESSoilTempPresent = true;
+                foreach(JObject ceresSoilTemp in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
+                    if(ceresSoilTemp["Name"].ToString() == "Temperature")
+                        ceresSoilTempNamedTemperature = true;
+                if (soilTemperatureNamedCERESSoilTempPresent && ceresSoilTempNamedTemperature)
+                    JsonUtilities.RemoveChild(soil,"Temperature");
+                    JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+                    soilSituationFoundAndCorrected = true;
+            }
+
+            // Some reports may also need to be updated.
+            if (soilSituationFoundAndCorrected == true)
+                foreach (JObject report in JsonUtilities.ChildrenOfType(simulation, "Report"))
+                    JsonUtilities.SearchReplaceReportVariableNames(report, "[Soil].CERESSoilTemperature", "[ISoilTemperature]");
+        }
+    }
+
+    /// <summary>
+    /// Change a few parameter names in AgPasture.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion221(JObject root, string fileName)
+    {
+        Tuple<string, string>[] changes =
+        {
+            new Tuple<string, string>("FractionLeafMaximum","LeafProportionMaximum"),
+            new Tuple<string, string>("FractionLeafMinimum","LeafProportionMinimum"),
+            new Tuple<string, string>("FractionLeafDMThreshold","LeafPropDMThreshold"),
+            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMFactor"),
+            new Tuple<string, string>("FractionLeafExponent", "LeafPropExponent"),
+            new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
+            new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
+        };
+
+        foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpecies"))
+        {
+            foreach (Tuple<string, string> change in changes)
+            {
+                if (pasture[change.Item1] != null)
+                    pasture[change.Item2] = pasture[change.Item1];
+            }
+        }
+        
+        JsonUtilities.RenameVariables(root, changes);
+    }
 }
+
+
+
+

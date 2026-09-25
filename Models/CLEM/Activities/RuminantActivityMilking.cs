@@ -8,12 +8,11 @@ using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity to undertake milking of particular herd</summary>
+    /// <summary>Activity to undertake milking of specified herd</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -24,6 +23,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityMilking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
@@ -87,7 +87,6 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
-            // find milk store
             milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
@@ -99,8 +98,10 @@ namespace Models.CLEM.Activities
         {
             // this method will ensure the milking status is defined for females after births when lactation is set and before milk production is determined
             foreach (RuminantFemale item in this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating))
+            {
                 // set these females to state milking performed so they switch to the non-suckling milk production curves.
-                item.MilkingPerformed = true;
+                item.Milk.MilkingPerformed = true;
+            }
         }
 
         /// <inheritdoc/>
@@ -119,7 +120,7 @@ namespace Models.CLEM.Activities
             IEnumerable<RuminantFemale> herd = GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsLactating);
             uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd, Structure);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
-            amountToDo = uniqueIndividuals.Sum(a => a.MilkCurrentlyAvailable);
+            amountToDo = uniqueIndividuals.Sum(a => a.Milk.Available);
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -201,34 +202,18 @@ namespace Models.CLEM.Activities
                 int number = 0;
                 foreach (RuminantFemale ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    amountDone += ruminant.MilkCurrentlyAvailable;
-                    amountToDo -= ruminant.MilkCurrentlyAvailable;
-                    ruminant.TakeMilk(ruminant.MilkCurrentlyAvailable, MilkUseReason.Milked);
+                    amountDone += ruminant.Milk.Available;
+                    amountToDo -= ruminant.Milk.Available;
+                    ruminant.Milk.Take(ruminant.Milk.Available, MilkUseReason.Milked);
                     number++;
                     if (amountToDo <= 0)
                         break;
                 }
                 // add clip to stores
-                (milkStore as IResourceType).Add(amountDone, this, this.PredictedHerdNameToDisplay, TransactionCategory);
+                (milkStore as IResourceType).AddToResource(amountDone, this, PredictedHerdNameToDisplay, TransactionCategory);
 
                 SetStatusSuccessOrPartial((number == numberToDo && amountToDo <= 0) == false);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

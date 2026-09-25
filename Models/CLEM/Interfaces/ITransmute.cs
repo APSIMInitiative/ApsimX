@@ -51,7 +51,7 @@ namespace Models.CLEM.Interfaces
         /// <param name="shortfall">The amount the resource is in shortfall</param>
         /// <param name="requiredByActivities">the amount of the transmute resource needed by other activities in the time-step</param>
         /// <param name="holder">Resource holder</param>
-        /// <param name="queryOnly">Only perfrom initial query, do not take resources</param>
+        /// <param name="queryOnly">Only perform initial query, do not take resources</param>
         /// <returns>Whether the Transmute resource (B) into (A) is successful</returns>
         bool DoTransmute(ResourceRequest request, double shortfall, double requiredByActivities, ResourcesHolder holder, bool queryOnly);
     }

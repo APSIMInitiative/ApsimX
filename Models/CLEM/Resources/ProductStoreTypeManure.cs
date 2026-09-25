@@ -20,8 +20,12 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ManureType.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ProductStoreTypeManure : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -59,9 +63,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Maximum age manure lasts
         /// </summary>
-        [Description("Maximum age (time steps) manure lasts")]
-        [Required]
-        public int MaximumAge { get; set; }
+        [Description("Maximum age manure lasts")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaximumAge { get; set; } = new int[] { 12, 0 };
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -71,17 +75,6 @@ namespace Models.CLEM.Resources
         {
             UncollectedStores = new List<ManureStoreUncollected>();
             Initialise();
-        }
-
-        /// <summary>
-        /// Total value of resource
-        /// </summary>
-        public double? Value
-        {
-            get
-            {
-                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
-            }
         }
 
         /// <summary>
@@ -129,12 +122,12 @@ namespace Models.CLEM.Resources
             {
                 foreach (ManurePool pool in store.Pools)
                 {
-                    pool.Age++;
+                    pool.Age += events.Interval;
                     pool.Amount *= DecayRate;
                     pool.ProportionMoisture *= MoistureDecayRate;
                     pool.ProportionMoisture = Math.Max(pool.ProportionMoisture, 0.05);
                 }
-                store.Pools.RemoveAll(a => a.Age > MaximumAge);
+                store.Pools.RemoveAll(a => a.Age > MaximumAge.InDays);
             }
         }
 
@@ -163,14 +156,14 @@ namespace Models.CLEM.Resources
                     // if 0 delete
                     store.Pools.RemoveAll(a => a.Amount == 0);
                 }
-                this.Add(amountMoved, activity, this.NameWithParent, ((storeName == "") ? "General" : storeName));
+                this.AddToResource(amountMoved, activity, this.NameWithParent, ((storeName == "") ? "General" : storeName));
             }
         }
 
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public double Amount { get { return amount; } }
+        public new double AmountTotal { get { return amount; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
@@ -191,7 +184,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity adding resource</param>
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
+        public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
@@ -206,48 +199,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove from product type store
-        /// </summary>
-        /// <param name="request">Resource request class with details.</param>
-        public new void Remove(ResourceRequest request)
-        {
-            if (request.Required == 0)
-                return;
-
-            // avoid taking too much
-            double amountRemoved = request.Required;
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
-            this.amount -= amountRemoved;
-
-            request.Provided = amountRemoved;
-            ReportTransaction(TransactionType.Loss, amountRemoved, request.ActivityModel, request.RelatesToResource, request.Category, this);
-        }
-
-        /// <summary>
         /// Set the amount in an account.
         /// </summary>
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
             amount = newAmount;
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>");
-                htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
         }
 
         #endregion

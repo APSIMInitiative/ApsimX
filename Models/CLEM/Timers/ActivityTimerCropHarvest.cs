@@ -52,15 +52,6 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerCropHarvest()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -128,16 +119,10 @@ namespace Models.CLEM.Timers
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             Model current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
@@ -150,76 +135,7 @@ namespace Models.CLEM.Timers
 
             if (ManageProductActivity == null)
             {
-                string[] memberNames = new string[] { "CropActivityManageProduct parent" };
-                results.Add(new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", memberNames));
-            }
-
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
-                {
-                    htmlWriter.Write("At harvest</div>");
-                }
-                else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
-                {
-                    htmlWriter.Write($"All {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStart))}");
-                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest (\"first\" if using HarvestType)</div>");
-                }
-                else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
-                {
-                    htmlWriter.Write($"All {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
-                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest (\"last\" if using HarvestType)</div>");
-                }
-                else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
-                {
-                    htmlWriter.Write($"Perform {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
-                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before \"first\" (if using HarvestType)" : "after \"last\" (if using HarvestType)") + " harvest</div>");
-                }
-                else
-                {
-                    htmlWriter.Write($"Start {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStart))}");
-                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
-                    htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after \"last\" (if using HarvestType) " : "before \"first\" (if using HarvestType) ");
-                    htmlWriter.Write($" harvest and stop {CLEMModel.DisplaySummaryValueSnippet(Math.Abs(OffsetMonthHarvestStop))}");
-                    htmlWriter.Write(" month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
-                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)</div>");
-                }
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
-                    htmlWriter.Write(this.Name);
-                }
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
+                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", new string[] { "CropActivityManageProduct parent" });
             }
         }
         #endregion

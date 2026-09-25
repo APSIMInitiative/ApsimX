@@ -195,7 +195,7 @@ namespace UserInterface.Presenters
             {
                 if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
                 {
-                    IModel model = MainMenu.FindRunnable(explorerPresenter.CurrentNode);
+                    IModel model = MainMenu.FindRunnable(explorerPresenter);
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();

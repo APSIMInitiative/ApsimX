@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreFertilityLimiter : CLEMModel
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private double annualNUsed = 0;
         private GrazeFoodStoreType parentPasture;
@@ -40,27 +40,17 @@ namespace Models.CLEM.Resources
         /// Month in which to start calculating annual pasture yield
         /// </summary>
         [Description("First month of annual pasture yield")]
-        [System.ComponentModel.DefaultValue(typeof(MonthsOfYear), "January")]
         [Required, Month]
-        public MonthsOfYear AnnualYieldStartMonth { get; set; }
+        public MonthsOfYear AnnualYieldStartMonth { get; set; } = MonthsOfYear.January;
 
         /// <summary>
         /// Proportional reduction in N%
         /// </summary>
         [Description("Nitrogen reduction to apply")]
-        [System.ComponentModel.DefaultValue(typeof(Single), "0.2")]
         [Required]
         [Proportion]
         [GreaterThanValue(0)]
-        public Single NitrogenReduction { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public GrazeFoodStoreFertilityLimiter()
-        {
-            this.SetDefaults();
-        }
+        public Single NitrogenReduction { get; set; } = 0.2f;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -80,7 +70,7 @@ namespace Models.CLEM.Resources
         public double GetProportionNitrogenLimited(double newGrowthKgHa)
         {
             // calculate proportion of new growth above the cutoff to adjust N reduction accordingly
-            double nRequired = newGrowthKgHa * parentPasture.GreenNitrogen / 100;
+            double nRequired = newGrowthKgHa * parentPasture.GreenNitrogenPercent / 100;
             double reduction;
 
             if (timingPresent && this.TimingOK)
@@ -105,83 +95,9 @@ namespace Models.CLEM.Resources
         private void OnStartOfMonth(object sender, EventArgs e)
         {
             if (clock.Today.Month == (int)AnnualYieldStartMonth)
-                annualNUsed = 0;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            bool timerpresent = Structure.FindChildren<ActivityTimerMonthRange>().Count() > 0;
-            parentPasture = this.Parent as GrazeFoodStoreType;
-
-            using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\nThe nitrogen content of new pasture will be reduced by ");
-                if (NitrogenReduction == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">Not Set</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(NitrogenReduction.ToString("P0"));
-                    htmlWriter.Write("</span>");
-                }
-                htmlWriter.Write(" if");
-
-                if (timerpresent)
-                {
-                    htmlWriter.Write("</div>");
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("<b>(A)</b>");
-                }
-
-                htmlWriter.Write(" an annual nitrogen supply of  ");
-                if (AnnualNitrogenSupply == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">Not Set</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(AnnualNitrogenSupply.ToString("N0"));
-                    htmlWriter.Write("</span> kg per hectare has been used since ");
-                }
-
-                if (AnnualYieldStartMonth == MonthsOfYear.NotSet)
-                    htmlWriter.Write("<span class=\"errorlink\">Month not set");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(AnnualYieldStartMonth.ToString());
-                }
-                htmlWriter.Write("</span>\r\n</div>");
-
-                if (AnnualNitrogenSupply > 0)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (parentPasture.GreenNitrogen > 0)
-                        htmlWriter.Write($"This equates to <span class=\"setvalue\">{AnnualNitrogenSupply / (parentPasture.GreenNitrogen / 100)}</span> kg per hectare of pasture production given the new growth nitrogen content of <span class=\"setvalue\">{parentPasture.GreenNitrogen}%</span>.");
-                    else
-                        htmlWriter.Write($"This equates to <span class=\"errorlink\">Undefined</span> kg per hectare of pasture production given the green growth nitrogen content of <span class=\"errorlink\">Not set</span>.");
-
-                    htmlWriter.Write("\r\n</div>");
-                }
-
-                if (timerpresent)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("or <b>(B)</b> the growth month falls within the specified period below");
-                    htmlWriter.Write("\r\n</div>");
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("or <b>(B)</b> Add a ActivityMonthRangeTimer below to reduce nitrogen content in specified months");
-                    htmlWriter.Write("\r\n</div>");
-                }
-                return htmlWriter.ToString();
+                annualNUsed = 0;
             }
         }
-        #endregion
     }
 }

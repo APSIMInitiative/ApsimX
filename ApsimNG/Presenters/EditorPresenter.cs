@@ -9,17 +9,15 @@ using UserInterface.EventArguments;
 
 namespace UserInterface.Presenters
 {
-
-
     /// <summary>
-    /// A presenter class for showing a cultivar.
+    /// A presenter class for and Editor view
     /// </summary>
     public class EditorPresenter : IPresenter, ISubPresenter
     {
-        /// <summary>The cultivar model</summary>
-        private ILineEditor model;
+        /// <summary>The model</summary>
+        private ICodeEditor model;
 
-        /// <summary>The cultivar view</summary>
+        /// <summary>The view</summary>
         private IEditorView view;
 
         /// <summary>The parent explorer presenter</summary>
@@ -32,7 +30,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model</param>
         /// <param name="property">The property changed</param>
         /// <param name="lines">The lines it should be given</param>
-        public delegate void TextChangedDelegate(ILineEditor model, string property, string[] lines);
+        public delegate void TextChangedDelegate(ICodeEditor model, string property, string[] lines);
 
         /// <summary>
         /// Invoked when the user changes the text in the editor
@@ -46,20 +44,20 @@ namespace UserInterface.Presenters
         /// </summary>
         private bool _eventsConnected = false;
 
-        /// <summary>Attach the cultivar model to the cultivar view</summary>
+        /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The mode</param>
         /// <param name="view">The view</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.model = model as ILineEditor;
+            this.model = model as ICodeEditor;
             this.view = view as IEditorView;
             (this.view as EditorView).Language = "c-sharp";
             this.explorerPresenter = explorerPresenter;
 
-            this.view.Lines = this.model.Lines?.ToArray();
             intellisense = new IntellisensePresenter(this.view as ViewBase);
             ConnectEvents();
+            Refresh();
         }
 
         /// <summary>Detach the model from the view</summary>
@@ -100,8 +98,14 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            SetCode(this.model.Code?.ToArray());
             view.Show();
             view.Refresh();
+        }
+
+        public void SetCode(string[] lines)
+        {
+            this.view.Lines = lines;
         }
 
         /// <summary>The user has changed the commands</summary>
@@ -111,13 +115,13 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (this.view.Lines != this.model.Lines)
+                if (this.view.Lines != this.model.Code)
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    if (model.Lines == null || !model.Lines.SequenceEqual(view.Lines))
+                    if (model.Code == null || !model.Code.SequenceEqual(view.Lines))
                     {
-                        ChangeProperty command = new ChangeProperty(model, nameof(model.Lines), this.view.Lines);
+                        ChangeProperty command = new ChangeProperty(model, nameof(model.Code), this.view.Lines);
                         explorerPresenter.CommandHistory.Add(command);
                     }
 
@@ -149,13 +153,13 @@ namespace UserInterface.Presenters
             
         }
 
-        /// <summary>The cultivar model has changed probably because of an undo.</summary>
+        /// <summary>The model has changed</summary>
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel is ILineEditor linesModel)
+            if (changedModel is ICodeEditor linesModel)
                 if (linesModel.FullPath == model.FullPath)
-                    view.Lines = linesModel.Lines.ToArray();
+                    view.Lines = linesModel.Code.ToArray();
         }
 
         /// <summary>
@@ -180,13 +184,13 @@ namespace UserInterface.Presenters
             if (TextChanged == null)
             {
                 explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Lines", view.Lines));
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Code", view.Lines));
                 explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
             }
             //if something is, let the other presenter do the change (such as this being a sub presenter)
             else 
             {
-                TextChanged?.Invoke(model, "Lines", view.Lines);
+                TextChanged?.Invoke(model, "Code", view.Lines);
             }
         }
     }

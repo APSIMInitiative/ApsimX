@@ -1,3 +1,4 @@
+using APSIM.Numerics;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -28,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal : CLEMActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
         private double[,] amountToDo;
         private double[,] valueToDo;
         private double[,] packetsToDo;
@@ -96,19 +97,23 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get bank account object to use if provided
             if (AccountName != "No financial transactions")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            }
 
-            // get reader
             Model parentZone = Structure.FindParents<Zone>().FirstOrDefault();
-            if(parentZone != null)
+            if (parentZone != null)
+            {
                 fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
+            }
 
             resourcesForMonth = new List<(IResourceType resource, double amount)>();
 
-            if ((ResourceColumnsToUse??"") != "")
+            if ((ResourceColumnsToUse ?? "") != "")
+            {
                 resourceTypesToInclude = ResourceColumnsToUse.Split(",").Select(x => x.Trim());
+            }
 
             // find all resources and check if related multiplier is available
             // place in dictionary for easy access during simulation
@@ -121,9 +126,13 @@ namespace Models.CLEM.Activities
                     {
                         IResourceType resource;
                         if (resourceName.Contains("."))
+                        {
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                        }
                         else
+                        {
                             resource = Structure.FindChildren<IResourceType>(resourceName, relativeTo: Resources, recurse: true).FirstOrDefault();
+                        }
 
                         switch (resource.GetType().ToString())
                         {
@@ -132,7 +141,7 @@ namespace Models.CLEM.Activities
                             case "Models.CLEM.Resources.LabourType":
                             case "Models.CLEM.Resources.GrazeFoodStoreType":
                             case "Models.CLEM.Resources.OtherAnimalsType":
-                                warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
+                                warn = $"[a={Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                                 resource = null;
                                 break;
@@ -147,14 +156,14 @@ namespace Models.CLEM.Activities
                             var matchingResources = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name);
                             if (matchingResources.Count() > 1)
                             {
-                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                                warn = $"[a={Name}] could not distinguish between multiple occurrences of resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                             }
                             resourceMultiplier = Structure.FindChildren<ResourceActivityExternalMultiplier>().Where(a => a.ResourceTypeName == (resource as CLEMModel).NameWithParent || a.ResourceTypeName == (resource as CLEMModel).Name).FirstOrDefault()?.Multiplier ?? 1;
                         }
                         else
                         {
-                            warn = $"[a={this.Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
+                            warn = $"[a={Name}] could not find the resource [r={resourceName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
                             Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                         }
 
@@ -172,7 +181,7 @@ namespace Models.CLEM.Activities
             packetsToDo = new double[,] { { 0, 0 }, { 0, 0 } };
 
             // get data from reader for month
-            currentEntries = fileResource.GetCurrentResourceData(clock.Today.Month, clock.Today.Year, resourceTypesToInclude, false);
+            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, events.TimeStepEnd, resourceTypesToInclude, false);
 
             resourcesForMonth.Clear();
 
@@ -189,13 +198,15 @@ namespace Models.CLEM.Activities
                         // get price of resource
                         ResourcePricing price = resource.Item1.Price(amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale);
 
-                        double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Item1.Amount) : amount;
+                        double amountAvailable = (amount < 0) ? Math.Min(Math.Abs(amount), resource.Item1.AmountAvailable) : amount;
 
                         double packets = amountAvailable / price.PacketSize;
                         if (price.UseWholePackets)
+                        {
                             packets = Math.Truncate(packets);
+                        }
 
-                        if (amount < 0)
+                        if (MathUtilities.IsNegative(amount))
                         {
                             packetsToDo[0, 0] += packets;
                             amountToDo[0, 0] += packets * price.PacketSize;
@@ -295,7 +306,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (resourcesForMonth.Any())
+            if (resourcesForMonth.Count != 0)
             {
                 double[] amountPerformed = new double[2] { 0, 0 };
                 // loop through all resources to exchange and make transactions
@@ -306,7 +317,9 @@ namespace Models.CLEM.Activities
                     amount = Math.Abs(amount);
                     ResourcePricing price = null;
                     if (bankAccount != null && !(resourceItem.resource is FinanceType))
+                    {
                         price = resourceItem.resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
+                    }
 
                     // transactions
                     if (isSale)
@@ -315,9 +328,11 @@ namespace Models.CLEM.Activities
                         double amountPossible = amountToDo[0, 0] - amountToDo[0, 1];
                         double amountRemaining = 0;
                         if (amountPossible > amountPerformed[0])
+                        {
                             amountRemaining = amountPossible - amountPerformed[0];
+                        }
 
-                        amount = Math.Min(amountRemaining, Math.Min(amount, resourceItem.resource.Amount));
+                        amount = Math.Min(amountRemaining, Math.Min(amount, resourceItem.resource.AmountAvailable));
                         if (amount > 0)
                         {
                             if (price != null)
@@ -328,7 +343,7 @@ namespace Models.CLEM.Activities
                                     packets = Math.Truncate(packets);
                                     amount = packets * price.PacketSize;
                                 }
-                                bankAccount.Add(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
+                                bankAccount.AddToResource(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
                             }
                             ResourceRequest sellRequest = new ResourceRequest
                             {
@@ -338,7 +353,7 @@ namespace Models.CLEM.Activities
                                 Category = "External output",
                                 RelatesToResource = (resourceItem.resource as CLEMModel).NameWithParent
                             };
-                            resourceItem.resource.Remove(sellRequest);
+                            resourceItem.resource.RemoveFromResource(sellRequest);
                         }
                     }
                     else
@@ -346,7 +361,9 @@ namespace Models.CLEM.Activities
                         double amountPossible = amountToDo[1, 0] - amountToDo[1, 1];
                         double amountRemaining = 0;
                         if (amountPossible > amountPerformed[1])
+                        {
                             amountRemaining = amountPossible - amountPerformed[1];
+                        }
 
                         amount = Math.Min(amountRemaining, amount);
 
@@ -358,7 +375,9 @@ namespace Models.CLEM.Activities
                                 // need to limit amount by financial constraints
                                 double packets = amount / price.PacketSize;
                                 if (price.UseWholePackets)
+                                {
                                     packets = Math.Truncate(packets);
+                                }
 
                                 amount = packets * price.PacketSize;
                                 ResourceRequest sellRequestDollars = new ResourceRequest
@@ -369,17 +388,20 @@ namespace Models.CLEM.Activities
                                     Category = "External input",
                                     RelatesToResource = (resourceItem.resource as CLEMModel).NameWithParent
                                 };
-                                bankAccount.Remove(sellRequestDollars);
+                                bankAccount.RemoveFromResource(sellRequestDollars);
                             }
-                            resourceItem.resource.Add(amount, this, (resourceItem.resource as CLEMModel).NameWithParent, "External input");
+                            resourceItem.resource.AddToResource(amount, this, (resourceItem.resource as CLEMModel).NameWithParent, "External input");
                         }
                     }
                 }
             }
             else
             {
-                if (currentEntries.Count > 0)
-                    this.Status = ActivityStatus.Warning;
+                if (MathUtilities.IsPositive(currentEntries.Count))
+                {
+                    Status = ActivityStatus.Warning;
+                }
+
                 return;
             }
 
@@ -391,73 +413,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (fileResource == null)
             {
-                string[] memberNames = new string[] { "FileResourceReader" };
-                results.Add(new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Resources added or removed are provided by ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceDataReader, "Reader not set", HTMLSummaryStyle.FileReader));
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (AccountName == null || AccountName == "")
-                    htmlWriter.Write("Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>");
-                else if (AccountName == "No financial implications")
-                    htmlWriter.Write("No financial constraints relating to pricing and packet sizes associated with each resource will be included.");
-                else
-                    htmlWriter.Write("Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>");
-                htmlWriter.Write("</div>");
-
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">The following resources will be included if present in the Resource File");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                var resourceFilter = ((ResourceColumnsToUse ?? "").Length > 0) ? ResourceColumnsToUse:"All resources";
-                foreach (var res in resourceFilter.Split(",").Select(x => x.Trim()))
-                    htmlWriter.Write($"<div class=\"filter\">{res}</div>");
-
-                htmlWriter.Write("</div>");
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
+                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", new string[] { "FileResourceReader" });
             }
         }
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            var childList = new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>();
-
-            childList.Add((Structure.FindChildren<ResourceActivityExternalMultiplier>(), true, "childgroupfilterborder", "The following multipliers will be applied:", ""));
-            return childList;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-
-
-
         #endregion
-
     }
 }

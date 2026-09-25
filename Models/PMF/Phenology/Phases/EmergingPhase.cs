@@ -16,14 +16,15 @@ namespace Models.PMF.Phen
     [ValidParent(ParentType = typeof(Phenology))]
     public class EmergingPhase : Model, IPhase, IPhaseWithTarget, IPhaseWithSetableCompletionDate
     {
-        [Link]
-        Phenology phenology = null;
 
         [Link]
         IClock clock = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction target = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction thermalTime = null;
 
         /// <summary>Fraction of phase that is complete (0-1).on yesterdays timestep</summary>
         private double fractionCompleteYesterday; 
@@ -80,7 +81,7 @@ namespace Models.PMF.Phen
             }
 
             bool proceedToNextPhase = false;
-            TTForTimeStep = phenology.thermalTime.Value() * propOfDayToUse;
+            TTForTimeStep = thermalTime.Value() * propOfDayToUse;
             ProgressThroughPhase += TTForTimeStep;
             fractionCompleteYesterday = FractionComplete;
             if (ProgressThroughPhase > Target)

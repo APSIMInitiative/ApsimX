@@ -15,6 +15,7 @@ namespace Models.CLEM.Activities
     [Description("This activity folder helps arrange activities and apply timers to the group")]
     [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>
@@ -26,28 +27,5 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NoTask;
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return $"\r\n<div class=folder>{this.Name} folder {((!this.Enabled) ? " - DISABLED!" : "")}</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return $"\r\n<div class=\"activityborder\" style=\"opacity: {SummaryOpacity(FormatForParentControl)};\">";
-        } 
-        #endregion
-
-
     }
 }

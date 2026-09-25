@@ -63,7 +63,7 @@ namespace UnitTests
             Utilities.InjectLink(tool, "dataStore", dataStore);
             tool.Run();
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
             var data = dataStore.Reader.GetData("CreateProfileTable");
 
             DataTable table = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "Year", "Col1", "Col2" },

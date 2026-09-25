@@ -1,13 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
-  "Version": 156,
+  "Version": 217,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -18,7 +16,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Cropping Examples",
       "ResourceName": null,
       "Children": [
@@ -33,7 +30,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Single and Mixed Cropping",
           "ResourceName": null,
           "Children": [
@@ -52,7 +48,22 @@
               "End": "2005-12-31T00:00:00",
               "Name": "clock",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.CLEM.CLEMEvents, Models",
+                  "TimeStep": 30,
+                  "CustomTimeStep": 0,
+                  "EcologicalIndicatorsCalculationInterval": 12,
+                  "EcologicalIndicatorsCalculationMonth": 7,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "CLEMEvents",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -67,18 +78,17 @@
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
+              "UserType": 0,
               "FarmMultiplier": 1.0,
-              "ClimateRegion": 0,
-              "EcologicalIndicatorsCalculationInterval": 12,
-              "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "DescriptiveSummaryFormatStyle": 0,
               "BuildTransactionCategoryFromTree": false,
               "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
-              "ModelSummaryStyle": 7,
+              "CanopyType": null,
               "Name": "CLEM",
               "ResourceName": null,
               "Children": [
@@ -90,8 +100,12 @@
                   "SoilTypeColumnName": "SoilNum",
                   "YearColumnName": "Year",
                   "MonthColumnName": "Month",
+                  "DayColumnName": null,
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
+                  "PercentCrudeProteinColumnName": null,
+                  "DryMatterDigestibilityColumnName": null,
+                  "MDColumnName": null,
                   "HarvestTypeColumnName": null,
                   "Notes": null,
                   "SelectedTab": null,
@@ -109,8 +123,12 @@
                   "SoilTypeColumnName": "SoilNum",
                   "YearColumnName": "Year",
                   "MonthColumnName": "Month",
+                  "DayColumnName": null,
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
+                  "PercentCrudeProteinColumnName": null,
+                  "DryMatterDigestibilityColumnName": null,
+                  "MDColumnName": null,
                   "HarvestTypeColumnName": null,
                   "Notes": null,
                   "SelectedTab": null,
@@ -185,7 +203,7 @@
                     {
                       "$type": "Models.CLEM.Resources.Labour, Models",
                       "UseCohorts": false,
-                      "AllowAging": true,
+                      "AllowAgeing": false,
                       "Notes": null,
                       "SelectedTab": null,
                       "Name": "Labour",
@@ -196,7 +214,7 @@
                           "InitialAge": 42.0,
                           "Sex": 1,
                           "Individuals": 1.0,
-                          "Hired": false,
+                          "IsHired": false,
                           "Notes": null,
                           "SelectedTab": null,
                           "Name": "Male",
@@ -210,7 +228,7 @@
                           "InitialAge": 35.0,
                           "Sex": 0,
                           "Individuals": 1.0,
-                          "Hired": false,
+                          "IsHired": false,
                           "Notes": null,
                           "SelectedTab": null,
                           "Name": "Female",
@@ -227,7 +245,7 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "$type": "Models.CLEM.Groupings.LabourAvailabilityGroup, Models",
                               "Value": 28.0,
                               "RandomiseBeforeSorting": false,
                               "Identifier": null,
@@ -256,7 +274,7 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "$type": "Models.CLEM.Groupings.LabourAvailabilityGroup, Models",
                               "Value": 28.0,
                               "RandomiseBeforeSorting": false,
                               "Identifier": null,
@@ -409,16 +427,10 @@
                           "ModelNameFileCrop": "FileCrop_Maize",
                           "CropName": "Maize_sole_fertilised",
                           "StoreItemName": "ProductStore.Maize",
+                          "AddProductStyle": 0,
                           "ProportionKept": 1.0,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
-                          "Harvests": {
-                            "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
-                            "Item1": null,
-                            "Item2": null,
-                            "Item3": null,
-                            "Item4": null
-                          },
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
@@ -518,16 +530,10 @@
                           "ModelNameFileCrop": "FileCrop_Vegetables",
                           "CropName": "Tomatoes",
                           "StoreItemName": "ProductStore.Tomatoes",
+                          "AddProductStyle": 0,
                           "ProportionKept": 0.8,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
-                          "Harvests": {
-                            "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
-                            "Item1": null,
-                            "Item2": null,
-                            "Item3": null,
-                            "Item4": null
-                          },
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
@@ -548,7 +554,7 @@
                               "MaximumPerPerson": 100.0,
                               "ApplyToAll": false,
                               "TransactionCategory": "[General].[Type].[Action]",
-                              "OnPartialResourcesAvailableAction": 0,
+                              "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
                               "SelectedTab": null,
                               "Name": "LabourRequirement",
@@ -619,16 +625,10 @@
                               "ModelNameFileCrop": "FileCrop_Vegetables",
                               "CropName": "Cucumber",
                               "StoreItemName": "ProductStore.Cucumbers",
+                              "AddProductStyle": 0,
                               "ProportionKept": 0.8,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
-                              "Harvests": {
-                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
-                                "Item1": null,
-                                "Item2": null,
-                                "Item3": null,
-                                "Item4": null
-                              },
                               "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
@@ -649,7 +649,7 @@
                                   "MaximumPerPerson": 100.0,
                                   "ApplyToAll": false,
                                   "TransactionCategory": "[General].[Type].[Action]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "LabourRequirement",
@@ -733,6 +733,7 @@
                             {
                               "$type": "Models.CLEM.Activities.ActivityFee, Models",
                               "BankAccount": null,
+                              "ResourceStore": null,
                               "Identifier": null,
                               "BankAccountName": "Finances.General account",
                               "Measure": "per amount to process",
@@ -844,9 +845,34 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Timers.ActivityTimerInterval, Models",
-                              "Interval": 12,
-                              "MonthDue": 11,
+                              "$type": "Models.CLEM.Timers.ActivityTimerCalendar, Models",
+                              "StartDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  11,
+                                  0
+                                ]
+                              },
+                              "EndDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  11,
+                                  0
+                                ]
+                              },
+                              "RepeatInterval": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  1,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "WholeTimeStepMustBeInRange": false,
+                              "Invert": false,
+                              "StatusMessage": null,
                               "Notes": null,
                               "SelectedTab": null,
                               "Name": "SellInNovember",
@@ -870,7 +896,6 @@
                 {
                   "$type": "Models.CLEM.CLEMFolder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Reports",
                   "ResourceName": null,
                   "Children": [
@@ -882,7 +907,6 @@
                       "RotateReport": false,
                       "AutoCreateHTML": true,
                       "SelectedTab": "Properties",
-                      "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
                       "GroupByVariableName": null,
@@ -911,6 +935,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": null,
                       "VariableNames": [
                         "ProductStore"
@@ -934,6 +970,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": null,
                       "VariableNames": [
                         "Finances"
@@ -957,6 +1005,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": null,
                       "VariableNames": [
                         "Labour"
@@ -1024,7 +1084,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs_General Account",
                   "ResourceName": null,
                   "Children": [
@@ -1038,6 +1097,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1048,6 +1108,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1058,6 +1119,7 @@
                           "Position": 2,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1172,6 +1234,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1182,6 +1245,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1267,6 +1331,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1277,6 +1342,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1359,7 +1425,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs_ProductStore",
                   "ResourceName": null,
                   "Children": [
@@ -1373,6 +1438,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1383,6 +1449,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1468,6 +1535,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1478,6 +1546,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -1596,7 +1665,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "Rotation cropping",
           "ResourceName": null,
           "Children": [
@@ -1615,7 +1683,22 @@
               "End": "1906-12-31T00:00:00",
               "Name": "clock",
               "ResourceName": null,
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.CLEM.CLEMEvents, Models",
+                  "TimeStep": 30,
+                  "CustomTimeStep": 0,
+                  "EcologicalIndicatorsCalculationInterval": 12,
+                  "EcologicalIndicatorsCalculationMonth": 7,
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "CLEMEvents",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1630,18 +1713,17 @@
             },
             {
               "$type": "Models.CLEM.ZoneCLEM, Models",
+              "UserType": 0,
               "FarmMultiplier": 1.0,
-              "ClimateRegion": 0,
-              "EcologicalIndicatorsCalculationInterval": 12,
-              "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
+              "DescriptiveSummaryFormatStyle": 0,
               "BuildTransactionCategoryFromTree": false,
               "UseModelNameAsTransactionCategory": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
-              "ModelSummaryStyle": 7,
+              "CanopyType": null,
               "Name": "CLEM",
               "ResourceName": null,
               "Children": [
@@ -1653,8 +1735,12 @@
                   "SoilTypeColumnName": "SoilNum",
                   "YearColumnName": "Year",
                   "MonthColumnName": "Month",
+                  "DayColumnName": null,
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
+                  "PercentCrudeProteinColumnName": null,
+                  "DryMatterDigestibilityColumnName": null,
+                  "MDColumnName": null,
                   "HarvestTypeColumnName": "HarvestTag",
                   "Notes": null,
                   "SelectedTab": null,
@@ -1709,7 +1795,7 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.FinanceType, Models",
-                          "OpeningBalance": 1000.0,
+                          "OpeningBalance": 10000.0,
                           "EnforceWithdrawalLimit": false,
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 0.0,
@@ -1729,7 +1815,7 @@
                     {
                       "$type": "Models.CLEM.Resources.Labour, Models",
                       "UseCohorts": false,
-                      "AllowAging": true,
+                      "AllowAgeing": false,
                       "Notes": null,
                       "SelectedTab": null,
                       "Name": "Labour",
@@ -1740,7 +1826,7 @@
                           "InitialAge": 30.0,
                           "Sex": 1,
                           "Individuals": 5.0,
-                          "Hired": false,
+                          "IsHired": false,
                           "Notes": null,
                           "SelectedTab": null,
                           "Name": "Male",
@@ -1757,7 +1843,7 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Resources.LabourAvailabilityItem, Models",
+                              "$type": "Models.CLEM.Groupings.LabourAvailabilityGroup, Models",
                               "Value": 8.0,
                               "RandomiseBeforeSorting": false,
                               "Identifier": null,
@@ -1880,18 +1966,12 @@
                               "ModelNameFileCrop": "FileCrop",
                               "CropName": "Wheat",
                               "StoreItemName": "ProductStore.Wheat",
+                              "AddProductStyle": 0,
                               "ProportionKept": 1.0,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
-                              "Harvests": {
-                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
-                                "Item1": null,
-                                "Item2": null,
-                                "Item3": null,
-                                "Item4": null
-                              },
                               "TransactionCategory": "Crop.[Product]",
-                              "OnPartialResourcesAvailableAction": 0,
+                              "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
                               "SelectedTab": null,
                               "Name": "Manage Wheat",
@@ -1910,6 +1990,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": -11,
                                       "OffsetMonthHarvestStop": -11,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "PrepareWheat",
@@ -1971,6 +2052,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": -8,
                                       "OffsetMonthHarvestStop": -8,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "PlantWheat",
@@ -2032,6 +2114,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": -6,
                                       "OffsetMonthHarvestStop": -2,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "SprayWheat",
@@ -2053,7 +2136,7 @@
                                       "MaximumPerPerson": 100.0,
                                       "ApplyToAll": false,
                                       "TransactionCategory": "[General].[Type].[Action]",
-                                      "OnPartialResourcesAvailableAction": 0,
+                                      "OnPartialResourcesAvailableAction": 2,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "LabourRequirement",
@@ -2129,6 +2212,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": 0,
                                       "OffsetMonthHarvestStop": 0,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "HarvestWheat",
@@ -2144,12 +2228,13 @@
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFee, Models",
                                   "BankAccount": null,
+                                  "ResourceStore": null,
                                   "Identifier": null,
                                   "BankAccountName": "Finances.General account",
                                   "Measure": "per kg harvested",
                                   "Amount": 40.0,
                                   "TransactionCategory": "Crop.[Activity]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "Wheat harvest costs",
@@ -2161,12 +2246,13 @@
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFee, Models",
                                   "BankAccount": null,
+                                  "ResourceStore": null,
                                   "Identifier": null,
                                   "BankAccountName": "Finances.General account",
                                   "Measure": "per hectare harvested",
                                   "Amount": 175.0,
                                   "TransactionCategory": "Crop.[Activity]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "Wheat variable costs",
@@ -2188,7 +2274,7 @@
                                   "MaximumPerPerson": 100.0,
                                   "ApplyToAll": false,
                                   "TransactionCategory": "[General].[Type].[Action]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "LabourRequirement",
@@ -2220,16 +2306,10 @@
                               "ModelNameFileCrop": "FileCrop",
                               "CropName": "Sorghum",
                               "StoreItemName": "ProductStore.Sorghum",
+                              "AddProductStyle": 0,
                               "ProportionKept": 1.0,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
-                              "Harvests": {
-                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
-                                "Item1": null,
-                                "Item2": null,
-                                "Item3": null,
-                                "Item4": null
-                              },
                               "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
@@ -2250,6 +2330,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": -4,
                                       "OffsetMonthHarvestStop": -4,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "PlantSorghum",
@@ -2311,6 +2392,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": -3,
                                       "OffsetMonthHarvestStop": -2,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "SpraySorghum",
@@ -2408,6 +2490,7 @@
                                       "$type": "Models.CLEM.Timers.ActivityTimerCropHarvest, Models",
                                       "OffsetMonthHarvestStart": 0,
                                       "OffsetMonthHarvestStop": 0,
+                                      "StatusMessage": null,
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "Name": "HarvestSorghum",
@@ -2423,12 +2506,13 @@
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFee, Models",
                                   "BankAccount": null,
+                                  "ResourceStore": null,
                                   "Identifier": null,
                                   "BankAccountName": "Finances.General account",
                                   "Measure": "per kg harvested",
                                   "Amount": 55.0,
                                   "TransactionCategory": "Crop.[Activity]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "Sorghum harvest costs",
@@ -2440,12 +2524,13 @@
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFee, Models",
                                   "BankAccount": null,
+                                  "ResourceStore": null,
                                   "Identifier": null,
                                   "BankAccountName": "Finances.General account",
                                   "Measure": "per hectare harvested",
                                   "Amount": 218.0,
                                   "TransactionCategory": "Crop.[Activity]",
-                                  "OnPartialResourcesAvailableAction": 0,
+                                  "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "Name": "Sorghum variable costs",
@@ -2528,9 +2613,34 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Timers.ActivityTimerInterval, Models",
-                              "Interval": 12,
-                              "MonthDue": 7,
+                              "$type": "Models.CLEM.Timers.ActivityTimerCalendar, Models",
+                              "StartDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  7,
+                                  0
+                                ]
+                              },
+                              "EndDetails": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  0,
+                                  7,
+                                  0
+                                ]
+                              },
+                              "RepeatInterval": {
+                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "Parts": [
+                                  1,
+                                  0,
+                                  0
+                                ]
+                              },
+                              "WholeTimeStepMustBeInRange": false,
+                              "Invert": false,
+                              "StatusMessage": null,
                               "Notes": null,
                               "SelectedTab": null,
                               "Name": "SellJuly",
@@ -2554,7 +2664,6 @@
                 {
                   "$type": "Models.CLEM.CLEMFolder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "Reports",
                   "ResourceName": null,
                   "Children": [
@@ -2566,7 +2675,6 @@
                       "RotateReport": false,
                       "AutoCreateHTML": true,
                       "SelectedTab": "Display",
-                      "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
                       "GroupByVariableName": null,
@@ -2638,6 +2746,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": "Properties",
                       "VariableNames": [
                         "Labour"
@@ -2661,6 +2781,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": "Data",
                       "VariableNames": [
                         "Finances"
@@ -2684,6 +2816,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": "Data",
                       "VariableNames": [
                         "ProductStore"
@@ -2715,6 +2859,18 @@
                       "TransactionCategoryLevels": 0,
                       "TransactionCategoryLevelColumnNames": null,
                       "CustomVariableNames": null,
+                      "ReportRuminantAge": 1,
+                      "IncludeRuminantAE": false,
+                      "IncludeRuminantBreed": false,
+                      "IncludeRuminantCategory": true,
+                      "IncludeRuminantChangeDirection": true,
+                      "IncludeRuminantClass": true,
+                      "IncludeRuminantID": false,
+                      "IncludeRuminantLocation": false,
+                      "IncludeRuminantRelatesTo": false,
+                      "IncludeRuminantSex": true,
+                      "IncludeRuminantWeight": false,
+                      "IncludeRuminantGrowthRate": false,
                       "SelectedTab": "Data",
                       "VariableNames": null,
                       "EventNames": null,
@@ -2732,7 +2888,6 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": true,
-                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "ResourceName": null,
                   "Children": [
@@ -2746,6 +2901,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -2756,6 +2912,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -2841,6 +2998,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -2851,6 +3009,7 @@
                           "Position": 0,
                           "Inverted": false,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -2936,6 +3095,7 @@
                           "Position": 3,
                           "Inverted": false,
                           "CrossesAtZero": true,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null
@@ -2946,6 +3106,7 @@
                           "Position": 0,
                           "Inverted": true,
                           "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
                           "Minimum": null,
                           "Maximum": null,
                           "Interval": null

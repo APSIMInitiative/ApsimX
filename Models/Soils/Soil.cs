@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
 using Models.WaterModel;
 
 namespace Models.Soils
@@ -327,6 +326,10 @@ namespace Models.Soils
                 }
             }
 
+            // Get warnings related to soil temperature models.
+            List<string> soilTempWarnings = CheckSoilTemperatureModels();
+            warning.AddRange(soilTempWarnings);
+
             if (summary != null && warning.Count > 0)
             {
                 foreach(string line in warning)
@@ -336,5 +339,23 @@ namespace Models.Soils
             if (message.Length > 0)
                 throw new Exception(message.ToString());
         }
+
+        /// <summary>
+        /// Checks for multiple ISoilTemperature children.
+        /// </summary>
+        /// <exception cref="Exception"/>
+        public List<string> CheckSoilTemperatureModels()
+        {
+            List<string> warnings = new();
+            List<ISoilTemperature> soilTemperatures = Children.OfType<ISoilTemperature>().ToList();
+            if (soilTemperatures.Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
+            {
+                warnings.Add(
+                $"WARNING: Soils should only use one type of Soil temperature" +
+                $" model to avoid unintended behaviour. More than one model found in {FullPath}");
+            }
+            return warnings;
+        }
+
     }
 }

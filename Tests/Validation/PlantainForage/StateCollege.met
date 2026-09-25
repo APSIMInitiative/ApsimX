@@ -10,7 +10,7 @@ Longitude= -77.867
 tav = 9.6           ! Annual average ambient temperature
 amp = 24.6          ! Annual amplitude in mean monthly temperature
 
-year   month     day    rain     maxt     mint  windspeed      radn
+year   month     day    rain     maxt     mint       wind      radn
   ()      ()      ()    (mm)     (oC)     (oC)      (m/s)  (MJ/m^2)
 1991       1       1     0.0     -0.6     -8.3       2.00      8.15
 1991       1       2     0.0      0.6     -7.8       2.00      8.48

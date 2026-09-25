@@ -18,6 +18,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a ledger of all shortfalls in resource requests")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ReportResourceShortfalls : Models.Report
     {
         /// <summary>
@@ -26,8 +27,7 @@ namespace Models.CLEM.Reporting
         [Summary]
         [Description("Pasture shortfall as proportion of desired intake before reported")]
         [Required, GreaterThanEqualValue(0), Proportion]
-        [System.ComponentModel.DefaultValueAttribute(0.03)]
-        public double PropPastureShortfallOfDesiredIntake { get; set; }
+        public double PropPastureShortfallOfDesiredIntake { get; set; } = 0.03;
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -43,7 +43,6 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.Category as Category",
                 "[Activities].LastShortfallResourceRequest.Available as Available",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
-//                "[Activities].LastShortfallResourceRequest.Provided as Provided",
                 "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status"
             };
 
@@ -53,12 +52,5 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportResourceShortfalls()
-        {
-            CLEMModel.SetPropertyDefaults(this);
-        }
     }
 }

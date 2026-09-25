@@ -1,9 +1,10 @@
-using Models.Core;
-using System;
-using Models.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
 using APSIM.Numerics;
+using APSIM.Shared.Utilities;
+using Models.Climate;
+using Models.Core;
+using Models.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Models.Soils.Nutrients
 {
@@ -95,7 +96,7 @@ namespace Models.Soils.Nutrients
 
         /// <summary>The factor for gas exchange</summary>
         [Separator("Gas exchange parameters")]
-        [Description("Factor for soil/atmosphere gas exchange (AFPV/mm):")]
+        [Description("Factor for soil/atmosphere gas exchange (AFPV*sec/m)")]
         public double k_AFPV { get; set; } = 75.0;
 
         /// <summary>The additional limits for volatilisation</summary>
@@ -116,7 +117,7 @@ namespace Models.Soils.Nutrients
         ///////////////////////////////////////////////////////////////////////////
 
         /// <summary>Dynamic pH within the volatilisation model</summary>
-        public double[] pH { get; private set; }
+        public double[] pH { get; set; }
 
         /// <summary>Emissability, fraction subject to loss, of NH3 gas by soil layer (0-1)</summary>
         public double[] EmissabilityNH3 { get; private set; }
@@ -336,7 +337,8 @@ namespace Models.Soils.Nutrients
                 NH3Gas[z] = NH3ppm[z] * NH3GtoNH3A;                   // ppm (ug/cm3_air in soil = mg/L)
 
                 // 11-Calc the amount of NH3 in gaseous form and the amount effectivelly lost by volatilization
-                PotGasExchangeNH = waterBalance.Eo * k_AFPV;   // air filled pore volumes/day
+                if (weather.Wind < 0.001) summary.WriteMessage(this, "Note that windspeed is very low and this will affect the calculation of volatilisation. If wind is missing from your weather file then you will need to use a ClimateController", MessageType.Information);
+                PotGasExchangeNH = weather.Wind * k_AFPV;   // air filled pore volumes/day
                 AirFilledPoreVolume[z] = (physical.SAT[z] - waterBalance.SW[z]) * physical.Thickness[z];    // L_air/m2
 
                 GasExchangeNH[z] = PotGasExchangeNH * AirFilledPoreVolume[z];      // L_air/m2/day
@@ -344,8 +346,8 @@ namespace Models.Soils.Nutrients
                 if (GasExchangeNH[z] > 0)
                 {
                     EmissionNH3[z] = NH3Gas[z] * GasExchangeNH[z] * EmissabilityNH3[z];      // mg/m2
-                    EmissionNH3[z] = EmissionNH3[z] * 10E+4;                      // mg/ha
-                    EmissionNH3[z] = EmissionNH3[z] * 10E-6;                      // kg/ha
+                    EmissionNH3[z] = EmissionNH3[z] * 1E+4;                      // mg/ha
+                    EmissionNH3[z] = EmissionNH3[z] * 1E-6;                      // kg/ha
                 }
                 else
                     EmissionNH3[z] = 0;

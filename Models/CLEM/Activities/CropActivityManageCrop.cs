@@ -25,7 +25,9 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
-    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager, IStructureDependency
+    [ModelAssociations(associatedModels: new Type[] { typeof(CropActivityManageProduct) },
+        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
+    public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         private int currentCropIndex = 0;
         private int numberOfCrops = 0;
@@ -63,14 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public CropActivityManageCrop()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -83,7 +77,9 @@ namespace Models.CLEM.Activities
                 LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                 if (UseAreaAvailable)
+                {
                     LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
+                }
             }
 
         }
@@ -96,7 +92,7 @@ namespace Models.CLEM.Activities
         {
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
-            foreach (CropActivityManageProduct item in this.Children.OfType<CropActivityManageProduct>())
+            foreach (CropActivityManageProduct item in Children.OfType<CropActivityManageProduct>())
             {
                 numberOfCrops = i+1;
                 item.CurrentlyManaged = (i == currentCropIndex);
@@ -110,7 +106,9 @@ namespace Models.CLEM.Activities
             }
 
             if (Area == 0 && UseAreaAvailable)
-                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={this.NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
+            {
+                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -122,14 +120,19 @@ namespace Models.CLEM.Activities
             {
                 currentCropIndex++;
                 if (currentCropIndex >= numberOfCrops)
+                {
                     currentCropIndex = 0;
+                }
 
                 int i = 0;
                 foreach (CropActivityManageProduct item in Structure.FindChildren<CropActivityManageProduct>())
                 {
                     item.CurrentlyManaged = (i == currentCropIndex);
                     if (item.CurrentlyManaged)
+                    {
                         AdjustLand(item);
+                    }
+
                     i++;
                 }
             }
@@ -145,16 +148,16 @@ namespace Models.CLEM.Activities
             if (Area == 0 || !UseAreaAvailable)
             {
                 // is the requested land different to land currently provided
-                double areaneeded = UseAreaAvailable ? LinkedLandItem.AreaAvailable : (AreaRequested * cropProduct.PlantedMultiplier) - Area;
-                if (areaneeded != 0)
+                double areaNeeded = UseAreaAvailable ? LinkedLandItem.AmountAvailable : (AreaRequested * cropProduct.PlantedMultiplier) - Area;
+                if (areaNeeded != 0)
                 {
-                    if(areaneeded > 0)
+                    if (areaNeeded > 0)
                     {
                         ResourceRequestList = new List<ResourceRequest> {
-                            new ResourceRequest() {
+                            new () {
                                 Resource = LinkedLandItem,
                                 AllowTransmutation = false,
-                                Required = areaneeded,
+                                Required = areaNeeded,
                                 ResourceType = typeof(Land),
                                 ResourceTypeName = LandItemNameToUse,
                                 ActivityModel = this,
@@ -173,16 +176,19 @@ namespace Models.CLEM.Activities
                             Area += ResourceRequestList.FirstOrDefault().Provided;
                         }
                         else
-                            Area += areaneeded;
+                        {
+                            Area += areaNeeded;
+                        }
+                        ResourceRequestList = [];
                     }
                     else
                     {
-                        // excess land for planting can be reterned to land resource
-                        // careful that this doesn't get taken by a use all available elewhere if you want it back again.
+                        // excess land for planting can be returned to land resource
+                        // careful that this doesn't get taken by a use all available elsewhere if you want it back again.
                         if (LinkedLandItem != null)
                         {
-                            LinkedLandItem.Add(-areaneeded, this, cropProduct.LinkedResourceItem.Name, this.TransactionCategory);
-                            Area += areaneeded;
+                            LinkedLandItem.AddToResource(-areaNeeded, this, cropProduct.LinkedResourceItem.Name, TransactionCategory);
+                            Area += areaNeeded;
                         }
                     }
                 }
@@ -199,12 +205,12 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
-        // Method to listen for land use transactions
+        // Method to listens for land use transactions
         // This allows this activity to dynamically respond when use available area is selected
         // only listens when use available is set for parent
         private void LinkedLandItem_TransactionOccurred(object sender, EventArgs e)
         {
-            Area = LinkedLandItem.AreaAvailable;
+            Area = LinkedLandItem.AmountAvailable;
         }
 
         /// <inheritdoc/>
@@ -216,70 +222,13 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            // check that this activity contains at least one CollectProduct activity
-            var cropProductChildren = this.Children.OfType<CropActivityManageProduct>();
-            if (!cropProductChildren.Any())
+            var cropProductChildren = Children.OfType<CropActivityManageProduct>();
+            if (cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
             {
-                string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
-            }
-            if(cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
-            {
-                string[] memberNames = new string[] { "Multiple crop product activities" };
-                results.Add(new ValidationResult("More than one [a=CropActivityManageProduct] with the same [CropName] were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            string intro = (Structure.FindChildren<CropActivityManageProduct>().Count() > 1) ? "Rotating through crops" : "";
-
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<CropActivityManageProduct>(), true, "childgrouprotationborder", intro, "No CropActivityManageProduct component provided"),
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
-
-                Land parentLand = null;
-                Model clemParent = Structure.FindParent<ZoneCLEM>(relativeTo: this, recurse: true);
-                if (LandItemNameToUse != null && LandItemNameToUse != "")
-                    if (clemParent != null && clemParent.Enabled)
-                        parentLand = Structure.Find<Land>(LandItemNameToUse.Split('.')[0], relativeTo: clemParent);
-
-                if (UseAreaAvailable)
-                    htmlWriter.Write("the unallocated portion of ");
-                else
-                {
-                    htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(AreaRequested, warnZero:true)} of ");
-
-                    if (parentLand == null)
-                        htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                    else
-                        htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)} of ");
-                }
-                htmlWriter.Write($"{ CLEMModel.DisplaySummaryValueSnippet(LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
+                yield return new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", new string[] { "Multiple crop product activities" });
             }
         }
         #endregion

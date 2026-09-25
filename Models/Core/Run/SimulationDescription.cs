@@ -43,6 +43,11 @@ namespace Models.Core.Run
         }
 
         /// <summary>
+        /// Is the baseSimulation enabled?
+        /// </summary>
+        public bool IsEnabled => baseSimulation.Enabled;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="sim">The simulation to run.</param>
@@ -150,6 +155,10 @@ namespace Models.Core.Run
 
                 Node newNode = baseSimulation.Node.Clone();
 
+                //remove readonly from any node so that it can be run correctly.
+                foreach(Node node in newNode.Walk())
+                    node.Model.ReadOnly = false;
+
                 if (string.IsNullOrWhiteSpace(Name))
                     newNode.Rename(baseSimulation.Name);
                 else
@@ -212,9 +221,15 @@ namespace Models.Core.Run
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
-                                                                         multiple: true, ReplaceCommand.MatchType.Name));
+                    foreach (INodeModel child in replacements.Children)
+                    {
+                        if (child.Enabled && !(child is IText))
+                        {
+                            ModelReference reference = new ModelReference(child);
+                            ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
+                            replacementsToApply.Insert(0, command);
+                        }
+                    }                        
                 }
             }
         }

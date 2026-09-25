@@ -16,14 +16,14 @@ namespace Models.Core;
 [ValidParent(ParentType = typeof(Simulations))]
 [ValidParent(ParentType = typeof(Simulation))]
 [ValidParent(ParentType = typeof(Folder))]
-public class ModelCommands : Model, ILineEditor
+public class ModelCommands : Model, ICodeEditor
 {
     [Link]
     private readonly Simulation simulation = null;
 
     /// <summary>The lines to return to the editor.</summary>
     [JsonIgnore]
-    public IEnumerable<string> Lines { get; set; }
+    public IEnumerable<string> Code { get; set; }
 
     /// <summary>
     /// Run all commands.
@@ -32,7 +32,7 @@ public class ModelCommands : Model, ILineEditor
     {
         var runner = new Runner(this);
 
-        var commands = CommandLanguage.StringToCommands(Lines, this, Path.GetDirectoryName(simulation.FileName));
+        var commands = CommandLanguage.StringToCommands(Code, this, Path.GetDirectoryName(simulation.FileName));
         CommandProcessor.Run(commands, this, runner);
     }
 

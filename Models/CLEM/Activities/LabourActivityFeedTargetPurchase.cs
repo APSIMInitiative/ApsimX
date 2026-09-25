@@ -48,36 +48,5 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public HumanFoodStoreType FoodStore { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public LabourActivityFeedTargetPurchase()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FoodStoreName, "Store not set"));
-                htmlWriter.Write(" will be purchased to provide ");
-                if (TargetProportion == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>: ");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + (TargetProportion).ToString("0.0%") + "</span>");
-                htmlWriter.Write(" of remaining intake needed to meet current targets");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
-        } 
-        #endregion
-
     }
 }

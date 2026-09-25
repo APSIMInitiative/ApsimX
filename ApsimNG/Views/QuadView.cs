@@ -1,6 +1,6 @@
 ﻿using Gtk;
 using System;
-using UserInterface.Interfaces;
+using System.Data;
 
 namespace UserInterface.Views
 {
@@ -14,7 +14,9 @@ namespace UserInterface.Views
         Graph,
         Grid,
         Property,
-        Code
+        Code,
+        List,
+        Button
     }
 
     /// <summary>
@@ -151,6 +153,23 @@ namespace UserInterface.Views
                         rightPaned.Position = paneHeight - natHeight;
                 }
             }
+
+            view = GetView(WidgetType.Button);
+            if (view != null)
+            {
+                WidgetPosition position = WidgetTypeToPosition(WidgetType.Button);
+                ButtonView buttonView = view as ButtonView;
+                buttonView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
+                natHeight += 20;
+                if (position == WidgetPosition.TopLeft)
+                    leftPaned.Position = natHeight;
+                else if (position == WidgetPosition.TopRight)
+                    rightPaned.Position = natHeight;
+                else if (position == WidgetPosition.BottomLeft)
+                    leftPaned.Position = paneHeight - natHeight;
+                else if (position == WidgetPosition.BottomRight)
+                    rightPaned.Position = paneHeight - natHeight;
+            }
         }
 
         /// <summary></summary>
@@ -177,6 +196,14 @@ namespace UserInterface.Views
             else if (type == WidgetType.Code)
             {
                 container = this.GetControl<EditorView>(name);
+            }
+            else if (type == WidgetType.List)
+            {
+                container = this.GetControl<ExperimentView>(name);
+            }
+            else if (type == WidgetType.Button)
+            {
+                container = this.GetControl<ButtonView>(name);
             }
 
             SetView(container, position);
@@ -287,6 +314,10 @@ namespace UserInterface.Views
                 return WidgetType.Grid;
             else if (view is EditorView)
                 return WidgetType.Code;
+            else if (view is ExperimentView)
+                return WidgetType.List;
+            else if (view is ButtonView)
+                return WidgetType.Button;
             else
                 return WidgetType.None;
         }

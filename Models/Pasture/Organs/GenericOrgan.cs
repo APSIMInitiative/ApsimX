@@ -387,8 +387,7 @@ namespace Models.GrazPlan.Organs
     public double RemoveBiomass( double liveToRemove = 0,  double deadToRemove = 0,   double liveToResidue = 0,   double deadToResidue = 0,   double fractionStanding = 0)
     {
         double totalBiomass = 0.0;
-        double totalBiomassRemoved = 0.0;
-        double PostDMTotal = 0.0;
+        double postDMTotal = 0.0;
         
         double totalDM =  PastureModel.GetHerbageMass(stESTAB, TOTAL, TOTAL) +  PastureModel.GetHerbageMass(stDEAD, TOTAL, TOTAL);
         if (totalDM > 0.0)
@@ -443,15 +442,15 @@ namespace Models.GrazPlan.Organs
                 }
                 for (int cls=1; cls <= HerbClassNo; cls++)
                 {
-                    double PostDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
-                    double PostDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
-                    PostDMTotal += PostDMlive + PostDMdead;
+                    double postDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
+                    double postDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                    postDMTotal += postDMlive + postDMdead;
                 }   
                                
                 //update live and dead biomasses
                 CalculateLiveDead();
-                double RemoveDM = totalBiomass - totalBiomassRemoved;
-                return RemoveDM;    
+                double removedDM = totalBiomass - postDMTotal;
+                return removedDM;    
             }
             else
                 throw new Exception($"There is insufficient biomass to remove.");

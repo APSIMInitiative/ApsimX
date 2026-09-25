@@ -15,6 +15,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all products store types (e.g. wool, timber, manure) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ProductStore.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ProductStore : ResourceBaseWithTransactions
     {
 

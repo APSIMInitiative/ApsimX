@@ -57,7 +57,9 @@ jobs:
         image: apsiminitiative/apsimng-build:latest
       steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          allow-unsafe-pr-checkout: true
 
       - name: Make all directories safe (we are in a container. so it is ok :))
         run: git config --global --add safe.directory "*"
@@ -69,7 +71,7 @@ jobs:
         run: chown -R root:root /github/home
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '8.0.x'
 
@@ -94,7 +96,7 @@ jobs:
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
 
       - name: Upload a Windows Installer Build Artifact
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7
         with:
           name: windows-installer
           path: /__w/ApsimX/ApsimX/Setup/net8.0/windows/Output/APSIMSetup.exe
@@ -113,7 +115,9 @@ jobs:
       steps:
         
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v7
+          with:
+            allow-unsafe-pr-checkout: true
 
         - name: Make sure we have ownership of ApsimX
           run: chmod 777 -R  .
@@ -130,7 +134,7 @@ jobs:
               type=ref,event=pr
 
         - name: Download Windows installer build artifact
-          uses: actions/download-artifact@v6.0.0
+          uses: actions/download-artifact@v8
           with:
             name: windows-installer
             path: .
@@ -169,7 +173,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+            allow-unsafe-pr-checkout: true
 
       - name: Set script permissions
         run: chmod +x -R ./.github/workflows/scripts/
@@ -194,7 +200,9 @@ jobs:
       steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        with:
+          allow-unsafe-pr-checkout: true
 
       - name: Set script permissions
         run: chmod +x -R ./.github/workflows/scripts/

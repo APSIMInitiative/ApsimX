@@ -22,6 +22,8 @@ namespace Models.CLEM.Resources
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    [ModelAssociations(singleInstance:true)]
     public class ResourcesHolder : CLEMModel, IValidatableObject, IReportPricingChange
     {
         [JsonIgnore]
@@ -90,7 +92,7 @@ namespace Models.CLEM.Resources
         /// <param name="missingResourceAction">Action if resource group missing</param>
         /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
         /// <returns>A resource type component</returns>
-        public T FindResourceType<R, T>(IModel requestingModel, string resourceName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
+        public T FindResourceType<R, T>(CLEMModel requestingModel, string resourceName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
             // if resourceName is null return empty T as this is from the UI and user has not supplied the resource name
             if (resourceName is null)
@@ -101,7 +103,7 @@ namespace Models.CLEM.Resources
             {
                 nameParts = nameParts.Last().Split('.');
                 if (nameParts.Length > 2)
-                    throw new ApsimXException(requestingModel, $"Invalid resource name identifier for [{requestingModel.Name}], expecting 'ResourceName.ResourceTypeName' or 'ResourceTypeName'. Value provided [{resourceName}]");
+                    throw new ApsimXException(requestingModel, $"Invalid resource name identifier for [{requestingModel.NameWithParent}], expecting 'ResourceName.ResourceTypeName' or 'ResourceTypeName'. Value provided [{resourceName}]");
             }
 
             // not sure it's quickets to find the resource then look at it's children
@@ -142,7 +144,7 @@ namespace Models.CLEM.Resources
             string errorMsg;
             if (resGroup == null)
             {
-                errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] with value [{resourceName}] for [a={requestingModel.NameWithParent}]";
 
                 switch (missingResourceAction)
                 {
@@ -160,14 +162,14 @@ namespace Models.CLEM.Resources
             {
                 if (!resGroupNameMatch)
                 {
-                    errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
+                    errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.NameWithParent}] but a [{typeof(R).Name}] resource was found and will be used.";
                     Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                 }
             }
 
             if (resType as IModel is null)
             {
-                errorMsg = $"Unable to locate resource type [r={((nameParts.Last() == "") ? "Unknown" : nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource type [r={((nameParts.Last() == "") ? "Unknown" : nameParts.Last())}] in [r={resGroup.Name}] for [a={requestingModel.NameWithParent}]";
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -403,7 +405,7 @@ namespace Models.CLEM.Resources
                                     // assumed successful transaction based on where clause in transaction selection
                                     // Add resource: tops up resource from transmutation so available in CheckResources
                                     // if pricing based
-                                    resourceTypeInShortfall.Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
+                                    resourceTypeInShortfall.AddToResource(packetsNeeded * ((transmutation.TransmutationPacketSize == 0) ? 1 : transmutation.TransmutationPacketSize), request.ActivityModel, null, transmutation.TransactionCategory);
                                     if (allTransmutesSucceeed)
                                     {
                                         request.ShortfallStatus = "Transmuted";
@@ -447,52 +449,21 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // check that only one instance of each resource group is present
             foreach (var item in Structure.FindChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
-                string[] memberNames = new string[] { item.Key.FullName };
-                results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));
+                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), new string[] { item.Key.FullName });
             }
 
             // check that only one resource type with a given name is present
             foreach (var item in Structure.FindChildren<IResourceType>(recurse: true).GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
             {
                 var bits = item.Key.Split(':');
-                string[] memberNames = new string[] { "Multiple resource type with same name" };
-                results.Add(new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", memberNames));
+                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", new string[] { "Multiple resource type with same name" });
             }
-            return results;
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "<h1>Resources summary</h1>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>";
         }
 
         #endregion

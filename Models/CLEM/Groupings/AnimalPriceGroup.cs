@@ -21,6 +21,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
     {
         /// <summary>
@@ -45,7 +46,7 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
-        /// Calulate the value of an individual
+        /// Calculate the value of an individual
         /// </summary>
         /// <param name="ind"></param>
         /// <returns></returns>
@@ -59,10 +60,10 @@ namespace Models.CLEM.Groupings
                     case PricingStyleType.perHead:
                         break;
                     case PricingStyleType.perKg:
-                        multiplier = (ind as Ruminant).Weight;
+                        multiplier = (ind as Ruminant).Weight.Live;
                         break;
                     case PricingStyleType.perAE:
-                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        multiplier = (ind as Ruminant).Weight.AdultEquivalent;
                         break;
                     default:
                         break;
@@ -82,14 +83,6 @@ namespace Models.CLEM.Groupings
 
         /// <inheritdoc/>
         public IResourceType Resource { get { return Structure.FindParent<IResourceType>(recurse: true); } }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected AnimalPriceGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
 
         /// <inheritdoc/>
         public event EventHandler PriceChangeOccurred;
@@ -134,126 +127,5 @@ namespace Models.CLEM.Groupings
             PriceChangeOccurred?.Invoke(this, e);
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (!FormatForParentControl)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    switch (PurchaseOrSale)
-                    {
-                        case PurchaseOrSalePricingStyleType.Both:
-                            htmlWriter.Write("Buy and sell for ");
-                            break;
-                        case PurchaseOrSalePricingStyleType.Purchase:
-                            htmlWriter.Write("Buy for ");
-                            break;
-                        case PurchaseOrSalePricingStyleType.Sale:
-                            htmlWriter.Write("Sell for ");
-                            break;
-                    }
-                    if (Value.ToString() == "0")
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("<span class=\"setvalue\">");
-                        htmlWriter.Write(Value.ToString("#,0.##"));
-                    }
-                    htmlWriter.Write("</span> ");
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(PricingStyle.ToString());
-                    htmlWriter.Write("</span>");
-                    htmlWriter.Write("</div>");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (FormatForParentControl)
-                {
-                    if (Value.ToString() == "0")
-                    {
-                        htmlWriter.Write("</td><td><span class=\"errorlink\">NOT SET");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("</td><td><span class=\"setvalue\">");
-                        htmlWriter.Write(this.Value.ToString("#,0.##"));
-                    }
-                    htmlWriter.Write("</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{PricingStyle.ToString()}</span></td>");
-                    string buySellString = "";
-                    switch (PurchaseOrSale)
-                    {
-                        case PurchaseOrSalePricingStyleType.Both:
-                            buySellString = "Buy and sell";
-                            break;
-                        case PurchaseOrSalePricingStyleType.Purchase:
-                            buySellString = "Buy";
-                            break;
-                        case PurchaseOrSalePricingStyleType.Sale:
-                            buySellString = "Sell";
-                            break;
-                    }
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{buySellString}</span></td>");
-                    htmlWriter.Write("</tr>");
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n</div>");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (FormatForParentControl)
-                {
-                    htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(Structure.FindChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(Structure.FindChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                    }
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
-        }
-
-        #endregion
     }
 }

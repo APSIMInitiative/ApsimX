@@ -1,0 +1,403 @@
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// This stores the general parameters for a ruminant Type
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
+    [ValidParent(ParentType = typeof(RuminantParametersHolder))]
+    [Description("General ruminant parameters")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGeneral.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    public class RuminantParametersGeneral : CLEMModel, ISubParameters, ICloneable, IValidatableObject
+    {
+        /// <summary>
+        /// Name of breed
+        /// </summary>
+        /// <remarks>
+        /// This relates to breed where the name of herd defined by the name of the RuminantType
+        /// </remarks>
+        [Category("Breed:CrossBreed:Summary", "General")]
+        [Description("Breed name")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Name of breed required")]
+        public string Breed { get; set; } = "Bos taurus";
+
+        #region Age
+
+        /// <summary>
+        /// Natural weaning age
+        /// </summary>
+        [Category("Breed", "Growth")]
+        [Description("Natural weaning age (0, use gestation length)")]
+        [Units("years, months, days")]
+        public AgeSpecifier NaturalWeaningAge { get; set; } = new int[] { 0 };
+
+        #endregion
+
+        #region breeding
+
+        /// <summary>
+        /// Minimum size at which females mature, proportion of SRW
+        /// </summary>
+        [Category("Farm:Summary", "Breeding")]
+        [Description("Minimum female size for maturity (prop of SRW)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double MinimumSizeForMaturityFemale { get; set; } = 0.6;
+
+        /// <summary>
+        /// Minimum size at which males mature, proportion of male SRW
+        /// </summary>
+        [Category("Farm:Summary", "Breeding")]
+        [Description("Minimum male size for maturity (prop of male SRW)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double MinimumSizeForMaturityMale { get; set; } = 0.6;
+
+        /// <summary>
+        /// Days between conception and parturition
+        /// </summary>
+        [Category("Breed:CrossBreed", "Breeding")]
+        [Description("Days from conception to parturition")]
+        [Units("years, months, days")]
+        public AgeSpecifier GestationLength { get; set; } = new int[] { 0, 9, 0 };
+
+        /// <summary>
+        /// Rate at which multiple births are concieved (twins, triplets, ...)
+        /// </summary>
+        [Category("Breed", "Breeding")]
+        [Description("Rate at which multiple births occur (twins,triplets,...")]
+        [Proportion]
+        public double[] MultipleBirthRate { get; set; } = new double[] { 0.0 }; // default no multiple births
+
+        #endregion
+
+        #region Size
+
+        /// <summary>
+        /// Standard Reference Weight of female
+        /// </summary>
+        [Category("Farm:CrossBreed:Summary", "General")]
+        [Units("kg")]
+        [Description("Standard Ref. Weight for a female")]
+        [Required, GreaterThanValue(0)]
+        public double SRWFemale { get; set; } = 450;
+
+        /// <summary>
+        /// Standard Reference Weight for castrated male from female multiplier
+        /// </summary>
+        [Category("Farm:CrossBreed:Summary", "General")]
+        [Description("Castrated male SRW multiplier")]
+        [Required, GreaterThanValue(0)]
+        public double SRWCastrateMaleMultiplier { get; set; } = 1.2;
+
+        /// <summary>
+        /// Standard Reference Weight for male from female multiplier
+        /// </summary>
+        [Category("Farm:CrossBreed:Summary", "General")]
+        [Description("Male SRW multiplier")]
+        [Required, GreaterThanValue(0)]
+        public double SRWMaleMultiplier { get; set; } = 1.4;
+
+        /// <summary>
+        /// Standard Reference Weight at birth
+        /// </summary>
+        [Category("Breed:CrossBreed", "Breeding")]
+        [Units("Proportion of female SRW")]
+        [Description("Proportional birth mass (singlet,twins,triplets..)")]
+        [Required, GreaterThanValue(0), Proportion, MinLength(1)]
+        public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
+
+        /// <summary>
+        /// Effect of relative size on birth weight
+        /// </summary>
+        /// <value>Default value for cattle</value>
+        [Description("Effect of relative size on birth weight [CP4]")]
+        [Category("Breed", "Breeding")]
+        [Required, GreaterThanValue(0)]
+        public double EffectRelativeSizeBirthWeight_CP4 { get; set; } = 0.33;
+
+        /// <summary>
+        /// Weight(kg) of 1 animal equivalent (e.g. steer, DSE)
+        /// </summary>
+        [Category("Farm:Summary", "General")]
+        [Description("Weight of an animal equivalent")]
+        [Units("kg")]
+        [Required, GreaterThanValue(0)]
+        public double BaseAnimalEquivalent { get; set; } = 450;
+
+        #endregion
+
+        #region Condition
+
+        /// <summary>
+        /// Relative body condition to score rate
+        /// </summary>
+        [Category("Farm:Summary", "Growth")]
+        [Description("Rel. Body Cond. to Score rate")]
+        [Required, GreaterThanValue(0)]
+        public double RelBCToScoreRate { get; set; } = 0.15;
+
+        /// <summary>
+        /// Body condition score range
+        /// </summary>
+        [Category("Farm:Summary", "Growth")]
+        [Description("Body Condition Score range (min, mid, max)")]
+        [Required, ArrayItemCount(3)]
+        public double[] BCScoreRange { get; set; } = new[] { 0.0, 3.0, 5.0 };
+
+        /// <summary>
+        /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid)
+        /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
+        /// </summary>
+        [Category("Breed:CrossBreed", "Growth")]
+        [Description("Proportion of EBW fat for mature females"), Tooltip("Assumes cow at relative condition 1 (mid condition)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double ProportionEBWFatFemale { get; set; } = 0.25;
+
+        /// <summary>
+        /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid) SIRES
+        /// Still growing (e.g. heifers) will be leaner (RC 0.9) and intake males will be leaner based on sex effect (0.85)
+        /// </summary>
+        [Category("Breed:CrossBreed", "Growth")]
+        [Description("Proportion of EBW fat for mature males"), Tooltip("Assumes sire at relative condition 1 (mid condition)")]
+        [Required, Proportion, GreaterThanValue(0.0)]
+        public double ProportionEBWFatMale { get; set; } = 0.25;
+
+        /// <summary>
+        /// Max fat as a proportion of Empty Body Weight assuming Relative Condition of 1.5
+        /// </summary>
+        [Category("Breed:CrossBreed", "Growth")]
+        [Description("Proportion of EBW fat at RC=1.5"), Tooltip("Assumes cow at relative condition 1.5")]
+        [Required, Proportion]
+        public double ProportionEBWFatMax { get; set; } = 0.45;
+
+        /// <summary>
+        /// Minimum gut fill
+        /// </summary>
+        [Category("Core", "Growth")]
+        [Description("Minimum gut fill")]
+        [Required, Proportion]
+        public double GutFillMinimum { get; set; } = 0.04;
+
+        #endregion
+
+        #region Normalised Weight CN
+
+        /// <summary>
+        /// Style of obtaining the age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Approach used to provide age growth rate coefficient [CN1]")]
+        [Category("Farm", "Growth")]
+        public AgeGrowthRateCoefficientProvisionTypes AgeGrowthRateCoefficientProvisionStyle { get; set; }
+
+        /// <summary>
+        /// Age growth rate coefficient (CN1 in SCA)
+        /// </summary>
+        /// <value>Default value for cattle</value>
+        [Description("Age growth rate coefficient [CN1]")]
+        [Category("Farm:CrossBreed:Summary", "Growth")]
+        [Core.Display(VisibleCallback = "IsCN1Supplied")]
+        public double AgeGrowthRateCoefficient_CN1 { get; set; } = 0.0145; // updated from previous 0.0115 used in IAT/NABSA based on new analysis and breed improvements
+
+        /// <summary>
+        /// Average weaning weight to estimate age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Average weaning weight to estimate age growth rate coefficient")]
+        [Category("Farm:Summary", "Growth")]
+        [Units("kg")]
+        [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
+        public double CN1EstimatedWeaningWeight { get; set; }
+
+        /// <summary>
+        /// Average weaning age to estimate age growth rate coefficient (CN1)
+        /// </summary>
+        [Description("Average weaning age to estimate age growth rate coefficient")]
+        [Category("Farm:Summary", "Growth")]
+        [Core.Display(VisibleCallback = "IsCN1EstimatedFromWeaningDetails")]
+        [Units("years, months, days")]
+        public AgeSpecifier CN1EstimatedWeaningAge { get; set; } = new int[] { 0 };
+
+        /// <summary>
+        /// Determines whether CN1 is to be estimated from weaning details supplied
+        /// </summary>
+        public bool IsCN1EstimatedFromWeaningDetails { get { return AgeGrowthRateCoefficientProvisionStyle == AgeGrowthRateCoefficientProvisionTypes.EstimateFromAverageWeaningDetails; } }
+
+        /// <summary>
+        /// Determines whether CN1 is to be estimated from weaning details supplied
+        /// </summary>
+        public bool IsCN1Supplied { get { return !IsCN1EstimatedFromWeaningDetails; } }
+
+        /// <summary>
+        /// Standard Reference Weight growth scalar (CN2 in SCA)
+        /// </summary>
+        /// <value>Default value for cattle</value>
+        [Description("Standard Reference Weight growth scalar [CN2]")]
+        [Category("Breed:CrossBreed", "Growth")]
+        [Required, GreaterThanValue(0)]
+        public double SRWGrowthScalar_CN2 { get; set; } = 0.27;
+
+        /// <summary>
+        /// Slow growth factor (CN3 in SCA)
+        /// </summary>
+        /// <value>Default value for cattle</value>
+        [Description("Slow growth factor [CN3]")]
+        [Category("Farm:CrossBreed:Summary", "Growth")]
+        [Required, GreaterThanValue(0)]
+        public double SlowGrowthFactor_CN3 { get; set; } = 0.4;
+
+        #endregion
+
+        ///// <summary>
+        ///// Conversion from empty body weight to live weight
+        ///// </summary>
+        //[Description("Conversion from empty body weight to live weight [CG18]")]
+        //[Category("Farm:CrossBreed:Summary", "Growth")]
+        //[Required, GreaterThanValue(1.0)]
+        //public double EBW2LW_CG18 { get; set; } = 1.09;
+
+        ///// <summary>
+        ///// The proportion of SRW empty body weight that is protein
+        ///// </summary>
+        //[Description("The proportion of SRW empty body weight that is protein")]
+        //[Category("Breed:CrossBreed", "Growth")]
+        //[Required, Proportion, GreaterThanValue(0)]
+        //public double ProportionSRWEmptyBodyProtein { get; set; } = 0.17;
+
+        /// <summary>
+        /// Energy content of fat (MJ/kg) (Used in GrowPF, SAC07 and Oddy Growth models)
+        /// </summary>
+        [Description("MJ energy per kg fat")]
+        [Category("Core", "Energy")]
+        public double MJEnergyPerKgFat { get; set; } = 39.3; //GrowPF, 39.6 Oddy;
+
+        /// <summary>
+        /// Energy content of protein (MJ/kg) (Used in GrowPF, SAC07 and Oddy Growth models)
+        /// </summary>
+        [Description("MJ energy per kg protein")]
+        [Category("Core", "Energy")]
+        public double MJEnergyPerKgProtein { get; set; } = 23.6; // GrowPF, 23.8 Oddy;
+
+        /// <summary>
+        /// Determine whether wool production is included.
+        /// </summary>
+        [Description("Include wool production")]
+        [Category("Breed:Summary", "General")]
+        public bool IncludeWool { get; set; } = false;
+
+        /// <summary>
+        /// Create a clone of this class
+        /// </summary>
+        /// <returns>A copy of the class</returns>
+        public object Clone()
+        {
+            RuminantParametersGeneral clonedParameters = new()
+            {
+                NaturalWeaningAge = NaturalWeaningAge.Clone() as AgeSpecifier,
+                MinimumSizeForMaturityFemale = MinimumSizeForMaturityFemale,
+                MinimumSizeForMaturityMale = MinimumSizeForMaturityMale,
+                GestationLength = GestationLength.Clone() as AgeSpecifier,
+                SRWFemale = SRWFemale,
+                SRWCastrateMaleMultiplier = SRWCastrateMaleMultiplier,
+                SRWMaleMultiplier = SRWMaleMultiplier,
+                BirthScalar = BirthScalar.Clone() as double[],
+                MultipleBirthRate = MultipleBirthRate.Clone() as double[],
+                BaseAnimalEquivalent = BaseAnimalEquivalent,
+                RelBCToScoreRate = RelBCToScoreRate,
+                BCScoreRange = BCScoreRange.Clone() as double[],
+                AgeGrowthRateCoefficient_CN1 = AgeGrowthRateCoefficient_CN1,
+                SRWGrowthScalar_CN2 = SRWGrowthScalar_CN2,
+                SlowGrowthFactor_CN3 = SlowGrowthFactor_CN3,
+            };
+            return clonedParameters;
+        }
+
+        /// <summary>
+        /// A method to calculate the age growth rate coefficient (CN1) from weaning details
+        /// </summary>
+        public void CalculateAgeGrowthRateCoefficientFromWeaningDetails()
+        {
+            if (IsCN1EstimatedFromWeaningDetails)
+            {
+                AgeGrowthRateCoefficient_CN1 = 0;
+                if (CN1EstimatedWeaningWeight > 0 && CN1EstimatedWeaningAge.InDays > 0)
+                {
+                    // this is what GitHub CoPilot suggested before I got the calculation from the JD
+                    AgeGrowthRateCoefficient_CN1 = Math.Log(SRWFemale / CN1EstimatedWeaningWeight) / CN1EstimatedWeaningAge.InDays;
+                }
+            }
+        }
+
+        #region validation
+
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+
+            if (MultipleBirthRate is null || MultipleBirthRate.Length == 0)
+            {
+                yield return new ValidationResult($"At least one multiple birth rate [MultipleBirthRate] value is required. Specify [0] for no multiple births or a comma separated list of values for the probability of twins, triplets, quadrulpets etc.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
+            }
+            if (BirthScalar is null || BirthScalar.Length == 0)
+            {
+                yield return new ValidationResult($"At least one birth scalar [BirthScalar] value is required.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
+            }
+            if (((MultipleBirthRate?.Length ?? 0) > 0) & ((BirthScalar?.Length ?? 0) > 0))
+            {
+                if (BirthScalar.Length <= MultipleBirthRate.Length & !(MultipleBirthRate.Length == 1 & MultipleBirthRate[0] == 0 & BirthScalar.Length == 1))
+                {
+                    yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantParametersGeneral.BirthScalar" });
+                }
+            }
+
+            // estimate from weaning details
+            string warnExtra = "Check specified value and contact developers if correct";
+            if (IsCN1EstimatedFromWeaningDetails)
+            {
+                if (CN1EstimatedWeaningWeight <= 0)
+                {
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningWeight] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningWeight" });
+                }
+                if (CN1EstimatedWeaningAge.InDays == 0)
+                {
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningAge] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningAge" });
+                }
+                warnExtra = $"Check the calculation of AgeGrowthRateCoefficient based on weaning weight [{CN1EstimatedWeaningWeight}] and age [{CN1EstimatedWeaningAge.InDays}] in documentation";
+                CalculateAgeGrowthRateCoefficientFromWeaningDetails();
+            }
+            // ToDo: check the limits for cattle sheep etc
+            if (AgeGrowthRateCoefficient_CN1 > 0.02)
+            {
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be less than 0.02{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+            }
+            if (AgeGrowthRateCoefficient_CN1 < 0.01)
+            {
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be greater than 0.01{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+            }
+
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Styles of estimating the age growth rate coefficient (CN1)
+    /// </summary>
+    public enum AgeGrowthRateCoefficientProvisionTypes
+    {
+        /// <summary>
+        /// Provide the value to use
+        /// </summary>
+        ProvideValue,
+        /// <summary>
+        /// Use average weight and age at weaning to estimate
+        /// </summary>
+        EstimateFromAverageWeaningDetails
+    }
+}

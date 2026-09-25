@@ -92,7 +92,7 @@ namespace UnitTests
             sim.Prepare();
             sim.Run();
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             //Get data from the datastore and retrieve data from specific columns
            
