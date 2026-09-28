@@ -1134,10 +1134,10 @@
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "FodderBeet.StorageRoot",
-              "LiveDigestibility": "0",
-              "DeadDigestibility": "0",
-              "LiveFractionConsumable": 0.0,
-              "DeadFractionConsumable": 0.0,
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
               "LiveMinimumBiomass": 100.0,
               "DeadMinimumBiomass": 0.0
             },
@@ -1164,10 +1164,10 @@
             {
               "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
               "Name": "FodderBeet.Root",
-              "LiveDigestibility": "0",
-              "DeadDigestibility": "0",
-              "LiveFractionConsumable": 0.0,
-              "DeadFractionConsumable": 0.0,
+              "LiveDigestibility": "0.7",
+              "DeadDigestibility": "0.3",
+              "LiveFractionConsumable": 1.0,
+              "DeadFractionConsumable": 1.0,
               "LiveMinimumBiomass": 100.0,
               "DeadMinimumBiomass": 0.0
             },
