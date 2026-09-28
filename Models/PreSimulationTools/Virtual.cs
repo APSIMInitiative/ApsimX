@@ -27,7 +27,7 @@ namespace Models.PreSimulationTools
     public class Virtual : Model, IReferenceExternalFiles, ICodeEditor, IGenerateNodes
     {
         //Path to model to copy in
-        private string _modelPath = "[Simulations]";
+        private string[] _modelPaths = ["[Simulations]"];
 
         /// <summary>The list of commands that are generated</summary>
         private string[] _commands = [];
@@ -67,14 +67,26 @@ namespace Models.PreSimulationTools
         /// instead as children of Import.
         /// Defaults to [Simulations]
         /// </summary>
-        [Description("Model Path")]
-        public string ModelPath { 
-            get {return _modelPath; }
+        [Description("Model Paths")]
+        [Display(Type = DisplayType.MultiLineText)]
+        public string[] ModelPaths { 
+            get { return _modelPaths; }
             set
             {
-                _modelPath = value;
                 _commands = [];
                 _requiresUpdating = true;
+                
+                if (value == null)
+                    _modelPaths = Array.Empty<string>();
+                else
+                {
+                    //remove any null or blank sheet names that could be passed in
+                    List<string> filtered = new List<string>();
+                    foreach(string line in value)
+                        if (line != null && line.Length > 0)
+                            filtered.Add(line);
+                    _modelPaths = filtered.ToArray();
+                }
             }
         }
 
@@ -114,10 +126,10 @@ namespace Models.PreSimulationTools
             if (parentVirtual != null)
                 throw new Exception("Virtual cannot be placed under another Virtual node, potential cyclical loop.");
 
-            _commands = GetCommands(this, FilePath.AbsoluteFilePath, ModelPath);
+            _commands = GetCommands(this, FilePath.AbsoluteFilePath, ModelPaths);
 
             string relativeDirectory = FilePath.StartDirectory;
-            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(ModelPath))
+            if (string.IsNullOrEmpty(relativeDirectory) || string.IsNullOrEmpty(FileName) || ModelPaths.Length == 0)
                 return false;
 
             bool readOnly = ReadOnly;
@@ -170,20 +182,23 @@ namespace Models.PreSimulationTools
         /// <summary>
         ///
         /// </summary>
-        private static string[] GetCommands(Virtual import, string fileName, string path)
+        private static string[] GetCommands(Virtual import, string fileName, string[] paths)
         {
-            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(path))
+            if (string.IsNullOrEmpty(fileName) || paths.Length == 0)
                 return [];
 
             Simulations otherFile = FileFormat.ReadFromFile<Simulations>(fileName).Model as Simulations;
             List<IModel> childrenToImport = new List<IModel>();
-            if (path.ToLower() == "simulations" || path.ToLower() == "[simulations]")
-                childrenToImport.AddRange(otherFile.Children);
-            else
+            foreach (string path in paths)
             {
-                VariableComposite model = otherFile.Node.GetObject(path, LocatorFlags.ModelsOnly);
-                if (model != null)
-                    childrenToImport.Add(model.Value as IModel);
+                if (path.ToLower() == "simulations" || path.ToLower() == "[simulations]")
+                    childrenToImport.AddRange(otherFile.Children);
+                else
+                {
+                    VariableComposite model = otherFile.Node.GetObject(path, LocatorFlags.ModelsOnly);
+                    if (model != null)
+                        childrenToImport.Add(model.Value as IModel);
+                }
             }
 
             List<string> commands = new List<string>();
@@ -198,10 +213,11 @@ namespace Models.PreSimulationTools
                     
                     if (allowedToImport)
                     {
-                        commands.Add($"add [Simulations].{child.Name} from {fileName} to [{import.Name}]");
-                        readOnlyCommands.Add($"[{import.Name}].{child.Name}.ReadOnly = True");
+                        commands.Add($"add {child.FullPath} from {fileName} to [{import.Name}]");
+                        string importedName = $"[{import.Name}].{child.Name}";
+                        readOnlyCommands.Add($"{importedName}.ReadOnly = True");
                         foreach(Node node in child.Node.Walk())
-                            commands.AddRange(ModelSpecificCommands(import, node, fileName));
+                            commands.AddRange(ModelSpecificCommands(import, node, child.FullPath, importedName, fileName));
                     }
                 }
             }
@@ -216,7 +232,7 @@ namespace Models.PreSimulationTools
             FilePath.SetStartDirectory(Path.GetDirectoryName(Node.FileName));
         }
 
-        private static string[] ModelSpecificCommands(Virtual import, Node node, string fileName)
+        private static string[] ModelSpecificCommands(Virtual import, Node node, string basePath, string importedName, string fileName)
         {
             string localDirectory = Path.GetDirectoryName(import.Node.FileName);
             string referenceDirectory = Path.GetDirectoryName(fileName);
@@ -224,13 +240,13 @@ namespace Models.PreSimulationTools
             List<string> commands = new List<string>();
             if (node.Model is DataStore dataStore)
             {
-                commands.Add($"[{import.Name}].{dataStore.Name}.FileName = {Path.ChangeExtension(import.Node.FileName, ".db")}");
+                commands.Add($"{importedName}.FileName = {Path.ChangeExtension(import.Node.FileName, ".db")}");
             }
             else if (node.Model is Weather weather)
             {
                 string absolutePath = PathUtilities.GetAbsolutePath(weather.FileName, referenceDirectory);
                 string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
-                string modelPath = weather.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                string modelPath = weather.FullPath.Replace($"{basePath}.", $"{importedName}.");
                 commands.Add($"{modelPath}.FileName = {relativePath}");
             }
             else if (node.Model is ExcelInput excelInput)
@@ -243,7 +259,7 @@ namespace Models.PreSimulationTools
                     newFileNames.Add(relativePath);
                 }
 
-                string modelPath = excelInput.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                string modelPath = excelInput.FullPath.Replace($"{basePath}.", $"{importedName}.");
                 commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
             }
             else if (node.Model is Observations observations)
@@ -256,14 +272,14 @@ namespace Models.PreSimulationTools
                     newFileNames.Add(relativePath);
                 }
 
-                string modelPath = observations.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                string modelPath = observations.FullPath.Replace($"{basePath}.", $"{importedName}.");
                 commands.Add($"{modelPath}.FileNames = {string.Join(',', newFileNames)}");
             }
             else if (node.Model is SetModelParamsBySimulation setModelParamsBySimulation)
             {
                 string absolutePath = PathUtilities.GetAbsolutePath(setModelParamsBySimulation.ParameterFile, referenceDirectory);
                 string relativePath = PathUtilities.GetRelativePath(absolutePath, localDirectory);
-                string modelPath = setModelParamsBySimulation.FullPath.Replace($".Simulations.", $"[{import.Name}].");
+                string modelPath = setModelParamsBySimulation.FullPath.Replace($"{basePath}.", $"{importedName}.");
                 commands.Add($"{modelPath}.ParameterFile = {relativePath}");
             }
             return commands.ToArray();
