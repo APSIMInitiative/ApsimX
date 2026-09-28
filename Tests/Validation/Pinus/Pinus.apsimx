@@ -1797,85 +1797,85 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1973-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1973-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1974-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1974-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1975-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1975-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1976-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1976-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1977-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1977-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1978-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1978-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1979-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1979-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1980-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1980-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1981-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1981-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1981-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.01);",
-                                  "Line": "1982-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.01);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.01);",
+                                  "Line": "1982-12-31 [TreeThinning].Script.DoThin(0.01);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1983-06-15",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1983-06-15 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1983-06-15 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.563);",
-                                  "Line": "1988-10-09 [TreeThinningFromAboveOrBelow].Script.DoThin(0.563);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.563);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.563);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -1905,113 +1905,113 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1973-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1973-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1974-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1974-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1975-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1975-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1976-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1976-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1977-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1977-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1978-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1978-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1979-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1979-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1980-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1980-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1981-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1981-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1981-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1982-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1982-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1983-06-15",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1983-06-15 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1983-06-15 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1985-06-15",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.068);",
-                                  "Line": "1985-06-15 [TreeThinningFromAboveOrBelow].Script.DoThin(0.068);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.068);",
+                                  "Line": "1985-06-15 [TreeThinning].Script.DoThin(0.068);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1986-06-15",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.029);",
-                                  "Line": "1986-06-15 [TreeThinningFromAboveOrBelow].Script.DoThin(0.029);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.029);",
+                                  "Line": "1986-06-15 [TreeThinning].Script.DoThin(0.029);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1987-08-27",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.015);",
-                                  "Line": "1987-08-27 [TreeThinningFromAboveOrBelow].Script.DoThin(0.015);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.015);",
+                                  "Line": "1987-08-27 [TreeThinning].Script.DoThin(0.015);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-04-03",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.032);",
-                                  "Line": "1988-04-03 [TreeThinningFromAboveOrBelow].Script.DoThin(0.032);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.032);",
+                                  "Line": "1988-04-03 [TreeThinning].Script.DoThin(0.032);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.46);",
-                                  "Line": "1988-10-09 [TreeThinningFromAboveOrBelow].Script.DoThin(0.46);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.46);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.46);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2062,99 +2062,99 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1973-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1973-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1974-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1974-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1975-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1975-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1976-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1976-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1977-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1977-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1978-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1978-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1979-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1979-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1980-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1980-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1981-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1981-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1981-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1982-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1982-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1983-06-15",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1983-06-15 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1983-06-15 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1987-08-27",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.014);",
-                                  "Line": "1987-08-27 [TreeThinningFromAboveOrBelow].Script.DoThin(0.014);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.014);",
+                                  "Line": "1987-08-27 [TreeThinning].Script.DoThin(0.014);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-04-03",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.014);",
-                                  "Line": "1988-04-03 [TreeThinningFromAboveOrBelow].Script.DoThin(0.014);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.014);",
+                                  "Line": "1988-04-03 [TreeThinning].Script.DoThin(0.014);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.555);",
-                                  "Line": "1988-10-09 [TreeThinningFromAboveOrBelow].Script.DoThin(0.555);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.555);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.555);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2205,78 +2205,78 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1973-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1973-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1974-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1974-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1975-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1975-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1976-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1976-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1977-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1977-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1978-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.05);",
-                                  "Line": "1978-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.05);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1979-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.01);",
-                                  "Line": "1979-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.01);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.01);",
+                                  "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.01);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1980-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1980-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1981-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1981-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1981-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1982-12-31",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.00);",
-                                  "Line": "1982-12-31 [TreeThinningFromAboveOrBelow].Script.DoThin(0.00);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.00);",
+                                  "Line": "1982-12-31 [TreeThinning].Script.DoThin(0.00);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinningFromAboveOrBelow].Script.DoThin(0.462);",
-                                  "Line": "1988-10-09 [TreeThinningFromAboveOrBelow].Script.DoThin(0.462);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.462);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.462);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -3354,81 +3354,6 @@
                               ],
                               "Parameters": [],
                               "Name": "TreeThinning",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Manager, Models",
-                              "CodeArray": [
-                                "",
-                                "using APSIM.Core;",
-                                "using Models.Soils;",
-                                "using Models.Interfaces;",
-                                "using APSIM.Shared.Utilities;",
-                                "using System.Xml.Serialization;",
-                                "using Models.PMF;",
-                                "using Models.Core;",
-                                "using System.Collections.Generic;",
-                                "using System;",
-                                "using Newtonsoft.Json;",
-                                "using Models.PMF.Interfaces;",
-                                "using Models.Functions;",
-                                "",
-                                "namespace Models",
-                                "{",
-                                "    [Serializable] ",
-                                "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                                "    public class Script : Model, IStructureDependency",
-                                "    {",
-                                "        [Link] private Plant Pinus;",
-                                "        [Link] private Clock Clock;",
-                                "        ",
-                                "        public IStructure Structure { private get; set; }",
-                                "        ",
-                                "        public void DoThin(double ThinFr)",
-                                "        {",
-                                "            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.",
-                                "            //Set thinning bias away from average for biomass components (not for population), e.g. 0.5 for thinning from below, and 2 for thinning from above, ",
-                                "            //i.e. average individual tree size changes",
-                                "",
-                                "",
-                                "            double ThinBias = 0.2;   ",
-                                "            if (ThinFr>0.4)",
-                                "            {",
-                                "                ThinBias = 0.7;  ",
-                                "                ",
-                                "                VariableComposite variable = Node.GetObject(\"[Pinus].Stem.SizeClass.Location.Fraction\");",
-                                "                if (variable != null)",
-                                "                {",
-                                "                    Constant locationFraction = variable.FirstModel as Constant;",
-                                "                    locationFraction.FixedValue = 0.7;",
-                                "                }               ",
-                                "            } ",
-                                "",
-                                "            //Harvest with manager specified removal fractions",
-                                "            Pinus.structure?.DoThin(ThinFr*ThinBias);",
-                                "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
-                                "            var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
-                                "            var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
-                                "            var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
-                                "            var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
-                                "            Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-                                "            Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-                                "            Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-                                "            FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-                                "            CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-                                "",
-                                "            Pinus.Population = Pinus.Population*(1-ThinFr);",
-                                "        }",
-                                "    }",
-                                "}",
-                                "",
-                                "                "
-                              ],
-                              "Parameters": [],
-                              "Name": "TreeThinningFromAboveOrBelow",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
