@@ -3787,6 +3787,33 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "[Pinus].Arbitrator.DM.TotalFixationSupply",
+                                "[Pinus].Arbitrator.DM.TotalPlantDemand",
+                                "[Pinus].Arbitrator.DMPartitioningMassBalanceError ",
+                                "[Pinus].Arbitrator.N.TotalUptakeSupply",
+                                "[Pinus].Arbitrator.N.TotalPlantDemand",
+                                "",
+                                "[Pinus].Leaf.DMDemand.Total",
+                                "[Pinus].FineRoot.DMDemand.Total",
+                                "[Pinus].CoarseRoot.DMDemand.Total",
+                                "[Pinus].Stem.DMDemand.Total",
+                                "[Pinus].Branch.DMDemand.Total",
+                                "[Pinus].Cone.DMDemand.Total"
+                              ],
+                              "EventNames": [
+                                "[Clock].DoReport"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "DetailedDynamicsReport",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -114010,6 +114037,15 @@
               "ReadOnly": false
             }
           ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "Name": "Partitioning",
+          "ResourceName": null,
+          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
