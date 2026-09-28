@@ -209,7 +209,7 @@ namespace Models.AgPasture
         public double DungNConc { get; set; } = 2.6;
 
         /// <summary>Fraction of defoliated Biomass going to soil</summary>
-        [Description("Fraction of dung/urine exported off paddock e.g. to lanes/camps (0-1). Single value or montly values.")]
+        [Description("Fraction of dung/urine exported off paddock e.g. to lanes/camps (-1 to 1, negative values are net imports). Single value or montly values.")]
         [Display(VisibleCallback = nameof(IsDungUrineReturnOn))]
         public double[] FractionOfDungUrineOffPaddock { get; set; } = new double[] { 0 };
 
@@ -504,8 +504,8 @@ namespace Models.AgPasture
 
             // FractionOfDungUrineOffPaddock should only lie between 0 and 1. 
             for (int i = 0; i < FractionOfDungUrineOffPaddock.Length; i++) {
-                if (FractionOfDungUrineOffPaddock[i] < 0.0 || FractionOfDungUrineOffPaddock[i] > 1.0)
-                    throw new Exception("FractionOfDungUrineOffPaddock should be between 0 and 1");
+                if (FractionOfDungUrineOffPaddock[i] < -1.0 || FractionOfDungUrineOffPaddock[i] > 1.0)
+                    throw new Exception("FractionOfDungUrineOffPaddock should be between -1 and 1. Negative values are a net import of excreta.");
             }
 
             // If we are at the top level of the simulation then look in first zone for number of forages.
