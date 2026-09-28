@@ -7,10 +7,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
 using Humanizer;
+using System.Threading;
 using System.Globalization;
 
 namespace APSIM.Workflow;
-
 
 /// <summary>
 /// Main program class for the APSIM.Workflow application.
@@ -102,7 +102,7 @@ public class Program
                         envDict.Add(values[0], values[1]);
                     }
 
-                    Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
+                    Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
                     Azure.CreateJobs(
                         envDict["AZURE_PRIMARY_ACCESS_KEY"],
                         validationPaths,
@@ -112,6 +112,9 @@ public class Program
                         options.PullRequestNumber,
                         poolName
                     );
+                    // Wait for a few minutes before resizing.
+                    Thread.Sleep(TimeSpan.FromMinutes(3));
+                    Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
                     stopwatch.Stop();
                 }
                 catch (Exception ex)
