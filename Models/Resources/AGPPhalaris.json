@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 220,
+  "Version": 221,
   "Name": "Simulations",
   "Children": [
     {
@@ -41,12 +41,12 @@
       "TargetShootRootRatio": 3.0,
       "MaxRootAllocation": 0.325,
       "ShootRootGlfFactor": 0.5,
-      "FractionLeafMaximum": 0.65,
-      "FractionLeafMinimum": 0.65,
-      "FractionLeafDMThreshold": 500.0,
-      "FractionLeafDMFactor": 2000.0,
-      "FractionLeafExponent": 3.0,
-      "FractionToStolon": 0.0,
+      "LeafProportionMaximum": 0.65,
+      "LeafProportionMinimum": 0.65,
+      "LeafPropDMThreshold": 500.0,
+      "LeafPropDMFactor": 2000.0,
+      "LeafPropExponent": 3.0,
+      "StolonProportionTarget": 0.0,
       "SpecificLeafArea": 22.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 1000.0,

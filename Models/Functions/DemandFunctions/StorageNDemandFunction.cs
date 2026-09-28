@@ -47,8 +47,7 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
-            double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
+            double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + parentOrgan.potentialDMAllocation.Total) - parentOrgan.Live.N);
             NDeficit *= nitrogenDemandSwitch.Value();
 
             return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
