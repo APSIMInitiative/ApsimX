@@ -75,7 +75,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-
         public RuminantInfoEnergy Energy { get; set; }
 
         /// <summary>
@@ -324,7 +323,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateAgeInDays(DateTime currentDate)
         {
-            AgeInDays = DaysSince(RuminantTimeSpanTypes.Birth, 0, Parameters.Details.CurrentTimeStep.TimeStepStart);
+            AgeInDays = DaysSince(RuminantTimeSpanTypes.Birth, 0, currentDate);
         }
 
         /// <summary>
@@ -876,7 +875,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Milk production currently available for each offspring from mother (kg day-1)
+        /// Milk production currently available for each offspring from mother (MJ day-1)
         /// </summary>
         public double MothersMilkProductionAvailable
         {
@@ -1029,8 +1028,8 @@ namespace Models.CLEM.Resources
             Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
-            growActivity?.SetProteinAndFatAtBirth(this, weight);
             Weight.SetStandardReferenceWeight();
+            growActivity?.SetProteinAndFatAtBirth(this, weight);
 
             if (growActivity.IncludeFatAndProtein)
             {
@@ -1046,6 +1045,7 @@ namespace Models.CLEM.Resources
             AgeInDays = 0;
             DateOfBirth = mother.BirthDueDate;
             DateEnteredSimulation = DateOfBirth;
+            daysInTimeStepSuckling = Convert.ToInt32((Parameters.Details.CurrentTimeStep.TimeStepEnd - DateOfBirth).TotalDays) + 1;
 
             // add attributes inherited from mother
             foreach (var attribute in mother.Attributes.Items.Where(a => a.Value is not null))

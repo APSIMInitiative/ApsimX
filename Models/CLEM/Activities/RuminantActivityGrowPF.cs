@@ -1,5 +1,6 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using MathNet.Numerics.Distributions;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -463,7 +464,13 @@ namespace Models.CLEM.Activities
 
             // determine if body protein is below expected for age to adjust protein content of gain for recovery of protein
             ind.Weight.Protein.Normal = ind.Weight.Protein.MassAtSRW * Math.Min(1.0, relativeSizeForWeightGainPurposes);
-            ind.Weight.Protein.NormalShortfall = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
+            ind.Weight.Protein.NormalShortfallTimeStep = Math.Max(0, ind.Weight.Protein.Normal - ind.Weight.Protein.Amount);
+            ind.Weight.Protein.NormalShortfall = ind.Weight.Protein.NormalShortfallTimeStep / daysInTimeStep;
+            if (ind.IsSucklingWithMother)
+            {
+                ind.Weight.Protein.NormalShortfallTimeStep = double.PositiveInfinity;
+                ind.Weight.Protein.NormalShortfall = double.PositiveInfinity;
+            }
 
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
@@ -501,8 +508,9 @@ namespace Models.CLEM.Activities
 
             // 1. if protein from intake available AND insufficient energy to grow protein to normal limit AND lactating, mobilise fat to provide energy to grow protein from diet
 
-            double proteinToMeetNormal = Math.Min(ind.Weight.Protein.NormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake)) / daysInTimeStep;
+            double proteinToMeetNormal = Math.Min(ind.Weight.Protein.NormalShortfall, Math.Max(0.0, proteinAvailableForGainFromIntake));
             double energyNeededToMeetNormal = proteinToMeetNormal * ind.Parameters.General.MJEnergyPerKgProtein;
+            ind.Energy.ForDesiredGain = energyNeededToMeetNormal;
             double energyShortfall = Math.Min(0, Math.Max(energyAvailableForGain - energyNeededToMeetNormal, energyNeededToMeetNormal * -1));
             double efficiencyToGetEnergy = Math.Min(1.0, ind.Energy.Km / 0.8);
             // previously only for lactating females.
@@ -620,8 +628,10 @@ namespace Models.CLEM.Activities
 
                 double bodyProteinAvailable = Math.Max(0.0, ind.Weight.Protein.Amount - (proteinNormal * 0.75));
 
+                int daysInTimeStep = indFemale.SucklingOffspringList.First()?.DaysInTimeStep??ind.DaysInTimeStep;
+
                 // get protein required from body
-                double bodyProteinTakenForLactation = Math.Min(lactationProteinDeficit / 0.8, bodyProteinAvailable);
+                double bodyProteinTakenForLactation = Math.Min(lactationProteinDeficit / 0.8, bodyProteinAvailable / daysInTimeStep);
 
                 double proteinProvided = ind.Weight.Protein.MobiliseAmount(bodyProteinTakenForLactation, 0.8, MobilisationReasonType.LactationProtein);
                 double proteinEnergyProvided = ind.Energy.Protein.MobiliseAmount(bodyProteinTakenForLactation * ind.Parameters.General.MJEnergyPerKgProtein, 0.8, MobilisationReasonType.LactationProtein);
@@ -897,6 +907,11 @@ namespace Models.CLEM.Activities
             {
                 suckling.Intake.MilkDaily.Expected = sucklingMJExpected / ind.Milk.EnergyContent;
                 suckling.Energy.MilkDaily.Expected = sucklingMJExpected;
+                if (!updateValues)
+                {
+                    suckling.Intake.MilkDaily.MaximumExpected = suckling.Intake.MilkDaily.Expected;
+                    suckling.Energy.MilkDaily.MaximumExpected = suckling.Energy.MilkDaily.Expected;
+                }
             }
 
             if (updateValues)

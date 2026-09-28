@@ -32,7 +32,8 @@ namespace Models.CLEM.Resources
         public double PreviousWet { get { return Previous / ProportionDry; } }
 
         /// <inheritdoc/>
-        public new double Net { get { return FromIntakeAvailable - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
+        public new double Net { get { return FromIntakeTotal - ForUrinary - ForFaecal - ForPregnancy - ForWool - ForLactationFromIntake; } }
+        // Note: Net must use total cp from intake as ForUrinary and ForFaecal use the protein not included in dietary protein leaving the stomach
 
         /// <summary>
         /// Normal protein mass by body size
@@ -40,7 +41,12 @@ namespace Models.CLEM.Resources
         public double Normal { get; set; }
 
         /// <summary>
-        /// Protein needed to reach normal protein mass by body size
+        /// Total protein needed to reach normal protein mass by body size
+        /// </summary>
+        public double NormalShortfallTimeStep { get; set; }
+
+        /// <summary>
+        /// Protein needed dailly to reach normal protein mass by body size
         /// </summary>
         public double NormalShortfall { get; set; }
 
@@ -236,6 +242,49 @@ namespace Models.CLEM.Resources
         {
             Change = 0;
             Amount = amount;
+        }
+
+        /// <summary>
+        /// A method to return the proportion of energy provided for a pahse of allocation
+        /// </summary>
+        /// <param name="allocationPhase">The name of the allocation phase</param>
+        /// <returns>Proportion of energy provided for the phase or -9999 if phase unknown</returns>
+        public double ProportionAvailable(string allocationPhase)
+        {
+            double needed = 0;
+            double after = 0;
+
+            switch (allocationPhase)
+            {
+                case "Maintenance":
+                    needed = ForMaintenance;
+                    after = FromIntakeAvailable - ForMaintenance;
+                    break;
+                case "Wool":
+                    needed = ForWool;
+                    after = FromIntakeAvailable - ForMaintenance - ForWool;
+                    break;
+                case "Pregnancy":
+                    needed = ForPregnancy;
+                    after = FromIntakeAvailable - ForMaintenance - ForWool - ForPregnancy;
+                    break;
+                case "Lactation":
+                    needed = ForLactationTotalRequired;
+                    after = FromIntakeAvailable - ForMaintenance - ForWool - ForPregnancy - ForLactationTotalRequired;
+                    break;
+                case "DesiredGain":
+                    needed = NormalShortfall;
+                    after = FromIntakeAvailable - ForMaintenance - ForWool - ForPregnancy - ForLactationActual - NormalShortfall;
+                    break;
+                default:
+                    return -9999;
+            }
+            if (needed <= 0)
+                return double.NaN;
+
+
+
+            return Math.Max(0.0, needed + Math.Min(after, 0.0)) / needed;
         }
     }
 }

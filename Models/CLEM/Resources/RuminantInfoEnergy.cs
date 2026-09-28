@@ -148,6 +148,11 @@ namespace Models.CLEM.Resources
         public double ForGain { get; set; }
 
         /// <summary>
+        /// Energy for gain up to the normalised for age
+        /// </summary>
+        public double ForDesiredGain { get; set; }
+
+        /// <summary>
         /// Energy of protein (non-viscera protein in Oddy)
         /// </summary>
         public RuminantTrackingItemBodyStore Protein { get; set; }
@@ -228,5 +233,57 @@ namespace Models.CLEM.Resources
             Fat?.TimeStepReset();
         }
 
+        /// <summary>
+        /// A method to return the proportion of energy provided for a pahse of allocation
+        /// </summary>
+        /// <param name="allocationPhase">The name of the allocation phase</param>
+        /// <returns>Proportion of energy provided for the phase or -9999 if phase unknown</returns>
+        public double ProportionAvailable(string allocationPhase)
+        {
+            double needed = FromIntake;
+            double after = 0;
+
+            switch (allocationPhase)
+            {
+                case "Metabolism":
+                    needed = ForBasalMetabolism + ForProductFormationAverage;
+                    after = FromIntake - ForBasalMetabolism - ForProductFormationAverage;
+                    break;
+                case "Movement":
+                    needed = ForGrazing;
+                    after = FromIntake - ForMaintenance;
+                    break;
+                case "Maintenance":
+                    needed = ForMaintenance + ForProductFormationAverage ;
+                    after = AfterMaintenance;
+                    break;
+                case "Pregnancy":
+                    needed = ForFetus;
+                    after = AfterPregnancy;
+                    break;
+                case "Lactation":
+                    needed = ForLactation;
+                    after = AfterPregnancy - ForLactation;
+                    break;
+                case "ProteinMobilisation":
+                    needed = ForProteinMobilisation;
+                    after = AfterLactation;
+                    break;
+                case "Wool":
+                    needed = ForWool;
+                    after = AfterWool;
+                    break;
+                case "DesiredGain":
+                    needed = ForDesiredGain;
+                    after = AfterWool;
+                    break;
+                default:
+                    return -9999;
+            }
+            if (needed == 0)
+                return double.NaN;
+
+            return Math.Max(0.0, needed + Math.Min(after, 0.0)) / needed;
+        }
     }
 }
