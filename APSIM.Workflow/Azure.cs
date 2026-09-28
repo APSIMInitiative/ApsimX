@@ -213,5 +213,15 @@ public class Azure
         BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(scriptPath));
         blobClient.Upload(data, overwrite: true);
     }
-    
+
+    /// <summary>Resizes a pool by locating a pool with a specific name and applying an autoscal script.</summary>
+    /// <param name="primaryAccessKey">An Azure batch account primary access key.</param>
+    /// <param name="poolName">The name of the Azure batch pool for this run.</param>
+    public static void EnablePoolAutoReszing(string primaryAccessKey, string poolName)
+    {
+        BatchSharedKeyCredentials batchCredentials = new(AZURE_ACCOUNT_URL, AZURE_ACCOUNT_NAME, primaryAccessKey);
+        using BatchClient batchClient = BatchClient.Open(batchCredentials);
+        CloudPool pool = batchClient.PoolOperations.ListPools().FirstOrDefault(p => p.Id == poolName);
+        batchClient.PoolOperations.EnableAutoScale(poolName, autoScaleScript, TimeSpan.FromMinutes(5));
+    }
 }
