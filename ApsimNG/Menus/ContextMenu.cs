@@ -180,7 +180,8 @@ namespace UserInterface.Presenters
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Export to EXCEL",
-                     AppliesTo = new Type[] { typeof(DataStore) })]
+                     AppliesTo = new Type[] { typeof(DataStore) },
+                     FollowsSeparator = true)]
         public async void ExportDataStoreToEXCEL(object sender, EventArgs e)
         {
             List<DataTable> tables = new List<DataTable>();
