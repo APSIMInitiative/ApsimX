@@ -110,7 +110,7 @@ public class Program
                         Console.WriteLine(item);
 
                     Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
-                    logger.information($"An Azure batch pool called {poolname} successfully created!");
+                    logger.information($"An Azure batch pool called {poolName} successfully created!");
                     Azure.CreateJobs(
                         envDict["AZURE_PRIMARY_ACCESS_KEY"],
                         validationPaths,
