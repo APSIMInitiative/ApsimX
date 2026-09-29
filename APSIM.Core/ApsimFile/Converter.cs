@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 221; } }
+    public static int LatestVersion { get { return 222; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8098,17 +8098,12 @@ internal class Converter
     {
         Tuple<string, string>[] changes =
         {
-            new Tuple<string, string>("CO2EffectScaleFactor", "CO2EffectOnPhotoScaleFactor"),
-            new Tuple<string, string>("CO2EffectOffsetFactor", "CO2EffectOnNConcScaleFactor"),
-            new Tuple<string, string>("CO2EffectExponent", "CO2EffectOnNConcExponent"),
-            new Tuple<string, string>("FractionLeafMaximum", "LeafProportionTargetMax"),
-            new Tuple<string, string>("FractionLeafMinimum", "LeafProportionTargetMin"),
-            new Tuple<string, string>("FractionLeafDMThreshold", "LeafPropDMThreshold"),
-            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMForHalfEffect"),
+            new Tuple<string, string>("FractionLeafMaximum","LeafProportionMaximum"),
+            new Tuple<string, string>("FractionLeafMinimum","LeafProportionMinimum"),
+            new Tuple<string, string>("FractionLeafDMThreshold","LeafPropDMThreshold"),
+            new Tuple<string, string>("FractionLeafDMFactor", "LeafPropDMFactor"),
             new Tuple<string, string>("FractionLeafExponent", "LeafPropExponent"),
             new Tuple<string, string>("FractionToStolon", "StolonProportionTarget"),
-            new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
-            new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI"),
             new Tuple<string, string>("MaximumAllowedRootingDepth", "MaximumAllowedDepth")
         };
 
@@ -8121,6 +8116,37 @@ internal class Converter
             }
         }
         
+        JsonUtilities.RenameVariables(root, changes);
+    }
+
+
+    /// <summary>
+    /// Change a few parameter names in AgPasture.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion222(JObject root, string fileName)
+    {
+        Tuple<string, string>[] changes =
+        {
+            new Tuple<string, string>("CO2EffectScaleFactor", "CO2EffectOnPhotoScaleFactor"),
+            new Tuple<string, string>("CO2EffectOffsetFactor", "CO2EffectOnNConcScaleFactor"),
+            new Tuple<string, string>("CO2EffectExponent", "CO2EffectOnNConcExponent"),
+            new Tuple<string, string>("LeafProportionMaximum", "LeafProportionTargetMax"),
+            new Tuple<string, string>("LeafProportionMinimum", "LeafProportionTargetMin"),
+            new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
+            new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI")
+        };
+
+        foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpecies"))
+        {
+            foreach (Tuple<string, string> change in changes)
+            {
+                if (pasture[change.Item1] != null)
+                    pasture[change.Item2] = pasture[change.Item1];
+            }
+        }
+
         JsonUtilities.RenameVariables(root, changes);
     }
 }
