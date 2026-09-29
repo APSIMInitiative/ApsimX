@@ -350,11 +350,14 @@ namespace UserInterface.Presenters
                 ReplaceModelCommand command = new ReplaceModelCommand(memo, documentation, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(command, true);
 
+                string path = documentation.FullPath;
                 if (documentation.Name == "Memo")
                 {
                     documentation.Name = "Documentation";
-                    explorerPresenter.RebuildTree();
+                    path = path.Replace(".Memo", ".Documentation");
                 }
+                explorerPresenter.RebuildTree();
+                explorerPresenter.SelectNode(path);
             }
             else
             {
@@ -378,11 +381,14 @@ namespace UserInterface.Presenters
                 ReplaceModelCommand command = new ReplaceModelCommand(documentation, memo, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(command, true);
 
+                string path = memo.FullPath;
                 if (memo.Name == "Documentation")
                 {
                     memo.Name = "Memo";
-                    explorerPresenter.RebuildTree();
+                    path = path.Replace(".Documentation", ".Memo");
                 }
+                explorerPresenter.RebuildTree();
+                explorerPresenter.SelectNode(path);
             }
             else
             {
