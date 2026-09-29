@@ -701,8 +701,7 @@ namespace UserInterface.Presenters
                             MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                             if (checkMethod != null)
                             {
-                                //desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
-                                desc.Checked = false;
+                                desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
                             }
                             else
                             {
