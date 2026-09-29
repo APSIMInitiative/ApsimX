@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 220,
+  "Version": 221,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -16381,7 +16381,7 @@
                           ],
                           "DungNConc": 2.6,
                           "FractionOfDungUrineOffPaddock": [
-                            -89.0
+                            0.0
                           ],
                           "DepthUrineIsAdded": 150.0,
                           "ShowAdvancedExcretaOptions": false,
@@ -18468,7 +18468,7 @@
                           ],
                           "DungNConc": 2.6,
                           "FractionOfDungUrineOffPaddock": [
-                            -89.0
+                            0.0
                           ],
                           "DepthUrineIsAdded": 150.0,
                           "ShowAdvancedExcretaOptions": false,
@@ -20173,7 +20173,7 @@
                           ],
                           "DungNConc": 2.6,
                           "FractionOfDungUrineOffPaddock": [
-                            -89.0
+                            0.0
                           ],
                           "DepthUrineIsAdded": 150.0,
                           "ShowAdvancedExcretaOptions": false,
