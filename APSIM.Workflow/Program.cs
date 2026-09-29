@@ -91,18 +91,26 @@ public class Program
 
                     string poolName = options.PullRequestNumber + options.CommitSHA;
                     string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
-                    string jobName = $"{nowDateString}_acceptance-tests_pr-{options.PullRequestNumber}";
+                    string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
 
                     // Create the environment variable dictionary for use further on 
                     // from the environment variable string.
+
                     Dictionary<string, string> envDict = [];
-                    foreach(string line in options.EnvString.Split("\n"))
+                    foreach(string line in options.EnvString.Split(
+                        [ "\r\n", "\n" ],
+                        StringSplitOptions.RemoveEmptyEntries))
                     {
-                        string[] values = line.Split('=');
+                        // Split only on the first '=' since values (e.g. base64 keys) may themselves contain '='.
+                        string[] values = line.Split('=', 2);
                         envDict.Add(values[0], values[1]);
                     }
+                    Console.WriteLine($"envString={options.EnvString}");
+                    foreach (var item in envDict)
+                        Console.WriteLine(item);
 
                     Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
+                    logger.information($"An Azure batch pool called {poolname} successfully created!");
                     Azure.CreateJobs(
                         envDict["AZURE_PRIMARY_ACCESS_KEY"],
                         validationPaths,
@@ -112,9 +120,11 @@ public class Program
                         options.PullRequestNumber,
                         poolName
                     );
+                    logger.information($"Azure jobs successfully submitted!");
                     // Wait for a few minutes before resizing.
                     Thread.Sleep(TimeSpan.FromMinutes(3));
                     Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
+                    logger.information($"Azure pool successfully resized!");
                     stopwatch.Stop();
                 }
                 catch (Exception ex)

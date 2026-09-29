@@ -105,7 +105,7 @@ public class Azure
         string commandLine = "bash workflow.sh run_00001";
         CloudJob azureJob = null;
         string isoDate = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
-        string storageName = $"{isoDate}-{uniqueJobName}-storage".ToLowerInvariant(); // used for naming the blob storage container for this run.
+        string storageName = $"{uniqueJobName}-storage".ToLowerInvariant(); // used for naming the blob storage container for this run.
         BatchSharedKeyCredentials batchCredentials = new(AZURE_ACCOUNT_URL, AZURE_ACCOUNT_NAME, primaryAccessKey);
 
         using BatchClient batchClient = BatchClient.Open(batchCredentials);
@@ -197,7 +197,8 @@ public class Azure
         //Connect to Azure storage
         BlobContainerClient containerClient = new(storageConnectionString, storageName);
 
-        //throw if the container already exists
+        // throw if the container already exists.
+        // Note: in debug situations it's normal for this line to through 3 times before moving on.
         bool containerExists = containerClient.Exists();
         if (containerExists)
             throw new Exception($"Cannot create output container on Azure as it already exists.");
