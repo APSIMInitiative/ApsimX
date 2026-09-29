@@ -442,15 +442,6 @@ namespace Models
         /// <param name="e">Event arguments.</param>
         private void OnStartOfDay(object sender, EventArgs e)
         {
-            if (fromVariable != null)
-            {
-                var fromDate = (DateTime)fromVariable.Value;
-                if (fromHasNoYear)
-                    fromDate = new DateTime(clock.Today.Year, fromDate.Month, fromDate.Day);
-                if (clock.Today == fromDate)
-                    OnFromEvent();
-            }
-
             if (inCaptureWindow && toVariable != null)
             {
                 var toDate = (DateTime)toVariable.Value;
@@ -459,6 +450,15 @@ namespace Models
 
                 if (clock.Today == toDate.AddDays(1))
                     OnToEvent();
+            }
+
+            if (fromVariable != null)
+            {
+                var fromDate = (DateTime)fromVariable.Value;
+                if (fromHasNoYear)
+                    fromDate = new DateTime(clock.Today.Year, fromDate.Month, fromDate.Day);
+                if (clock.Today == fromDate)
+                    OnFromEvent();
             }
         }
 

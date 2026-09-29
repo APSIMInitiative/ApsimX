@@ -425,6 +425,26 @@ namespace UnitTests.Report
             Assert.That(values.Last(), Is.EqualTo(1));
         }
 
+        /// <summary>
+        /// This test reproduces a bug where nonstandard yearly aggregations would
+        /// never be in capture window.
+        /// </summary>
+        [Test]
+        public void EnsureNonStandardYearlyAggregationWorks()
+        {
+            clock.StartDate = new(2017, 11, 11);
+            clock.EndDate = new(2018, 11, 10);
+
+            report.VariableNames =
+            [
+                // Parentheses force the report to read it as an expression.
+                "sum of (1) from 11-nov to 10-nov as Days"
+            ];
+            runner.Run();
+            var values = storage.Get<double>("Days");
+            Assert.That(values.Last(), Is.EqualTo(365));
+        }
+
         [Test]
         public void FactorsTableIsWritten()
         {
