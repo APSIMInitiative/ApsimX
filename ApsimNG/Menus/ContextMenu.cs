@@ -334,8 +334,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        //This menu item is dynamically added by ExplorerPresented based on how many
-        //Playlists exist within the file.
+        //Converts a Memo node to a Documentation node inplace
         [ContextMenu(MenuName = "Convert to documentation",
                      ShortcutKey = "",
                      AppliesTo = new[] { typeof(Memo) })]
@@ -365,8 +364,7 @@ namespace UserInterface.Presenters
             }
         }
 
-        //This menu item is dynamically added by ExplorerPresented based on how many
-        //Playlists exist within the file.
+        //Converts a Documentation node to a memo inplace
         [ContextMenu(MenuName = "Convert to memo",
                      ShortcutKey = "",
                      AppliesTo = new[] { typeof(Documentation) })]
