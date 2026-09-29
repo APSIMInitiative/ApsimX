@@ -8134,6 +8134,7 @@ internal class Converter
             new Tuple<string, string>("CO2EffectExponent", "CO2EffectOnNConcExponent"),
             new Tuple<string, string>("LeafProportionMaximum", "LeafProportionTargetMax"),
             new Tuple<string, string>("LeafProportionMinimum", "LeafProportionTargetMin"),
+            new Tuple<string, string>("LeafPropDMFactor", "LeafPropDMForHalfEffect"),
             new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
             new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI")
         };
