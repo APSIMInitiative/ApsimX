@@ -675,11 +675,13 @@ namespace UserInterface.Presenters
 
                     if (ok)
                     {
-                        if (contextMenuAttr.MenuName.CompareTo("Playlist") != 0)
+                        if (contextMenuAttr.MenuName != "Add to Playlist")
                         {
                             MenuDescriptionArgs desc = new MenuDescriptionArgs();
                             desc.Name = contextMenuAttr.MenuName;
-                            desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+                            (bool, string) icon = CheckIfIconExists(desc.Name.Replace(".", ""));
+                            if (icon.Item1 == true)
+                                desc.ResourceNameForImage = icon.Item2;
                             desc.ShortcutKey = contextMenuAttr.ShortcutKey;
                             desc.ShowCheckbox = contextMenuAttr.IsToggle;
                             desc.FollowsSeparator = contextMenuAttr.FollowsSeparator;
@@ -699,7 +701,8 @@ namespace UserInterface.Presenters
                             MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                             if (checkMethod != null)
                             {
-                                desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
+                                //desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
+                                desc.Checked = false;
                             }
                             else
                             {
@@ -719,7 +722,7 @@ namespace UserInterface.Presenters
                             {
                                 MenuDescriptionArgs desc = new MenuDescriptionArgs();
                                 desc.Name = " Add to " + list.Name;
-                                desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages.Playlist.png";
+                                desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages.Add to Playlist.png";
                                 desc.ShortcutKey = null;
                                 desc.ShowCheckbox = false;
                                 desc.FollowsSeparator = firstTimeOnly;
@@ -1222,17 +1225,26 @@ namespace UserInterface.Presenters
         /// <returns></returns>
         public static (bool, string) CheckIfIconExists(string iconName)
         {
+            string[] locations = new[]
+            {
+                "ApsimNG.Resources.MenuImages",
+                "ApsimNG.Resources.TreeViewImages"
+            };
             string[] extensions = new[]
             {
                 ".svg",
                 ".png"
             };
-            foreach (string extension in extensions)
+            foreach (string location in locations)
             {
-                string resourceName = GetResourceName(iconName, extension);
-                if (Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
-                    return (true, resourceName);
+                foreach (string extension in extensions)
+                {
+                    string resourceName = GetResourceName(location, iconName, extension);
+                    if (Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
+                        return (true, resourceName);
+                }
             }
+            
             return (false, null);
         }
 
@@ -1240,9 +1252,9 @@ namespace UserInterface.Presenters
 
         #region Privates
 
-        private static string GetResourceName(string name, string extension)
+        private static string GetResourceName(string location, string name, string extension)
         {
-            return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
+            return $"{location}.{name}{extension}";
         }
 
 
