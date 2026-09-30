@@ -57,6 +57,10 @@ namespace Models.AgPasture
         [Link]
         private ISoilTemperature soilTemperature = null;
 
+        /// <summary>Link to the PastureSpeciesConstants which holds constants for each type of AgPasture</summary>
+        //[Link]
+        private PastureSpeciesConstants constants = null;
+
         /// <summary>Structure instance supplied by APSIM.core.</summary>
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
