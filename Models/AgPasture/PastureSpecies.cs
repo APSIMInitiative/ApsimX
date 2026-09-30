@@ -616,7 +616,12 @@ namespace Models.AgPasture
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
-        public double LightExtinctionCoefficient { get { return constants.LightExtinctionCoefficient; } }
+        [JsonIgnore]
+        public double LightExtinctionCoefficient 
+        { 
+            get { return constants.LightExtinctionCoefficient; } 
+            set { constants.LightExtinctionCoefficient = value; } 
+        }
 
         /// <summary>Minimum temperature for growth (oC).</summary>
         [Units("oC")]
@@ -937,11 +942,20 @@ namespace Models.AgPasture
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MinimumNFixation { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        [JsonIgnore]
+        public double MinimumNFixation 
+        { 
+            get { return constants.TurnoverDefoliationEffectOnRoots; } 
+            set { constants.TurnoverDefoliationEffectOnRoots = value; } 
+        }
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MaximumNFixation { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        [JsonIgnore]
+        public double MaximumNFixation { 
+            get { return constants.MaximumNFixation; } 
+            set { constants.MaximumNFixation = value; } 
+        }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -965,7 +979,8 @@ namespace Models.AgPasture
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
         [Units("0-1")]
-        public double GlfGeneric { get; private set; } = 1.0;
+        [JsonIgnore]
+        public double GlfGeneric { get; set; } = 1.0;
 
         /// <summary>Generic growth limiting factor that represents an arbitrary soil limitation (0-1).</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
