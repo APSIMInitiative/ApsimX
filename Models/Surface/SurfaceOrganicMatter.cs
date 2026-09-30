@@ -304,7 +304,7 @@ namespace Models.Surface
         // }
 
         /// <summary>
-        /// Test - filtering manure
+        /// test
         /// </summary>
          public IEnumerable<DamageableBiomass> Material
         {
@@ -312,7 +312,7 @@ namespace Models.Surface
             {   
                 //Filter SOM for manure. 
                 var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "RuminantDung_PastureFed",StringComparison.OrdinalIgnoreCase));
-                
+               
                 // Return an empty live material. Stock won't find the dead material unless there
                 // is matching live material.
                 yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
