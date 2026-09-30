@@ -110,7 +110,7 @@ public class Program
                         Console.WriteLine(item);
 
                     Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
-                    logger.information($"An Azure batch pool called {poolName} successfully created!");
+                    logger.LogInformation($"An Azure batch pool called {poolName} successfully created!");
                     Azure.CreateJobs(
                         envDict["AZURE_PRIMARY_ACCESS_KEY"],
                         validationPaths,
@@ -120,11 +120,11 @@ public class Program
                         options.PullRequestNumber,
                         poolName
                     );
-                    logger.information($"Azure jobs successfully submitted!");
+                    logger.LogInformation($"Azure jobs successfully submitted!");
                     // Wait for a few minutes before resizing.
                     Thread.Sleep(TimeSpan.FromMinutes(3));
                     Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
-                    logger.information($"Azure pool successfully resized!");
+                    logger.LogInformation($"Azure pool successfully resized!");
                     stopwatch.Stop();
                 }
                 catch (Exception ex)
