@@ -197,7 +197,7 @@ namespace Models.AgPasture
                     swardGreenCover = 0.0;
                     if (InterceptedRadn > 0.0)
                     {
-                        fractionGreenCover = InterceptedRadn / totalRadiationInterceptionOnGreen;
+                        fractionGreenCover = Math.Min(1.0, InterceptedRadn / totalRadiationInterceptionOnGreen);
                         swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
                     }
                 }
@@ -1355,7 +1355,7 @@ namespace Models.AgPasture
         {
             get
             {
-                double dmRemoved = 0;
+                double dmRemoved = 0.0;
                 double digestibleMaterial = 0.0;
                 foreach (var organ in AboveGroundOrgans)
                 {
@@ -1375,6 +1375,7 @@ namespace Models.AgPasture
                     }
                     digestibleMaterial += organ.DeadTissue.Digestibility * organ.DeadTissue.DMRemoved;
                 }
+
                 return digestibleMaterial / dmRemoved;
             }
         }
@@ -1747,9 +1748,7 @@ namespace Models.AgPasture
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
 
-        /// <summary>
-        /// Crude protien estimated as (N concentration in  plant above grounf * 6.25)
-        /// </summary>
+        /// <summary>Estimated crude protein in aboveground material (i.e. N concentration * 6.25)</summary>
         [Units("kg/kg")]
         public double AboveGroundCrudeProtein
         {
@@ -2499,11 +2498,11 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable + Stolon.DMTotalHarvestable,
                     N = Leaf.NTotalHarvestable + Stem.NTotalHarvestable + Stolon.NTotalHarvestable,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.DMTotalHarvestable +
-                                                         Stem.StandingDigestibility * Stem.DMTotalHarvestable +
-                                                         Stolon.StandingDigestibility * Stolon.DMTotalHarvestable,
-                                                         Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable +
-                                                         Stolon.DMTotalHarvestable, 0.0)
+                    Digestibility = Math.Max(0.0, MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.DMTotalHarvestable +
+                                                                       Stem.StandingDigestibility * Stem.DMTotalHarvestable +
+                                                                       Stolon.StandingDigestibility * Stolon.DMTotalHarvestable,
+                                                                       Leaf.DMTotalHarvestable + Stem.DMTotalHarvestable +
+                                                                       Stolon.DMTotalHarvestable, 0.0))
                 };
             }
         }
@@ -2519,11 +2518,11 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt,
                     N = Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.StandingHerbageWt +
-                                                         Stem.StandingDigestibility * Stem.StandingHerbageWt +
-                                                         Stolon.StandingDigestibility * Stolon.StandingHerbageWt,
-                                                         Leaf.StandingHerbageWt + Stem.StandingHerbageWt +
-                                                         Stolon.StandingHerbageWt, 0.0)
+                    Digestibility = Math.Max(0.0, MathUtilities.Divide(Leaf.StandingDigestibility * Leaf.StandingHerbageWt +
+                                                                       Stem.StandingDigestibility * Stem.StandingHerbageWt +
+                                                                       Stolon.StandingDigestibility * Stolon.StandingHerbageWt,
+                                                                       Leaf.StandingHerbageWt + Stem.StandingHerbageWt +
+                                                                       Stolon.StandingHerbageWt, 0.0))
                 };
             }
         }
@@ -2538,11 +2537,11 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.StandingLiveHerbageWt + Stem.StandingLiveHerbageWt + Stolon.StandingLiveHerbageWt,
                     N = Leaf.StandingLiveHerbageN + Stem.StandingLiveHerbageN + Stolon.StandingLiveHerbageN,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingLiveDigestibility * Leaf.StandingLiveHerbageWt +
-                                                         Stem.StandingLiveDigestibility * Stem.StandingLiveHerbageWt +
-                                                         Stolon.StandingLiveDigestibility * Stolon.StandingLiveHerbageWt,
-                                                         Leaf.StandingLiveHerbageWt + Stem.StandingLiveHerbageWt +
-                                                         Stolon.StandingLiveHerbageWt, 0.0)
+                    Digestibility = Math.Max(0.0, MathUtilities.Divide(Leaf.StandingLiveDigestibility * Leaf.StandingLiveHerbageWt +
+                                                                       Stem.StandingLiveDigestibility * Stem.StandingLiveHerbageWt +
+                                                                       Stolon.StandingLiveDigestibility * Stolon.StandingLiveHerbageWt,
+                                                                       Leaf.StandingLiveHerbageWt + Stem.StandingLiveHerbageWt +
+                                                                       Stolon.StandingLiveHerbageWt, 0.0))
                 };
             }
         }
@@ -2557,11 +2556,11 @@ namespace Models.AgPasture
                 {
                     Wt = Leaf.StandingDeadHerbageWt + Stem.StandingDeadHerbageWt + Stolon.StandingDeadHerbageWt,
                     N = Leaf.StandingDeadHerbageN + Stem.StandingDeadHerbageN + Stolon.StandingDeadHerbageN,
-                    Digestibility = MathUtilities.Divide(Leaf.StandingDeadDigestibility * Leaf.StandingDeadHerbageWt +
-                                                         Stem.StandingDeadDigestibility * Stem.StandingDeadHerbageWt +
-                                                         Stolon.StandingDeadDigestibility * Stolon.StandingDeadHerbageWt,
-                                                         Leaf.StandingDeadHerbageWt + Stem.StandingDeadHerbageWt +
-                                                         Stolon.StandingDeadHerbageWt, 0.0)
+                    Digestibility = Math.Max(0.0, MathUtilities.Divide(Leaf.StandingDeadDigestibility * Leaf.StandingDeadHerbageWt +
+                                                                       Stem.StandingDeadDigestibility * Stem.StandingDeadHerbageWt +
+                                                                       Stolon.StandingDeadDigestibility * Stolon.StandingDeadHerbageWt,
+                                                                       Leaf.StandingDeadHerbageWt + Stem.StandingDeadHerbageWt +
+                                                                       Stolon.StandingDeadHerbageWt, 0.0))
                 };
             }
         }
@@ -4212,12 +4211,12 @@ namespace Models.AgPasture
                 if (amountToRemove - Harvestable.Wt > -ToleranceForDM)
                 { // all existing harvestable biomass is removed
                     amountToRemove = Harvestable.Wt;
-                    fracToRemove[0] = MathUtilities.Divide(Leaf.DMLiveHarvestable, Leaf.DMLive, 0.0);
-                    fracToRemove[1] = MathUtilities.Divide(Stem.DMLiveHarvestable, Stem.DMLive, 0.0);
-                    fracToRemove[2] = MathUtilities.Divide(Stolon.DMLiveHarvestable, Stolon.DMLive, 0.0);
-                    fracToRemove[3] = MathUtilities.Divide(Leaf.DMDeadHarvestable, Leaf.DMDead, 0.0);
-                    fracToRemove[4] = MathUtilities.Divide(Stem.DMDeadHarvestable, Stem.DMDead, 0.0);
-                    fracToRemove[5] = MathUtilities.Divide(Stolon.DMDeadHarvestable, Stolon.DMDead, 0.0);
+                    fracToRemove[0] = Math.Max(0.0, MathUtilities.Divide(Leaf.DMLiveHarvestable, Leaf.DMLive, 0.0));
+                    fracToRemove[1] = Math.Max(0.0, MathUtilities.Divide(Stem.DMLiveHarvestable, Stem.DMLive, 0.0));
+                    fracToRemove[2] = Math.Max(0.0, MathUtilities.Divide(Stolon.DMLiveHarvestable, Stolon.DMLive, 0.0));
+                    fracToRemove[3] = Math.Max(0.0, MathUtilities.Divide(Leaf.DMDeadHarvestable, Leaf.DMDead, 0.0));
+                    fracToRemove[4] = Math.Max(0.0, MathUtilities.Divide(Stem.DMDeadHarvestable, Stem.DMDead, 0.0));
+                    fracToRemove[5] = Math.Max(0.0, MathUtilities.Divide(Stolon.DMDeadHarvestable, Stolon.DMDead, 0.0));
                 }
                 else
                 { // only a fraction of harvestable biomass is removed, compute partition between organs
@@ -4709,6 +4708,11 @@ namespace Models.AgPasture
         /// <returns>A factor for adjusting the detachment rate(0-1)</returns>
         private double DigestibilityEffectOnDetachment()
         {
+            if (Leaf.DMDead + Stem.DMDead < ToleranceForDM)
+            {
+                return 0.0;
+            }
+
             double digestDead = (Leaf.DigestibilityDead * Leaf.DMDead) + (Stem.DigestibilityDead * Stem.DMDead);
             digestDead = MathUtilities.Divide(digestDead, Leaf.DMDead + Stem.DMDead, 0.0);
             return digestDead / CarbonConcentration;
