@@ -311,7 +311,7 @@ namespace Models.Surface
             get
             {   
                 //Filter SOM for manure. 
-                var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "manure",StringComparison.OrdinalIgnoreCase));
+                var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "RuminantDung_PastureFed",StringComparison.OrdinalIgnoreCase));
                 
                 // Return an empty live material. Stock won't find the dead material unless there
                 // is matching live material.
