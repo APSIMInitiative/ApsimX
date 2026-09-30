@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using APSIM.Core;
 using Models.Core;
-using Models.PMF;
 using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
-using Models.PMF.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models.AgPasture
 {
@@ -96,7 +94,7 @@ namespace Models.AgPasture
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
         [Units("-")]
-        public double DepthDistributionParamBottom { get; set; } = 1.05;
+        public double DepthDistributionParamBottom { get; private set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
         [Units("m/g")]
@@ -116,11 +114,11 @@ namespace Models.AgPasture
 
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
         [Units("-")]
-        public double NExtractionSWFactorExponent { get; set; } = 1.50;
+        public double NExtractionSWFactorExponent { get; private set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double MinimumLiveDM { get; set; }
+        public double MinimumLiveDM { get; private set; }
 
         //----------------------- Constants -----------------------
 
@@ -134,6 +132,7 @@ namespace Models.AgPasture
 
         /// <summary>Rooting depth (mm).</summary>
         [Units("mm")]
+        [JsonIgnore]
         public double Depth
         {
             get { return rootingDepth; }
@@ -153,10 +152,10 @@ namespace Models.AgPasture
 
         /// <summary>Maximum rooting depth allowed by soil conditions (mm).</summary>
         [Units("mm")]
-        public double MaximumAllowedDepth { get; set; }
+        public double MaximumAllowedDepth { get; private set; }
 
         /// <summary>Target (idealised) DM fractions for each layer (0-1).</summary>
-        public double[] TargetDistribution { get; set; }
+        public double[] TargetDistribution { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]

@@ -93,6 +93,7 @@ namespace Models.AgPasture
         public double Area { get; set; } = 1.0;
 
         /// <summary>Canopy type identifier.</summary>
+        [JsonIgnore]
         public string CanopyType { get; set; } = "PastureSpecies";
 
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
@@ -180,6 +181,7 @@ namespace Models.AgPasture
 
         /// <summary>Light profile for this plant, interception calculated by MicroClimate (W/m^2).</summary>
         /// <remarks>This contains the intercepted radiation for each layer of the canopy.</remarks>
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
         {
             get { return myLightProfile; }
@@ -524,6 +526,7 @@ namespace Models.AgPasture
 
         /// <summary>Family type for this plant species (grass/legume/forb).</summary>
         [Units("-")]
+        [JsonIgnore]
         public PlantFamilyType SpeciesFamily
         {
             get { return mySpeciesFamily; }
@@ -535,6 +538,7 @@ namespace Models.AgPasture
         }
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
+        [JsonIgnore]
         public PhotosynthesisPathwayType PhotosyntheticPathway { get; set; } = PhotosynthesisPathwayType.C3;
 
         ////- Initial state parameters (replace the default values) >>> - - - - - - - - - - - - - - - - - - - - - - - -
@@ -648,6 +652,7 @@ namespace Models.AgPasture
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseHeatStressFactor
         {
             get
@@ -682,6 +687,7 @@ namespace Models.AgPasture
 
         /// <summary>Enable photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseColdStressFactor
         {
             get
@@ -766,6 +772,7 @@ namespace Models.AgPasture
         /// Adjust Shoot:Root ratio to mimic DM allocation during reproductive season (perennial species)?.
         /// </summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseReproSeasonFactor
         {
             get
@@ -1005,32 +1012,39 @@ namespace Models.AgPasture
 
         /// <summary>Day of year when seeds are allowed to germinate.</summary>
         [Units("day")]
-        public int doyGermination = 275;
+        [JsonIgnore]
+        public int doyGermination { get; set; } = 275;
 
         /// <summary>Number of days from emergence to anthesis.</summary>
         [Units("day")]
-        public int daysEmergenceToAnthesis = 120;
+        [JsonIgnore]
+        public int daysEmergenceToAnthesis { get; set; } = 120;
 
         /// <summary>Number of days from anthesis to maturity.</summary>
         [Units("days")]
-        public int daysAnthesisToMaturity = 85;
+        [JsonIgnore]
+        public int daysAnthesisToMaturity { get; set; } = 85;
 
         /// <summary>Cumulative degrees-day from emergence to anthesis (oCd).</summary>
         [Units("oCd")]
-        public double degreesDayForAnthesis = 1100.0;
+        [JsonIgnore]
+        public double degreesDayForAnthesis { get; set; } = 1100.0;
 
         /// <summary>Cumulative degrees-day from anthesis to maturity (oCd).</summary>
         [Units("oCd")]
-        public double degreesDayForMaturity = 900.0;
+        [JsonIgnore]
+        public double degreesDayForMaturity { get; set; } = 900.0;
 
         /// <summary>Number of days from emergence with reduced growth.</summary>
         [Units("days")]
-        public int daysAnnualsFactor = 45;
+        [JsonIgnore]
+        public int daysAnnualsFactor { get; set; } = 45;
 
         ////- Other parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Describes the FVPD function.</summary>
         [Units("0-1")]
+        [JsonIgnore]
         public LinearInterpolationFunction FVPDFunction
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });

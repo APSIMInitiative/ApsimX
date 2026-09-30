@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
@@ -51,30 +52,39 @@ namespace Models.AgPasture
         // These get applied once each day during Update()
 
         /// <summary>DM transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredOut { get; private set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMRemoved { get; private set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
+        [JsonIgnore]
         public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemoved { get; private set; }
 
         /// <summary>N available for remobilisation (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilisable { get; set; }
 
         /// <summary>N remobilised into new growth (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilised { get; set; }
 
         //----------------------- States -----------------------

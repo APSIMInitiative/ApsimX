@@ -6,6 +6,7 @@ using APSIM.Numerics;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models.AgPasture
 {
@@ -60,6 +61,7 @@ namespace Models.AgPasture
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         [Units("kg/ha")]
+        [JsonIgnore]
         public double MinimumLiveDM { get; set; }
 
         //----------------------- Constants -----------------------

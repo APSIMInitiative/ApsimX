@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using APSIM.Shared.Utilities;
+using System.Text.Json.Serialization;
 using APSIM.Numerics;
 using Models.Core;
 using Models.Soils;
@@ -54,24 +54,26 @@ namespace Models.AgPasture
         public double NTransferredIn { get; private set; }
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferredOut = 0.0;
+        public double DMTransferredOut { get; private set; } = 0.0;
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get; set; }
+        public double DMRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get; set; }
+        public double NRemoved { get; private set; }
 
         /// <summary>Fraction of DM removed from this tissue.</summary>
         public double FractionRemoved { get; private set; }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilisable { get; set; }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilised { get; set; }
 
         /// <summary>Fraction of N from this tissue that was remobilised to new growth.</summary>
