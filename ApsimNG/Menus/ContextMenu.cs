@@ -334,6 +334,66 @@ namespace UserInterface.Presenters
             }
         }
 
+        //Converts a Memo node to a Documentation node inplace
+        [ContextMenu(MenuName = "Convert to documentation",
+                     ShortcutKey = "",
+                     AppliesTo = new[] { typeof(Memo) })]
+        public void OnConvertToDocumentation(object sender, EventArgs e)
+        {
+            IModel model = explorerPresenter.CurrentNode;
+            if (model is Memo memo)
+            {
+                Documentation documentation = new Documentation();
+                documentation.Name = memo.Name;
+                documentation.Text = memo.Text;
+                ReplaceModelCommand command = new ReplaceModelCommand(memo, documentation, explorerPresenter.GetNodeDescription);
+                explorerPresenter.CommandHistory.Add(command, true);
+
+                string path = documentation.FullPath;
+                if (documentation.Name == "Memo")
+                {
+                    documentation.Name = "Documentation";
+                    path = path.Replace(".Memo", ".Documentation");
+                }
+                explorerPresenter.RebuildTree();
+                explorerPresenter.SelectNode(path);
+            }
+            else
+            {
+                explorerPresenter.MainPresenter.ShowMessage($"Could not convert {model.Name} to Documentation model", Simulation.MessageType.Warning);
+            }
+        }
+
+        //Converts a Documentation node to a memo inplace
+        [ContextMenu(MenuName = "Convert to memo",
+                     ShortcutKey = "",
+                     AppliesTo = new[] { typeof(Documentation) })]
+        public void OnConvertToMemo(object sender, EventArgs e)
+        {
+            IModel model = explorerPresenter.CurrentNode;
+            if (model is Documentation documentation)
+            {
+                Memo memo = new Memo();
+                memo.Name = documentation.Name;
+                memo.Text = documentation.Text;
+                ReplaceModelCommand command = new ReplaceModelCommand(documentation, memo, explorerPresenter.GetNodeDescription);
+                explorerPresenter.CommandHistory.Add(command, true);
+
+                string path = memo.FullPath;
+                if (memo.Name == "Documentation")
+                {
+                    memo.Name = "Memo";
+                    path = path.Replace(".Documentation", ".Memo");
+                }
+                explorerPresenter.RebuildTree();
+                explorerPresenter.SelectNode(path);
+            }
+            else
+            {
+                explorerPresenter.MainPresenter.ShowMessage($"Could not convert {model.Name} to Memo model", Simulation.MessageType.Warning);
+            }
+        }
+
         /// <summary>
         /// Event handler for a User interface "Check Soil" action
         /// </summary>
