@@ -122,89 +122,97 @@ namespace UserInterface.Presenters
         {
             explorerPresenter.MainPresenter.ClearStatusPanel();
             graphView.Clear();
-            if (storage == null)
-                storage = graph.Node.Find<IDataStore>();
-            if (graph != null && graph.Series != null)
+            try
             {
-                if (!definitions.Any() && Configuration.Settings.EnableGraphDebuggingMessages)
-                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No data matches the properties and filters set for this graph", Simulation.MessageType.Warning, false);
-
-                foreach (SeriesDefinition definition in definitions)
+                if (storage == null)
+                    storage = graph.Node.Find<IDataStore>();
+                if (graph != null && graph.Series != null)
                 {
-                    DrawOnView(definition);
-                }
+                    if (!definitions.Any() && Configuration.Settings.EnableGraphDebuggingMessages)
+                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No data matches the properties and filters set for this graph", Simulation.MessageType.Warning, false);
 
-                // Update axis maxima and minima
-                graphView.UpdateView();
-
-                //check if the axes are too small, update if so
-                AdjustAxesboundaries(definitions);
-
-                int pointsOutsideAxis = 0;
-                int pointsInsideAxis = 0;
-                foreach (SeriesDefinition definition in definitions)
-                {
-                    string seriesName = graph.Name;
-                    if (definition.Series != null)
-                        seriesName = graph.Name + " (" + definition.Series.Name + ")";
-
-                    double xMin = graphView.AxisMinimum(definition.XAxis);
-                    double xMax = graphView.AxisMaximum(definition.XAxis);
-                    int xNaNCount = 0;
-                    int yNaNCount = 0;
-                    int bothNaNCount = 0;
-                    double yMin = graphView.AxisMinimum(definition.YAxis);
-                    double yMax = graphView.AxisMaximum(definition.YAxis);
-
-                    List<double> valuesX = GetSeriesAsDoublesList(definition.X);
-                    List<double> valuesY = GetSeriesAsDoublesList(definition.Y);
-
-                    PerformPointErrorChecks(ref pointsOutsideAxis, ref pointsInsideAxis, xMin, xMax, ref xNaNCount, ref yNaNCount, ref bothNaNCount, yMin, yMax, valuesX, valuesY);
-                    if (Configuration.Settings.EnableGraphDebuggingMessages && xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
+                    foreach (SeriesDefinition definition in definitions)
                     {
-                        DisplayNaNWarnings(seriesName, xNaNCount, yNaNCount, bothNaNCount);
+                        DrawOnView(definition);
                     }
+
+                    // Update axis maxima and minima
+                    graphView.UpdateView();
+
+                    //check if the axes are too small, update if so
+                    AdjustAxesboundaries(definitions);
+
+                    int pointsOutsideAxis = 0;
+                    int pointsInsideAxis = 0;
+                    foreach (SeriesDefinition definition in definitions)
+                    {
+                        string seriesName = graph.Name;
+                        if (definition.Series != null)
+                            seriesName = graph.Name + " (" + definition.Series.Name + ")";
+
+                        double xMin = graphView.AxisMinimum(definition.XAxis);
+                        double xMax = graphView.AxisMaximum(definition.XAxis);
+                        int xNaNCount = 0;
+                        int yNaNCount = 0;
+                        int bothNaNCount = 0;
+                        double yMin = graphView.AxisMinimum(definition.YAxis);
+                        double yMax = graphView.AxisMaximum(definition.YAxis);
+
+                        List<double> valuesX = GetSeriesAsDoublesList(definition.X);
+                        List<double> valuesY = GetSeriesAsDoublesList(definition.Y);
+
+                        PerformPointErrorChecks(ref pointsOutsideAxis, ref pointsInsideAxis, xMin, xMax, ref xNaNCount, ref yNaNCount, ref bothNaNCount, yMin, yMax, valuesX, valuesY);
+                        if (Configuration.Settings.EnableGraphDebuggingMessages && xNaNCount == valuesX.Count || yNaNCount == valuesY.Count || bothNaNCount == valuesX.Count)
+                        {
+                            DisplayNaNWarnings(seriesName, xNaNCount, yNaNCount, bothNaNCount);
+                        }
+                    }
+
+                    if (pointsOutsideAxis > 0 && pointsInsideAxis == 0 && Configuration.Settings.EnableGraphDebuggingMessages)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values.", Simulation.MessageType.Warning, false);
+                    }
+                    else if (pointsOutsideAxis > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
+                    {
+                        explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
+                    }
+
+                    // Get a list of series annotations.
+                    DrawOnView(graph.GetAnnotationsToGraph());
+
+                    // Format the legend.
+                    graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
+
+                    // Format the title
+                    graphView.FormatTitle(graph.Name);
+
+                    // Format the footer
+                    if (string.IsNullOrEmpty(graph.Caption))
+                    {
+                        graphView.FormatCaption("Double click to add a caption", true);
+                    }
+                    else
+                    {
+                        graphView.FormatCaption(graph.Caption, false);
+                    }
+
+                    // Remove series titles out of the graph disabled series list when
+                    // they are no longer valid i.e. not on the graph.
+                    if (graph.DisabledSeries == null)
+                        graph.DisabledSeries = new List<string>();
+                    IEnumerable<string> validSeriesTitles = definitions.Select(s => s.Title);
+                    List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
+                    this.graph.DisabledSeries.Clear();
+                    this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
+                    graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
+
+                    graphView.Refresh();
                 }
-
-                if (pointsOutsideAxis > 0 && pointsInsideAxis == 0 && Configuration.Settings.EnableGraphDebuggingMessages)
-                {
-                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: No points are visible with current axis values.", Simulation.MessageType.Warning, false);
-                }
-                else if (pointsOutsideAxis > 0 && Configuration.Settings.EnableGraphDebuggingMessages)
-                {
-                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: {pointsOutsideAxis} points are outside of the provided graph axis. Adjust the minimums and maximums for the axis, or clear them to have them autocalculate and show everything.", Simulation.MessageType.Warning, false);
-                }
-
-                // Get a list of series annotations.
-                DrawOnView(graph.GetAnnotationsToGraph());
-
-                // Format the legend.
-                graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
-
-                // Format the title
-                graphView.FormatTitle(graph.Name);
-
-                // Format the footer
-                if (string.IsNullOrEmpty(graph.Caption))
-                {
-                    graphView.FormatCaption("Double click to add a caption", true);
-                }
-                else
-                {
-                    graphView.FormatCaption(graph.Caption, false);
-                }
-
-                // Remove series titles out of the graph disabled series list when
-                // they are no longer valid i.e. not on the graph.
-                if (graph.DisabledSeries == null)
-                    graph.DisabledSeries = new List<string>();
-                IEnumerable<string> validSeriesTitles = definitions.Select(s => s.Title);
-                List<string> seriesTitlesToKeep = new List<string>(validSeriesTitles.Intersect(this.graph.DisabledSeries));
-                this.graph.DisabledSeries.Clear();
-                this.graph.DisabledSeries.AddRange(seriesTitlesToKeep);
-                graphView.LegendInsideGraph = !graph.LegendOutsideGraph;
-
-                graphView.Refresh();
+            }
+            catch (Exception e)
+            {
+                if (Configuration.Settings.EnableGraphDebuggingMessages)
+                    explorerPresenter.MainPresenter.ShowMessage($"{this.graph.Name}: Error drawing graph - {e.Message}", Simulation.MessageType.Warning, false);
             }
         }
 
@@ -486,6 +494,8 @@ namespace UserInterface.Presenters
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
             var range = graphView.AxisMaximum(AxisPosition.Bottom) - graphView.AxisMinimum(AxisPosition.Bottom);
+            if (Double.IsNaN(range))
+                throw new Exception("Cannot add annotation to badly-formed graph.");
 
             double minimumX = graphView.AxisMinimum(AxisPosition.Bottom) + range * 0.03;
             double maximumX = graphView.AxisMaximum(AxisPosition.Bottom);
