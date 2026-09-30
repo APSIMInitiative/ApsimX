@@ -89,7 +89,8 @@ public class Program
                     if (string.IsNullOrEmpty(options.EnvString))
                         throw new ArgumentException("An environment variable must be provided to continue.");
 
-                    string poolName = $"{options.PullRequestNumber}-{options.CommitSHA}";
+                    string shortCommitSha = options.CommitSHA.Length > 6 ? options.CommitSHA[..6] : options.CommitSHA;
+                    string poolName = $"{options.PullRequestNumber}-{shortCommitSha}";
                     string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
                     string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
 
