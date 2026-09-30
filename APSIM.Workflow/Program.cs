@@ -89,7 +89,7 @@ public class Program
                     if (string.IsNullOrEmpty(options.EnvString))
                         throw new ArgumentException("An environment variable must be provided to continue.");
 
-                    string poolName = options.PullRequestNumber + options.CommitSHA;
+                    string poolName = $"{options.PullRequestNumber}-{options.CommitSHA}";
                     string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
                     string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
 
@@ -105,9 +105,11 @@ public class Program
                         string[] values = line.Split('=', 2);
                         envDict.Add(values[0], values[1]);
                     }
-                    Console.WriteLine($"envString={options.EnvString}");
-                    foreach (var item in envDict)
-                        Console.WriteLine(item);
+
+                    // Add PO Stats specific environment variables
+                    envDict.Add("AUTHOR", options.GitHubAuthorID);
+                    envDict.Add("COMMIT_SHA", options.CommitSHA);
+                    envDict.Add("FULL_COMMIT_HASH", options.FullCommitHash);
 
                     Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
                     logger.LogInformation($"An Azure batch pool called {poolName} successfully created!");
@@ -143,48 +145,6 @@ public class Program
             logger.LogError("Error: " + ex.Message);
             exitCode = 1;
         }
-    }
-
-    private static void PrepareAndSubmitWorkflowJob(Options options)
-    {
-        WorkFloFileUtilities.CreateValidationWorkFloFile(options);
-        if (options.Verbose)
-            logger.LogInformation("Validation workflow file created.");
-
-        bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath, options.Verbose);
-        if (options.Verbose && zipFileCreated)
-            logger.LogInformation("Zip file created.");
-
-        if (zipFileCreated & exitCode == 0)
-        {
-            if (options.Verbose)
-                logger.LogInformation("Submitting workflow job to Azure.");
-
-            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
-        }
-        else if (zipFileCreated & exitCode != 0)
-        {
-            logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
-        }
-        else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-
-
-
-    }
-
-    /// <summary>
-    /// Prints the contents of the split directory.
-    /// </summary>
-    /// <param name="splitDirectory">The path to the split directory.</param>
-    private static void PrintSplitDirectoryContents(string splitDirectory)
-    {
-        logger.LogInformation(splitDirectory);
-        logger.LogInformation($"Files in {splitDirectory}:");
-        foreach (string file in Directory.GetFiles(splitDirectory))
-        {
-            logger.LogInformation("  " + Path.GetFileName(file));
-        }
-        logger.LogInformation("");
     }
 
 

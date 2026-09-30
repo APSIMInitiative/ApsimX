@@ -1,27 +1,22 @@
 #!/bin/bash
 
 function initialise {
+  # Install docker on the Azure node
   if ! pgrep -x "dockerd" > /dev/null;then
     sudo snap install docker
     sleep 10
   fi
-  sudo docker pull digitalag/workflo:latest
-  sudo docker pull apsiminitiative/apsimng
+  # Pull down the apsim next gen and apsim performance stats collector docker images
+  sudo docker pull apsiminitiative/apsimplusr:pr-$PR_NUMBER
+  sudo docker pull apsiminitiative/postats2-collector:latest
 }
 
 function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e AZURE_ACCOUNT_URL -e AZURE_ACCOUNT_NAME -e AZURE_PRIMARY_ACCESS_KEY -e AZURE_STORAGE_ACCOUNT_NAME -e AZURE_KEY1 -e CLIMATE_API_KEY -e AZURE_STORAGE_CONNECTION_STRING -e AZURE_STORAGE_CONTAINER -e INPUT_FILES digitalag/workflo:latest "Azure.CopyFilesFromStorage($AZURE_STORAGE_CONTAINER, $INPUT_FILES)"
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e AZURE_ACCOUNT_URL -e AZURE_ACCOUNT_NAME -e AZURE_PRIMARY_ACCESS_KEY -e AZURE_STORAGE_ACCOUNT_NAME -e AZURE_KEY1 -e POSTATS_UPLOAD_URL -e APSIM_NO_DOCKER -e AZURE_STORAGE_CONNECTION_STRING -e AZURE_STORAGE_CONTAINER -e Path -e DockerImage -e INPUT_FILES "apsiminitiative/apsimplusr:pr-$PR_NUMBER" "$Path" --verbose
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e APSIM_NO_DOCKER "apsiminitiative/apsimplusr:pr-$PR_NUMBER" "$Path" --verbose
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload $PR_NUMBER a4fde455717f327d5afc4bb7934a86ef58947b7d $AUTHOR 2026.9.30-14:30 $PR_NUMBER-$COMMIT_SHA "$Path"
 }
-
-function run_00001_finally {
-  # Function always called, regardless of any errors.
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e AZURE_ACCOUNT_URL -e AZURE_ACCOUNT_NAME -e AZURE_PRIMARY_ACCESS_KEY -e AZURE_STORAGE_ACCOUNT_NAME -e AZURE_KEY1 -e CLIMATE_API_KEY -e AZURE_STORAGE_CONNECTION_STRING -e AZURE_STORAGE_CONTAINER -e INPUT_FILES digitalag/workflo:latest "Checksum.CreateHashes(hashes.txt)"
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e AZURE_ACCOUNT_URL -e AZURE_ACCOUNT_NAME -e AZURE_PRIMARY_ACCESS_KEY -e AZURE_STORAGE_ACCOUNT_NAME -e AZURE_KEY1 -e CLIMATE_API_KEY -e AZURE_STORAGE_CONNECTION_STRING -e AZURE_STORAGE_CONTAINER -e INPUT_FILES -e OUTPUT_FILES digitalag/workflo:latest "Azure.CopyFilesToStorage($AZURE_STORAGE_CONTAINER, $OUTPUT_FILES, true)"
-}
-
 
 
 # ==============================================================
@@ -34,9 +29,6 @@ start_time=$(date +%s.%N)
   $1 &>> local.stdout.txt
 );
 exit_code=$?
-if [[ $(type -t $1_finally) == function ]]; then
-  $1_finally &>> local.stdout.txt
-fi
 end_time=$(date +%s.%N)
 elapsed=$(echo "$end_time - $start_time" | bc -l)
 echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt

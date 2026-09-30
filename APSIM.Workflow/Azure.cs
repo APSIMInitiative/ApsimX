@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Auth;
@@ -21,7 +22,6 @@ public class Azure
     private static readonly string AZURE_ACCOUNT_URL = "https://apsimbuildsysbatch.australiaeast.batch.azure.com";
     private static readonly string AZURE_ACCOUNT_NAME = "apsimbuildsysbatch";
     private static readonly string AZURE_STORAGE_ACCOUNT_NAME = "apsimbuildsysstorage";
-    private static readonly string AZURE_POOL_PASSSWORD = "ZHaS2*VPW3q@*5";
 
     private static readonly string autoScaleScript =
         "TimeIntervalMinute = 5;\n" +
@@ -31,6 +31,18 @@ public class Azure
         "NumberNodes = NumberTasks == 0 ? 0 : (NumberTasks + 1) / NumberCPUPerNode;\n" +
         "$TargetDedicatedNodes = min(MaxNumberNodes, NumberNodes);\n" +
         "$NodeDeallocationOption = taskcompletion;\n";
+
+    private static string GenerateRandomPassword(int length = 24)
+    {
+        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*()-_=+[]{}";
+        byte[] data = RandomNumberGenerator.GetBytes(length);
+        char[] password = new char[length];
+
+        for (int i = 0; i < length; i++)
+            password[i] = chars[data[i] % chars.Length];
+
+        return new string(password);
+    }
 
     /// <summary>
     /// Create an return reference to pool.
@@ -65,9 +77,10 @@ public class Azure
                     virtualMachineSize: vmsize,
                     virtualMachineConfiguration: vmConfiguration);
                 pool.TaskSlotsPerNode = 2;
+                string poolPassword = GenerateRandomPassword();
                 pool.UserAccounts = new List<UserAccount>
                 {
-                    new("admin", AZURE_POOL_PASSSWORD, ElevationLevel.Admin),
+                    new("admin", poolPassword, ElevationLevel.Admin),
                 };
 
                 if (isAutoscaling == false)
@@ -130,7 +143,7 @@ public class Azure
 
         //TODO: replace this with a real value.
         envVars.Add("PR_NUMBER", prNumber);
-        envVars.Add("OUTPUT_FILES", "stdout.txt");
+        envVars.Add("OUTPUT_FILES", "local.stdout.txt");
         envVars.Add("AZURE_STORAGE_CONTAINER", storageName);
         envVars.Add("AZURE_STORAGE_CONNECTION_STRING", storageConnectionString);
 
@@ -142,7 +155,9 @@ public class Azure
             string cloudTaskName = $"{pathIndex}-{Path.GetFileNameWithoutExtension(apsimFilePath).Replace(" ", "_")}"; // spaces are not allowed.
             CloudTask cloudTask = new(cloudTaskName, commandLine)
             {
-                UserIdentity = new UserIdentity("admin"),
+                UserIdentity = new UserIdentity(
+                    new AutoUserSpecification(AutoUserScope.Task, ElevationLevel.Admin)
+                ),
                 ResourceFiles = resourceFiles,
                 EnvironmentSettings = envVars.Select(e => new EnvironmentSetting(e.Key, e.Value))
                     .Append(new EnvironmentSetting("Path", apsimFilePath[1..])) // Path has to be added here so it's unique for each task.

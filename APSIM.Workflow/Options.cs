@@ -70,6 +70,12 @@ public class Options
     /// </summary>
     [Option("env-string", Required= false, HelpText ="An env file represented as a string.")]
     public string EnvString {get;set;} = "";  
+
+    /// <summary>
+    /// An env file represented as a string.
+    /// </summary>
+    [Option("full-commit-hash", Required= false, HelpText ="The full commit hash. Used for PO Stats system.")]
+    public string FullCommitHash {get;set;} = "";  
  
 }
     
