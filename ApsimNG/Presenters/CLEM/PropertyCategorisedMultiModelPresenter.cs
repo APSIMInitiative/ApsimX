@@ -11,7 +11,7 @@ namespace UserInterface.Presenters
 {
     /// <summary>
     /// A combination of the PropertyCategorisedPresenter for property category filtering
-    /// and the PropertyMultiModelPresenter to display the properties of all children of the attachedm model
+    /// and the PropertyMultiModelPresenter to display the properties of all children of the attached model
     /// as columns of property entry idems in the display
     /// </summary>
     public class PropertyCategorisedMultiModelPresenter: PropertyCategorisedPresenter

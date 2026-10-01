@@ -24,12 +24,13 @@ namespace Models.CLEM.Timers
     [Description("This activity is is based on whether a pasture biomass (t/ha) is within a specified range.")]
     [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
 
-        [Link] IClock clock = null;
+        [Link] readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -49,7 +50,7 @@ namespace Models.CLEM.Timers
         /// paddock or pasture to graze
         /// </summary>
         [JsonIgnore]
-        public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
+        public IGrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
         /// Minimum pasture level
@@ -70,22 +71,13 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerPastureLevel()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -114,55 +106,6 @@ namespace Models.CLEM.Timers
         {
             ActivityPerformed?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" is between <span class=\"setvalueextra\">");
-                htmlWriter.Write(MinimumPastureLevel.ToString());
-                htmlWriter.Write("</span> and ");
-                if (MaximumPastureLevel <= MinimumPastureLevel)
-                    htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(MaximumPastureLevel.ToString());
-                    htmlWriter.Write("</span> ");
-                }
-                htmlWriter.Write(" kg per hectare</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
 
     }
 }

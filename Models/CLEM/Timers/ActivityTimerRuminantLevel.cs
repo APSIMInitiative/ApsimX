@@ -26,9 +26,10 @@ namespace Models.CLEM.Timers
     [Description("This activity timer is is based on whether the size or value of individual property is within a specified range for the herd.")]
     [HelpUri(@"Content/Features/Timers/HerdLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerRuminantLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [Link] IClock clock = null;
+        [Link] readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -87,15 +88,6 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerRuminantLevel()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -121,7 +113,9 @@ namespace Models.CLEM.Timers
             if (TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
             {
                 if ((RuminantProperty ?? "") != "")
+                {
                     propertyInfo = typeof(Ruminant).GetProperty(RuminantProperty);
+                }
 
                 if ((RuminantProperty ?? "") == "" || propertyInfo is null)
                 {
@@ -138,11 +132,13 @@ namespace Models.CLEM.Timers
             {
                 if (clock.Today != checkDate)
                 {
-                    // filter based on all filtergroups
+                    // filter based on all filter groups
                     uniqueIndividuals = CLEMRuminantActivityBase.GetUniqueIndividuals<Ruminant>(filterGroups, parentRuminantBase.CurrentHerd(), Structure);
 
                     if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
+                    {
                         amountAtFirstCheck = uniqueIndividuals.Count();
+                    }
                     else
                     {
                         var individualProperty = uniqueIndividuals.Select(a => Convert.ToDouble(propertyInfo.GetValue(a)));
@@ -211,115 +207,5 @@ namespace Models.CLEM.Timers
         {
             ActivityPerformed?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"clearfix\"><div class=\"filter\">");
-                htmlWriter.Write("Perform when ");
-                if (TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
-                    htmlWriter.Write($"{DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
-                else
-                {
-                    string stl = "[Unknown]";
-                    switch (TimerStyle)
-                    {
-                        case ActivityTimerRuminantLevelStyle.SumOfProperty:
-                            stl = "sum";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MeanOfProperty:
-                            stl = "mean";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MinimumOfProperty:
-                            stl = "minimum";
-                            break;
-                        case ActivityTimerRuminantLevelStyle.MaximumOfProperty:
-                            stl = "maximum";
-                            break;
-                    }
-                    htmlWriter.Write($"the {DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {DisplaySummaryValueSnippet(RuminantProperty)}", "Not set", HTMLSummaryStyle.Default);
-                }
-                htmlWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
-                htmlWriter.Write($" {DisplaySummaryValueSnippet(Amount, "Not set", HTMLSummaryStyle.Default)}</div></div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Convert the operator to a symbol
-        /// </summary>
-        /// <returns>Operator as symbol</returns>
-        protected string OperatorToSymbol()
-        {
-            switch (Operator)
-            {
-                case ExpressionType.Equal:
-                    return "=";
-                case ExpressionType.GreaterThan:
-                    return ">";
-                case ExpressionType.GreaterThanOrEqual:
-                    return ">=";
-                case ExpressionType.LessThan:
-                    return "<";
-                case ExpressionType.LessThanOrEqual:
-                    return "<=";
-                case ExpressionType.NotEqual:
-                    return "!=";
-                default:
-                    return Operator.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            return "<div>";
-        }
-
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<RuminantGroup>(), true, "childgroupfilterborder", "Based on unique individuals selected from:", "")
-            };
-        }
-
-
-        #endregion
-
     }
 }

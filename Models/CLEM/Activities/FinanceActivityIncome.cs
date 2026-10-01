@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using APSIM.Numerics;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -19,6 +20,7 @@ namespace Models.CLEM.Activities
     [Description("Define an income source")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/Income.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FinanceActivityIncome : CLEMActivityBase
     {
         private FinanceType bankAccount;
@@ -38,14 +40,6 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FinanceActivityIncome()
-        {
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -58,27 +52,11 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if (Amount > 0)
+            if (MathUtilities.IsPositive(Amount))
             {
-                bankAccount.Add(Amount, this, null, TransactionCategory);
+                bankAccount.AddToResource(Amount, this, null, TransactionCategory);
                 SetStatusSuccessOrPartial();
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Earn {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero: true)}");
-                htmlWriter.Write($" paid into {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
-        } 
-        #endregion
-
     }
 }

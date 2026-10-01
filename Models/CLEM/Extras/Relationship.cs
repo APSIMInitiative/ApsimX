@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using System.IO;
-using APSIM.Shared.Utilities;
 using System.Xml.Serialization;
 using Models.CLEM.Resources;
 using APSIM.Numerics;
@@ -88,14 +87,6 @@ namespace Models.CLEM
         public string TransactionCategory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public Relationship()
-        {
-            this.SetDefaults();
-        }
-
-        /// <summary>
         /// Solve equation for y given x
         /// </summary>
         /// <param name="xValue">x value to solve y</param>
@@ -103,168 +94,32 @@ namespace Models.CLEM
         public double SolveY(double xValue)
         {
             if (MathUtilities.IsLessThanOrEqual(xValue, XValues[0]))
+            {
                 return YValues[0];
+            }
 
             if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[XValues.Length - 1]))
+            {
                 return YValues[YValues.Length - 1];
+            }
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)
+            {
                 if (MathUtilities.IsLessThanOrEqual(xValue, XValues[i + 1]))
                 {
                     k = i;
                     break;
                 }
+            }
 
             if (CalculationMethod == RelationshipCalculationMethod.Interpolation)
+            {
                 return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k]) / (XValues[k + 1] - XValues[k]);
+            }
             else
+            {
                 return YValues[k + 1];
-        }
-
-        #region validation
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (XValues == null)
-            {
-                string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("X values are required for relationship", memberNames));
-            }
-            if (YValues == null)
-            {
-                string[] memberNames = new string[] { "YValues" };
-                results.Add(new ValidationResult("Y values are required for relationship", memberNames));
-            }
-            if (XValues.Length != YValues.Length)
-            {
-                string[] memberNames = new string[] { "XValues and YValues" };
-                results.Add(new ValidationResult("The same number of X and Y values are required for relationship", memberNames));
-            }
-            if (XValues.Length == 0)
-            {
-                string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("No data points were provided for relationship", memberNames));
-            }
-            if (XValues.Length < 2)
-            {
-                string[] memberNames = new string[] { "XValues" };
-                results.Add(new ValidationResult("At least two data points are required for relationship", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
-                // draw chart
-
-                if (XValues is null || XValues.Length == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
-                else
-                {
-                    if (YValues is null || XValues.Length != YValues.Length)
-                        htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
-                    else
-                    {
-                        htmlWriter.Write(@"
-                        <canvas id=""myChart_" + this.FullPath + @"""><p>Unable to display graph in browser</p></canvas>
-                        <script>
-                        var ctx = document.getElementById('myChart_" + this.FullPath + @"').getContext('2d');
-                        var myChart = new Chart(ctx, {
-                        responsive:false,
-                        maintainAspectRatio: true,
-                        type: 'scatter',
-                        data: {
-                            datasets: [{
-                                data: [");
-                        string data = "";
-                        for (int i = 0; i < XValues.Length; i++)
-                            if (YValues.Length > i)
-                                data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
-
-                        data = data.TrimEnd(',');
-                        htmlWriter.Write(data);
-                        htmlWriter.Write(@"],
-                        pointBackgroundColor: '[GraphPointColour]',
-                        pointBorderColor: '[GraphPointColour]',
-                        borderColor: '[GraphLineColour]',
-                        pointRadius: 5,
-                        pointHoverRadius: 5,
-                        fill: false,
-                        tension: 0,
-                        showLine: true,
-                        steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
-                        }]
-                        },
-                        options: {
-                            legend: {
-                                display: false
-                            },
-                            scales: {
-                                xAxes: [{
-                                    color: 'green',
-                                    type: 'linear',
-                                    position: 'bottom',
-                                    ticks: {
-                                      fontColor: '[GraphLabelColour]',
-                                      fontSize: 13,
-                                      padding: 3
-                                    },
-                                    gridLines: {
-                                       color: '[GraphGridLineColour]',
-                                       drawOnChartArea: true
-                                    }");
-                        if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                        {
-                            htmlWriter.Write(@",
-                            scaleLabel: {
-                            display: true,
-                            labelString: '" + this.NameOfXVariable + @"'
-                            }");
-                        }
-                        htmlWriter.Write(@"}],
-                        yAxes: [{
-                            type: 'linear',
-                            gridLines: {
-                                zeroLineColor: '[GraphGridZeroLineColour]',
-                                zeroLineWidth: 1,
-                                zeroLineBorderDash: [3, 3],
-                                color: '[GraphGridLineColour]',
-                                drawOnChartArea: true
-                            },
-                            ticks: {
-                                fontColor: '[GraphLabelColour]',
-                                fontSize: 13,
-                                padding: 3
-                            }");
-                        if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                        {
-                            htmlWriter.Write(@", scaleLabel: {
-                            display: true,
-                            labelString: '" + this.NameOfYVariable + @"'
-                        }");
-                        }
-                        htmlWriter.Write(@"}],
-                            }
-                           }
-                        });
-                        </script>");
-                    }
-                }
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
             }
         }
 
@@ -286,6 +141,36 @@ namespace Models.CLEM
             return;
         }
 
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (XValues == null)
+            {
+                string[] memberNames = new string[] { "XValues" };
+                yield return new ValidationResult("X values are required for relationship", memberNames);
+            }
+            if (YValues == null)
+            {
+                string[] memberNames = new string[] { "YValues" };
+                yield return new ValidationResult("Y values are required for relationship", memberNames);
+            }
+            if (XValues.Length != YValues.Length)
+            {
+                string[] memberNames = new string[] { "XValues and YValues" };
+                yield return new ValidationResult("The same number of X and Y values are required for relationship", memberNames);
+            }
+            if (XValues.Length == 0)
+            {
+                string[] memberNames = new string[] { "XValues" };
+                yield return new ValidationResult("No data points were provided for relationship", memberNames);
+            }
+            if (XValues.Length < 2)
+            {
+                string[] memberNames = new string[] { "XValues" };
+                yield return new ValidationResult("At least two data points are required for relationship", memberNames);
+            }
+        }
         #endregion
     }
 }

@@ -1,11 +1,9 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
@@ -55,13 +53,11 @@ namespace Models.CLEM.Resources
         public Sex Sex { get; set; }
 
         /// <summary>
-        /// Age (Months)
+        /// Initial age
         /// </summary>
-        [Description("Age (months)")]
-        [Units("Months")]
-        [Required, GreaterThanEqualValue(0)]
-        [FilterByProperty]
-        public int Age { get; set; }
+        [Description("Age")]
+        [Units("years, months, days")]
+        public AgeSpecifier AgeDetails { get; set; } = new int[] { 12, 0 };
 
         /// <summary>
         /// Starting Number

@@ -1,14 +1,11 @@
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
-using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 
 namespace Models.CLEM
@@ -71,14 +68,14 @@ namespace Models.CLEM
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<OtherAnimalsGroup>();
-                if (filtergroup.Count() > 1)
+                var filterGroup = current.Children.OfType<OtherAnimalsGroup>();
+                if (filterGroup.Count() > 1)
                 {
                     Summary.WriteMessage(this, "Multiple other animal filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.", MessageType.Warning);
                 }
-                if (filtergroup.FirstOrDefault() != null)
+                if (filterGroup.FirstOrDefault() != null)
                 {
-                    cohortFilters.Insert(0, filtergroup.FirstOrDefault());
+                    cohortFilters.Insert(0, filterGroup.FirstOrDefault());
                 }
                 current = current.Parent as IModel;
             }
@@ -109,13 +106,13 @@ namespace Models.CLEM
             IEnumerable<OtherAnimalsTypeCohort> cohortsToReport = otherAnimals.GetCohorts(cohortFilters, true);
 
             // weaned
-            foreach (var oaCohort in  cohortsToReport.OrderBy(a => a.Sex).ThenBy(a => a.Age))
+            foreach (var oaCohort in  cohortsToReport.OrderBy(a => a.Sex).ThenBy(a => a.AgeDetails.InDays))
             {
                 ReportDetails = new HerdReportItemGeneratedEventArgs()
                 {
                     Group = oaCohort.ID.ToString(),
-                    Age = oaCohort.Age,
-                    AgeInYears = oaCohort.Age / 12,
+                    Age = oaCohort.AgeDetails.InDays,
+                    AgeInYears = oaCohort.AgeDetails.InDays / 12.0,
                     Sex = oaCohort.Sex.ToString(),
                     Number = oaCohort.Number,
                     AverageWeight = oaCohort.Weight,

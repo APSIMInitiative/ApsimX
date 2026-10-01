@@ -84,7 +84,7 @@ namespace UnitTests
             Utilities.InjectLink(PO, "dataStore", dataStore);
             PO.Run();
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
             var data = dataStore.Reader.GetData("PredictedObserved");
 
             Assert.That(
@@ -144,7 +144,7 @@ namespace UnitTests
             Utilities.InjectLink(PO, "dataStore", dataStore);
             PO.Run();
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
             var data = dataStore.Reader.GetData("PredictedObserved");
 
             Assert.That(

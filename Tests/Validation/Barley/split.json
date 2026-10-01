@@ -1,0 +1,31 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"Barley-NewZealand",
+			"Folders":["NewZealand"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Barley-Australia",
+			"Folders":["MCVP", "HermitageRS", "Wellcamp", "Hermitage1990", "Roma1988", "Gatton1984", "ControlledEnvironment", "Sensibility tests"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Barley-NPIField2019",
+			"Folders":["NPIField2019"],
+			"Experiments":[],
+			"Simulations":[]
+		},
+		{
+			"Name":"Barley-NPIField2020",
+			"Folders":["NPIField2020"],
+			"Experiments":[],
+			"Simulations":[]
+		}
+	]
+}

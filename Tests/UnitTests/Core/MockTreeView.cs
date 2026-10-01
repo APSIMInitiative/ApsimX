@@ -2,6 +2,7 @@ using System;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using APSIMNG.Utility;
+using System.Collections.Generic;
 
 namespace UnitTests.Core
 {
@@ -74,12 +75,22 @@ namespace UnitTests.Core
             throw new NotImplementedException();
         }
 
+        public void Populate(TreeViewNode rootNode, List<string> expandedNodes)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RefreshNode(string path, TreeViewNode description)
         {
             throw new NotImplementedException();
         }
 
         public void Rename(string nodePath, string newName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(GLib.Object gtkControl)
         {
             throw new NotImplementedException();
         }

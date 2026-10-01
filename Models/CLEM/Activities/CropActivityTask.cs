@@ -28,14 +28,6 @@ namespace Models.CLEM.Activities
 
         double amountToSkip = 0;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected CropActivityTask()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
-
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
@@ -65,7 +57,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            //relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
             parentManagementActivity = Structure.FindParent<CropActivityManageCrop>(recurse: true);
             parentManageProductActivity = (Parent as CropActivityManageProduct);
         }
@@ -77,7 +68,9 @@ namespace Models.CLEM.Activities
             if (TimingOK)
             {
                 if (Structure.FindParent<CropActivityManageProduct>(recurse: true).CurrentlyManaged)
+                {
                     Status = ActivityStatus.Success;
+                }
                 else
                 {
                     Status = ActivityStatus.Warning;
@@ -87,7 +80,7 @@ namespace Models.CLEM.Activities
                     }
                     if (!timingIssueReported)
                     {
-                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
                         timingIssueReported = true;
                     }
                 }
@@ -138,7 +131,6 @@ namespace Models.CLEM.Activities
             {
                 // find shortfall by identifiers as these may have different influence on outcome
                 var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
-                //if (tagsShort != null)
                 amountToSkip = (1 - tagsShort.Available / tagsShort.Required);
             }
         }
@@ -146,7 +138,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(ResourceRequestList.Any())
+            if (ResourceRequestList.Count != 0)
             {
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
@@ -154,42 +146,22 @@ namespace Models.CLEM.Activities
 
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-            IModel follow = this.Parent;
-            while(!(follow is ActivitiesHolder))
+            IModel follow = Parent;
+            while (follow is not Activities.ActivitiesHolder)
             {
-                if(follow is CropActivityManageProduct)
-                    return results;
-
-                if(!(follow is ActivityFolder))
+                if (follow is CropActivityManageProduct)
                 {
-                    string[] memberNames = new string[] { "Parent model" };
-                    results.Add(new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", memberNames));
-                    return results;
+                    break;
+                }
+
+                if (follow is not ActivityFolder)
+                {
+                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", new string[] { "Parent model" });
                 }
                 follow = follow.Parent;
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (Structure.FindChildren<ActivityFee>().Count() + Structure.FindChildren<LabourRequirement>().Count() == 0)
-                    htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                return htmlWriter.ToString();
             }
         }
         #endregion

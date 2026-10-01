@@ -1,0 +1,232 @@
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace Models.CLEM.Resources
+{
+    /// <summary>
+    /// Store of Ruminant energy for the time-step
+    /// </summary>
+    [Serializable]
+    public class RuminantInfoEnergy
+    {
+        private readonly Ruminant ruminant;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="ruminant">Reference to the ruminant</param>
+        public RuminantInfoEnergy(Ruminant ruminant)
+        {
+            this.ruminant = ruminant;
+        }
+
+        /// <summary>
+        /// The potential and actual MJ milk intake of the individual.
+        /// </summary>
+        [JsonIgnore]
+        public ExpectedActualContainer MilkDaily { get; set; } = new ExpectedActualContainer();
+
+        /// <summary>
+        /// Energy obtained from intake
+        /// </summary>
+        public double FromIntake { get { return ruminant.Intake.ME; } }
+
+        /// <summary>
+        /// Energy used for basal metabolism
+        /// </summary>
+        public double ForBasalMetabolism { get; set; }
+
+        /// <summary>
+        /// Energy used for HP Viscera
+        /// </summary>
+        public double ForHPViscera { get; set; }
+
+        /// <summary>
+        /// Energy used to move while grazing/mustering etc
+        /// </summary>
+        public double ToMove { get; set; }
+
+        /// <summary>
+        /// Energy used to graze while grazing
+        /// </summary>
+        public double ToGraze { get; set; }
+
+        /// <summary>
+        /// Total Energy used for grazing (ToMove + ToGraze)
+        /// </summary>
+        public double ForGrazing { get { return ToMove + ToGraze; } }
+
+        /// <summary>
+        /// Energy used for maintenance
+        /// </summary>
+        public double ForMaintenance { get { return ForBasalMetabolism + ForHPViscera + ForGrazing; } }
+
+        /// <summary>
+        /// Energetic cost of depositing protein and fat. Heat for product formation 
+        /// </summary>
+        public double ForProductFormation { get; set; } = 0.0;
+
+        /// <summary>
+        /// Averaged time-step energetic cost of depositing protein and fat. Heat for product formation
+        /// </summary>
+        public double ForProductFormationAverage { get; set; } = 0.0;
+
+        /// <summary>
+        /// Method to calculate running ME Average for today and last timestep
+        /// </summary>
+        public void UpdateProductFormationAverage()
+        {
+            if (ForProductFormationAverage == 0)
+                ForProductFormationAverage = ForProductFormation;
+            else
+                ForProductFormationAverage = (ForProductFormationAverage + ForProductFormation) / 2.0;
+        }
+
+        /// <summary>
+        /// Total energetic cost of heat production
+        /// </summary>
+        public double ForHeatProduction { get { return ForBasalMetabolism + ForHPViscera + ForProductFormationAverage;} } 
+
+        /// <summary>
+        /// Energy available after maintenance
+        /// </summary>
+        public double AfterMaintenance { get { return FromIntake - ForMaintenance - ForProductFormationAverage; } }
+
+        /// <summary>
+        /// Energy used for fetal development
+        /// </summary>
+        public double ForFetus { get; set; }
+
+        /// <summary>
+        /// Energy available after accounting for pregnancy
+        /// </summary>
+        public double AfterPregnancy { get { return AfterMaintenance - ForFetus; } }
+
+        /// <summary>
+        /// Energy used for milk production
+        /// </summary>
+        public double ForLactation { get; set; }
+
+        /// <summary>
+        /// Energy used for protein mobilisation
+        /// </summary>
+        public double ForProteinMobilisation { get; set; }
+
+        /// <summary>
+        /// Energy available after lactation demands
+        /// </summary>
+        public double AfterLactation { get { return AfterPregnancy - ForLactation - ForProteinMobilisation; } }
+
+        /// <summary>
+        /// Energy used for wool production
+        /// </summary>
+        public double ForWool { get; set; }
+
+        /// <summary>
+        /// Energy stored in clean wool
+        /// </summary>
+        public double StoredInWool { get { return ruminant.Weight.WoolClean.Amount * 24.0; } }
+
+        /// <summary>
+        /// Energy available after wool demands
+        /// </summary>
+        public double AfterWool { get { return AfterLactation - ForWool; } }
+
+        /// <summary>
+        /// Energy available for growth
+        /// </summary>
+        public double Net { get { return AfterWool; } }
+
+        /// <summary>
+        /// Energy available for growth
+        /// </summary>
+        public double AvailableForGain { get { return AfterWool; } }
+
+        /// <summary>
+        /// Energy for gain after accounting for efficiency
+        /// </summary>
+        public double ForGain { get; set; }
+
+        /// <summary>
+        /// Energy of protein (non-viscera protein in Oddy)
+        /// </summary>
+        public RuminantTrackingItemBodyStore Protein { get; set; }
+
+        /// <summary>
+        /// Energy of visceral protein (empty gut, liver, kidneys, heart, and lungs) used in Oddy
+        /// </summary>
+        public RuminantTrackingItemBodyStore ProteinViscera { get; set; }
+
+        /// <summary>
+        /// Energy used for fat
+        /// </summary>
+        public RuminantTrackingItemBodyStore Fat { get; set; }
+
+        /// <summary>
+        /// Sum total protein energy accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinTotal { get { return (Protein?.Amount ?? 0) + (ProteinViscera?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Sum change in dry protein energy accounting for any non-visceral and visceral protein pools
+        /// </summary>
+        public double ProteinChange { get { return (Protein?.Change ?? 0) + (ProteinViscera?.Change ?? 0); } }
+
+        /// <summary>
+        /// Total fat energy accounting for missing Fat pool
+        /// </summary>
+        public double FatTotal { get { return (Fat?.Amount ?? 0); } }
+
+        /// <summary>
+        /// Change in fat energy accounting for missing fat pool
+        /// </summary>
+        public double FatChange { get { return (Fat?.Change ?? 0); } }
+
+        /// <summary>
+        /// Efficiency growth
+        /// </summary>
+        public double Kg { get; set; }
+
+        /// <summary>
+        /// Efficiency maintenance
+        /// </summary>
+        public double Km { get; set; }
+
+        /// <summary>
+        /// Efficiency lactation
+        /// </summary>
+        public double Kl { get; set; }
+
+        /// <summary>
+        /// Efficiency wool
+        /// </summary>
+        public double Kw { get; set; } = 0.18;
+
+        /// <summary>
+        /// Reset all running stores
+        /// </summary>
+        public void Reset()
+        {
+            ForBasalMetabolism = 0;
+            ForProductFormation = 0;
+            ForHPViscera = 0;
+            ForLactation = 0;
+            ForProteinMobilisation = 0;
+            ForWool = 0;
+            ToMove = 0;
+            ToGraze = 0;
+            ForGain = 0;
+        }
+
+        /// <summary>
+        /// Reset all BodyStore Tracking items for time step
+        /// </summary>
+        public void TimeStepReset()
+        {
+            Protein?.TimeStepReset();
+            ProteinViscera?.TimeStepReset();
+            Fat?.TimeStepReset();
+        }
+
+    }
+}

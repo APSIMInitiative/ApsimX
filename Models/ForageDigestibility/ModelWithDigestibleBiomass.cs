@@ -197,7 +197,7 @@ namespace Models.ForageDigestibility
 
                 return new Forages.MaterialRemoved(defoliatedDM * 10, defoliatedN * 10, defoliatedDigestibility); // convert mass from g/m2 to kg/ha
             }
-            return null;
+            return new Forages.MaterialRemoved(0.0, 0.0, 1.0);
         }
 
         /// <summary>Removes plant material simulating a graze event.</summary>
@@ -230,8 +230,7 @@ namespace Models.ForageDigestibility
                 double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, harvestableWt));
 
                 // Do the actual removal
-                if (!MathUtilities.FloatsAreEqual(amountToRemove, 0, 0.0001))
-                    RemoveBiomass(amountToRemove: amountToRemove);
+                RemoveBiomass(amountToRemove: amountToRemove);
 
             }
             else

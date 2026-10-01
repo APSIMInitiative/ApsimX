@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -45,43 +46,43 @@ namespace Models.CLEM.Activities
             if (finance != null)
             {
                 // make interest payments on bank accounts
-                foreach (FinanceType accnt in Structure.FindChildren<FinanceType>(relativeTo: finance))
+                foreach (FinanceType account in Structure.FindChildren<FinanceType>(relativeTo: finance))
                 {
-                    if (accnt.Balance > 0)
+                    if (MathUtilities.IsPositive(account.Balance))
                     {
-                        if (accnt.InterestRatePaid > 0)
+                        if (MathUtilities.IsPositive(account.InterestRatePaid))
                         {
-                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, null, "Interest");
+                            account.AddToResource(account.Balance * account.InterestRatePaid / 1200, this, null, "Interest");
                             SetStatusSuccessOrPartial();
                         }
                     }
-                    else if (accnt.Balance < 0)
+                    else if (MathUtilities.IsNegative(account.Balance))
                     {
-                        double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
-                        if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+                        double interest = Math.Round(Math.Abs(account.Balance) * account.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
+                        if (Math.Abs(account.Balance) * account.InterestRateCharged / 1200 != 0)
                         {
-                            ResourceRequest interestRequest = new ResourceRequest
+                            ResourceRequest interestRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = interest,
                                 AllowTransmutation = false,
                                 Category = TransactionCategory
                             };
-                            accnt.Remove(interestRequest);
+                            account.RemoveFromResource(interestRequest);
 
                             // report status
                             if (interestRequest.Required > interestRequest.Provided)
                             {
                                 interestRequest.ResourceType = typeof(Finance);
-                                interestRequest.ResourceTypeName = accnt.NameWithParent;
-                                interestRequest.Available = accnt.FundsAvailable;
-                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
+                                interestRequest.ResourceTypeName = account.NameWithParent;
+                                interestRequest.Available = account.FundsAvailable;
+                                ResourceRequestEventArgs rre = new() { Request = interestRequest };
                                 ActivitiesHolder.ReportActivityShortfall(rre);
 
                                 switch (OnPartialResourcesAvailableAction)
                                 {
                                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
+                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", account.Name));
                                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                                         Status = ActivityStatus.Ignored;
                                         break;
@@ -93,53 +94,13 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
+                            {
                                 Status = ActivityStatus.Success;
+                            }
                         }
                     }
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                ZoneCLEM clemParent = Structure.FindParent<ZoneCLEM>(recurse: true);
-                ResourcesHolder resHolder;
-                Finance finance = null;
-                if (clemParent != null)
-                {
-                    resHolder = Structure.FindChildren<ResourcesHolder>(relativeTo: clemParent).FirstOrDefault() as ResourcesHolder;
-                    finance = resHolder.FindResourceGroup<Finance>();
-                    if (finance != null && !finance.Enabled)
-                        finance = null;
-                }
-
-                if (finance == null)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                    foreach (FinanceType accnt in Structure.FindChildren<FinanceType>(relativeTo: finance).Where(a => a.Enabled))
-                    {
-                        if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
-                            htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
-                        else
-                        {
-                            if (accnt.InterestRateCharged > 0)
-                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
-                            else
-                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
-                        }
-                    }
-                }
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

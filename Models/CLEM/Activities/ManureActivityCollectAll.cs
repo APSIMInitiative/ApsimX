@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core.Attributes;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
@@ -22,10 +21,11 @@ namespace Models.CLEM.Activities
     [Description("Undertake the collection of manure from all paddocks and yards in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManureAll.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ManureActivityCollectAll : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         private ProductStoreTypeManure manureStore;
         private ActivityCarryLimiter limiter;
@@ -47,11 +47,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // activity is performed in CLEMCollectManure not CLEMGetResources
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            AllocationStyle = ResourceAllocationStyle.Manual;
 
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // locate a cut and carry limiter associated with this event.
             limiter = ActivityCarryLimiter.Locate(this, Structure);
         }
 
@@ -87,7 +85,6 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToSkip = 0;
-
             amountToDo = manureStore?.UncollectedStores.Sum(a => a.Pools.Sum(b => b.WetWeight))??0;
 
             // reduce amount by limiter if present.
@@ -157,12 +154,5 @@ namespace Models.CLEM.Activities
             }
             SetStatusSuccessOrPartial(amountToSkip > 0);
         }
-
-        ///<inheritdoc/>
-        public override string ModelSummary()
-        {
-            return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";
-        }
-
     }
 }

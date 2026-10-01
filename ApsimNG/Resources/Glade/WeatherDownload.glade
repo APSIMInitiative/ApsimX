@@ -237,6 +237,21 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkRadioButton" id="radioWorldNASAOnly">
+                                <property name="label" translatable="yes">World</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="draw-indicator">True</property>
+                                <property name="group">radioAus</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">2</property>
+                                <property name="top-attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkEntry" id="entryEmail">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
@@ -257,7 +272,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="valign">center</property>
-                                <property name="label" translatable="yes">E-mail address:</property>
+                                <property name="label" translatable="yes">E-mail address: (required for SILO only)</property>
                               </object>
                               <packing>
                                 <property name="left-attach">0</property>
@@ -337,6 +352,21 @@
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkRadioButton" id="radioNASAOnly">
+                                <property name="label" translatable="yes">NASA POWER (Global)</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="draw-indicator">True</property>
+                                <property name="group">radioSiloDataDrill</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>

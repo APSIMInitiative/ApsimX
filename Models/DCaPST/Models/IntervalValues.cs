@@ -18,6 +18,16 @@ namespace Models.DCAPST
         public double AirTemperature { get; set; }
 
         /// <summary>
+        /// Leaf area index of the sunlit canopy during the interval.
+        /// </summary>
+        public double SunlitLAI { get; set; }
+
+        /// <summary>
+        /// Leaf area index of the shaded canopy during the interval.
+        /// </summary>
+        public double ShadedLAI { get; set; }
+
+        /// <summary>
         /// Area values for the sunlit canopy
         /// </summary>
         public AreaValues Sunlit { get; set; }

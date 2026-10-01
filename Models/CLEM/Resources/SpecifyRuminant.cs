@@ -25,8 +25,10 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
-        [Link]
-        private ResourcesHolder resources = null;
+        [Link(IsOptional = true)]
+        private readonly ResourcesHolder resources = null;
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
 
         private RuminantType ruminantType;
 
@@ -61,21 +63,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
-        public RuminantType BreedParams { get { return ruminantType; } }
+        public RuminantType BreedType { get { return ruminantType; } }
 
         /// <summary>
         /// Records if a warning about set weight occurred
         /// </summary>
         [JsonIgnore]
         public bool WeightWarningOccurred { get; private set; } = false;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SpecifyRuminant()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -84,70 +78,44 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             Details = Structure.FindChildren<RuminantTypeCohort>().FirstOrDefault();
-            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(Parent as CLEMModel, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            // create example ruminant
-            Details.Number = 1;
-            ExampleIndividual = Details.CreateIndividuals(null, BreedParams, getUniqueID:false).FirstOrDefault();
+            if (Details is not null && ruminantType.Parameters.General is not null)
+            {
+                // create example ruminant
+                Details.Number = 1;
+                ExampleIndividual = Details.CreateIndividuals(1, null, events.Clock.Today, BreedType, false).FirstOrDefault();
+            }
         }
 
         #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             // check that this model contains children RuminantDestockGroups with filters
-            var results = new List<ValidationResult>();
             // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-
             if (ruminantType is null)
             {
-                string[] memberNames = new string[] { "Ruminant type" };
-                results.Add(new ValidationResult("An invalid [r=RuminantType] was specified", memberNames));
+                yield return new ValidationResult("An invalid [r=RuminantType] was specified", new string[] { "Ruminant type" });
             }
 
             if (Structure.FindChildren<RuminantTypeCohort>().Count() != 1)
             {
-                string[] memberNames = new string[] { "Specify ruminant" };
-                results.Add(new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", memberNames));
+                yield return new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", new string[] { "Specify ruminant" });
             }
-            return results;
-        }
-        #endregion
 
-        #region descriptive summary
-
-        private bool cohortFound;
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
+            // bubble through to check status of any cohorts as children of in SepcifyRuminant
+            foreach (RuminantTypeCohort cohort in Structure.FindChildren<RuminantTypeCohort>())
             {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"setvalue\">{Proportion.ToString("p0")}</span> of the individuals will be ");
-                if (RuminantTypeName == null || RuminantTypeName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">TYPE NOT SET</span>");
-                else
-                    htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
-
-                cohortFound = Structure.FindChildren<RuminantTypeCohort>().Count() > 0;
-                if (cohortFound)
-                    htmlWriter.Write($" with the following details:</div>");
-                else
+                foreach (var val in cohort.Validate(validationContext))
                 {
-                    htmlWriter.Write($"</div>");
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">RuminantCohort</span> describing the individuals was provided!</div>");
+                    yield return val;
                 }
-
-                return htmlWriter.ToString();
             }
+
+
         }
-
         #endregion
-
 
     }
 }

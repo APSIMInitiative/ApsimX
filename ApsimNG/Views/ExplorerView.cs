@@ -8,6 +8,7 @@ using Gtk;
 using GLib;
 using System;
 using UserInterface.Interfaces;
+using System.Collections.Generic;
 
 namespace UserInterface.Views
 {
@@ -21,6 +22,7 @@ namespace UserInterface.Views
     public class ExplorerView : ViewBase, IExplorerView
     {
         private Box rightHandView;
+        private Gtk.ScrolledWindow treeBox;
         private Gtk.TreeView treeviewWidget;
         private Paned hpaned;
 
@@ -33,11 +35,8 @@ namespace UserInterface.Views
             hpaned = (Paned)builder.GetObject("hpaned1");
             hpaned.AddNotification(OnDividerNotified);
 
-            treeviewWidget = (Gtk.TreeView)builder.GetObject("treeview1");
-            treeviewWidget.Realized += OnLoaded;
-            Tree = new TreeView(owner, treeviewWidget);
+            treeBox = (ScrolledWindow)builder.GetObject("treewindow1");
             rightHandView = (Box)builder.GetObject("vbox2");
-            //rightHandView.ShadowType = ShadowType.EtchedOut;
 
             mainWidget.Destroyed += OnDestroyed;
         }
@@ -56,6 +55,34 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the divider position is changed</summary>
         public event EventHandler DividerChanged;
+
+        /// <summary>
+        /// Remake the treeview from scratch, disposing of the existing one if 
+        /// it exists and putting the new one into the view.
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <param name="expandedNodes"></param>
+        public void RebuildTree(TreeViewNode rootNode, List<string> expandedNodes)
+        {
+            if (treeviewWidget != null)
+            {
+                treeviewWidget.Realized -= OnLoaded;
+                treeviewWidget.Dispose();
+            }
+
+            foreach(Widget widget in treeBox.Children)
+                treeBox.Remove(widget);
+            
+            treeviewWidget = new Gtk.TreeView();
+            treeviewWidget.HeadersVisible = false;
+            treeviewWidget.EnableTreeLines = true;
+            treeviewWidget.Realized += OnLoaded;
+            
+            Tree = new TreeView(owner, treeviewWidget);
+            Tree.Populate(rootNode, expandedNodes);
+            
+            treeBox.Add(treeviewWidget);
+        }
 
         /// <summary>
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.

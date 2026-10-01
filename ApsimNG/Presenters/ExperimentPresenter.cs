@@ -187,16 +187,19 @@ namespace UserInterface.Presenters
         {
             try
             {
-                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("*.csv", null);
+                var path = explorerPresenter.MainPresenter.AskUserForSaveFileName("Comma-Separated Values|*.csv", null);
                 if (path != null)
                 {
                     // Clone the datatable and add an enabled column.
                     var data = view.List.DataSource.Copy();
-                    data.Columns.Add("Enabled?", typeof(bool));
+                    data.Columns.Add("Enabled", typeof(bool));
                     foreach (DataRow row in data.Rows)
                     {
                         var simulationName = row[0].ToString();
-                        row["Enabled"] = !experiment.DisabledSimNames.Contains(simulationName);
+                        if (experiment.DisabledSimNames != null && experiment.DisabledSimNames.Contains(simulationName))
+                            row["Enabled"] = false;
+                        else
+                            row["Enabled"] = true;
                     }
 
                     // Convert datatable to csv and write to path.
@@ -220,12 +223,14 @@ namespace UserInterface.Presenters
             ApsimTextFile textFile = new ApsimTextFile();
             try
             {
-                var path = explorerPresenter.MainPresenter.AskUserForOpenFileName("*.csv");
+                var path = explorerPresenter.MainPresenter.AskUserForOpenFileName("Comma-Separated Values|*.csv");
                 if (path != null)
                 {
                     textFile.Open(path);
-                    var disabledSimsTable = new DataView(textFile.ToTable());
-                    disabledSimsTable.RowFilter = "Enabled = False";
+                    DataView disabledSimsTable = new(textFile.ToTable())
+                    {
+                        RowFilter = "Enabled = False"
+                    };
                     experiment.DisabledSimNames = DataTableUtilities.GetColumnAsStrings(disabledSimsTable, "SimulationName").ToList();
                 }
                 PopulateView();

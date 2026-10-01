@@ -22,16 +22,33 @@ internal class ModelInFileReference : IModelReference
         this.modelName = modelName;
     }
 
-    /// <summary>
-    /// Get the model. Throws if model not found.
-    /// </summary>
-    /// <returns>The model</returns>
     INodeModel IModelReference.GetModel()
     {
-        var simulationsType = ModelRegistry.ModelNameToType("Simulations");
+        Type simulationsType = ModelRegistry.ModelNameToType("Simulations");
         string json = File.ReadAllText(fileName);
         (var externalRootNode, _, _) = FileFormat.ReadFromStringAndReturnConvertState(json, simulationsType);
         return (INodeModel)externalRootNode.Get(modelName)
             ?? throw new Exception($"Cannot find model {modelName} in file {fileName}");
+    }
+
+    /// <summary>
+    /// Get the model. Throws if model not found.
+    /// </summary>
+    /// <returns>The model</returns>
+    public INodeModel GetModelUsingCache(Node cachedFile)
+    {
+        INodeModel model = cachedFile.Get(modelName) as INodeModel;
+        if (model is null)
+            throw new Exception($"Cannot find model {modelName} in file {fileName}");
+        else
+            return model;
+    }
+
+    /// <summary>
+    /// Returns the potential filepath for this command.
+    /// </summary>
+    public string GetFilePath()
+    {
+        return fileName;
     }
 }

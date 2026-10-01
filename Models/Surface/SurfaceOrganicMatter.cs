@@ -173,11 +173,13 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double InitialResidueMass { get; set; }
 
+
         /// <summary>Gets or sets the standing fraction of initial residue pool</summary>
         [Summary]
         [Description("Standing fraction (0-1)")]
         [Units("0-1")]
         public double InitialStandingFraction { get; set; }
+
 
         /// <summary>Gets or sets the Carbon:Phosphorus ratio.</summary>
         [Summary]
@@ -506,6 +508,16 @@ namespace Models.Surface
             surfaceResidue.SetLayerFraction(layerFractions);
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Reset();
+        }
+
         /// <summary>Called at start of each day.</summary>
         /// <param name="sender">The sender of the event</param>
         /// <param name="e">The event data.</param>
@@ -631,7 +643,11 @@ namespace Models.Surface
                 double cpr = double.IsNaN(InitialCPR) ? DefaultCPRatio : InitialCPR;
                 totP = MathUtilities.Divide(totC, cpr, 0.0);
 
-                double standFract = double.IsNaN(InitialStandingFraction) ? DefaultCPRatio : InitialStandingFraction;
+                if (InitialStandingFraction < 0 || InitialStandingFraction > 1)
+                    throw new ArgumentOutOfRangeException(nameof(InitialStandingFraction), 
+                        $"Standing Fraction is only allowed to be a number between 0 and 1. " +
+                        $"Please change the value in model located at path: {FullPath}");
+                double standFract = double.IsNaN(InitialStandingFraction) ? 0 : InitialStandingFraction;
 
                 for (int j = 0; j < maxFr; j++)
                 {

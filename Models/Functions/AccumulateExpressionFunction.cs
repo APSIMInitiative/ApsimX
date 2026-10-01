@@ -43,6 +43,8 @@ namespace Models.Functions
                 throw new Exception(errors);
 
             accumulatedValue = 0;
+
+            FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
         /// <summary>Called at the start of each day</summary>

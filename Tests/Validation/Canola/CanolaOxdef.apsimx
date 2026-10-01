@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 216,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -121,8 +121,6 @@
             "",
             "[paddock].Fertiliser.NitrogenApplied as Fert.applied",
             "",
-            "Divide (GrainN_kgha, Yield_kgha)*100 as GrainN_conc",
-            "Divide (StoverN_kgha, StoverDM_kgha)*100 as StoverN_conc",
             "[Canola].Population",
             "[Canola].Grain.Size * 1000 as GrainSize_mg",
             "[Canola].Grain.Number as GrainNumber_m2",
@@ -250,7 +248,7 @@
     },
     {
       "$type": "Models.Memo, Models",
-      "Text": "Ploschuk et al. 2021\n\nPloschuk, Rocio Antonella, et al. “Early‐ and Late‐waterlogging Differentially Affect the Yield of Wheat, Barley, Oilseed Rape and Field Pea Through Changes in Leaf Area Index, Radiation Interception and Radiation Use Efficiency.” Journal of Agronomy and Crop Science, vol. 207, no. 3, Mar. 2021, pp. 504–20. https://doi.org/10.1111/jac.12486.\n\n**Study years** -> 2 [2017 & 2018]\n\n**Sowing dates** -> July 26 (2017) & July 24 (2018)\n\n**Experimental setup** -> Outdoor in plastic containers with size of 1 m3 (1*1*1m, depth).\n\t              4 species (wheat, barley, oilseed rape, and field pea) * 3 treatments (Control; early wl; late wl) * 3 replicates\n\n**Planting density** -> Wheat & barley = 275 pl/m2\n\t         oilseed rape & field pea = 100 pl/m2\n\n**Row to row & plant to plant spacing** -> Wheat and barley have 10 rows with 4 cm distance b/w plants\n\t               oil seed rape and field pea have 9 rows with 10 cm distance b/w plants per container\n\n**Fertilizer application** -> 200 kg N/ha in three equal split doses at 15 days after sowing, with second and third dose at begining of recovery period  after early and late waterlogging treatments \n\n**Waterlogging treatments** -> \n\n\t\t\t1. Control (daily watered to ensure no water stress)\n\n\t\t\t2. Early waterlogging (vegetative stage) -> 43 & 56 DAS in 2017 and 2018, respectively\n\n\t\t\t3. Late waterlogging (reproductive stage) -> wheat and barley [72 and 78 DAS in 2017 and 2018 respectively]\n\t\t\t\t\t \t  oilseed rape and field pea [78 and 80 DAS in 2017 and 2018, respectively]\n\n**Duration of waterlogging** -> 14 days with water standing of 1-2 cm  ",
+      "Text": "Ploschuk et al. 2021\n\nPloschuk, Rocio Antonella, et al. “Early‐ and Late‐waterlogging Differentially Affect the Yield of Wheat, Barley, Oilseed Rape and Field Pea Through Changes in Leaf Area Index, Radiation Interception and Radiation Use Efficiency.” Journal of Agronomy and Crop Science, vol. 207, no. 3, Mar. 2021, pp. 504–20. https://doi.org/10.1111/jac.12486.\n\n**Study years** -> 2 [#2017 & 2018]\n\n**Sowing dates** -> July 26 (2017) & July 24 (2018)\n\n**Experimental setup** -> Outdoor in plastic containers with size of 1 m3 (1*1*1m, depth).\n\t              4 species (wheat, barley, oilseed rape, and field pea) * 3 treatments (Control; early wl; late wl) * 3 replicates\n\n**Planting density** -> Wheat & barley = 275 pl/m2\n\t         oilseed rape & field pea = 100 pl/m2\n\n**Row to row & plant to plant spacing** -> Wheat and barley have 10 rows with 4 cm distance b/w plants\n\t               oil seed rape and field pea have 9 rows with 10 cm distance b/w plants per container\n\n**Fertilizer application** -> 200 kg N/ha in three equal split doses at 15 days after sowing, with second and third dose at begining of recovery period  after early and late waterlogging treatments \n\n**Waterlogging treatments** -> \n\n\t\t\t1. Control (daily watered to ensure no water stress)\n\n\t\t\t2. Early waterlogging (vegetative stage) -> 43 & 56 DAS in 2017 and 2018, respectively\n\n\t\t\t3. Late waterlogging (reproductive stage) -> wheat and barley [#72 and 78 DAS in 2017 and 2018 respectively]\n\t\t\t\t\t \t  oilseed rape and field pea [#78 and 80 DAS in 2017 and 2018, respectively]\n\n**Duration of waterlogging** -> 14 days with water standing of 1-2 cm  ",
       "Name": "Memo",
       "ResourceName": null,
       "Children": [],
@@ -473,7 +471,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Base_Exp1",
               "ResourceName": null,
               "Children": [
@@ -1326,6 +1323,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],

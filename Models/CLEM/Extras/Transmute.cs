@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using Models.CLEM.Interfaces;
 using System.IO;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM
@@ -25,9 +24,10 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [Version(2, 0, 0, "Refactor from TransmutationCost with generic functionality and include TransmutationCostUsePrice")]
     [HelpUri(@"Content/Features/Transmutation/Transmute.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
-        [Link]
+        [Link(IsOptional = true)]
         private ResourcesHolder resources = null;
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;
@@ -67,27 +67,17 @@ namespace Models.CLEM
         [Description("Resource for price-based transactions")]
         [Category("By pricing style", "All")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
-        [System.ComponentModel.DefaultValueAttribute("No transactions")]
-        public string FinanceTypeForTransactionsName { get; set; }
+        public string FinanceTypeForTransactionsName { get; set; } = "No transactions";
 
         /// <summary>
         /// Method to determine if direct transmute style will enable the amount property
         /// </summary>
         public bool AmountPerPacketEnabled() { return TransmuteStyle == TransmuteStyle.Direct; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Transmute()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-            base.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // determine resource type from name
@@ -106,11 +96,17 @@ namespace Models.CLEM
                 {
                     // get pricing
                     if ((shortfallResourceType as CLEMResourceTypeBase).MarketStoreExists)
+                    {
                         if ((shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
+                        {
                             shortfallPricing = (shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+                        }
+                    }
 
-                    if(shortfallPricing is null)
+                    if (shortfallPricing is null)
+                    {
                         shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+                    }
 
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
@@ -124,7 +120,9 @@ namespace Models.CLEM
                             financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
                     else
+                    {
                         transmutePricing = shortfallPricing;
+                    }
                 }
 
                 shortfallPricePacketMultiplier = (Parent as Transmutation).TransmutationPacketSize / shortfallPacketSize;
@@ -141,7 +139,10 @@ namespace Models.CLEM
             {
                 case TransmuteStyle.Direct:
                     if ((Parent as Transmutation).UseWholePackets)
+                    {
                         shortfallPackets = Math.Ceiling(shortfallPackets);
+                    }
+
                     request.Required = shortfallPackets * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
@@ -153,14 +154,19 @@ namespace Models.CLEM
                         else
                         {
                             if (shortfallWholePackets)
+                            {
                                 shortfallPackets = Math.Ceiling(shortfallPackets);
+                            }
+
                             request.Required = shortfallPackets * shortfallPricing.CurrentPrice;
 
                             if(transmutePricing != shortfallPricing && transmutePricing.UseWholePackets)
                             {
                                 transPackets = shortfall / transmutePricing.PacketSize;
                                 if (transmutePricing.UseWholePackets)
+                                {
                                     transPackets = Math.Ceiling(transPackets);
+                                }
                             }
                         }
                     }
@@ -171,14 +177,14 @@ namespace Models.CLEM
 
             if (queryOnly)
             {
-                return request.Required + requiredByActivities <= TransmuteResourceType.Amount;
+                return request.Required + requiredByActivities <= TransmuteResourceType.AmountAvailable;
             }
             else
             {
                 if (TransmuteStyle == TransmuteStyle.UsePricing && !(TransmuteResourceType is FinanceType))
                 {
                     // add finance transaction to sell transmute
-                    financeType.Add(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
+                    financeType.AddToResource(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // add finance transaction to buy shortfall
                     ResourceRequest financeRequest = new ResourceRequest()
@@ -190,11 +196,11 @@ namespace Models.CLEM
                         ActivityModel = request.ActivityModel,
                         Category = request.Category,
                     };
-                    financeType.Remove(financeRequest);
+                    financeType.RemoveFromResource(financeRequest);
                 }
                 else
                 {
-                    TransmuteResourceType.Remove(request);
+                    TransmuteResourceType.RemoveFromResource(request);
                 }
             }
             return true;
@@ -208,27 +214,24 @@ namespace Models.CLEM
 
             double unitsNeeded = amount / (shortfallPacketSize==0?1: shortfallPacketSize);
             if (shortfallWholePackets)
+            {
                 unitsNeeded = Math.Ceiling(unitsNeeded);
+            }
 
             return unitsNeeded / shortfallPricePacketMultiplier;
         }
 
         #region validation
 
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
             {
                 if (!TransmuteResourceTypeName.Contains("."))
                 {
                     string[] memberNames = new string[] { "ResourceTypeName" };
-                    results.Add(new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames));
+                    yield return new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames);
                 }
                 else
                 {
@@ -243,7 +246,7 @@ namespace Models.CLEM
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };
-                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] for [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames));
+                            yield return new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] for [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames);
                         }
                     }
                 }
@@ -256,7 +259,7 @@ namespace Models.CLEM
                 if (shortfallPricing is null)
                 {
                     string[] memberNames = new string[] { "Shortfall resource pricing" };
-                    results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames));
+                    yield return new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames);
                 }
 
                 if (!(TransmuteResourceType is FinanceType))
@@ -264,73 +267,11 @@ namespace Models.CLEM
                     if (transmutePricing is null)
                     {
                         string[] memberNames = new string[] { "Transmute resource pricing" };
-                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
+                        yield return new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames);
                     }
                 }
             }
-
-            return results;
         }
-        #endregion
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override string ModelSummaryNameTypeHeaderText()
-        {
-            return Transmute.AddTransmuteStyleText(this);
-        }
-
-        /// <summary>
-        /// Create additional text for transmute headers
-        /// </summary>
-        /// <param name="transmute"></param>
-        /// <returns></returns>
-        public static string AddTransmuteStyleText(ITransmute transmute)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.WriteLine((transmute as IModel).Name);
-                if (transmute.TransmuteStyle == TransmuteStyle.Direct)
-                    htmlWriter.WriteLine(": B&#8594;A");
-                else
-                {
-                    if (transmute.FinanceTypeForTransactionsName != null && transmute.FinanceTypeForTransactionsName != "")
-                        htmlWriter.WriteLine(": B&#8594;$ $&#8594;A");
-                    else
-                        htmlWriter.WriteLine(": B&#8594;$&#8594;A");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"activityentry\">");
-                if (TransmuteStyle == TransmuteStyle.Direct && AmountPerPacket > 0)
-                {
-                    htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> x ");
-                }
-
-                if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
-                    htmlWriter.Write($"<span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                else
-                    htmlWriter.Write("<span class=\"errorlink\">No Transmute resource (B) set</span>");
-
-                if (TransmuteStyle == TransmuteStyle.UsePricing)
-                {
-                    htmlWriter.Write($" using the resource pricing details");
-                    if (FinanceTypeForTransactionsName != null && FinanceTypeForTransactionsName != "")
-                        htmlWriter.Write($" and all financial Transactions of sales and purchases using <span class=\"resourcelink\">{TransmuteResourceTypeName}</span>");
-                }
-                htmlWriter.WriteLine("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
         #endregion
     }
 

@@ -119,6 +119,17 @@ namespace UserInterface.Views
                 button.Clicked += OnButtonClick;
                 mainWidget = button;
             }
+            else if (gtkControl is Container container)
+            {
+                Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ButtonView.glade");
+
+                button = (Button)builder.GetObject("button");
+                button.Clicked += OnButtonClick;
+
+                Box box = (Box)builder.GetObject("vbox");
+                container.Add(box);
+                mainWidget = container;
+            }
             else
             {
                 toolButton = (ToolButton)gtkControl;

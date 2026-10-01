@@ -65,7 +65,7 @@ namespace UnitTests
             Utilities.InjectLink(tool, "dataStore", dataStore);
             tool.Run();
             dataStore.Writer.Stop();
-            dataStore.Reader.Refresh();
+            dataStore.Refresh();
             var data = dataStore.Reader.GetData("SimulationComparison");
 
             DataTable table = Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "Year", "Sim1.Col1", "Sim2.Col1", "Sim1.Col2", "Sim2.Col2" },

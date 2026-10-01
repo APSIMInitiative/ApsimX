@@ -4,17 +4,20 @@ using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
 using Models.Functions;
+using Models.Management;
+using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using Models.Soils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Models.PMF.SimplePlantModels
 {
     /// <summary>
-    /// Data structure that contains information for a specific crop type in Scrum
+    /// Data structure that contains information for a specific crop type in Strum
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
@@ -26,25 +29,30 @@ namespace Models.PMF.SimplePlantModels
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        /// <summary>Pruning Event.</summary>
+        public event EventHandler<EventArgs> Pruning;
 
-        private double _RowSpacing = 6;
+        private double _RowSpacing = 6.0;
         private double _InterRowSpacing = 1.0;
         private double _AlleyZoneWidthFrac = 0.5;
         private int _AgeAtSimulationStart = 1;
         private int _YearsToMaxDimension = 7;
-        private double _TrunkMassAtmaxDimension = 10;
-        private double _MaxRD = 3000;
-        private double _Proot = 0.2;
-        private double _Pleaf = 0.5;
-        private double _Ptrunk = 0.3;
-        private double _CanopyBaseHeight = 1000;
-        private double _MaxPrunedHeight = 3000;
-        private double _MaxHeight = 3500;
-        private double _MaxPrunedWidth = 2000;
-        private double _MaxWidth = 3000;
+        private double _WoodBulkDensity = 650;
+        private double _DBHatMaturity = 20;
+        private double _MaximumLeafBiomass = 500;
+        private double _MaximumRootBiomass = 300;
+        private double _WoodStorageFraction = 0;
+        private double _TypicalCanopyArea = 5.6;
+        private double _MaxRD = 3.0;
+        private double _CanopyBaseHeight = 1.0;
+        private double _PrunedCanopyBaseHeight = 1.0;
+        private double _MaxPrunedHeight = 3.0;
+        private double _MaxHeight = 3.5;
+        private double _MaxPrunedWidth = 2.0;
+        private double _MaxWidth = 3.0;
         private double _RootNConc = 0.01;
         private double _LeafNConc = 0.03;
-        private double _TrunkNConc = 0.005;
+        private double _WoodNConc = 0.005;
         private double _FruitNConc = 0.01;
         private double _ExtinctCoeff = 0.7;
         private double _MaxCover = 0.98;
@@ -65,36 +73,60 @@ namespace Models.PMF.SimplePlantModels
         private int _DAFEndLinearGrowth = 150;
         private int _DAFMaxSize = 180;
         private double _NFixationFrac = 0;
+        private double _FRemoveSummerPrune = 0;
+        private static string _WinterSolsticeDate = "21-Jun";
 
-        ///<summary>Is the tree decidious</summary>
-        [Separator("Tree Type")]
-        [Description("Is the tree decidious or ever green")]
-        [Display(Type = DisplayType.StrumTreeTypes)]
-        public string TreeType { get; set; }
+        private string _BudBreakDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(60).ToString("dd-MMM");
+        private string _StartFullCanopyDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(120).ToString("dd-MMM");
+        private string _StartLeafFallDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(230).ToString("dd-MMM");
+        private string _EndLeafFallDate = DateTime.Parse(_WinterSolsticeDate + "-2000").AddDays(300).ToString("dd-MMM");
 
         private string WinterSolsticeDate
         {
             get
             {
                 DateTime winterSolsticeDate = DateUtilities.GetDate(weather.WinterSolsticeDOY, clock.Today.Year);
-                return winterSolsticeDate.ToString("dd-MMM");
+                _WinterSolsticeDate = winterSolsticeDate.ToString("dd-MMM");
+                return _WinterSolsticeDate;
             }
         }
+
+        private double woodMassAtMaxDimension = 0;
+        private double pruningFractionWood = 0;
+        private double pruningFractionLeaf = 0;
+        
 
         /// <summary>Is the tree decidious</summary>
         public bool Decidious
         {
             get
             {
-                if (TreeType == "Ever green")
+                if (TreeType == "Evergreen")
                     return false;
                 if (TreeType == "Deciduous")
                     return true;
                 throw new Exception("Invalid tree type specified");
             }
         }
+
+        /// <summary>Canopy shape options</summary>
+        public enum TreeShape
+        {
+            /// <summary>Rounded column or sphere (if in row spacing > maximum width</summary>
+            Round,
+            /// <summary>Square column or cube (if in row spacing > maximum width</summary>
+            Square,
+            /// <summary>Triangular column or cone (if in row spacing > maximum width</summary>
+            Triangular
+        }
+
+        ///<summary>Are trees decidious</summary>
+        [Separator("Orchard Information")]
+        [Description("Are trees decidious or ever green")]
+        [Display(Type = DisplayType.StrumTreeTypes)]
+        public string TreeType { get; set; }
+
         /// <summary>Distance between tree rows (0.01 - 100 m)</summary>
-        [Separator("Orchid Information")]
         [Description("Distance between tree rows (0.01 - 100 m)")]
         [Units("m")]
         [Bounds(Lower = 0.01, Upper = 100)]
@@ -144,7 +176,7 @@ namespace Models.PMF.SimplePlantModels
             {
                 if (AlleyZoneWidth > RowSpacing)
                     throw new Exception("Alley Zone Width can not exceed Row spacing");
-                return RowSpacing * (1-AlleyZoneWidthFrac);
+                return RowSpacing * (1 - AlleyZoneWidthFrac);
             }
         }
 
@@ -166,11 +198,109 @@ namespace Models.PMF.SimplePlantModels
         {
             get
             {
-                return MaxWidth/1000 * InterRowSpacing;
+                return MatureWidth * InterRowSpacing;
             }
         }
 
+        /// <summary>Date for Bud Break</summary>
+        [Separator("Tree Phenology.  Specify when canopy stages occur ")]
+        [Description("Date for Bud Break")]
+        public string BudBreakDate 
+        {
+            get { return _BudBreakDate; }
+            set { _BudBreakDate = value; } 
+        }
+
+        /// <summary>Date for Start Full Canopy</summary>
+        [Description("Date for Start Full Canopy")]
+        public string StartFullCanopyDate
+        {
+            get { return _StartFullCanopyDate; }
+            set { _StartFullCanopyDate = value; }
+        }
+
+        /// <summary>Date for Start of leaf fall</summary>
+        [Description("Date for Start of leaf fall")]
+        public string StartLeafFallDate
+        {
+            get { return _StartLeafFallDate; }
+            set { _StartLeafFallDate = value; }
+        }
+
+        /// <summary>Date for End of Leaf fall</summary>
+        [Description("Date for End of Leaf fall")]
+        public string EndLeafFallDate
+        {
+            get { return _EndLeafFallDate; }
+            set { _EndLeafFallDate = value; }
+        }
+
+        /// <summary>Diameter at breast height for mature orchard tree (5-100 cm)</summary>
+        [Separator("Wood Growth.")]
+        [Separator("Diameter Above Brest height is for a mature orchard tree of the specified canopy area.")]
+        [Separator("The Model uses these parameters to calcualte DBH based on the canopy area modeled for this simulation")]
+        [Description("Diameter at breast height (5-100 cm) for tree of canopy area specified below")]
+        [Units("cm")]
+        [Bounds(Lower = 5, Upper = 100)]
+        public double DBHatMaturity
+        {
+            get { return _DBHatMaturity; }
+            set { _DBHatMaturity = constrain(value, 5, 100); }
+        }
+
+        /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
+        [Description("Area of canopy (0.1-1000 m^2) for tree with DBH specified above")]
+        [Bounds(Lower = .1, Upper = 1000)]
+        [Units("m^2")]
+        public double TypicalCanopyArea
+        {
+            get { return _TypicalCanopyArea; }
+            set { _TypicalCanopyArea = constrain(value, 0.1, 1000); }
+        }
+
+        /// <summary>Dry bulk density of wood wood (400-1600 kg/m^3)</summary>
+        [Description("Dry bulk density of wood wood (400-1600 kg/m^3)")]
+        [Units("kg/m^3")]
+        [Bounds(Lower = 400, Upper = 1600)]
+        public double WoodBulkDensity
+        {
+            get { return _WoodBulkDensity; }
+            set { _WoodBulkDensity = constrain(value, 400, 1600); }
+        }
+
+        /// <summary>Carbohydrate storage capacity of wood (0 - 0.5 g/g)</summary>
+        [Description("Carbohydrate storage capacity of wood (0 - 0.5 g/g)")]
+        [Units("g/g")]
+        [Bounds(Lower = 0, Upper = 0.5)]
+        public double WoodStorageFraction
+        {
+            get { return _WoodStorageFraction; }
+            set { _WoodStorageFraction = constrain(value, 0, 0.5); }
+        }
+
+        /// <summary>Leaf mass (g/m2 of canopy)</summary>
+        [Separator("Maximum Leaf and Root mass.  Specify mass (g/m2) for organs of mature tree during late summer")]
+        [Description("Leaf mass (g/m2 of canopy)")]
+        [Units("g/m2")]
+        [Bounds(Lower = 10, Upper = 1500)]
+        public double MaximumLeafBiomass
+        {
+            get { return _MaximumLeafBiomass; }
+            set { _MaximumLeafBiomass = (int)constrain((double)value, 10, 1500); }
+        }
+
+        /// <summary>Fine root mass (g/m2 of canopy)</summary>
+        [Description("Fine root mass (g/m2 of canopy)")]
+        [Units("g/m2")]
+        [Bounds(Lower = 10, Upper = 1000)]
+        public double MaximumRootBiomass
+        {
+            get { return _MaximumRootBiomass; }
+            set { _MaximumRootBiomass = (int)constrain((double)value, 10, 1000); }
+        }
+
         /// <summary>Tree Age At Start of Simulation (years)</summary>
+        [Separator("Tree Dimenesions.  Values for trees at orchard mature size")]
         [Description("Tree Age At Start of Simulation (years)")]
         [Units("years")]
         [Bounds(Lower = 0, Upper = 300)]
@@ -180,8 +310,8 @@ namespace Models.PMF.SimplePlantModels
             set { _AgeAtSimulationStart = (int)constrain((double)value, 0, 300); }
         }
 
-        /// <summary>Age of the tree when it reaches Maximum dimension (1-300 years)</summary>
-        [Description("Age of the tree when it reaches Maximum dimension (1-300 years)")]
+        /// <summary>Age of the tree when it reaches mature dimension (1-300 years)</summary>
+        [Description("Age of the tree when it reaches mature dimension (1-300 years)")]
         [Units("years")]
         [Bounds(Lower = 1, Upper = 300)]
         public int YearsToMaxDimension
@@ -190,127 +320,87 @@ namespace Models.PMF.SimplePlantModels
             set { _YearsToMaxDimension = (int)constrain((double)value, 1, 300); }
         }
 
-        /// <summary>Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)</summary>
-        [Description("Trunk dry mass when maximum dimension reached (0.1-10000 kgDM/tree)")]
-        [Units("kgDM/tree")]
-        [Bounds(Lower = 0.1, Upper = 10000)]
-        public double TrunkMassAtMaxDimension
-        {
-            get { return _TrunkMassAtmaxDimension; }
-            set { _TrunkMassAtmaxDimension = constrain(value, 0.1, 10000); }
-        }
+        /// <summary>Canopy shape.  If InterRowSpacing > MaxWidth assume separate sphere, cube or cone, else continuous row of shape</summary>
+        [Description("Canopy shape.  If InterRowSpacing > MaxWidth assume separate sphere, cube or cone, else continuous row of shape)")]
+        public TreeShape CrownShape { get; set; } = TreeShape.Round;
 
-        /// <summary>Date for Bud Break</summary>
-        [Separator("Tree Phenology.  Specify when canopy stages occur ")]
-        [Description("Date for Bud Break")]
-        public string BudBreakDate { get; set; }
-
-        /// <summary>Date for Start Full Canopy</summary>
-        [Description("Date for Start Full Canopy")]
-        public string StartFullCanopyDate { get; set; }
-
-        /// <summary>Date for Start of leaf fall</summary>
-        [Description("Date for Start of leaf fall")]
-        public string StartLeafFallDate { get; set; }
-
-        /// <summary>Date for End of Leaf fall</summary>
-        [Description("Date for End of Leaf fall")]
-        public string EndLeafFallDate { get; set; }
-
-        /// <summary>Grow roots into Alley zone (yes or no)</summary>
-        [Separator("Tree Dimnesions")]
-        [Description("Grow roots into Alley zone (yes or no)")]
-        public bool GRINZ { get; set; }
-
-        /// <summary>Root depth at harvest (300 - 20000 mm)</summary>
-        [Description("Root depth when mature (300 - 20000 mm)")]
-        [Bounds(Lower = 300, Upper = 20000)]
-        [Units("mm")]
-        public double MaxRD
-        {
-            get { return _MaxRD; }
-            set { _MaxRD = constrain(value, 300, 20000); }
-        }
-
-        /// <summary>Root Biomass proportion (0-1)</summary>
-        [Description("Root Biomass proportion (0-1)")]
-        [Bounds(Lower = 0, Upper = 0.99)]
-        [Units("0-1")]
-        public double Proot
-        {
-            get { return _Proot; }
-            set { _Proot = constrain(value, 0, 0.99); }
-        }
-
-        /// <summary>Leaf Biomass proportion (0-1)</summary>
-        [Description("Leaf Biomass proportion (0-1)")]
-        [Bounds(Lower = 0, Upper = 0.99)]
-        [Units("0-1")]
-        public double Pleaf
-        {
-            get { return _Pleaf; }
-            set { _Pleaf = constrain(value, 0, 0.99); }
-        }
-
-        /// <summary>Trunk Biomass proportion (0-1)</summary>
-        [Description("Trunk Biomass proportion (0-1)")]
-        [Bounds(Lower = 0, Upper = 1.0)]
-        [Units("0-1")]
-        public double Ptrunk
-        {
-            get { return _Ptrunk; }
-            set { _Ptrunk = constrain(value, 0, 0.99); }
-        }
-
-        /// <summary>Hight of the bottom of the canop (10-100000 mm)</summary>
-        [Description("Hight of the bottom of the canopy (10-100000 mm)")]
-        [Bounds(Lower = 10, Upper = 100000)]
-        [Units("mm")]
-        public double CanopyBaseHeight
+        
+        /// <summary>Height of the bottom of the canop (0.1-100 m)</summary>
+        [Description("Height of the mature canopy base before pruning (.1-10 m)")]
+        [Bounds(Lower = 0.1, Upper = 100000)]
+        [Units("m")]
+        public double MatureCanopyBaseHeight
         {
             get { return _CanopyBaseHeight; }
-            set { _CanopyBaseHeight = constrain(value, 10, 100000); }
+            set { _CanopyBaseHeight = constrain(value, .1, 100000); }
         }
 
-        /// <summary>Hight of mature tree after pruning (50 - 200000mm)</summary>
-        [Description("Hight of mature tree after pruning (50 - 200000mm)")]
-        [Bounds(Lower = 50, Upper = 200000)]
-        [Units("mm")]
-        public double MaxPrunedHeight
+        /// <summary>Height of the bottom of the canop (0.1-100 m)</summary>
+        [Description("Height of the mature canopy base after pruning (0.1-100 m)")]
+        [Bounds(Lower = 0.1, Upper = 100000)]
+        [Units("m")]
+        public double MaturePrunedCanopyBaseHeight
         {
-            get { return _MaxPrunedHeight; }
-            set { _MaxPrunedHeight = constrain(value, 50, 200000); }
+            get { return _PrunedCanopyBaseHeight; }
+            set { _PrunedCanopyBaseHeight = constrain(value, 0.1, 100000); }
         }
 
-        /// <summary>maximum hight of mature tree before pruning (10 - 200000mm)</summary>
-        [Description("maximum hight of mature tree before pruning (mm)")]
-        [Bounds(Lower = 10, Upper = 200000)]
-        [Units("mm")]
-        public double MaxHeight
+        /// <summary>Height of top of the canopy before pruning (0.1- 200 m)</summary>
+        [Description("Height of mature canopy before pruning (0.1-200 m)")]
+        [Bounds(Lower = 0.1, Upper = 200000)]
+        [Units("m")]
+        public double MatureHeight
         {
             get { return _MaxHeight; }
-            set { _MaxHeight = constrain(value, 10, 200000); }
+            set { _MaxHeight = constrain(value, 0.1, 200000); }
         }
 
-        /// <summary>Width of mature tree before pruning (10-100000 mm)</summary>
-        [Description("Width of mature tree before pruning (10-100000 mm)")]
-        [Bounds(Lower = 10, Upper = 100000)]
-        [Units("mm")]
-        public double MaxWidth
+        /// <summary>Height of top of the canopy after pruning (0.5 - 200 m)</summary>
+        [Description("Height of mature canopy after pruning (0.5 - 200 m)")]
+        [Bounds(Lower = 0.5, Upper = 200000)]
+        [Units("m")]
+        public double MaturePrunedHeight
+        {
+            get { return _MaxPrunedHeight; }
+            set { _MaxPrunedHeight = constrain(value, 0.5, 200000); }
+        }
+
+        /// <summary>Width of canopy before pruning (10-100000 mm)</summary>
+        [Description("Width of mature canopy before pruning (0.1-100 m)")]
+        [Bounds(Lower = 0.1, Upper = 100000)]
+        [Units("m")]
+        public double MatureWidth
         {
             get { return _MaxWidth; }
-            set { _MaxWidth = constrain(value, 10, 100000); }
+            set { _MaxWidth = constrain(value, 0.1, 100000); }
         }
 
-        /// <summary>Width of mature tree after pruning (10-100000mm)</summary>
-        [Description("Width of mature tree after pruning  (10-100000mm)")]
-        [Bounds(Lower = 10, Upper = 100000)]
-        [Units("mm")]
-        public double MaxPrunedWidth
+        /// <summary>Width of canopy after pruning (0.1-100 m)</summary>
+        [Description("Width of mature canopy after pruning  (0.1-100 m)")]
+        [Bounds(Lower = 0.1, Upper = 100000)]
+        [Units("m")]
+        public double MaturePrunedWidth
         {
             get { return _MaxPrunedWidth; }
-            set { _MaxPrunedWidth = constrain(value, 10, 100000); }
+            set { _MaxPrunedWidth = constrain(value, 0.1, 100000); }
         }
+
+        /// <summary>Dates for summer pruning</summary>
+        [Separator("Pruning.  Proportion of biomass removed from leaf and wood determined from dimensions above.")]
+        [Separator("Winter pruning occurs on EndLeafFallDate.  Picking occurs on the date maximum fruit size is reached")]
+        [Description("Dates for summer pruning (coma seperated, dd-mmm for annual events or dd-mmm-yyyy for specific dates)")]
+        public string[] SummerPruneDates { get; set; }
+
+        /// <summary>Fraction of leaf and wood removed with each summer prune</summary>
+        [Description("Fraction of leaf and wood removed with each summer prune (0-1)")]
+        [Bounds(Lower = 0, Upper = 1)]
+        [Units("0-1")]
+        public double FRemoveSummerPrune
+        {
+            get { return _FRemoveSummerPrune; }
+            set { _FRemoveSummerPrune = constrain(value, 0, 1); }
+        }
+
         /// <summary>Root Nitrogen Concentration (g/g)</summary>
         [Separator("Tree Nitrogen contents")]
         [Description("Root Nitrogen concentration (g/g)")]
@@ -332,14 +422,14 @@ namespace Models.PMF.SimplePlantModels
             set { _LeafNConc = constrain(value, 0.001, 0.1); }
         }
 
-        /// <summary>Trunk and branch Nitrogen concentration (g/g)</summary>
-        [Description("Trunk and branch Nitrogen concentration (g/g)")]
+        /// <summary>Wood and branch Nitrogen concentration (g/g)</summary>
+        [Description("Wood and branch Nitrogen concentration (g/g)")]
         [Bounds(Lower = 0.001, Upper = 0.1)]
         [Units("g/g")]
-        public double TrunkNConc
+        public double WoodNConc
         {
-            get { return _TrunkNConc; }
-            set { _TrunkNConc = constrain(value, 0.001, 0.1); }
+            get { return _WoodNConc; }
+            set { _WoodNConc = constrain(value, 0.001, 0.1); }
         }
 
         /// <summary>Fruit Nitrogen concentration at maturity (g/g)</summary>
@@ -359,11 +449,27 @@ namespace Models.PMF.SimplePlantModels
         public double NFixationFrac
         {
             get { return _NFixationFrac; }
-            set { _NFixationFrac = constrain(value, 0, 1); }
+            set { _NFixationFrac = constrain(value, 0, .05); }
+        }
+
+        
+
+        /// <summary>Grow roots into Alley zone (yes or no)</summary>
+        [Separator("Root and Canopy parameters")]
+        [Description("Grow roots into Alley zone (yes or no)")]
+        public bool GRINZ { get; set; }
+
+        /// <summary>Root depth at harvest (0.3 - 20 m)</summary>
+        [Description("Root depth when mature (0.3 - 20 m)")]
+        [Bounds(Lower = 0.3, Upper = 20000)]
+        [Units("m")]
+        public double MaxRD
+        {
+            get { return _MaxRD; }
+            set { _MaxRD = constrain(value, 0.3, 20000); }
         }
 
         /// <summary>Extinction coefficient (0.1-1)</summary>
-        [Separator("Canopy parameters")]
         [Description("Extinction coefficient (0.1-1)")]
         [Bounds(Lower = 0.1, Upper = 1.0)]
         [Units("0-1")]
@@ -384,7 +490,7 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>Maximum cover of tree canopy (0.01-0.98).  This is the fraction of radiation that the tree canopy intercepts within its canopy area, not for the entire zone.</summary>
-        [Description("Maximum cover of tree canopy (0.01-0.98).  This is the fraction of radiation that the tree canopy intercepts within its canopy area, not for the entire zone.")]
+        [Description("Maximum fractional radiation interception of tree canopy (0.01-0.98).  For the canopy area, not the entire zone.")]
         [Bounds(Lower = 0.01, Upper = 0.98)]
         [Units("0-1")]
         public double MaxCover
@@ -513,7 +619,7 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Fruit Fresh Density (g/cm3) </summary>
         [Description("Fruit Fresh Density (g/cm3)")]
         [Bounds(Lower = 0.1, Upper = 1.5)]
-        [Units("g/m^3")]
+        [Units("g/cm^3")]
         public double FruitDensity
         {
             get { return _FruitDensity; }
@@ -534,9 +640,9 @@ namespace Models.PMF.SimplePlantModels
             set { _DAFStartLinearGrowth = (int)constrain((double)value, 0, 200); }
         }
 
-        /// <summary>End Linear Growth (Days After maximum bloom) </summary>
+        /// <summary>End Linear Growth (10-330 Days After maximum bloom) </summary>
         [Description("End Linear Growth (Days After maximum bloom)")]
-        [Bounds(Lower = 10, Upper = 350)]
+        [Bounds(Lower = 10, Upper = 330)]
         [Units("days")]
         public int DAFEndLinearGrowth
         {
@@ -545,13 +651,13 @@ namespace Models.PMF.SimplePlantModels
         }
 
         /// <summary>Max size (Days After maximum bloom) </summary>
-        [Description("Max size (Days After maximum bloom)")]
-        [Bounds(Lower = 10, Upper = 350)]
+        [Description("Max size (15 - 360 Days After maximum bloom)")]
+        [Bounds(Lower = 15, Upper = 360)]
         [Units("days")]
         public int DAFMaxSize
         {
             get { return _DAFMaxSize; }
-            set { _DAFMaxSize = (int)constrain((double)value, 10, 350); }
+            set { _DAFMaxSize = (int)constrain((double)value, 10, 360); }
         }
 
         /// <summary>The plant</summary>
@@ -602,23 +708,22 @@ namespace Models.PMF.SimplePlantModels
             {"LeafFall", "[STRUM].Phenology.LeafFall.DateToProgress = " },
             {"WinterDormant", "[STRUM].Phenology.WinterDormancy.DateToProgress = " },
             {"MaxRootDepth","[STRUM].Root.Network.MaximumRootDepth.FixedValue = "},
-            {"Proot","[STRUM].Root.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"Pleaf","[STRUM].Leaf.TotalCarbonDemand.TotalDMDemand.PartitionFraction.FixedValue = " },
-            {"Ptrunk","[STRUM].Trunk.TotalCarbonDemand.TotalDMDemand.Available.PartitionFraction.FixedValue = " },
-            {"MaxPrunedHeight","[STRUM].MaxPrunedHeight.FixedValue = " },
-            {"CanopyBaseHeight","[STRUM].Height.CanopyBaseHeight.Maximum.FixedValue = " },
-            {"MaxSeasonalHeight","[STRUM].Height.SeasonalGrowth.Maximum.FixedValue = " },
-            {"MaxPrunedWidth","[STRUM].Width.PrunedWidth.Maximum.FixedValue = "},
-            {"MaxSeasonalWidth","[STRUM].Width.SeasonalGrowth.Maximum.FixedValue = " },
+            {"MaturePrunedCanopyBaseHeight","[STRUM].BaseHeight.PrunedCanopyBaseHeight.PrunedMatureCanopyBaseHeight.FixedValue = " },
+            {"BaseHeightSeasonalIncrement","[STRUM].BaseHeight.SeasonalGrowth.BaseHeightSeasonalIncrement.FixedValue = " },
+            {"MaturePrunedHeight","[STRUM].Height.PrunedCanopyDepth.MatureDepth.MaturePrunedHeight.FixedValue = " },
+            {"SeasonalHeightIncrement","[STRUM].Height.SeasonalDepthGrowth.Increment.SeasonalHeightIncrement.FixedValue = " },
+            {"MaturePrunedWidth","[STRUM].Width.PrunedWidth.MaturePrunedWidth.FixedValue = "},
+            {"SeasonalWidthIncrement","[STRUM].Width.SeasonalGrowth.SeasonalWidthIncrement.FixedValue = " },
             {"ProductNConc","[STRUM].Fruit.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ResidueNConc","[STRUM].Leaf.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"RootNConc","[STRUM].Root.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
-            {"WoodNConc","[STRUM].Trunk.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
+            {"WoodNConc","[STRUM].Wood.Nitrogen.ConcFunctions.Maximum.FixedValue = "},
             {"ExtinctCoeff","[STRUM].Leaf.Canopy.GreenExtinctionCoefficient.UnstressedCoeff.FixedValue = "},
             {"BaseLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.Winter.BaseArea.FixedValue = " },
-            {"AnnualDeltaLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.AnnualDelta.FixedValue = " },
-            {"DecidiousSenescence","[STRUM].Leaf.SenescenceRate.DecidiousSensecence.LeafFall.MultiplyFunction.Switch.FixedValue = " },
+            {"AnnualDeltaLAI","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.Accumulated.DailyGrowth.Integral.AnnualDelta.FixedValue = " },
+            {"DecidiousSenescence","[STRUM].Leaf.SenescenceRate.DecidiousSensecence.Switch.FixedValue = " },
             {"EverGreenSenescence", "[STRUM].Leaf.SenescenceRate.EvergreenSenescence.Coefficient.FixedValue = "},
+            {"SummerPruneRemoval","[STRUM].Leaf.Canopy.GreenAreaIndex.SeasonalGrowth.Accumulated.FractionRemovedOnEvent = " },
             {"GSMax","[STRUM].Leaf.Canopy.Gsmax350 = " },
             {"R50","[STRUM].Leaf.Canopy.R50 = " },
             {"SurfaceKL","[STRUM].Root.Network.KLModifier.SurfaceKL.FixedValue = " },
@@ -630,12 +735,16 @@ namespace Models.PMF.SimplePlantModels
             {"FRGRUOptT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[3] = " },
             {"FRGRMaxT", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.X[4] = " },
             {"FRGRMaxTY", "[STRUM].Leaf.Canopy.FRGRer.FT.XYPairs.Y[4] = " },
-            {"InitialTrunkWt","[STRUM].Trunk.InitialWt.FixedValue = "},
+            {"InitialWoodWt","[STRUM].Wood.InitialWt.FixedValue = "},
             {"InitialRootWt", "[STRUM].Root.InitialWt.FixedValue = " },
             {"InitialFruitWt","[STRUM].Fruit.InitialWt.FixedValue = "},
             {"InitialLeafWt", "[STRUM].Leaf.InitialWt.FixedValue = " },
             {"YearsToMaturity","[STRUM].RelativeAnnualDimension.XYPairs.X[2] = " },
-            {"TrunkWtAtMaturity","[STRUM].Trunk.MatureWt.FixedValue = " },
+            {"WoodWtAtMaturity","[STRUM].Wood.MatureWt.FixedValue = " },
+            {"LeafWtAtMaturity","[STRUM].Leaf.TotalCarbonDemand.TotalDMDemand.SizeDemand.SizeDemand.SizeDemand.TargetSize.gPerM2.FixedValue = " },
+            {"RootWtAtMaturity","[STRUM].Root.TotalCarbonDemand.TotalDMDemand.SizeDemand.SizeDemand.SizeDemand.TargetSize.gPerM2.FixedValue = " },
+            {"WoodStorageFraction", "[STRUM].Wood.Carbon.PoolFractions.Storage.FixedValue = " },
+            {"WoodStructuralFraction", "[STRUM].Wood.Carbon.PoolFractions.Structural.FixedValue = " },
             {"YearsToMaxRD","[STRUM].Root.Network.RootFrontVelocity.RootGrowthDuration.YearsToMaxDepth.FixedValue = " },
             {"Number","[STRUM].Fruit.Number.RetainedPostThinning.FixedValue = " },
             {"FruitDensity","[STRUM].Fruit.Density.FixedValue = " },
@@ -683,8 +792,7 @@ namespace Models.PMF.SimplePlantModels
             for (int d = 0; d < soilCrop.KL.Length; d++)
                 soilCrop.KL[d] = 1.0;
 
-
-            double rootDepth = Math.Min(MaxRD, soilDepthMax);
+            double rootDepth = Math.Min(MaxRD*1000, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
                 List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
@@ -718,14 +826,14 @@ namespace Models.PMF.SimplePlantModels
             }
 
             string cropName = this.Name;
-            double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
+            double depth = Math.Min(this.MaxRD*1000 * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
             double population = TreePopulation;
             double rowWidth = RowSpacing;
 
             tree = CoeffCalc();
             strum.AddCultivar(tree);
             strum.Sow(cropName, population, depth, rowWidth);
-            phenology.SetAge(AgeAtSimulationStart);
+            phenology.SetAge(AgeAtSimulationStart-1);
             summary.WriteMessage(this,"Some of the message above is not relevent as STRUM has no notion of population, bud number or row spacing." +
                 " Additional info that may be useful.  " + this.Name + " is established as " + this.AgeAtSimulationStart.ToString() + " Year old plant "
                 ,MessageType.Information);
@@ -736,7 +844,23 @@ namespace Models.PMF.SimplePlantModels
         /// </summary>
         public Cultivar CoeffCalc()
         {
-            Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
+
+        Dictionary<string, string> treeParams = new Dictionary<string, string>(blankParams);
+
+            double areaWidth = 0;
+            woodMassAtMaxDimension = StrumBiomass.EstimateMatureWoodMassKg(
+                                                                                    crownShape: CrownShape,
+                                                                                    heightBottomPrePrune_m: MatureCanopyBaseHeight,  // ground → crown bottom, before prune
+                                                                                    heightTopPrePrune_m: MatureHeight,     // crown top (mature height) before prune
+                                                                                    heightTopPostPrune_m: MaturePrunedHeight,    // crown top after prune (topping allowed)
+                                                                                    widthPrePrune_m: MatureWidth,         // canopy width before prune
+                                                                                    widthPostPrune_m: MaturePrunedWidth,        // canopy width after prune
+                                                                                    inRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                                    rowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                                    woodDensity_kg_m3: WoodBulkDensity,       // oven-dry density [kg m^-3]
+                                                                                    reffDBHatMaturity_cm: DBHatMaturity,            // diameter of stem at brest height when orchard tree is mature (cm)
+                                                                                    reffArea_m2: TypicalCanopyArea
+                                                                                   );
 
             if (this.WaterStress)
             {
@@ -760,24 +884,23 @@ namespace Models.PMF.SimplePlantModels
             treeParams["FullCanopy"] += StartLeafFallDate;
             treeParams["LeafFall"] += EndLeafFallDate;
             treeParams["WinterDormant"] += WinterSolsticeDate;
-            treeParams["MaxRootDepth"] += MaxRD.ToString();
-            treeParams["Proot"] += Proot.ToString();
-            treeParams["Pleaf"] += Pleaf.ToString();
-            treeParams["Ptrunk"] += Ptrunk.ToString();
-            treeParams["MaxPrunedHeight"] += MaxPrunedHeight.ToString();
-            treeParams["CanopyBaseHeight"] += CanopyBaseHeight.ToString();
-            treeParams["MaxSeasonalHeight"] += (MaxHeight - MaxPrunedHeight).ToString();
-            treeParams["MaxPrunedWidth"] += MaxPrunedWidth.ToString();
-            treeParams["MaxSeasonalWidth"] += (MaxWidth - MaxPrunedWidth).ToString();
+            treeParams["MaxRootDepth"] += (1000 * MaxRD).ToString();
+            treeParams["MaturePrunedCanopyBaseHeight"] += (1000 * MaturePrunedCanopyBaseHeight).ToString();
+            treeParams["BaseHeightSeasonalIncrement"] += (1000 * (MaturePrunedCanopyBaseHeight - MatureCanopyBaseHeight)).ToString();
+            treeParams["MaturePrunedHeight"] += (1000 * MaturePrunedHeight).ToString();
+            treeParams["SeasonalHeightIncrement"] += (1000 * (MatureHeight - MaturePrunedHeight)).ToString();
+            treeParams["MaturePrunedWidth"] += (1000 * MaturePrunedWidth).ToString();
+            treeParams["SeasonalWidthIncrement"] += (1000 * (MatureWidth - MaturePrunedWidth)).ToString();
             treeParams["ProductNConc"] += FruitNConc.ToString();
             treeParams["ResidueNConc"] += LeafNConc.ToString();
             treeParams["RootNConc"] += RootNConc.ToString();
-            treeParams["WoodNConc"] += TrunkNConc.ToString();
+            treeParams["WoodNConc"] += WoodNConc.ToString();
             treeParams["ExtinctCoeff"] += ExtinctCoeff.ToString();
             treeParams["BaseLAI"] += ((Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["AnnualDeltaLAI"] += ((Math.Log(1 - (MaxCover)) / (ExtinctCoeff * -1)) - (Math.Log(1 - BaseCover) / (ExtinctCoeff * -1))).ToString();
             treeParams["DecidiousSenescence"] += (Decidious ? "1" : "0");
             treeParams["EverGreenSenescence"] += ((Decidious ? 0 : 1)*0.0015).ToString();
+            treeParams["SummerPruneRemoval"] += FRemoveSummerPrune.ToString();
             treeParams["GSMax"] += GSMax.ToString();
             treeParams["R50"] += R50.ToString();
             treeParams["RUE"] += RUE.ToString();
@@ -789,7 +912,11 @@ namespace Models.PMF.SimplePlantModels
             treeParams["FRGRMaxT"] += PSMaxT.ToString();
             treeParams["SurfaceKL"] += SurfaceKL.ToString();
             treeParams["YearsToMaturity"] += YearsToMaxDimension.ToString();
-            treeParams["TrunkWtAtMaturity"] += (TrunkMassAtMaxDimension * 1000).ToString();
+            treeParams["WoodWtAtMaturity"] += (woodMassAtMaxDimension * 1000).ToString();
+            treeParams["LeafWtAtMaturity"] += MaximumLeafBiomass.ToString();
+            treeParams["RootWtAtMaturity"] += MaximumRootBiomass.ToString();
+            treeParams["WoodStorageFraction"] += WoodStorageFraction.ToString();
+            treeParams["WoodStructuralFraction"] += (1-WoodStorageFraction).ToString();
             treeParams["YearsToMaxRD"] += YearsToMaxDimension.ToString();
             treeParams["Number"] += (Number*TreeCanopyArea).ToString();
             treeParams["FruitDensity"] += FruitDensity.ToString();
@@ -802,30 +929,48 @@ namespace Models.PMF.SimplePlantModels
             treeParams["PotentialFWPerFruit"] += PotentialFWPerFruit.ToString();
             treeParams["NFixationFrac"] += NFixationFrac.ToString();
 
-
             if (hasAlleyZone)
             {
-                treeParams["RowWidth"] += (RowZoneWidth + AlleyZoneWidth).ToString();
+                areaWidth = RowZoneWidth + AlleyZoneWidth;
+                treeParams["RowWidth"] += (areaWidth).ToString();
                 treeParams["InterRowSpacing"] += InterRowSpacing.ToString();
             }
             else
             {
-                treeParams["RowWidth"] += RowZoneWidth.ToString();
+                areaWidth = RowZoneWidth;
+                treeParams["RowWidth"] += areaWidth.ToString();
                 treeParams["InterRowSpacing"] += InterRowSpacing.ToString();
             }
 
 
 
             if (AgeAtSimulationStart <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Tree Age at start of Simulation' > 1 years");
-            if (TrunkMassAtMaxDimension <= 0)
-                throw new Exception("SPRUMtree needs to have a 'Trunk Mass at maximum dimension > 0");
-            double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
-            double initialTrunkWt = relativeInitialSize* TrunkMassAtMaxDimension *1000;
-            treeParams["InitialTrunkWt"] += initialTrunkWt.ToString();
-            treeParams["InitialRootWt"] += (initialTrunkWt * Proot * 0.5).ToString();
+                throw new Exception("STRUM needs to have a 'Tree Age at start of Simulation' > 1 years");
+            if (woodMassAtMaxDimension <= 0)
+                throw new Exception("STRUM needs to have a 'Wood Mass at maximum dimension > 0");
+            
+            
+            pruningFractionWood = StrumBiomass.StrumPruningFraction(crownShape: CrownShape,
+                                                                heightBottomPrePrune_m: MatureCanopyBaseHeight,  // ground → crown bottom, before prune
+                                                                heightBottomPostPrune_m: MaturePrunedCanopyBaseHeight,
+                                                                heightTopPrePrune_m: MatureHeight,     // crown top (mature height) before prune
+                                                                heightTopPostPrune_m: MaturePrunedHeight,    // crown top after prune (topping allowed)
+                                                                widthPrePrune_m: MatureWidth,         // canopy width before prune
+                                                                widthPostPrune_m: MaturePrunedWidth,        // canopy width after prune
+                                                                interRowSpacing_m: InterRowSpacing,          // per-tree length along row (spacing within row)
+                                                                rowSpacing_m: RowSpacing,               // optional: distance between rows
+                                                                matureDbh_cm: DBHatMaturity,
+                                                                matureWoodMass: woodMassAtMaxDimension
+                                                                );
+            pruningFractionLeaf = (MatureWidth - MaturePrunedWidth) / MaturePrunedWidth;
+
             treeParams["InitialFruitWt"] += (0).ToString();
-            treeParams["InitialLeafWt"] += ((initialTrunkWt * Pleaf) * (Decidious ? 0 : 1 )).ToString();
+            double relativeInitialSize = Math.Min(1,(double)AgeAtSimulationStart / (double)YearsToMaxDimension);
+            treeParams["InitialWoodWt"] += relativeInitialSize * woodMassAtMaxDimension * 1000 * (1 - pruningFractionWood);
+            double PurnedCanopyArea = Math.Min(MaturePrunedWidth, areaWidth) * Math.Min(MaturePrunedWidth, InterRowSpacing);
+            double InitialCanopyArea = PurnedCanopyArea * relativeInitialSize;
+            treeParams["InitialLeafWt"] += (InitialCanopyArea * MaximumLeafBiomass * (Decidious ? 0 : 1)).ToString();
+            treeParams["InitialRootWt"] += (InitialCanopyArea * MaximumRootBiomass * (Decidious ? 0.5 : 1)).ToString();
 
             string[] commands = new string[treeParams.Count];
             treeParams.Values.CopyTo(commands, 0);
@@ -871,11 +1016,44 @@ namespace Models.PMF.SimplePlantModels
         [EventSubscribe("StartOfSimulation")]
         private void OnStartSimulation(object sender, EventArgs e)
         {
+            if (DateUtilities.CompareDates(WinterSolsticeDate, clock.Today) < 0)
+            {
+                throw new Exception("STRUM simulations need to start on the winter solstice (" + WinterSolsticeDate + ") to ensure things initialise sensibly");
+            }
+
             SetUpZones();
             Establish();
         }
 
+        [EventSubscribe("DoManagement")]
+        private void OnDoManagement(object sender, EventArgs e)
+        {
+            //Winter pruning
+            if (DateUtilities.DatesAreEqual(EndLeafFallDate, clock.Today))
+            {
+                Prune(pruningFractionWood, pruningFractionLeaf);
+            }
 
+            //Fruit Picking
+            string pickingDate = DateTime.Parse(DateMaxBloom + "-" + clock.Today.Year.ToString()).AddDays(DAFMaxSize).ToString("dd-MMM");
+            if (DateUtilities.DatesAreEqual(pickingDate, clock.Today))
+            {
+                Pick();
+            }
+
+            //Summer pruning
+            if ((SummerPruneDates != null) && (!String.IsNullOrEmpty(SummerPruneDates[0])))
+            {
+                foreach (string date in SummerPruneDates)
+                {
+                    DateTime pruneDate = DateUtilities.GetDate(date, clock.Today.Year);
+                    if (clock.Today == pruneDate)
+                    {
+                        Prune(FRemoveSummerPrune, FRemoveSummerPrune);
+                    }
+                }
+            }
+        }
 
         private double constrain(double value, double min, double max)
         {
@@ -889,10 +1067,36 @@ namespace Models.PMF.SimplePlantModels
             return MathUtilities.Bound(value, min, max);
         }
 
+        /// <summary>
+        /// Method called to invoke pruning.
+        /// </summary>
+        public void Prune(double fracWoodToResidue,double fracLeafToResidue)
+        {
+            Pruning?.Invoke(this, new EventArgs());
 
+            IOrgan organ = Structure.FindChild<IOrgan>("Wood", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: fracWoodToResidue,
+                                                        deadToResidue: 1.0);
 
+            organ = Structure.FindChild<IOrgan>("Leaf", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: fracLeafToResidue,
+                                                        deadToResidue: 1.0);
+        }
 
-
-
+        /// <summary>
+        /// Method called to invoke pruning.
+        /// </summary>
+        public void Pick()
+        {
+            IOrgan organ = Structure.FindChild<IOrgan>("Fruit", relativeTo: (INodeModel)strum, recurse: true);
+            (organ as IHasDamageableBiomass).RemoveBiomass(liveToRemove: 1.0,
+                                                        deadToRemove: 0,
+                                                        liveToResidue: 0,
+                                                        deadToResidue: 1);
+        }
     }
 }

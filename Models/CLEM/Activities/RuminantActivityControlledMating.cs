@@ -1,11 +1,11 @@
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.CLEM.Timers;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,41 +23,40 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityBreed))]
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
-    [Version(1, 0, 1, "")]
-    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
+    [Version(1, 0, 1, "Includes oestrus cycling to determine conception")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
+    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private List<ISetAttribute> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
-        private RuminantActivityBreed breedingParent;
+        private IEnumerable<RuminantFemale> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         private int numberToDo;
         private int numberToSkip;
         private int amountToSkip;
         private int amountToDo;
-        private IEnumerable<RuminantFemale> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Maximum age for mating (months)
+        /// Maximum age for mating
         /// </summary>
         [Description("Maximum female age for mating")]
-        [Category("General", "All")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(120)]
-        public double MaximumAgeMating { get; set; }
+        [Category("Farm", "Breeding")]
+        [Units("years, months, days")]
+        public AgeSpecifier MaximumAgeMating { get; set; } = new int[] { 20, 0, 0 };
 
         /// <summary>
         /// Number joinings per male before male genetics replaced
         /// </summary>
         [Description("Joinings per individual male (genetics)")]
-        [Category("Genetics", "All")]
+        [Category("Farm", "Genetics")]
         [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(1)]
-        public int JoiningsPerMale { get; set; }
+        public int JoiningsPerMale { get; set; } = 1;
 
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
+        [JsonIgnore]
         public List<ISetAttribute> SireAttributes => attributeList;
 
         /// <summary>
@@ -65,8 +64,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
-            SetDefaults();
-            this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -100,8 +97,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private new void OnStartOfSimulation(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialise")]
+        private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
             attributeList = Structure.FindChildren<ISetAttribute>(recurse: true).ToList();
         }
@@ -112,18 +109,16 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
-            this.InitialiseHerd(false, true);
+            AllocationStyle = ResourceAllocationStyle.Manual;
+            InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
             milkingTimer = Structure.FindChild<ActivityTimerBreedForMilking>();
 
-            // check that timer exists for controlled mating
-            if (!this.TimingExists)
-                Summary.WriteMessage(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
-
-            // get details from parent breeding activity
-            breedingParent = this.Parent as RuminantActivityBreed;
+            if (!TimingExists)
+            {
+                Summary.WriteMessage(this, $"Breeding with controlled mating [a={Parent.Name}].[a={Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -137,7 +132,7 @@ namespace Models.CLEM.Activities
             var fullSetBreeders = milkingTimer != null
                 ? milkingTimer.IndividualsToBreed
                 : CurrentHerd(true).OfType<RuminantFemale>()
-                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
+                    .Where(a => a.IsAbleToBreed & a.AgeInDays <= MaximumAgeMating.InDays);
 
             return fullSetBreeders;
         }
@@ -155,14 +150,22 @@ namespace Models.CLEM.Activities
             amountToDo = numberToDo;
 
             // ensure a conception rate is provided for all females
-            // calculate conception rate for all individuals
             foreach (RuminantFemale female in uniqueIndividuals)
             {
-                if (female.BreedParams.ConceptionModel is null)
-                    throw new ApsimXException(this, $"No conception details were found for [r={female.BreedParams.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
-                female.ActivityDeterminedConceptionRate = female.BreedParams.ConceptionModel.ConceptionRate(female);
+                if (female.Parameters.Details.ConceptionModel is null)
+                {
+                    throw new ApsimXException(this, $"No conception details were found for [r={female.Parameters.Details.Name}]\r\nPlease add a conception component below the [r=RuminantType]");
+                }
+
+                female.ActivityDeterminedConceptionRate = female.Parameters.Details.ConceptionModel.ConceptionRate(female);
                 // identify successful matings by a positive value of rate
                 female.ActivityDeterminedConceptionRate *= (RandomNumberGenerator.Generator.NextDouble() <= female.ActivityDeterminedConceptionRate) ? 1 : -1;
+
+                // if failed mating as opposed to missed mating do not allow another mating for this "in heat" period
+                if (female.ActivityDeterminedConceptionRate < 0)
+                {
+                    female.CancelOestrusCycle();
+                }
             }
 
             // provide updated measure for companion models
@@ -222,9 +225,11 @@ namespace Models.CLEM.Activities
                         AddStatusMessage("Resource shortfall prevented any mating");
                     }
 
-                    // set skipped individual activitymanagedconception to 0 // unmated
+                    // set skipped individual activity managed conception to 0 // unmated
                     foreach (RuminantFemale female in uniqueIndividuals.Skip(numberToDo - numberToSkip))
+                    {
                         female.ActivityDeterminedConceptionRate = 0;
+                    }
                 }
 
                 var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number conceived").FirstOrDefault();
@@ -253,7 +258,9 @@ namespace Models.CLEM.Activities
                 if (conceived > 0)
                 {
                     if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
+                    {
                         conceived--;
+                    }
                 }
                 else
                     ruminant.ActivityDeterminedConceptionRate = 0;
@@ -264,6 +271,15 @@ namespace Models.CLEM.Activities
                 if (mated > 0)
                 {
                     AddStatusMessage($"{mated} mated where {amountToDo - amountToSkip - conceived} conceived");
+                    if (amountToDo - amountToSkip - conceived == 0)
+                    {
+                        Status = ActivityStatus.Warning;
+                    }
+                    else
+                    {
+                        Status = ActivityStatus.Partial;
+                    }
+                    
                 }
                 SetStatusSuccessOrPartial(numberToSkip + amountToSkip > 0);
             }
@@ -280,58 +296,5 @@ namespace Models.CLEM.Activities
             // return resulting list with conception precalculated back to the breeding activity.
             return uniqueIndividuals;
         }
-
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            if (breedingParent is null)
-            {
-                string[] memberNames = new string[] { "Controlled mating parent" };
-                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                // set attribute with value
-                IEnumerable<SetAttributeWithValue> attributeSetters = Structure.FindChildren<SetAttributeWithValue>();
-                if (attributeSetters.Any())
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    // need to check for mandatory attributes
-                    var zone = Structure.FindParent<Zone>(recurse: true);
-                    var mandatoryAttributes = Structure.FindChildren<SetAttributeWithValue>(relativeTo: zone, recurse: true).Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
-                    if (mandatoryAttributes.Any())
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
-                        htmlWriter.Write("</div>");
-                    }
-                }
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
-
     }
 }
