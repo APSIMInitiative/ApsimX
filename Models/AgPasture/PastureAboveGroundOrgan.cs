@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using Models.Core;
 using Models.PMF;
@@ -12,6 +11,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
         /// <summary>Plant model.</summary>
@@ -43,14 +44,17 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/kg")]
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        [Description("NConcMinimum")]
         [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [Description("NConcMaximum")]
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
@@ -59,10 +63,12 @@ namespace Models.AgPasture
         public double MaxCO2EffectOnNRequirement { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
+        [Description("FractionStanding")]
         [Units("kg/kg")]
         public double FractionStanding { get; set; } = 1.0;
 
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>'
+        [Description("MinimumLiveDM")]
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 
