@@ -93,7 +93,8 @@ namespace Models.AgPasture
         public double Area { get; set; } = 1.0;
 
         /// <summary>Canopy type identifier.</summary>
-        public string CanopyType { get; set; } = "PastureSpecies";
+        [JsonIgnore]
+        public string CanopyType { get; private set; } = "PastureSpecies";
 
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
@@ -180,6 +181,7 @@ namespace Models.AgPasture
 
         /// <summary>Light profile for this plant, interception calculated by MicroClimate (W/m^2).</summary>
         /// <remarks>This contains the intercepted radiation for each layer of the canopy.</remarks>
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
         {
             get { return myLightProfile; }
@@ -576,7 +578,7 @@ namespace Models.AgPasture
         ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
         ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature (all zeroes);
         /// </remarks>
-        public double[] initialDMFractionsGrasses { get; set; } = { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
+        private double[] initialDMFractionsGrasses { get; set; } = { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         /// <summary>Initial fractions of DM for each plant part in legumes (0-1).</summary>
         /// <remarks>
@@ -585,7 +587,7 @@ namespace Models.AgPasture
         ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
         ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature;
         /// </remarks>
-        public double[] initialDMFractionsLegumes { get; set; } = { 0.16, 0.23, 0.22, 0.05, 0.03, 0.05, 0.05, 0.01, 0.04, 0.08, 0.08 };
+        private double[] initialDMFractionsLegumes { get; set; } = { 0.16, 0.23, 0.22, 0.05, 0.03, 0.05, 0.05, 0.01, 0.04, 0.08, 0.08 };
 
         /// <summary>Initial fractions of DM for each plant part in forbs (0-1).</summary>
         /// <remarks>
@@ -594,7 +596,7 @@ namespace Models.AgPasture
         ///  Stem.Emerging, Stem.Developing, Stem.Mature, Stem.Dead;
         ///  Stolon.Emerging, Stolon.Developing, Stolon.Mature (all zeroes);
         /// </remarks>
-        public double[] initialDMFractionsForbs { get; set; } = { 0.20, 0.20, 0.15, 0.05, 0.10, 0.15, 0.10, 0.05, 0.00, 0.00, 0.00 };
+        private double[] initialDMFractionsForbs { get; set; } = { 0.20, 0.20, 0.15, 0.05, 0.10, 0.15, 0.10, 0.05, 0.00, 0.00, 0.00 };
 
         ////- Potential growth (photosynthesis) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -771,6 +773,7 @@ namespace Models.AgPasture
         /// Adjust Shoot:Root ratio to mimic DM allocation during reproductive season (perennial species)?.
         /// </summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseReproSeasonFactor
         {
             get
@@ -789,30 +792,37 @@ namespace Models.AgPasture
 
         /// <summary>Reference latitude determining timing for reproductive season (degrees).</summary>
         [Units("degrees")]
+        [JsonIgnore]
         public double ReproSeasonReferenceLatitude { get; set; } = 41.0;
 
         /// <summary>Coefficient controlling the time to start the reproductive season as function of latitude (-).</summary>
         [Units("-")]
+        [JsonIgnore]
         public double ReproSeasonTimingCoeff { get; set; } = 0.14;
 
         /// <summary>Coefficient controlling the duration of the reproductive season as function of latitude (-).</summary>
         [Units("-")]
+        [JsonIgnore]
         public double ReproSeasonDurationCoeff { get; set; } = 2.0;
 
         /// <summary>Ratio between the length of shoulders and the period with full reproductive growth effect (-).</summary>
         [Units("-")]
+        [JsonIgnore]
         public double ReproSeasonShouldersLengthFactor { get; set; } = 1.0;
 
         /// <summary>Proportion of the onset phase of shoulder period with reproductive growth effect (0-1).</summary>
         [Units("0-1")]
+        [JsonIgnore]
         public double ReproSeasonOnsetDurationFactor { get; set; } = 0.60;
 
         /// <summary>Maximum increase in Shoot-Root ratio during reproductive growth (0-1).</summary>
         [Units("0-1")]
+        [JsonIgnore]
         public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
 
         /// <summary>Coefficient controlling the increase in shoot allocation during reproductive growth as function of latitude (-).</summary>
         [Units("-")]
+        [JsonIgnore]
         public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
 
         /// <summary>Maximum target allocation of shoot new growth to leaves (0-1).</summary>
@@ -971,11 +981,13 @@ namespace Models.AgPasture
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
         [Units("0-1")]
+        [JsonIgnore]
         public double GlfGeneric { get; set; } = 1.0;
 
         /// <summary>Generic growth limiting factor that represents an arbitrary soil limitation (0-1).</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
         [Units("0-1")]
+        [JsonIgnore]
         public double GlfSoilFertility { get; set; } = 1.0;
 
         ////- Plant height >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1004,47 +1016,47 @@ namespace Models.AgPasture
 
         /// <summary>Leaf proportion in the minimum green Wt (0-1).</summary>
         [Units("0-1")]
-        public double MinimumGreenLeafProp { get; set; } = 0.8;
+        public double MinimumGreenLeafProp { get; private set; } = 0.8;
 
         /// <summary>Minimum root amount relative to minimum green Wt (>0.0).</summary>
         [Units("0-1")]
-        public double MinimumGreenRootProp { get; set; } = 0.5;
+        public double MinimumGreenRootProp { get; private set; } = 0.5;
 
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
-        public double PreferenceForLeafOverStems { get; set; } = 1.0;
+        public double PreferenceForLeafOverStems { get; private set; } = 1.0;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Day of year when seeds are allowed to germinate.</summary>
         [Units("day")]
-        public int doyGermination = 275;
+        private int doyGermination = 275;
 
         /// <summary>Number of days from emergence to anthesis.</summary>
         [Units("day")]
-        public int daysEmergenceToAnthesis = 120;
+        private int daysEmergenceToAnthesis = 120;
 
         /// <summary>Number of days from anthesis to maturity.</summary>
         [Units("days")]
-        public int daysAnthesisToMaturity = 85;
+        private int daysAnthesisToMaturity = 85;
 
         /// <summary>Cumulative degrees-day from emergence to anthesis (oCd).</summary>
         [Units("oCd")]
-        public double degreesDayForAnthesis = 1100.0;
+        private double degreesDayForAnthesis = 1100.0;
 
         /// <summary>Cumulative degrees-day from anthesis to maturity (oCd).</summary>
         [Units("oCd")]
-        public double degreesDayForMaturity = 900.0;
+        private double degreesDayForMaturity = 900.0;
 
         /// <summary>Number of days from emergence with reduced growth.</summary>
         [Units("days")]
-        public int daysAnnualsFactor = 45;
+        private int daysAnnualsFactor = 45;
 
         ////- Other parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Describes the FVPD function.</summary>
         [Units("0-1")]
-        public LinearInterpolationFunction FVPDFunction
+        private LinearInterpolationFunction FVPDFunction
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });
 
