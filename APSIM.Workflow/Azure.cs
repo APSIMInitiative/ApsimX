@@ -187,7 +187,8 @@ public class Azure
                 azureJob.JobPreparationTask = new JobPreparationTask("bash workflow.sh initialise")
                 {
                     ResourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName)],
-                    UserIdentity = new UserIdentity("admin")
+                    UserIdentity = new UserIdentity("admin"),
+                    EnvironmentSettings = [new EnvironmentSetting("PR_NUMBER", prNumber)]
                 };
                 azureJob.Commit();
             }
