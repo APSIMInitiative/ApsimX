@@ -1,0 +1,12 @@
+Scenario,Crop,[Sow on a fixed date].Script.Crop,[Sow on a fixed date].Script.CultivarName,[Sow on a fixed date].Script.SowDate,[Sow on a fixed date].Script.SowingDepth,[Sow on a fixed date].Script.Population,[Fertilise at sowing].Script.Crop,[Fertilise at sowing].Script.Amount,[Topup fertiliser].Script.Amount,[Harvesting].Script.Crop
+Spartacus,Barley,[Barley],Spartacus,3-Jun,50,100,[Barley],,,[Barley]
+Planet,Barley,[Barley],Planet,3-Jun,50,100,[Barley],,,[Barley]
+EarlySpartacus,Barley,[Barley],Spartacus,7-May,50,100,[Barley],,,[Barley]
+EarlyPlanet,Barley,[Barley],Planet,7-May,50,100,[Barley],,,[Barley]
+SpartacusLowN,Barley,[Barley],Spartacus,3-Jun,50,100,[Barley],10,,[Barley]
+SpartacusLowNLowTopUp,Barley,[Barley],Spartacus,3-Jun,50,100,[Barley],10,50,[Barley]
+SpartacusTopUp,Barley,[Barley],Spartacus,3-Jun,50,100,[Barley],,50,[Barley]
+EarlyCanola,Canola,[Canola],GenericEarly,7-May,20,40,[Canola],,,[Canola]
+LateCanola,Canola,[Canola],GenericEarly,10-Jun,20,40,[Canola],,,[Canola]
+Chickpea,Chickpea,[Chickpea],HatTrick,3-Jun,50,40,[Chickpea],,,[Chickpea]
+

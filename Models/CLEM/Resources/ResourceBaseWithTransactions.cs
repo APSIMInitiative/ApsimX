@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         public string FullName => $"{CLEMParentName}.{Name}";
 
         /// <summary>
-        /// Resource transaction occured Event handler
+        /// Resource transaction occurred Event handler
         /// </summary>
         public event EventHandler TransactionOccurred;
 

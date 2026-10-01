@@ -20,8 +20,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         public SpecifyRuminant SpecifyRuminantComponent { get; set; }
         /// <summary>
-        /// Cummulative probability of this one being picked
+        /// Cumulative probability of this one being picked
         /// </summary>
-        public double CummulativeProbability { get; set; }
+        public double CumulativeProbability { get; set; }
     }
 }

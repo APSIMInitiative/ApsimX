@@ -22,12 +22,8 @@ namespace Models.Functions
         "Optional full or partial removal of accumulated values can occur on specified events, stages or dates")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunctionGeneral : Model, IFunction, IStructureDependency
+    public class AccumulateFunctionGeneral : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -150,11 +146,11 @@ namespace Models.Functions
             AccumulateToday = true;
             if (!String.IsNullOrEmpty(NameOfPlantToLink))
             {
-                parentPhenology = Structure.Find<Plant>(NameOfPlantToLink).Phenology;
+                parentPhenology = Node.Find<Plant>(NameOfPlantToLink).Phenology;
             }
             else
             {
-                parentPhenology = Structure.FindParents<Plant>().FirstOrDefault()?.Phenology;
+                parentPhenology = Node.FindParents<Plant>().FirstOrDefault()?.Phenology;
             }
 
             if ((!String.IsNullOrEmpty(StartEventName))||(!String.IsNullOrEmpty(StartDate))||(!String.IsNullOrEmpty(StartStageName)))
@@ -171,6 +167,8 @@ namespace Models.Functions
             {
                 throw new Exception("Can only select one option for stoping accumulation, Stage, Date or Event.  Currently more than one are specified for " + this.Name);
             }
+
+            FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
         /// <summary>
@@ -232,7 +230,7 @@ namespace Models.Functions
             }
 
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (AccumulateToday)
             {

@@ -150,6 +150,19 @@ namespace Models.DCAPST
         public DCAPSTModel DcapstModel { get; private set; } = new();
 
         /// <summary>
+        /// Invoked once for each DCaPST calculation interval after the day's
+        /// water-limited biomass calculation has completed.
+        /// </summary>
+        public event EventHandler<DCaPSTIntervalOutput> IntervalStep;
+
+        /// <summary>
+        /// The interval currently being published. This is non-null only while
+        /// <see cref="IntervalStep"/> subscribers are running.
+        /// </summary>
+        [JsonIgnore]
+        public DCaPSTIntervalOutput CurrentInterval { get; private set; }
+
+        /// <summary>
         /// The biological transpiration limit of a plant
         /// </summary>
         public double Biolimit { get; set; } = 0;
@@ -401,6 +414,32 @@ namespace Models.DCAPST
             else
             {
                 throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
+            }
+
+            PublishIntervalOutputs();
+        }
+
+        /// <summary>
+        /// Publishes each calculated interval through <see cref="IntervalStep"/>.
+        /// The output is exposed through <see cref="CurrentInterval"/> only for
+        /// the duration of the event so that the report model can read it.
+        /// </summary>
+        private void PublishIntervalOutputs()
+        {
+            if (IntervalStep is null || DcapstModel?.Intervals is null)
+                return;
+
+            foreach (IntervalValues interval in DcapstModel.Intervals)
+            {
+                CurrentInterval = new DCaPSTIntervalOutput(clock.Today, interval);
+                try
+                {
+                    IntervalStep.Invoke(this, CurrentInterval);
+                }
+                finally
+                {
+                    CurrentInterval = null;
+                }
             }
         }
 

@@ -124,7 +124,11 @@ namespace Models.Soils
         /// </summary>
         private const double slcerr = 0.000001;
 
-        private const double hydrol_effective_depth = 450;
+        /// <summary>Depth in the soil to assess water content for runoff effect (mm).</summary>
+        public double hydrol_effective_depth { get; set; } = 450;
+
+        /// <summary>Exponent in the equation for hydraulic effectiveness for runoff (-).</summary>
+        public double hydrol_effective_exponent { get; set; } = 4.16;
 
         private double[] _swf;
         private string rain_time = null;
@@ -2319,7 +2323,7 @@ namespace Models.Soils
 
             hydrolEffectiveDepth = Math.Min(hydrol_effective_depth, profile_depth);
 
-            scale_fact = 1.0 / (1.0 - Math.Exp(-4.16));
+            scale_fact = 1.0 / (1.0 - Math.Exp(-hydrol_effective_exponent));
             hydrolEffectiveLayer = FindSwimLayer(hydrolEffectiveDepth);
 
             for (layer = 0; layer <= hydrolEffectiveLayer; layer++)
@@ -2330,7 +2334,7 @@ namespace Models.Soils
                 // assume water content to c%hydrol_effective_depth affects runoff
                 // sum of wf should = 1 - may need to be bounded? <dms 7-7-95>
 
-                wx = scale_fact * (1.0 - Math.Exp(-4.16 * cum_depth / hydrolEffectiveDepth));
+                wx = scale_fact * (1.0 - Math.Exp(-hydrol_effective_exponent * cum_depth / hydrolEffectiveDepth));
                 runoff_wf[layer] = wx - xx;
                 xx = wx;
 

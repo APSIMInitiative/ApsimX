@@ -10,19 +10,24 @@ namespace UserInterface.Presenters
 
         public CategoryTree()
         {
-            this.CategoryItems = new List<CategoryItem>();
+            CategoryItems = new List<CategoryItem>();
         }
 
         public CategoryItem FindCategoryInTree(string catName)
         {
-            return this.CategoryItems.Find(item => item.Name == catName);
+            return CategoryItems.Find(item => item.Name == catName);
         }
 
         public void AddCategoryToTree(String catName)
         {
-            bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
+            bool catExists = CategoryItems.Exists(item => item.Name == catName);
             if (!catExists)
-                this.CategoryItems.Add(new CategoryItem(catName));
+                CategoryItems.Add(new CategoryItem(catName));
+        }
+
+        public void OrderBy(Comparison<CategoryItem> comparison)
+        {
+            CategoryItems.Sort(comparison);
         }
     }
 }

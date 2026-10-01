@@ -16,10 +16,11 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all finance types (bank accounts) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/Finance.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Finance : ResourceBaseWithTransactions
     {
         [Link]
-        IClock Clock = null;
+        readonly IClock Clock = null;
 
         /// <summary>
         /// Currency used
@@ -36,7 +37,7 @@ namespace Models.CLEM.Resources
         public MonthsOfYear FirstMonthOfFinancialYear { get; set; }
 
         /// <summary>
-        /// Method to determine the financial year from a given date
+        /// Property to determine the financial year from current date
         /// </summary>
         /// <returns>The financial year</returns>
         public int FinancialYear
@@ -44,32 +45,14 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Clock.Today.Month < (int)FirstMonthOfFinancialYear)
+                {
                     return Clock.Today.Year - 1;
+                }
                 else
+                {
                     return Clock.Today.Year;
+                }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using StringWriter htmlWriter = new StringWriter();
-            htmlWriter.Write($"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>");
-            htmlWriter.Write($"<div class=\"activityentry\">The financial year starts in ");
-            if (FirstMonthOfFinancialYear == 0)
-                htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-            else
-            {
-                htmlWriter.Write("<span class=\"setvalueextra\">");
-                htmlWriter.Write(FirstMonthOfFinancialYear.ToString() + "</span>");
-            }
-            htmlWriter.Write("</div>");
-            return htmlWriter.ToString();
-        }
-
-        #endregion
-
     }
 }

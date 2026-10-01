@@ -101,6 +101,11 @@ public class VariableComposite
     public INodeModel FirstModel => Variables.FirstOrDefault(v => v is VariableObject obj && obj.Value is INodeModel)?.Value as INodeModel;
 
     /// <summary>
+    /// Gets the data type of the property
+    /// </summary>
+    public IEnumerable<IVariable> AllModels => Variables.Where(v => v is VariableObject obj && obj.Value is INodeModel);
+
+    /// <summary>
     /// Returns true if the variable is writable
     /// </summary>
     public bool Writable { get { return Variables.Last().Writable; } }

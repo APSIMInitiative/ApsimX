@@ -1,9 +1,11 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using Models.Core.Run;
 using Models.Soils;
 using Models.Soils.SoilTemp;
+using Models.Storage;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -473,6 +475,61 @@ namespace UnitTests.Soils
 
 
         //}
+
+        [Test]
+        public void CheckSoilWritesWarningWhen_MultipleISoilTempModels_ArePresent()
+        {
+            var summary = new Summary();
+
+            var soil = new Soil()
+            {
+                Name = "Soil",
+                Children = new List<IModel>
+                {
+                    new CERESSoilTemperature(),
+                    new SoilTemperature(),
+                    new Physical
+                    {
+                        Depth = [
+                            "0-100",
+                            "100-200",
+                            "200-400",
+                            "400-700",
+                            "700-1000"
+                        ],
+                        
+                    }
+                }
+            };
+
+            var simulation = new Simulation()
+            {
+                Name = "Test",
+                Children = new List<IModel> { summary, soil }
+            };
+
+            Simulations simulations = new Simulations
+            {
+                Children = new List<IModel>
+                {
+                    simulation,
+                    new DataStore()
+                    {
+                        UseInMemoryDB = true
+                    }
+                }
+            };
+
+            Node.Create(simulations);
+            var links = new Links();
+            links.Resolve(simulations, true);
+
+            // Act
+            List<string> warnings = soil.CheckSoilTemperatureModels();
+
+            // Assert
+            Assert.That(warnings, Has.Some.Contains("WARNING: Soils should only use one type of Soil temperature model to avoid unintended behaviour."));
+        }
 
         /// <summary>Test that InteractionsPerDay property can be set with range constraints.</summary>
         [Test]

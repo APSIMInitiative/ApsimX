@@ -45,6 +45,11 @@ namespace UserInterface.Interfaces
         /// <param name="rootNode">A description of the top level root node</param>
         void Populate(TreeViewNode rootNode);
 
+        /// <summary>Populate the treeview.</summary>
+        /// <param name="rootNode">A description of the top level root node</param>
+        /// <param name="expandedNodes">A list of nodes to expand again after refreshing.</param>
+        void Populate(TreeViewNode rootNode, List<string> expandedNodes);
+
         /// <summary>
         /// Refresh the node at the given data..
         /// </summary>
@@ -122,9 +127,6 @@ namespace UserInterface.Interfaces
 
         /// <summary>The child nodes of this node</summary>
         public List<TreeViewNode> Children = new List<TreeViewNode>();
-
-        /// <summary>Determines whether this node is checked</summary>
-        public bool Checked { get; set; }
 
         /// <summary>The text colour of this node.</summary>
         public System.Drawing.Color Colour { get; set; }

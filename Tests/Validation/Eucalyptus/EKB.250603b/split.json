@@ -1,0 +1,25 @@
+{
+	"OutputPath":"temp/",
+	"CopyWeatherFiles":false,
+	"CopyObservedData":false,
+	"Groups": [
+		{
+			"Name":"EKB 250603b-TAS",
+			"Folders":[],
+			"Experiments":["T"],
+			"Simulations":[]
+		},
+		{
+			"Name":"EKB 250603b-VIC",
+			"Folders":[],
+			"Experiments":["V"],
+			"Simulations":[]
+		},
+		{
+			"Name":"EKB 250603b-WA",
+			"Folders":[],
+			"Experiments":["W"],
+			"Simulations":[]
+		}
+	]
+}

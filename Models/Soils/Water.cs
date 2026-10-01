@@ -243,7 +243,7 @@ namespace Models.Soils
         {
             get
             {
-                if (Physical != null)
+                if (Physical != null && Thickness != null)
                 {
                     double newFractionFull;
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());

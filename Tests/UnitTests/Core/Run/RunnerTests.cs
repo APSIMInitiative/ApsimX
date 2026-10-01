@@ -734,7 +734,7 @@ namespace UnitTests.Core.Run
                 List<Exception> errors = runner.Run();
                 Assert.That(errors.Count, Is.EqualTo(0), errors.Count > 0 ? errors[0].ToString() : "");
 
-                storage.Reader.Refresh();
+                storage.Refresh();
                 DataTable storedData = storage.Reader.GetData(data.TableName);
                 Assert.That(storedData, Is.Not.Null);
                 Assert.That(storedData.Rows.Count, Is.EqualTo(1));
@@ -744,7 +744,7 @@ namespace UnitTests.Core.Run
                 errors = runner.Run();
                 Assert.That(errors.Count, Is.EqualTo(0), errors.Count > 0 ? errors[0].ToString() : "");
 
-                storage.Reader.Refresh();
+                storage.Refresh();
                 storedData = storage.Reader.GetData(data.TableName);
                 Assert.That(storedData.Rows.Count, Is.EqualTo(1), "Post-simulation tool data was not cleaned when running only post-simulation tools");
                 database.CloseDatabase();

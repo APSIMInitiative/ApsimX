@@ -154,8 +154,8 @@ namespace Models
 
                 // Add some descriptors
                 int path = (simulationNumber - 1) / (Parameters.Count + 1) + 1;
-                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
-                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("Path", path.ToString()));
+                simDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", simulationName));
+                simDescription.Descriptors.Add(new SimulationDescriptor("Path", path.ToString()));
 
                 // Apply each composite factor of this combination to our simulation description.
                 combination.ForEach(c => c.ApplyToSimulation(simDescription));

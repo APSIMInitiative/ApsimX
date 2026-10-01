@@ -21,11 +21,11 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/ActivityFee.htm")]
-
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityFee : CLEMActivityBase, IActivityCompanionModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private ResourceRequest resourceRequest;
 
         /// <summary>
@@ -72,9 +72,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public ActivityFee()
         {
-            this.SetDefaults();
             AllocationStyle = ResourceAllocationStyle.Manual;
-            ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -83,10 +81,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get resource type to buy
             BankAccount = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, BankAccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if (BankAccount is not null)
+            {
                 ResourceStore = (BankAccount as IModel).Parent as ResourceBaseWithTransactions;
+            }
         }
 
         /// <inheritdoc/>
@@ -97,11 +96,19 @@ namespace Models.CLEM.Activities
             {
                 string relatesTo = null;
                 if (Parent as CLEMRuminantActivityBase != null)
+                {
                     relatesTo = (Parent as CLEMRuminantActivityBase).PredictedHerdNameToDisplay;
+                }
+
                 if (Parent as ResourceActivityBuy != null)
+                {
                     relatesTo = (Parent as ResourceActivityBuy).ResourceName;
+                }
+
                 if (Parent is OtherAnimalsActivityBuy otherParentBuy)
+                {
                     relatesTo = otherParentBuy.PredictedAnimalType;
+                }
 
                 double charge = argument * Amount;
                 resourceRequest = new ResourceRequest()
@@ -130,22 +137,5 @@ namespace Models.CLEM.Activities
                 SetStatusSuccessOrPartial(shortfalls);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, "Rate not set")} ");
-                if(Measure?.ToLower() != "")
-                    htmlWriter.Write($"per {CLEMModel.DisplaySummaryValueSnippet(Measure, "Measure not set")} ");
-                htmlWriter.Write($"from {DisplaySummaryResourceTypeSnippet(BankAccountName)}</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

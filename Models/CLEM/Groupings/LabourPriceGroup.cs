@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.Groupings
@@ -27,70 +28,5 @@ namespace Models.CLEM.Groupings
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected LabourPriceGroup()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            if (!FormatForParentControl)
-            {
-                html += "\r\n<div class=\"activityentry\">";
-                html += $"Pay {CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)} for a days work</div>";
-            }
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            string html = "";
-            if (FormatForParentControl)
-            {
-                html += $"</td><td>{CLEMModel.DisplaySummaryValueSnippet(Value, warnZero: true)}</td>";
-                html += "</tr>";
-            }
-            else
-            {
-                html += "\r\n</div>";
-            }
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            string html = "";
-            if (FormatForParentControl)
-                html += "<tr><td>" + this.Name + "</td><td>";
-            else
-                html += "\r\n<div class=\"filterborder clearfix\">";
-
-            if (Structure.FindChildren<Filter>().Count() < 1)
-                html += "<div class=\"filter\">All individuals</div>";
-
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
-        }
-        #endregion
     }
 }

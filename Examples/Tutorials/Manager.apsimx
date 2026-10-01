@@ -6,7 +6,7 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# Manager Model Documentation and Examples\n\n\n\n**Manager** is the model in APSIM that is used to script the on-farm management of a simulation. The examples in this document increase in complexity. [Read this to better understand the structure of a manager script](https://apsimnextgeneration.netlify.app/usage/writemanagerscript/)\n\n\n\n   \n\n\n\n\n",
+      "Text": "# Manager Model Documentation and Examples\n\n\n\n**Manager** is the model in APSIM that is used to script the on-farm management of a simulation. The examples in this document increase in complexity. [Read this to better understand the structure of a manager script](https://docs.apsim.info/docs/usage/writemanagerscript)\n\n\n\n   \n\n\n\n\n",
       "Name": "About this example",
       "ResourceName": null,
       "Children": [],

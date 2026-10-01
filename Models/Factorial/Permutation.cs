@@ -16,25 +16,26 @@ namespace Models.Factorial
     [ValidParent(ParentType = typeof(Factor))]
     [ValidParent(ParentType = typeof(Permutation))]
     [Serializable]
-    public class Permutation : Model, IStructureDependency
+    public class Permutation : Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>
         /// Get a list of all permutations of child factors and compositefactors.
         /// </summary>
         internal List<List<CompositeFactor>> GetPermutations()
         {
             var factors = new List<List<CompositeFactor>>();
-            foreach (Factor factor in Structure.FindChildren<Factor>())
+            // recurse factor list to pick up any factors that are nested below any FactorFromFile component as a child of permutation.
+            foreach (Factor factor in Node.FindChildren<Factor>(recurse: true))
+                if (factor.Enabled)
+                    factors.Add(factor.GetCompositeFactors());
+
+            foreach (FactorFromFile factor in Node.FindChildren<FactorFromFile>(recurse: true))
             {
                 if (factor.Enabled)
                     factors.Add(factor.GetCompositeFactors());
             }
 
-            var compositeFactors = Structure.FindChildren<CompositeFactor>().Where(cf => cf.Enabled);
+            var compositeFactors = Node.FindChildren<CompositeFactor>().Where(cf => cf.Enabled);
 
             var permutations = new List<List<CompositeFactor>>();
             if (compositeFactors.Count() > 0)

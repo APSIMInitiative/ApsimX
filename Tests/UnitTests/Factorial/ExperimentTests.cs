@@ -226,16 +226,16 @@ namespace UnitTests.Factorial
                             new CompositeFactor()
                             {
                                 Name = "Factor1",
-                                Specifications = new List<string>() { "[Weather].MaxT = 10",
-                                                                        "[Weather].MinT = 20",
-                                                                        "[Clock].NumberOfTicks = 10"},
+                                Specifications = ["[Weather].MaxT = 10",
+                                                  "[Weather].MinT = 20",
+                                                  "[Clock].NumberOfTicks = 10"],
                             },
                             new CompositeFactor()
                             {
                                 Name = "Factor2",
-                                Specifications = new List<string>() { "[Weather].MaxT = 100",
-                                                                        "[Weather].MinT = 200",
-                                                                        "[Clock].NumberOfTicks = 100"},
+                                Specifications = ["[Weather].MaxT = 100",
+                                                  "[Weather].MinT = 200",
+                                                  "[Clock].NumberOfTicks = 100"],
                             }
                         }
                     }
@@ -306,9 +306,9 @@ namespace UnitTests.Factorial
                                     new CompositeFactor()
                                     {
                                         Name = "Goondiwindi",
-                                        Specifications = new List<string>() { "[Weather].MaxT = 10",
-                                                                              "[Weather].MinT = 20",
-                                                                              "[Clock]"},
+                                        Specifications = ["[Weather].MaxT = 10",
+                                                          "[Weather].MinT = 20",
+                                                          "[Clock]"],
                                         Children = new List<IModel>()
                                         {
                                             new MockClock()
@@ -322,9 +322,9 @@ namespace UnitTests.Factorial
                                     new CompositeFactor()
                                     {
                                         Name = "Toowoomba",
-                                        Specifications = new List<string>() { "[Weather].MaxT = 100",
-                                                                              "[Weather].MinT = 200",
-                                                                              "[Clock]"},
+                                        Specifications = ["[Weather].MaxT = 100",
+                                                          "[Weather].MinT = 200",
+                                                          "[Clock]"],
                                         Children = new List<IModel>()
                                         {
                                             new MockClock()
@@ -407,7 +407,7 @@ namespace UnitTests.Factorial
                                     new CompositeFactor()
                                     {
                                         Name = "Place",
-                                        Specifications = new List<string>() {"[Clock]"},
+                                        Specifications = ["[Clock]"],
                                         Children = new List<IModel>()
                                         {
                                             new MockClock()
@@ -493,8 +493,7 @@ namespace UnitTests.Factorial
                                     new CompositeFactor()
                                     {
                                         Name = "1",
-                                        Specifications = new List<string>() { "[Sowing]",
-                                                                              "[Cutting]"},
+                                        Specifications = ["[Sowing]","[Cutting]"],
                                         Children = new List<IModel>()
                                         {
                                             new Models.Operations()
@@ -902,12 +901,12 @@ namespace UnitTests.Factorial
                                     new CompositeFactor()
                                     {
                                         Name = "Mod1",
-                                        Specifications = new List<string>() { "[Mod].A=3" },
+                                        Specifications = ["[Mod].A=3"],
                                     },
                                     new CompositeFactor()
                                     {
                                         Name = "Mod2",
-                                        Specifications = new List<string>() { "[Mod].A=4" },
+                                        Specifications = ["[Mod].A=4"],
                                     }
                                 }
                             }
@@ -991,10 +990,10 @@ namespace UnitTests.Factorial
                             new CompositeFactor()
                             {
                                 Name = "MaxT",
-                                Specifications = new List<string>(){
+                                Specifications = [
                                     "//[Weather].MaxT = 10",
                                     "[Weather].MaxT = 20"
-                                }
+                                ]
                             },
                         }
                     }
@@ -1010,5 +1009,84 @@ namespace UnitTests.Factorial
             Assert.That(weather.MaxT, Is.EqualTo(20));
         }
 
+        /// <summary>Ensure composite that has a memo as a child still works and the Memo should not overwrite an existing Memo in the simulation.</summary>
+        [Test]
+        public void EnsureCompositeWithCustomDescriptorsWorks()
+        {
+            var experiment = new Experiment()
+            {
+                Name = "Exp1",
+                Children = new List<IModel>()
+                {
+                    new Simulation()
+                    {
+                        Name = "BaseSimulation",
+                        Children = new List<IModel>()
+                        {
+                            new MockClock()
+                            {
+                                Name = "Clock",
+                                NumberOfTicks = 1,
+                                Today = DateTime.MinValue
+                            },
+                            new MockSummary()
+                        }
+                    },
+                    new Factors()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Factor()
+                            {
+                                Name = "Site",
+                                Children = new List<IModel>()
+                                {
+                                    new CompositeFactor()
+                                    {
+                                        Name = "Place",
+                                        Specifications = ["[Clock]"],
+                                        CustomDescriptors = [new SimulationDescriptor("Custom", "SomeText")],
+                                        Children = new List<IModel>()
+                                        {
+                                            new MockClock()
+                                            {
+                                                Name = "Clock",
+                                                NumberOfTicks = 10,
+                                                Today = DateTime.MinValue
+                                            }
+                                        }
+                                    },
+                                    new CompositeFactor()
+                                    {
+                                        Name = "PlaceTwo",
+                                        Specifications = ["[Clock]"],
+                                        Children = new List<IModel>()
+                                        {
+                                            new MockClock()
+                                            {
+                                                Name = "Clock",
+                                                NumberOfTicks = 10,
+                                                Today = DateTime.MinValue
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var tree = Node.Create(experiment);
+
+            var sims = experiment.GenerateSimulationDescriptions();
+            Assert.That(sims[0].Name, Is.EqualTo("Exp1SitePlace"));
+            Assert.That(sims[0].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
+            Assert.That(sims[0].Descriptors.Find(d => d.Name == "Custom").Value, Is.EqualTo("SomeText"));
+            Assert.That(sims[0].Descriptors.Find(d => d.Name == "Site").Value, Is.EqualTo("Place"));
+            Assert.That(sims[1].Name, Is.EqualTo("Exp1SitePlaceTwo"));
+            Assert.That(sims[1].Descriptors.Find(d => d.Name == "Experiment").Value, Is.EqualTo("Exp1"));
+            Assert.That(sims[1].Descriptors.Find(d => d.Name == "Custom"), Is.Null);
+            Assert.That(sims[1].Descriptors.Find(d => d.Name == "Site").Value, Is.EqualTo("PlaceTwo"));
+        }
     }
 }

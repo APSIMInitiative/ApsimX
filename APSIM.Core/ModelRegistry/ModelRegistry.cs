@@ -1,6 +1,6 @@
 using System.Reflection;
 using APSIM.Shared.Utilities;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json.Linq;
 
 namespace APSIM.Core;
 
@@ -21,7 +21,7 @@ internal class ModelRegistry
     internal static Type ModelNameToType(string modelNameToCreate)
     {
         DiscoverModels();
-        var modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelNameToCreate, modelsAssembly);
+        Type[] modelTypes = ReflectionUtilities.GetTypeWithoutNameSpace(modelNameToCreate, modelsAssembly);
         if (modelTypes.Length != 1)
             return null;
         Type typeToCreate = modelTypes.First();
@@ -36,12 +36,53 @@ internal class ModelRegistry
     internal static INodeModel CreateModel(string modelNameToCreate)
     {
         DiscoverModels();
-        Type typeToCreate = ModelNameToType(modelNameToCreate)
-                            ?? throw new Exception($"Unknown model type {modelNameToCreate}");
+        Type typeToCreate = ModelNameToType(modelNameToCreate);
+        if (typeToCreate != null)
+        {
+            INodeModel model = (INodeModel)Activator.CreateInstance(typeToCreate, true);
+            if (model == null)
+                throw new Exception($"A {typeToCreate.Name} model could not be found or could not be created.");
+            return model;
+        }
+        else
+        {
+            // Try and see if this is a resource.
+            string[] names = modelsAssembly.GetManifestResourceNames();
+            string resourceName = names.FirstOrDefault(r => r.Equals($"Models.Resources.{modelNameToCreate}.json", StringComparison.InvariantCultureIgnoreCase));
+            if (resourceName != null)
+                return CreateResourceModelFromName(modelNameToCreate, resourceName);
+            else
+                throw new Exception($"A {typeToCreate.Name} model or resource could not be found.");
+        }
+    }
 
-        var model = (INodeModel)Activator.CreateInstance(typeToCreate, true)
-                    ?? throw new Exception($"Cannot create a model of type {typeToCreate.Name}");
-        return model;
+    /// <summary>
+    /// Create a model from an embedded resource.
+    /// </summary>
+    /// <param name="modelNameToCreate">The name of the model to create.</param>
+    /// <param name="resourceName">The name of the embedded resource.</param>
+    /// <returns>The newly created instance.</returns>
+    private static INodeModel CreateResourceModelFromName(string modelNameToCreate, string resourceName)
+    {
+        using Stream stream = modelsAssembly.GetManifestResourceStream(resourceName);
+        if (stream == null)
+            throw new Exception($"Could not find model or resource with the name: {resourceName}");
+        
+        using StreamReader reader = new StreamReader(stream);
+        string json = reader.ReadToEnd();
+        
+        // Inject the ResourceName into the JSON before deserializing
+        JObject jObject = JObject.Parse(json);
+        // Get the first child of the root object and set its ResourceName property.
+        // The actual resource always has a simulations Parent, so the first child of the root object is always the resource.
+        jObject["Children"][0]["ResourceName"] = modelNameToCreate;
+        
+        INodeModel resource = FileFormat.ReadFromString<INodeModel>(jObject.ToString()).Model.GetChildren().FirstOrDefault();
+        
+        List<INodeModel> children = resource.GetChildren().ToList();
+        foreach (INodeModel child in children)
+            resource.RemoveChild(child);
+        return resource;
     }
 
     /// <summary>

@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
-using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models
 {
-
     /// <summary>
     /// A micro climate wrapper around a Zone instance.
     /// </summary>
@@ -174,16 +170,15 @@ namespace Models
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
         /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
-        /// <param name="structure">Structure instance</param>
-        public MicroClimateZone(IClock clockModel, Zone zoneModel, IStructure structure, double minHeightDiffForNewLayer)
+        public MicroClimateZone(IClock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
             MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
-            canopyModels = structure.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
-            modelsThatHaveCanopies = structure.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
-            SoilWater = structure.Find<ISoilWater>(relativeTo: Zone);
-            SurfaceOM = structure.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
+            canopyModels = zoneModel.Node.FindChildren<ICanopy>(relativeTo: Zone, recurse: true).ToList();
+            modelsThatHaveCanopies = zoneModel.Node.FindChildren<IHaveCanopy>(relativeTo: Zone, recurse: true).ToList();
+            SoilWater = zoneModel.Node.Find<ISoilWater>(relativeTo: Zone);
+            SurfaceOM = zoneModel.Node.Find<ISurfaceOrganicMatter>(relativeTo: Zone);
         }
 
         /// <summary>Constructor. for blank zone</summary>
@@ -531,7 +526,23 @@ namespace Models
         /// <summary>Send an energy balance event</summary>
         public void SetCanopyEnergyTerms()
         {
+            //calculate the total green/dead for the canopy first, as AgPasture needs to know this
+            double totalGreen = 0;
+            double totalDead = 0;
             for (int j = 0; j <= Canopies.Count - 1; j++)
+            {
+                if (Canopies[j].Canopy != null)
+                {
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        totalGreen += CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, RadnGreenFraction(j));
+                        totalDead += CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, 1 - RadnGreenFraction(j));
+                    }
+                }
+            }
+
+            for (int j = 0; j <= Canopies.Count - 1; j++)
+            {
                 if (Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
@@ -543,8 +554,10 @@ namespace Models
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * SimulationAreaM2 * RadnGreenFraction(j);
-                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * SimulationAreaM2 * (1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreen = CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, RadnGreenFraction(j));
+                        lightProfile[i].AmountOnDead = CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, 1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreenTotal = totalGreen;
+                        lightProfile[i].AmountOnDeadTotal = totalDead;
                         totalPETa += Canopies[j].PETa[i];
                         totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];
@@ -554,6 +567,13 @@ namespace Models
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
                 }
+            }
+        }
+
+        /// <summary>AmountOnGreen and AmountOnDead Calucation for SetCanopyEnergyTerms</summary>
+        private double CalculateCanpoyEnergy(double Rs, double area, double radiation)
+        {
+            return Rs * area * radiation;
         }
 
         /// <summary>Break the combined Canopy into layers</summary>

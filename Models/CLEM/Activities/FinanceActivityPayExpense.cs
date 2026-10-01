@@ -12,7 +12,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Activity to arrange and pay an enterprise expenses
     /// </summary>
-    /// <version>1.0</version>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -22,6 +21,7 @@ namespace Models.CLEM.Activities
     [Description("Perform payment of a specified expense")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/PayExpenses.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class FinanceActivityPayExpense : CLEMActivityBase
     {
         private FinanceType bankAccount;
@@ -40,14 +40,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FinanceActivityPayExpense()
-        {
-            this.SetDefaults();
-        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -68,8 +60,8 @@ namespace Models.CLEM.Activities
                     Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     AllowTransmutation = false,
-                    Required = this.Amount,
-                    ResourceTypeName = this.AccountName,
+                    Required = Amount,
+                    ResourceTypeName = AccountName,
                     ActivityModel = this,
                     Category = TransactionCategory
                 }
@@ -80,7 +72,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PerformTasksForTimestep(double argument = 0)
         {
-            if(ResourceRequestList.Any())
+            if (ResourceRequestList.Count != 0)
             {
                 var finRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)).FirstOrDefault<ResourceRequest>();
                 if (finRequest != null)
@@ -89,21 +81,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Pay {CLEMModel.DisplaySummaryValueSnippet(Amount, warnZero:true)}");
-                htmlWriter.Write($" from {CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource)}");
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
-        } 
-        #endregion
-
     }
 }

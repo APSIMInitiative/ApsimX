@@ -81,8 +81,8 @@
         /// <param name="tree">A tree view to which the changes will be applied.</param>
         private void MoveModelDown(IModel parent, int modelIndex, ITreeView tree)
         {
-            parent.Children.Remove(modelToMove as Model);
-            parent.Children.Insert(modelIndex + 1, modelToMove as Model);
+            parent.Node.RemoveChild(modelToMove as Model);
+            parent.Node.InsertChild(modelIndex + 1, modelToMove as Model);
             ModelWasMoved = true;
             tree.MoveDown(modelToMove.FullPath);
         }
@@ -93,8 +93,8 @@
         /// <param name="tree">A tree view to which the changes will be applied.</param>
         private void MoveModelUp(IModel parent, int modelIndex, ITreeView tree)
         {
-            parent.Children.Remove(modelToMove as Model);
-            parent.Children.Insert(modelIndex - 1, modelToMove as Model);
+            parent.Node.RemoveChild(modelToMove as Model);
+            parent.Node.InsertChild(modelIndex - 1, modelToMove as Model);
             ModelWasMoved = true;
             tree.MoveUp(modelToMove.FullPath);
         }

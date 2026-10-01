@@ -183,7 +183,7 @@ namespace Models.DCAPST.Canopy
         public AreaValues GetAreaValues()
         {
             // Casting to an array to ensure we don't change pathways outside of this method
-            var temp = pathways.ToArray().OrderBy(p => p.CO2Rate).First().Temperature;
+            var limitingPath = pathways.ToArray().OrderBy(p => p.CO2Rate).First().GetPathValues();
 
             var ac1 = pathways.FirstOrDefault(p => p.Type == PathwayType.Ac1).GetPathValues();
 
@@ -196,7 +196,8 @@ namespace Models.DCAPST.Canopy
             {
                 A = CO2AssimilationRate,
                 Water = WaterUse,
-                Temperature = temp,
+                Temperature = limitingPath.Temperature,
+                VPD = limitingPath.VPD,
                 Ac1 = ac1,
                 Ac2 = ac2,
                 Aj = aj

@@ -64,15 +64,6 @@ namespace Models.CLEM.Timers
         ///<inheritdoc/>
         public string StatusMessage { get; set; }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerMonthRange()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
-        }
-
         /// <inheritdoc/>
         public bool ActivityDue
         {
@@ -110,7 +101,9 @@ namespace Models.CLEM.Timers
             if (startMonth <= endMonth)
             {
                 if ((date.Month >= startMonth) & (date.Month <= endMonth))
+                {
                     due = ActivityTimerSequence.IsInSequence(sequenceTimerList, date.Month - startMonth);
+                }
             }
             else
             {
@@ -118,7 +111,9 @@ namespace Models.CLEM.Timers
                 {
                     int? index;
                     if (date.Month >= startMonth)
+                    {
                         index = date.Month - startMonth;
+                    }
                     else
                     {
                         index = 12 - startMonth + date.Month;
@@ -134,57 +129,5 @@ namespace Models.CLEM.Timers
         {
             ActivityPerformed?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write("Perform between ");
-                if (StartMonth == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(StartMonth.ToString() + "</span>");
-                }
-                htmlWriter.Write(" and <span class=\"setvalueextra\">");
-                if (EndMonth == 0)
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalueextra\">");
-                    htmlWriter.Write(EndMonth.ToString() + "</span>");
-                }
-                htmlWriter.Write("</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
     }
 }

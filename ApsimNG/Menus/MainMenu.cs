@@ -7,6 +7,7 @@ using Models.Core;
 using Models.Core.Run;
 using Models;
 using APSIMNG.Utility;
+using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -161,7 +162,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/");
+                ProcessUtilities.ProcessStart("https://docs.apsim.info/");
             }
             catch (Exception err)
             {
@@ -195,7 +196,7 @@ namespace UserInterface.Presenters
                 if (string.IsNullOrEmpty(explorer.ApsimXFile.FileName))
                      throw new InvalidOperationException("Please save before running simulation.");
 
-                IModel model = FindRunnable(explorer.CurrentNode);
+                IModel model = FindRunnable(explorer);
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
 
@@ -209,8 +210,24 @@ namespace UserInterface.Presenters
             }
         }
 
-        public static IModel FindRunnable(IModel currentNode)
+        public static IModel FindRunnable(ExplorerPresenter explorerPresenter)
         {
+            IModel currentNode = explorerPresenter.CurrentNode;
+            
+            //Prior to running, we need to generate any virtual nodes that have 
+            //been changed since opening the file
+            bool treeNeedsUpdating = false;
+            foreach (Node node in currentNode.Node.Walk())
+                if (node.Model is IGenerateNodes generator)
+                    if (generator.RequiresUpdating())
+                        treeNeedsUpdating = true;
+            
+            if (treeNeedsUpdating)
+            {
+                Node.Create(currentNode.Node.Model);
+                explorerPresenter.RebuildTree();
+            }
+
             if (currentNode is Folder && currentNode.Node.FindChild<ISimulationDescriptionGenerator>(recurse: true) != null)
                 return currentNode;
             IEnumerable<ISimulationDescriptionGenerator> runnableModels = currentNode.Node.FindParents<ISimulationDescriptionGenerator>();

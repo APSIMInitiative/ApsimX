@@ -57,7 +57,7 @@ namespace Models
                                 double markerModifier,
                                 IEnumerable<string> inScopeSimulationNames = null,
                                 string filter = null,
-                                List<SimulationDescription.Descriptor> descriptors = null,
+                                List<SimulationDescriptor> descriptors = null,
                                 string customTitle = null)
         {
             this.Series = series;
@@ -136,7 +136,7 @@ namespace Models
         }
 
         /// <summary>Descriptors associate with this definition.</summary>
-        public List<SimulationDescription.Descriptor> Descriptors { get; }
+        public List<SimulationDescriptor> Descriptors { get; }
 
         /// <summary>Gets the colour.</summary>
         public Color Colour { get; set; }
@@ -288,7 +288,7 @@ namespace Models
                     //Get the name of each sim that has a matching descriptor to this graph
                     foreach (SimulationDescription sim in simulationDescriptions) {
                         bool matched = true;
-                        foreach (SimulationDescription.Descriptor descriptor in Descriptors)
+                        foreach (SimulationDescriptor descriptor in Descriptors)
                         {
                             if (!sim.HasDescriptor(descriptor))
                             {

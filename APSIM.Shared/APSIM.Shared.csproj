@@ -36,8 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="./Resources/Images/*.png" />
-    <EmbeddedResource Include="./Resources/Images/*.jpg" />
+    <EmbeddedResource Include="./Resources/Images/**/*.png" />
+    <EmbeddedResource Include="./Resources/Images/**/*.jpg" />
   </ItemGroup>
 
   <ItemGroup>

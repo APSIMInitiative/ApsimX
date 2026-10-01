@@ -177,7 +177,7 @@
         /// <summary>
         /// Convert all slashes to the correct directory separator character.
         /// </summary>
-        private static string ConvertSlashes(string path)
+        public static string ConvertSlashes(string path)
         {
             return path.Replace("\\", "/");
         }

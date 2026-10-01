@@ -37,7 +37,7 @@ namespace Models.Factorial
         public IStructure Structure { private get; set; }
 
         /// <summary>A specification for producing a series of factor values.</summary>
-        public string Specification { get; set; }
+        public string Specification { get; set; } = "";
 
         /// <summary>
         /// Return all possible factor values for this factor.
@@ -59,7 +59,7 @@ namespace Models.Factorial
                     if (Specification.Contains(" to ") && Specification.Contains(" step "))
                     {
                         if (childCompositeFactors.Any())
-                            throw new InvalidOperationException("Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
+                            throw new InvalidOperationException($"Illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                         factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
                     }
                     else if (Specification.Contains('='))
@@ -100,7 +100,6 @@ namespace Models.Factorial
             foreach (var val in values)
             {
                 var newFactor = new CompositeFactor(this, path.Trim(), val.Trim());
-                newFactor.Structure = Structure;
                 newFactor.Children.AddRange(Children);
                 returnValues.Add(newFactor);
             }
