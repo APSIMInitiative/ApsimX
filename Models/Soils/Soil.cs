@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using APSIM.Core;
 using APSIM.Numerics;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Models.Core;
 using Models.Interfaces;
 using Models.WaterModel;
@@ -251,7 +252,10 @@ namespace Models.Soils
                     else if (MathUtilities.GreaterThan(physical.BD[layer], specific_bd, 3))
                         message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
                     else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
-                        message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")}");
+                    {
+                        if (MathUtilities.LessThan(physical.Rocks[layer], 0.75, 3))
+                            message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")} and Rocks are less than 75%");
+                    }
 
                     if (physical.KS != null)
                     {
