@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using APSIM.Core;
 using Models.Core;
-using Models.PMF;
 using Models.Soils;
 using Models.Interfaces;
 using Models.Soils.Arbitrator;
 using Models.Soils.Nutrients;
-using Models.PMF.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Models.AgPasture
 {
@@ -63,62 +61,77 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/kg")]
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
         /// <summary>Minimum rooting depth (mm).</summary>
+        [Description("NConcOptimum")]
         [Units("mm")]
         public double MinimumRootingDepth { get; set; }
 
         /// <summary>Maximum potential rooting depth (mm).</summary>
+        [Description("NConcOptimum")]
         [Units("mm")]
         public double MaximumPotentialRootingDepth { get; set; }
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
+        [Description("NConcOptimum")]
         [Units("mm/day")]
         public double ElongationRate { get; set; }
 
         /// <summary>Factor for root distribution; depth from surface where root proportion starts to decrease (mm).</summary>
+        [Description("NConcOptimum")]
         [Units("mm")]
         public double DepthDistributionParamTop { get; set; }
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
+        [Description("NConcOptimum")]
         [Units("-")]
         public double DepthDistributionExponent { get; set; }
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
+        [Description("NConcOptimum")]
         [Units("-")]
         public double DepthDistributionParamBottom { get; set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
+        [Description("NConcOptimum")]
         [Units("m/g")]
         public double SpecificRootLength { get; set; }
 
         /// <summary>Ammonium uptake coefficient (/ppm).</summary>
+        [Description("NConcOptimum")]
         [Units("/ppm")]
         public double KNH4 { get; set; }
 
         /// <summary>Nitrate uptake coefficient (/ppm).</summary>
+        [Description("NConcOptimum")]
         [Units("/ppm")]
         public double KNO3 { get; set; }
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/ha")]
         public double MaximumNUptake { get; set; }
 
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
+        [Description("NConcOptimum")]
         [Units("-")]
         public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        [Description("NConcOptimum")]
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 
@@ -134,6 +147,7 @@ namespace Models.AgPasture
 
         /// <summary>Rooting depth (mm).</summary>
         [Units("mm")]
+        [JsonIgnore]
         public double Depth
         {
             get { return rootingDepth; }
@@ -153,10 +167,10 @@ namespace Models.AgPasture
 
         /// <summary>Maximum rooting depth allowed by soil conditions (mm).</summary>
         [Units("mm")]
-        public double MaximumAllowedDepth { get; set; }
+        public double MaximumAllowedDepth { get; private set; }
 
         /// <summary>Target (idealised) DM fractions for each layer (0-1).</summary>
-        public double[] TargetDistribution { get; set; }
+        public double[] TargetDistribution { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]

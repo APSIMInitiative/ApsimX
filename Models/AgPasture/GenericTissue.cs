@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Surface;
 
@@ -36,45 +36,58 @@ namespace Models.AgPasture
         //---------------------------- Parameters -----------------------
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
+        [Description("FractionNRemobilisable")]
         public double FractionNRemobilisable { get; set; }
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
+        [Description("FractionSugarNewGrowth")]
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
+        [Description("DigestibilityCellWall")]
         public double DigestibilityCellWall { get; set; }
 
         /// <summary>Digestibility of proteins (0-1).</summary>
+        [Description("DigestibilityProtein")]
         public double DigestibilityProtein { get; set; } = 1.0;
 
         //----------------------- Daily Deltas -----------------------
         // These get applied once each day during Update()
 
         /// <summary>DM transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredOut { get; private set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMRemoved { get; private set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
+        [JsonIgnore]
         public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemoved { get; private set; }
 
         /// <summary>N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; set; }
+        [JsonIgnore]
+        public double NRemobilisable { get; private set; }
 
         /// <summary>N remobilised into new growth (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilised { get; set; }
 
         //----------------------- States -----------------------
