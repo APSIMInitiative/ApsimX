@@ -930,11 +930,11 @@ namespace Models.AgPasture
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MinimumNFixation { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double MinimumNFixation { get { return constants.MinimumNFixation; } }
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MaximumNFixation { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double MaximumNFixation { get { return constants.MaximumNFixation; }  }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
