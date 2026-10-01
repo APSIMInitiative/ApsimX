@@ -12,6 +12,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RootTissue : Model
     {
         /// <summary>Pasture species this tissue belongs to.</summary>

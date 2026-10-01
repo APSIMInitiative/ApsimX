@@ -9,6 +9,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class GenericTissue : Model
     {
         /// <summary>Name of species.</summary>

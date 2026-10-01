@@ -15,6 +15,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PastureBelowGroundOrgan : Model, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
@@ -66,72 +68,72 @@ namespace Models.AgPasture
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        [Description("NConcOptimum")]
+        [Description("NConcMinimum")]
         [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [Description("NConcOptimum")]
+        [Description("NConcMaximum")]
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        [Description("NConcOptimum")]
+        [Description("MinimumRootingDepth")]
         [Units("mm")]
         public double MinimumRootingDepth { get; set; }
 
         /// <summary>Maximum potential rooting depth (mm).</summary>
-        [Description("NConcOptimum")]
+        [Description("MaximumPotentialRootingDepth")]
         [Units("mm")]
         public double MaximumPotentialRootingDepth { get; set; }
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
-        [Description("NConcOptimum")]
+        [Description("ElongationRate")]
         [Units("mm/day")]
         public double ElongationRate { get; set; }
 
         /// <summary>Factor for root distribution; depth from surface where root proportion starts to decrease (mm).</summary>
-        [Description("NConcOptimum")]
+        [Description("DepthDistributionParamTop")]
         [Units("mm")]
         public double DepthDistributionParamTop { get; set; }
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        [Description("NConcOptimum")]
+        [Description("DepthDistributionExponent")]
         [Units("-")]
         public double DepthDistributionExponent { get; set; }
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        [Description("NConcOptimum")]
+        [Description("DepthDistributionParamBottom")]
         [Units("-")]
         public double DepthDistributionParamBottom { get; set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        [Description("NConcOptimum")]
+        [Description("SpecificRootLength")]
         [Units("m/g")]
         public double SpecificRootLength { get; set; }
 
         /// <summary>Ammonium uptake coefficient (/ppm).</summary>
-        [Description("NConcOptimum")]
+        [Description("KNH4")]
         [Units("/ppm")]
         public double KNH4 { get; set; }
 
         /// <summary>Nitrate uptake coefficient (/ppm).</summary>
-        [Description("NConcOptimum")]
+        [Description("KNO3")]
         [Units("/ppm")]
         public double KNO3 { get; set; }
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
-        [Description("NConcOptimum")]
+        [Description("MaximumNUptake")]
         [Units("kg/ha")]
         public double MaximumNUptake { get; set; }
 
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
-        [Description("NConcOptimum")]
+        [Description("NExtractionSWFactorExponent")]
         [Units("-")]
         public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        [Description("NConcOptimum")]
+        [Description("MinimumLiveDM")]
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 

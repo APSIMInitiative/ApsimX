@@ -11,6 +11,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
         /// <summary>Plant model.</summary>
