@@ -612,7 +612,12 @@ namespace Models.AgPasture
 
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
-        public double LightExtinctionCoefficient { get { return constants.LightExtinctionCoefficient; } }
+        [JsonIgnore]
+        public double LightExtinctionCoefficient
+        { 
+            get { return constants.LightExtinctionCoefficient; } 
+            set { constants.LightExtinctionCoefficient = value; } 
+        }
 
         /// <summary>Minimum temperature for growth (oC).</summary>
         [Units("oC")]
@@ -930,11 +935,19 @@ namespace Models.AgPasture
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MinimumNFixation { get { return constants.MinimumNFixation; } }
+        [JsonIgnore]
+        public double MinimumNFixation { 
+            get { return constants.MinimumNFixation; } 
+            set { constants.MinimumNFixation = value; } 
+        }
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MaximumNFixation { get { return constants.MaximumNFixation; }  }
+        [JsonIgnore]
+        public double MaximumNFixation { 
+            get { return constants.MaximumNFixation; } 
+            set { constants.MaximumNFixation = value; } 
+        }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -949,11 +962,11 @@ namespace Models.AgPasture
 
         /// <summary>Maximum daily recovery rate from water logging (0-1).</summary>
         [Units("0-1")]
-        public double SoilSaturationRecoveryFactor { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double SoilSaturationRecoveryFactor { get { return constants.SoilSaturationRecoveryFactor; } }
 
         /// <summary>Exponent to modify the effect of N deficiency on plant growth (>1.0).</summary>
         [Units("-")]
-        public double NDilutionCoefficient { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double NDilutionCoefficient { get { return constants.NDilutionCoefficient; } }
 
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
@@ -969,19 +982,19 @@ namespace Models.AgPasture
 
         /// <summary>Minimum plant height (mm).</summary>
         [Units("mm")]
-        public double PlantHeightMinimum { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double PlantHeightMinimum { get { return constants.PlantHeightMinimum; } }
 
         /// <summary>Maximum plant height (mm).</summary>
         [Units("mm")]
-        public double PlantHeightMaximum { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double PlantHeightMaximum { get { return constants.PlantHeightMaximum; } }
 
         /// <summary>DM weight above ground for maximum plant height (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double PlantHeightMassForMax { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double PlantHeightMassForMax { get { return constants.PlantHeightMassForMax; } }
 
         /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
         [Units(">1.0")]
-        public double PlantHeightExponent { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double PlantHeightExponent { get { return constants.PlantHeightExponent; } }
 
         ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
