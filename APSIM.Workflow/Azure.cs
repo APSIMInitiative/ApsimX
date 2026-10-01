@@ -23,8 +23,6 @@ public class Azure
     private static readonly string AZURE_ACCOUNT_NAME = "apsimbuildsysbatch";
     private static readonly string AZURE_STORAGE_ACCOUNT_NAME = "apsimbuildsysstorage";
 
-    private static readonly string AZURE_POOL_PASSSWORD = "ZHaS2*VPW3q@*5";
-
     private static readonly string autoScaleScript =
         "TimeIntervalMinute = 5;\n" +
         "MaxNumberNodes = 60;\n" +
@@ -79,10 +77,10 @@ public class Azure
                     virtualMachineSize: vmsize,
                     virtualMachineConfiguration: vmConfiguration);
                 pool.TaskSlotsPerNode = 2;
-                // string poolPassword = GenerateRandomPassword();
+                string poolPassword = GenerateRandomPassword();
                 pool.UserAccounts = new List<UserAccount>
                 {
-                    new("admin", AZURE_POOL_PASSSWORD, ElevationLevel.Admin),
+                    new("admin", poolPassword, ElevationLevel.Admin),
                 };
 
                 if (isAutoscaling == false)
@@ -157,9 +155,6 @@ public class Azure
             string cloudTaskName = $"{pathIndex}-{Path.GetFileNameWithoutExtension(apsimFilePath).Replace(" ", "_")}"; // spaces are not allowed.
             CloudTask cloudTask = new(cloudTaskName, commandLine)
             {
-                // UserIdentity = new UserIdentity(
-                //     new AutoUserSpecification(AutoUserScope.Pool, ElevationLevel.Admin)
-                // ),
                 UserIdentity = new UserIdentity("admin"),
                 ResourceFiles = resourceFiles,
                 EnvironmentSettings = envVars.Select(e => new EnvironmentSetting(e.Key, e.Value))
