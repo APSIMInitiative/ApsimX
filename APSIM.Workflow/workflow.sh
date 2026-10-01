@@ -7,7 +7,7 @@ function initialise {
     sleep 10
   fi
   # Pull down the apsim next gen and apsim performance stats collector docker images
-  sudo docker pull apsiminitiative/apsimplusr:pr-$PR_NUMBER
+  sudo docker pull "apsiminitiative/apsimplusr:pr-$PR_NUMBER"
   sudo docker pull apsiminitiative/postats2-collector:latest
 }
 
@@ -15,7 +15,7 @@ function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
   sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e APSIM_NO_DOCKER "apsiminitiative/apsimplusr:pr-$PR_NUMBER" "$Path" --verbose
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload $PR_NUMBER a4fde455717f327d5afc4bb7934a86ef58947b7d $AUTHOR 2026.9.30-14:30 $PR_NUMBER-$COMMIT_SHA "$Path"
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload "$PR_NUMBER" "$COMMIT_SHA" "$AUTHOR" "$TIME" "$PR_NUMBER-$SHORT_COMMIT_SHA" "$Path"
 }
 
 

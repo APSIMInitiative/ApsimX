@@ -141,7 +141,9 @@ public class Azure
             throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
         CopyFilesToAzure(scriptPath, storageConnectionString, storageName);
 
-        //TODO: replace this with a real value.
+        // Get a time formatted like 2026.9.30-14:30
+        string now = DateTime.UtcNow.ToString("yyyy.M.d-HH:mm", CultureInfo.InvariantCulture);
+        envVars.Add("TIME", now );
         envVars.Add("PR_NUMBER", prNumber);
         envVars.Add("OUTPUT_FILES", "local.stdout.txt");
         envVars.Add("AZURE_STORAGE_CONTAINER", storageName);

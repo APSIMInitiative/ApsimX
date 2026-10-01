@@ -109,7 +109,7 @@ public class Program
 
                     // Add PO Stats specific environment variables
                     envDict.Add("AUTHOR", options.GitHubAuthorID);
-                    envDict.Add("COMMIT_SHA", options.CommitSHA);
+                    envDict.Add("COMMIT_SHA", shortCommitSha);
                     envDict.Add("FULL_COMMIT_HASH", options.FullCommitHash);
 
                     Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
