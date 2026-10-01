@@ -15,7 +15,7 @@ function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
   sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e APSIM_NO_DOCKER "apsiminitiative/apsimplusr:pr-$PR_NUMBER" "$Path" --verbose
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload "$PR_NUMBER" "$COMMIT_SHA" "$AUTHOR" "$TIME" "$PR_NUMBER-$SHORT_COMMIT_SHA" "$Path"
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload "$PR_NUMBER" "$FULL_COMMIT_HASH" "$AUTHOR" "$TIME" "$PR_NUMBER-$SHORT_COMMIT_SHA" "$Path"
 }
 
 
