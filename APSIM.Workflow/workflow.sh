@@ -15,9 +15,12 @@ function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
   sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e APSIM_NO_DOCKER "apsiminitiative/apsimplusr:pr-$PR_NUMBER" "$Path" --verbose
-  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload "$PR_NUMBER" "$FULL_COMMIT_HASH" "$AUTHOR" "$TIME" "$PR_NUMBER-$SHORT_COMMIT_SHA" "$Path"
 }
 
+function run_00001_finally {
+  # Function always called, regardless of any errors.
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd -e POSTATS_UPLOAD_URL  apsiminitiative/postats2-collector:latest upload "$PR_NUMBER" "$FULL_COMMIT_HASH" "$AUTHOR" "$TIME" "$PR_NUMBER-$COMMIT_SHA" "$Path"
+}
 
 # ==============================================================
 # Entry point for script.
@@ -29,6 +32,13 @@ start_time=$(date +%s.%N)
   $1 &>> local.stdout.txt
 );
 exit_code=$?
+if [[ $(type -t $1_finally) == function ]]; then
+  $1_finally &>> local.stdout.txt
+  finally_exit_code=$?
+  if [[ $exit_code -eq 0 && $finally_exit_code -ne 0 ]]; then
+    exit_code=$finally_exit_code
+  fi
+fi
 end_time=$(date +%s.%N)
 elapsed=$(echo "$end_time - $start_time" | bc -l)
 echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt
