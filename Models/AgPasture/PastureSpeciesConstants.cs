@@ -3,7 +3,6 @@ using Models.Core;
 
 namespace Models.AgPasture
 {
-
     /// <summary>
     /// Holds all the constants for a PastureSpecies so they can be set in a resource
     /// </summary>
@@ -13,9 +12,20 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(PastureSpecies))]
     public class PastureSpeciesConstants : Model
     {
+        /// <summary>Family type for this plant species (grass/legume/forb).</summary>
+        [Separator("Species Parameters")]
+        [Description("SpeciesFamily")]
+        [Units("-")]
+        public PastureSpecies.PlantFamilyType SpeciesFamily { get; set; } = PastureSpecies.PlantFamilyType.Grass;
+
+        /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
+        [Description("PhotosyntheticPathway")]
+        public PastureSpecies.PhotosynthesisPathwayType PhotosyntheticPathway { get; set; } = PastureSpecies.PhotosynthesisPathwayType.C3;
+
         ////- Potential growth (photosynthesis) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Reference leaf CO2 assimilation rate for photosynthesis (mg CO2/m^2Leaf/s).</summary>
+        [Separator("Potential growth")]
         [Description("ReferencePhotosyntheticRate")]
         [Units("mg/m^2/s")]
         public double ReferencePhotosyntheticRate { get; set; } = 1;
@@ -56,24 +66,19 @@ namespace Models.AgPasture
         public double ReferenceCO2 { get; set; } = 380.0;
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
-        [Description("CO2EffectScaleFactor")]
+        [Description("CO2EffectOnPhotoScaleFactor")]
         [Units("ppm")]
-        public double CO2EffectScaleFactor { get; set; } = 700.0;
+        public double CO2EffectOnPhotoScaleFactor { get; set; } = 700.0;
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
-        [Description("CO2EffectOffsetFactor")]
+        [Description("CO2EffectOnNConcScaleFactor")]
         [Units("ppm")]
-        public double CO2EffectOffsetFactor { get; set; } = 600.0;
-
-        /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
-        [Description("CO2EffectMinimum")]
-        [Units("0-1")]
-        public double CO2EffectMinimum { get; set; } = 0.7;
+        public double CO2EffectOnNConcScaleFactor { get; set; } = 600.0;
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
-        [Description("CO2EffectExponent")]
+        [Description("CO2EffectOnNConcExponent")]
         [Units("-")]
-        public double CO2EffectExponent { get; set; } = 2.0;
+        public double CO2EffectOnNConcExponent { get; set; } = 2.0;
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
         [Description("HeatOnsetTdemperature")]
@@ -118,6 +123,7 @@ namespace Models.AgPasture
         ////- Respiration parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maintenance respiration coefficient (0-1).</summary>
+        [Separator("Respiration Parameters")]
         [Description("MaintenanceRespirationCoefficient")]
         [Units("0-1")]
         public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
@@ -140,6 +146,7 @@ namespace Models.AgPasture
         ////- Germination and emergence >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
+        [Separator("Germination and Emergence Parameters")]
         [Description("DegreesDayForGermination")]
         [Units("oCd")]
         public double DegreesDayForGermination { get; set; } = 125;
@@ -147,6 +154,7 @@ namespace Models.AgPasture
         ////- Allocation of new growth >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
+        [Separator("Allocation of New Growth Parameters")]
         [Description("TargetShootRootRatio")]
         [Units("-")]
         public double TargetShootRootRatio { get; set; } = 4.0;
@@ -157,14 +165,14 @@ namespace Models.AgPasture
         public double ShootRootGlfFactor { get; set; } = 0.50;
 
         /// <summary>Maximum target allocation of shoot new growth to leaves (0-1).</summary>
-        [Description("LeafProportionMaximum")]
+        [Description("LeafProportionTargetMax")]
         [Units("0-1")]
-        public double LeafProportionMaximum { get; set; } = 0.7;
+        public double LeafProportionTargetMax { get; set; } = 0.7;
 
         /// <summary>Minimum target allocation of shoot new growth to leaves (0-1).</summary>
-        [Description("LeafProportionMinimum")]
+        [Description("LeafProportionTargetMin")]
         [Units("0-1")]
-        public double LeafProportionMinimum { get; set; } = 0.7;
+        public double LeafProportionTargetMin { get; set; } = 0.7;
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Description("LeafPropDMThreshold")]
@@ -172,33 +180,44 @@ namespace Models.AgPasture
         public double LeafPropDMThreshold { get; set; } = 500;
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
-        [Description("LeafPropDMFactor")]
+        [Description("LeafPropDMForHalfEffect")]
         [Units("kg/ha")]
-        public double LeafPropDMFactor { get; set; } = 2000;
+        public double LeafPropDMForHalfEffect { get; set; } = 2000;
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Description("LeafPropExponent")]
         [Units(">0.0")]
         public double LeafPropExponent { get; set; } = 3.0;
 
+        /// <summary>Target allocation of shoot new shoot growth to stolons (0-1).</summary>
+        [Description("StolonProportionTarget")]
+        [Units("0-1")]
+        public double StolonProportionTarget { get; set; } = 0.0;
+
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Description("SpecificLeafArea")]
         [Units("m^2/kg")]
         public double SpecificLeafArea { get; set; } = 25.0;
 
-        /// <summary>Maximum aboveground biomass for considering stems when computing LAI (kgDM/ha).</summary>
-        [Description("ShootMaxEffectOnLAI")]
+        /// <summary>Fraction of stolon tissue used when computing green LAI (0-1).</summary>
+        [Units("0-1")]
+        [Description("StolonEffectOnLAI")]
+        public double StolonEffectOnLAI { get; set; } = 0.0;
+
+        /// <summary>Aboveground biomass below which stems are used for computing LAI (kgDM/ha).</summary>
+        [Description("ShootDMThresholdForLAI")]
         [Units("kg/ha")]
-        public double ShootMaxEffectOnLAI { get; set; } = 1000;
+        public double ShootDMThresholdForLAI { get; set; } = 0;
 
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
-        [Description("MaxStemEffectOnLAI")]
+        [Description("StemMaxEffectOnLAI")]
         [Units("0-1")]
-        public double MaxStemEffectOnLAI { get; set; } = 1.0;
+        public double StemMaxEffectOnLAI { get; set; } = 1.0;
 
         ////- Tissue turnover and senescence >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Number of live leaves per tiller (-).</summary>
+        [Separator("Tissue Turnover and Senescence Parameters")]
         [Description("LiveLeavesPerTiller")][Units("-")]
         public double LiveLeavesPerTiller { get; set; } = 3.0;
 
@@ -278,6 +297,7 @@ namespace Models.AgPasture
         ////- N fixation (for legumes) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
+        [Separator("N fixation Parameters (for legumes)")]
         [Description("MinimumNFixation")]
         [Units("0-1")]
         public double MinimumNFixation { get; set; } = 0.0;
@@ -290,6 +310,7 @@ namespace Models.AgPasture
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) (0-1).</summary>
+        [Separator("Growth Limiting Factors")]
         [Description("SoilSaturationEffectMax")]
         [Units("0-1")]
         public double SoilSaturationEffectMax { get; set; } = 0.1;
@@ -307,6 +328,7 @@ namespace Models.AgPasture
         ////- Plant height >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum plant height (mm).</summary>
+        [Separator("Plant Height Parameters")]
         [Description("PlantHeightMinimum")]
         [Units("mm")]
         public double PlantHeightMinimum { get; set; } = 25.0;
@@ -326,5 +348,12 @@ namespace Models.AgPasture
         [Units(">1.0")]
         public double PlantHeightExponent { get; set; } = 2.8;
 
+        ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
+        [Separator("Harvest Limits and Preferences")]
+        [Description("MinimumGreenWt")]
+        [Units("kg/ha")]
+        public double MinimumGreenWt { get; set; } = 100;
     }
 }
