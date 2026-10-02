@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using APSIM.Core;
@@ -12,6 +11,7 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
+using System.Text.Json.Serialization;
 
 namespace Models.AgPasture
 {
@@ -98,15 +98,15 @@ namespace Models.AgPasture
 
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
-        public double Albedo { get; set; } = 0.26;
+        public double Albedo { get; private set; } = 0.26;
 
         /// <summary>Maximum stomatal conductance (m/s).</summary>
         [Units("m/s")]
-        public double Gsmax { get; set; } = 0.011;
+        public double Gsmax { get; private set; } = 0.011;
 
         /// <summary>Solar radiation at which stomatal conductance decreases to 50% (W/m^2).</summary>
         [Units("W/m^2")]
-        public double R50 { get; set; } = 200;
+        public double R50 { get; private set; } = 200;
 
         /// <summary>Leaf Area Index of live tissues (m^2/m^2).</summary>
         [Units("m^2/m^2")]
@@ -548,22 +548,22 @@ namespace Models.AgPasture
         ////- General parameters (name and type) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Family type for this plant species (grass/legume/forb).</summary>
-        private PlantFamilyType mySpeciesFamily = PlantFamilyType.Grass;
-
-        /// <summary>Family type for this plant species (grass/legume/forb).</summary>
         [Units("-")]
+        [JsonIgnore]
         public PlantFamilyType SpeciesFamily
         {
-            get { return mySpeciesFamily; }
+            get { return constants.SpeciesFamily; }
             set
             {
-                mySpeciesFamily = value;
-                isLegume = mySpeciesFamily == PlantFamilyType.Legume;
+                constants.SpeciesFamily = value;
+                if (constants.SpeciesFamily  == PlantFamilyType.Legume)
+                    isLegume = true;
             }
         }
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
-        public PhotosynthesisPathwayType PhotosyntheticPathway { get; set; } = PhotosynthesisPathwayType.C3;
+        [JsonIgnore]
+        public PhotosynthesisPathwayType PhotosyntheticPathway { get { return constants.PhotosyntheticPathway; } }
 
         ////- Initial state parameters (replace the default values) >>> - - - - - - - - - - - - - - - - - - - - - - - -
         ////////////// GUI parameters shown to user //////////////
@@ -677,6 +677,7 @@ namespace Models.AgPasture
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseHeatStressFactor
         {
             get
@@ -690,7 +691,7 @@ namespace Models.AgPasture
                     return YesNoAnswer.no;
                 }
             }
-            set { usingHeatStressFactor = (value == YesNoAnswer.yes); }
+            set { usingHeatStressFactor = value == YesNoAnswer.yes; }
         }
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
@@ -711,6 +712,7 @@ namespace Models.AgPasture
 
         /// <summary>Enable photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Units("yes/no")]
+        [JsonIgnore]
         public YesNoAnswer UseColdStressFactor
         {
             get
@@ -865,7 +867,7 @@ namespace Models.AgPasture
 
         /// <summary>Target allocation of shoot new shoot growth to stolons (0-1).</summary>
         [Units("0-1")]
-        public double StolonProportionTarget { get; set; } = 0.0;
+        public double StolonProportionTarget { get { return constants.StolonProportionTarget; } }
 
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Units("m^2/kg")]
@@ -873,7 +875,7 @@ namespace Models.AgPasture
 
         /// <summary>Fraction of stolon tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
-        public double StolonEffectOnLAI { get; set; } = 0.0;
+        public double StolonEffectOnLAI { get { return constants.StolonEffectOnLAI; } }
 
         /// <summary>Aboveground biomass below which stems are used for computing LAI (kgDM/ha).</summary>
         [Units("kg/ha")]
@@ -986,6 +988,7 @@ namespace Models.AgPasture
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
         /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
         [Units("0-1")]
+        [JsonIgnore]
         public double MinimumWaterFreePorosity { get; set; } = -1.0;
 
         /// <summary>Maximum daily recovery rate from water logging (0-1).</summary>
@@ -1030,7 +1033,7 @@ namespace Models.AgPasture
 
         /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         [Units("kg/ha")]
-        public double MinimumGreenWt { get; set; } = 100.0;
+        public double MinimumGreenWt { get { return constants.MinimumGreenWt; } }
 
         /// <summary>Leaf proportion in the minimum green Wt (0-1).</summary>
         [Units("0-1")]
@@ -2811,11 +2814,11 @@ namespace Models.AgPasture
         {
             // choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
-            if (mySpeciesFamily == PlantFamilyType.Grass)
+            if (SpeciesFamily == PlantFamilyType.Grass)
             {
                 initialDMFractions = initialDMFractionsGrasses;
             }
-            else if (mySpeciesFamily == PlantFamilyType.Legume)
+            else if (SpeciesFamily == PlantFamilyType.Legume)
             {
                 initialDMFractions = initialDMFractionsLegumes;
             }
@@ -3940,7 +3943,7 @@ namespace Models.AgPasture
                 if (BiomassRemoved != null)
                 {
                     BiomassRemovedType biomassData = new BiomassRemovedType();
-                    string[] type = { mySpeciesFamily.ToString() };
+                    string[] type = { SpeciesFamily.ToString() };
                     float[] dltdm = { (float)amountDM };
                     float[] dltn = { (float)amountN };
                     float[] dltp = { 0f }; // P not considered here
