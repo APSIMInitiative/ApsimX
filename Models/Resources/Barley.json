@@ -1104,16 +1104,16 @@
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
                 "[Phenology].CAMP.FLNparams.MinLN = 7",
-                "[Phenology].CAMP.FLNparams.PpLN = 4 ",
+                "[Phenology].CAMP.FLNparams.PpLN = 5.5 // 4",
                 "[Phenology].CAMP.FLNparams.VrnLN = 0",
-                "[Phenology].CAMP.FLNparams.VxPLN = 0",
+                "[Phenology].CAMP.FLNparams.VxPLN = 0.25 // 0",
                 "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.025 // 0.6",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 120 // 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.5 // 3",
                 "",
-                "[Phenology].GrainFilling.Target.FixedValue = 350"
+                "[Phenology].GrainFilling.Target.FixedValue = 606.25 // 306.25 (refit for MaturityDAS at EndGrainFill) // 350"
               ],
               "Name": "Baudin",
               "ResourceName": null,
