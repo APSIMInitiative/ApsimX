@@ -8149,25 +8149,6 @@ internal class Converter
         }
 
         JsonUtilities.RenameVariables(root, changes);
-
-        Tuple<string, string>[] changes2 =
-        {
-            new Tuple<string, string>("CO2EffectScaleFactorOnNConc", "CO2EffectOnNConcScaleFactor"),
-            new Tuple<string, string>("CO2EffectExponentOnNConc", "CO2EffectOnNConcExponent"),
-            new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
-            new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI")
-        };
-
-        foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpeciesConstants"))
-        {
-            foreach (Tuple<string, string> change in changes2)
-            {
-                if (pasture[change.Item1] != null)
-                    pasture[change.Item2] = pasture[change.Item1];
-            }
-        }
-
-        JsonUtilities.RenameVariables(root, changes);
     }
 }
 
