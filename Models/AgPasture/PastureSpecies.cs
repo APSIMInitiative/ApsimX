@@ -981,7 +981,7 @@ namespace Models.AgPasture
 
         /// <summary>Maximum reduction in plant growth due to water logging (saturated soil) (0-1).</summary>
         [Units("0-1")]
-        public double SoilSaturationEffectMax { get { return constants.TurnoverDefoliationEffectOnRoots; } }
+        public double SoilSaturationEffectMax { get { return constants.SoilSaturationEffectMax; } }
 
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
         /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
