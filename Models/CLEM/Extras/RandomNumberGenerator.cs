@@ -31,10 +31,11 @@ namespace Models.CLEM
         public int Seed { get; set; }
 
         /// <summary>
-        /// Iteration number for multiple simulations of stochasitc processes
+        /// Iteration number for multiple simulations of stochastic processes
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, GreaterThanEqualValue(0)]
+        [JsonIgnore]
         public int Iteration { get; set; }
 
         /// <summary>
@@ -45,13 +46,20 @@ namespace Models.CLEM
         public static Random Generator 
         { 
             get 
-            { 
-                if(generator is null)
-                    throw new Exception("Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+            {
+                if (generator is null)
+                {
+                    throw new Exception($"Missing random number generator!{Environment.NewLine}This simulation uses stochastic processes requiring random numbers{Environment.NewLine}You must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation].");
+                }
 
                 return generator; 
             } 
         }
+
+        /// <summary>
+        /// Determines if the random nunber generator has been created and is available.
+        /// </summary>
+        public static bool IsAvailable => generator is not null;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -60,9 +68,21 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             if (Seed == 0)
+            {
                 generator = new Random(Guid.NewGuid().GetHashCode());
+            }
             else
+            {
                 generator = new Random(Seed);
+            }
+        }
+
+        /// <summary>
+        /// A method to initialise the random number generator needed for UI calculations such as the Descriptive Summary
+        /// </summary>
+        public static void SetForPreSimulation()
+        {
+            generator = new Random(1);
         }
     }
 }

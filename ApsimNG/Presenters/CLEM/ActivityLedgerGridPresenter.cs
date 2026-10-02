@@ -1,14 +1,16 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.Interfaces;
+using Models;
+using Models.CLEM.Reporting;
+using Models.Core;
+using Models.Factorial;
+using Models.Storage;
+using System;
+using System.IO;
+using UserInterface.Views;
+using APSIMNG.Utility;
+
+namespace UserInterface.Presenters
 {
-    using global::UserInterface.Interfaces;
-    using Models;
-    using Models.CLEM.Reporting;
-    using Models.Core;
-    using Models.Factorial;
-    using Models.Storage;
-    using System;
-    using System.IO;
-    using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter, IRefreshPresenter, ICLEMPresenter
@@ -115,10 +117,10 @@
         public void Refresh()
         {
             // now get report model to create data as we need to generate the HTML report independent of ApsimNG
-            Grid.DataSource = !Utility.Configuration.Settings.ThemeRestartRequired ?
-                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme) :
-                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), !Utility.Configuration.Settings.DarkTheme);
-
+            Grid.DataSource = !Configuration.Settings.ThemeRestartRequired ?
+                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Configuration.Settings.DarkTheme) :
+                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), !Configuration.Settings.DarkTheme);
+    
             this.Grid.LockLeftMostColumns(1);  // lock activity name.
         }
 

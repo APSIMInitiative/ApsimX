@@ -1,9 +1,9 @@
-﻿using APSIM.Shared.JobRunning;
-using Models.Core;
+﻿using Models.Core;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using APSIM.Shared.Utilities;
 
 namespace UnitTests.Storage
 {
@@ -194,7 +194,7 @@ namespace UnitTests.Storage
             this.columnNames.Clear();
             this.columnNames.AddRange(data.ColumnNames);
             foreach (var dataRow in data.Rows)
-                rows.Add(new Row() { values = APSIM.Shared.Utilities.ReflectionUtilities.Clone(dataRow) as IList<object> });
+                rows.Add(new Row() { values = ReflectionUtilities.Clone(dataRow) as IList<object> });
 
         }
 

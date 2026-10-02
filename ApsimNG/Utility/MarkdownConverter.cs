@@ -3,13 +3,9 @@ using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Syntax;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using UserInterface.Classes;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// Utility class which encapsulates markdown -> HTML conversion process.

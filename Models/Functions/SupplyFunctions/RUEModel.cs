@@ -6,10 +6,48 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// Biomass fixation is modelled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).
-    /// This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.
-    /// The potential photosynthesis calculated using RUE is then adjusted according to stress factors, these account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO~2~ concentration (FCO2).
-    /// NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
+    /// Potential daily photosynthesis is calculated as the product of intercepted short wave radiation and its conversion efficiency, the radiation use efficiency (RUE) ([#Monteith1977]).
+    /// 
+    /// _Note: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth._
+    /// 
+    /// The radiation use efficiency is adjusted from a base value appropriate for historical levels of atmospheric CO2 concentration (ie 350ppm - see previous section).  Daily values of potential photosynthesis are then modified for whichever is the most severe effect of plant nitrogen status, temperature and atmospheric vapour pressure deficit.   These same relative growth factors are provided to the MicroClimate model to moderate the stomatal conductance terms incorporated into the Penman-Monteith formulation.
+    /// Finally, the daily growth rate is moderated in response to the relative water supply:demand ratio (F<sub>W</sub>) to capture the effect of daily plant water status.
+    /// 
+    /// This calculation for photosynthesis is then provided to the organ arbitrator as a potential daily DM fixation supply for arbitration with all other DM supplies and demands.
+    /// 
+    /// ```
+    /// DMFixationSupply = RUE x PhotosynthesisCO2Modifier x Min(F<sub>T</sub>, F<sub>N</sub>, F<sub>VPD</sub>) x F<sub>W</sub>
+    /// ```
+    /// 
+    /// where
+    /// 
+    /// **RUE ({[RUEModel].RUE.GetType().Name})**
+    /// 
+    /// Radiation Use Efficiency for potential daily growth (g/MJ/m~2~)
+    /// 
+    /// {[RUEModel].RUE}
+    /// 
+    /// **F~T~ ({[RUEModel].FT.GetType().Name})**
+    /// 
+    /// Relative growth rate factor for Temperature (0-1)
+    /// 
+    /// {[RUEModel].FT}
+    /// 
+    /// **F~N~ ({[RUEModel].FN.GetType().Name})**
+    /// 
+    /// Relative growth rate factor for Nitrogen status (0-1)
+    /// {[RUEModel].FN}
+    /// 
+    /// **F~VPD~ ({[RUEModel].FVPD.GetType().Name})**
+    /// 
+    /// Relative growth rate factor for Vapour Pressure Deficit (0-1)
+    /// {[RUEModel].FVPD}
+    /// 
+    /// **F~W~ ({[RUEModel].FW.GetType().Name})**
+    /// 
+    /// Relative growth rate factor for plant water status (0-1)
+    /// {[RUEModel].FW}
+    /// 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(ILeaf))]

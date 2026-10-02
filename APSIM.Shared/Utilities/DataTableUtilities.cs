@@ -1075,38 +1075,42 @@ public static DataTable ReadDataTable(string filePath, char delimiter = ' ', int
                 Type typeToConvertTo = null;
                 foreach (DataRow row in dt.Rows)
                 {
-                    if (Int32.TryParse((string)row[colIndex], out int intValue))
+                    if (typeToConvertTo == null || typeToConvertTo == typeof(DateTime))
                     {
-                        if (typeToConvertTo == null)
+                        if (DateTime.TryParse((string)row[colIndex], out DateTime dateValue))
+                        {
+                            string result = DateUtilities.ValidateDateStringWithYear((string)row[colIndex]);
+                            if (result != null)
+                                if (typeToConvertTo == null)
+                                    typeToConvertTo = typeof(DateTime);
+                        }
+                        else if (Int32.TryParse((string)row[colIndex], out int intValue))
                             typeToConvertTo = typeof(int);
-                        else if (typeToConvertTo != typeof(int))
-                        {
-                            typeToConvertTo = null;
-                            break;
-                        }
-                    }
-                    else if (Double.TryParse((string)row[colIndex], out double doubleValue))
-                    {
-                        if (typeToConvertTo == null)
+                        else if (Double.TryParse((string)row[colIndex], out double doubleValue))
                             typeToConvertTo = typeof(double);
-                        else if (typeToConvertTo != typeof(double))
-                        {
-                            typeToConvertTo = null;
-                            break;
-                        }
+                        else
+                            typeToConvertTo = typeof(string);
                     }
-                    else if (DateTime.TryParse((string)row[colIndex], out DateTime dateValue))
+                    else if (typeToConvertTo == typeof(int))
                     {
-                        if (typeToConvertTo == null)
-                            typeToConvertTo = typeof(DateTime);
-                        else if (typeToConvertTo != typeof(DateTime))
-                        {
-                            typeToConvertTo = null;
-                            break;
-                        }
+                        if (Int32.TryParse((string)row[colIndex], out int intValue))
+                            typeToConvertTo = typeof(int);
+                        else if (Double.TryParse((string)row[colIndex], out double doubleValue))
+                            typeToConvertTo = typeof(double);
+                        else
+                            typeToConvertTo = typeof(string);
+                    }
+                    else if (typeToConvertTo == typeof(double))
+                    {
+                        if (Double.TryParse((string)row[colIndex], out double doubleValue))
+                            typeToConvertTo = typeof(double);
+                        else
+                            typeToConvertTo = typeof(string);
                     }
                     else
+                    {
                         typeToConvertTo = typeof(string);
+                    }
                 }
                 if (typeToConvertTo != null && typeToConvertTo != typeof(string))
                     ConvertDataTableOfColumn(dt, dt.Columns[colIndex].ColumnName, typeToConvertTo);

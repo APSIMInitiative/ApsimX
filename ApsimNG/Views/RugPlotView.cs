@@ -1,21 +1,15 @@
-﻿namespace UserInterface.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Interfaces;
-    using EventArguments;
-    using Gtk;
-    using Models;
-    using Models.Core;
-    using Models.Management;
-    using Extensions;
-    using Utility;
-    using APSIM.Shared.Graphing;
-    using Color = System.Drawing.Color;
-    using Point = System.Drawing.Point;
-    using Gtk.Sheet;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Gtk;
+using Models.Management;
+using APSIMNG.Utility;
+using Color = System.Drawing.Color;
+using Point = System.Drawing.Point;
+using Gtk.Sheet;
 
+namespace UserInterface.Views
+{
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

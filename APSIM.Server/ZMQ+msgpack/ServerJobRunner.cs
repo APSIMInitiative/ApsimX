@@ -49,7 +49,6 @@ namespace APSIM.ZMQServer
         {
             if (job is SimulationDescription sim)
             {
-                sim.Storage.Writer.Clean(new[] { sim.SimulationToRun.Name }, false);
                 apsim?.aboutToStart( job.Name );
                 sim.Run(cancelToken, Replacements);
             }

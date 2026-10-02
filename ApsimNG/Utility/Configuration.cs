@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
 
     /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>

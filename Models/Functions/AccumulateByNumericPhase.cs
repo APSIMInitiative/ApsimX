@@ -15,12 +15,8 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByNumericPhase : Model, IFunction, IStructureDependency
+    public class AccumulateByNumericPhase : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         //Class members
         /// <summary>The accumulated value</summary>
         private double AccumulatedValue = 0;
@@ -67,6 +63,7 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
+            FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -76,7 +73,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (Phenology.Stage >= StartStageName && Phenology.Stage <= EndStageName)
             {

@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Metadata;
 using APSIM.Shared.Documentation;
-using DeepCloner.Core;
-using MathNet.Numerics.Distributions;
 using Models;
+using Models.Functions;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
-using Graph = Models.Graph;
+using Constant = Models.Functions.Constant;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -33,9 +33,9 @@ namespace APSIM.Documentation.Models.Types
             List<ITag> newTags = new List<ITag>();
 
             Section mainSection = GetSummaryAndRemarksSection(model);
-            
 
-            newTags.Add(new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections."));
+
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections."));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
@@ -44,18 +44,16 @@ namespace APSIM.Documentation.Models.Types
             tableData.Columns.Add("Component Type", typeof(string));
             foreach (IModel child in this.model.Children)
             {
-                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass))
+                if (child as IText == null && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(Folder) && child.GetType() != typeof(CompositeBiomass) && child.GetType() != typeof(ModelOverrides))
                 {
                     DataRow row = tableData.NewRow();
                     row[0] = child.Name;
-                    string childtype = child.GetType().ToString();
-                    row[1] = "["+childtype+ "](https://github.com/APSIMInitiative/ApsimX/blob/master/"+childtype.Replace(".","/")+".cs)";
+                    string childtype = DocumentationUtilities.GetFilepathOfNamespace(child.GetType());
+                    row[1] = DocumentationUtilities.GetGithubMarkdownLink(child);
                     tableData.Rows.Add(row);
                 }
             }
-            newTags.Add(new Section("Plant Model Components", new Table(tableData)));
-
-
+            mainSection.Add(new Table(tableData));
 
             // Write Composite Biomass Table
             // -------------------------------------------------------------------------------
@@ -81,15 +79,17 @@ namespace APSIM.Documentation.Models.Types
             }
             if (tableDataBiomass.Rows.Count > 0)
             {
-                newTags.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
+                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
             }
+
+            newTags.Add(mainSection);
 
             // Document Phenology Model
             // -------------------------------------------------------------------------------
             Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
             if (phenology != null)
             {
-                DataTable dataTable = phenology.GetPhaseTable();
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(phenology);
                 Section PhenologySection = new Section("Phenology", new Table(dataTable));
                 PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
                 newTags.Add(PhenologySection);
@@ -104,23 +104,16 @@ namespace APSIM.Documentation.Models.Types
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
-            {
-                Section S = GetSummaryAndRemarksSection(simpleLeaf);
+                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf)));
 
-                S.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-                newTags.Add(S);
-            }
             //Write children
             // -------------------------------------------------------------------------------
-            List<ITag> children = new List<ITag>();
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null)
                 {
                     Section S = GetSummaryAndRemarksSection(child);
-                    //S.Add(new Paragraph("Hello World"));
-                    children.AddRange(new List<ITag>() {S});
+                    newTags.Add(S);
                 }
-            newTags.Add(new Section("Child Components", children));
 
             //Write cultivars table
             // -------------------------------------------------------------------------------
@@ -133,27 +126,36 @@ namespace APSIM.Documentation.Models.Types
                 cultivarNameTable.Columns.Add("Overrides");
                 foreach (Cultivar cultivarChild in cultivars)
                 {
-                    string altNames = cultivarChild.GetNames().Any() ? string.Join(' ', cultivarChild.GetNames()) : string.Empty;
+                    string altNames = cultivarChild.GetNames().Any() ? string.Join(',', cultivarChild.GetNames()) : string.Empty;
                     altNames = altNames.Replace(cultivarChild.Name, "");
-                    if (altNames != "") altNames = "(" + altNames + ")";
-                    altNames = altNames.Replace("( ", "(");
+                    if (altNames.StartsWith(','))
+                        altNames = altNames.Substring(1);
+                    if (altNames.Length > 0)
+                        altNames = $"<p>*{altNames}*</p>";
 
                     string commands = "";
                     if (cultivarChild.Command != null)
-                        foreach (string cmd in cultivarChild.Command)
-                            commands += cmd + " \n\n";
-                    cultivarNameTable.Rows.Add(new string[] { cultivarChild.Name + " \n\n" + altNames, commands });
+                    {
+                        List<string> commandsList = new List<string>(cultivarChild.Command);
+                        commandsList.Sort(StringComparer.OrdinalIgnoreCase);
+                        if (cultivarChild.Command != null)
+                        {
+                            foreach (string cmd in commandsList)
+                            {
+                                string line = cmd.Trim();
+                                if (line.Contains("//"))
+                                    line = line.Split("//")[0];
+                                if (line.Length > 0)
+                                    commands += $"<p>{cmd}</p>";
+                            }
+                        }
+                            
+                                
+                    }
+                    cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p>{altNames}", commands });
                 }
-                newTags.Add(new Section("Appendix 1 - Cultivar specifications", new Table(cultivarNameTable)));
+                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
             }
-
-
-            mainSection.Add(newTags);
-
-
-
-
-            newTags = new List<ITag>() { mainSection };
 
             return newTags;
         }

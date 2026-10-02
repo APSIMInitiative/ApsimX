@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     [AttributeUsage(AttributeTargets.Property)]
     internal class InputAttribute : Attribute

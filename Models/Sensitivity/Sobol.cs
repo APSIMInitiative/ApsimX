@@ -118,7 +118,7 @@ namespace Models
                 // Create a simulation.
                 var simulationName = Name + "Simulation" + simulationNumber;
                 var simDescription = new SimulationDescription(baseSimulation, simulationName);
-                simDescription.Descriptors.Add(new SimulationDescription.Descriptor("SimulationName", simulationName));
+                simDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", simulationName));
 
                 // Apply each composite factor of this combination to our simulation description.
                 combination.ForEach(c => c.ApplyToSimulation(simDescription));

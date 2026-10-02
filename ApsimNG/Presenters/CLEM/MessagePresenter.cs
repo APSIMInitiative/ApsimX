@@ -1,16 +1,12 @@
-﻿using ApsimNG.Interfaces;
-using Models;
+﻿using APSIMNG.Utility;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 
@@ -29,7 +25,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view to use
         /// </summary>
-        private IMarkdownView genericView;
+        private MarkdownView genericView;
 
         /// <summary>
         /// Attach the view
@@ -40,7 +36,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            genericView = view as IMarkdownView;
+            genericView = view as MarkdownView;
         }
 
         public void Refresh()
@@ -58,32 +54,37 @@ namespace UserInterface.Presenters
                 IModel simulation = model.Node.FindParent<Simulation>(recurse: true);
                 IDataStore ds = model.Node.Find<IDataStore>();
                 if (ds == null)
+                { 
+                    markdownWriter.Write("### No [DataStore] found in simulation.");
                     return markdownWriter.ToString();
+                }
 
                 DataTable dataTable = null;
-                string noSimulationMessage = "No simulation has been performed for this farm";
-
                 bool expSim = model.Node.FindParents<Experiment>().Any();
-                if (expSim)
-                {
-                    markdownWriter.Write("### Multiple simulation experiment performed");
-                    markdownWriter.Write("  \r\n  \r\n");
-
-                    dataTable = ds.Reader.GetData(tableName: "_Messages");
-                    noSimulationMessage = "No simulations have been performed for this experiment";
-                }
-                else
-                {
-                    dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                // ensure _Messages table has been created.
+                if (ds.Reader.TableNames.Any())
+                { 
+                    if (expSim)
+                    {
+                        markdownWriter.Write("### Multiple simulation experiment performed.  \r\n  \r\n");
+                        dataTable = ds.Reader.GetData(tableName: "_Messages");
+                    }
+                    else
+                    {
+                        dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                    }
                 }
 
                 if (dataTable == null)
                 {
-                    markdownWriter.Write($"### Datastore is empty  \r\n  \r\n{noSimulationMessage}");
+                    markdownWriter.Write("### Datastore is empty  \r\n  \r\nNo simulation has been performed for this farm.");
                     return markdownWriter.ToString();
                 }
+                if (!ds.Reader.TableNames.Any())
+                    markdownWriter.Write("### No data reported  \r\n  \r\nNo data has been reported in the last simulation.  \r\n  \r\n");
+
                 DataRow[] dataRows = dataTable.Select();
-                if (dataRows.Length > 0)
+                if (dataRows.Any())
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;
@@ -174,10 +175,6 @@ namespace UserInterface.Presenters
                                 terminatedCount++;
                             }
 
-                            markdownWriter.Write("  \r\n### ");
-                            if (expSim)
-                                markdownWriter.Write($"[{dr[2]}].");
-                            markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");
                             msgStr = msgStr.Replace("[rs=", @".resources-**");
@@ -196,20 +193,29 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
                             msgStr = msgStr.Replace("</b>", "**");
-                            markdownWriter.Write("  \r\n");
-                            markdownWriter.Write(msgStr);
+
+                            // do not include duplicates of final error message if already reported. 
+                            if (!markdownWriter.ToString().Contains(msgStr))
+                            {
+                                markdownWriter.Write("  \r\n### ");
+                                if (expSim)
+                                    markdownWriter.Write($"[{dr[2]}].");
+                                markdownWriter.Write(title);
+                                markdownWriter.Write("  \r\n");
+                                markdownWriter.Write(msgStr);
+                            }
                         }
                     }
                     if (dataRows.Length > maxErrors)
                     {
-                        markdownWriter.Write("## Warning limit reached");
+                        markdownWriter.Write($"\r\n## Warning limit reached");
                         markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayed here. Please refer to the SummaryInformation for the full list of issues.");
                     }
                 }
                 else
                 {
                     markdownWriter.Write("\r\n### Message");
-                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
+                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed.");
                 }
                 return markdownWriter.ToString();
             }
@@ -246,13 +252,13 @@ namespace UserInterface.Presenters
                 "\n</style>\n</head>\n<body>";
 
             // apply theme based settings
-            if (!Utility.Configuration.Settings.ThemeRestartRequired)
+            if (!Configuration.Settings.ThemeRestartRequired)
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, false) : ModifyHTMLStyle(htmlString, true);
             }
             else
             {
-                htmlString = !Utility.Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
+                htmlString = !Configuration.Settings.DarkTheme ? ModifyHTMLStyle(htmlString, true) : ModifyHTMLStyle(htmlString, false);
 
             }
 

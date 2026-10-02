@@ -28,6 +28,7 @@ namespace Models.CLEM.Timers
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerLinked : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [NonSerialized]
@@ -50,14 +51,6 @@ namespace Models.CLEM.Timers
 
         ///<inheritdoc/>
         public string StatusMessage { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerLinked()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-        }
 
         /// <inheritdoc/>
         public bool ActivityDue
@@ -92,7 +85,7 @@ namespace Models.CLEM.Timers
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
+        [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             GetAllTimersAvailable();
@@ -105,67 +98,25 @@ namespace Models.CLEM.Timers
             ActivityPerformed?.Invoke(this, e);
         }
 
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write($"Linked to {CLEMModel.DisplaySummaryValueSnippet(ExistingTimerName, errorString: "No timer selected")}");
-                htmlWriter.Write("</span></div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
         #region validation
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (linkedTimer is null)
             {
-                string[] memberNames = new string[] { "Linked timer" };
-                string errorMsg = string.Empty;
+                string errorMsg;
                 if (ExistingTimerName is null)
+                {
                     errorMsg = "No existing timer has been specified";
+                }
                 else
+                {
                     errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
+                }
 
-                results.Add(new ValidationResult(errorMsg, memberNames));
+                yield return new ValidationResult(errorMsg, new string[] { "Linked timer" });
             }
-            return results;
         }
         #endregion
     }

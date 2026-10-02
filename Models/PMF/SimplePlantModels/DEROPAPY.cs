@@ -232,18 +232,11 @@ namespace Models.PMF.SimplePlantModels
             bool RootsInNeighbourZone = bool.Parse(CurrentCropParams["RootsInNeighbourZone"]);
             if (RootsInNeighbourZone)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
-                string neighbour = "";
                 List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
                 {
-                    foreach (Zone z in zones)
-                    {
-                        if (z.Name != zone.Name)
-                            neighbour = z.Name;
-                    }
-                    root.ZoneNamesToGrowRootsIn.Add(neighbour);
                     root.ZoneRootDepths.Add(rootDepth);
                     NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
                     Constant InitStruct = new Constant();
@@ -255,7 +248,18 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    //root.ZoneInitialDM.Add(InitialDM);
+                }
+            }
+            else
+            {
+                List<Zone> zones = Structure.FindAll<Zone>(relativeTo: simulation).ToList();
+                foreach (Zone z in zones)
+                {
+                    if (z.Name != zone.Name)
+                    {
+                        //This is the neighbour zone for the plant and roots are not growing into it so set to false
+                        deropapy.ZonesToGrowRootsIn[z.Name] = false;
+                    }
                 }
             }
 

@@ -25,12 +25,13 @@ namespace Models.CLEM.Timers
     [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class ActivityTimerResourceLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
-        [Link] IClock clock = null;
+        [Link] readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
@@ -56,6 +57,7 @@ namespace Models.CLEM.Timers
         [Required]
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
+        
         private object[] GetOperators() => new object[]
         {
             ExpressionType.Equal,
@@ -80,15 +82,6 @@ namespace Models.CLEM.Timers
         /// </summary>
         public event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ActivityTimerResourceLevel()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Filter;
-            this.SetDefaults();
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -105,7 +98,7 @@ namespace Models.CLEM.Timers
             {
                 if (clock.Today != checkDate)
                 {
-                    amountAtFirstCheck = ResourceTypeModel.Amount;
+                    amountAtFirstCheck = ResourceTypeModel.AmountAvailable;
                     checkDate = clock.Today;
                 }
 
@@ -149,76 +142,5 @@ namespace Models.CLEM.Timers
         {
             ActivityPerformed?.Invoke(this, e);
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filter\">");
-                htmlWriter.Write($"Perform when {DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)} ");
-                string str = "";
-                switch (Operator)
-                {
-                    case ExpressionType.Equal:
-                        str += "equals";
-                        break;
-                    case ExpressionType.NotEqual:
-                        str += "does not equal";
-                        break;
-                    case ExpressionType.LessThan:
-                        str += "is less than";
-                        break;
-                    case ExpressionType.LessThanOrEqual:
-                        str += "is less than or equal to";
-                        break;
-                    case ExpressionType.GreaterThan:
-                        str += "is greater than";
-                        break;
-                    case ExpressionType.GreaterThanOrEqual:
-                        str += "is greater than or equal to";
-                        break;
-                    default:
-                        break;
-                }
-                htmlWriter.Write(str);
-                if (Amount == 0)
-                    htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
-                else
-                {
-                    htmlWriter.Write(" <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Amount.ToString());
-                    htmlWriter.Write("</span>");
-                }
-                htmlWriter.Write("</div>");
-                if (!this.Enabled & !FormatForParentControl)
-                    htmlWriter.Write(" - DISABLED!");
-                return htmlWriter.ToString();
-            }
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryClosingTags()
-        {
-            return "</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write(this.Name);
-                htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

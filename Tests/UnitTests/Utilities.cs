@@ -1,39 +1,55 @@
-﻿using System;
+﻿using APSIM.Core;
+using APSIM.Shared.JobRunning;
+using APSIM.Shared.Utilities;
+using Microsoft.Data.Sqlite;
+using Models;
+using Models.Core;
+using Models.PMF;
+using Models.Soils;
+using Models.Soils.Nutrients;
+using Models.Soils.SoilTemp;
+using Models.Storage;
+using Models.Surface;
+using Models.WaterModel;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using APSIM.Core;
-using APSIM.Shared.JobRunning;
-using APSIM.Shared.Utilities;
-using Models;
-using Models.Core;
-using Models.Storage;
-using NUnit.Framework;
-using Models.Soils;
-using Models.WaterModel;
-using Models.PMF;
-using Models.Surface;
-using Models.Soils.SoilTemp;
-using Models.Soils.Nutrients;
 
 namespace UnitTests
 {
-
     [SetUpFixture]
     public static class Utilities
     {
+
+        private static string originalDir = Directory.GetCurrentDirectory();
+
         private static string tempPath;
+
         [OneTimeTearDown]
         public static void TearDown()
         {
+            // This may all look a bit odd, but Microsoft.Data.Sqlite is reluctant to
+            // release database file locks. Although we close our connections appropriately,
+            // some of that closing is done only when finalizers are run.
+            // I don't understand why we need to do the garbage collection twice,
+            // but the following does work, allowing us to remove the temporary folder.
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            SqliteConnection.ClearAllPools();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Directory.SetCurrentDirectory(originalDir);
             Directory.Delete(tempPath, true);
         }
 
         [OneTimeSetUp]
         public static void OneTimeSetUp()
         {
+            string originalDir = Directory.GetCurrentDirectory();
             tempPath = Path.Combine(Path.GetTempPath(), $"apsimx-unittests-{Guid.NewGuid().ToString()}");
             Environment.SetEnvironmentVariable("TMP", tempPath);
             if (!Directory.Exists(tempPath))

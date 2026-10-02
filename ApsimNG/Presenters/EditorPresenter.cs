@@ -1,23 +1,23 @@
-﻿namespace UserInterface.Presenters
+﻿using System;
+using System.Drawing;
+using System.Linq;
+using Models.Core;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using UserInterface.Views;
+using UserInterface.EventArguments;
+
+namespace UserInterface.Presenters
 {
-    using System;
-    using System.Drawing;
-    using EventArguments;
-    using Views;
-    using Interfaces;
-    using Commands;
-    using System.Linq;
-    using Models.Core;
-
     /// <summary>
-    /// A presenter class for showing a cultivar.
+    /// A presenter class for and Editor view
     /// </summary>
-    public class EditorPresenter : IPresenter
+    public class EditorPresenter : IPresenter, ISubPresenter
     {
-        /// <summary>The cultivar model</summary>
-        private ILineEditor model;
+        /// <summary>The model</summary>
+        private ICodeEditor model;
 
-        /// <summary>The cultivar view</summary>
+        /// <summary>The view</summary>
         private IEditorView view;
 
         /// <summary>The parent explorer presenter</summary>
@@ -26,34 +26,86 @@
         /// <summary>The intellisense object.</summary>
         private IntellisensePresenter intellisense;
 
-        /// <summary>Attach the cultivar model to the cultivar view</summary>
+        /// <summary>Delegate for a TextChanged event.</summary>
+        /// <param name="model">The model</param>
+        /// <param name="property">The property changed</param>
+        /// <param name="lines">The lines it should be given</param>
+        public delegate void TextChangedDelegate(ICodeEditor model, string property, string[] lines);
+
+        /// <summary>
+        /// Invoked when the user changes the text in the editor
+        /// </summary>
+        public event TextChangedDelegate TextChanged;
+
+        /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
+
+        /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The mode</param>
         /// <param name="view">The view</param>
         /// <param name="explorerPresenter">The parent explorer presenter</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.model = model as ILineEditor;
+            this.model = model as ICodeEditor;
             this.view = view as IEditorView;
+            (this.view as EditorView).Language = "c-sharp";
             this.explorerPresenter = explorerPresenter;
 
-            this.view.Lines = this.model.Lines?.ToArray();
             intellisense = new IntellisensePresenter(this.view as ViewBase);
-            intellisense.ItemSelected += OnIntellisenseItemSelected;
-
-            this.view.LeaveEditor += this.OnCommandsChanged;
-            this.view.ContextItemsNeeded += this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+            ConnectEvents();
+            Refresh();
         }
 
         /// <summary>Detach the model from the view</summary>
         public void Detach()
         {
-            this.OnCommandsChanged(this, new EventArgs());
-            this.view.LeaveEditor -= this.OnCommandsChanged;
-            this.view.ContextItemsNeeded -= this.OnContextItemsNeeded;
-            this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
-            intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            DisconnectEvents();
+            OnCommandsChanged(this, new EventArgs());
             intellisense.Cleanup();
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        public void ConnectEvents()
+        {
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                intellisense.ItemSelected += OnIntellisenseItemSelected;
+                view.LeaveEditor += OnCommandsChanged;
+                view.ContextItemsNeeded += OnContextItemsNeeded;
+                view.TextHasChangedByUser += OnTextChanged;
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        public void DisconnectEvents()
+        {
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                view.LeaveEditor -= OnCommandsChanged;
+                view.ContextItemsNeeded -= OnContextItemsNeeded;
+                view.TextHasChangedByUser -= OnTextChanged;
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+                intellisense.ItemSelected -= OnIntellisenseItemSelected;
+            }
+        }
+
+        public void Refresh()
+        {
+            SetCode(this.model.Code?.ToArray());
+            view.Show();
+            view.Refresh();
+        }
+
+        public void SetCode(string[] lines)
+        {
+            this.view.Lines = lines;
         }
 
         /// <summary>The user has changed the commands</summary>
@@ -63,13 +115,13 @@
         {
             try
             {
-                if (this.view.Lines != this.model.Lines)
+                if (this.view.Lines != this.model.Code)
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    if (model.Lines == null || !model.Lines.SequenceEqual(view.Lines))
+                    if (model.Code == null || !model.Code.SequenceEqual(view.Lines))
                     {
-                        ChangeProperty command = new ChangeProperty(model, nameof(model.Lines), this.view.Lines);
+                        ChangeProperty command = new ChangeProperty(model, nameof(model.Code), this.view.Lines);
                         explorerPresenter.CommandHistory.Add(command);
                     }
 
@@ -101,11 +153,13 @@
             
         }
 
-        /// <summary>The cultivar model has changed probably because of an undo.</summary>
+        /// <summary>The model has changed</summary>
         /// <param name="changedModel">The model that was changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            this.view.Lines = this.model.Lines.ToArray();
+            if (changedModel is ICodeEditor linesModel)
+                if (linesModel.FullPath == model.FullPath)
+                    view.Lines = linesModel.Code.ToArray();
         }
 
         /// <summary>
@@ -117,6 +171,27 @@
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             view.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+        }
+
+        /// <summary>
+        /// User has changed the paths. Save to model.
+        /// </summary>
+        /// <param name="sender">The text control</param>
+        /// <param name="e">Event arguments</param>
+        private void OnTextChanged(object sender, EventArgs e)
+        {
+            //if nothing is listening to the change, update model here
+            if (TextChanged == null)
+            {
+                explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(model, "Code", view.Lines));
+                explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
+            //if something is, let the other presenter do the change (such as this being a sub presenter)
+            else 
+            {
+                TextChanged?.Invoke(model, "Code", view.Lines);
+            }
         }
     }
 }

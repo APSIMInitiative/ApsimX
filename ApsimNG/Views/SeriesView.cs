@@ -243,7 +243,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                    ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/graphs/graphfilters/");
+                    ProcessUtilities.ProcessStart("https://docs.apsim.info/docs/usage/graphs/graphfilters");
             }
             catch (Exception err)
             {

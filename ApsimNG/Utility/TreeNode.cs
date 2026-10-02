@@ -1,4 +1,4 @@
-﻿namespace Utility
+﻿namespace APSIMNG.Utility
 {
     /// <summary>
     /// Encapsulates a node in the simulations tree.

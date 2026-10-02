@@ -14,8 +14,8 @@ namespace Models.Soils
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     public class OutputLayers : Model
     {
         /// <summary>Access the soil physical properties.</summary>

@@ -1,9 +1,8 @@
 ﻿using Gtk;
 using System;
 using System.Drawing;
-using System.Reflection.Emit;
 using UserInterface.Interfaces;
-using Utility;
+using APSIMNG.Utility;
 
 namespace UserInterface.Views
 {

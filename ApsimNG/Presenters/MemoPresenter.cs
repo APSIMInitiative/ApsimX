@@ -4,6 +4,10 @@ using UserInterface.Views;
 using System;
 using APSIM.Shared.Utilities;
 using UserInterface.Commands;
+using APSIM.Documentation;
+using APSIM.Documentation.Bibliography;
+using System.Collections.Generic;
+using APSIMNG.Utility;
 
 namespace UserInterface.Presenters
 {
@@ -57,24 +61,28 @@ namespace UserInterface.Presenters
             helpButton = (view as ViewBase).GetControl<ButtonView>("helpButton");
             previewBox = (view as ViewBase).GetControl<ContainerView>("previewBox");
             editorBox = (view as ViewBase).GetControl<ContainerView>("editorBox");
+
             helpButton.Clicked += HelpBtnClicked;
-            textView.WrapText = true;
-            textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
-            textView.Text = this.model.Text;
-            textView.Changed += OnTextHasChanged;
-            markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-            markdownView.Text = this.model.Text;
             editButton.Clicked += OnEditButtonClick;
-            helpButton.Visible = false;
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+
+            textView.WrapText = true;
+            textView.ModifyFont(Configuration.Settings.EditorFontName);
+            textView.Changed += OnTextHasChanged;
+            textView.Text = this.model.Text;
+
             previewBox.Show();
             editorBox.Hide();
+
+            markdownView.Refresh();
+            markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
         }
 
         private void HelpBtnClicked(object sender, EventArgs e)
         {
             try
             {
-                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.app/usage/memo/");
+                ProcessUtilities.ProcessStart("https://docs.apsim.info/docs/usage/memo");
             }
             catch (Exception err)
             {
@@ -90,7 +98,23 @@ namespace UserInterface.Presenters
         /// <param name="e">The event arguments.</param>
         private void OnTextHasChanged(object sender, EventArgs e)
         {
-            markdownView.Text = textView.Text;
+            List<ICitation> cites = WebDocs.ProcessCitations(textView.Text, out string text);
+
+            //replace redirects to "References" with urls so the gui works better
+            foreach(ICitation cite in cites)
+            {
+                if (string.IsNullOrEmpty(cite.URL))
+                    text = text.Replace($"[{cite.InTextCite}](#{cite.Name})", $"{cite.InTextCite}");
+                else
+                    text = text.Replace($"[{cite.InTextCite}](#{cite.Name})", $"[{cite.InTextCite}]({cite.URL})");
+            }
+                
+            if (cites.Count > 0)
+            {
+                text += "\n\n# References\n.";
+                text += WebDocs.WriteBibliography(cites);
+            }
+            markdownView.Text = text;
         }
 
         /// <summary>User has clicked the edit button.</summary>
@@ -101,16 +125,12 @@ namespace UserInterface.Presenters
             if (editButton.Text == "Edit")
             {
                 editButton.Text = "Hide";
-                helpButton.Visible = true;
                 editorBox.Show();
-                if (textView.MainWidget.Parent.Parent is Gtk.Paned paned && paned.Position == 0)
-                    paned.Position = paned.Allocation.Height / 2;
             }
             else
             {
                 editButton.Text = "Edit";
                 editorBox.Hide();
-                helpButton.Visible = false;
             }
         }
 

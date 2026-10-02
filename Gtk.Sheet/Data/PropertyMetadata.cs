@@ -154,7 +154,7 @@ public class PropertyMetadata
             if (propertyValue is string st)
                 values = new List<string>() { st };
             else if (propertyValue is double doub)
-                values = new List<string>() { double.IsNaN(doub) ? string.Empty : doub.ToString(format) };
+                values = new List<string>() { double.IsNaN(doub) ? "NaN" : doub.ToString(format) };
             else if (propertyValue is int integer)
                 values = new List<string>() { integer.ToString() };
             else if (propertyValue is DateTime datet)
@@ -162,7 +162,7 @@ public class PropertyMetadata
             else if (propertyValue is string[] s)
                 values = s.Select(v => v?.ToString()).ToList();
             else if (propertyValue is double[] d)
-                values = d.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+                values = d.Select(v => double.IsNaN(v) ? "NaN" : v.ToString(format)).ToList();
             else if (propertyValue is int[] i)
                 values = i.Select(v => v.ToString()).ToList();
             else if (propertyValue is bool[] b)
@@ -172,7 +172,7 @@ public class PropertyMetadata
             else if (propertyValue is List<string> ls)
                 values = ls.Select(v => v?.ToString()).ToList();
             else if (propertyValue is List<double> ld)
-                values = ld.Select(v => double.IsNaN(v) ? string.Empty : v.ToString(format)).ToList();
+                values = ld.Select(v => double.IsNaN(v) ? "NaN" : v.ToString(format)).ToList();
             else if (propertyValue is List<int> li)
                 values = li.Select(v => v.ToString()).ToList();
             else if (propertyValue is bool[] lb)
@@ -210,10 +210,21 @@ public class PropertyMetadata
                 else
                     throw new Exception($"Cannot convert {v} to Double");
             });
-            if (Property.PropertyType == typeof(double[]))
-                newValues = (newValues as IEnumerable<double>).ToArray();
-            else if (Property.PropertyType == typeof(List<double>))
-                newValues = (newValues as IEnumerable<double>).ToList();
+            
+            bool allNaN = true;
+            foreach (double d in (newValues as IEnumerable<double>))
+                if (!double.IsNaN(d))
+                    allNaN = false;
+
+            if (allNaN)
+                newValues = null;
+            else
+            {
+                if (Property.PropertyType == typeof(double[]))
+                    newValues = (newValues as IEnumerable<double>).ToArray();
+                else if (Property.PropertyType == typeof(List<double>))
+                    newValues = (newValues as IEnumerable<double>).ToList();
+            }
         }
         else if (Property.PropertyType == typeof(int[]) || Property.PropertyType == typeof(List<int>))
         {

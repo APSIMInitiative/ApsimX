@@ -25,10 +25,10 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
-        [Link]
-        private IClock clock = null;
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
         private GrazeFoodStoreType pasture;
-        private AnimalFoodStoreType foodstore;
+        private AnimalFoodStoreType foodStore;
         private ActivityCarryLimiter limiter;
         private double amountToDo;
         private double amountToSkip;
@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         public double Supply { get; set; }
 
         /// <summary>
-        /// Amount harvested this timestep after limiter accounted for
+        /// Amount harvested this time step after limiter accounted for
         /// </summary>
         [JsonIgnore]
         public double AmountHarvested { get; set; }
@@ -93,13 +93,8 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            // get pasture
             pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // get food store
-            foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
-            // locate a cut and carry limiter associarted with this event.
+            foodStore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             switch (CutStyle)
@@ -149,37 +144,37 @@ namespace Models.CLEM.Activities
             switch (CutStyle)
             {
                 case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                    amountToDo += pasture.Amount * Supply;
+                    amountToDo += pasture.AmountAvailable * Supply;
                     break;
                 case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    amountToDo += Supply * 30.4;
+                    amountToDo += Supply * events.Interval;
                     break;
                 case RuminantFeedActivityTypes.ProportionOfWeight:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.Weight * 30.4;
+                        amountToDo += Supply * ind.Weight.Live * events.Interval;
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * ind.PotentialIntake;
+                        amountToDo += Supply * ind.Intake.SolidsDaily.ExpectedForTimeStep(events.Interval);
                     }
                     break;
                 case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     foreach (Ruminant ind in CurrentHerd(false))
                     {
-                        amountToDo += Supply * (ind.PotentialIntake - ind.Intake);
+                        amountToDo += Supply * ind.Intake.SolidsDaily.RequiredForTimeStep(events.Interval);
                     }
                     break;
                 default:
-                    throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, this.Name));
+                    throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, Name));
             }
 
             // reduce amount by limiter if present.
             if (limiter != null)
             {
-                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                double canBeCarried = limiter.GetAmountAvailable(events.Clock.Today.Month);
                 Status = ActivityStatus.Warning;
                 AddStatusMessage("CutCarry limit enforced");
                 amountToDo = Math.Max(amountToDo, canBeCarried);
@@ -225,66 +220,27 @@ namespace Models.CLEM.Activities
         {
             if (amountToDo > 0)
             {
-                pasture.Remove(new ResourceRequest()
+                pasture.RemoveFromResource(new ResourceRequest()
                 {
                     ActivityModel = this,
                     AdditionalDetails = this,
                     Category = TransactionCategory,
                     Required = amountToDo - amountToSkip,
-                    Resource = pasture
+                    Resource = pasture,
                 });
                 AmountAvailableForHarvest = amountToDo;
                 AmountHarvested = amountToDo - amountToSkip;
 
-                FoodResourcePacket packet = new FoodResourcePacket()
+                FoodResourcePacket packet = new(amountToDo - amountToSkip)
                 {
-                    Amount = amountToDo - amountToSkip,
-                    PercentN = pasture.Nitrogen,
-                    DMD = pasture.EstimateDMD(pasture.Nitrogen)
+                    NitrogenPercent = pasture.SwardNitrogenPercent,
+                    DryMatterDigestibility = pasture.EstimateDMD(pasture.SwardNitrogenPercent),
                 };
 
-                foodstore.Add(packet, this, null, TransactionCategory);
+                foodStore.AddToResource(packet, this, null, TransactionCategory);
                 limiter?.AddWeightCarried(amountToDo - amountToSkip);
                 SetStatusSuccessOrPartial(amountToSkip > 0);
             }
         }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write($"Cut {CLEMModel.DisplaySummaryValueSnippet(Supply, warnZero:true)}");
-                switch (CutStyle)
-                {
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        htmlWriter.Write(" kg ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">live weight</span> ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">potential intake</span> ");
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        htmlWriter.Write(" of herd <span class=\"setvalue\">remaining intake required</span> ");
-                        break;
-                    default:
-                        break;
-                }
-
-                htmlWriter.Write("from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write(" and carry to ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Store not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
     }
 }

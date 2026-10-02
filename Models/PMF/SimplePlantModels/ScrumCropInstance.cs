@@ -11,6 +11,7 @@ using Models.Surface;
 using APSIM.Numerics;
 using APSIM.Core;
 using Models.Soils;
+using System.Linq;
 
 namespace Models.PMF.SimplePlantModels
 {
@@ -77,6 +78,10 @@ namespace Models.PMF.SimplePlantModels
         /// <summary>Connection to the interface with the stover 'organ'.</summary>
         [Link(ByName = true)]
         private IHasDamageableBiomass stover = null;
+
+        //The soil KL is overwritten by this class. We need to restore the 
+        //original values when it is removed, so we store those here.
+        private double[] soilKL;
 
         private double _harvestIndex = 0.4;
         private double _moistureContent = 0.15;
@@ -349,6 +354,10 @@ namespace Models.PMF.SimplePlantModels
         [JsonIgnore]
         public double ResidueIncorporationDepth { get; set; }
 
+        /// <summary>Fraction of unincorporated resideus that are left standing.</summary>
+        [JsonIgnore]
+        public double FractionStanding { get; set; }
+
         //-------------------------------------------------------------------------------------------------------------
         // Parameters defining the shape of the growth curves for this crop, can to be set by a manager
         //-------------------------------------------------------------------------------------------------------------
@@ -536,6 +545,7 @@ namespace Models.PMF.SimplePlantModels
                 ResidueRemoval = management.ResidueRemoval;
                 ResidueIncorporation = management.ResidueIncorporation;
                 ResidueIncorporationDepth = management.ResidueIncorporationDepth;
+                FractionStanding = management.FractionStanding;
             }
             else
             {
@@ -551,7 +561,8 @@ namespace Models.PMF.SimplePlantModels
                     fieldLoss: FieldLoss,
                     residueRemoval: ResidueRemoval,
                     residueIncorporation: ResidueIncorporation,
-                    residueIncorporationDepth: ResidueIncorporationDepth);
+                    residueIncorporationDepth: ResidueIncorporationDepth,
+                    fractionStanding: FractionStanding);
             }
 
             return management;
@@ -563,8 +574,13 @@ namespace Models.PMF.SimplePlantModels
             var soilCrop = Structure.FindChild<SoilCrop>(scrum.Name + "Soil", relativeTo: soil, recurse: true);
 
             // SPRUM sets soil KL to 1 and uses the KL modifier to determine appropriate kl based on root depth
+            soilKL = new double[soilCrop.KL.Length];
             for (int d = 0; d < soilCrop.KL.Length; d++)
+            {
+                soilKL[d] = soilCrop.KL[d];
                 soilCrop.KL[d] = 1.0;
+            }
+                
 
             management = setManagementInstance(management);
             currentCrop = SetCropCoefficients(management);
@@ -775,6 +791,17 @@ namespace Models.PMF.SimplePlantModels
             }
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            if (currentCrop != null)
+                EndScrumCrop();
+        }
+
         /// <summary>Triggers the removal of biomass from various organs.</summary>
         public void HarvestScrumCrop()
         {
@@ -782,7 +809,8 @@ namespace Models.PMF.SimplePlantModels
             product.RemoveBiomass(liveToRemove: 1.0 - FieldLoss,
                                   deadToRemove: 1.0 - FieldLoss,
                                   liveToResidue: FieldLoss,
-                                  deadToResidue: FieldLoss);
+                                  deadToResidue: FieldLoss, 
+                                  fractionStanding: FractionStanding);
             Biomass finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Product.Total");
             ProductHarvested = initialCropBiomass - finalCropBiomass;
 
@@ -790,7 +818,8 @@ namespace Models.PMF.SimplePlantModels
             stover.RemoveBiomass(liveToRemove: ResidueRemoval,
                                  deadToRemove: ResidueRemoval,
                                  liveToResidue: 1.0 - ResidueRemoval,
-                                 deadToResidue: 1.0 - ResidueRemoval);
+                                 deadToResidue: 1.0 - ResidueRemoval,
+                                 fractionStanding: FractionStanding);
             finalCropBiomass = (Biomass)Structure.Get("[SCRUM].Stover.Total");
             StoverRemoved = initialCropBiomass - finalCropBiomass;
             if (Harvesting != null)
@@ -802,12 +831,19 @@ namespace Models.PMF.SimplePlantModels
         public void EndScrumCrop()
         {
             // end this crop instance
-            scrum.EndCrop();
+            if (scrum.IsAlive)
+                scrum.EndCrop();
 
             // remove this crop instance from SCRUM and reset parameters
             scrum.Node.RemoveChild(currentCrop);
             cropEstablished = false;
             cropTerminating = true;
+            currentCrop = null;
+
+            //Reset soil KL
+            SoilCrop soilCrop = Structure.FindChild<SoilCrop>(scrum.Name + "Soil", relativeTo: soil, recurse: true);
+            for (int d = 0; d < soilCrop.KL.Length; d++)
+                soilCrop.KL[d] = soilKL[d];
         }
 
         /// <summary>Calculates the accumulated thermal time between two dates.</summary>

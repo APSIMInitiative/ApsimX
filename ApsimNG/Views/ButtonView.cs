@@ -1,8 +1,9 @@
-﻿namespace UserInterface.Views
+﻿using System;
+using Gtk;
+using UserInterface.Interfaces;
+
+namespace UserInterface.Views
 {
-    using System;
-    using Gtk;
-    using Interfaces;
 
     /// <summary>A button view.</summary>
     public class ButtonView : ViewBase, IButtonView
@@ -117,6 +118,17 @@
                 button = (Button)gtkControl;
                 button.Clicked += OnButtonClick;
                 mainWidget = button;
+            }
+            else if (gtkControl is Container container)
+            {
+                Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.ButtonView.glade");
+
+                button = (Button)builder.GetObject("button");
+                button.Clicked += OnButtonClick;
+
+                Box box = (Box)builder.GetObject("vbox");
+                container.Add(box);
+                mainWidget = container;
             }
             else
             {

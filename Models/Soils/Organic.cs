@@ -12,8 +12,8 @@ namespace Models.Soils
 
     /// <summary>A model for capturing soil organic parameters</summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Organic : Model
     {

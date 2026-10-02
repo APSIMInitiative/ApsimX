@@ -61,11 +61,13 @@ namespace Models.PMF.Library
         /// <param name="dead">Dead biomass pool</param>
         /// <param name="removed">The removed pool to add to.</param>
         /// <param name="detached">The detached pool to add to.</param>
+        /// <param name="fractionStanding">The fraction of the biomass that is left standing</param>
         /// <param name="writeToSummary">Write the biomass removal to summary file?</param>
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove, double deadToRemove, double liveToResidue, double deadToResidue,
                                     Biomass live, Biomass dead,
                                     Biomass removed, Biomass detached,
+                                    double fractionStanding = 0,
                                     bool writeToSummary = true)
         {
             if (liveToRemove + liveToResidue > 1.0)
@@ -103,7 +105,7 @@ namespace Models.PMF.Library
                                                      $"{removedOff:F1}% is removed from the system and {toResidue:F1}% is returned to the surface", MessageType.Diagnostic);
                     }
 
-                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.PlantType, Name);
+                    surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0, plant.PlantType, Name, fractionStanding);
 
                     return removing.Wt + detaching.Wt; ;
                 }

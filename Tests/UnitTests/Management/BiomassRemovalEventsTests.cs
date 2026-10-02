@@ -4,11 +4,14 @@ using Models;
 using Models.Climate;
 using Models.Core;
 using Models.Core.Run;
+using Models.Management;
+using Models.PMF;
 using Models.Storage;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace UnitTests.Core
 {
@@ -77,6 +80,40 @@ namespace UnitTests.Core
             Assert.That(simEvents["AboveGroundWt"], Is.Not.EqualTo(simNone["AboveGroundWt"]));
             Assert.That(simEvents["AboveGroundN"], Is.Not.EqualTo(simNone["AboveGroundN"]));
             Assert.That(simEvents["TotalWt"], Is.Not.EqualTo(simNone["TotalWt"]));
+        }
+
+        /// <summary>
+        /// Ensure BiomassRemovalEvents works as expected when removing biomass from a PastureSpecies Model.
+        /// </summary>
+        [Test]
+        public void EnsurePastureSpeciesBiomassRemoval()
+        {
+            // read in our base simulation that we'll use for this test
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Management.PastureSpeciesBiomassRemovalEventsTests.apsimx");
+            string weatherData = ReflectionUtilities.GetResourceAsString("UnitTests.Management.NZ_Lincoln.met");
+            string metFile = Path.GetTempFileName();
+            File.WriteAllText(metFile, weatherData);
+
+            // prepare the simulation to run
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
+            Models.Climate.Weather weather = sims.Node.FindChild<Models.Climate.Weather>(recurse: true);
+            weather.FileName = metFile;
+
+            // run the simulation and get list of errors
+            Runner runner = new Runner(sims);
+            List<Exception> errors = runner.Run();
+            foreach (var ex in errors)
+                Console.WriteLine(ex.ToString());
+
+            // check that no errors were thrown and that it runs successfully
+            Assert.That(errors.Count, Is.EqualTo(0));
+
+            // Check that BiomassRemovalFractions are set correctly
+            BiomassRemovalEvents biomassRemoval = sims.Node.FindChild<BiomassRemovalEvents>(recurse: true);
+            Assert.That(biomassRemoval.BiomassRemovalFractions.First().OrganName, Is.EqualTo("Leaf") );
+            Assert.That(biomassRemoval.BiomassRemovalFractions.First().LiveToRemove, Is.EqualTo(0.5) );
+            Assert.That(biomassRemoval.BiomassRemovalFractions.First().DeadToRemove, Is.EqualTo(0.5) );
+
         }
     }
 }

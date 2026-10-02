@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using APSIM.Core;
+using Models;
 using Models.Core;
 using Models.Factorial;
 using Models.PMF;
@@ -7,10 +8,9 @@ using Models.Soils;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using UnitTests;
 using UnitTests.Core;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 
 [TestFixture]

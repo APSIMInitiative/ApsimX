@@ -1,7 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
-using Models.Core.ApsimFile;
 using Models.Factorial;
 using System.Reflection;
 
@@ -57,10 +57,11 @@ namespace Models
         /// <param name="rootPath">The path to the apsimx directory.</param>
         private static void ScrapeFile(string fileName, string rootPath)
         {
-            Simulations? simulations = ModelTreeFactory.CreateFromFile(fileName, (e) => throw e, false).Root.Instance as Simulations;
+            Simulations? simulations = FileFormat.ReadFromFile<Simulations>(fileName, (e) => throw e, false).Model as Simulations;
             if (simulations != null)
             {
-                foreach (var experiment in simulations.FindAllDescendants<Experiment>())
+                // foreach (var experiment in simulations.FindAllDescendants<Experiment>())
+                foreach (var experiment in simulations.Node.FindChildren<Experiment>(recurse: true))
                 {
                     foreach (var simulationDescription in experiment.GetSimulationDescriptions())
                     {
@@ -69,7 +70,7 @@ namespace Models
                     }
                 }
 
-                foreach (var simulation in  simulations.FindAllDescendants<Simulation>()
+                foreach (var simulation in simulations.Node.FindChildren<Simulation>()
                                                        .Where(s => s.Parent is not Experiment))
                 {
                     ScrapeSimulation(simulation, string.Empty, string.Empty, rootPath);
@@ -99,7 +100,7 @@ namespace Models
         private static (double, double) GetLatLongFromSimulation(Simulation simulation, string rootPath)
         {
             (double, double) latitudeLongitude;
-            Weather weather = simulation.FindChild<Weather>();
+            Weather weather = simulation.Node.FindChild<Weather>();
             if (weather == null)
                 latitudeLongitude = (double.NaN, double.NaN);
             else
@@ -110,7 +111,7 @@ namespace Models
                 {
                     try
                     {
-                        Clock clock = simulation.FindChild<Clock>();
+                        Clock clock = simulation.Node.FindChild<Clock>();
                         CallMethod(clock, "OnSimulationCommencing", new object[] { null, EventArgs.Empty });
                         InjectLink(weather, "clock", clock);
                         CallMethod(weather, "OnSimulationCommencing", new object[] { null, EventArgs.Empty });

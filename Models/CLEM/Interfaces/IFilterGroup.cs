@@ -29,7 +29,17 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Retrieves information on a property
         /// </summary>
-        PropertyInfo GetProperty(string name);
+        IEnumerable<PropertyInfo> GetProperty(string name);
+
+        /// <summary>
+        /// Get the value of a property allowing for nested properties.
+        /// </summary>
+        /// <param name="name">
+        /// Name of the property provided in properties list with and period separated nesting
+        /// </param>
+        /// <param name="parentTopLevel">The first level object to search from</param>
+        /// <returns>Property value as an object</returns>
+        object GetPropertyValue(string name, object parentTopLevel);
 
         /// <summary>
         /// Filters the source using the group items

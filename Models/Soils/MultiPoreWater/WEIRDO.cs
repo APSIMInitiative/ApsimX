@@ -18,8 +18,8 @@ namespace Models.Soils
     ///
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Resources.Glade.ProfileView.glade")]
-    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class WEIRDO : Model, ISoilWater, IStructureDependency
     {

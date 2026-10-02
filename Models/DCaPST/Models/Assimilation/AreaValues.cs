@@ -23,6 +23,11 @@
         public double Temperature;
 
         /// <summary>
+        /// Vapour pressure deficit for the limiting assimilation pathway.
+        /// </summary>
+        public double VPD;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <value></value>

@@ -18,6 +18,7 @@ namespace Models.CLEM.Resources
     [Description("Resource group for all land types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class Land : ResourceBaseWithTransactions
     {
         private bool changeOccurred = false;
@@ -25,18 +26,16 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit of area to be used in this simulation
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute("hectares")]
         [Description("Unit of area to be used in this simulation")]
         [Required]
-        public string UnitsOfArea { get; set; }
+        public string UnitsOfArea { get; set; } = "hectares";
 
         /// <summary>
         /// Conversion of unit of area to hectares (10,000 square metres)
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("Unit of area conversion to hectares")]
         [Required, GreaterThanEqualValue(0)]
-        public double UnitsOfAreaToHaConversion { get; set; }
+        public double UnitsOfAreaToHaConversion { get; set; } = 1;
 
         /// <summary>
         /// A method with argument to test
@@ -45,7 +44,7 @@ namespace Models.CLEM.Resources
         /// <param name="intarg"></param>
         /// <param name="doublearg"></param>
         /// <returns></returns>
-        public string TestMethod(string txt, int intarg, double doublearg)
+        public static string TestMethod(string txt, int intarg, double doublearg)
         {
             return "string:" + txt + "_int:" + intarg.ToString() + "_double:" + doublearg.ToString();
         }
@@ -56,7 +55,6 @@ namespace Models.CLEM.Resources
         public Land()
         {
             ReportedLandAllocation = new LandActivityAllocation();
-            this.SetDefaults();
         }
 
         /// <summary>
@@ -110,31 +108,5 @@ namespace Models.CLEM.Resources
         /// Override base event
         /// </summary>
         public event EventHandler AllocationReported;
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("Reported in ");
-                if (UnitsOfArea == null || UnitsOfArea == "")
-                    htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
-                htmlWriter.Write("</span>");
-
-
-                if (UnitsOfAreaToHaConversion != 1)
-                    htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
-
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        #endregion
     }
 }

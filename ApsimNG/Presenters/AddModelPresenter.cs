@@ -1,16 +1,15 @@
-﻿namespace UserInterface.Presenters
+﻿using APSIM.Core;
+using UserInterface.Commands;
+using UserInterface.Interfaces;
+using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UserInterface.Views;
+
+namespace UserInterface.Presenters
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using ApsimNG.Properties;
-    using global::UserInterface.Commands;
-    using Interfaces;
-    using Models.Core;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Views;
 
     /// <summary>This presenter lets the user add a model.</summary>
     public class AddModelPresenter : IPresenter

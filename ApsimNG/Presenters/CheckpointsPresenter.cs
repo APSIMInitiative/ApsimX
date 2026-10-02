@@ -1,12 +1,13 @@
-﻿namespace UserInterface.Presenters
+﻿using UserInterface.Interfaces;
+using Models.Core;
+using Models.Storage;
+using System;
+using System.Collections.Generic;
+using UserInterface.Views;
+using APSIMNG.Utility;
+
+namespace UserInterface.Presenters
 {
-    using global::UserInterface.Interfaces;
-    using Models.Core;
-    using Models.Storage;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Views;
 
     /// <summary>This presenter lets the user add/delete checkpoints</summary>
     public class CheckpointsPresenter : IPresenter
@@ -111,7 +112,7 @@
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            string checkpointName = Utility.StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name",
+            string checkpointName = StringEntryForm.ShowDialog(explorerPresenter, "New checkpoint name",
                                                                        "Enter new checkpoint name:", null);
             if (checkpointName != null)
             {
@@ -149,7 +150,7 @@
                     try
                     {
                         storage.Writer.DeleteCheckpoint(checkpointName);
-                        storage.Reader.Refresh();
+                        storage.Refresh();
                         PopulateList();
                         explorerPresenter.MainPresenter.ShowMessage("Checkpoint deleted", Simulation.MessageType.Information);
                     }
@@ -170,7 +171,7 @@
             var checkpoint = rootNode.Children.Find(node => node.Name == checkpointName);
 
             storage.Writer.SetCheckpointShowGraphs(checkpoint.Name, !checkpoint.ResourceNameForImage.Contains("Check"));
-            storage.Reader.Refresh();
+            storage.Refresh();
             PopulateList();
         }
     }

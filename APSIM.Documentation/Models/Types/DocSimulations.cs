@@ -8,6 +8,7 @@ using Models;
 using Models.Core;
 using Graph = Models.Graph;
 using System;
+using Models.PMF;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -62,7 +63,7 @@ namespace APSIM.Documentation.Models.Types
         private List<ITag> DocumentValidation(Model m)
         {
             string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
-            string title = "The APSIM " + name + " Model";
+            string title = GetSimulationsName(m as Simulations);
 
             if (name.ToLower() == "SpeciesTable".ToLower()) //This is a special case file, we may want to review this in the future to remove/merge it
                 return (new DocSpeciesTable(m)).Document();
@@ -147,8 +148,7 @@ namespace APSIM.Documentation.Models.Types
 
             if (m is not Simulation)
             {
-                string name = Path.GetFileNameWithoutExtension((m as Simulations).FileName);
-                string title = name + " Tutorial";
+                string title = GetSimulationsName(m as Simulations);
                 //Sort out heading
                 var firstSection = new Section(title, new List<ITag>() { new Paragraph("----") });
                 tags.Add(firstSection);
@@ -240,6 +240,48 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
             return additionsTags;
+        }
+
+        /// <summary>
+        /// Create the name for a Simulations documentation depending if it's validation, tutorial or other file
+        /// </summary>
+        public static string GetSimulationsName(Simulations sims)
+        {
+            if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
+                sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
+            {
+                string name = Path.GetFileNameWithoutExtension(sims.FileName);
+                IEnumerable<IModel> models = sims.Node.FindChildren<IModel>(recurse: true);
+                List<string> modelNames = new List<string>();
+                foreach(Model m in models)
+                {
+                    string type;
+                    if (m.GetType() == typeof(Plant))
+                    {
+                        type = m.Name;
+                    }
+                    else
+                    {
+                        type = m.GetType().ToString();
+                        type = type.Substring(type.LastIndexOf('.')+1);
+                    }
+                    if (!modelNames.Contains(type))
+                        modelNames.Add(type);
+                }
+                    
+                if (modelNames.Contains(name))
+                    return $"The APSIM {name} Model";
+                else
+                    return $"{name} Validation";
+            }
+            else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
+            {
+                return Path.GetFileNameWithoutExtension(sims.FileName) + " Tutorial";
+            }
+            else
+            {
+                return Path.GetFileNameWithoutExtension(sims.FileName);
+            }
         }
 
         /// <summary>

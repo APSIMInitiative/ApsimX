@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -30,21 +31,19 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "HTML version created")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ActivitiesPerformed.htm")]
-    public class ReportActivitiesPerformed : Report, ICLEMDescriptiveSummary, ICLEMUI, ISpecificOutputFilename
+    public class ReportActivitiesPerformed : Report, ICLEMUI, ISpecificOutputFilename
     {
         /// <summary>
         /// Includes folders in simulation as placeholders in output
         /// </summary>
         [Description("Include folders in output")]
-        [System.ComponentModel.DefaultValue(true)]
-        public bool IncludeFolders { get; set; }
+        public bool IncludeFolders { get; set; } = true;
 
         /// <summary>
         /// The style timers are handled in report
         /// </summary>
         [Description("Style of handling timers")]
-        [System.ComponentModel.DefaultValue(ReportActivitiesPerformedTimerHandleStyle.InPosition)]
-        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; }
+        public ReportActivitiesPerformedTimerHandleStyle HandleTimers { get; set; } = ReportActivitiesPerformedTimerHandleStyle.InPosition;
 
         /// <summary>
         /// Create html version of summary
@@ -76,15 +75,6 @@ namespace Models.CLEM.Reporting
         [JsonIgnore]
         public DescriptiveSummaryMemoReportingType ReportMemosType { get; set; } = DescriptiveSummaryMemoReportingType.InPlace;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ReportActivitiesPerformed()
-        {
-            ModelSummaryStyle = HTMLSummaryStyle.Default;
-            CLEMModel.SetPropertyDefaults(this);
-        }
-
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -105,8 +95,6 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        #region create html report
-
         /// <summary>
         /// Get the data for display
         /// </summary>
@@ -117,70 +105,66 @@ namespace Models.CLEM.Reporting
             DataTable data = null;
             if (dataStore != null)
             {
-                try
+                // get all rows from table
+                data = dataStore.Reader.GetData(
+                                        tableName: this.Name,
+                                        count: 0);
+                if (data != null)
                 {
-                    // get all rows from table
-                    data = dataStore.Reader.GetData(
-                                            tableName: this.Name,
-                                            count: 0);
-                    if (data != null)
+                    // need to filter by current simulation
+                    string simName = Structure.FindParents<Simulation>().First().Name;
+                    string zoneName = Structure.FindParents<ZoneCLEM>().First().Name;
+                    var filteredData = data.AsEnumerable()
+                        .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
+                        & (IncludeFolders || (row.Field<int>("Type") != 1))
+                        & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2))));
+
+                    if (filteredData.Any())
                     {
-                        // need to filter by current simulation
-                        string simName = Structure.FindParents<Simulation>().First().Name;
-                        string zoneName = Structure.FindParents<ZoneCLEM>().First().Name;
-                        var filteredData = data.AsEnumerable()
-                            .Where(row => row.Field<String>("SimulationName") == simName & row.Field<String>("Zone") == zoneName
-                            & (IncludeFolders || (row.Field<int>("Type") != 1))
-                            & (HandleTimers != ReportActivitiesPerformedTimerHandleStyle.Ignore || ((row.Field<string>("Name") == "TimeStep" | row.Field<int>("Type") != 2))));
-
-                        if (filteredData.Any())
+                        // flag folders for display
+                        if (IncludeFolders)
                         {
-                            // flag folders for display
-                            if (IncludeFolders)
-                            {
-                                foreach (var item in filteredData)
-                                {
-                                    if (item.Field<int>("Type") == 1)
-                                        item.SetField<String>("Status", "Folder");
-                                }
-                            }
-
-                            // identify any timer or event that did not occur
-                            string currentID = "";
-                            List<string> list = new List<string>() { "Ignored", "Folder" };
                             foreach (var item in filteredData)
                             {
-                                if (item.Field<string>("UniqueID") != currentID)
-                                {
-                                    currentID = item.Field<string>("UniqueID");
-                                    if ((item.Field<int>("Type") != 1))
-                                    {
-                                        // look for no task controller activities
-                                        //var testc = filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1);
-                                        if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
-                                            item.SetField<String>("Status", "Controller");
+                                if (item.Field<int>("Type") == 1)
+                                    item.SetField<String>("Status", "Folder");
+                            }
+                        }
 
-                                        // mark and message any with nothing to do.
-                                        if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
-                                        {
-                                            item.SetField<String>("Status", "Warning");
-                                            item.SetField<String>("Message", $"Never occurs");
-                                        }
+                        // identify any timer or event that did not occur
+                        string currentID = "";
+                        List<string> list = new List<string>() { "Ignored", "Folder" };
+                        foreach (var item in filteredData)
+                        {
+                            if (item.Field<string>("UniqueID") != currentID)
+                            {
+                                currentID = item.Field<string>("UniqueID");
+                                if ((item.Field<int>("Type") != 1))
+                                {
+                                    // look for no task controller activities
+                                    if (filteredData.Where(a => a.Field<String>("UniqueID") == currentID && a.Field<String>("Status") != "NoTask").Skip(1).Any() == false)
+                                    {
+                                        item.SetField<String>("Status", "Controller");
+                                    }
+
+                                    // look for no task timers
+                                    // mark and message any with nothing to do.
+                                    if (filteredData.Where(a => a.Field<String>("UniqueID").ToString() == currentID && a.Field<String>("Status") != "Ignored").Any() == false)
+                                    {
+                                        item.SetField<String>("Status", "Warning");
+                                        item.SetField<String>("Message", $"Never occurs");
                                     }
                                 }
+
                             }
+                        }
 
-                            data = filteredData.CopyToDataTable();
-                        }
-                        else
-                        {
-                            data = new DataTable();
-                        }
+                        data = filteredData.CopyToDataTable();
                     }
-
-                }
-                catch (Exception)
-                {
+                    else
+                    {
+                        data = new DataTable();
+                    }
                 }
             }
             else
@@ -210,13 +194,13 @@ namespace Models.CLEM.Reporting
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                string columnname = dt.Rows[i].ItemArray[0].ToString();
+                string columnName = dt.Rows[i].ItemArray[0].ToString();
                 int cnt = 0;
-                while (dtNew.Columns.Contains(columnname + (cnt == 0 ? "" : $"_{cnt}")))
+                while (dtNew.Columns.Contains(columnName + (cnt == 0 ? "" : $"_{cnt}")))
                 {
                     cnt++;
                 }
-                dtNew.Columns[i + 1].ColumnName = columnname + (cnt == 0 ? "" : $"_{cnt}");
+                dtNew.Columns[i + 1].ColumnName = columnName + (cnt == 0 ? "" : $"_{cnt}");
             }
 
             //Adding Row Data
@@ -255,7 +239,7 @@ namespace Models.CLEM.Reporting
                             activities = data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
                             break;
                         default:
-                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
+                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList(); //.OrderBy(a => a).ToList<string>();
                             break;
                     }
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
@@ -263,15 +247,21 @@ namespace Models.CLEM.Reporting
                     // get unique columns
                     List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
 
+                    DateTime first = dates.First();
+
                     // create table
                     tbl = new DataTable();
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
-                        if (item.Day != DateTime.DaysInMonth(item.Year, item.Month))
+                        if (item == first)
+                        {
                             tbl.Columns.Add("00\r\n" + item.ToString("yy"));
+                        }
                         else
+                        {
                             tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
+                        }
                     }
                     // add blank column for resize row height of pixelbuf with font size change
                     tbl.Columns.Add(" ");
@@ -292,10 +282,14 @@ namespace Models.CLEM.Reporting
 
                                 string monthID = "00";
                                 if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
+                                {
                                     monthID = dte.Month.ToString("00");
+                                }
 
                                 if (!(monthID == "00" && status == "Timer"))
+                                {
                                     dr[monthID + "\r\n" + dte.ToString("yy")] = $"{status}:{tooltip}";
+                                }
                             }
                             dr[" "] = " ";
                             tbl.Rows.Add(dr);
@@ -303,7 +297,10 @@ namespace Models.CLEM.Reporting
                     }
                 }
                 if (CreateHTML)
+                {
                     CreateHTMLVersion(tbl, directoryPath, darkTheme);
+                }
+
                 return tbl;
             }
         }
@@ -334,7 +331,7 @@ namespace Models.CLEM.Reporting
                 "th {background-color: Black !important; position:-webkit-sticky; /* for Safari */ position: sticky; top: 0;}" +
                 "tr:nth-child(2n+3) {background-color:[ResRowBack]}" +
                 "tr:nth-child(2n+2) {background-color:[ResRowBack2]}" +
-                ".folder {background-color:[FolderBack] !important;}" +
+                ".folder {background-color:[FolderBack] !important; color:[FolderColor]}" +
                 ".controller {background-color:[ControlBack] !important; color:[ControlColor]}" +
                 "td.fill {background-color: #c1946c !important;}" +
                 ".topspacing { margin-top:10px; }" +
@@ -364,9 +361,10 @@ namespace Models.CLEM.Reporting
                 // light theme
                 html = html.Replace("[BackColor]", "white");
                 html = html.Replace("[FontColor]", "black");
-                html = html.Replace("[HeaderFontColor]", "white");
+                html = html.Replace("[HeaderFontColor]", "black");
 
                 html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[FolderColor]", "black");
                 html = html.Replace("[ControlBack]", "#d7ffd6");
                 html = html.Replace("[ControlColor]", "black");
 
@@ -387,11 +385,12 @@ namespace Models.CLEM.Reporting
                 // dark theme
                 html = html.Replace("[BackColor]", "#281A0E");
                 html = html.Replace("[FontColor]", "#E5E5E5");
-                html = html.Replace("[HeaderFontColor]", "black");
+                html = html.Replace("[HeaderFontColor]", "white");
 
                 html = html.Replace("[FolderBack]", "#b3f1ff");
+                html = html.Replace("[FolderColor]", "#3F2817");
                 html = html.Replace("[ControlBack]", "#a3a3a2");
-                html = html.Replace("[ControlColor]", "white");
+                html = html.Replace("[ControlColor]", "#3F2817");
 
                 // resources
                 html = html.Replace("[ResRowBack]", "#281A0E");
@@ -445,9 +444,14 @@ namespace Models.CLEM.Reporting
                     {
                         string rowClass = "";
                         if (row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
+                        {
                             rowClass = "class=\"folder\"";
+                        }
+
                         if (row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
+                        {
                             rowClass = "class=\"controller\"";
+                        }
 
                         htmlString.WriteLine($"<tr {rowClass}>");
                         foreach (var item in row.ItemArray)
@@ -502,153 +506,10 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }
-
-        #endregion
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public List<string> CurrentAncestorList { get; set; } = new List<string>();
-
-        /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
-
-        ///<inheritdoc/>
-        public string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (CreateHTML)
-                {
-                    htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
-                    if (RotateReport)
-                    {
-                        htmlWriter.Write($" with months as columns and activities as rows.</div>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write($" with months as rows and activities as columns.</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write($"<div>No HTML version of this report is provided for viewing in browser.</div>");
-                }
-                if (AutoCreateHTML)
-                {
-                    htmlWriter.Write($"<div>A HTML version of this report will automatically be created for its parent CLEMZone and named the same as the simulation file with a html extension</div>");
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        ///<inheritdoc/>
-        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (model is ICLEMDescriptiveSummary)
-                {
-                    ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    cm.CurrentAncestorList = parentControls.ToList();
-                    cm.CurrentAncestorList.Add(model.GetType().Name);
-
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
-
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
-
-                    htmlWriter.Write(cm.ModelSummary());
-
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
-
-                    foreach (var item in (model as IModel).Children)
-                    {
-                        htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
-                    }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
-
-                    htmlWriter.Write(cm.ModelSummaryClosingTags());
-                }
-                return htmlWriter.ToString();
-            }
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryClosingTags()
-        {
-            return "\r\n</div>\r\n</div>";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryOpeningTags()
-        {
-            string overall = "default";
-            string extra = "";
-
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
-
-                return htmlWriter.ToString();
-            }
-        }
-
-        ///<inheritdoc/>
-        public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTagsBeforeSummary()
-        {
-            return "";
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryNameTypeHeader()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"<div class=\"namediv\">{this.Name}{((!this.Enabled) ? " - DISABLED!" : "")}</div>");
-                if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-                {
-                    htmlWriter.Write("<div class=\"partialdiv\"");
-                    htmlWriter.Write(">");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
-                return htmlWriter.ToString();
-            }
-        }
-
-        ///<inheritdoc/>
-        public string ModelSummaryNameTypeHeaderText()
-        {
-            return this.Name;
-        }
-        #endregion
-
     }
 
     /// <summary>

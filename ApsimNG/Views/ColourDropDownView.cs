@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using global::UserInterface.Extensions;
 using Gtk;
-using Utility;
+using APSIMNG.Utility;
 using CellLayout = Gtk.ICellLayout;
 using TreeModel = Gtk.ITreeModel;
 
@@ -68,7 +67,7 @@ namespace UserInterface.Views
                         if (typeEnum == ColourDropTypeEnum.Text)
                             result[i++] = (string)comboModel.GetValue(iter, 0);
                         else
-                            result[i++] = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
+                            result[i++] = Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                     }
                     while (comboModel.IterNext(ref iter) && i < nVals);
                 return result;
@@ -124,7 +123,7 @@ namespace UserInterface.Views
                     if (typeEnum == ColourDropTypeEnum.Text)
                         return (string)comboModel.GetValue(iter, 0);
                     else
-                        return Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
+                        return Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                 }
                 else
                     return null;
@@ -141,7 +140,7 @@ namespace UserInterface.Views
                         if (value.GetType() == typeof(Color))
                         {
                             Gdk.Color entry = (Gdk.Color)comboModel.GetValue(iter, 1);
-                            Color rgb = Utility.Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
+                            Color rgb = Colour.FromGtk((Gdk.Color)comboModel.GetValue(iter, 1));
                             if (rgb.Equals((Color)value))
                             {
                                 combobox1.SetActiveIter(iter);

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 205,
+  "Version": 217,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -82,8 +82,7 @@
                 "[CERESSoilTemperature].Enabled = true",
                 "[CampbellSoilTemperature].Enabled = false"
               ],
-              "Paths": null,
-              "Values": null,
+              "CustomDescriptors": [],
               "Name": "CERES",
               "ResourceName": null,
               "Children": [],
@@ -96,8 +95,7 @@
                 "[CERESSoilTemperature].Enabled = false",
                 "[CampbellSoilTemperature].Enabled = true"
               ],
-              "Paths": null,
-              "Values": null,
+              "CustomDescriptors": [],
               "Name": "Campbell",
               "ResourceName": null,
               "Children": [],
@@ -110,7 +108,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "RyegrassBase",
           "ResourceName": null,
           "Children": [
@@ -747,6 +744,7 @@
                         8.847,
                         9.22
                       ],
+                      "InteractionsPerDay": 8,
                       "Name": "CampbellSoilTemperature",
                       "ResourceName": null,
                       "Children": [],
@@ -1051,13 +1049,14 @@
                   "Gsmax": 0.011,
                   "R50": 200.0,
                   "LightProfile": null,
+                  "PlantType": null,
                   "WaterDemand": 0.0,
                   "LAI": 0.0,
                   "Name": "Pasture",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                       "RootWeight": [
                         400.0,
                         400.0
@@ -1099,7 +1098,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                      "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                       "Status": "established",
                       "LeafDMD": [
                         0.6
@@ -6198,7 +6197,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "Ryegrass",
       "ResourceName": null,
       "Children": [
@@ -6770,6 +6768,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "SoilTemperatureCampbell",
                   "ResourceName": null,
                   "Children": [],
@@ -6999,7 +6998,7 @@
                 "[Nutrient].FOMCarbohydrate.InitialCarbon",
                 "[Nutrient].FOMCellulose.InitialCarbon",
                 "[Nutrient].FOMLignin.InitialCarbon",
-                "sum([Nutrient].FOMCarbohydrate.Decomposition.MineralisedN)+sum([Nutrient].FOMCellulose.Decomposition.MineralisedN)+sum([Nutrient].FOMLignin.Decomposition.MineralisedN as FOMMineralisation)",
+                "sum([Nutrient].FOMCarbohydrate.Decomposition.MineralisedN)+sum([Nutrient].FOMCellulose.Decomposition.MineralisedN)+sum([Nutrient].FOMLignin.Decomposition.MineralisedN) as FOMMineralisation",
                 "sum([Nutrient].Microbial.Decomposition.MineralisedN)",
                 "sum([Nutrient].Humic.Decomposition.MineralisedN)",
                 "[Water].MM",
@@ -7072,13 +7071,14 @@
               "Gsmax": 0.011,
               "R50": 200.0,
               "LightProfile": null,
+              "PlantType": null,
               "WaterDemand": 0.0,
               "LAI": 0.0,
               "Name": "Pasture",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     400.0,
                     400.0
@@ -7120,7 +7120,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "established",
                   "LeafDMD": [
                     0.6
@@ -12104,7 +12104,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "Clover",
       "ResourceName": null,
       "Children": [
@@ -13155,6 +13154,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "CERESSoilTemperature",
                   "ResourceName": null,
                   "Children": [],
@@ -13314,13 +13314,14 @@
               "Gsmax": 0.011,
               "R50": 200.0,
               "LightProfile": null,
+              "PlantType": null,
               "WaterDemand": 0.0,
               "LAI": 0.0,
               "Name": "Pasture",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.55
@@ -13353,7 +13354,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.55
@@ -13386,7 +13387,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.SeedCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.SeedCohortInitialise, Models",
                   "SoftUnripe": [
                     75.0
                   ],
@@ -16107,7 +16108,6 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "CloverRyegrass",
       "ResourceName": null,
       "Children": [
@@ -17042,6 +17042,7 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Thickness": null,
                   "InitialValues": null,
+                  "InteractionsPerDay": 8,
                   "Name": "CERESSoilTemperature",
                   "ResourceName": null,
                   "Children": [],
@@ -17208,13 +17209,14 @@
               "Gsmax": 0.011,
               "R50": 200.0,
               "LightProfile": null,
+              "PlantType": null,
               "WaterDemand": 0.0,
               "LAI": 0.0,
               "Name": "Clover",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.55
@@ -17247,7 +17249,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.55
@@ -17280,7 +17282,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.SeedCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.SeedCohortInitialise, Models",
                   "SoftUnripe": [
                     467.0
                   ],
@@ -17347,13 +17349,14 @@
               "Gsmax": 0.011,
               "R50": 200.0,
               "LightProfile": null,
+              "PlantType": null,
               "WaterDemand": 0.0,
               "LAI": 0.0,
               "Name": "Ryegrass",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     0.0,
                     400.0
@@ -17395,7 +17398,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.GreenCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.GreenCohortInitialise, Models",
                   "RootWeight": [
                     200.0,
                     0.0
@@ -17437,7 +17440,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "dead",
                   "LeafDMD": [
                     0.6
@@ -17470,7 +17473,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Grazplan.DryCohortInitialise, Models",
+                  "$type": "Models.GrazPlan.DryCohortInitialise, Models",
                   "Status": "litter",
                   "LeafDMD": [
                     0.65

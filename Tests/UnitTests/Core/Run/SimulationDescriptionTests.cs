@@ -1,15 +1,15 @@
-﻿namespace UnitTests.Core.Run
-{
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Soils;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using UnitTests.Weather;
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models.Core;
+using Models.Core.Run;
+using Models.Soils;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using UnitTests.Weather;
 
+namespace UnitTests.Core.Run
+{
     /// <summary>This is a test class for the SimulationDescription class</summary>
     [TestFixture]
     public class SimulationDescriptionTests

@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using APSIM.Shared.Utilities;
 
 namespace Gtk.Sheet
 {
@@ -81,9 +82,15 @@ namespace Gtk.Sheet
 
             var value = Data.Rows[rowIndex][colIndex];
             if (value is double)
-                return ((double)value).ToString("F3");  // 3 decimal places.
+            {
+                if (double.IsNaN((double)value))
+                    return "NaN";
+                else
+                    return ((double)value).ToString("F3");  // 3 decimal places.
+            }
+                
             else if (value is DateTime)
-                return ((DateTime)value).ToString("yyyy-MM-dd");
+                return DateUtilities.GetDateAsString((DateTime)value);
             return value.ToString();
         }
         

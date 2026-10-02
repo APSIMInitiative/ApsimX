@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Hold an array of months for the graph,  by default, is set to will Jan yyyy to Dec yyyy, except where
         /// data being displays is not for full year</summary>
-        private string[] monthsToDisplay = DateUtilities.MONTHS_3_LETTERS;
+        private string[] monthsToDisplay = DateUtilities.MONTHS_3_LETTERS.Take(12).ToArray();
 
         /// <summary>The explorer presenter</summary>
         private ExplorerPresenter explorerPresenter;
@@ -200,6 +200,8 @@ namespace UserInterface.Presenters
             this.weatherDataView.GraphRadiation.Clear();
             this.weatherDataView.GraphRadiation.Refresh();
             this.graphMetData = new DataTable();
+
+            string fullFilePath = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             if (filename != null)
             {
                 try
@@ -210,7 +212,7 @@ namespace UserInterface.Presenters
                         this.weatherDataView.ShowExcelSheets(true);
                         if (this.sheetNames == null)
                         {
-                            this.sheetNames = ExcelUtilities.GetWorkSheetNames(filename);
+                            this.sheetNames = ExcelUtilities.GetWorkSheetNames(fullFilePath);
                             this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
                             this.weatherDataView.PopulateDropDownData(this.sheetNames);
                             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
@@ -267,7 +269,6 @@ namespace UserInterface.Presenters
                 }
             }
 
-            string fullFilePath = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             string relativeFilePath = fullFilePath;
             Simulations simulations = weatherData.Node.FindParent<Simulations>(recurse: true);
             if (simulations != null)

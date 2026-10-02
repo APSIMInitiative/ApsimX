@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Documentation;
 using System.Linq;
-using MigraDocCore.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel;
 using APSIM.Core;
 
 namespace APSIM.Documentation.Models

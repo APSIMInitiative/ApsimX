@@ -1,16 +1,10 @@
+using Gtk;
+using UserInterface.Interfaces;
+using System;
+using APSIMNG.Utility;
+
 namespace UserInterface.Views
 {
-    using EventArguments;
-    using Gtk;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.InteropServices;
-    using APSIM.Shared.Utilities;
-    using global::UserInterface.Extensions;
-    using Utility;
 
     /// <summary>
     /// GTK# based view of the PropertyCategorisedPresenter to display a tree view of categories and sub-categories to assit filtering properties
@@ -44,8 +38,6 @@ namespace UserInterface.Views
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             mainWidget = hpaned;
             rightHandView.BorderWidth = 7;
-
-
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();

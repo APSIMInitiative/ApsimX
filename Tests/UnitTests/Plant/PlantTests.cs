@@ -64,7 +64,7 @@ namespace UnitTests.Core
             sim.Prepare();
             sim.Run();
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             var dataTable = storage.Reader.GetData("Report");
 

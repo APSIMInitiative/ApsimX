@@ -1,28 +1,18 @@
-﻿using Atk;
+﻿using APSIM.Core;
 using Models;
-using Models.Climate;
 using Models.Core;
 using Models.PMF;
 using Models.Soils;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Linq;
 using UnitTests.Core.Run;
 
-namespace APSIM.Core.Tests;
+namespace UnitTests.APSIM.Core.Tests;
 
 [TestFixture]
 public class CommandTests
 {
-    /*class ModelA : Model
-    {
-    }
-
-    class ModelB : Model
-    {
-        public int B1 { get { return 3; } }
-    }*/
 
     /// <summary>Ensure the add command works.</summary>
     [Test]
@@ -34,7 +24,7 @@ public class CommandTests
         IModelCommand cmd = new AddCommand(modelReference: new NewModelReference("Report"),
                                            toPath: "[Simulation]",
                                            multiple: false);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Models.Report)));
     }
@@ -55,7 +45,7 @@ public class CommandTests
         IModelCommand cmd = new AddCommand(modelReference: new NewModelReference("Report"),
                                            toPath: "[Simulation]",
                                            multiple: true);
-        cmd.Run(simulations, runner: null);
+        cmd.Run(simulations, null, null);
 
         Assert.That(simulations.Children[0].Children[0], Is.InstanceOf(typeof(Models.Report)));
         Assert.That(simulations.Children[1].Children[0], Is.InstanceOf(typeof(Models.Report)));
@@ -73,7 +63,7 @@ public class CommandTests
                                            multiple: false,
                                            newName: "NewReport");
 
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
     }
@@ -88,7 +78,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "NewReport" }
+                new Models.Report() { Name = "NewReport" }
             ]
         };
         Node simulationsNode = Node.Create(simulations);
@@ -100,12 +90,13 @@ public class CommandTests
         Simulation simulation = new();
         Node.Create(simulation);
 
+        Node externalRootNode = FileFormat.ReadFromFile(tempFilePath, typeof(Simulations));
         // Run add command to add report from external file into simulation.
         IModelCommand cmd = new AddCommand(modelReference: new ModelInFileReference(tempFilePath, "Report"),
                                            toPath: "[Simulation]",
                                            multiple: false,
                                            newName: "NewReport");
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, [externalRootNode]);
 
         // Make sure report was added.
         Assert.That(simulation.Children[0].Name, Is.EqualTo("NewReport"));
@@ -122,15 +113,103 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "NewReport" }
+                new Models.Report() { Name = "NewReport" }
             ]
         };
         Node.Create(simulation);
 
-        IModelCommand cmd = new DeleteCommand(modelName: "Report");
-        cmd.Run(simulation, runner: null);
+        IModelCommand cmd = new DeleteCommand(modelName: "Report", false);
+        cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(0));
+    }
+
+    /// <summary>Ensure the delete command works.</summary>
+    [Test]
+    public void EnsureDeleteMultipleWorks()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Models.Report() { Name = "NewReport" },
+                new Models.Report() { Name = "NewReport1" },
+                new Models.Report() { Name = "NewReport2" }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new DeleteCommand(modelName: "[Report]", true);
+        cmd.Run(simulation, null, null);
+
+        Assert.That(simulation.Children.Count, Is.EqualTo(0));
+    }
+
+    /// <summary>Ensure the delete command works.</summary>
+    [Test]
+    public void EnsureDeleteMultipleWorksWithNoMatches()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Models.Report() { Name = "NewReport" },
+                new Models.Report() { Name = "NewReport1" },
+                new Models.Report() { Name = "NewReport2" }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new DeleteCommand(modelName: "[Clock]", true);
+        cmd.Run(simulation, null, null);
+
+        Assert.That(simulation.Children.Count, Is.EqualTo(3));
+    }
+
+    /// <summary>Ensure a delete command can target a model beneath a specified parent.</summary>
+    [Test]
+    public void EnsureDeleteWorksFromParent()
+    {
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Zone { Name = "Zone", Children = [new Models.Report { Name = "Report" }] },
+                new Zone { Name = "OtherZone", Children = [new Models.Report { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulations);
+
+        IModelCommand command = CommandLanguage.StringToCommands(["delete [Report] from [Zone]"], simulations, null).Single();
+        command.Run(simulations, null, null);
+
+        Assert.That(simulations.Children[0].Children, Is.Empty);
+        Assert.That(simulations.Children[1].Children, Has.Count.EqualTo(1));
+    }
+
+    /// <summary>Ensure delete all is limited to the specified parent.</summary>
+    [Test]
+    public void EnsureDeleteAllWorksFromParent()
+    {
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Zone
+                {
+                    Name = "Zone",
+                    Children = [new Models.Report { Name = "Report1" }, new Models.Report { Name = "Report2" }]
+                },
+                new Zone { Name = "OtherZone", Children = [new Models.Report { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulations);
+
+        IModelCommand command = CommandLanguage.StringToCommands(["delete all [Report] from [Zone]"], simulations, null).Single();
+        command.Run(simulations, null, null);
+
+        Assert.That(simulations.Children[0].Children, Is.Empty);
+        Assert.That(simulations.Children[1].Children, Has.Count.EqualTo(1));
     }
 
     /// <summary>Ensure the duplicate command works.</summary>
@@ -141,16 +220,16 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulation);
 
         IModelCommand cmd = new DuplicateCommand(modelName: "Report", newName: "NewReport");
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(2));
-        Assert.That(simulation.Children[1], Is.InstanceOf<Report>());
+        Assert.That(simulation.Children[1], Is.InstanceOf<Models.Report>());
         Assert.That(simulation.Children[1].Name, Is.EqualTo("NewReport"));
     }
 
@@ -163,7 +242,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -171,7 +250,7 @@ public class CommandTests
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
         IModelCommand cmd = new SaveCommand(fileName: tempFilePath);
-        var saveModel = cmd.Run(simulations, runner: null);
+        var saveModel = cmd.Run(simulations, null, null);
 
         Assert.That(File.Exists(tempFilePath));
         Node simulationsReadIn = FileFormat.ReadFromFile<Simulations>(tempFilePath);
@@ -199,7 +278,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Clock].StartDate", "=", "2000-01-01", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var clock = simulation.Children.First() as Clock;
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
@@ -223,7 +302,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Clock].StartDate", "=", "2000-01-01", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var clock = simulation.Children.First() as Clock;
         Assert.That(clock.StartDate, Is.EqualTo(new System.DateTime(2000, 1, 1)));
@@ -241,7 +320,7 @@ public class CommandTests
         {
             Children =
             [
-                new Weather()
+                new Models.Climate.Weather()
                 {
                     FileName = "file1.apsimx"
                 }
@@ -250,9 +329,9 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Weather].FileName", "=", "", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
-        var weather = simulation.Children.First() as Weather;
+        var weather = simulation.Children.First() as Models.Climate.Weather;
         Assert.That(weather.FileName, Is.Empty);
     }
 
@@ -273,10 +352,33 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "b=2", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
+    }
+
+    /// <summary>Ensure the set property += command works with an empty array</summary>
+    [Test]
+    public void EnsureSetPropertyAddToArrayWorksOnEmptyArray()
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Command = new string[] {}
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "a=1", fileName: null);
+        cmd.Run(simulation, null, null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.EqualTo(["a=1"]));
     }
 
     /// <summary>Ensure the set property += command overwrites existing value when it exists.</summary>
@@ -296,7 +398,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "+=", "a=2", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["a=2"]));
@@ -319,13 +421,13 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "b=2,c=3", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["b=2", "c=3"]));
     }
 
-    /// <summary>Ensure the set array property to empty string clears the array.</summary>
+        /// <summary>Ensure the set array property to empty string clears the array.</summary>
     [Test]
     public void EnsureSetArrayPropertyToEmptyWorks()
     {
@@ -342,7 +444,57 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyWithNameWhitespaceWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = new SetPropertyCommand($"[{modelName}].Command", "=", "", fileName: null);
+        cmd.Run(simulation, null, null);
+
+        var cultivar = simulation.Children.First() as Cultivar;
+        Assert.That(cultivar.Command, Is.Empty);
+    }
+
+    /// <summary>Ensure the set property with name containing whitespace works.</summary>
+    [TestCase("Test Cultivar")]
+    [TestCase("Second Test Cultivar")]
+    public void EnsureSetPropertyCommandStringParsingWorks(string modelName)
+    {
+        Simulations simulation = new()
+        {
+            Children =
+            [
+                new Cultivar()
+                {
+                    Name = modelName,
+                    Command = [ "a=1" ]
+                }
+            ]
+        };
+        Node.Create(simulation);
+
+        IModelCommand cmd = SetPropertyCommand.Create($"[{modelName}].Command=", null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.Empty);
@@ -365,7 +517,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "null", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.Null);
@@ -388,7 +540,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command[1]", "=", "b=1", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["b=1", "b=2"]));
@@ -412,7 +564,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "=", "", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command.Length, Is.EqualTo(0));
@@ -435,7 +587,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "b", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["a=1"]));
@@ -459,7 +611,7 @@ public class CommandTests
         Node.Create(simulation);
 
         IModelCommand cmd = new SetPropertyCommand("[Cultivar].Command", "-=", "c", fileName: null);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var cultivar = simulation.Children.First() as Cultivar;
         Assert.That(cultivar.Command, Is.EqualTo(["a=1", "b=2"]));
@@ -474,7 +626,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -482,11 +634,12 @@ public class CommandTests
         // Run the save command.
         string tempFilePath = Path.GetTempFileName();
         IModelCommand saveCommand = new SaveCommand(fileName: tempFilePath);
-        saveCommand.Run(relativeTo: simulations, runner: null);
+        saveCommand.Run(relativeTo: simulations, null, null);
 
         // Run load command. It should return a relativeTo that is from the temp file.
+        Node externalRootNode = FileFormat.ReadFromFile(tempFilePath, typeof(Simulations));
         IModelCommand loadCommand = new LoadCommand(tempFilePath);
-        var relativeTo = loadCommand.Run(relativeTo: null, runner: null);
+        var relativeTo = loadCommand.Run(relativeTo: null, null, [externalRootNode]);
 
         Assert.That(relativeTo.GetChildren().First().Name, Is.EqualTo("Report"));
     }
@@ -500,7 +653,7 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulations);
@@ -509,7 +662,7 @@ public class CommandTests
 
         // Run the run command.
         IModelCommand cmd = new RunCommand();
-        cmd.Run(simulations, runner: mockRunner);
+        cmd.Run(simulations, mockRunner, null);
 
         Assert.That(mockRunner.RunCalled, Is.True);
         Assert.That(mockRunner.RelativeTo, Is.EqualTo(simulations));
@@ -523,18 +676,18 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report", VariableNames = [ "1" ] }
+                new Models.Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.NameAndType);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
-        var report = simulation.Children[0] as Report;
+        var report = simulation.Children[0] as Models.Report;
         Assert.That(report, Is.Not.Null);
         Assert.That(report.Name, Is.EqualTo("Report"));
         Assert.That(report.VariableNames, Is.EqualTo([ "2" ]));
@@ -548,18 +701,18 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report", VariableNames = [ "1" ] }
+                new Models.Report() { Name = "Report", VariableNames = [ "1" ] }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
-        var report = simulation.Children[0] as Report;
+        var report = simulation.Children[0] as Models.Report;
         Assert.That(report, Is.Not.Null, "simulation.Children[0] is not a Report after replacement.");
 
         Assert.That(report.Name, Is.EqualTo("Report"));
@@ -574,16 +727,16 @@ public class CommandTests
         {
             Children =
             [
-                new Report() { Name = "Report" }
+                new Models.Report() { Name = "Report" }
             ]
         };
         Node.Create(simulation);
 
 
-        var newModel = new Report() { Name = "NewReport" };
+        var newModel = new Models.Report() { Name = "NewReport" };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name, newName: "NewName");
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children.First().Name, Is.EqualTo("NewName"));
     }
@@ -597,17 +750,17 @@ public class CommandTests
             Children =
             [
                 new Zone() { Children = [new Clock() { Name = "Report" }] },
-                new Zone() { Children = [new Report() { Name = "Report" }] }
+                new Zone() { Children = [new Models.Report() { Name = "Report" }] }
             ]
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = ["2"] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = ["2"] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: true, ReplaceCommand.MatchType.Name);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
-        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        var reports = simulation.Node.FindChildren<Models.Report>(recurse: true).ToArray();
         Assert.That(reports[0].Name, Is.EqualTo("Report"));
         Assert.That(reports[0].VariableNames, Is.EqualTo(["2"]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
@@ -634,7 +787,7 @@ public class CommandTests
         var newModel = new Soil() { Name = "NewSoil", ApsoilNumber = "2" };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "[Soil]", multiple: true, ReplaceCommand.MatchType.NameOrType);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var soil = simulation.Node.FindChild<Soil>(recurse: true);
         Assert.That(soil.Name, Is.EqualTo("SandyClayLoam"));
@@ -657,7 +810,7 @@ public class CommandTests
         var newModel = new Soil() { Name = "NewSoil", Enabled = true };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "[Soil]", multiple: true, ReplaceCommand.MatchType.Name);
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
         var soil = simulation.Node.FindChild<Soil>(recurse: true);
         Assert.That(soil.Name, Is.EqualTo("SandyClayLoam"));
@@ -672,22 +825,39 @@ public class CommandTests
         {
             Children =
             [
-                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] },
-                new Zone() { Children = [new Report() { Name = "Report", VariableNames = [ "1" ] }] }
+                new Zone() { Children = [new Models.Report() { Name = "Report", VariableNames = [ "1" ] }] },
+                new Zone() { Children = [new Models.Report() { Name = "Report", VariableNames = [ "1" ] }] }
             ]
         };
         Node.Create(simulation);
 
-        var newModel = new Report() { Name = "NewReport", VariableNames = [ "2" ] };
+        var newModel = new Models.Report() { Name = "NewReport", VariableNames = [ "2" ] };
         IModelCommand cmd = new ReplaceCommand(new ModelReference(newModel),
                                                replacementPath: "Report", multiple: false, ReplaceCommand.MatchType.Name);
 
-        cmd.Run(simulation, runner: null);
+        cmd.Run(simulation, null, null);
 
-        var reports = simulation.Node.FindChildren<Report>(recurse: true).ToArray();
+        var reports = simulation.Node.FindChildren<Models.Report>(recurse: true).ToArray();
         Assert.That(reports[0].Name, Is.EqualTo("Report"));
         Assert.That(reports[0].VariableNames, Is.EqualTo([ "2" ]));
         Assert.That(reports[1].Name, Is.EqualTo("Report"));
         Assert.That(reports[1].VariableNames, Is.EqualTo([ "1" ]));
+    }
+
+        /// <summary>Ensure the add command works.</summary>
+    [Test]
+    [TestCase("Wheat")]
+    [TestCase("Canola")]
+    public void EnsureAddFromResourceWorks(string modelName)
+    {
+        Simulation simulation = new();
+        Node.Create(simulation);
+
+        IModelCommand cmd = new AddCommand(modelReference: new NewModelReference(modelName),
+                                           toPath: "[Simulation]",
+                                           multiple: false);
+        cmd.Run(simulation, null, null);
+
+        Assert.That(simulation.Children[0], Is.InstanceOf(typeof(Plant)));
     }
 }

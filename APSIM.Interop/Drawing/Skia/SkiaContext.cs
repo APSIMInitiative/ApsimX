@@ -274,7 +274,7 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void ShowText(string text)
         {
-            canvas.DrawText(text, (SKPoint)currentPoint, paint);
+            canvas.DrawText(text, (SKPoint)currentPoint, SKTextAlign.Left, font, paint);
         }
 
         /// <inheritdoc />

@@ -16,9 +16,6 @@ namespace Models.CLEM
     ///<summary>
     /// Reads in crop growth data and makes it available to other models.
     ///</summary>
-    ///
-    ///<remarks>
-    ///</remarks>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -42,37 +39,57 @@ namespace Models.CLEM
         /// <summary>
         /// The character spacing index for the SoilNum column
         /// </summary>
-        private int soilNumIndex;
+        private int soilNumIndex = 0;
 
         /// <summary>
         /// The character spacing index for the CropName column
         /// </summary>
-        private int cropNameIndex;
+        private int cropNameIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Year column
         /// </summary>
-        private int yearIndex;
+        private int yearIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Month column
         /// </summary>
-        private int monthIndex;
+        private int monthIndex = 0;
+
+        /// <summary>
+        /// The character spacing index for the Month column
+        /// </summary>
+        private int dayIndex = 0;
 
         /// <summary>
         /// The character spacing index for the AmtKg column
         /// </summary>
-        private int amountKgIndex;
+        private int amountKgIndex = 0;
 
         /// <summary>
         /// The character spacing index for the Npct column
         /// </summary>
-        private int nitrogenPercentIndex;
+        private int nitrogenPercentIndex ;
+
+        /// <summary>
+        /// The character spacing index for the Crude protein percent column
+        /// </summary>
+        private int crudeProteinPercentIndex = 0;
+
+        /// <summary>
+        /// The character spacing index for the dry matter digestibility column
+        /// </summary>
+        private int dryMatterDigestibilityIndex = 0;
+
+        /// <summary>
+        /// The character spacing index for the energy content column
+        /// </summary>
+        private int mDIndex = 0;
 
         /// <summary>
         /// The character spacing index for the harvest type column
         /// </summary>
-        private int harvestTypeIndex;
+        private int harvestTypeIndex = 0;
 
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
@@ -84,7 +101,7 @@ namespace Models.CLEM
         /// </summary>
         [Summary]
         [Description("Crop file name")]
-        [Models.Core.Display(Type=DisplayType.FileName)]
+        [Core.Display(Type=DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop file name must be supplied")]
         public string FileName { get; set; }
 
@@ -99,46 +116,48 @@ namespace Models.CLEM
         /// Name of column holding crop name data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("CropName")]
         [Description("Column name for crop name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop name column name must be supplied")]
-        public string CropNameColumnName { get; set; }
+        public string CropNameColumnName { get; set; } = "CropName";
 
         /// <summary>
         /// Name of column holding soil type data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("SoilNum")]
         [Description("Column name for land id")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string SoilTypeColumnName { get; set; }
+        public string SoilTypeColumnName { get; set; } = "LandId";
 
         /// <summary>
         /// Name of column holding year data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Year")]
         [Description("Column name for year")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; }
+        public string YearColumnName { get; set; } = "Year";
 
         /// <summary>
         /// Name of column holding month data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("Month")]
         [Description("Column name for month")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; }
+        public string MonthColumnName { get; set; } = "Month";
+
+        /// <summary>
+        /// Name of column holding day data
+        /// </summary>
+        [Summary]
+        [Description("Column name for day (optional)")]
+        public string DayColumnName { get; set; }
 
         /// <summary>
         /// Name of column holding amount data
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute("AmtKg")]
         [Description("Column name for amount")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; }
+        public string AmountColumnName { get; set; } = "AmountKg";
 
         /// <summary>
         /// Name of column holding nitrogen data
@@ -146,6 +165,27 @@ namespace Models.CLEM
         [Summary]
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding crude protein percent
+        /// </summary>
+        [Summary]
+        [Description("Column name for percent crude protein")]
+        public string PercentCrudeProteinColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding dry matter digestibility
+        /// </summary>
+        [Summary]
+        [Description("Column name for dry matter digestibility (%)")]
+        public string DryMatterDigestibilityColumnName { get; set; }
+
+        /// <summary>
+        /// Name of column holding energy content (MD)
+        /// </summary>
+        [Summary]
+        [Description("Column name for energy content (MD)")]
+        public string MDColumnName { get; set; }
 
         /// <summary>
         /// Name of column holding harvest details
@@ -164,15 +204,19 @@ namespace Models.CLEM
         {
             get
             {
-                if ((this.FileName == null) || (this.FileName == ""))
+                if ((FileName == null) || (FileName == ""))
                     return "";
                 else
                 {
                     Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
                     if (simulation != null)
-                        return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
+                    {
+                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                    }
                     else
-                        return this.FileName;
+                    {
+                        return FileName;
+                    }
                 }
             }
         }
@@ -182,7 +226,7 @@ namespace Models.CLEM
         /// </summary>
         public bool FileExists
         {
-            get { return File.Exists(this.FullFileName); }
+            get { return File.Exists(FullFileName); }
         }
 
         /// <summary>
@@ -191,19 +235,22 @@ namespace Models.CLEM
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            if (!this.FileExists)
+            if (!FileExists)
             {
-                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), Name);
                 throw new ApsimXException(this, errorMsg);
             }
-            this.soilNumIndex = 0;
-            this.cropNameIndex = 0;
-            this.yearIndex = 0;
-            this.monthIndex = 0;
-            this.amountKgIndex = 0;
-            this.nitrogenPercentIndex = 0;
-            this.harvestTypeIndex = 0;
-            this.forageFileAsTable = GetAllData();
+            //soilNumIndex = 0;
+            //cropNameIndex = 0;
+            //yearIndex = 0;
+            //monthIndex = 0;
+            //amountKgIndex = 0;
+            //nitrogenPercentIndex = 0;
+            //harvestTypeIndex = 0;
+            //crudeProteinPercentIndex = 0;
+            //dryMatterDigestibilityIndex = 0;
+            //mDIndex = 0;
+            forageFileAsTable = GetAllData();
         }
 
         /// <summary>
@@ -212,10 +259,10 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
+            if (reader != null)
             {
-                this.reader.Close();
-                this.reader = null;
+                reader.Close();
+                reader = null;
             }
         }
 
@@ -228,15 +275,6 @@ namespace Models.CLEM
         /// </summary>
         [JsonIgnore]
         public string ErrorMessage = string.Empty;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileCrop()
-        {
-            base.SetDefaults();
-            base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
-        }
 
         /// <summary>
         ///
@@ -261,9 +299,9 @@ namespace Models.CLEM
         /// <returns>The DataTable</returns>
         public DataTable GetAllData()
         {
-            this.reader = null;
+            reader = null;
 
-            if (this.OpenDataFile())
+            if (OpenDataFile())
             {
                 List<string> cropProps = new List<string>
                 {
@@ -275,19 +313,53 @@ namespace Models.CLEM
                 };
                 //Npct column is optional
                 //Only try to read it in if it exists in the file.
+                if (dayIndex != -1)
+                {
+                    cropProps.Add(DayColumnName);
+                }
+
                 if (nitrogenPercentIndex != -1)
+                {
                     cropProps.Add(PercentNitrogenColumnName);
+                }
+
+                if (crudeProteinPercentIndex != -1)
+                {
+                    cropProps.Add(PercentCrudeProteinColumnName);
+                }
+
+                if (dryMatterDigestibilityIndex != -1)
+                {
+                    cropProps.Add(DryMatterDigestibilityColumnName);
+                }
+
+                if (mDIndex != -1)
+                {
+                    cropProps.Add(MDColumnName);
+                }
 
                 if (harvestTypeIndex != -1)
+                {
                     cropProps.Add(HarvestTypeColumnName);
+                }
 
-                DataTable table = this.reader.ToTable(cropProps);
+                DataTable table = reader.ToTable(cropProps);
+
+                int numColumns = 5;
+                if (dayIndex != -1)
+                {
+                    numColumns++;
+                }
 
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[0] = table.Columns[SoilTypeColumnName];
                 primarykeys[1] = table.Columns[CropNameColumnName];
                 primarykeys[2] = table.Columns[YearColumnName];
                 primarykeys[3] = table.Columns[MonthColumnName];
+                if (dayIndex != -1)
+                {
+                    primarykeys[4] = table.Columns[DayColumnName];
+                }
 
                 table.PrimaryKey = primarykeys;
 
@@ -295,7 +367,9 @@ namespace Models.CLEM
                 return table;
             }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>
@@ -319,31 +393,50 @@ namespace Models.CLEM
 
             //http://www.csharp-examples.net/dataview-rowfilter/
 
-            string soiltypeparenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
-            string cropnameparenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
+            string soilTypeParenth = (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(System.String)) ? "'" : "";
+            string cropNameParenth = (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.String)) ? "'" : "";
 
             // check that entry is in correct type
-            if(forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(float))
-                if(!float.TryParse(landId, out float val))
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+            if (forageFileAsTable.Columns[SoilTypeColumnName].DataType == typeof(float))
+            {
+                if (!float.TryParse(landId, out float val))
+                {
+                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                }
+            }
 
             if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(float))
+            {
                 if (!float.TryParse(cropName, out float val))
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                {
+                    throw new ApsimXException(this, $"[o={Parent.Name}.{Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                }
+            }
 
-            string filter = $"({SoilTypeColumnName} = {soiltypeparenth}{landId}{soiltypeparenth}) AND ({CropNameColumnName} = {cropnameparenth}{cropName}{cropnameparenth})"
-                + " AND ("
-                + $"( {YearColumnName} = " + startYear + $" AND {MonthColumnName} >= " + startMonth + ")"
-                + $" OR  ( {YearColumnName} > " + startYear + $" AND {YearColumnName} < " + endYear + ")"
-                + $" OR  ( {YearColumnName} = " + endYear + $" AND {MonthColumnName} <= " + endMonth + ")"
-                + ")";
+            using StringWriter filterWriter = new();
+            filterWriter.Write($"({SoilTypeColumnName} = {soilTypeParenth}{landId}{soilTypeParenth}) AND ({CropNameColumnName} = {cropNameParenth}{cropName}{cropNameParenth}) AND (");
+            if ((DayColumnName??"").Length > 0)
+            {
+                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month} AND {DayColumnName} >= {startDate.Day}) OR ");
+                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month} AND {DayColumnName} <= {endDate.Day})");
+            }
+            else
+            {
+                filterWriter.Write($"({YearColumnName} = {startDate.Year} AND {MonthColumnName} >= {startDate.Month}) OR ");
+                filterWriter.Write($"({YearColumnName} > {startDate.Year} AND {YearColumnName} < {endDate.Year}) OR ");
+                filterWriter.Write($"({YearColumnName} = {endDate.Year} AND {MonthColumnName} <= {endDate.Month})");
+            }
+            filterWriter.Write(")");
 
-            DataRow[] foundRows = this.forageFileAsTable.Select(filter);
+            DataRow[] foundRows = forageFileAsTable.Select(filterWriter.ToString());
 
             List<CropDataType> filtered = new List<CropDataType>();
 
             foreach (DataRow dr in foundRows)
+            {
                 filtered.Add(DataRow2CropData(dr));
+            }
 
             filtered.Sort((r, s) => DateTime.Compare(r.HarvestDate, s.HarvestDate));
             return filtered;
@@ -360,24 +453,76 @@ namespace Models.CLEM
                 AmtKg = double.Parse(dr[AmountColumnName].ToString(), CultureInfo.InvariantCulture)
             };
 
-            //Npct column is optional
+            if (dayIndex != -1)
+            {
+                cropdata.Day = int.Parse(dr[DayColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                cropdata.Day = 1;
+            }
+
+            //Npct column is optional 
             //Only try to read it in if it exists in the file.
             if (nitrogenPercentIndex != -1)
+            {
                 cropdata.Npct = double.Parse(dr[PercentNitrogenColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
             else
+            {
                 cropdata.Npct = double.NaN;
+            }
 
-            //HarvestType column is optional
+            //CPpct column is optional 
+            //Only try to read it in if it exists in the file.
+            if (crudeProteinPercentIndex != -1)
+            {
+                cropdata.CPpct = double.Parse(dr[PercentCrudeProteinColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                cropdata.CPpct = double.NaN;
+            }
+
+            //DMD column is optional 
+            //Only try to read it in if it exists in the file.
+            if (dryMatterDigestibilityIndex != -1)
+            {
+                cropdata.DMDpct = double.Parse(dr[DryMatterDigestibilityColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                cropdata.DMDpct = double.NaN;
+            }
+
+            //MD column is optional 
+            //Only try to read it in if it exists in the file.
+            if (mDIndex != -1)
+            {
+                cropdata.MD = double.Parse(dr[MDColumnName].ToString(), CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                cropdata.MD = double.NaN;
+            }
+
+            //HarvestType column is optional 
             //Only try to read it in if it exists in the file.
             if (harvestTypeIndex != -1)
             {
-                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString().ToLower()))
+                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString(), StringComparison.CurrentCultureIgnoreCase))
+                {
                     cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
+                }
                 else
+                {
                     cropdata.HarvestType = "";
+                }
             }
             else
+            {
                 cropdata.HarvestType = "";
+            }
 
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
             return cropdata;
@@ -389,66 +534,96 @@ namespace Models.CLEM
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
         {
-            if (System.IO.File.Exists(this.FullFileName))
+            if (File.Exists(FullFileName))
             {
-                if (this.reader == null)
+                if (reader == null)
                 {
-                    this.reader = new ApsimTextFile();
-                    this.reader.Open(this.FullFileName, this.ExcelWorkSheetName);
+                    reader = new ApsimTextFile();
+                    reader.Open(FullFileName, ExcelWorkSheetName);
 
-                    if (this.reader.Headings == null)
+                    if (reader.Headings == null)
                     {
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
+                        {
                             fileType = "Comma delimited text file (csv)";
+                        }
 
                         if (reader.IsExcelFile)
                         {
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
-                    this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, SoilTypeColumnName);
-                    this.cropNameIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, CropNameColumnName);
-                    this.yearIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, YearColumnName);
-                    this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName);
-                    this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName);
-                    this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, PercentNitrogenColumnName);
-                    this.harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, HarvestTypeColumnName);
+                    soilNumIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, SoilTypeColumnName);
+                    cropNameIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, CropNameColumnName);
+                    yearIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName);
+                    monthIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName);
+                    dayIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DayColumnName);
+                    amountKgIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName);
+                    nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentNitrogenColumnName);
+                    harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, HarvestTypeColumnName);
+                    crudeProteinPercentIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, PercentCrudeProteinColumnName);
+                    dryMatterDigestibilityIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, DryMatterDigestibilityColumnName);
+                    mDIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, MDColumnName);
 
-                    if (this.soilNumIndex == -1)
-                        if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
-                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
+                    if (soilNumIndex == -1)
+                    {
+                        if (reader == null || reader.Constant(SoilTypeColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName ?? "Empty"}] in crop file [x={FullFileName.Replace("\\", "\\&shy;")}] for [x={Name}]");
+                        }
+                    }
 
-                    if (this.cropNameIndex == -1)
-                        if (this.reader == null || this.reader.Constant(CropNameColumnName) == null)
-                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (cropNameIndex == -1)
+                    {
+                        if (reader == null || reader.Constant(CropNameColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
 
-                    if (this.yearIndex == -1)
-                        if (this.reader == null || this.reader.Constant(YearColumnName) == null)
-                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (yearIndex == -1)
+                    {
+                        if (reader == null || reader.Constant(YearColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
 
-                    if (this.monthIndex == -1)
-                        if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
-                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (monthIndex == -1)
+                    {
+                        if (reader == null || reader.Constant(MonthColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
 
-                    if (this.amountKgIndex == -1)
-                        if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
-                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                    if (amountKgIndex == -1)
+                    {
+                        if (reader == null || reader.Constant(AmountColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
                 }
                 else
                 {
-                    if (this.reader.IsExcelFile != true)
-                        this.reader.SeekToDate(this.reader.FirstDate);
+                    if (reader.IsExcelFile != true)
+                    {
+                        reader.SeekToDate(reader.FirstDate);
+                    }
                 }
 
                 return true;
             }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -460,131 +635,5 @@ namespace Models.CLEM
                 reader = null;
             }
         }
-
-        #region descriptive summary
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (FileName == null || FileName == "")
-                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                else
-                {
-                    if (!this.FileExists)
-                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    else
-                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
-
-                if (FileName != null && FileName.Contains(".xls"))
-                {
-                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    else
-                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-                }
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
-                if (SoilTypeColumnName is null || SoilTypeColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
-                if (CropNameColumnName is null || CropNameColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
-                if (YearColumnName is null || YearColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                if (MonthColumnName is null || MonthColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
-                if (AmountColumnName is null || AmountColumnName == "")
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                else
-                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
-
-                if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                else
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
-
-                if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
-                else
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
-
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
-            }
-        }
-        #endregion
-
-    }
-
-    /// <summary>
-    /// A structure containing the commonly used crop input data.
-    /// </summary>
-    [Serializable]
-    public class CropDataType
-    {
-        /// <summary>
-        /// Soil Number
-        /// </summary>
-        public string SoilNum;
-
-        /// <summary>
-        /// Name of Crop
-        /// </summary>
-        public string CropName;
-
-        /// <summary>
-        /// Year (eg. 2017)
-        /// </summary>
-        public int Year;
-
-        /// <summary>
-        /// Month (eg. 1 is Jan, 2 is Feb)
-        /// </summary>
-        public int Month;
-
-        /// <summary>
-        /// Amount in Kg (perHa or perTree)
-        /// </summary>
-        public double AmtKg;
-
-        /// <summary>
-        /// Nitrogen Percentage of the Amount
-        /// </summary>
-        public double Npct;
-
-        /// <summary>
-        /// Combine Year and Month to create a DateTime.
-        /// Day is set to the 1st of the month.
-        /// </summary>
-        public DateTime HarvestDate;
-
-        /// <summary>
-        /// Harvest type identifier
-        /// </summary>
-        public string HarvestType;
     }
 }

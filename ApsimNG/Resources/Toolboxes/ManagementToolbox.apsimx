@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 204,
+  "Version": 208,
   "Name": "Management toolbox",
   "ResourceName": null,
   "Children": [
@@ -3545,7 +3545,7 @@
             "        {",
             "            if (Dates.Any(d => DateUtilities.DatesEqual(d, clock.Today)))",
             "            {",
-            "                Solute.AddAtDepth(Amount, Depth);",
+            "                Solute.AddToDepth(Amount, Depth);",
             "            }",
             "        }",
             "    }",

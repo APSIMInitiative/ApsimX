@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Models.CLEM.Resources
 {
-
     ///<summary>
     /// Store for all the biomass growing in the fields (pasture, crop residue etc)
     /// This acts like an AnimalFoodStore but in reality the food is in a field
@@ -62,10 +61,11 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (GrazeFoodStoreType childModel in Structure.FindChildren<GrazeFoodStoreType>())
+            {
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
+            }
 
-            if (Items != null)
-                Items.Clear();
+            Items?.Clear();
             Items = null;
         }
 

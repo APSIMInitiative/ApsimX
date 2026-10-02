@@ -25,10 +25,10 @@ namespace Models.CLEM.Resources
     public class Labour : ResourceBaseWithTransactions, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
-        private IClock clock = null;
+        private readonly CLEMEvents events = null;
 
-        private List<string> warningsMultipleEntry = new List<string>();
-        private List<string> warningsNotFound = new List<string>();
+        private readonly List<string> warningsMultipleEntry = new();
+        private readonly List<string> warningsNotFound = new();
         private Relationship adultEquivalentRelationship = null;
         private LabourAvailabilityList availabilityList;
 
@@ -47,11 +47,11 @@ namespace Models.CLEM.Resources
         public bool UseCohorts { get; set; }
 
         /// <summary>
-        /// Allows indiviuals to age each month
+        /// Allows individuals to age each month
         /// </summary>
         [Description("Allow individuals to age")]
         [Required]
-        public bool AllowAging { get; set; }
+        public bool AllowAgeing { get; set; }
 
         /// <summary>
         /// Current pay rate value of individuals
@@ -65,17 +65,14 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable { get { return (PayList != null); } }
 
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            // locate resources
             availabilityList = Structure.FindChildren<LabourAvailabilityList>().FirstOrDefault();
-
-            if (clock.Today.Day != 1)
-                OnStartOfMonth(this, null);
         }
 
         /// <summary>
@@ -89,7 +86,9 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.IsHired == false)))
+            {
                 value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            }
             return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
 
@@ -102,38 +101,30 @@ namespace Models.CLEM.Resources
         /// <returns>Amount eaten per day</returns>
         public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
-            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
-            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
+            //ToDo: check updates for time-steps less than monthy
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / events.Interval;
         }
 
         /// <inheritdoc/>
         public LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() { "Adult equivalent" },
-                        measures: new List<string>()
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: new List<string>() { "Adult equivalent" },
+                                        measures: new List<string>()
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         #region validation
 
-        /// <summary>
-        /// Validation of this resource
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             // Add warning if no individuals defined
-            if (Structure.FindChildren<LabourType>().Count() > 0 && Structure.FindChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
+            if (Structure.FindChildren<LabourType>().Any() && Structure.FindChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
                 string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
                 if (!warningsNotFound.Contains(warningString))
@@ -142,12 +133,12 @@ namespace Models.CLEM.Resources
                     Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
-            return results;
+            return null;
         }
 
         #endregion
 
-        /// <summary>An event handler to allow us to create labour list when simualtion commences</summary>
+        /// <summary>An event handler to allow us to create labour list when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
@@ -159,49 +150,50 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in Structure.FindChildren<LabourType>())
             {
-                IndividualAttribute att = new IndividualAttribute() { StoredValue = labourChildModel.Name };
-                if (UseCohorts)
+                //IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
+                if (UseCohorts | labourChildModel.Individuals <= 1)
                 {
-                    LabourType labour = new LabourType()
-                    {
-                        Sex = labourChildModel.Sex,
-                        Individuals = labourChildModel.Individuals,
-                        Parent = this,
-                        InitialAge = labourChildModel.InitialAge,
-                        AgeInMonths = labourChildModel.InitialAge * 12,
-                        LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name,
-                        IsHired = labourChildModel.IsHired
-                    };
-                    labour.SetParentResourceBaseWithTransactions(this);
-                    labour.Attributes.Add("Group", att);
-                    labour.TransactionOccurred += Resource_TransactionOccurred;
-                    Items.Add(labour);
+                    Items.Add(CreateNewLabour(labourChildModel));
                 }
                 else
                 {
-                    for (int i = 0; i < labourChildModel.Individuals; i++)
+                    for (int i = 1; i <= labourChildModel.Individuals; i++)
                     {
-                        // get the availability from provided list
-                        LabourType labour = new LabourType()
-                        {
-                            Sex = labourChildModel.Sex,
-                            Individuals = 1,
-                            Parent = this,
-                            InitialAge = labourChildModel.InitialAge,
-                            AgeInMonths = labourChildModel.InitialAge * 12,
-                            LabourAvailability = labourChildModel.LabourAvailability,
-                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
-                            IsHired = labourChildModel.IsHired
-                        };
-                        labour.SetParentResourceBaseWithTransactions(this);
-                        labour.Attributes.Add("Group", att);
-                        labour.TransactionOccurred += Resource_TransactionOccurred;
-                        Items.Add(labour);
+                        Items.Add(CreateNewLabour(labourChildModel, i));
                     }
                 }
             }
-            PayList = Structure.FindChild<LabourPricing>();
+            // clone pricelist so model can modify if needed and not affect initial parameterisation
+            if (Structure.FindChildren<LabourPricing>().Any())
+            {
+                PayList = Apsim.Clone(Structure.FindChildren<LabourPricing>().FirstOrDefault());
+                foreach (LabourPriceGroup item in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
+                {
+                    item.InitialiseFilters();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Create a full clone of a child labour type
+        /// </summary>
+        /// <param name="labourType">The labour type to use</param>
+        /// <param name="individualIndex">Optional individual index to specify multiple individual</param>
+        /// <returns></returns>
+        private LabourType CreateNewLabour(LabourType labourType, int? individualIndex = null)
+        {
+            IndividualAttribute att = new() { StoredValue = labourType.Name };
+            LabourType newLabourType = labourType.Clone() as LabourType;
+            if (individualIndex is not null)
+            {
+                newLabourType.Individuals = 1;
+                newLabourType.Name = $"{labourType.Name}_{individualIndex}";
+            }
+            newLabourType.Parent = this;
+            newLabourType.SetParentResourceBaseWithTransactions(this);
+            newLabourType.Attributes.Add("Cohort", att);
+            newLabourType.TransactionOccurred += Resource_TransactionOccurred;
+            return newLabourType;
         }
 
         /// <summary>
@@ -211,26 +203,33 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (LabourType childModel in Structure.FindChildren<LabourType>())
+            {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
+            }
 
-            if (Items != null)
-                Items.Clear();
-
+            Items?.Clear();
             Items = null;
         }
 
         /// <summary>An event handler to allow us to check if labour availability is available.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfMonth")]
-        private void OnStartOfMonth(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             foreach (LabourType item in Items)
             {
+                //if (AllowAgeing)
+                //{
+                //    if (adultEquivalentRelationship != null)
+                //    {
+                //        item.SetAdultEquivalent(adultEquivalentRelationship);
+                //    }
+                //}
+
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
-                if (item.DietaryComponentList != null)
-                    item.DietaryComponentList.Clear();
+                item.DietaryComponentList?.Clear();
 
                 // reset check and take labour trackers for last activity to avoid between month carryover
                 for (int i = 0; i < 2; i++)
@@ -249,10 +248,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMUpdateLabourAvailability")]
         private void OnCLEMUpdateLabourAvailability(object sender, EventArgs e)
         {
-            int currentmonth = clock.Today.Month;
             foreach (LabourType item in Items)
-                // set available days from availabilityitem
-                item.SetAvailableDays(currentmonth);
+            {
+                // set available days from availability item
+                item.SetAvailableDays(Math.Min(events.Interval, events.Interval));
+            }
         }
 
         private void CheckAssignLabourAvailability(LabourType labour)
@@ -262,7 +262,9 @@ namespace Models.CLEM.Resources
             {
                 // check labour availability still ok
                 if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
+                {
                     labour.LabourAvailability = null;
+                }
             }
 
             // if not assign new value
@@ -295,7 +297,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void ONCLEMAgeResources(object sender, EventArgs e)
         {
-            if (AllowAging)
+            if (AllowAgeing)
             {
                 foreach (LabourType item in Items)
                 {
@@ -329,32 +331,35 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double AdultEquivalents(bool includeHired)
         {
-            double ae = 0;
-            foreach (LabourType person in Items)
-                if (!person.IsHired | (includeHired))
-                    ae += (CalculateAE(person.AgeInMonths) ?? 1) * Convert.ToDouble(person.Individuals, System.Globalization.CultureInfo.InvariantCulture);
-            return ae;
+            return Items.Where(p => !p.IsHired | includeHired).Sum(p => p.AdultEquivalent * Convert.ToDouble(p.Individuals, System.Globalization.CultureInfo.InvariantCulture));
         }
 
         /// <summary>
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double PayRate(LabourType ind)
+        public double PayRate(LabourType ind, bool reportWarningIfNoPrice = false)
         {
             if (PricingAvailable)
             {
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
                 foreach (LabourPriceGroup item in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
-                    if (item.Filter(ind))
-                        return item.Value;
-
-                // no price match found.
-                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=sex: {ind.Sex}]";
-                if (!warningsNotFound.Contains(warningString))
                 {
-                    warningsNotFound.Add(warningString);
-                    Summary.WriteMessage(this, warningString, MessageType.Warning);
+                    if (item.Filter(ind))
+                    {
+                        return item.Value;
+                    }
+                }
+
+                if (reportWarningIfNoPrice)
+                {
+                    // no price match found.
+                    string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {Convert.ToInt32(ind.Age)}] [f=sex: {ind.Sex}]";
+                    if (!warningsNotFound.Contains(warningString))
+                    {
+                        warningsNotFound.Add(warningString);
+                        Summary.WriteMessage(this, warningString, MessageType.Warning);
+                    }
                 }
             }
             return 0;
@@ -377,15 +382,17 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup priceGroup in Structure.FindChildren<LabourPriceGroup>(relativeTo: PayList))
                 {
                     if (priceGroup.Filter(ind) && matchIndividual == null)
+                    {
                         matchIndividual = priceGroup;
+                    }
 
                     // check that pricing item meets the specified criteria.
                     var items = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
-                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual) == property)
+                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual).First() == property)
                         .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
 
                     var suitableFilters = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
-                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual) == property) &
+                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual).First() == property) &
                         (
                             (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
                             (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
@@ -397,7 +404,9 @@ namespace Models.CLEM.Resources
                     if (suitableFilters)
                     {
                         if (matchCriteria == null)
+                        {
                             matchCriteria = priceGroup;
+                        }
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
@@ -422,7 +431,9 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value;
                     }
                     else
+                    {
                         Summary.WriteMessage(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]", MessageType.Warning);
+                    }
 
                     if (!warningsNotFound.Contains(criteria))
                     {
@@ -444,44 +455,13 @@ namespace Models.CLEM.Resources
         public double GetAvailabilityForEntry(int index)
         {
             if (index < Items.Count)
-                return Items[index].AvailableDays;
-            else
-                return 0;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
             {
-                if (AllowAging)
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Individuals age with time");
-                    htmlWriter.Write("</div>");
-                }
-                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
-                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
-                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
-                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-                foreach (LabourType labourType in Structure.FindChildren<LabourType>(relativeTo: this))
-                {
-                    htmlWriter.Write("<tr>");
-                    htmlWriter.Write($"<td>{labourType.Name}</td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
-                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
-                    htmlWriter.Write("<td" + ((labourType.IsHired) ? " class=\"fill\"" : "") + "></td>");
-                    htmlWriter.Write("</tr>");
-                }
-                htmlWriter.Write("</table>");
-                htmlWriter.Write("</div></div>");
-                return htmlWriter.ToString();
+                return Items[index].AvailableDays;
+            }
+            else
+            {
+                return 0;
             }
         }
-
-        #endregion
     }
 }

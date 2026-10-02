@@ -1,12 +1,9 @@
 ﻿using System;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.VariantTypes;
 using OxyPlot;
 using OxyPlot.Series;
-using UserInterface.EventArguments;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// An area series with a better tracker.

@@ -5,7 +5,7 @@ using System.IO;
 using ClosedXML.Excel;
 using ExcelDataReader;
 
-namespace Utility
+namespace APSIMNG.Utility
 {
     /// <summary>
     /// A class for writing a collection of DataTables to an excel file, where each table is a different sheet.

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Core.Interfaces;
+using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
 
@@ -109,7 +110,7 @@ namespace Models.Core
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
-                storage.Reader.Refresh();
+                storage.Refresh();
             }
         }
 
@@ -181,9 +182,7 @@ namespace Models.Core
                 else if (child is DataStore)
                 {
                     DataStore storage = child as DataStore;
-                    storage.Close();
                     storage.UpdateFileName();
-                    storage.Open();
                 }
             }
         }
@@ -241,6 +240,29 @@ namespace Models.Core
                         fileNames.Add(fileName);
                     }
             return fileNames;
+        }
+
+        /// <summary>
+        /// Get all Simulation and Factorial names from the given file.
+        /// </summary>
+        /// <param name="onlyEnabled"></param>
+        /// <returns></returns>
+        public List<string> GetAllSimulationAndFactorialNameList(bool onlyEnabled = false)
+        {
+            List<string> sims;
+            if (onlyEnabled)
+            {
+                sims = Node.FindChildren<Simulation>().Where(sim => sim.Enabled).Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions(false).Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            else
+            {
+                sims = Node.FindChildren<Simulation>().Select(sim => sim.Name).ToList();
+                List<string> allExperimentCombinations = Node.FindChildren<Experiment>(recurse: true).SelectMany(experiment => experiment.GetSimulationDescriptions().Select(sim => sim.Name)).ToList();
+                sims.AddRange(allExperimentCombinations);
+            }
+            return sims;
         }
     }
 }

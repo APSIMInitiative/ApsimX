@@ -185,18 +185,11 @@ internal class Locator
         //if it doesn't start with those characters, it might be a report variable, so we need to search for that in the report columns
         else if (includeReportVars)
         {
-            // Try a variable supplier.
-            foreach (IVariableSupplier variableSupplier in relativeTo.WalkScoped()
-                                                                     .Where(n => n.Model is IVariableSupplier)
-                                                                     .Select(n => n.Model))
+            if (relativeTo.Model is IVariableSupplier supplier && supplier.Get(namePath, out object supplierValue))
             {
-
-                if (variableSupplier.Get(namePath, out object supplierValue))
-                {
-                    var comp = new VariableComposite(namePath);
-                    comp.AddInstance(supplierValue);
-                    return comp;
-                }
+                var comp = new VariableComposite(namePath);
+                comp.AddInstance(supplierValue);
+                return comp;
             }
         }
 
@@ -257,6 +250,16 @@ internal class Locator
                 if (propertiesOnly && j == namePathBits.Length - 1)
                     break;
                 relativeToObject = composite.Value;
+
+                //if the property evaluates to null (has not been set), instantiate a copy of that class so it can continue searching the properties.
+                //that way we can continuing search below this object without the relativeToObject being null and breaking the search
+                if (relativeToObject == null && !composite.Property.DeclaringType.IsAbstract)
+                {
+                    //Can only create a blank instance if the class has a default constructor, abandon if it doesnt.
+                    ConstructorInfo ctor = composite.Property.DeclaringType.GetConstructor(Type.EmptyTypes);
+                    if (ctor != null)
+                        relativeToObject = Activator.CreateInstance(composite.Property.DeclaringType);
+                }
             }
             else if ((objectInfo as MethodInfo) != null)
             {

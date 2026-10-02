@@ -201,5 +201,36 @@ namespace APSIM.Shared.Utilities
                     destination.Close();
             }
         }
+
+        /// <summary>
+        /// Get a string from a URL. 
+        /// This is a wrapper around ExtractDataFromURL, which returns a stream. 
+        /// This function reads the stream and returns the content as a string.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Throws if the data cannot be retrieved</exception>
+        /// <exception cref="OperationCanceledException">Throws if Operation is canceled</exception>
+        public static async Task<string> GetStringFromURL(string url, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                MemoryStream stream = await ExtractDataFromURL(url, cancellationToken);
+                stream.Position = 0;
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                throw;  // rethrow to caller
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Cannot get data from " + url, ex);
+            }
+        }
     }
 }

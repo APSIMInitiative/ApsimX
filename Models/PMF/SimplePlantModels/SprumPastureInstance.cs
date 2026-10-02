@@ -44,9 +44,6 @@ namespace Models.PMF.SimplePlantModels
         [Link]
         private ISummary summary = null;
 
-        [Link(Type = LinkType.Scoped)]
-        private RootNetwork root = null;
-
         [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
 
@@ -463,19 +460,11 @@ namespace Models.PMF.SimplePlantModels
             double rootDepth = Math.Min(MaxRD, soilDepthMax);
             if (GRINZ)
             {  //Must add root zone prior to sowing the crop.  For some reason they (silently) dont add if you try to do so after the crop is established
-                string neighbour = "";
                 List<Zone> zones = Structure.FindChildren<Zone>(relativeTo: simulation).ToList();
                 if (zones.Count > 2)
                     throw new Exception("Strip crop logic only set up for 2 zones, your simulation has more than this");
                 if (zones.Count > 1)
                 {
-                    foreach (Zone z in zones)
-                    {
-                        if (z.Name != zone.Name)
-                            neighbour = z.Name;
-                    }
-                    root.ZoneNamesToGrowRootsIn.Add(neighbour);
-                    //root.ZoneRootDepths.Add(rootDepth);
                     NutrientPoolFunctions InitialDM = new NutrientPoolFunctions();
                     Constant InitStruct = new Constant();
                     InitStruct.FixedValue = 10;
@@ -486,11 +475,22 @@ namespace Models.PMF.SimplePlantModels
                     Constant InitStor = new Constant();
                     InitStor.FixedValue = 0;
                     InitialDM.Storage = InitStor;
-                    //root.ZoneInitialDM.Add(InitialDM);
+                }
+            }
+            else
+            {
+                List<Zone> zones = Structure.FindAll<Zone>(relativeTo: simulation).ToList();
+                foreach(Zone z in zones)
+                {
+                    if (z.Name != zone.Name)
+                    {
+                        //This is the neighbour zone for the plant and roots are not growing into it so set to false
+                        sprum.ZonesToGrowRootsIn[z.Name] = false;
+                    }
                 }
             }
 
-            string cropName = this.Name;
+                string cropName = this.Name;
             double depth = Math.Min(this.MaxRD * this.AgeAtSimulationStart / this.YearsToMaxDimension, rootDepth);
             double population = 1.0;
             double rowWidth = 0.0;

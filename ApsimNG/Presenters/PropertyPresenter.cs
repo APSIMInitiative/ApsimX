@@ -1,4 +1,6 @@
 using APSIM.Shared.Utilities;
+using Models.CLEM;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Utilities;
 using System;
@@ -15,7 +17,7 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class PropertyPresenter : IPresenter
+    public class PropertyPresenter : IPresenter, ISubPresenter
     {
         /// <summary>
         /// The model whose properties are being displayed.
@@ -42,12 +44,19 @@ namespace UserInterface.Presenters
         /// This associates an ID with each property being displayed in
         /// the view, and the object to which that property belongs.
         /// </summary>
-        private Dictionary<Guid, PropertyObjectPair> propertyMap = new Dictionary<Guid, PropertyObjectPair>();
+        public Dictionary<Guid, PropertyObjectPair> PropertyMap { get; private set; } = new Dictionary<Guid, PropertyObjectPair>();
 
         /// <summary>
         /// Called when the view is refreshed
         /// </summary>
         public event EventHandler ViewRefreshed;
+
+        /// <summary>
+        /// Flag to record if Presenter is currently listening for events.
+        /// Prevents event listeners from being doubled up when used as sub 
+        /// presenter.
+        /// </summary>
+        private bool _eventsConnected = false;
 
         /// <summary>
         /// Attach the model to the view.
@@ -72,8 +81,6 @@ namespace UserInterface.Presenters
                 throw new ArgumentException($"The view must be an IPropertyView instance");
 
             RefreshView(this.model);
-            presenter.CommandHistory.ModelChanged += OnModelChanged;
-            this.view.PropertyChanged += OnViewChanged;
         }
 
         /// <summary>
@@ -83,8 +90,7 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
-                view.PropertyChanged -= OnViewChanged;
-                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+                DisconnectEvents();
 
                 this.view.SaveChanges();
 
@@ -94,8 +100,7 @@ namespace UserInterface.Presenters
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
 
-                view.PropertyChanged += OnViewChanged;
-                presenter.CommandHistory.ModelChanged += OnModelChanged;
+                ConnectEvents();
 
                 ViewRefreshed?.Invoke(this, new EventArgs());
             }
@@ -125,8 +130,27 @@ namespace UserInterface.Presenters
             // yield multiple properties to be displayed in the view.
             List<Property> properties = new List<Property>();
             List<PropertyGroup> subModelProperties = new List<PropertyGroup>();
+            CategoryAttribute categoryAttribute = null;
+            
             foreach (PropertyInfo property in allProperties)
             {
+                //Forward check for invalid enum values so this can report an error to the gui
+                if (property.PropertyType.IsEnum)
+                {
+                    object objValue = property.GetValue(obj);
+                    string text = AttributeUtilities.GetEnumDescription((Enum)Enum.Parse(property.PropertyType, objValue?.ToString()));
+                    if (string.IsNullOrEmpty(text))
+                        presenter.MainPresenter.ShowError($"Error: Cannot match Enum {property.Name} with value {objValue} to valid Enum Value.");
+                }
+
+                // Assign any category attribute details here for category based property presenter (currently in CLEM)
+                if (property.IsDefined(typeof(CategoryAttribute), false))
+                {
+                    categoryAttribute = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
+                    if(categoryAttribute.Category == "*")
+                        categoryAttribute = new CategoryAttribute("Simulation", "Details");
+                }
+
                 DisplayAttribute display = property.GetCustomAttribute<DisplayAttribute>();
                 if (display != null && display.Type == DisplayType.SubModel)
                 {
@@ -146,24 +170,35 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    // determine where to link to the property or use a substitute sub-property for a class-based property.
-                    Property result;
-                    string subPropertyName = property.GetCustomAttribute<DisplayAttribute>()?.SubstituteSubPropertyName ?? "";
-                    if (subPropertyName.Any())
+                    Property result = new Property(obj, property);
+                    properties.Add(result);
+
+                    PropertyInfo propertyRef = property;
+                    object objectRef = obj;
+
+                    //check if our property is a class of some sort (but not a DateTime or list/array). If so, look for a property it holds to use instead.
+                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)))
                     {
                         object subObject = property.GetValue(obj);
-                        subObject ??= Activator.CreateInstance(property.PropertyType);
-                        PropertyInfo subProperty = GetAllProperties(subObject).Where(a => a.Name == subPropertyName).FirstOrDefault();
+                        PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
+                        if (subProperty != null)
+                        {
+                            objectRef = subObject;
+                            propertyRef = subProperty;
+                        }
+                    }
+                    PropertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
+                }
+            }
 
-                        result = new Property(subObject, subProperty);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = subObject, Property = subProperty });
-                    }
-                    else
-                    {
-                        result = new Property(obj, property);
-                        propertyMap.Add(result.ID, new PropertyObjectPair() { Model = obj, Property = property });
-                    }
-                    properties.Add(result);
+            // Also allow children of parent object to be added as groups if they are of type ISubParameters (Used in CLEM and CategoryProperyPresenter)
+            if (obj is CLEMModel cm)
+            {
+                foreach (var submodel in cm.Structure.FindChildren<ISubParameters>().Cast<CLEMModel>())
+                {
+                    PropertyGroup group = GetProperties(submodel);
+                    group.Name = submodel.Name;
+                    subModelProperties.Add(group);
                 }
             }
             string name = obj is IModel model ? model.Name : obj.GetType().Name;
@@ -177,7 +212,10 @@ namespace UserInterface.Presenters
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
             BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-            return obj.GetType().GetProperties(flags);
+            if (obj == null)
+                return new List<PropertyInfo>();
+            else
+                return obj.GetType().GetProperties(flags);
         }
 
         /// <summary>
@@ -186,9 +224,35 @@ namespace UserInterface.Presenters
         public virtual void Detach()
         {
             view.SaveChanges();
-            view.PropertyChanged -= OnViewChanged;
+            DisconnectEvents();
             (view as ViewBase).Dispose();
-            presenter.CommandHistory.ModelChanged -= OnModelChanged;
+        }
+
+        /// <summary>Connect all widget events.</summary>
+        public void ConnectEvents()
+        {
+            if (!_eventsConnected)
+            {
+                _eventsConnected = true;
+                view.PropertyChanged += OnViewChanged;
+                presenter.CommandHistory.ModelChanged += OnModelChanged;
+            }
+        }
+
+        /// <summary>Disconnect all widget events.</summary>
+        public void DisconnectEvents()
+        {
+            if (_eventsConnected)
+            {
+                _eventsConnected = false;
+                view.PropertyChanged -= OnViewChanged;
+                presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            }
+        }
+
+        public void Refresh()
+        {
+            RefreshView(model);
         }
 
         /// <summary>
@@ -206,8 +270,8 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model which was changed.</param>
         protected virtual void OnModelChanged(object changedModel)
         {
-            if (propertyMap.Values.Any(p => p.Model == changedModel))
-                RefreshView(this.model);
+            if (PropertyMap.Values.Any(p => p.Model == changedModel))
+                RefreshView(model);
         }
 
         /// <summary>
@@ -219,11 +283,11 @@ namespace UserInterface.Presenters
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.
-            //presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            DisconnectEvents();
 
             // Figure out which property of which object is being changed.
-            PropertyInfo property = propertyMap[args.ID].Property;
-            object changedObject = propertyMap[args.ID].Model;
+            PropertyInfo property = PropertyMap[args.ID].Property;
+            object changedObject = PropertyMap[args.ID].Model;
 
             object newValue = args.NewValue;
 
@@ -266,18 +330,12 @@ namespace UserInterface.Presenters
             ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
             presenter.CommandHistory.Add(updateModel);
 
+            //update the view components
+            RefreshView(model);
+
             // Re-attach the model changed handler, so we can continue to trap
             // changes to the model from other sources (e.g. undo/redo).
-            //presenter.CommandHistory.ModelChanged += OnModelChanged;
-        }
-
-        /// <summary>
-        /// Stores a property and the object to which it belongs.
-        /// </summary>
-        private struct PropertyObjectPair
-        {
-            public object Model { get; set; }
-            public PropertyInfo Property { get; set; }
+            ConnectEvents();
         }
     }
 }

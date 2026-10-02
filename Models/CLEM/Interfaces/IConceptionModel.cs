@@ -9,9 +9,8 @@ namespace Models.CLEM.Interfaces
     public interface IConceptionModel
     {
         /// <summary>
-        /// Concpetion rate for given female
+        /// Get current conception rate for given female
         /// </summary>
-        [Description("Concpetion rate for given female")]
         double ConceptionRate(RuminantFemale female);
     }
 }

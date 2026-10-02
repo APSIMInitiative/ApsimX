@@ -18,6 +18,10 @@ namespace Models
     [Serializable]
     public class Operation
     {
+        private DateTime? ActionDate { get; set; }
+
+        private bool HasYear => ActionDate?.Year != DateTime.MinValue.Year;
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -43,7 +47,27 @@ namespace Models
         public bool Enabled { get; set; }
 
         /// <summary>Gets or sets the date.</summary>
-        public string Date { get; set; }
+        public string Date
+        {
+            get
+            {
+                if (ActionDate is DateTime dt)
+                {
+                    if (HasYear)
+                        return DateUtilities.GetDateAsString(dt);
+                    else
+                        return DateUtilities.GetDateAsDayMonthString(dt);
+                }
+                return null;
+            }
+            set
+            {
+                if (value == null)
+                    ActionDate = null;
+                else
+                    ActionDate = DateUtilities.GetDate(value, DateTime.MinValue.Year);
+            }
+        }
 
         /// <summary>Gets or sets the action.</summary>
         /// <value>The action.</value>
@@ -62,6 +86,23 @@ namespace Models
                 return Action.Substring(0, posPeriod);
 
             return "";
+        }
+
+        /// <summary>
+        /// Check whether or not this operation should trigger on the given date.
+        /// </summary>
+        /// <param name="date">The date to check.</param>
+        /// <returns>True if the op should be performed at this time.</returns>
+        public bool TriggersOnDate(DateTime date)
+        {
+            if (ActionDate is DateTime dt)
+            {
+                if (HasYear)
+                    return date == dt;
+                else
+                    return date.Month == dt.Month && date.Day == dt.Day;
+            }
+            return false;
         }
 
         /// <summary>
@@ -242,14 +283,12 @@ namespace Models
             if (OperationsList == null)
                 OperationsList = new List<Operation>();
 
-            DateTime operationDate;
             foreach (Operation operation in OperationsList.Where(o => o.Enabled))
             {
                 if (operation.Date == null || operation.Action == null)
                     throw new Exception($"Error: Operation line '{operation.Line}' cannot be parsed.");
 
-                operationDate = DateUtilities.GetDate(operation.Date, Clock.Today.Year);
-                if (operationDate == Clock.Today)
+                if (operation.TriggersOnDate(Clock.Today))
                 {
                     string st = operation.Action;
 
@@ -290,36 +329,44 @@ namespace Models
                             throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
 
                         object[] parameterValues = null;
-                        foreach (MethodInfo method in methods)
-                        {
-                            if (method.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                parameterValues = GetArgumentsForMethod(arguments, method);
+                        List<MethodInfo> matchingMethods = methods.
+                            Where(methodInfo => methodInfo.Name.Equals(methodName, StringComparison.CurrentCultureIgnoreCase)).
+                            ToList();
 
-                                // invoke method.
-                                if (parameterValues != null)
+                        if (matchingMethods.Count < 1)
+                            if (parameterValues == null)
+                                throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
+
+                        for(int i = 0; i < matchingMethods.Count; i++)
+                        {
+                            MethodInfo method = matchingMethods[i];
+                            parameterValues = GetArgumentsForMethod(arguments, method);
+                                
+                            // check if there are more methods to check.
+                            bool hasMore = i < matchingMethods.Count - 1;
+                            if (hasMore && parameterValues == null)
+                                continue;
+
+                            // invoke method.
+                            if (parameterValues != null)
+                            {
+                                try
                                 {
-                                    try
-                                    {
-                                        method.Invoke(model, parameterValues);
-                                    }
-                                    catch (Exception err)
-                                    {
-                                        throw err.InnerException;
-                                    }
-                                    break;
+                                    method.Invoke(model, parameterValues);
                                 }
-                                else if (parameterValues == null)
+                                catch (Exception err)
                                 {
-                                    throw new ApsimXException(this, 
-                                        "There is an issue with the arguments provided a method in the operation location at \'" + this.FullPath + 
-                                        "\'. The method with argument issue(s) is : " + modelName + "." + methodName + "().\nIf you are using named arguments, please ensure the argument names are correct.");
+                                    throw err.InnerException;
                                 }
+                                break;
+                            }
+                            else if (parameterValues == null)
+                            {
+                                throw new ApsimXException(this, 
+                                    "There is an issue with the arguments provided a method in the operation location at \'" + this.FullPath + 
+                                    "\'. The method with argument issue(s) is : " + modelName + "." + methodName + "().\nIf you are using named arguments, please ensure the argument names are correct.");
                             }
                         }
-
-                        if (parameterValues == null)
-                            throw new ApsimXException(this, "Cannot find method: " + methodName + " in model: " + modelName);
                     }
                 }
             }

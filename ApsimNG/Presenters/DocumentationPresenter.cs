@@ -11,12 +11,14 @@ using UserInterface.Views;
 using Models.PMF.Phen;
 using APSIM.Shared.Documentation;
 using APSIM.Core;
+using APSIM.Documentation;
+using Models;
 
 namespace UserInterface.Presenters
 {
     public class DocumentationPresenter : IPresenter
     {
-        private IMarkdownView view;
+        private MarkdownView view;
         private ExplorerPresenter presenter;
         private IModel model;
 
@@ -33,7 +35,7 @@ namespace UserInterface.Presenters
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.view = view as IMarkdownView;
+            this.view = view as MarkdownView;
             this.model = model as IModel;
             this.presenter = explorerPresenter;
 
@@ -85,6 +87,12 @@ namespace UserInterface.Presenters
             markdown.AppendLine(summary);
             markdown.AppendLine();
 
+            foreach (IText child in model.Node.FindChildren<IText>())
+            {
+                markdown.AppendLine(child.Text);
+                markdown.AppendLine();
+            }
+
             string remarks = CodeDocumentation.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
@@ -97,7 +105,7 @@ namespace UserInterface.Presenters
             //This has been added so Phenology can show its phases inside of the GUI
             if (model.GetType() == typeof(Phenology))
             {
-                DataTable dataTable = (model as Phenology).GetPhaseTable();
+                DataTable dataTable = DocumentationUtilities.GetPhaseTable(model as Phenology);
                 markdown.AppendLine(DataTableUtilities.ToMarkdown(dataTable, true));
                 markdown.AppendLine();
             }

@@ -1,19 +1,20 @@
-﻿namespace UnitTests.Core.Run
+﻿using APSIM.Core;
+using APSIM.Shared.Utilities;
+using Models;
+using Models.Core;
+using Models.Core.Run;
+using Models.Storage;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Linq;
+using UnitTests.Storage;
+using static Models.Core.Run.Runner;
+
+namespace UnitTests.Core.Run
 {
-    using APSIM.Core;
-    using APSIM.Shared.Utilities;
-    using Models;
-    using Models.Core;
-    using Models.Core.Run;
-    using Models.Storage;
-    using NUnit.Framework;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using UnitTests.Storage;
-    using static Models.Core.Run.Runner;
 
     /// <summary>This is a test class for the RunnableSimulationList class</summary>
     [TestFixture]
@@ -207,7 +208,7 @@
                                     EndDate = new DateTime(1980, 1, 4)
                                 },
                                 new MockSummary(),
-                                new Report()
+                                new Models.Report()
                                 {
                                     Name = "Report",
                                     VariableNames = new string[] {"[Clock].Today"},
@@ -565,7 +566,7 @@
                     Name = $"sim{number}",
                     Children =
                     [
-                        new Report()
+                        new Models.Report()
                         {
                             Name = $"Report{number}",
                             VariableNames = ["[Clock].Today"],
@@ -733,7 +734,7 @@
                 List<Exception> errors = runner.Run();
                 Assert.That(errors.Count, Is.EqualTo(0), errors.Count > 0 ? errors[0].ToString() : "");
 
-                storage.Reader.Refresh();
+                storage.Refresh();
                 DataTable storedData = storage.Reader.GetData(data.TableName);
                 Assert.That(storedData, Is.Not.Null);
                 Assert.That(storedData.Rows.Count, Is.EqualTo(1));
@@ -743,7 +744,7 @@
                 errors = runner.Run();
                 Assert.That(errors.Count, Is.EqualTo(0), errors.Count > 0 ? errors[0].ToString() : "");
 
-                storage.Reader.Refresh();
+                storage.Refresh();
                 storedData = storage.Reader.GetData(data.TableName);
                 Assert.That(storedData.Rows.Count, Is.EqualTo(1), "Post-simulation tool data was not cleaned when running only post-simulation tools");
                 database.CloseDatabase();
