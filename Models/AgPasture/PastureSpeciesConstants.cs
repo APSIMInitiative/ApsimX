@@ -56,24 +56,19 @@ namespace Models.AgPasture
         public double ReferenceCO2 { get; set; } = 380.0;
 
         /// <summary>Scaling parameter for the CO2 effect on photosynthesis (ppm).</summary>
-        [Description("CO2EffectScaleFactor")]
+        [Description("CO2EffectOnPhotoScaleFactor")]
         [Units("ppm")]
-        public double CO2EffectScaleFactor { get; set; } = 700.0;
+        public double CO2EffectOnPhotoScaleFactor { get; set; } = 700.0;
 
         /// <summary>Scaling parameter for the CO2 effects on N requirements (ppm).</summary>
-        [Description("CO2EffectOffsetFactor")]
+        [Description("CO2EffectOnNConcScaleFactor")]
         [Units("ppm")]
-        public double CO2EffectOffsetFactor { get; set; } = 600.0;
-
-        /// <summary>Minimum value for the CO2 effect on N requirements (0-1).</summary>
-        [Description("CO2EffectMinimum")]
-        [Units("0-1")]
-        public double CO2EffectMinimum { get; set; } = 0.7;
+        public double CO2EffectOnNConcScaleFactor { get; set; } = 600.0;
 
         /// <summary>Exponent controlling the CO2 effect on N requirements (>0.0).</summary>
-        [Description("CO2EffectExponent")]
+        [Description("CO2EffectOnNConcExponent")]
         [Units("-")]
-        public double CO2EffectExponent { get; set; } = 2.0;
+        public double CO2EffectOnNConcExponent { get; set; } = 2.0;
 
         /// <summary>Onset temperature for heat effects on photosynthesis (oC).</summary>
         [Description("HeatOnsetTdemperature")]
@@ -157,14 +152,14 @@ namespace Models.AgPasture
         public double ShootRootGlfFactor { get; set; } = 0.50;
 
         /// <summary>Maximum target allocation of shoot new growth to leaves (0-1).</summary>
-        [Description("LeafProportionMaximum")]
+        [Description("LeafProportionTargetMax")]
         [Units("0-1")]
-        public double LeafProportionMaximum { get; set; } = 0.7;
+        public double LeafProportionTargetMax { get; set; } = 0.7;
 
         /// <summary>Minimum target allocation of shoot new growth to leaves (0-1).</summary>
-        [Description("LeafProportionMinimum")]
+        [Description("LeafProportionTargetMin")]
         [Units("0-1")]
-        public double LeafProportionMinimum { get; set; } = 0.7;
+        public double LeafProportionTargetMin { get; set; } = 0.7;
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Description("LeafPropDMThreshold")]
@@ -172,9 +167,9 @@ namespace Models.AgPasture
         public double LeafPropDMThreshold { get; set; } = 500;
 
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
-        [Description("LeafPropDMFactor")]
+        [Description("LeafPropDMForHalfEffect")]
         [Units("kg/ha")]
-        public double LeafPropDMFactor { get; set; } = 2000;
+        public double LeafPropDMForHalfEffect { get; set; } = 2000;
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Description("LeafPropExponent")]
@@ -191,10 +186,15 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double ShootMaxEffectOnLAI { get; set; } = 1000;
 
+        /// <summary>Aboveground biomass below which stems are used for computing LAI (kgDM/ha).</summary>
+        [Description("ShootDMThresholdForLAI")]
+        [Units("kg/ha")]
+        public double ShootDMThresholdForLAI { get; set; } = 0;
+
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
-        [Description("MaxStemEffectOnLAI")]
+        [Description("StemMaxEffectOnLAI")]
         [Units("0-1")]
-        public double MaxStemEffectOnLAI { get; set; } = 1.0;
+        public double StemMaxEffectOnLAI { get; set; } = 1.0;
 
         ////- Tissue turnover and senescence >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
