@@ -2033,7 +2033,7 @@
                 "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
                 "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.38",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110 // 200 (single-site fit)",
                 "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4",
                 "",
                 "//[Phenology].CAMP.FLNparams.MinLN = 8",
