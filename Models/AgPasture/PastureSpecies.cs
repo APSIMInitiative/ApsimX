@@ -550,16 +550,7 @@ namespace Models.AgPasture
         /// <summary>Family type for this plant species (grass/legume/forb).</summary>
         [Units("-")]
         [JsonIgnore]
-        public PlantFamilyType SpeciesFamily
-        {
-            get { return constants.SpeciesFamily; }
-            set
-            {
-                constants.SpeciesFamily = value;
-                if (constants.SpeciesFamily  == PlantFamilyType.Legume)
-                    isLegume = true;
-            }
-        }
+        public PlantFamilyType SpeciesFamily { get { return constants.SpeciesFamily; } }
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
         [JsonIgnore]
@@ -1126,7 +1117,16 @@ namespace Models.AgPasture
         private bool isAnnual = false;
 
         /// <summary>Flag whether this species is a legume.</summary>
-        private bool isLegume = false;
+        private bool isLegume
+        {
+            get
+            {
+                if (constants.SpeciesFamily == PastureSpecies.PlantFamilyType.Legume)
+                    return true;
+                else
+                    return false;
+            }
+        }
 
         ////- Annuals and phenology >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

@@ -8155,6 +8155,7 @@ internal class Converter
             new Tuple<string, string>("CO2EffectScaleFactorOnNConc", "CO2EffectOnNConcScaleFactor"),
             new Tuple<string, string>("CO2EffectExponentOnNConc", "CO2EffectOnNConcExponent"),
             new Tuple<string, string>("ShootMaxEffectOnLAI", "StemMaxEffectOnLAI"),
+            new Tuple<string, string>("MaxStemEffectOnLAI", "ShootDMThresholdForLAI")
         };
 
         foreach (JObject pasture in JsonUtilities.ChildrenOfType(root, "PastureSpeciesConstants"))
