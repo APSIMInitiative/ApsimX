@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 using Models.Core;
 using Models.Soils;
 using Models.Soils.Nutrients;
 using Models.Surface;
+using System.Text.Json.Serialization;
 
 namespace Models.AgPasture
 {
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class RootTissue : Model
     {
         /// <summary>Pasture species this tissue belongs to.</summary>
@@ -48,30 +50,39 @@ namespace Models.AgPasture
         private double[] nTransferredInByLayer;
 
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredIn { get; private set; }
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredIn { get; private set; }
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredOut = 0.0;
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get; set; }
+        [JsonIgnore]
+        public double DMRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get; set; }
+        [JsonIgnore]
+        public double NRemoved { get; private set; }
 
         /// <summary>Fraction of DM removed from this tissue.</summary>
+        [JsonIgnore]
         public double FractionRemoved { get; private set; }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; set; }
+        [JsonIgnore]
+        public double NRemobilisable { get; private set; }
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilised { get; set; }
 
         /// <summary>Fraction of N from this tissue that was remobilised to new growth.</summary>

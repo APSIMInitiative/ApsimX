@@ -9,19 +9,22 @@ namespace Models.Functions
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
-    public class LessThanFunction : Model, IFunction, IStructureDependency
+    public class LessThanFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+            ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             double TestVariable = 0.0;
             double LessThanCriteria = 0.0;
