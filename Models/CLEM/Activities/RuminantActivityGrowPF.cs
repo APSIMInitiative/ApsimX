@@ -212,7 +212,7 @@ namespace Models.CLEM.Activities
             // Equation 3 ==================================================
             // We do not allow condition factor for unweaned individuals (differs to Stock on conceptual standpoint).
             double cf = 1.0;
-            if (ind.IsWeaned && ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1)
+            if (ind.IsWeaned && ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20 > 1 && ind.Weight.RelativeCondition > 1 && ind.Weight.RelativeSize > 0.9)
             {
                 cf = 0;
                 if (ind.Weight.RelativeCondition < ind.Parameters.GrowPF_CI.RelativeConditionEffect_CI20)
@@ -228,7 +228,6 @@ namespace Models.CLEM.Activities
                 // expected milk and mother's milk production has been determined in CalculateLactationEnergy of the mother before getting here.
                 double predictedMilkEnergy = Math.Min(ind.Energy.MilkDaily.Expected, ind.Mother.Milk.ProductionRate / ind.Mother.NumberOfSucklings);
                 yf = (1 - (predictedMilkEnergy / (ind.Energy.MilkDaily.Expected))) / (1 + Math.Exp(-ind.Parameters.GrowPF_CI.RumenDevelopmentCurvature_CI3 *(ind.AgeInDays + (ind.DaysInTimeStep / 2.0) - ind.Parameters.GrowPF_CI.RumenDevelopmentAge_CI4)));
-                // ToDo: reduce if only unweaned for proportion of time-step.
             }
 
             // Equations 5-7  ==================================================  Temperature factor. NOT INCLUDED
@@ -617,8 +616,14 @@ namespace Models.CLEM.Activities
 
             var indFemale = ind as RuminantFemale;
 
+            if (indFemale.DaysLactating(true) < events.Interval)
+            {
+                indFemale.Weight.Protein.AtStartLactation = indFemale.Weight.Protein.Amount;
+            }
+
             // Mobilise body protein to produce milk when CP shortfall - Dougherty et al 2024 ========================================
-            // Departure from Freer 2012 to allow body protein above 75% of normalised protein to be provided to lactation when less than peak milk days.
+            // Departure from Freer 2012 to allow body protein above 75% of body protein at the start of lactation to be provided to lactation when less than peak milk days.
+            // PREVIOUS: Departure from Freer 2012 to allow body protein above 75% of normalised protein to be provided to lactation when less than peak milk days.
 
             // if day of lactation (mid point of time step) < peak lactation 
             if (indFemale.DaysLactating(true) <= ind.Parameters.Lactation.MilkPeakDay)
@@ -626,7 +631,7 @@ namespace Models.CLEM.Activities
                 // get lactation protein deficit
                 double lactationProteinDeficit = Math.Min(indFemale.Weight.Protein.ForLactationActual, Math.Abs(proteinAvailableForGainFromIntake));
 
-                double bodyProteinAvailable = Math.Max(0.0, ind.Weight.Protein.Amount - (proteinNormal * 0.75));
+                double bodyProteinAvailable = Math.Max(0.0, ind.Weight.Protein.Amount - (indFemale.Weight.Protein.AtStartLactation * 0.75));
 
                 int daysInTimeStep = indFemale.SucklingOffspringList.First()?.DaysInTimeStep??ind.DaysInTimeStep;
 

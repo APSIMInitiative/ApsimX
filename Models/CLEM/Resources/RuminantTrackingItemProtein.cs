@@ -106,6 +106,11 @@ namespace Models.CLEM.Resources
         public double ForLactationFromIntake { get { return ForLactationActual - GetMobilisationProvidedByReason(MobilisationReasonType.LactationProtein); } }
 
         /// <summary>
+        /// The body protein present at the start of lactation
+        /// </summary>
+        public double AtStartLactation { get; set; } = 0;
+
+        /// <summary>
         /// Protein freed from reduced lactation when protein deficit (kg day-1)
         /// </summary>
         public double LactationReduction { get; set; }
@@ -148,7 +153,6 @@ namespace Models.CLEM.Resources
         /// Protein available from intake (DPLS, kg day-1)
         /// </summary>
         public double FromIntakeAvailable { get { return intake.DPLS; } }
-
 
         /// <summary>
         /// Protein mass at mature (kg)
