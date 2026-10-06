@@ -328,8 +328,8 @@ namespace Models.CLEM.Resources
                 AgeGrowthRateCoefficient_CN1 = 0;
                 if (CN1EstimatedWeaningWeight > 0 && CN1EstimatedWeaningAge.InDays > 0)
                 {
-                    // this is what GitHub CoPilot suggested before I got the calculation from the JD
-                    AgeGrowthRateCoefficient_CN1 = Math.Log(SRWFemale / CN1EstimatedWeaningWeight) / CN1EstimatedWeaningAge.InDays;
+                    // solved equation for CN1 (JD)
+                    AgeGrowthRateCoefficient_CN1 = Math.Pow(SRWFemale, SRWGrowthScalar_CN2) * Math.Log(((CN1EstimatedWeaningWeight - SRWFemale) / ((1 - BirthScalar[0]) * SRWFemale))) * -1 * (1 / CN1EstimatedWeaningAge.InDays);
                 }
             }
         }
@@ -380,7 +380,6 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be greater than 0.01{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
             }
-
         }
 
         #endregion
