@@ -305,7 +305,8 @@ public static class SoilSanitise
             physical.LL15 = SoilUtilities.MapConcentration(physical.LL15, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.LL15), modelName: name);
             physical.DUL = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.DUL), modelName: name);
             physical.SAT = SoilUtilities.MapConcentration(physical.SAT, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.SAT), modelName: name);
-            physical.KS = SoilUtilities.MapConcentration(physical.KS, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.KS), modelName: name);
+            //physical.KS = SoilUtilities.MapConcentration(physical.KS, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.KS), modelName: name);
+            physical.KS = SoilUtilities.MapConcentrationLog10(physical.KS, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.KS), modelName: name);
             if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length > 0 && physical.ParticleSizeClay.Length != targetThickness.Length)
                 physical.ParticleSizeClay = SoilUtilities.MapConcentration(physical.ParticleSizeClay, physical.Thickness, targetThickness, MathUtilities.LastValue(physical.ParticleSizeClay), modelName: name);
             if (physical.ParticleSizeSand != null && physical.ParticleSizeSand.Length > 0 && physical.ParticleSizeSand.Length != targetThickness.Length)
