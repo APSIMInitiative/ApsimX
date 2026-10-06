@@ -6,7 +6,6 @@ using Models.PMF.Organs;
 using Models.Climate;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using APSIM.Core;
 
 namespace Models.Functions
@@ -49,8 +48,8 @@ namespace Models.Functions
         "When using the damage functions, please use the following reference for more information: Hu, P., He, D., Zheng, B., Whish, J., Kirkegaard, J., Bell, L., Leske, B., Chen, S., Uppal, R., Biddulph, B., Trethowan, R., Beletse, Y., Lilley, J., 2026. " +
         "Event-based frost and heat damage functions improve yield predictions of APSIM canola and wheat: formulation, calibration, and evaluation. " +
         "Agricultural and Forest Meteorology 386, 111239. https://doi.org/10.1016/j.agrformet.2026.111239")]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.QuadView")]
+    [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class FrostHeatDamageFunctions : Model, IStructureDependency
     {
@@ -58,14 +57,94 @@ namespace Models.Functions
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
-        //[Link]
-        //Clock Clock;
+        /// <summary>
+        /// Instructions text for how to use this model.
+        /// </summary>
+        public const string HelpText =
+@"## About the Frost and Heat Damage Functions model
+
+This model reduces simulated crop yield in response to daily frost and heat events. Each day it
+combines two things: (1) the *potential* yield-reduction ratio caused by an extreme minimum
+(frost) or maximum (heat) temperature on that day - a piece-wise linear function of temperature
+between a lower and upper threshold - and (2) the *sensitivity* of yield to the crop's growth
+stage on the day the event occurs - a piece-wise linear function of growth stage, ramping up to
+full sensitivity around flowering and back down again. The product of these two gives the actual
+daily yield-reduction ratio, which is then compounded over the season to estimate a frost- and
+heat-limited yield. Parameter values have been statistically calibrated for wheat and canola (see
+this model's `Description` citation for how the model was formulated, calibrated, and evaluated); 
+barley support is planned. 
+
+### Outputs produced
+
+- **FrostReductionRatio** - daily actual yield reduction ratio caused by a frost event
+- **HeatReductionRatio** - daily actual yield reduction ratio caused by a heat event
+- **FrostHeatReductionRatio** - daily actual yield reduction ratio from combined frost and heat events
+- **CumulativeFrostReductionRatio** - season-to-date cumulative yield reduction ratio from frost events
+- **CumulativeHeatReductionRatio** - season-to-date cumulative yield reduction ratio from heat events
+- **CumulativeFrostHeatReductionRatio** - season-to-date cumulative yield reduction ratio from combined frost and heat events
+- **FrostEventNumber** - number of frost events counted during the frost-sensitive period
+- **HeatEventNumber** - number of heat events counted during the heat-sensitive period
+- **FrostHeatYield** (g/m2) - final frost- and heat-limited grain yield
+- **FrostSensitivePeriodStartDAS** / **FrostSensitivePeriodEndDAS** (days) - start/end of the frost-sensitive period, in days after sowing
+- **HeatSensitivePeriodStartDAS** / **HeatSensitivePeriodEndDAS** (days) - start/end of the heat-sensitive period, in days after sowing
+
+### How to use it
+
+1. Add this model as a child of the **Plant** model you want it to affect - it is only valid under
+   a Plant, and its `CropType` must match that Plant's crop type (Wheat or Canola).
+2. Open this model and set **Crop to be simulated (CropType)** to `Wheat` or `Canola`. Selecting a
+   crop automatically fills in the published, calibrated threshold and sensitivity-period
+   parameters below for that crop.
+3. Only change the auto-filled parameters if you have your own calibration:
+   - **Frost damage**: `FrostLowTT`, `FrostUpTT` (lower/upper minimum-temperature thresholds, degC)
+     and `FrostMaxReductionRatio`, `FrostMinReductionRatio` (yield-reduction ratio at each threshold).
+   - **Frost sensitive period**: `FrostStartSensitiveGS`, `FrostStartMostSensitiveGS`,
+     `FrostEndMostSensitiveGS`, `FrostEndSensitiveGS` (growth stages bounding when frost sensitivity
+     ramps up to 1, stays at 1, and ramps back down).
+   - **Heat damage**: `HeatLowTT`, `HeatUpTT` (lower/upper maximum-temperature thresholds, degC) and
+     `HeatMinReductionRatio`, `HeatMaxReductionRatio` (yield-reduction ratio at each threshold).
+   - **Heat sensitive period**: `HeatStartSensitiveGS`, `HeatStartMostSensitiveGS`,
+     `HeatEndMostSensitiveGS`, `HeatEndSensitiveGS` (same idea as frost, for heat).
+4. Run the simulation - the outputs listed above become available for Report/graphing once a crop
+   has been sown (they reset at each sowing event).
+
+### Using this with more than one crop (e.g. a rotation)
+
+If this model is added under more than one crop in the same simulation (for example, Wheat and
+Canola both present and sown in rotation), give each instance a **unique name** - e.g.
+`WheatFrostHeatDamageFunctions` and `CanolaFrostHeatDamageFunctions` - rather than leaving both at
+the default `FrostHeatDamageFunctions`. Then reference outputs in a Report or Graph using the
+**fully qualified path** for the crop you mean, e.g. `[Wheat].WheatFrostHeatDamageFunctions.FrostHeatYield`,
+rather than the bare `[FrostHeatDamageFunctions]`. This matters because a bare-name lookup from
+outside both crops resolves to whichever instance is found first and stays pinned to it for the
+whole run - if both instances share a name, any Report using the bare name will silently report
+the wrong crop's values, even while the other crop is actively growing. If two instances do end up
+with the same name, this model will raise a clear error at the start of the run rather than
+silently mis-reporting.
+
+### Funding and citation
+
+The development of frost and heat damage functions for canola and wheat was supported by the
+Frost and Heat Management Analytics (FAHMA) project via funding from the Grains Research and
+Development Corporation (GRDC; Grant No. CSP2204-009RTX).
+
+When using the damage functions, please use the following reference for more information:
+Hu, P., He, D., Zheng, B., Whish, J., Kirkegaard, J., Bell, L., Leske, B., Chen, S., Uppal, R.,
+Biddulph, B., Trethowan, R., Beletse, Y., Lilley, J., 2026. Event-based frost and heat damage
+functions improve yield predictions of APSIM canola and wheat: formulation, calibration, and
+evaluation. Agricultural and Forest Meteorology 386, 111239.
+[https://doi.org/10.1016/j.agrformet.2026.111239](https://doi.org/10.1016/j.agrformet.2026.111239)";
+
         [Link]
-        Weather Weather = null;
+        private Weather _weather = null;
+
         [Link]
-        Plant Plant = null;
+        private Plant _plant = null;
+        
         [Link]
-        private ISummary Summary = null;
+        private ISummary _summary = null;
+
+        private CropTypes _cropType = CropTypes.SelectCrop;
 
         // Define parameters
 
@@ -87,26 +166,19 @@ namespace Models.Functions
 
         /// <summary>Crop to be simulated</summary>
         [Separator("Crop to be simulated, wheat or canola?")]
-        // <summary>Crop to be simulated</summary>
         [Description("Crop to be simulated")]
-        //public string CropType { get; set; }
         public CropTypes CropType
         {
-            get => cropType;
+            get => _cropType;
             set
             {
-                cropType = value;
+                _cropType = value;
                 SetDefaultValues();
             }
         }
 
-        [JsonIgnore]
-        private CropTypes cropType = CropTypes.SelectCrop;        
-
-
-        /// <summary>Frost damage</summary>
+        /// <summary>Lower thereshold</summary>
         [Separator("Frost damage")]
-        // <summary>Lower thereshold</summary>
         [Description("Lower threshold of air temperature for frost damage")]
         public double FrostLowTT { get; set; }
 
@@ -123,9 +195,8 @@ namespace Models.Functions
         public double FrostMinReductionRatio { get; set; }
 
 
-        /// <summary>Sensitive period of frost damage</summary>
+        /// <summary>The start of sensitive period of frost damage</summary>
         [Separator("Growth stages to define the sensitive period of frost damage")]
-        // <summary>The start of sensitive period of frost damage</summary>
         [Description("Start of sensitive period")]
         public double FrostStartSensitiveGS { get; set; }
 
@@ -142,9 +213,8 @@ namespace Models.Functions
         public double FrostEndSensitiveGS { get; set; }
 
 
-        /// <summary>Heat damage</summary>
+        /// <summary>Lower threshold</summary>
         [Separator("Heat damage")]
-        // <summary>Lower threshold</summary>
         [Description("Lower threshold of air temperature for heat damage")]
         public double HeatLowTT { get; set; }
 
@@ -161,9 +231,8 @@ namespace Models.Functions
         public double HeatMaxReductionRatio { get; set; }
 
 
-        /// <summary>Sensitivity period of heat damage</summary>
+        /// <summary>The start of sensitive period of heat damage</summary>
         [Separator("Growth stages to define the sensitivity period of heat damage")]
-        // <summary>The start of sensitive period of heat damage</summary>
         [Description("Start of sensitive period")]
         public double HeatStartSensitiveGS { get; set; }
 
@@ -187,80 +256,62 @@ namespace Models.Functions
         /// <summary>Overall remainng ratio after heat events.</summary>
         double HeatOverallRemaining;
 
-
         // Output variables
         /// <summary>Daily potential yield reduction ratio by a frost event.</summary>
-        [JsonIgnore]
-        public double FrostPotentialReductionRatio { get; set; }
+        public double FrostPotentialReductionRatio { get; private set; }
 
         /// <summary>Daily sensitivity of yield reduction to growth stage when the frost event occurs.</summary>
-        [JsonIgnore]
-        public double FrostSensitivity { get; set; }
+        public double FrostSensitivity { get; private set; }
 
         /// <summary>Daily actual yield reduction ratio by frost stress.</summary>
-        [JsonIgnore]
-        public double FrostReductionRatio { get; set; }
+        public double FrostReductionRatio { get; private set; }
 
         /// <summary>Daily potential yiled reduction ratio by a heat event.</summary>
-        [JsonIgnore]
-        public double HeatPotentialReductionRatio { get; set; }
+        public double HeatPotentialReductionRatio { get; private set; }
 
         /// <summary>Daily sensitivity of yield reduction to growth stage when the heat event occurs.</summary>
-        [JsonIgnore]
-        public double HeatSensitivity { get; set; }
+        public double HeatSensitivity { get; private set; }
 
         /// <summary>Daily actual yield reduction ratio by heat stress.</summary>
-        [JsonIgnore]
-        public double HeatReductionRatio { get; set; }
+        public double HeatReductionRatio { get; private set; }
 
         /// <summary>Daily actual yield reduction ratio by frost and heat stress.</summary>
-        [JsonIgnore]
-        public double FrostHeatReductionRatio { get; set; }
+        public double FrostHeatReductionRatio { get; private set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by frost stress.</summary>
-        [JsonIgnore]
-        public double CumulativeFrostReductionRatio { get; set; }
+        public double CumulativeFrostReductionRatio { get; private set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by heat stress.</summary>
-        [JsonIgnore]
-        public double CumulativeHeatReductionRatio { get; set; }
+        public double CumulativeHeatReductionRatio { get; private set; }
 
         /// <summary>Number of frost events during sensitive period.</summary>
-        [JsonIgnore]
-        public double FrostEventNumber { get; set; }
+        public double FrostEventNumber { get; private set; }
 
         /// <summary>Number of heat events during sensitive period.</summary>
-        [JsonIgnore]
-        public double HeatEventNumber { get; set; }
+        public double HeatEventNumber { get; private set; }
 
         /// <summary>Cumulative actual yield reduction ratio induced by frost and heat stress.</summary>
-        [JsonIgnore]
-        public double CumulativeFrostHeatReductionRatio { get; set; }
+        public double CumulativeFrostHeatReductionRatio { get; private set; }
 
         /// <summary>Frost- and heat-limiated yield.</summary>
         [Units("g/m2")]
-        [JsonIgnore]
-        public double FrostHeatYield { get; set; }
+        public double FrostHeatYield { get; private set; }
 
         /// <summary>Start of frost sensitive period in days after sowing.</summary>
         [Units("days")]
-        [JsonIgnore]
-        public double FrostSensitivePeriodStartDAS { get; set; }
+        public double FrostSensitivePeriodStartDAS { get; private set; }
 
         /// <summary>End of frost sensitive period in days after sowing.</summary>
         [Units("days")]
-        [JsonIgnore]
-        public double FrostSensitivePeriodEndDAS { get; set; }
+        public double FrostSensitivePeriodEndDAS { get; private set; }
 
         /// <summary>Start of heat sensitive period in days after sowing.</summary>
         [Units("days")]
-        [JsonIgnore]
-        public double HeatSensitivePeriodStartDAS { get; set; }
+        public double HeatSensitivePeriodStartDAS { get; private set; }
 
         /// <summary>End of heat sensitive period in days after sowing.</summary>
         [Units("days")]
-        [JsonIgnore]
-        public double HeatSensitivePeriodEndDAS { get; set; }
+        public double HeatSensitivePeriodEndDAS { get; private set; }
 
         // Dictionary to hold default values for each crop type
         private readonly Dictionary<CropTypes, Dictionary<string, double>> cropDefaults = new Dictionary<CropTypes, Dictionary<string, double>>()
@@ -339,7 +390,7 @@ namespace Models.Functions
             }
             else
             {
-                Summary?.WriteMessage(this, $"Unknown crop type: {CropType}", MessageType.Error);
+                _summary?.WriteMessage(this, $"Unknown crop type: {CropType}", MessageType.Error);
             }
         }
 
@@ -464,7 +515,7 @@ namespace Models.Functions
             }
 
             // Check if the selected crop type matches the plant type in the simulation
-            string actualPlantType = Plant.PlantType;
+            string actualPlantType = _plant.PlantType;
             string selectedCropType = CropType.ToString();
 
             List<string> plantTypes = new List<string>();
@@ -473,7 +524,7 @@ namespace Models.Functions
 
             //check if the crop this is on exists in the enum, and then check if the correct crop was selected
             //if the crop is not in the list, don't throw on this to allow prototying for new crops.
-            if (plantTypes.Contains(Plant.PlantType))
+            if (plantTypes.Contains(_plant.PlantType))
             {
                 // Compare the selected crop type with the plant type in simulation
                 if (!actualPlantType.Equals(selectedCropType, StringComparison.OrdinalIgnoreCase))
@@ -491,7 +542,7 @@ namespace Models.Functions
         private void OnDoSowing(object sender, EventArgs e)
         {
             // initialize
-            Summary.WriteMessage(this, "FrostHeatDamageFunctions will be performed.", Core.MessageType.Information);
+            _summary.WriteMessage(this, "FrostHeatDamageFunctions will be performed.", Core.MessageType.Information);
 
             FrostPotentialReductionRatio = 0;
             FrostSensitivity = 0;
@@ -520,18 +571,28 @@ namespace Models.Functions
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoManagementCalculations(object sender, EventArgs e)
         {
-            if (Plant != this.Parent)
+            if (_plant != this.Parent)
                 throw new Exception("Error: `FrostHeatDamageFunctions` has linked with a Plant that is not its parent");
 
-            if (!Plant.IsAlive)
+            if (!_plant.IsAlive)
+            {
+                FrostPotentialReductionRatio = 0;
+                FrostSensitivity = 0;
+                FrostReductionRatio = 0;
+                HeatPotentialReductionRatio = 0;
+                HeatSensitivity = 0;
+                HeatReductionRatio = 0;
+                FrostHeatReductionRatio = 0;
+                FrostHeatYield = 0;
                 return;
-    
-            Phenology phen = Plant.Phenology;
-            ReproductiveOrgan organs = Plant.Node.FindChild<ReproductiveOrgan>("Grain");
+            }
+
+            Phenology phen = _plant.Phenology;
+            ReproductiveOrgan organs = _plant.Node.FindChild<ReproductiveOrgan>("Grain");
 
             double GrowthStageToday = phen.Stage;
             //GrowthStageToday = phen.Zadok;
-            double DaysAfterSowingToday = Plant.DaysAfterSowing;
+            double DaysAfterSowingToday = _plant.DaysAfterSowing;
 
             // Track frost sensitive period start and end
             if (GrowthStageToday >= FrostStartSensitiveGS && FrostSensitivePeriodStartDAS < 0)
@@ -554,7 +615,7 @@ namespace Models.Functions
             }
 
             // Daily potential yield reduction ratio by a frost event
-            FrostPotentialReductionRatio = FrostPotentialReductionRatioFun(Weather.MinT);
+            FrostPotentialReductionRatio = FrostPotentialReductionRatioFun(_weather.MinT);
 
             // Daily sensitivity of yield reduction to the growth stage when a frost event occurs
             FrostSensitivity = FrostSensitivityFun(GrowthStageToday);
@@ -567,7 +628,7 @@ namespace Models.Functions
                 FrostEventNumber++;
             }
             // Daily potential yield reduction by a heat event
-            HeatPotentialReductionRatio = HeatPotentialReductionRatioFun(Weather.MaxT);
+            HeatPotentialReductionRatio = HeatPotentialReductionRatioFun(_weather.MaxT);
 
             // Daily sensitivity of yield reduction to the growth stage when a heat frost event occurs
             HeatSensitivity = HeatSensitivityFun(GrowthStageToday);

@@ -221,9 +221,15 @@ namespace Models.Core.Run
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
-                                                                         multiple: true, ReplaceCommand.MatchType.Name));
+                    foreach (INodeModel child in replacements.Children)
+                    {
+                        if (child.Enabled && !(child is IText))
+                        {
+                            ModelReference reference = new ModelReference(child);
+                            ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
+                            replacementsToApply.Insert(0, command);
+                        }
+                    }                        
                 }
             }
         }
