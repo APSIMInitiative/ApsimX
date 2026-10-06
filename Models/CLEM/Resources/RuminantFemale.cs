@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
+                // this was a misunderstanding on my part.
                 return (IsWeaned && NumberOfBirths == 0);
             }
         }
@@ -446,15 +446,9 @@ namespace Models.CLEM.Resources
             {
                 // daysInTimeStepLactating is determined in UpdateBreedingDetails calculated as an individual ages
                 // sucklings, milking and total milking days are accounted for in UpdateBreedingDetails
-                // Births occure before lactation is calculated so there should not be any occassion where lactation days are > 0 with no sucklings present.
+                // Births occur before lactation is calculated so there should not be any occasion where lactation days are > 0 with no sucklings present.
 
                 return daysInTimeStepLactating > 0;
-
-                //if (daysInTimeStepLactating > 0 && SucklingOffspringList.Count == 0)
-                //{
-                //    throw new Exception($"Lactation is predicted without births occuring for [{this.HerdName}]. This may arise because a pregnant breeder is present in the initial herd and no [RuminantActivityBreed] activity is available to manage births.");
-                //}
-                //return daysInTimeStepLactating > 0;
             }
         }
 
@@ -474,9 +468,6 @@ namespace Models.CLEM.Resources
         /// A list of individuals currently suckling this female
         /// </summary>
         public List<Ruminant> SucklingOffspringList { get; set; }
-
-
-
 
         /// <summary>
         /// Method to clear all breeding details
@@ -529,9 +520,6 @@ namespace Models.CLEM.Resources
                         BirthDueDate = Parameters.Details.CurrentTimeStep.TimeStepStart;
                         daysInTimeStepPregnant = 0;
                         daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval;
-
-                        //daysInTimeStepPregnant = (int)((BirthDueDate - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays);
-                        //daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
                         IsBirthDue = true;
                     }
                 }
@@ -732,7 +720,6 @@ namespace Models.CLEM.Resources
                 EBMAt70PctPregnant = 0;
             }
 
-            //ToDo: Check this is correct
             dateOfLastConception = date.AddDays(ageOffset);
             BirthDueDate = DateOfLastConception.AddDays(Parameters.General.GestationLength.InDays);
             // use normalised weight for age if offset provided for pre simulation allocation
@@ -791,6 +778,7 @@ namespace Models.CLEM.Resources
                 //   * use the weight of fetus at birth as calculated during pregnancy
                 // RuminantGrowSCA
                 // RuminantGrowOddy
+                //   * do not implement breeding and births.
 
                 Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate, herd.NextUniqueID, this, herd.RuminantGrowActivity);
 
@@ -896,8 +884,5 @@ namespace Models.CLEM.Resources
             : base(id)
         {
         }
-
-
     }
-
 }
