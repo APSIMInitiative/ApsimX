@@ -24,6 +24,7 @@
             "[Pinus].Leaf.Live.Wt",
             "[Pinus].Leaf.Live.NConc",
             "[Pinus].Leaf.Wt",
+            "[Pinus].Leaf.SpecificLeafArea",
             "[Pinus].Branch.Live.Wt",
             "[Pinus].Branch.Dead.Wt",
             "[Pinus].Branch.Wt",
