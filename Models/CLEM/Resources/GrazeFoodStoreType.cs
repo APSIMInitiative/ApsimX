@@ -268,6 +268,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double CalculateGutFill(double dmd)
         {
+            if (GreenDMD == MinimumDMD)
+                return GutFillLowQuality;
             return GutFillLowQuality + ((dmd - MinimumDMD) / (GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
         }
 
