@@ -25,11 +25,17 @@ namespace Models.Soils
         [field: NonSerialized]
         public IStructure Structure { private get; set; }
 
+        /// <summary>Lazy cache for Physical.</summary>
+        private IPhysical phys;
+
+        /// <summary>Lazy cache for WaterModel.</summary>
+        private ISoilWater wm;
+
         /// <summary>Finds the 'Physical' node.</summary>
-        private IPhysical Physical => Structure?.FindSibling<IPhysical>();
+        private IPhysical Physical => phys ??= Structure?.FindSibling<IPhysical>();
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        private ISoilWater WaterModel => Structure?.FindSibling<ISoilWater>();
+        private ISoilWater WaterModel => wm ??= Structure?.FindSibling<ISoilWater>();
 
         private double initialFractionFull = double.NaN;
 
