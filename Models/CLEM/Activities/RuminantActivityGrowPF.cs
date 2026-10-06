@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
         /// CLEMAnimalBreeding.
         /// </summary>
         /// <param name="herd">Enumerable of individuals to consider</param>
-        public void CalculateHerdPregnancyEnergy(IEnumerable<Ruminant> herd)
+        public static void CalculateHerdPregnancyEnergy(IEnumerable<Ruminant> herd)
         {
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsMature))
             {
@@ -639,7 +639,7 @@ namespace Models.CLEM.Activities
                 double bodyProteinTakenForLactation = Math.Min(lactationProteinDeficit / 0.8, bodyProteinAvailable / daysInTimeStep);
 
                 double proteinProvided = ind.Weight.Protein.MobiliseAmount(bodyProteinTakenForLactation, 0.8, MobilisationReasonType.LactationProtein);
-                double proteinEnergyProvided = ind.Energy.Protein.MobiliseAmount(bodyProteinTakenForLactation * ind.Parameters.General.MJEnergyPerKgProtein, 0.8, MobilisationReasonType.LactationProtein);
+                ind.Energy.Protein.MobiliseAmount(bodyProteinTakenForLactation * ind.Parameters.General.MJEnergyPerKgProtein, 0.8, MobilisationReasonType.LactationProtein);
 
                 // reduce CP shortfall by the body protein provided for milk production. This will be removed from the body later in protein and fat updates.
                 proteinAvailableForGainFromIntake += proteinProvided;
@@ -946,7 +946,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="ind">Female individua.</param>
         /// <returns>Energy required per day for pregnancy</returns>
-        private double CalculatePregnancyEnergy(RuminantFemale ind)
+        private static double CalculatePregnancyEnergy(RuminantFemale ind)
         {
             ind.Weight.Protein.ForPregnancy = 0;
 
@@ -1238,7 +1238,7 @@ namespace Models.CLEM.Activities
             // check parameters are available for all ruminants.
             foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.GrowPF is null))
             {
-                yield return new ValidationResult($"No [RuminantParametersGrowPF] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowPF" });
+                yield return new ValidationResult($"No [RuminantParametersGrowPF] parameters are provided for [{item.NameWithParent}]", ["RuminantParametersGrowPF"]);
             }
         }
 

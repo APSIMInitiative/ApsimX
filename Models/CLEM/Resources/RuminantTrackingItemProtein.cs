@@ -255,8 +255,8 @@ namespace Models.CLEM.Resources
         /// <returns>Proportion of energy provided for the phase or -9999 if phase unknown</returns>
         public double ProportionAvailable(string allocationPhase)
         {
-            double needed = 0;
-            double after = 0;
+            double needed;
+            double after;
 
             switch (allocationPhase)
             {

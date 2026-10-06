@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType } )]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType])]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
             // get all time steps over gestation length that are allowed based on controlled mating timing.
             // randomly assign pregnancies to this list
-            List<DateTime> timeList = new ();
+            List<DateTime> timeList = [];
             DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
             while(dateTime < events.Clock.Today)
             {
@@ -304,7 +304,7 @@ namespace Models.CLEM.Activities
 
                 int numberPossible = 0;
                 int numberServiced = 1;
-                List<Ruminant> maleBreeders = new();
+                List<Ruminant> maleBreeders = [];
 
                 // for each location where parts of this herd are located
                 foreach (var location in breeders)
