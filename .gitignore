@@ -79,9 +79,23 @@ Tests/Validation/Wheat/Dookie2024/UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx
 /tests/Validation/WorkFloTest/
 
 Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints/DataColation-checkpoint.ipynb
-Tests/Validation/Wheat/Dookie2024/UOM2312-001RTX 24 DOO JH WWHI WHT.xlsx
 Tests/Validation/Wheat/Dookie2024/.ipynb_checkpoints
 
 
 # Stop tracking the mutex related errors file.
 errors.txt
+/Tests/Validation/Wheat/Pask/_apply_PaskExperiments.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Dookie2024.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Dookie2025.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Fords2025.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Gnarwarre2024.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Gnarwarre2025.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_GrassPatch2024.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_GrassPatch2025.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_Turretfield2024.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_WaggaWagga2024.txt
+/Tests/Validation/Wheat/UoM_WinterVsSpring/_apply_WaggaWagga2025.txt
+/Tests/Validation/Wheat/_apply_LincolnUni.txt
+/Tests/Validation/Wheat/_apply_Wheat.txt
+*.xlsx
+/Tests/Validation/Wheat/UoM_WinterVsSpring/Observed/QC_Report.html
