@@ -153,8 +153,8 @@ namespace Models.CLEM.Activities
                 {
                     // find any suitable times and randomly pick one
                     var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.Details.EstimatedAgeAtMaturityFemale).ToList();
-                    List<RuminantMale> maleBreeders = new();
-                    DateTime conceiveDate = default(DateTime);
+                    List<RuminantMale> maleBreeders = [];
+                    DateTime conceiveDate = default;
                     if (datesAvailable.Count > 0)
                     {
                         conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
@@ -180,7 +180,6 @@ namespace Models.CLEM.Activities
                         double conceptionRate = ConceptionRate(female, out status);
                         if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), conceptionRate))
                         {
-                            // ToDo: Clock Check when conception rate should be.
                             female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, conceiveDate);
                             female.LastMatingStyle = MatingStyle.PreSimulation;
 
@@ -236,26 +235,11 @@ namespace Models.CLEM.Activities
             bool pregnancyLost = false;
             bool birthOccurred = false;
 
-            // todo: add prenatal mortality based on trimester
-
-
-            //// only perform prenatal mortality if using RuminantGrow as GrowPF will use toxaemia and dystocia to determine this mortality.
-            //if (CurrentHerd(true).FirstOrDefault().Parameters.Details.ParentHerd.RuminantGrowActivity.GetType() == typeof(RuminantActivityGrow))
-            //{
-            //    foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList())
-            //    {
-            //        // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT
-            //        // calculate fetus and newborn mortality
-            //        // total mortality / (gestation months + 1) to get monthly mortality
-            //        // done here before births to account for post birth mortality as well..
-            //        // needs to be calculated for each offspring carried.
-
-            //        if (female.FetusNewBornMortality(events, conceptionArgs))
-            //        {
-            //            pregnancyLost = true;
-            //        }
-            //    }
-            //}
+            // todo: Prenatal mortality based on time step was previously performed here in
+            // THIS HAS BEEN TURNED OFF AS NOT SURE THIS FUNCTIONALITY FROM IAT/NABSA IS CORRECT (JD)
+            // Use to calculate fetus and newborn mortality from total mortality / (gestation months + 1) to get monthly mortality
+            // done here before births to account for post birth mortality as well..
+            // needs to be calculated for each offspring carried and set PregnancyLost to true.
 
             // give birth if needed.
             foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBirthDue).ToList())
@@ -306,7 +290,7 @@ namespace Models.CLEM.Activities
                 return;
             }
 
-            // step through each date of the time-step to handle "in heat" status for conception
+            // step through each date of the time step to handle "in heat" status for conception
             // track male energy use from mating
             // limit males to maximum number of matings per day
             bool breedOccurred = false;
@@ -318,7 +302,7 @@ namespace Models.CLEM.Activities
                                group ind by ind.Location into grp
                                select grp;
 
-                int numberPossible = 0; // breeders.Sum(a => a.Count());
+                int numberPossible = 0;
                 int numberServiced = 1;
                 List<Ruminant> maleBreeders = new();
 
@@ -404,8 +388,8 @@ namespace Models.CLEM.Activities
                                 // ActivityDeterminedConception rate > 0, otherwise rate calculated above versus the random number approach
                                 if ((female.ActivityDeterminedConceptionRate != null) ? conceptionRate > 0 : RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
-                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, timeStepDate);
-                                    conceptionArgs.Update(ConceptionStatus.Conceived, female, timeStepDate);
+                                    female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0, events.TimeStepStart);
+                                    conceptionArgs.Update(ConceptionStatus.Conceived, female, events.TimeStepStart);
                                     female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                                     if (useControlledMating)
@@ -435,7 +419,7 @@ namespace Models.CLEM.Activities
                         // do not report for -1 (controlled mating outside timing)
                         if (numberPossible >= 0 && status != ConceptionStatus.Conceived && status != ConceptionStatus.NotMated)
                         {
-                            conceptionArgs.Update(status, female, timeStepDate, null, false);
+                            conceptionArgs.Update(status, female, events.TimeStepStart, null, false); // timeStepDate
                             female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                         }
                         cnt++;
