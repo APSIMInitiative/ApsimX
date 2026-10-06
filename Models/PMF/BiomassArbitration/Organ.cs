@@ -679,8 +679,8 @@ namespace Models.PMF
             {
                 Zone z = Structure.FindParent<Zone>(recurse: true);
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                somZone.Add(wt/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
-                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, fractionStanding, parentPlant.PlantType, Name);
+                somZone.Add(wt * Constants.gPerSm2kgPerHa, 
+                    n * Constants.gPerSm2kgPerHa, fractionStanding, parentPlant.PlantType, Name);
             }
             else
             {

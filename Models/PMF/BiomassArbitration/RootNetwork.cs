@@ -648,7 +648,7 @@ namespace Models.PMF
 
                         OrganNutrientsState rootToFOM = detachedToday + liveToResidues + deadToResidues;
 
-                        double zoneMassTokgPerHa = 10 / (z.Area * 10000); // divide by z.Area to convert from g/area to g/m2.  multiply by 10 to convert from g/m2 to kg/ha
+                        double zoneMassTokgPerHa = 10; // (z.Area * 10000); // divide by z.Area to convert from g/area to g/m2.  multiply by 10 to convert from g/m2 to kg/ha
                         FOMType fom = new FOMType();
                         fom.amount = (float)(rootToFOM.Wt * zoneMassTokgPerHa);
                         fom.N = (float)(rootToFOM.N * zoneMassTokgPerHa);

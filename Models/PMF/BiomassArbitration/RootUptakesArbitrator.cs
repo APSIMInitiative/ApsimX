@@ -306,7 +306,7 @@ namespace Models.PMF
             {
                 if (initialNitrogenEstimate) //This is called multiple times per day with different soil states.  The first call is with the initial value that represents plant supply in the absence of competition
                 {
-                    NitrogenDemand.AmountByZone[0] = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / 1000; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
+                    NitrogenDemand.AmountByZone[0] = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) * NitrogenDemand.AreaByZone[0]; //NOTE: This is in kg, not g, to arbitrate N demands for spatial simulations.
                     if (NitrogenDemand.Amount < 0)
                         NitrogenDemand.AmountByZone[0] = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
                 }
@@ -339,7 +339,7 @@ namespace Models.PMF
                             PlantUptakeSupply_kg.NO3N = MathUtilities.Add(PlantUptakeSupply_kg.NO3N, organNO3Supply_kg); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             PlantUptakeSupply_kg.NH4N = MathUtilities.Add(PlantUptakeSupply_kg.NH4N, organNH4Supply_kg);
                             double organSupply_kg = organNH4Supply_kg.Sum() + organNO3Supply_kg.Sum();
-                            o.Nitrogen.Supplies.Uptake += organSupply_kg * 1000; //Uptake supply in g so organSupply (in ka/ha) convert to grams/ha
+                            o.Nitrogen.Supplies.Uptake += organSupply_kg * 1000 / zone.Zone.Area; //Uptake supply in g so organSupply (in ka/ha) convert to grams/ha
                             nitrogenSupplyCurrentSoilState[z] += organSupply_kg;
                         }
                     }
@@ -358,10 +358,10 @@ namespace Models.PMF
                 }
                 initialNitrogenEstimate = false;
 
-                if (nitrogenSupplyCurrentSoilState.Sum() > NitrogenDemand.Amount)
+                if (nitrogenSupplyCurrentSoilState.Sum() * 1000 > NitrogenDemand.Amount) //Convert kg to g for comparison.  If the total supply is greater than the total demand then we need to reduce the potential uptakes that we pass to the soil arbitrator
                 {
                     //Reduce the PotentialUptakes that we pass to the soil arbitrator
-                    double ratio = Math.Min(1.0, NitrogenDemand.Amount / nitrogenSupplyCurrentSoilState.Sum());
+                    double ratio = Math.Min(1.0, NitrogenDemand.Amount / (nitrogenSupplyCurrentSoilState.Sum() * 1000));
                     foreach (ZoneWaterAndN UptakeDemands in zones)
                     {
                         UptakeDemands.NO3N = MathUtilities.Multiply_Value(UptakeDemands.NO3N, ratio);
@@ -381,24 +381,28 @@ namespace Models.PMF
             if (plant.IsEmerged)
             {
                 // Calculate the total no3 and nh4 across all zones.
-                double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NSupply = 0;
                 foreach (ZoneWaterAndN Z in zones)
-                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum());
+                    NSupply += (Z.NO3N.Sum() + Z.NH4N.Sum()) * 1000 / Z.Zone.Area; //NOTE: NO3 and NH4 in kg, not kg/ha, to arbitrate N demands for spatial simulations.  Need to convert to g/canopy area to send to PMF
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g
-                biomassArbitrator.AllocateNUptake(NSupply * 1000); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha
+                biomassArbitrator.AllocateNUptake(NSupply); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha
 
                 List<double> uptakebyzone = new List<double>();
+
+                foreach (ZoneWaterAndN Z in zones)
+                    uptakebyzone.Add(Z.NH4N.Sum() + Z.NO3N.Sum());
+
+                if (uptakingOrgans.Count > 1) {throw new Exception("Multiple organs with IWaterNitrogenUptake interface not yet supported"); }
+                //Fixme.  This needs to be changed to allow multiple organs with IWaterNitrogenUptake interface.  Currently only one organ is allowed to have this interface.  This will be changed when we move to a more generic Organ model that can have suborgans.
+
                 foreach (IWaterNitrogenUptake u in uptakingOrgans)
-                {  //Fix me.  This needs to be modified to account for multiple uptakeing organs
+                {
                     u.DoNitrogenUptake(zones);
-                    foreach (ZoneWaterAndN Z in zones)
-                    {
-                        uptakebyzone.Add((Z.NH4N.Sum()+Z.NO3N.Sum())); //Allocation to plant in g so allocation from soil arbitrator (in ka/ha) convert to grams/ha
-                    }
                     u.NitrogenTakenUp.AmountByZone = uptakebyzone.ToArray();
                 }
+
                 NitrogenUptake.AmountByZone = uptakebyzone.ToArray();
             }
         }
