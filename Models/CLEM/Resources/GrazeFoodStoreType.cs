@@ -853,9 +853,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            // Nitrogen and DMD are monthly so divide by 30.4 to daily and apply for time-step
             AgePasture(events.Interval, 30.4);
-
         }
 
         /// <summary>
@@ -880,7 +878,7 @@ namespace Models.CLEM.Resources
                     pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / daysInMonth * daysInTimeStep)), MinimumDMD);
                 }
 
-                pool.UpdateAge(pool.GrowthDate, events.TimeStepEnd);
+                pool.UpdateAge(pool.GrowthDate, events.TimeStepStart.AddDays(events.Interval));
             }
             // remove all pools with less than 1g of food
             Pools.RemoveAll(a => a.Amount < 0.001);
@@ -1148,6 +1146,9 @@ namespace Models.CLEM.Resources
         /// <param name="category">Transaction category</param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
+            if (events is null)
+                throw new ApsimXException(this, $"Core logic error: Cannot add to [r={this.NameWithParent}] as the [Clock.CLEMEvents] is not available. Check that the [Clock.CLEMEvents] is present in the simulation.");
+
             GrazeFoodStorePool pool = new(0, this)
             {
                 GrossEnergyContent = GrossEnergyContent,
@@ -1175,7 +1176,7 @@ namespace Models.CLEM.Resources
                     }
                     pool.GutFill = CalculateGutFill(pool.DryMatterDigestibility);
                     pool.InitialBiomassSet(incomingPool.Amount);
-                    pool.UpdateAge(incomingPool.GrowthDate, this.events.TimeStepStart);
+                    pool.UpdateAge(incomingPool.GrowthDate, events.TimeStepStart);
                     break;
                 case FoodResourcePacket packet:
                     // coming from the CropActivityManage
@@ -1183,14 +1184,14 @@ namespace Models.CLEM.Resources
                     pool.InitialBiomassSet(packet.Amount);
                     pool.NitrogenPercent = packet.NitrogenPercent;
                     pool.DryMatterDigestibility = packet.DryMatterDigestibility;
-                    pool.UpdateAge(this.events.TimeStepStart, this.events.TimeStepStart);
+                    pool.UpdateAge(events.TimeStepStart, events.TimeStepStart);
                     break;
                 case double amount:
                     // add amount at current rates
                     pool.InitialBiomassSet(amount);
                     pool.NitrogenPercent = this.SwardNitrogenPercent;
                     pool.DryMatterDigestibility = SwardDryMatterDigestibility; 
-                    pool.UpdateAge(this.events.TimeStepStart, this.events.TimeStepStart);
+                    pool.UpdateAge(events.TimeStepStart, events.TimeStepStart);
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");

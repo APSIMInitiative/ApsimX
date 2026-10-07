@@ -306,6 +306,22 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Initialisation for unit tests
+        /// </summary>
+        public void OnStartUnitTest()
+        {
+            if (TimeStep == TimeStepTypes.Monthly)
+            {
+                DateTime checkEndDate = new(Clock.EndDate.Year, Clock.EndDate.Month, DateTime.DaysInMonth(Clock.EndDate.Year, Clock.EndDate.Month));
+                if (Clock.EndDate < checkEndDate)
+                    Clock.EndDate = checkEndDate;
+            }
+
+            SetInterval();
+            SetNextTimeStep(Clock.StartDate);
+        }
+
+        /// <summary>
         /// Method to define interval in days from TimeStepType
         /// </summary>
         public void SetInterval()

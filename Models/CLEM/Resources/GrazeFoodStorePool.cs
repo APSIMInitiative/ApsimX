@@ -211,7 +211,7 @@ namespace Models.CLEM.Resources
             GrowthDate = growthDate;
             IsGrowthThisTimeStep = growthDate == currentDate;
 
-            AgeInDays = (currentDate - GrowthDate).Days;
+            AgeInDays = (int)(currentDate - GrowthDate).TotalDays;
             AgeInMonths = CalculateMonthsDifference(GrowthDate, currentDate);
         }
 
@@ -222,6 +222,7 @@ namespace Models.CLEM.Resources
                 throw new ArgumentOutOfRangeException(nameof(startDate), "The start date must be before the end date.");
             }
 
+            endDate = endDate.AddDays(1);
             int months = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
 
             if (endDate.Day < startDate.Day)

@@ -1,0 +1,334 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 221,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "StandAlone",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2002-06-01T00:00:00",
+          "End": "2022-06-30T00:00:00",
+          "Name": "Clock",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.CLEMEvents, Models",
+              "TimeStep": 30,
+              "CustomTimeStep": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
+              "EcologicalIndicatorsCalculationMonth": 7,
+              "Notes": null,
+              "SelectedTab": "Properties",
+              "Name": "CLEMEvents",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "Verbosity": 100,
+          "Name": "summaryfile",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Lots of good info here in the log. Check it from time to time.",
+              "Name": "Memo",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "Seed": 1,
+          "Name": "RandomNumberGenerator",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.CLEM.ZoneCLEM, Models",
+          "UserType": 1,
+          "FarmMultiplier": 1.0,
+          "AutoCreateDescriptiveSummary": false,
+          "DescriptiveSummaryFormatStyle": 0,
+          "BuildTransactionCategoryFromTree": false,
+          "UseModelNameAsTransactionCategory": false,
+          "Area": 0.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "CanopyType": null,
+          "Name": "CLEM",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.CLEM.FileSQLitePasture, Models",
+              "FileName": "sturtalluv_kid_Native_inputs.db",
+              "TableName": "Native_Inputs",
+              "RegionColumnName": "Region",
+              "LandIdColumnName": "Soil",
+              "GrassBAColumnName": "GrassBA",
+              "LandConColumnName": "LandCon",
+              "StkRateColumnName": "StkRate",
+              "YearColumnName": "Year",
+              "MonthColumnName": "Month",
+              "GrowthColumnName": "Growth",
+              "ErosionColumnName": "SoilLoss",
+              "RunoffColumnName": "RunOff",
+              "RainfallColumnName": "Rainfall",
+              "CoverColumnName": "Cover",
+              "TBAColumnName": "TreeBA",
+              "MissingDataAction": 1,
+              "Notes": null,
+              "SelectedTab": "Properties",
+              "Name": "FileSQLitePasture",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Resources",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Resources.Land, Models",
+                  "UnitsOfArea": "hectares",
+                  "UnitsOfAreaToHaConversion": 1.0,
+                  "Notes": null,
+                  "SelectedTab": "Properties",
+                  "Name": "Land",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.LandType, Models",
+                      "LandArea": 65000.0,
+                      "PortionBuildings": 0.0,
+                      "ProportionOfTotalArea": 1.0,
+                      "SoilType": "1",
+                      "Notes": "Now equivalent to area of pasture.\nDPIF = 100,000 ha. \nDPIF Roper = 65% used.\nDPIF Sturt = 83% used.",
+                      "SelectedTab": "Properties",
+                      "Name": "WholeProperty",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Reduced just to get the sim working. Bring back to realistic size when runnning. See also 'Resources.LandType' ‘Land Area’and set the same (and ask Adam what the difference is).\n\nDPIF = 100,000 ha. \nDPIF Roper = 65% used.\nDPIF Sturt = 83% used.",
+                          "Name": "DPIF_Areas",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Resources.GrazeFoodStore, Models",
+                  "Notes": null,
+                  "SelectedTab": null,
+                  "Name": "GrazeFoodStore",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Resources.GrazeFoodStoreType, Models",
+                      "TypeOfFeed": 4,
+                      "GrossEnergyContent": 18.4,
+                      "MetabolisableEnergyContent": 8.2,
+                      "NitrogenPercent": 0.0,
+                      "GreenNitrogenPercent": 2.0,
+                      "DecayNitrogen": 0.4,
+                      "MinimumNitrogen": 0.4,
+                      "RumenDegradableProteinPercent": 58.0,
+                      "DMDStyle": 1,
+                      "DryMatterDigestibility": 41.4,
+                      "GreenDMD": 58.0,
+                      "NToDMDCoefficient": 11.03,
+                      "NToDMDIntercept": 41.4,
+                      "DecayDMD": 0.12,
+                      "MinimumDMD": 42.0,
+                      "DetachRate": 0.03,
+                      "CarryoverDetachRate": 0.12,
+                      "AcidDetergentInsolubleProtein": 0.07980000000000001,
+                      "CrudeProteinPercent": 0.0,
+                      "FatPercent": 1.9,
+                      "GutFillHighQuality": 0.08,
+                      "GutFillLowQuality": 0.2,
+                      "StartingAmount": 2000.0,
+                      "FirstMonthOfGrowSeason": 11,
+                      "LastMonthOfGrowSeason": 5,
+                      "NumberMonthsForInitialBiomass": 5,
+                      "Notes": "11/1/23 was running with 0.13 and 1.9 before sending to Adam",
+                      "SelectedTab": "Properties",
+                      "Name": "NativePasture",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "Notes": null,
+              "SelectedTab": null,
+              "Name": "Activities",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.CLEM.Activities.PastureActivityManage, Models",
+                  "LandTypeNameToUse": "Land.WholeProperty",
+                  "AreaRequested": 20000.0,
+                  "UseAreaAvailable": false,
+                  "FeedTypeName": "GrazeFoodStore.NativePasture",
+                  "PastureDataReader": "FileSQLitePasture",
+                  "StartingStockingRate": 5.0,
+                  "TransactionCategory": "",
+                  "OnPartialResourcesAvailableAction": 0,
+                  "Notes": "\n\nDPIF = 100,000 ha. \nDPIF Roper = 65% used.\nDPIF Sturt = 83% used.",
+                  "SelectedTab": "Properties",
+                  "Name": "GrowPasture",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Relationship, Models",
+                      "Identifier": "Utilisation % to change in Land condition index",
+                      "Measure": "",
+                      "XValues": [
+                        0.0,
+                        20.0,
+                        30.0,
+                        100.0
+                      ],
+                      "YValues": [
+                        -0.625,
+                        -0.125,
+                        0.0,
+                        0.75
+                      ],
+                      "CalculationMethod": 1,
+                      "NameOfXVariable": "% utilisation",
+                      "NameOfYVariable": "Change in LC index",
+                      "Notes": null,
+                      "SelectedTab": null,
+                      "Name": "Relationship_LandCondition",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.RelationshipRunningValue, Models",
+                          "StartingValue": 5.0,
+                          "Minimum": 4.5,
+                          "Maximum": 5.5,
+                          "Notes": "Aim for an average of 1900 kg/ha growth",
+                          "SelectedTab": null,
+                          "Name": "LC",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Relationship, Models",
+                      "Identifier": "Utilisation % to change in Grass basal area",
+                      "Measure": "",
+                      "XValues": [
+                        0.0,
+                        20.0,
+                        30.0,
+                        100.0
+                      ],
+                      "YValues": [
+                        1.0,
+                        0.0,
+                        -0.1,
+                        -0.15
+                      ],
+                      "CalculationMethod": 1,
+                      "NameOfXVariable": "%Utilisation",
+                      "NameOfYVariable": "Change in GBA",
+                      "Notes": null,
+                      "SelectedTab": null,
+                      "Name": "Relationship_GrassBasalArea",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.RelationshipRunningValue, Models",
+                          "StartingValue": 1.6,
+                          "Minimum": 1.5,
+                          "Maximum": 1.7,
+                          "Notes": "Aim for an average of 1900 kg/ha growth",
+                          "SelectedTab": null,
+                          "Name": "GBA",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
