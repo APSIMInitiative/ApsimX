@@ -4211,7 +4211,7 @@ namespace Models.GrazPlan
                             }
                             else
                             {
-                                pastureGreen += forageProvider.ForageObj.Material.Where(m => m.IsLive)
+                                pastureGreen = forageProvider.ForageObj.Material.Where(m => m.IsLive)
                                 .Sum(m => m.Consumable.Wt);
                             }
                                                     
