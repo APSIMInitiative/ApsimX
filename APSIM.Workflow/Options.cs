@@ -65,5 +65,17 @@ public class Options
     [Option("azure-pool", Required = false, HelpText = "The Azure pool to use for the workflow.")]
     public string AzurePool { get; set; } = "workflo-pool";
 
+    /// <summary>
+    /// An env file represented as a string.
+    /// </summary>
+    [Option("env-string", Required= false, HelpText ="An env file represented as a string.")]
+    public string EnvString {get;set;} = "";  
+
+    /// <summary>
+    /// An env file represented as a string.
+    /// </summary>
+    [Option("full-commit-hash", Required= false, HelpText ="The full commit hash. Used for PO Stats system.")]
+    public string FullCommitHash {get;set;} = "";  
+ 
 }
     

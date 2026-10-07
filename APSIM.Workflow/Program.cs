@@ -7,9 +7,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
 using Humanizer;
+using System.Threading;
+using System.Globalization;
 
 namespace APSIM.Workflow;
-
 
 /// <summary>
 /// Main program class for the APSIM.Workflow application.
@@ -76,7 +77,57 @@ public class Program
                 stopwatch.Start();
                 try
                 {
-                    PrepareAndSubmitWorkflowJob(options);
+                    // PrepareAndSubmitWorkflowJob(options);
+                    string[] validationPaths = ValidationLocationUtility.GetValidationFilePaths();
+                    // Create a pool name using the PR number and commit SHA.
+                    if (string.IsNullOrEmpty(options.PullRequestNumber))
+                        throw new ArgumentException("A pull request number argument must be provided for Azure batch pool creation to complete successfully.");
+                    if (string.IsNullOrEmpty(options.CommitSHA))
+                        throw new ArgumentException("A commit SHA argument must be provided for Azure batch pool creation to complete successfully.");
+                    if (validationPaths.Length < 1)
+                        throw new Exception("A list of validation paths must be provided to continue.");
+                    if (string.IsNullOrEmpty(options.EnvString))
+                        throw new ArgumentException("An environment variable must be provided to continue.");
+
+                    string shortCommitSha = options.CommitSHA.Length > 6 ? options.CommitSHA[..6] : options.CommitSHA;
+                    string poolName = $"{options.PullRequestNumber}-{shortCommitSha}";
+                    string nowDateString = DateTime.UtcNow.ToString("yyyy-MM-dd-HH-mm-ss", CultureInfo.InvariantCulture);
+                    string jobName = $"{nowDateString}-acceptance-tests-pr-{options.PullRequestNumber}";
+
+                    // Create the environment variable dictionary for use further on 
+                    // from the environment variable string.
+
+                    Dictionary<string, string> envDict = [];
+                    foreach(string line in options.EnvString.Split(
+                        [ "\r\n", "\n" ],
+                        StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        // Split only on the first '=' since values (e.g. base64 keys) may themselves contain '='.
+                        string[] values = line.Split('=', 2);
+                        envDict.Add(values[0], values[1]);
+                    }
+
+                    // Add PO Stats specific environment variables
+                    envDict.Add("AUTHOR", options.GitHubAuthorID);
+                    envDict.Add("COMMIT_SHA", shortCommitSha);
+                    envDict.Add("FULL_COMMIT_HASH", options.FullCommitHash);
+
+                    Azure.CreatePool(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName, isAutoscaling: false);
+                    logger.LogInformation($"An Azure batch pool called {poolName} successfully created!");
+                    Azure.CreateJobs(
+                        envDict["AZURE_PRIMARY_ACCESS_KEY"],
+                        validationPaths,
+                        envDict,
+                        jobName,
+                        envDict["AZURE_KEY1"],
+                        options.PullRequestNumber,
+                        poolName
+                    );
+                    logger.LogInformation($"Azure jobs successfully submitted!");
+                    // Wait for a few minutes before resizing.
+                    Thread.Sleep(TimeSpan.FromMinutes(3));
+                    Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
+                    logger.LogInformation($"Azure pool successfully resized!");
                     stopwatch.Stop();
                 }
                 catch (Exception ex)
@@ -95,48 +146,6 @@ public class Program
             logger.LogError("Error: " + ex.Message);
             exitCode = 1;
         }
-    }
-
-    private static void PrepareAndSubmitWorkflowJob(Options options)
-    {
-        WorkFloFileUtilities.CreateValidationWorkFloFile(options);
-        if (options.Verbose)
-            logger.LogInformation("Validation workflow file created.");
-
-        bool zipFileCreated = PayloadUtilities.CreateZipFile(options.DirectoryPath, options.Verbose);
-        if (options.Verbose && zipFileCreated)
-            logger.LogInformation("Zip file created.");
-
-        if (zipFileCreated & exitCode == 0)
-        {
-            if (options.Verbose)
-                logger.LogInformation("Submitting workflow job to Azure.");
-
-            PayloadUtilities.SubmitWorkFloJob(options.DirectoryPath).Wait();
-        }
-        else if (zipFileCreated & exitCode != 0)
-        {
-            logger.LogError("There was an issue with the validation workflow. Please check the logs for more details.");
-        }
-        else throw new Exception("There was an issue organising the files for submittal to Azure.\n");
-
-
-
-    }
-
-    /// <summary>
-    /// Prints the contents of the split directory.
-    /// </summary>
-    /// <param name="splitDirectory">The path to the split directory.</param>
-    private static void PrintSplitDirectoryContents(string splitDirectory)
-    {
-        logger.LogInformation(splitDirectory);
-        logger.LogInformation($"Files in {splitDirectory}:");
-        foreach (string file in Directory.GetFiles(splitDirectory))
-        {
-            logger.LogInformation("  " + Path.GetFileName(file));
-        }
-        logger.LogInformation("");
     }
 
 
