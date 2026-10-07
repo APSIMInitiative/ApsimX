@@ -305,33 +305,6 @@ namespace Models.Surface
             }
         }
 
-        // /// <summary>
-        // /// test
-        // /// </summary>
-        //  public IEnumerable<DamageableBiomass> Material
-        // {
-        //     get
-        //     {   
-        //         //Filter SOM for manure. 
-        //         var Material = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "manure",StringComparison.OrdinalIgnoreCase));
-               
-        //         // Return an empty live material. Stock won't find the dead material unless there
-        //         // is matching live material.
-        //         yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
-        //         yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
-        //         {
-        //             StructuralWt = (Material.Sum(som => som.Standing.Sum(om => om.amount))
-        //             + Material.Sum(som => som.Lying.Sum(om => om.amount))) / 10,
-        //             StructuralN = (Material.Sum(som => som.Standing.Sum(om => om.N)) + Material.Sum(som => som.Lying.Sum(om => om.N)))/10,
-        //             MetabolicWt = 0.0,
-        //             MetabolicN = 0.0,
-        //             StorageWt = 0.0,
-        //             StorageN = 0.0,
-        //         }, isLive: false);
-        //     }
-        // }
-
-
 
         /// <summary>
         /// test

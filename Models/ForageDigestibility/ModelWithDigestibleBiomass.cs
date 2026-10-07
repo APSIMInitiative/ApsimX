@@ -55,28 +55,9 @@ namespace Models.ForageDigestibility
         }
 
 
-        // public IEnumerable<DamageableBiomass> GrazableMaterial
-        // {
-        // get
-        // {
-        //     foreach (var material in forageModel.Material)
-        //     {
-                
-        //         var fractionConsumable = forages.GetFractionConsumable(material);
-        //         if (fractionConsumable > 0)
-        //         {
-        //             var minimumConsumable = forages.GetMinimumConsumable(material) / 10; // kg/ha to g/m2
-        //             var consumableAmount = Math.Max(0.0, material.Total.Wt * fractionConsumable - minimumConsumable);
-        //             var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
-
-        //             yield return new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.DigestibilityFromModel);
-        //         }
-        //     }
-        // }
-        // }
-
+       
         /// <summary>
-        /// test
+        /// A collection of digestible material that can be grazed 
         /// </summary>
         public IEnumerable<DamageableBiomass> GrazableMaterial
         {
