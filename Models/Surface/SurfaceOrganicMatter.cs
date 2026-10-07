@@ -295,8 +295,8 @@ namespace Models.Surface
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
-                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N)) / 10,   // kg/ha to g/m2
+                    StructuralN = (SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N))) / 10,   // kg/ha to g/m2
                     MetabolicWt = 0.0,
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
