@@ -1271,7 +1271,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Soil].Temperature.Value[1]",
+                  "VariableName": "[ISoilTemperature].Value[1]",
                   "Name": "PostEventValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4150,7 +4150,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Soil].SoilWater.PAWmm[1]",
+                  "VariableName": "[ISoilWater].PAWmm[1]",
                   "Name": "PAW",
                   "Children": [],
                   "IncludeInDocumentation": true,
