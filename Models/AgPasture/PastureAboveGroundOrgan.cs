@@ -42,33 +42,37 @@ namespace Models.AgPasture
         public GenericTissue[] LiveTissue { get; private set; }
 
         //---------------------------- Parameters -----------------------
+        ////////////// GUI parameters shown to user //////////////
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        [Description("NConcOptimum")]
+        [Separator("Parameters controlling N content in this organ")]
+        [Description("N concentration for optimum growth")]
         [Units("kg/kg")]
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        [Description("NConcMinimum")]
+        [Description("Minimum N concentration")]
         [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [Description("NConcMaximum")]
+        [Description("Maximum N concentration")]
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
         /// <summary>Maximum reduction in N concentration due to elevated CO2 (0-1).</summary>
+        [Description("Maximum reduction in N concentration due to CO2")]
         [Units("kg/kg")]
         public double MaxCO2EffectOnNRequirement { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        [Description("FractionStanding")]
+        [Separator("Parameters controlling biomass availability for removal")]
+        [Description("Fraction standing, available to harvest")]
         [Units("kg/kg")]
         public double FractionStanding { get; set; } = 1.0;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>'
-        [Description("MinimumLiveDM")]
+        [Description("Minimum live DM biomass")]
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 

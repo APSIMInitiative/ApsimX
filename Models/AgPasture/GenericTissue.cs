@@ -36,21 +36,27 @@ namespace Models.AgPasture
         internal const double Tolerance = 0.000000001;
 
         //---------------------------- Parameters -----------------------
+        ////////////// GUI parameters shown to user //////////////
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
-        [Description("FractionNRemobilisable")]
+        [Separator("Parameters for N remobilisation and digestibility")]
+        [Description("Fraction of remobilisable N available per day")]
+        [Units("0-1")]
         public double FractionNRemobilisable { get; set; }
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
-        [Description("FractionSugarNewGrowth")]
+        [Description("Fraction of sugar in new growth")]
+        [Units("0-1")]
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
-        [Description("DigestibilityCellWall")]
+        [Description("Digestibility of cell wall")]
+        [Units("0-1")]
         public double DigestibilityCellWall { get; set; }
 
         /// <summary>Digestibility of proteins (0-1).</summary>
-        [Description("DigestibilityProtein")]
+        [Description("Digestibility of proteins")]
+        [Units("0-1")]
         public double DigestibilityProtein { get; set; } = 1.0;
 
         //----------------------- Daily Deltas -----------------------

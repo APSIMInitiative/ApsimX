@@ -61,83 +61,88 @@ namespace Models.AgPasture
         private ISolute nh4 = null;
 
         //---------------------------- Parameters -----------------------
+        ////////////// GUI parameters shown to user //////////////
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        [Description("NConcOptimum")]
+        [Separator("Parameters controlling N content in this organ")]
+        [Description("N concentration for optimum growth")]
         [Units("kg/kg")]
         public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        [Description("NConcMinimum")]
+        [Description("Minimum N concentration")]
         [Units("kg/kg")]
         public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        [Description("NConcMaximum")]
+        [Description("Maximum N concentration")]
         [Units("kg/kg")]
         public double NConcMaximum { get; set; }
 
         /// <summary>Maximum reduction in N concentration due to elevated CO2 (0-1).</summary>
+        [Description("Maximum reduction in N concentration due to CO2")]
         [Units("kg/kg")]
         public double MaxCO2EffectOnNRequirement { get; set; }
 
         /// <summary>Minimum rooting depth (mm).</summary>
-        [Description("MinimumRootingDepth")]
+        [Separator("Parameters controlling root depth and distribution")]
+        [Description("Minimum rooting depth")]
         [Units("mm")]
         public double MinimumRootingDepth { get; set; }
 
         /// <summary>Maximum potential rooting depth (mm).</summary>
-        [Description("MaximumPotentialRootingDepth")]
+        [Description("Maximum potential rooting depth")]
         [Units("mm")]
         public double MaximumPotentialRootingDepth { get; set; }
 
         /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
-        [Description("ElongationRate")]
+        [Description("Root elongation rate")]
         [Units("mm/day")]
         public double ElongationRate { get; set; }
 
         /// <summary>Factor for root distribution; depth from surface where root proportion starts to decrease (mm).</summary>
-        [Description("DepthDistributionParamTop")]
+        [Description("Depth from surface where root proportion starts to decrease")]
         [Units("mm")]
         public double DepthDistributionParamTop { get; set; }
 
         /// <summary>Exponent controlling the root distribution as function of depth (>0.0).</summary>
-        [Description("DepthDistributionExponent")]
+        [Description("Exponent for the root distribution function")]
         [Units("-")]
         public double DepthDistributionExponent { get; set; }
 
         /// <summary>Factor for root distribution; controls where the function is zero below maxRootDepth.</summary>
-        [Description("DepthDistributionParamBottom")]
         [Units("-")]
-        public double DepthDistributionParamBottom { get; set; } = 1.05;
+        public double DepthDistributionParamBottom { get; private set; } = 1.05;
 
         /// <summary>Specific root length (m/gDM).</summary>
-        [Description("SpecificRootLength")]
+        [Description("Specific root length")]
         [Units("m/g")]
         public double SpecificRootLength { get; set; }
 
         /// <summary>Ammonium uptake coefficient (/ppm).</summary>
-        [Description("KNH4")]
+        [Separator("Parameters controlling nitrogen uptake")]
+        [Description("Ammonium uptake coefficient, KNH4")]
         [Units("/ppm")]
         public double KNH4 { get; set; }
 
         /// <summary>Nitrate uptake coefficient (/ppm).</summary>
-        [Description("KNO3")]
+        [Description("Nitrate uptake coefficient, KNO3")]
         [Units("/ppm")]
         public double KNO3 { get; set; }
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
-        [Description("MaximumNUptake")]
+        [Description("Maximum daily N uptake")]
         [Units("kg/ha")]
         public double MaximumNUptake { get; set; }
 
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
-        [Description("NExtractionSWFactorExponent")]
+        [Description("Exponent for the effect of soil moisture on N uptake")]
         [Units("-")]
         public double NExtractionSWFactorExponent { get; set; } = 1.50;
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        [Description("MinimumLiveDM")]
+        [Separator("Parameters controlling biomass availability for removal")]
+        [Description("Minimum live DM biomass")]
         [Units("kg/ha")]
         public double MinimumLiveDM { get; set; }
 

@@ -547,8 +547,7 @@ namespace Models.AgPasture
 
         ////- General parameters (name and type) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Family type for this plant species (grass/legume/forb).</summary>
-        [Units("-")]
+        /// <summary>Functional group for this plant species (grass/legume/forb).</summary>
         [JsonIgnore]
         public PlantFamilyType SpeciesFamily { get { return constants.SpeciesFamily; } }
 
@@ -562,7 +561,7 @@ namespace Models.AgPasture
         /// <summary>Flag whether AgPasture species need to be sown or are initialised already growing.</summary>
         [Separator("Choose how this species is set at the start of simulation")]
         [Description(" Plants are alive and growing?")]
-        public bool InitialisePlantAtStartOfSimulation { get; set; } = true;
+        public bool InitialisePlantAtStartOfSimulation { get; set; } = false;
 
         /// <summary>Initial above ground DM weight (kgDM/ha).</summary>
         [Description("   Initial above ground DM weight")]
@@ -772,10 +771,10 @@ namespace Models.AgPasture
         ////- Allocation of new growth >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Target, or ideal, shoot-root ratio (>0.0).</summary>
-        [Units("-")]
+        [Units("kg/kg")]
         public double TargetShootRootRatio { get { return constants.TargetShootRootRatio; } }
 
-        /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
+        /// <summary>Maximum effect that soil GLFs have on shoot-root ratio (0-1).</summary>
         [Units("0-1")]
         public double ShootRootGlfFactor { get { return constants.ShootRootGlfFactor; } }
 
@@ -934,12 +933,12 @@ namespace Models.AgPasture
         /// <summary>Factor increasing tissue turnover rate due to stock trampling - NOT IMPLEMENTED.</summary>
         private double TurnoverStockFactor = 0.0;
 
-        /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        /// <summary>Multiplier of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Converts the fraction of biomass removed into potential increase in turnover.</remarks>
         [Units("-")]
         public double TurnoverDefoliationMultiplier { get { return constants.TurnoverDefoliationMultiplier; } }
 
-        /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        /// <summary>Exponent of function increasing the turnover rate due to defoliation (>0.0).</summary>
         /// <remarks>Controls the spread of the effect of time, the smaller the more spread the effect.</remarks>
         [Units("-")]
         public double TurnoverDefoliationCoefficient { get { return constants.TurnoverDefoliationCoefficient; } }
