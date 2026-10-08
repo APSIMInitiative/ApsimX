@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 221,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -7727,83 +7727,11 @@
                 },
                 {
                   "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "doyGermination": 275,
-                  "daysEmergenceToAnthesis": 120,
-                  "daysAnthesisToMaturity": 85,
-                  "degreesDayForAnthesis": 1100.0,
-                  "degreesDayForMaturity": 900.0,
-                  "daysAnnualsFactor": 45,
-                  "FVPDFunction": {
-                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                    "Name": "LinearInterpolationFunction",
-                    "ResourceName": null,
-                    "Children": [],
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "CanopyType": "PastureSpecies",
-                  "LightProfile": null,
                   "InitialisePlantAtStartOfSimulation": true,
                   "InitialShootDM": 1500.0,
                   "InitialRootDM": 500.0,
                   "InitialRootDepth": 750.0,
                   "PotentialRootingDepth": -1.0,
-                  "initialDMFractionsGrasses": [
-                    0.15,
-                    0.25,
-                    0.25,
-                    0.05,
-                    0.05,
-                    0.1,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "initialDMFractionsLegumes": [
-                    0.16,
-                    0.23,
-                    0.22,
-                    0.05,
-                    0.03,
-                    0.05,
-                    0.05,
-                    0.01,
-                    0.04,
-                    0.08,
-                    0.08
-                  ],
-                  "initialDMFractionsForbs": [
-                    0.2,
-                    0.2,
-                    0.15,
-                    0.05,
-                    0.1,
-                    0.15,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "UseHeatStressFactor": 0,
-                  "UseColdStressFactor": 0,
-                  "UseReproSeasonFactor": 0,
-                  "ReproSeasonReferenceLatitude": 41.0,
-                  "ReproSeasonTimingCoeff": 0.14,
-                  "ReproSeasonDurationCoeff": 2.0,
-                  "ReproSeasonShouldersLengthFactor": 1.0,
-                  "ReproSeasonOnsetDurationFactor": 0.6,
-                  "ReproSeasonMaxAllocationIncrease": 0.5,
-                  "ReproSeasonAllocationCoeff": 0.1,
-                  "RelativeTurnoverEmerging": 2.0,
-                  "TurnoverDefoliationEffectMin": 0.025,
-                  "GlfGeneric": 1.0,
-                  "GlfSoilFertility": 1.0,
-                  "MinimumGreenLeafProp": 0.8,
-                  "MinimumGreenRootProp": 0.5,
-                  "PreferenceForLeafOverStems": 1.0,
                   "Name": "AGPRyegrass",
                   "ResourceName": "AGPRyegrass",
                   "Children": [],
@@ -7812,83 +7740,11 @@
                 },
                 {
                   "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "doyGermination": 275,
-                  "daysEmergenceToAnthesis": 120,
-                  "daysAnthesisToMaturity": 85,
-                  "degreesDayForAnthesis": 1100.0,
-                  "degreesDayForMaturity": 900.0,
-                  "daysAnnualsFactor": 45,
-                  "FVPDFunction": {
-                    "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                    "Name": "LinearInterpolationFunction",
-                    "ResourceName": null,
-                    "Children": [],
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "CanopyType": "PastureSpecies",
-                  "LightProfile": null,
                   "InitialisePlantAtStartOfSimulation": true,
                   "InitialShootDM": 600.0,
                   "InitialRootDM": 300.0,
                   "InitialRootDepth": 350.0,
                   "PotentialRootingDepth": -1.0,
-                  "initialDMFractionsGrasses": [
-                    0.15,
-                    0.25,
-                    0.25,
-                    0.05,
-                    0.05,
-                    0.1,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "initialDMFractionsLegumes": [
-                    0.16,
-                    0.23,
-                    0.22,
-                    0.05,
-                    0.03,
-                    0.05,
-                    0.05,
-                    0.01,
-                    0.04,
-                    0.08,
-                    0.08
-                  ],
-                  "initialDMFractionsForbs": [
-                    0.2,
-                    0.2,
-                    0.15,
-                    0.05,
-                    0.1,
-                    0.15,
-                    0.1,
-                    0.05,
-                    0.0,
-                    0.0,
-                    0.0
-                  ],
-                  "UseHeatStressFactor": 0,
-                  "UseColdStressFactor": 0,
-                  "UseReproSeasonFactor": 0,
-                  "ReproSeasonReferenceLatitude": 41.0,
-                  "ReproSeasonTimingCoeff": 0.14,
-                  "ReproSeasonDurationCoeff": 2.0,
-                  "ReproSeasonShouldersLengthFactor": 1.0,
-                  "ReproSeasonOnsetDurationFactor": 0.6,
-                  "ReproSeasonMaxAllocationIncrease": 0.5,
-                  "ReproSeasonAllocationCoeff": 0.1,
-                  "RelativeTurnoverEmerging": 2.0,
-                  "TurnoverDefoliationEffectMin": 0.025,
-                  "GlfGeneric": 1.0,
-                  "GlfSoilFertility": 1.0,
-                  "MinimumGreenLeafProp": 0.8,
-                  "MinimumGreenRootProp": 0.5,
-                  "PreferenceForLeafOverStems": 1.0,
                   "Name": "AGPWhiteClover",
                   "ResourceName": "AGPWhiteClover",
                   "Children": [],
@@ -9048,19 +8904,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "0.9"
+                  "Value": "0.91"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "563.06"
+                  "Value": "705.25"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "801.24"
+                  "Value": "693.19"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "0.94"
+                  "Value": "0.96"
                 },
                 {
                   "Key": "Tolerance",
@@ -9249,19 +9105,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "1.54"
+                  "Value": "1.52"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-8.2"
+                  "Value": "-10.89"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "55.8"
+                  "Value": "53"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "-0.07"
+                  "Value": "0.1"
                 },
                 {
                   "Key": "Tolerance",
@@ -9450,19 +9306,19 @@
                 },
                 {
                   "Key": "AcceptedSlope",
-                  "Value": "2.1"
+                  "Value": "1.99"
                 },
                 {
                   "Key": "AcceptedIntercept",
-                  "Value": "-0.92"
+                  "Value": "-0.84"
                 },
                 {
                   "Key": "AcceptedRMSE",
-                  "Value": "1.44"
+                  "Value": "1.41"
                 },
                 {
                   "Key": "AcceptedNSE",
-                  "Value": "-2.72"
+                  "Value": "-2"
                 },
                 {
                   "Key": "Tolerance",
