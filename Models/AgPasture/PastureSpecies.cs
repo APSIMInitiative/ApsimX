@@ -561,7 +561,7 @@ namespace Models.AgPasture
         /// <summary>Flag whether AgPasture species need to be sown or are initialised already growing.</summary>
         [Separator("Choose how this species is set at the start of simulation")]
         [Description(" Plants are alive and growing?")]
-        public bool InitialisePlantAtStartOfSimulation { get; set; } = false;
+        public bool InitialisePlantAtStartOfSimulation { get; set; } = true;
 
         /// <summary>Initial above ground DM weight (kgDM/ha).</summary>
         [Description("   Initial above ground DM weight")]
