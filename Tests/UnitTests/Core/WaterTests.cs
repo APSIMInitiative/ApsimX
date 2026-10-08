@@ -490,6 +490,8 @@ namespace UnitTests.Core
                 }
             };
             Node.Create(soilModel);
+            Links links = new();
+            links.Resolve(soilModel.Children[1], allLinks: true, recurse: true);
             return soilModel;
         }
     }
