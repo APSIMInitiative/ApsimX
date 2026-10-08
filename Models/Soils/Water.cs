@@ -27,11 +27,11 @@ namespace Models.Soils
 
         /// <summary>Finds the 'Physical' node.</summary>
         [Link]
-        private IPhysical Physical;
+        private IPhysical Physical = null;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
         [Link]
-        private ISoilWater WaterModel;
+        private ISoilWater WaterModel = null;
 
         private double initialFractionFull = double.NaN;
 
