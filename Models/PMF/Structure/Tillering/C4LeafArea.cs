@@ -1,6 +1,7 @@
 ﻿using APSIM.Core;
 using Models.Core;
 using Models.Functions;
+using Models.LeafWise;
 using Models.PMF.Struct;
 using Models.Utilities;
 using System;
@@ -23,6 +24,10 @@ namespace Models.PMF
         /// <summary> Culms on the leaf </summary>
         [Link]
         private LeafCulms culms = null;
+
+        /// <summary>Optional LeafWise individual leaf dimension model.</summary>
+        [Link(IsOptional = true)]
+        private readonly LeafWiseModel leafWise = null;
 
         /// <summary>The Potential Area Calculation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -155,7 +160,11 @@ namespace Models.PMF
         /// <inheritdoc/>
         public double CalculateIndividualLeafArea(double leafNo, Culm culm)
         {
+            double reportedLeafNo = leafNo;
             leafNo = AdjustLeafNumberForPlateuEffect(leafNo, culm.FinalLeafNo, largestLeafPlateau.Value(), culm.CulmNo);
+
+            if (leafWise?.AppliesTo(plant) == true)
+                return leafWise.CalculateIndividualLeafArea(leafNo, culm, reportedLeafNo);
 
             // Bell shaped curve characteristics.
             var a = a0.Value() + (a1.Value() / (1 + a2.Value() * Math.Min(Math.Max(culm.FinalLeafNo,10),23)));
