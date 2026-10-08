@@ -549,7 +549,7 @@ namespace Models.AgPasture
 
         /// <summary>Functional group for this plant species (grass/legume/forb).</summary>
         [JsonIgnore]
-        public PlantFamilyType SpeciesFamily { get { return constants.SpeciesFamily; } }
+        public PlantFunctionalGroupType SpeciesFunctionalGroup { get { return constants.SpeciesFunctionalGroup; } }
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
         [JsonIgnore]
@@ -1120,7 +1120,7 @@ namespace Models.AgPasture
         {
             get
             {
-                if (constants.SpeciesFamily == PastureSpecies.PlantFamilyType.Legume)
+                if (constants.SpeciesFunctionalGroup == PastureSpecies.PlantFunctionalGroupType.Legume)
                     return true;
                 else
                     return false;
@@ -1440,8 +1440,8 @@ namespace Models.AgPasture
             no
         }
 
-        /// <summary>List of valid species family names.</summary>
-        public enum PlantFamilyType
+        /// <summary>List of valid plant functional groups.</summary>
+        public enum PlantFunctionalGroupType
         {
             /// <summary>A grass species, Poaceae.</summary>
             Grass,
@@ -2813,11 +2813,11 @@ namespace Models.AgPasture
         {
             // choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
-            if (SpeciesFamily == PlantFamilyType.Grass)
+            if (SpeciesFunctionalGroup == PlantFunctionalGroupType.Grass)
             {
                 initialDMFractions = initialDMFractionsGrasses;
             }
-            else if (SpeciesFamily == PlantFamilyType.Legume)
+            else if (SpeciesFunctionalGroup == PlantFunctionalGroupType.Legume)
             {
                 initialDMFractions = initialDMFractionsLegumes;
             }
@@ -3942,7 +3942,7 @@ namespace Models.AgPasture
                 if (BiomassRemoved != null)
                 {
                     BiomassRemovedType biomassData = new BiomassRemovedType();
-                    string[] type = { SpeciesFamily.ToString() };
+                    string[] type = { SpeciesFunctionalGroup.ToString() };
                     float[] dltdm = { (float)amountDM };
                     float[] dltn = { (float)amountN };
                     float[] dltp = { 0f }; // P not considered here

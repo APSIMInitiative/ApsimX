@@ -15,7 +15,7 @@ namespace Models.AgPasture
         /// <summary>Functional group for this plant species (grass/legume/forb).</summary>
         [Separator("Species parameters")]
         [Description("Plant functional group")]
-        public PastureSpecies.PlantFamilyType SpeciesFamily { get; set; } = PastureSpecies.PlantFamilyType.Grass;
+        public PastureSpecies.PlantFunctionalGroupType SpeciesFunctionalGroup { get; set; } = PastureSpecies.PlantFunctionalGroupType.Grass;
 
         /// <summary>Species metabolic pathway of C fixation during photosynthesis (C3/C4).</summary>
         [Description("Photosynthetic pathway")]
@@ -301,7 +301,7 @@ namespace Models.AgPasture
         ////- N fixation (for legumes) >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         private bool isLegume
-        { get { return SpeciesFamily == PastureSpecies.PlantFamilyType.Legume; } }
+        { get { return SpeciesFunctionalGroup == PastureSpecies.PlantFunctionalGroupType.Legume; } }
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Separator("Parameters controlling N fixation (for legumes)")]

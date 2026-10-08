@@ -8129,6 +8129,7 @@ internal class Converter
     {
         Tuple<string, string>[] changes =
         {
+            new Tuple<string, string>("SpeciesFamily", "SpeciesFunctionalGroup"),
             new Tuple<string, string>("CO2EffectScaleFactor", "CO2EffectOnPhotoScaleFactor"),
             new Tuple<string, string>("CO2EffectOffsetFactor", "CO2EffectOnNConcScaleFactor"),
             new Tuple<string, string>("CO2EffectExponent", "CO2EffectOnNConcExponent"),
