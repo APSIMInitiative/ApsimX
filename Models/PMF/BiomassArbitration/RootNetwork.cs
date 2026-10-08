@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Documentation.Extensions;
 using APSIM.Shared.Utilities;
@@ -13,7 +10,11 @@ using Models.PMF.Organs;
 using Models.Soils;
 using Models.Soils.Arbitrator;
 using Models.Surface;
+using Models.Zones;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Models.PMF
@@ -45,6 +46,11 @@ namespace Models.PMF
         /// <summary>The plant</summary>
         [Link]
         protected Plant parentPlant = null;
+
+        /// <summary>The parent rectangular zone</summary>
+        [JsonIgnore]
+        [Link(Type = LinkType.Ancestor, IsOptional = true)]
+        public RectangularZone parentRectangularZone = null;
 
         /// <summary>The plant</summary>
         [Link(Type = LinkType.Ancestor)]
@@ -448,13 +454,16 @@ namespace Models.PMF
                 NetworkZoneState zone = ZoneStates.Find(z => z.Name == thisZone.Zone.Name);
                 if (zone != null)
                 {
+                    double area = 1;
+                    if (parentRectangularZone != null)
+                        area = thisZone.Zone.Area;
                     //NO3 and NH4 pased in zonesFromSoilArbitrator are in kg.  Need to convert to kg/ha to set soil uptake
                     double[] thisZoneNO3kgpha = new double[thisZone.NO3N.Count()];
                     double[] thisZoneNH4kgpha = new double[thisZone.NO3N.Count()];
                     for (int i = 0; i < thisZone.NO3N.Count(); i++)
                     {
-                        thisZoneNO3kgpha[i] = MathUtilities.Divide(thisZone.NO3N[i], thisZone.Zone.Area, 0);
-                        thisZoneNH4kgpha[i] = MathUtilities.Divide(thisZone.NH4N[i], thisZone.Zone.Area, 0);
+                        thisZoneNO3kgpha[i] = MathUtilities.Divide(thisZone.NO3N[i], area, 0);
+                        thisZoneNH4kgpha[i] = MathUtilities.Divide(thisZone.NH4N[i], area, 0);
                     }
 
                     zone.NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(zone.NO3.kgha, thisZoneNO3kgpha));
@@ -474,12 +483,13 @@ namespace Models.PMF
         public void CalculateNitrogenSupply(ZoneWaterAndN zone, ref double[] NO3Supply_kg, ref double[] NH4Supply_kg)
         {
             NetworkZoneState myZone = ZoneStates.Find(z => z.Name == zone.Zone.Name);
+            double area = 1.0; // default area of 1 as model does mass / m2 by default.
+            if (parentRectangularZone != null)
+                area = parentRectangularZone.Area;  // for rectangular zones, model does mass in area per plant so need to use actual area
             if (myZone != null)
             {
                 if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
                     RWC = new double[myZone.Physical.Thickness.Length];
-
-
 
                 double[] thickness = myZone.Physical.Thickness;
                 double[] water = myZone.WaterBalance.SWmm;
@@ -507,14 +517,14 @@ namespace Models.PMF
                         double maxNO3uptake = maxNUptake - NO3Supply_kgpha - NH4Supply_kgpha;
                         double NO3Supply_kgpha_layer = Math.Min(zone.NO3N[layer] * kno3 * NO3ppm * SWAF * factorRootDepth, maxNO3uptake);
                         NO3Supply_kgpha += NO3Supply_kgpha_layer;
-                        NO3Supply_kg[layer] = NO3Supply_kgpha_layer * myZone.Area;
+                        NO3Supply_kg[layer] = NO3Supply_kgpha_layer * area;
 
                         double knh4 = this.knh4.Value(layer);
                         double NH4ppm = zone.NH4N[layer] * (100.0 / (bd[layer] * thickness[layer]));
                         double maxNH4Uptake = maxNUptake - NH4Supply_kgpha - NO3Supply_kgpha;
                         double NH4Supply_kgpha_layer = Math.Min(zone.NH4N[layer] * knh4 * NH4ppm * SWAF * factorRootDepth, maxNH4Uptake);
                         NH4Supply_kgpha += NH4Supply_kgpha_layer;
-                        NH4Supply_kg[layer] = NH4Supply_kgpha_layer * myZone.Area;
+                        NH4Supply_kg[layer] = NH4Supply_kgpha_layer * area;
                      }
                 }
             }
@@ -648,11 +658,14 @@ namespace Models.PMF
 
                         OrganNutrientsState rootToFOM = detachedToday + liveToResidues + deadToResidues;
 
-                        double zoneMassTokgPerHa = 10 / (z.Area * 10000); // divide by z.Area to convert from g/area to g/m2.  multiply by 10 to convert from g/m2 to kg/ha
+                        //double zoneMassTokgPerHa = 10 / (z.Area * 10000); // divide by z.Area to convert from g/area to g/m2.  multiply by 10 to convert from g/m2 to kg/ha
+                        double area = 1.0;
+                        if (parentRectangularZone != null)
+                                area = z.Area;
                         FOMType fom = new FOMType();
-                        fom.amount = (float)(rootToFOM.Wt * zoneMassTokgPerHa);
-                        fom.N = (float)(rootToFOM.N * zoneMassTokgPerHa);
-                        fom.C = (float)(0.40 * rootToFOM.Wt * zoneMassTokgPerHa);
+                        fom.amount = (float)(rootToFOM.Wt / 1000 / area); // divide mass by 1000 to convert from g to kg then divide by area to go to kg/ha
+                        fom.N = (float)(rootToFOM.N / 1000 / area);
+                        fom.C = (float)(0.40 * rootToFOM.Wt / 1000 / area);
                         fom.P = 0.0;
                         fom.AshAlk = 0.0;
 
@@ -737,7 +750,10 @@ namespace Models.PMF
                             newZone = new NetworkZoneState(parentPlant, soil, Structure);
                         newZone.Initialize(parentPlant.SowingData.Depth);
                         ZoneStates.Add(newZone);
-                        zoneAreas.Add(newZone.Area);
+                        if (parentRectangularZone != null)
+                            zoneAreas.Add(newZone.Area);
+                        else
+                            zoneAreas.Add(1.0);
                     }
                 }
             }
