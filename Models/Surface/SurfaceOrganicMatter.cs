@@ -309,7 +309,7 @@ namespace Models.Surface
         /// <summary>
         /// test
         /// </summary>
-         public IEnumerable<DamageableBiomass> GrazableMaterial
+         public IEnumerable<DamageableBiomass> GrazeableMaterial
         {
             get
             {   

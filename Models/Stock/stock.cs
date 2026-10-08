@@ -4156,7 +4156,7 @@ namespace Models.GrazPlan
                         {   
                             if (forageProvider.ForageObj.Name == "SurfaceOrganicMatter")
                             {
-                                pastureGreen += forageProvider.ForageObj.GrazableMaterial.Where(m => m.IsLive).Sum(m => m.Consumable.Wt);
+                                pastureGreen += forageProvider.ForageObj.GrazeableMaterial.Where(m => m.IsLive).Sum(m => m.Consumable.Wt);
                             }
                             else
                             {

@@ -57,22 +57,22 @@ namespace Models.ForageDigestibility
 
        
         /// <summary>
-        /// A collection of digestible material that can be grazed 
+        /// A collection of digestible material that can be grazed by the Stock model
         /// </summary>
-        public IEnumerable<DamageableBiomass> GrazableMaterial
+        public IEnumerable<DamageableBiomass> GrazeableMaterial
         {
             get
             {
-                IEnumerable<DamageableBiomass> sourceMaterial;
+                IEnumerable<DamageableBiomass> sourceMaterial; 
             
-                if (forageModel is Models.Surface.SurfaceOrganicMatter som)
+                if (forageModel is Models.Surface.SurfaceOrganicMatter som) //If SurfaceOrganicMatter use filtered GrazeableMaterial
                     {
-                    sourceMaterial = som.GrazableMaterial;
+                        sourceMaterial = som.GrazeableMaterial;
                     }
                 else
-                {
-                    sourceMaterial = forageModel.Material;
-                }
+                    {
+                        sourceMaterial = forageModel.Material;
+                    }
             
                 foreach (var material in sourceMaterial)
                 {

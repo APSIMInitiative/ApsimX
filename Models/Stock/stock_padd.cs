@@ -955,10 +955,10 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (var live in forageObj.GrazableMaterial.Where(m => m.IsLive))
+            foreach (var live in forageObj.GrazeableMaterial.Where(m => m.IsLive))
             {
                 // Find corresponding dead material
-                var dead = forageObj.GrazableMaterial.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+                var dead = forageObj.GrazeableMaterial.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
                 if (dead == null)
                     throw new Exception($"Cannot find dead material for {live.Name}.");
 
@@ -1052,8 +1052,8 @@ namespace Models.GrazPlan
 
                 if (ForageObj.Name == "SurfaceOrganicMatter")
                 {
-                    totalDM = ForageObj.GrazableMaterial.Sum(m => m.Total.Wt);
-                    consumableDM = ForageObj.GrazableMaterial.Sum(m => m.Consumable.Wt);
+                    totalDM = ForageObj.GrazeableMaterial.Sum(m => m.Total.Wt);
+                    consumableDM = ForageObj.GrazeableMaterial.Sum(m => m.Consumable.Wt);
                 }
                 else
                 {
@@ -1071,7 +1071,7 @@ namespace Models.GrazPlan
                 if (ForageObj.Name == "SurfaceOrganicMatter")
                 {
                     // Exclude manure from grazing calculations.
-                    material = ForageObj.GrazableMaterial;
+                    material = ForageObj.GrazeableMaterial;
                 }
                 else
                 {
