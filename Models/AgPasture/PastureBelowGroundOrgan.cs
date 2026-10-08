@@ -138,7 +138,7 @@ namespace Models.AgPasture
         /// <summary>Exponent controlling the effect of soil moisture variations on nitrogen extractability.</summary>
         [Description("Exponent for the effect of soil moisture on N uptake")]
         [Units("-")]
-        public double NExtractionSWFactorExponent { get; set; } = 1.50;
+        public double NExtractionSWFactorExponent { get; set; }
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         [Separator("Parameters controlling biomass availability for removal")]

@@ -47,7 +47,7 @@ namespace Models.AgPasture
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         [Description("Fraction of sugar in new growth")]
         [Units("0-1")]
-        public double FractionSugarNewGrowth { get; set; } = 0.0;
+        public double FractionSugarNewGrowth { get; set; }
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
         [Description("Digestibility of cell wall")]
@@ -57,7 +57,7 @@ namespace Models.AgPasture
         /// <summary>Digestibility of proteins (0-1).</summary>
         [Description("Digestibility of proteins")]
         [Units("0-1")]
-        public double DigestibilityProtein { get; set; } = 1.0;
+        public double DigestibilityProtein { get; set; }
 
         //----------------------- Daily Deltas -----------------------
         // These get applied once each day during Update()

@@ -69,7 +69,7 @@ namespace Models.AgPasture
         [Separator("Parameters controlling biomass availability for removal")]
         [Description("Fraction standing, available to harvest")]
         [Units("kg/kg")]
-        public double FractionStanding { get; set; } = 1.0;
+        public double FractionStanding { get; set; }
 
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>'
         [Description("Minimum live DM biomass")]

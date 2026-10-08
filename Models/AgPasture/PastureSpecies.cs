@@ -1035,7 +1035,8 @@ namespace Models.AgPasture
 
         /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
         [Units("-")]
-        public double PreferenceForLeafOverStems { get; private set; } = 1.0;
+        [JsonIgnore]
+        public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
