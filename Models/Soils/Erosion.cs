@@ -2,6 +2,7 @@ using System;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
+using Models.Surface;
 using Newtonsoft.Json;
 
 namespace Models.Soils
@@ -23,6 +24,12 @@ namespace Models.Soils
 
         [Link]
         private ISoilWater waterBalance = null;
+
+        [Link(Type=LinkType.Scoped)]
+        private ISurfaceOrganicMatter surfaceOrganicMatter = null;
+
+        [Link(Type = LinkType.Ancestor)]
+        private MicroClimate microClimate = null;
 
         /// <summary>Describes the different erosion models supported.</summary>
         public enum ModelTypeEnum
@@ -157,6 +164,10 @@ namespace Models.Soils
         {
             soil_loss_bed = 0.0;
             soil_loss_susp = 0.0;
+
+            double g_contact_cover = surfaceOrganicMatter.Cover; //+ g_basal_cover;
+            double visible_contact_cover = g_contact_cover * (1.0 - microClimate.CanopyCover * 0.44); // A_to_evap_fact = 0.00022 / 0.0005 = 0.44” confirmed from APSIM classic developers
+            erosion_cover = visible_contact_cover + microClimate.CanopyCover * 0.44;
 
             if (ModelType == ModelTypeEnum.Freebairn)
                 CalculateFreebairn();
