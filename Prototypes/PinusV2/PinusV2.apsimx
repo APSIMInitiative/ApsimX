@@ -7127,7 +7127,10 @@
       "FileName": "%root%/Tests/Validation/Pinus/Pinus.apsimx",
       "ModelPaths": [
         "[DataStore]",
-        "[Validation].Temperate.BFG"
+        "[Validation].Temperate.BFG",
+        "[Validation].Temperate.FSA703A",
+        "[Validation].Temperate.FSA704",
+        "[Validation].Temperate.TowerHill"
       ],
       "Name": "Virtual",
       "ResourceName": null,
@@ -7619,7 +7622,7 @@
               "LineThickness": 0,
               "TableName": "Report",
               "XFieldName": "Clock.Today",
-              "YFieldName": "Pinus.Leaf.ExtinctionCoefficient.XValue.Height",
+              "YFieldName": "Pinus.Leaf.ExtinctionCoefficient.XValue",
               "X2FieldName": null,
               "Y2FieldName": null,
               "ShowInLegend": false,
