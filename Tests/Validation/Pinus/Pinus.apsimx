@@ -18403,7 +18403,7 @@
                     {
                       "$type": "Models.Clock, Models",
                       "Start": "1936-07-01T00:00:00",
-                      "End": "1980-08-15T00:00:00",
+                      "End": "1995-08-15T00:00:00",
                       "Name": "Clock",
                       "ResourceName": null,
                       "Children": [],
