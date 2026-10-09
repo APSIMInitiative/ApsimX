@@ -281,7 +281,9 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double RemovedP { get; private set; }
 
-        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        /// <summary>
+        /// Test material
+        /// </summary>
         public IEnumerable<DamageableBiomass> Material
         {
             get
@@ -293,8 +295,8 @@ namespace Models.Surface
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
-                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N)) / 10,   // kg/ha to g/m2
+                    StructuralN = (SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N))) / 10,   // kg/ha to g/m2
                     MetabolicWt = 0.0,
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
@@ -302,6 +304,35 @@ namespace Models.Surface
                 }, isLive: false);
             }
         }
+
+
+        /// <summary>
+        /// test
+        /// </summary>
+         public IEnumerable<DamageableBiomass> GrazeableMaterial
+        {
+            get
+            {   
+                //Filter SOM for manure. 
+                var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "manure",StringComparison.OrdinalIgnoreCase));
+               
+                // Return an empty live material. Stock won't find the dead material unless there
+                // is matching live material.
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
+                {
+                    StructuralWt = (grazeablePools.Sum(som => som.Standing.Sum(om => om.amount))
+                    + grazeablePools.Sum(som => som.Lying.Sum(om => om.amount))) / 10,
+                    StructuralN = (grazeablePools.Sum(som => som.Standing.Sum(om => om.N)) + grazeablePools.Sum(som => som.Lying.Sum(om => om.N)))/10,
+                    MetabolicWt = 0.0,
+                    MetabolicN = 0.0,
+                    StorageWt = 0.0,
+                    StorageN = 0.0,
+                }, isLive: false);
+            }
+        }
+
+
 
         /// <summary>The amount of material incorporated into the soil.</summary>
         public FOMPoolType Incorporated { get; private set; }
@@ -336,6 +367,41 @@ namespace Models.Surface
             RemovedP += totalRemoved.P;
 
             return totalRemoved.amount;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="liveToRemove"></param>
+        /// <param name="deadToRemove"></param>
+        /// <param name="liveToResidue"></param>
+        /// <param name="deadToResidue"></param>
+        /// <param name="fractionStanding"></param>
+        /// <returns></returns>
+        public double RemoveGrazeableBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
+        {
+            OMFractionType totalRemoved = new();
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                 if (SurfOM[i].name != "manure")
+                {
+                   var removed = SurfOM[i].Remove(deadToRemove);
+                    totalRemoved.Add(removed);
+                    SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * removed.amount; 
+                }
+
+            }
+                    // Update 'Removed' variables
+                    RemovedC += totalRemoved.C;
+                    RemovedN += totalRemoved.N;
+                    RemovedP += totalRemoved.P;
+
+                    return totalRemoved.amount;
+             
+
+           
         }
 
         /// <summary>Called when [reset].</summary>

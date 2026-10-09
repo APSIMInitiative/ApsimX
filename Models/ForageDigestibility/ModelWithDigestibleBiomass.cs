@@ -40,6 +40,7 @@ namespace Models.ForageDigestibility
             {
                 foreach (var material in forageModel.Material)
                 {
+                    
                     var fractionConsumable = forages.GetFractionConsumable(material);
                     if (fractionConsumable > 0)
                     {
@@ -52,6 +53,64 @@ namespace Models.ForageDigestibility
                 }
             }
         }
+
+
+       
+        /// <summary>
+        /// A collection of digestible material that can be grazed by the Stock model
+        /// </summary>
+        public IEnumerable<DamageableBiomass> GrazeableMaterial
+        {
+            get
+            {
+                IEnumerable<DamageableBiomass> sourceMaterial; 
+            
+                if (forageModel is Models.Surface.SurfaceOrganicMatter som) //If SurfaceOrganicMatter use filtered GrazeableMaterial
+                    {
+                        sourceMaterial = som.GrazeableMaterial;
+                    }
+                else
+                    {
+                        sourceMaterial = forageModel.Material;
+                    }
+            
+                foreach (var material in sourceMaterial)
+                {
+                    var fractionConsumable = forages.GetFractionConsumable(material);
+            
+                if (fractionConsumable > 0)
+                {
+                    var minimumConsumable = forages.GetMinimumConsumable(material) / 10;
+                
+                    var consumableAmount = Math.Max(0.0, material.Total.Wt * fractionConsumable - minimumConsumable);
+                    
+                    var consumableFraction =  MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
+                
+                    yield return new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive,material.DigestibilityFromModel);
+                    
+                }
+                }
+            }
+        }
+
+        /// <summary>
+        /// test
+        /// </summary>
+        /// <param name="liveToRemove"></param>
+        /// <param name="deadToRemove"></param>
+        /// <param name="liveToResidue"></param>
+        /// <param name="deadToResidue"></param>
+        /// <returns></returns>
+        public double RemoveGrazeableBiomass( double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0,  double deadToResidue = 0)
+        {
+            if (forageModel is Models.Surface.SurfaceOrganicMatter som)
+            {
+                return som.RemoveGrazeableBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue);
+            }
+
+            return forageModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue);
+        }
+
 
         /// <summary>Remove biomass from organ.</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>
