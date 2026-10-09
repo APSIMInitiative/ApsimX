@@ -93,6 +93,24 @@ namespace Models.ForageDigestibility
             }
         }
 
+        /// <summary>
+        /// test
+        /// </summary>
+        /// <param name="liveToRemove"></param>
+        /// <param name="deadToRemove"></param>
+        /// <param name="liveToResidue"></param>
+        /// <param name="deadToResidue"></param>
+        /// <returns></returns>
+        public double RemoveGrazeableBiomass( double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0,  double deadToResidue = 0)
+        {
+            if (forageModel is Models.Surface.SurfaceOrganicMatter som)
+            {
+                return som.RemoveGrazeableBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue);
+            }
+
+            return forageModel.RemoveBiomass(liveToRemove, deadToRemove, liveToResidue, deadToResidue);
+        }
+
 
         /// <summary>Remove biomass from organ.</summary>
         /// <param name="liveToRemove">Fraction of live biomass to remove from simulation (0-1).</param>

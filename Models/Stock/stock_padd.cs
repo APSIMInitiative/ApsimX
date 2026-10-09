@@ -10,6 +10,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.ForageDigestibility;
 using Models.PMF.Interfaces;
+using Models.Surface;
 
 namespace Models.GrazPlan
 {
@@ -751,6 +752,9 @@ namespace Models.GrazPlan
         /// </summary>
         public ModelWithDigestibleBiomass ForageObj { get; set; }
 
+
+    
+
         /// <summary>
         /// Update the forage data for this crop/agpasture object
         /// </summary>
@@ -1024,10 +1028,10 @@ namespace Models.GrazPlan
         }
 
         
-        /// <summary>
-        /// The herbage is removed from the plant/agpasture
-        /// </summary>
-        /// <exception cref="Exception"></exception>
+       /// <summary>
+       /// /
+       /// </summary>
+       /// <exception cref="Exception"></exception>
         
          public void RemoveHerbageFromPlant()
         {
@@ -1046,37 +1050,63 @@ namespace Models.GrazPlan
                     totalRemoved += removed.Herbage[i];
                 double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
                 
-                double totalDM;
-                double consumableDM;
+                //double totalDM;
+               // double consumableDM;
                 
 
-                if (ForageObj.Name == "SurfaceOrganicMatter")
-                {
-                    totalDM = ForageObj.GrazeableMaterial.Sum(m => m.Total.Wt);
-                    consumableDM = ForageObj.GrazeableMaterial.Sum(m => m.Consumable.Wt);
-                }
-                else
-                {
-                    totalDM = ForageObj.Material.Sum(m => m.Total.Wt);
-                    consumableDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
+                // if (ForageObj.Name == "SurfaceOrganicMatter")
+                // {
+                //     totalDM = ForageObj.GrazeableMaterial.Sum(m => m.Total.Wt);
+                //     consumableDM = ForageObj.GrazeableMaterial.Sum(m => m.Consumable.Wt);
+                // }
+                // else
+                // {
+                //     totalDM = ForageObj.Material.Sum(m => m.Total.Wt);
+                //     consumableDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
 
-                }
+                // }
 
-                double amountRemoved = 0;
-                double amountToRemove = propnRemoved * consumableDM;
+                // double amountRemoved = 0;
+                // double amountToRemove = propnRemoved * consumableDM;
                 
-                IEnumerable<DamageableBiomass> material;
+                // IEnumerable<DamageableBiomass> material;
 
               
-                if (ForageObj.Name == "SurfaceOrganicMatter")
-                {
-                    // Exclude manure from grazing calculations.
-                    material = ForageObj.GrazeableMaterial;
-                }
-                else
-                {
-                    material = ForageObj.Material;
-                }
+                // if (ForageObj.Name == "SurfaceOrganicMatter")
+                // {
+                //     // Exclude manure from grazing calculations.
+                //     material = ForageObj.GrazeableMaterial;
+                // }
+                // else
+                // {
+                //     material = ForageObj.Material;
+                // }
+
+
+           IEnumerable<DamageableBiomass> material;
+
+            if (ForageObj.Name == "SurfaceOrganicMatter")
+            {
+                // Surface organic matter: only use grazeable pools.
+                material = ForageObj.GrazeableMaterial;
+            }
+            else
+            {
+                // Plant forage: use all plant material.
+                material = ForageObj.Material;
+            }
+
+            double totalDM = 0.0;
+            double consumableDM = 0.0;
+
+            foreach (DamageableBiomass biomass in material)
+            {
+                totalDM += biomass.Total.Wt;
+                consumableDM += biomass.Consumable.Wt;
+            }
+
+            double amountRemoved = 0.0;
+            double amountToRemove = propnRemoved * consumableDM;
 
                 var liveMaterial = material.Where(m => m.IsLive).ToList();
             foreach (var live in liveMaterial)
@@ -1089,21 +1119,20 @@ namespace Models.GrazPlan
 
                 if (live.Total.Wt + dead.Total.Wt > 0)
                 {
-                    double propnOfPlantDM =
-                    MathUtilities.Divide(live.Total.Wt + dead.Total.Wt,
-                    totalDM,
-                0);
+                    double propnOfPlantDM =  MathUtilities.Divide(live.Total.Wt + dead.Total.Wt,totalDM, 0);
 
-                double amountOfOrganToRemove =
-                propnOfPlantDM * amountToRemove;
+                double amountOfOrganToRemove =  propnOfPlantDM * amountToRemove;
 
                 double prpnOfOrganToRemove =  MathUtilities.Divide(amountOfOrganToRemove,live.Total.Wt + dead.Total.Wt, 0);
 
                 prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
 
-                ForageObj.RemoveBiomass(
-                liveToRemove: prpnOfOrganToRemove,
-                deadToRemove: prpnOfOrganToRemove);
+                ForageObj.RemoveGrazeableBiomass(liveToRemove: prpnOfOrganToRemove, deadToRemove: prpnOfOrganToRemove);
+
+
+                // ForageObj.RemoveBiomass(
+                // liveToRemove: prpnOfOrganToRemove,
+                // deadToRemove: prpnOfOrganToRemove);
 
                 amountRemoved += amountOfOrganToRemove;
                 }
@@ -1123,7 +1152,8 @@ namespace Models.GrazPlan
 
                 prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
 
-                ForageObj.RemoveBiomass( deadToRemove: prpnOfOrganToRemove);
+                ForageObj.RemoveGrazeableBiomass(deadToRemove:prpnOfOrganToRemove);
+                //ForageObj.RemoveBiomass( deadToRemove: prpnOfOrganToRemove);
 
                 amountRemoved += amountOfOrganToRemove;
             }
@@ -1140,6 +1170,111 @@ namespace Models.GrazPlan
                 forage = this.ForageByIndex(forageIdx);
             }
         }
+
+        //  public void RemoveHerbageFromPlant()
+        // {
+        //     string chemType = string.Empty;
+        //     int forageIdx = 0;
+
+        //     ForageInfo forage = this.ForageByIndex(forageIdx);
+        //     while (forage != null)
+        //     {
+        //         double area = forage.InPaddock.Area;
+        //         GrazType.GrazingOutputs removed = forage.RemovalKG;
+
+        //         // total the amount removed kg/ha
+        //         double totalRemoved = 0.0;
+        //         for (int i = 0; i < removed.Herbage.Length; i++)
+        //             totalRemoved += removed.Herbage[i];
+        //         double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
+                
+        //         double totalDM;
+        //         double consumableDM;
+
+        //          IEnumerable<DamageableBiomass> material;
+
+              
+        //         if (ForageObj.Name == "SurfaceOrganicMatter")
+        //         {
+        //             // Exclude manure from grazing calculations.
+        //             material = ForageObj.GrazeableMaterial;
+        //         }
+        //         else
+        //         {
+        //             material = ForageObj.Material;
+        //         }
+
+        //         totalDM = ForageObj.Material.Sum(m => m.Total.Wt);
+        //         consumableDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
+
+                
+
+        //         double amountRemoved = 0;
+        //         double amountToRemove = propnRemoved * consumableDM;
+                
+               
+
+
+        //         var liveMaterial = material.Where(m => m.IsLive).ToList();
+        //     foreach (var live in liveMaterial)
+        //     {
+        //         // Find corresponding dead material from the SAME collection.
+        //         var dead = material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+
+        //         if (dead == null)
+        //             throw new Exception($"Cannot find dead material for {live.Name}.");
+
+        //         if (live.Total.Wt + dead.Total.Wt > 0)
+        //         {
+        //             double propnOfPlantDM =  MathUtilities.Divide(live.Total.Wt + dead.Total.Wt,totalDM, 0);
+
+        //         double amountOfOrganToRemove =  propnOfPlantDM * amountToRemove;
+
+        //         double prpnOfOrganToRemove =  MathUtilities.Divide(amountOfOrganToRemove,live.Total.Wt + dead.Total.Wt, 0);
+
+        //         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
+
+        //         ForageObj.RemoveGrazeableBiomass(liveToRemove: prpnOfOrganToRemove, deadToRemove: prpnOfOrganToRemove);
+
+
+        //         // ForageObj.RemoveBiomass(
+        //         // liveToRemove: prpnOfOrganToRemove,
+        //         // deadToRemove: prpnOfOrganToRemove);
+
+        //         amountRemoved += amountOfOrganToRemove;
+        //         }
+        //     }
+
+        // if (liveMaterial.Count == 0)
+        // {
+        //     var deadMaterial = material.Where(m => !m.IsLive).ToList();
+
+        //     foreach (var dead in deadMaterial)
+        //     {
+        //         double propnOfPlantDM = MathUtilities.Divide(dead.Total.Wt, totalDM, 0);
+
+        //         double amountOfOrganToRemove =  propnOfPlantDM * amountToRemove;
+
+        //         double prpnOfOrganToRemove =  MathUtilities.Divide(amountOfOrganToRemove,     dead.Total.Wt,  0);
+
+        //         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
+
+        //         ForageObj.RemoveGrazeableBiomass(deadToRemove:prpnOfOrganToRemove);
+        //         //ForageObj.RemoveBiomass( deadToRemove: prpnOfOrganToRemove);
+
+        //         amountRemoved += amountOfOrganToRemove;
+        //     }
+        // }
+              
+        //         if (!MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
+        //             throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
+
+        //         forageIdx++;
+        //         forage = this.ForageByIndex(forageIdx);
+        //     }
+        // }
+
+       
 
        
 

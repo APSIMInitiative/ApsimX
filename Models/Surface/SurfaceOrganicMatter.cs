@@ -369,6 +369,41 @@ namespace Models.Surface
             return totalRemoved.amount;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="liveToRemove"></param>
+        /// <param name="deadToRemove"></param>
+        /// <param name="liveToResidue"></param>
+        /// <param name="deadToResidue"></param>
+        /// <param name="fractionStanding"></param>
+        /// <returns></returns>
+        public double RemoveGrazeableBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
+        {
+            OMFractionType totalRemoved = new();
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                 if (SurfOM[i].name != "manure")
+                {
+                   var removed = SurfOM[i].Remove(deadToRemove);
+                    totalRemoved.Add(removed);
+                    SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * removed.amount; 
+                }
+
+            }
+                    // Update 'Removed' variables
+                    RemovedC += totalRemoved.C;
+                    RemovedN += totalRemoved.N;
+                    RemovedP += totalRemoved.P;
+
+                    return totalRemoved.amount;
+             
+
+           
+        }
+
         /// <summary>Called when [reset].</summary>
         public void Reset()
         {
