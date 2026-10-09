@@ -260,8 +260,8 @@ namespace Models.CLEM.Resources
         /// added
         /// </param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <param name="relatesToResource">Optional relates to resource as string for reporting</param>
+        /// <param name="category">Transaction category</param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
@@ -274,7 +274,7 @@ namespace Models.CLEM.Resources
             else
             {
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
-                pool = new(packet.Amount);
+                pool = new(packet.Amount, null);
                 pool.NitrogenPercent = packet.NitrogenPercent;
                 pool.DryMatterDigestibility = packet.DryMatterDigestibility;
             }

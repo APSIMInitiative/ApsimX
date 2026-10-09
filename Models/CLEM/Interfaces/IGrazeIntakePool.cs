@@ -14,9 +14,14 @@ namespace Models.CLEM.Interfaces
     public interface IGrazeIntakePool: IFeed
     {
         /// <summary>
-        /// Age of pool in months
+        /// Age of pool in days
         /// </summary>
-        public int Age { get; set; }
+        public int AgeInDays { get; set; }
+
+        /// <summary>
+        /// Age of pool in months (rounded down)
+        /// </summary>
+        public int AgeInMonths { get; set; }
 
         /// <summary>
         /// Amount detached in this time step (kg)
@@ -27,6 +32,11 @@ namespace Models.CLEM.Interfaces
         /// Amount consumed in this time step (kg)
         /// </summary>
         public double Consumed { get; set; }
+
+        /// <summary>
+        /// Flag to indicate growth occurred in the current time step
+        /// </summary>
+        public bool IsGrowthThisTimeStep { get; }
 
         /// <summary>
         /// Amount of growth in this time step (kg)

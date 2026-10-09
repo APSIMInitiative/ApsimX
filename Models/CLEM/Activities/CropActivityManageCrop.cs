@@ -7,9 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using System.IO;
-using APSIM.Core;
-using System.Threading;
 
 namespace Models.CLEM.Activities
 {
@@ -25,8 +22,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(CropActivityManageProduct) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child })]
+    [ModelAssociations(associatedModels: [typeof(CropActivityManageProduct)],
+        associationStyles: [ModelAssociationStyle.Child])]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         private int currentCropIndex = 0;
@@ -153,7 +150,7 @@ namespace Models.CLEM.Activities
                 {
                     if (areaNeeded > 0)
                     {
-                        ResourceRequestList = new List<ResourceRequest> {
+                        ResourceRequestList = [
                             new () {
                                 Resource = LinkedLandItem,
                                 AllowTransmutation = false,
@@ -165,7 +162,7 @@ namespace Models.CLEM.Activities
                                 FilterDetails = null,
                                 RelatesToResource = cropProduct.LinkedResourceItem.Name
                             }
-                        };
+                        ];
 
                         if (!UseAreaAvailable & LinkedLandItem != null)
                         {
@@ -228,7 +225,7 @@ namespace Models.CLEM.Activities
             var cropProductChildren = Children.OfType<CropActivityManageProduct>();
             if (cropProductChildren.GroupBy(a => a.CropName).Select(a => a.Count()).Max() > 1)
             {
-                yield return new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", new string[] { "Multiple crop product activities" });
+                yield return new ValidationResult($"More than one [a=CropActivityManageProduct] with the same [CropName] of were provided. Use rotation croppping, \"HarvestTag\" and different crop names to manage the same crop", ["Multiple crop product activities"]);
             }
         }
         #endregion

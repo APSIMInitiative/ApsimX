@@ -32,6 +32,7 @@ namespace Models.CLEM.Activities
         private string pastureName = "";
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
+        [Link] readonly CLEMEvents events = null;
 
         /// <summary>
         /// Managed pasture to move to
@@ -232,7 +233,7 @@ namespace Models.CLEM.Activities
 
                     moved++;
                 }
-                SetStatusSuccessOrPartial(moved != numberToDo);
+                SetStatusSuccessOrPartial(events.IntervalIndex >= 0 && moved > 0 && moved != numberToDo);
             }
         }
     }

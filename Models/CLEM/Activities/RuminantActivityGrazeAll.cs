@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
                 var apsimEvents = new Events(newGrazePasture);
                 apsimEvents.ConnectEvents();
                 apsimEvents.PublishToModelAndChildren("Commencing", new object[] { newGrazePasture, new EventArgs() });
-                nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
+                nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
             }
 
             if (newPastureAdded)

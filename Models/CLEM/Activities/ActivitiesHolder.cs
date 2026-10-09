@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
         /// <summary>A method to allow all activities to perform actions during the last stage of initialisation.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfFirstDay")]
+        [EventSubscribe("CLEMValidate")] //StartOfFirstDay
         private void ReportActivityStatusAfterInitialisation(object sender, EventArgs e)
         {
             // call after FinalInitialise
@@ -147,13 +147,13 @@ namespace Models.CLEM.Activities
 
         private void ReportAllActivityStatus(bool fromSetup = false)
         {
-            // fire all activity performed triggers at end of time step
+            // fire all activity performed triggers when needeed
             foreach (CLEMActivityBase child in Structure.FindChildren<CLEMActivityBase>())
             {
                 child.ReportActivityStatus(0, fromSetup);
             }
 
-            // add timestep activity for reporting
+            // add time step activity for reporting
             ActivityPerformedEventArgs ea = new()
             {
                 Name = timeStep.Name,

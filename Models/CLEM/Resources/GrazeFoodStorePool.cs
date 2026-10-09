@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using BruTile;
 using Models.CLEM.Interfaces;
+using Models.PMF.Phen;
 using NetTopologySuite.Mathematics;
 using Newtonsoft.Json;
 using System;
@@ -94,16 +95,22 @@ namespace Models.CLEM.Resources
         public double GutFill { get; set; }
 
         /// <summary>
+        /// Age of pool in days
+        /// </summary>
+        [JsonIgnore]
+        public int AgeInDays { get; set; }
+
+        /// <summary>
         /// Age of pool in months
         /// </summary>
         [JsonIgnore]
-        public int Age { get; set; }
+        public int AgeInMonths { get; set; }
 
         /// <summary>
-        /// Date the growth was added to pools
+        /// Date the growth was added to pool
         /// </summary>
         [JsonIgnore]
-        public DateTime GrowthDate { get; set; } = new DateTime();
+        public DateTime GrowthDate { get; private set; } = new DateTime();
 
         /// <summary>
         /// Amount to set at start (kg)
@@ -121,9 +128,14 @@ namespace Models.CLEM.Resources
         public double Consumed { get; set; }
 
         /// <summary>
+        /// Determines if this is a growth time step
+        /// </summary>
+        public bool IsGrowthThisTimeStep { get; private set; }
+
+        /// <summary>
         /// Amount of growth in this time step (kg)
         /// </summary>
-        public double Growth => (Age == 0) ? Amount : 0; // { get; set; }
+        public double Growth => (IsGrowthThisTimeStep) ? Amount : 0;
 
         /// <inheritdoc/>
         public string Name { get; set; }
@@ -156,16 +168,69 @@ namespace Models.CLEM.Resources
         public double AmountInitialPending { get; private set; }
 
         /// <summary>
-        /// Constructor
+        /// Constructor for working with temporary pools (e.g. for grazing) where no store reference or age is required
         /// </summary>
         /// <param name="startingAmount">Initial amount of biomass in the pool (kg)</param>
-        /// <param name="store"></param>
-        /// <param name="age">Age of pool (in months) when created</param>
-        public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store = null, int age = 0)
+        /// <param name="store">Reference to the GrazeFoodStoreType that owns this pool</param>
+        public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store = null)
         {
+            if (store is not null)
+                grazeStore = store;
             amount = startingAmount;
-            Age = age;
+        }
+
+        /// <summary>
+        /// Constructor for working with pools that are part of a GrazeFoodStoreType where a reference to the store and
+        /// age tracking is required
+        /// </summary>
+        /// <param name="startingAmount">Initial amount of biomass in the pool (kg)</param>
+        /// <param name="store">Reference to the GrazeFoodStoreType that owns this pool</param>
+        /// <param name="growthDate">Date the growth was added to pool</param>
+        /// <param name="currentDate">Current date of the simulation</param>
+        public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store, DateTime growthDate, DateTime currentDate)
+        {
+            if (growthDate > currentDate)
+                throw new ArgumentException($"Growth date {growthDate.ToShortDateString()} cannot be after current date {currentDate.ToShortDateString()} during initialisation pools in [{store.NameWithParent}]");
+
+            amount = startingAmount;
             grazeStore = store;
+
+            UpdateAge(growthDate, currentDate);
+        }
+
+        /// <summary>
+        /// Method to update the age of the pool based on the growth date and current date. This method calculates the
+        /// age in days and months, and determines if this is a growth time step.
+        /// </summary>
+        /// <param name="growthDate">
+        /// Date the growth was added to the pool (will be first day of time step in update pasture)
+        /// </param>
+        /// <param name="currentDate">Current date of the simulation</param>
+        public void UpdateAge(DateTime growthDate, DateTime currentDate)
+        {
+            GrowthDate = growthDate;
+            IsGrowthThisTimeStep = growthDate == currentDate;
+
+            AgeInDays = (int)(currentDate - GrowthDate).TotalDays;
+            AgeInMonths = CalculateMonthsDifference(GrowthDate, currentDate);
+        }
+
+        private static int CalculateMonthsDifference(DateTime startDate, DateTime endDate)
+        {
+            if (startDate > endDate)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startDate), "The start date must be before the end date.");
+            }
+
+            endDate = endDate.AddDays(1);
+            int months = (endDate.Year - startDate.Year) * 12 + endDate.Month - startDate.Month;
+
+            if (endDate.Day < startDate.Day)
+            {
+                months--;
+            }
+
+            return months;
         }
 
         /// <summary>
@@ -197,7 +262,7 @@ namespace Models.CLEM.Resources
             // adjust DMD and N% based on incoming if needed
             if (DryMatterDigestibility != pool.DryMatterDigestibility || NitrogenPercent != pool.NitrogenPercent)
             {
-                //TODO: run calculation passed others.
+                //amount weighted average
                 DryMatterDigestibility = ((DryMatterDigestibility * Amount) + (pool.DryMatterDigestibility * pool.Amount)) / (Amount + pool.Amount);
                 NitrogenPercent = ((NitrogenPercent * Amount) + (pool.NitrogenPercent * pool.Amount)) / (Amount + pool.Amount);
             }
@@ -235,7 +300,7 @@ namespace Models.CLEM.Resources
         public double Detach(double proportion)
         {
             double removeAmount = AmountAvailable * proportion;
-            AmountPending *= proportion;
+            // TODO: deoes pending also detach? AmountPending *= proportion;
             Detached += removeAmount;
             amount -= removeAmount;
             return removeAmount;

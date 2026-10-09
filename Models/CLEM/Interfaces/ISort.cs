@@ -43,7 +43,7 @@ namespace Models.CLEM.Interfaces
                 return sorted;
 
             foreach (ISort sort in sorts)
-                sorted = (sort.SortDirection == System.ComponentModel.ListSortDirection.Ascending)
+                sorted = (sort.SortDirection == ListSortDirection.Ascending)
                     ? sorted.ThenBy(sort.OrderRule)
                     : sorted.ThenByDescending(sort.OrderRule);
 

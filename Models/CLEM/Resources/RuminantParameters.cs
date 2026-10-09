@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class RuminantParameters
     {
-        private readonly Dictionary<string, bool> modified = new();
+        private readonly Dictionary<string, bool> modified = [];
 
         /// <summary>
         /// Link to the ruminant type details of the individual.
