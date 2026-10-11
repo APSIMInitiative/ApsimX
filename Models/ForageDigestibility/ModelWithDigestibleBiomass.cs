@@ -66,35 +66,28 @@ namespace Models.ForageDigestibility
                 IEnumerable<DamageableBiomass> sourceMaterial; 
             
                 if (forageModel is Models.Surface.SurfaceOrganicMatter som) //If SurfaceOrganicMatter use filtered GrazeableMaterial
-                    {
-                        sourceMaterial = som.GrazeableMaterial;
-                    }
+                    sourceMaterial = som.GrazeableMaterial;
                 else
-                    {
-                        sourceMaterial = forageModel.Material;
-                    }
+                    sourceMaterial = forageModel.Material;              
             
                 foreach (var material in sourceMaterial)
                 {
                     var fractionConsumable = forages.GetFractionConsumable(material);
             
-                if (fractionConsumable > 0)
-                {
-                    var minimumConsumable = forages.GetMinimumConsumable(material) / 10;
-                
-                    var consumableAmount = Math.Max(0.0, material.Total.Wt * fractionConsumable - minimumConsumable);
-                    
-                    var consumableFraction =  MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
-                
-                    yield return new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive,material.DigestibilityFromModel);
-                    
-                }
+                    if (fractionConsumable > 0)
+                    {
+                        var minimumConsumable = forages.GetMinimumConsumable(material) / 10;                
+                        var consumableAmount = Math.Max(0.0, material.Total.Wt * fractionConsumable - minimumConsumable);                    
+                        var consumableFraction =  MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);                
+                        yield return new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive,material.DigestibilityFromModel);
+                        
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// test
+        /// Within Forage model if forage is SOM use RemoveGrazeableBiomass else use RemoveBiomass. This excludes removing manure as biomass
         /// </summary>
         /// <param name="liveToRemove"></param>
         /// <param name="deadToRemove"></param>
