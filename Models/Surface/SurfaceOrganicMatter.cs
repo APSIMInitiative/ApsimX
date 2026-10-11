@@ -281,10 +281,8 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double RemovedP { get; private set; }
 
-        /// <summary>
-        /// Test material
-        /// </summary>
-        public IEnumerable<DamageableBiomass> Material
+         /// <summary>A list of material (biomass) that can be damaged.</summary>
+       public IEnumerable<DamageableBiomass> Material
         {
             get
             {
@@ -295,8 +293,8 @@ namespace Models.Surface
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
-                    StructuralN = (SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N))) / 10,   // kg/ha to g/m2
+                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N)) / 10,   // kg/ha to g/m2
                     MetabolicWt = 0.0,
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
@@ -305,15 +303,14 @@ namespace Models.Surface
             }
         }
 
-
         /// <summary>
-        /// test
+        /// A list of material (biomass) that are suitable for grazing by Stock Model.
         /// </summary>
          public IEnumerable<DamageableBiomass> GrazeableMaterial
         {
             get
             {   
-                //Filter SOM for manure. 
+                //Filter SOM for manure. OrganicMatterType manure is specific for Stock model. 
                 var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "manure",StringComparison.OrdinalIgnoreCase));
                
                 // Return an empty live material. Stock won't find the dead material unless there
@@ -321,8 +318,7 @@ namespace Models.Surface
                 yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
                 yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
                 {
-                    StructuralWt = (grazeablePools.Sum(som => som.Standing.Sum(om => om.amount))
-                    + grazeablePools.Sum(som => som.Lying.Sum(om => om.amount))) / 10,
+                    StructuralWt = (grazeablePools.Sum(som => som.Standing.Sum(om => om.amount)) + grazeablePools.Sum(som => som.Lying.Sum(om => om.amount))) / 10,
                     StructuralN = (grazeablePools.Sum(som => som.Standing.Sum(om => om.N)) + grazeablePools.Sum(som => som.Lying.Sum(om => om.N)))/10,
                     MetabolicWt = 0.0,
                     MetabolicN = 0.0,
@@ -370,7 +366,7 @@ namespace Models.Surface
         }
 
         /// <summary>
-        /// 
+        /// Remove Biomass excluding the pools containing manure.
         /// </summary>
         /// <param name="liveToRemove"></param>
         /// <param name="deadToRemove"></param>
