@@ -71957,7 +71957,7 @@
                     "[Stock].NumberAll as CowNumberInMilk",
                     "[Stock].WeightAll as CowWeight // kg",
                     "[Stock].IntakeAll.Weight as CowIntake // kg DM /head /day",
-                    "[Stock].PastIntakeAll.Weight +  [Stock].SuppIntakeAll.Weight as CowPastureIntake // kg DM /head /day - PastureIntake is 0 as there is no forage available however pasture is used as supplement",
+                    "[Stock].PastIntakeAll.Weight +  [Stock].SuppIntakeAll.Weight as CowPastureIntake // kg DM /head /day - PastureIntake is 0 as there is no forage available however grazed pasture is used for stock as feed Supplement model is used in the simulation ",
                     "[Stock].SuppIntakeAll.Weight as CowSilageIntake // kg DM /head /day",
                     "([Stock].MilkWtAll * 0.04 * 0.80 + [Stock].MilkWtAll * 0.04) as MilkSolids // kg MS /head /day - 0.80 is the average Protein:Fat ratio from LUDF data, the NZ national average is 0.77 https://www.dairynz.co.nz/media/816845/WEB_Protein-to-fat-ratio.pdf",
                     "",
@@ -72410,8 +72410,8 @@
                           "TableName": "ValidationReport",
                           "XFieldName": "Date",
                           "YFieldName": "CowIntake",
-                          "X2FieldName": "",
-                          "Y2FieldName": "",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
                           "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
@@ -72420,6 +72420,256 @@
                           "Name": "Predicted",
                           "ResourceName": null,
                           "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "Name": "PredictedObserved",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CowIntake",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -1663232,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "DairyPredictedObserved",
+                          "XFieldName": "Observed.CowIntake",
+                          "YFieldName": "Predicted.CowIntake",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CowPastureIntake",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16736653,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "DairyPredictedObserved",
+                          "XFieldName": "Observed.CowPastureIntake",
+                          "YFieldName": "Predicted.CowPastureIntake",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 3,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        },
+                        {
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                          "Title": null,
+                          "Position": 0,
+                          "Inverted": false,
+                          "CrossesAtZero": false,
+                          "LabelOnOneLine": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationLocation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "CowWeight",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16747854,
+                          "FactorToVaryColours": null,
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "DairyPredictedObserved",
+                          "XFieldName": "Observed.CowWeight",
+                          "YFieldName": "Predicted.CowWeight",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Series",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Regression, Models",
+                              "ForEachSeries": false,
+                              "showOneToOne": true,
+                              "showEquation": true,
+                              "Name": "Regression",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
