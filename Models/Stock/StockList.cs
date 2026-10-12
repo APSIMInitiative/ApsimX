@@ -630,8 +630,6 @@ namespace Models.GrazPlan
             double delta;
             double RDP;
             int paddIdx, idx, n;
-            int iterator;
-            bool done;
 
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
             {
@@ -684,57 +682,32 @@ namespace Models.GrazPlan
             for (paddIdx = 0; paddIdx <= this.Paddocks.Count() - 1; paddIdx++)
             {
                 thePaddock = this.Paddocks[paddIdx];
+                timeValue = 0.0;                                                            // Variable-length substeps for grazing
 
-                // removal & its effect on intake
-                iterator = 1;                                                                  // This loop handles RDP insufficiency
-                done = false;
-                while (!done)
+                while (timeValue < 1.0 - EPS)
                 {
-                    timeValue = 0.0;                                                            // Variable-length substeps for grazing
-
-                    while (timeValue < 1.0 - EPS)
-                    {
-                        for (idx = 1; idx <= this.Count(); idx++)
-                            if (stock[idx].PaddOccupied == thePaddock)
-                                this.ComputeStepAvailability(idx);
-
-                        delta = Math.Min(this.ComputeStepLength(thePaddock), 1.0 - timeValue);
-
-                        // Compute rate of grazing for this substep
-                        for (idx = 1; idx <= this.Count(); idx++)
-                            if (stock[idx].PaddOccupied == thePaddock)
-                                this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
-
-                        this.ComputeRemoval(thePaddock, delta);
-
-                        timeValue = timeValue + delta;
-                    } // _ grazing sub-steps loop _
-
-                    // Nutrition submodel here...
-                    RDP = 1.0;
                     for (idx = 1; idx <= this.Count(); idx++)
                         if (stock[idx].PaddOccupied == thePaddock)
-                            this.ComputeNutrition(idx, ref RDP);
+                            this.ComputeStepAvailability(idx);
 
-                    // Maximum of 2 iterations in the RDP loop
-                    if (iterator == 2)
-                        done = true;
-                    else
-                    {
-                        done = (RDP == 1.0);                                              // Is there an animal group in this paddock with an RDP insufficiency?
-                        if (!done)
-                        {
-                            thePaddock.ZeroRemoval();
+                    delta = Math.Min(this.ComputeStepLength(thePaddock), 1.0 - timeValue);
 
-                            // If so, we have to revert the state of the animal group ready for the second iteration.
-                            for (idx = 1; idx <= this.Count(); idx++)
-                                if (stock[idx].PaddOccupied == thePaddock)
-                                    this.RevertInitialState(idx);
-                        }
-                    }
+                    // Compute rate of grazing for this substep
+                    for (idx = 1; idx <= this.Count(); idx++)
+                        if (stock[idx].PaddOccupied == thePaddock)
+                            this.ComputeGrazing(idx, timeValue, delta, thePaddock.FeedSuppFirst);
 
-                    iterator++;
-                } // _ RDP loop _
+                    this.ComputeRemoval(thePaddock, delta);
+
+                    timeValue = timeValue + delta;
+                } // _ grazing sub-steps loop _
+
+                // Nutrition submodel here...
+                RDP = 1.0;
+                for (idx = 1; idx <= this.Count(); idx++)
+                    if (stock[idx].PaddOccupied == thePaddock)
+                        this.ComputeNutrition(idx, ref RDP);
+
             } // _ loop over paddocks _
 
             for (idx = 1; idx <= this.Count(); idx++)
