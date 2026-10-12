@@ -717,7 +717,7 @@ namespace Models.GrazPlan
                             this.ComputeNutrition(idx, ref RDP);
 
                     // Maximum of 2 iterations in the RDP loop
-                    if (iterator == 2)
+                    if (iterator == 1)
                         done = true;
                     else
                     {
