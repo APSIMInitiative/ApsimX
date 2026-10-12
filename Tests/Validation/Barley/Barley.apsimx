@@ -20824,8 +20824,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1995-10-20",
-                                  "Action": "[Barley].Sow(population:280, cultivar:\"Triumph\", depth:20, rowSpacing:150);",
-                                  "Line": "1995-10-20 [Barley].Sow(population:280, cultivar:\"Triumph\", depth:20, rowSpacing:150);"
+                                  "Action": "[Barley].Sow(population:280, cultivar:\"Valetta\", depth:20, rowSpacing:150);",
+                                  "Line": "1995-10-20 [Barley].Sow(population:280, cultivar:\"Valetta\", depth:20, rowSpacing:150);"
                                 }
                               ],
                               "Name": "SowingEvent",
