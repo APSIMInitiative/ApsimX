@@ -1416,7 +1416,7 @@ namespace Models.Soils
             ibbc = 0;
             bbc_value = 0.0;
 
-            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!! VOS - yes there is see mmm
+            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!! VOS - yes there is see L700 "public void SetSurfaceBCForPowerFunction"
             {
                 if (Double.IsNaN(minimum_surface_storage))
                     throw new Exception("No value provided for minimum_surface_storage");
