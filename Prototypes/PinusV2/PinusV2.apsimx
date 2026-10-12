@@ -65,10 +65,9 @@
             "[Pinus].Stem.Ht",
             "[Pinus].RootShootRatio",
             "[Pinus].Stem.Vol",
-            "[Pinus].Stem.Volume",
             "[Pinus].Stem.WoodDensityOfGrowth",
             "[Pinus].Stem.WoodDensityOfStand",
-            "[Pinus].Stem.Volume.Calculation.AccumulatedChange.VolumeRemoved.DeltaVolume.MassRemoved",
+            "[Pinus].Stem.Vol.Calculation.AccumulatedChange.VolumeRemoved.DeltaVolume.MassRemoved",
             "[Pinus].Stem.MAI",
             "[Pinus].Stem.BA",
             "[Pinus].Stem.BarkThickness",
@@ -4005,54 +4004,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LessThanFunction, Models",
-                  "Name": "Vol",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Pinus].IndividualTreeStemWt",
-                      "Name": "Criterion",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 10000.0,
-                      "Units": null,
-                      "Name": "LowLimit",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Zero",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Units": null,
-                      "Expression": "[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
-                      "Name": "VolumeEquation",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
                   "Expression": "(([Pinus].Stem.Ht)*(([Pinus].Stem.DBH/200)^2)*3.14159/3*[Pinus].Population*10000)-(([Pinus].Stem.Ht)*(([Pinus].Stem.DBHub/200)^2)*3.14159/3*[Pinus].Population*10000)",
@@ -4404,7 +4355,7 @@
                 },
                 {
                   "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "Volume",
+                  "Name": "Vol",
                   "ResourceName": null,
                   "Children": [
                     {
@@ -4644,7 +4595,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stem].Volume",
+                          "VariableName": "[Stem].Vol",
                           "Name": "Volume",
                           "ResourceName": null,
                           "Children": [],
@@ -6659,9 +6610,9 @@
                     "[Stem].BarkDensity.WoodDensity.Expression=[Stem].WoodDensity*0.6",
                     "[Stem].VolBark.Expression=[Stem].BarkWt/[Stem].BarkDensity",
                     "",
-                    "[Stem].Vol.LowLimit.FixedValue=.01",
+                    "//[Stem].Vol.LowLimit.FixedValue=.01",
                     "[Stem].Volub.Expression=[Pinus].Stem.WoodWt*10/[Pinus].Stem.WoodDensity",
-                    "[Stem].Vol.VolumeEquation.Expression=[Stem].VolBark+[Stem].Volub",
+                    "//[Stem].Vol.VolumeEquation.Expression=[Stem].VolBark+[Stem].Volub",
                     "",
                     "[Stem].DBH.MinimumIndStemWt.FixedValue=.01",
                     "[Stem].DBH.DBHEquation.Expression=35.9*([Pinus].Stem.Volub/([Pinus].Population*10000))^0.4",
