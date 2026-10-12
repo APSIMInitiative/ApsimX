@@ -87,7 +87,7 @@ namespace Models.ForageDigestibility
         }
 
         /// <summary>
-        /// Within Forage model if forage is SOM use RemoveGrazeableBiomass else use RemoveBiomass. This excludes removing manure as biomass
+        /// Within Forage model if forage is SOM use RemoveGrazeableBiomass else use RemoveBiomass (IHasDamageableBiomass). This excludes removing manure as biomass
         /// </summary>
         /// <param name="liveToRemove"></param>
         /// <param name="deadToRemove"></param>
