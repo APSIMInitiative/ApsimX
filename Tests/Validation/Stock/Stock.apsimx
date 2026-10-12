@@ -75639,7 +75639,7 @@
                         "                supplement.Feed(\"Silage_11ME\", stock.NumberAll * SupplementOffered, \"Paddock\", false);  //should be true but will through an error",
                         "",
                         "                summary.WriteMessage(this, \"Total supp offered = \" + (stock.NumberAll * SupplementOffered).ToString(), MessageType.Diagnostic);",
-                        "                summary.WriteMessage(this, supplement.PaddAmounts[1].ToString(), MessageType.Diagnostic);",
+                        "                summary.WriteMessage(this, supplement.PaddAmounts[0].ToString(), MessageType.Diagnostic);",
                         "            }",
                         "            // Columns in spreadsheet:",
                         "            // Date",

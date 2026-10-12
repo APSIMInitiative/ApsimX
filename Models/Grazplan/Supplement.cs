@@ -426,7 +426,7 @@ namespace Models.GrazPlan
         {
             if (!paddocksGiven)
             {
-                theModel.AddPaddock(-1, string.Empty);
+                //theModel.AddPaddock(-1, string.Empty);
                 int paddId = 0;
                 foreach (Zone zone in Structure.FindAll<Zone>(relativeTo: simulation))
                     if (zone.Area > 0.0)

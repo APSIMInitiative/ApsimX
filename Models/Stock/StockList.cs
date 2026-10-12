@@ -83,7 +83,7 @@ namespace Models.GrazPlan
             Array.Resize(ref this.stock, 1);                                          // Set aside temporary storage
             Paddocks = new List<PaddockInfo>();
 
-            Paddocks.Add(new PaddockInfo(structure));
+            //Paddocks.Add(new PaddockInfo(structure));
 
             // get the paddock areas from the simulation
             foreach (var zone in paddocksInSimulation)
