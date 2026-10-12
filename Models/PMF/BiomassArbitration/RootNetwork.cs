@@ -485,7 +485,16 @@ namespace Models.PMF
             NetworkZoneState myZone = ZoneStates.Find(z => z.Name == zone.Zone.Name);
             double area = 1.0; // default area of 1 as model does mass / m2 by default.
             if (parentRectangularZone != null)
-                area = parentRectangularZone.Area;  // for rectangular zones, model does mass in area per plant so need to use actual area
+            {
+                if (myZone == null)
+                {
+                    area = 0; //for situations where there are multi zones but plant roots dont enter both.
+                }
+                else
+                {
+                    area = myZone.Area;  // for rectangular zones, model does mass in area per plant so need to use actual area
+                }
+            }
             if (myZone != null)
             {
                 if (RWC == null || RWC.Length != myZone.Physical.Thickness.Length)
