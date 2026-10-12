@@ -25,7 +25,7 @@ public class Azure
 
     private static readonly string autoScaleScript =
         "TimeIntervalMinute = 5;\n" +
-        "MaxNumberNodes = 60;\n" +
+        "MaxNumberNodes = 30;\n" +
         "NumberCPUPerNode = 2;\n" +
         "NumberTasks = max($PendingTasks.GetSample(TimeIntervalMinute * 2));\n" +
         "NumberNodes = NumberTasks == 0 ? 0 : (NumberTasks + 1) / NumberCPUPerNode;\n" +
