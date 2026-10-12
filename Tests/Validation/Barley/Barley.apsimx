@@ -39781,17 +39781,17 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1993-12-20",
-                                  "Action": "[Barley].Harvest();",
-                                  "Line": "1993-12-20 [Barley].Harvest();"
+                                  "Enabled": false,
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": "//1993-12-20 [Barley].Harvest();"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1993-12-20",
-                                  "Action": "[Barley].EndCrop();",
-                                  "Line": "1993-12-20 [Barley].EndCrop();"
+                                  "Enabled": false,
+                                  "Date": null,
+                                  "Action": null,
+                                  "Line": "//1993-12-20 [Barley].EndCrop();"
                                 }
                               ],
                               "Name": "Operations",
