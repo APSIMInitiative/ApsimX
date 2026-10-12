@@ -1173,7 +1173,9 @@ namespace Models.Soils
             GetSoluteVariables();
             GetCropVariables();
             residue_cover = surfaceOrganicMatter.Cover;
-            CNRunoff();
+
+            if (isbc != 2)  // if isbc is 2 the surface boundary condition is a power function and so we don't want to recalc runoff
+                CNRunoff();
 
             double timestepStart = Time(year, day, _apsimTimeMinutes);
             double timestep = apsim_timestep / 60.0;
@@ -1414,7 +1416,7 @@ namespace Models.Soils
             ibbc = 0;
             bbc_value = 0.0;
 
-            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!!
+            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!! VOS - yes there is see mmm
             {
                 if (Double.IsNaN(minimum_surface_storage))
                     throw new Exception("No value provided for minimum_surface_storage");
