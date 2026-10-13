@@ -922,8 +922,7 @@ namespace Models.GrazPlan
        /// <summary>
        /// The herbage is removed from the plant/agpasture
        /// </summary>
-       /// <exception cref="Exception"></exception>
-        
+       /// <exception cref="Exception"></exception>        
          public void RemoveHerbageFromPlant()
         {
             string chemType = string.Empty;
