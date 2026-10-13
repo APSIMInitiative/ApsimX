@@ -155,12 +155,13 @@ public class Azure
         {
             List<ResourceFile> resourceFiles = [ResourceFile.FromAutoStorageContainer(storageName, blobPrefix: scriptName)];
             string cloudTaskName = $"{pathIndex}-{Path.GetFileNameWithoutExtension(apsimFilePath).Replace(" ", "_")}"; // spaces are not allowed.
+            string azureApsimFilePath = "/wd/" + apsimFilePath[1..]; // Azure batch nodes runs from within the /wd/ drectory.
             CloudTask cloudTask = new(cloudTaskName, commandLine)
             {
                 UserIdentity = new UserIdentity("admin"),
                 ResourceFiles = resourceFiles,
                 EnvironmentSettings = envVars.Select(e => new EnvironmentSetting(e.Key, e.Value))
-                    .Append(new EnvironmentSetting("Path", apsimFilePath[1..])) // Path has to be added here so it's unique for each task.
+                    .Append(new EnvironmentSetting("Path", azureApsimFilePath)) // Path has to be added here so it's unique for each task.
                     .ToList(),
                 ExitConditions = new ExitConditions
                 {
