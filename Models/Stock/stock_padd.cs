@@ -819,116 +819,7 @@ namespace Models.GrazPlan
             else
                 throw new Exception("Stock: Forage not recognised");
         }
-
-        // /// <summary>
-        // /// Copies a Plant/AgPasture object biomass organs into GrazingInputs object
-        // /// This object may then get scaled to kg/ha
-        // /// </summary>
-        // /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
-        // /// <returns>The grazing inputs</returns>
-        // private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
-        // {
-        //     GrazType.GrazingInputs result = new GrazType.GrazingInputs();
-        //     GrazType.zeroGrazingInputs(ref result);
-        //             foreach (var m in forageObj.Material)
-        //             {
-        //             Console.WriteLine(
-        //             $"Name={m.Name} " +
-        //             $"Live={m.IsLive} " +
-        //             $"Total={m.Total.Wt} " +
-        //             $"Consumable={m.Consumable.Wt}");
-        //             }
-
-        //     result.TotalGreen = 0;
-        //     result.TotalDead = 0;
-
-        //     double totalDMD = 0;
-        //     double totalN = 0;
-        //     double nConc;
-        //     double meanDMD;
-        //     double dmd;
-
-        //     // calculate the green available based on the total green in this paddock
-        //     double greenPropn = 0;
-
-        //     // ** should really take into account the height ratio here e.g. Params.HeightRatio
-        //     if (this.PastureGreenDM > GrazType.Ungrazeable)
-        //     {
-        //         greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
-        //     }
-
-        //     // calculate the total live and dead biomass
-        //     foreach (var live in forageObj.Material.Where(m => m.IsLive))
-        //     {
-        //         // Find corresponding dead material
-        //         var dead = forageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
-        //         if (dead == null)
-        //             throw new Exception($"Cannot find dead material for {live.Name}.");
-
-        //         if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
-        //         {
-        //             result.TotalGreen += (greenPropn * live.Consumable.Wt);   // g/m^2
-        //             result.TotalDead += dead.Consumable.Wt;
-
-        //             // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-        //             dmd = (owningPaddock.ForagesModel.GetDigestibility(live) * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-        //             dmd += (owningPaddock.ForagesModel.GetDigestibility(dead) * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt);
-        //             totalDMD += dmd;
-        //             totalN += (greenPropn * live.Consumable.N) + (dead.Consumable.Wt > 0 ? dead.Consumable.N : 0);   // g/m^2
-        //         }
-        //     }
-
-        //     Console.WriteLine(
-        //         $"SOM TotalGreen={result.TotalGreen} " +
-        //         $"TotalDead={result.TotalDead}");
-
-        //     // TODO: Improve this routine
-        //     double availDM = result.TotalGreen + result.TotalDead;
-        //     if (availDM > 0)
-        //     {
-        //         meanDMD = totalDMD / availDM; // calc the average dmd for the plant
-        //         nConc = totalN / availDM;     // N conc
-        //         // get the dmd distribution
-        //         double[] dmdPropns; // = new double[GrazType.DigClassNo + 1];
-
-        //         // green 0.85-0.45, dead 0.70-0.30
-        //         dmdPropns = ForageInfo.CalcDMDDistribution(meanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
-
-        //         for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
-        //         {
-        //             result.Herbage[idx].Biomass = dmdPropns[idx] * availDM;
-        //             result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
-        //             result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
-        //             result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
-        //             result.Herbage[idx].HeightRatio = 1;
-        //             result.Herbage[idx].PhosContent = 0;    // N * 0.05?
-        //             result.Herbage[idx].SulfContent = 0;    // N * 0.07?
-        //             result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
-        //         }
-
-        //         if (forageObj is IPlant plant)
-        //         {
-        //             switch (plant.PlantType)
-        //             {
-        //                 case "AGPLucerne":
-        //                 case "AGPRedClover":
-        //                 case "AGPWhiteClover":
-        //                     result.LegumePropn = 1;
-        //                     break;
-        //                 default:
-        //                     result.LegumePropn = 0;
-        //                     break;
-        //             }
-        //         }
-
-        //         result.SelectFactor = 0;    // TODO: set from Plant model value
-
-        //         // TODO: Store any seed pools
-        //     }
-
-        //     return result;
-        // }
-
+  
         /// <summary>
         /// Copies a Plant/AgPasture object biomass organs into GrazingInputs object
         /// This object may then get scaled to kg/ha
@@ -958,7 +849,7 @@ namespace Models.GrazPlan
                 greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
             }
 
-            // calculate the total live and dead biomass
+            // calculate the total live and dead biomass from the Grazeable materials in forageObj (ModelWithDigestibleBiomass)
             foreach (var live in forageObj.GrazeableMaterial.Where(m => m.IsLive))
             {
                 // Find corresponding dead material

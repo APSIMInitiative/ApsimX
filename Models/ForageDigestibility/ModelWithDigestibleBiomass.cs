@@ -57,7 +57,7 @@ namespace Models.ForageDigestibility
 
        
         /// <summary>
-        /// A collection of digestible material that can be grazed by the Stock model
+        /// A collection of digestible material that can be grazed by the Stock model excluding manure in the SOM
         /// </summary>
         public IEnumerable<DamageableBiomass> GrazeableMaterial
         {
@@ -87,7 +87,7 @@ namespace Models.ForageDigestibility
         }
 
         /// <summary>
-        /// Within Forage model if forage is SOM use RemoveGrazeableBiomass else use RemoveBiomass (IHasDamageableBiomass). This excludes removing manure as biomass
+        /// Within Forage model if forage is SOM use RemoveGrazeableBiomass else use RemoveBiomass (IHasDamageableBiomass). This ensure manure is not removed as consumable biomass by stock.
         /// </summary>
         /// <param name="liveToRemove"></param>
         /// <param name="deadToRemove"></param>
