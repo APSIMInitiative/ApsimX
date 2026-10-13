@@ -38,7 +38,13 @@ namespace Models.PMF.Arbitrator
                     if (N.TotalAllocation[i] == 0 | Organs[i].MinNConc == 0)
                     N.ConstrainedGrowth[i] = 0;
                 else
-                    N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
+                {
+                    //N.ConstrainedGrowth[i] = N.TotalAllocation[i] / Organs[i].MinNConc;
+                    N.ConstrainedGrowth[i] = Math.Max(
+                        (Organs[i].Live.N + N.TotalAllocation[i]) / Organs[i].MinNConc - Organs[i].Live.Wt,
+                        0);
+                }
+
             }
 
             // Reduce DM allocation below potential if insufficient N to reach Min n Conc or if DM was allocated to fixation
