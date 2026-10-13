@@ -291,7 +291,14 @@ namespace Models.Core.Run
                             storage.Writer.Clean(names, false);
                         }
                         foreach (IRunnable job in jobs)
-                            Add(job);
+                        {
+                            if (job is SimulationDescription simDescription)
+                            {
+                                if (simDescription.IsEnabled)
+                                    Add(simDescription);
+                            }
+                            else Add(job);
+                        }
                     }
 
                     if (numJobsToRun == 0)

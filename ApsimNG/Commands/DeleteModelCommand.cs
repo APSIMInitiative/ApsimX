@@ -61,6 +61,7 @@
             if (modelWasRemoved)
             {
                 parent.Children.Insert(Pos, this.modelToDelete as Model);
+                parent.Node.AddChild(this.modelToDelete as Model);
                 Apsim.ClearCaches(this.modelToDelete);
                 tree.AddChild(this.parent.FullPath, nodeDescription, Pos);
                 tree.SelectedNode = modelToDelete.FullPath;

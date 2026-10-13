@@ -78,14 +78,14 @@ internal partial class AddCommand: IModelCommand
     {
         List<string> parts = ["add"];
 
-        if (modelReference is ModelLocatorReference childModelReference)
+        if (_modelReference is ModelLocatorReference childModelReference)
             parts.Add(childModelReference.modelName);
-        else if (modelReference is NewModelReference newModelReference)
+        else if (_modelReference is NewModelReference newModelReference)
         {
             parts.Add("new");
             parts.Add(newModelReference.newModelType);
         }
-        else if (modelReference is ModelInFileReference modelInFileReference)
+        else if (_modelReference is ModelInFileReference modelInFileReference)
         {
             parts.Add(modelInFileReference.modelName);
             parts.Add("from");

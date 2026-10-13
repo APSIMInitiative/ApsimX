@@ -191,7 +191,7 @@ namespace Models.PMF.Phen
         {
             get {
                 IFunction haunStage = Phenology.Node.FindChild<IFunction>("HaunStage");
-                if (Phenology.Stage < 5.3)
+                if (haunStage != null && Phenology.Stage < 5.3)
                     return 10.0f + haunStage.Value();
                 else
                     return -1;

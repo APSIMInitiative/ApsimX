@@ -1904,6 +1904,16 @@ namespace Models.PMF.Organs
             InitialLeaves = initialLeaves.ToArray();
         }
 
+        /// <summary>
+        /// Simulation is now completed. Make sure that we undo any commands. i.e. reset
+        /// back to default state.
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            Clear();
+        }
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1968,6 +1978,15 @@ namespace Models.PMF.Organs
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
+        }
+
+        /// <summary>Clears this instance.</summary>
+        private void Clear()
+        {
+            CohortsAtInitialisation = 0;
+            MostRecentlyExpandedSize = 0;
+            MostRecentlyExpandedPosition = 0;
+            MostRecentlyExpandedPotentialSize = 0;
         }
         #endregion
 

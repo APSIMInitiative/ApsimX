@@ -26,10 +26,12 @@ namespace Models.Soils
         public IStructure Structure { private get; set; }
 
         /// <summary>Finds the 'Physical' node.</summary>
-        private IPhysical Physical => Structure?.FindSibling<IPhysical>();
+        [Link]
+        private IPhysical Physical = null;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        private ISoilWater WaterModel => Structure?.FindSibling<ISoilWater>();
+        [Link]
+        private ISoilWater WaterModel = null;
 
         private double initialFractionFull = double.NaN;
 
@@ -243,7 +245,7 @@ namespace Models.Soils
         {
             get
             {
-                if (Physical != null)
+                if (Physical != null && Thickness != null)
                 {
                     double newFractionFull;
                     double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
