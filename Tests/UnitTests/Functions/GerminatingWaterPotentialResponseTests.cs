@@ -82,39 +82,15 @@ namespace UnitTests.Functions
             Assert.That(GerminatingWaterPotentialResponse.WaterFactorAt(-0.5, 0, q), Is.EqualTo(0));
         }
 
-        [Test]
-        public void PsiFromTheta_ReturnsAnchorValues()
+        /// <summary>Water.Potential (kPa) converted to MPa.</summary>
+        [TestCase(-1500, -1.5)]
+        [TestCase(-10, -0.01)]
+        [TestCase(-0.1, -0.0001)]
+        [TestCase(0, 0)]
+        [TestCase(0.5, 0.0005)]
+        public void KPaToMPa_ConvertsWaterPotential(double psiKPa, double expected)
         {
-            double airDry = 0.05, ll15 = 0.10, dul = 0.30, sat = 0.45;
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(airDry, airDry, ll15, dul, sat), Is.EqualTo(-100).Within(1e-9));
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(ll15, airDry, ll15, dul, sat), Is.EqualTo(-1.5).Within(1e-9));
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(dul, airDry, ll15, dul, sat), Is.EqualTo(-0.033).Within(1e-9));
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(sat, airDry, ll15, dul, sat), Is.EqualTo(-0.001).Within(1e-9));
-        }
-
-        [Test]
-        public void PsiFromTheta_InterpolatesLog10BetweenAnchors()
-        {
-            double airDry = 0.05, ll15 = 0.10, dul = 0.30, sat = 0.45;
-            double theta = (ll15 + dul) / 2;
-            double expected = -Math.Pow(10, (Math.Log10(1.5) + Math.Log10(0.033)) / 2);
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(theta, airDry, ll15, dul, sat), Is.EqualTo(expected).Within(1e-9));
-        }
-
-        [Test]
-        public void PsiFromTheta_IsHeldConstantBeyondEndAnchors()
-        {
-            double airDry = 0.05, ll15 = 0.10, dul = 0.30, sat = 0.45;
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(0.50, airDry, ll15, dul, sat), Is.EqualTo(-0.001).Within(1e-9));
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(0.01, airDry, ll15, dul, sat), Is.EqualTo(-100).Within(1e-9));
-        }
-
-        [Test]
-        public void PsiFromTheta_DropsAirDryAnchorWhenNotBelowLL15()
-        {
-            double ll15 = 0.10, dul = 0.30, sat = 0.45;
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(0.01, 0.10, ll15, dul, sat), Is.EqualTo(-1.5).Within(1e-9));
-            Assert.That(GerminatingWaterPotentialResponse.PsiFromTheta(0.01, 0.12, ll15, dul, sat), Is.EqualTo(-1.5).Within(1e-9));
+            Assert.That(GerminatingWaterPotentialResponse.KPaToMPa(psiKPa), Is.EqualTo(expected).Within(1e-12));
         }
     }
 }

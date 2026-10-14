@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
 using Models.PMF;
 using Models.PMF.Phen;
 using Models.Soils;
@@ -14,10 +12,9 @@ namespace Models.Functions
 {
     /// <summary>
     /// Calculates the soil water stress factor on the germination rate, fW(ψ, T), at the sowing depth.
-    /// The seed layer water potential ψ is derived from the volumetric soil water content using a
-    /// retention curve in which log10(-ψ) is interpolated linearly in water content between the
-    /// anchors AirDry (-100 MPa), LL15 (-1.5 MPa), DUL (-0.033 MPa) and SAT (-0.001 MPa), held
-    /// constant beyond the end anchors. The base water potential ψb(T) (child BaseWaterPotential) is
+    /// The seed layer matric potential ψ is taken from the soil water balance model ([Soil].Water.Potential),
+    /// so germination uses the same state variable as the rest of the simulation (SoilWater or SWIM).
+    /// The base water potential ψb(T) (child BaseWaterPotential) is
     /// the drought limit below which germination stops. fW = 1 when ψ ≥ 0,
     /// fW = ((ψ - ψb) / (0 - ψb))^q when ψb &lt; ψ &lt; 0 and fW = 0 when ψ ≤ ψb.
     /// </summary>
@@ -35,7 +32,7 @@ namespace Models.Functions
         private IPhysical soilPhysical = null;
 
         [Link]
-        private ISoilWater waterBalance = null;
+        private Water water = null;
 
         /// <summary>Base water potential (MPa) as a function of seed layer temperature, ψb(T).</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -71,9 +68,17 @@ namespace Models.Functions
         public double Calculate()
         {
             int i = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
-            SeedWaterContent = waterBalance.SW[i];
-            SeedWaterPotential = PsiFromTheta(SeedWaterContent, soilPhysical.AirDry[i], soilPhysical.LL15[i],
-                                              soilPhysical.DUL[i], soilPhysical.SAT[i]);
+            SeedWaterContent = water.Volumetric[i];
+            double[] potential;
+            try
+            {
+                potential = water.Potential;
+            }
+            catch (NotImplementedException)
+            {
+                throw new Exception($"{Name}: the soil water model does not provide soil water potential. Use SoilWater or SWIM.");
+            }
+            SeedWaterPotential = KPaToMPa(potential[i]);
             BaseWaterPotentialToday = BaseWaterPotential.Value();
             WaterFactor = WaterFactorAt(SeedWaterPotential, BaseWaterPotentialToday, Curvature);
             return WaterFactor;
@@ -92,29 +97,11 @@ namespace Models.Functions
             return Math.Pow((psi - psiBase) / (0 - psiBase), q);
         }
 
-        /// <summary>
-        /// Soil water potential (MPa) from volumetric water content, interpolating log10(-ψ) linearly in
-        /// water content between AirDry (-100 MPa), LL15 (-1.5 MPa), DUL (-0.033 MPa) and SAT (-0.001 MPa).
-        /// The AirDry anchor is dropped when AirDry ≥ LL15. Values are held constant beyond the end anchors.
-        /// </summary>
-        public static double PsiFromTheta(double theta, double airDry, double ll15, double dul, double sat)
+        /// <summary>Converts a soil water potential from kPa (Water.Potential) to MPa.</summary>
+        /// <param name="psiKPa">Soil water potential (kPa).</param>
+        public static double KPaToMPa(double psiKPa)
         {
-            var x = new List<double>();
-            var y = new List<double>();
-            if (airDry < ll15)
-            {
-                x.Add(airDry);
-                y.Add(Math.Log10(100));
-            }
-            x.Add(ll15);
-            y.Add(Math.Log10(1.5));
-            x.Add(dul);
-            y.Add(Math.Log10(0.033));
-            x.Add(sat);
-            y.Add(Math.Log10(0.001));
-
-            double logPsi = MathUtilities.LinearInterpReal(theta, x.ToArray(), y.ToArray(), out _);
-            return -Math.Pow(10, logPsi);
+            return psiKPa / 1000;
         }
     }
 }
