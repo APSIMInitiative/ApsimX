@@ -39,13 +39,6 @@ namespace Models
         [Description("The end date of the simulation")]
         public DateTime? End { get; set; }
 
-        /// <summary>Warning to display when the simulation end date is before its start date.</summary>
-        [JsonIgnore]
-        public string DateRangeWarning =>
-            Start.HasValue && End.HasValue && End.Value < Start.Value
-                ? $"The simulation end date ({End.Value:d}) is before the start date ({Start.Value:d}). Fix the Clock dates before running."
-                : null;
-
         /// <summary>
         /// Gets the start date for the simulation.
         /// </summary>
@@ -254,6 +247,9 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Today = StartDate;
+            if (EndDate < StartDate)
+                throw new ApsimXException(this, $"Invalid date configuration: The end date {EndDate} is before the start date {StartDate}. " +
+                    "Modify your dates in the Clock model to continue.");
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
