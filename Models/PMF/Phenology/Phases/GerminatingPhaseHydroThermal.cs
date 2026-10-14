@@ -19,8 +19,8 @@ namespace Models.PMF.Phen
     /// OptTemp = To and MaxTemp = Tx; 1 at To and 0 outside Tb..Tx) and fW(ψ, T) is the soil water
     /// potential response (GerminatingWaterPotentialResponse). The rate is zero during the optional
     /// dormancy phase (days after sowing) and when the seed layer soil temperature is below the optional
-    /// minimum germination temperature (MinSoilTemperature). Germination occurs, at the earliest on the
-    /// day after sowing, on the day the accumulated rate reaches 1.
+    /// minimum germination temperature (MinSoilTemperature). Progress accumulates from the sowing day,
+    /// and germination occurs on the day the accumulated rate reaches 1, at the earliest on the day after sowing.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -133,12 +133,17 @@ namespace Models.PMF.Phen
         [Units("/d")]
         public double DailyGerminationRate { get; private set; }
 
-        /// <summary>Fraction of phase that is complete (0-1).</summary>
+        /// <summary>
+        /// Fraction of phase that is complete (0-1). Reported as 0 on the sowing day, although progress
+        /// accumulates from the sowing day, so that stages derived from it (e.g. Zadok) start the day after sowing.
+        /// </summary>
         [JsonIgnore]
         public double FractionComplete
         {
             get
             {
+                if (phenology.OnStartDayOf("Sowing"))
+                    return 0;
                 return Phenology.FractionComplete(DateToProgress, ProgressThroughPhase, Target, startDate, clock.Today, fractionCompleteYesterday);
             }
         }
@@ -179,6 +184,7 @@ namespace Models.PMF.Phen
             ProgressThroughPhase += DailyGerminationRate;
             DaysSinceSowing += 1;
 
+            // Progress accumulates from the sowing day, but germination takes at least one day.
             if (!phenology.OnStartDayOf("Sowing") && ProgressThroughPhase >= Target)
             {
                 doGermination();
