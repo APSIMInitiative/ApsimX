@@ -43,6 +43,38 @@ namespace UnitTests.Core
             Assert.That((simulation.Children[0] as Clock).Today, Is.EqualTo(new DateTime(1980, 01, 02)));
         }
 
+        /// <summary>An invalid date range warns and does not commence the simulation.</summary>
+        [Test]
+        public void InvalidClockDateRangeWarnsAndDoesNotRun()
+        {
+            var simulation = new Simulation()
+            {
+                Name = "Sim",
+                FileName = Path.GetTempFileName(),
+                Children = new List<IModel>()
+                {
+                    new Clock()
+                    {
+                        StartDate = new DateTime(1980, 1, 2),
+                        EndDate = new DateTime(1980, 1, 1)
+                    },
+                    new MockSummary()
+                }
+            };
+            Node.Create(simulation);
+
+            simulation.Prepare();
+            Assert.Throws<SimulationException>(() => simulation.Run());
+
+            var clock = simulation.Node.FindChild<Clock>(recurse: true);
+            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
+            Assert.That(clock.Today, Is.EqualTo(DateTime.MinValue));
+            Assert.That(summary.messages.Exists(message =>
+                message.Contains("Simulation was skipped") &&
+                message.Contains("end date") &&
+                message.Contains("before the start date")), Is.True);
+        }
+
         /// <summary>Ensures a simulation with exceptions throws.</summary>
         [Test]
         public void EnsureRunErrorsAreThrown()

@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using Models;
 using Models.CLEM;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -329,6 +330,13 @@ namespace UserInterface.Presenters
             // Update the model.
             ICommand updateModel = new ChangeProperty(changedObject, property.Name, newValue);
             presenter.CommandHistory.Add(updateModel);
+
+            if (changedObject is Clock clock &&
+                (property.Name == nameof(Clock.Start) || property.Name == nameof(Clock.End)) &&
+                !string.IsNullOrEmpty(clock.DateRangeWarning))
+            {
+                presenter.MainPresenter.ShowMessage(clock.DateRangeWarning, Simulation.MessageType.Warning);
+            }
 
             //update the view components
             RefreshView(model);

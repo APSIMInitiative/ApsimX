@@ -237,6 +237,10 @@ namespace Models.Core
 
             try
             {
+                Clock clockModel = Node.Find<Clock>();
+                if (!string.IsNullOrEmpty(clockModel?.DateRangeWarning))
+                    throw new ApsimXException(clockModel, $"Simulation was skipped. {clockModel.DateRangeWarning}");
+
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
