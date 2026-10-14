@@ -177,7 +177,8 @@ namespace UserInterface.Presenters
                     object objectRef = obj;
 
                     //check if our property is a class of some sort (but not a DateTime or list/array). If so, look for a property it holds to use instead.
-                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)))
+                    // Properties that reference a model (e.g. IPlant) are changed by swapping the model itself, so don't drill into them.
+                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)) && !typeof(IModel).IsAssignableFrom(property.PropertyType))
                     {
                         object subObject = property.GetValue(obj);
                         PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
