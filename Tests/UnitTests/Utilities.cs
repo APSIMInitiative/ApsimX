@@ -1,4 +1,5 @@
 ﻿using APSIM.Core;
+// using APSIM.Shared.APSoil;
 using APSIM.Shared.JobRunning;
 using APSIM.Shared.Utilities;
 using Microsoft.Data.Sqlite;
@@ -232,6 +233,72 @@ namespace UnitTests
             var tree = Node.Create(sims);
             sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
             return sims;
+        }
+
+
+        /// <summary>
+        /// Gets a runnable Simulations model with the addition of Weather and Soil. 
+        /// Soil also has child Physical and Water models as well.
+        /// </summary>
+        /// <param name="useInMemoryDb"></param>
+        /// <returns></returns>
+        public static Simulations GetRunnableSimWithExtras(bool useInMemoryDb = false)
+        {
+            Simulations sims = new Simulations()
+            {
+                Children = 
+                [
+                    new DataStore() { UseInMemoryDB = useInMemoryDb },
+                    new Simulation()
+                    {
+                        Children = 
+                        [
+                            new Clock()
+                            {
+                                StartDate = new DateTime(2017, 1, 1),
+                                EndDate = new DateTime(2017, 1, 10) // January 10
+                            },
+                            new Summary(),
+                            new Models.Climate.Weather()
+                            {
+                                Name = "Weather"
+                            },
+                            new Zone()
+                            {
+                                Name = "Zone",
+                                Area = 1,
+                                Children = [
+                                
+                                    new Models.Report()
+                                    {
+                                        VariableNames = new string[]
+                                        {
+                                            "[Clock].Today.DayOfYear as n"
+                                        },
+                                        EventNames = new string[]
+                                        {
+                                            "[Clock].DoReport"
+                                        }
+                                    },
+                                    new Models.Soils.Soil()
+                                    {
+                                        Children =
+                                        [
+                                            new Physical(),
+                                            new Models.Soils.Water(),
+                                            new SoilTemperature(),
+                                            new WaterBalance()
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+            var tree = Node.Create(sims);
+            sims.Write(FileName: Path.ChangeExtension(Path.GetTempFileName(), ".apsimx"));
+            return sims;        
         }
 
         /// <summary>

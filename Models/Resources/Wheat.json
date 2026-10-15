@@ -2890,7 +2890,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Grian].Wt",
+                  "VariableName": "[Grain].Wt",
                   "Name": "LiveWt",
                   "ResourceName": null,
                   "Children": [],
