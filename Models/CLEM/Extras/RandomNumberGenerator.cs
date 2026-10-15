@@ -20,17 +20,14 @@ namespace Models.CLEM
     public class RandomNumberGenerator: Model
     {
         [ThreadStatic]
-        private static Random _generator = null;
-
-        [ThreadStatic]
-        private static bool _disableRandom = false;
+        private static Random generator = null;
 
         /// <summary>
         /// Seed for random number generator (0 uses GuId rather than clock)
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
-        [Required]
-        [Description("Generator seed (0 for no seed, -1 to disable random)")]
+        [Required, GreaterThanEqualValue(0)]
+        [Description("Generator seed (0 to use clock)")]
         public int Seed { get; set; }
 
         /// <summary>
@@ -50,19 +47,19 @@ namespace Models.CLEM
         { 
             get 
             {
-                if (_generator is null)
+                if (generator is null)
+                {
                     throw new Exception($"Missing random number generator!{Environment.NewLine}This simulation uses stochastic processes requiring random numbers{Environment.NewLine}You must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation].");
-                else if (_disableRandom)
-                    return new Random(1);
-                else
-                    return _generator; 
+                }
+
+                return generator; 
             } 
         }
 
         /// <summary>
         /// Determines if the random nunber generator has been created and is available.
         /// </summary>
-        public static bool IsAvailable => _generator is not null;
+        public static bool IsAvailable => generator is not null;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -70,12 +67,14 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (Seed == -1)
-                _disableRandom = true;
             if (Seed == 0)
-                _generator = new Random(Guid.NewGuid().GetHashCode());
+            {
+                generator = new Random(Guid.NewGuid().GetHashCode());
+            }
             else
-                _generator = new Random(Seed);
+            {
+                generator = new Random(Seed);
+            }
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace Models.CLEM
         /// </summary>
         public static void SetForPreSimulation()
         {
-            _generator = new Random(1);
+            generator = new Random(1);
         }
     }
 }
