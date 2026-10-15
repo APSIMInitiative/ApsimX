@@ -8,20 +8,22 @@ namespace Models.Functions
 {
     /// <summary>A class that returns the product of its child functions.  Performance note: This function returns zero as soon as any of its child functions return zero.  Therefore, speed gains can be achieved by placing children that are likely to return zero values at the top of the list of children</summary>
     [Serializable]
-    public class MultiplyFunction : Model, IFunction, IStructureDependency
+    public class MultiplyFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
 
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             double returnValue = 1.0;
 

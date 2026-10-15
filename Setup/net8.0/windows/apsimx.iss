@@ -354,9 +354,7 @@ Source: {#ApsimX}\ApsimNG\Resources\CommonReportVariables\*; DestDir: {app}\Apsi
 
 ;Sample files 
 Source: {#ApsimX}\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
-Source: {#ApsimX}\Examples\*; DestDir: {autodocs}\Apsim\Examples; Flags: recursesubdirs
 Source: {#ApsimX}\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdirs skipifsourcedoesntexist
-Source: {#ApsimX}\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs skipifsourcedoesntexist
 
 [Tasks]
 Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked

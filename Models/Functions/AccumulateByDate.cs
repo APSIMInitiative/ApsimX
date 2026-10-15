@@ -14,12 +14,8 @@ namespace Models.Functions
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateByDate : Model, IFunction, IStructureDependency
+    public class AccumulateByDate : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         //Class members
         /// <summary>The accumulated value</summary>
         private double AccumulatedValue = 0;
@@ -59,7 +55,7 @@ namespace Models.Functions
         private void OnStartOfDay(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (DateUtilities.WithinDates(StartDate, clock.Today, EndDate))
             {
@@ -76,6 +72,8 @@ namespace Models.Functions
             //Zero value if today is reset date
             if (DateUtilities.WithinDates(ResetDate, clock.Today, ResetDate))
                 AccumulatedValue = 0;
+
+            FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
 
