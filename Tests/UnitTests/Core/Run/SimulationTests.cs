@@ -43,9 +43,9 @@ namespace UnitTests.Core
             Assert.That((simulation.Children[0] as Clock).Today, Is.EqualTo(new DateTime(1980, 01, 02)));
         }
 
-        /// <summary>An invalid date range warns and does not commence the simulation.</summary>
+        /// <summary>An invalid date range throws the expected exception.</summary>
         [Test]
-        public void InvalidClockDateRangeWarnsAndDoesNotRun()
+        public void InvalidClockDateRangeThrowsExpectedException()
         {
             var simulation = new Simulation()
             {
@@ -64,15 +64,10 @@ namespace UnitTests.Core
             Node.Create(simulation);
 
             simulation.Prepare();
-            Assert.Throws<SimulationException>(() => simulation.Run());
-
-            var clock = simulation.Node.FindChild<Clock>(recurse: true);
-            var summary = simulation.Node.FindChild<MockSummary>(recurse: true);
-            Assert.That(clock.Today, Is.EqualTo(DateTime.MinValue));
-            Assert.That(summary.messages.Exists(message =>
-                message.Contains("Simulation was skipped") &&
-                message.Contains("end date") &&
-                message.Contains("before the start date")), Is.True);
+            var exception = Assert.Throws<SimulationException>(() => simulation.Run());
+            Assert.That(exception.InnerException.Message, Is.EqualTo(
+                $"Invalid date configuration: The end date {new DateTime(1980, 1, 1)} is before the start date {new DateTime(1980, 1, 2)}. " +
+                "Modify your dates in the Clock model to continue."));
         }
 
         /// <summary>Ensures a simulation with exceptions throws.</summary>
