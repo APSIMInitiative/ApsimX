@@ -237,7 +237,6 @@ namespace Models.Core
 
             try
             {
-
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
