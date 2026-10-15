@@ -247,6 +247,9 @@ namespace Models
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Today = StartDate;
+            if (EndDate < StartDate)
+                throw new ApsimXException(this, $"Invalid date configuration: The end date {EndDate} is before the start date {StartDate}. " +
+                    "Modify your dates in the Clock model to continue.");
         }
 
         /// <summary>An event handler to signal start of a simulation.</summary>
