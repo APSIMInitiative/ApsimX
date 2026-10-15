@@ -181,10 +181,10 @@ namespace UserInterface.Presenters
                     //Need to exclude IModels so that things like crop selection in manager scripts work
                     bool isPrimitive = property.PropertyType.IsPrimitive;
                     bool isArray = property.PropertyType.IsAssignableTo(typeof(IEnumerable));
-                    bool isDate = typeof(DateTime).IsAssignableFrom(property.PropertyType);
+                    bool isDate = typeof(DateTime?).IsAssignableFrom(property.PropertyType);
                     bool isIModel = typeof(IModel).IsAssignableFrom(property.PropertyType);
                     bool isEnum = property.PropertyType.IsEnum;
-                    if (!isPrimitive && ! isArray && !isDate && !isIModel && !isEnum)
+                    if (!isPrimitive && !isArray && !isDate && !isIModel && !isEnum)
                     {
                         object subObject = property.GetValue(obj);
                         IEnumerable<PropertyInfo> propertiesWithDescriptions = GetAllProperties(subObject).Where(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
