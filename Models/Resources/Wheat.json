@@ -551,13 +551,101 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Phen.GerminatingPhase, Models",
+              "$type": "Models.PMF.Phen.GerminatingPhaseHydroThermal, Models",
               "Start": "Sowing",
               "End": "Germination",
               "IsEmerged": false,
               "Name": "Germinating",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false,
+                  "Text": "Germination is simulated as a daily progress rate of the median seed, r = Rmax · f(T) · fW(ψ, T), and occurs (50% germination, T50) on the day the summed rate reaches 1. f(T) is a Wang and Engel function of seed-layer soil temperature (To fixed at 27.5 °C) and fW is the seed-layer soil water potential response with a temperature-dependent base water potential. Parameters were fitted to T50 of cultivar Mace in Petri-dish experiments (5-40 °C, 0 to -1.75 MPa PEG) and validated against Mace18."
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.7344158465,
+                  "Units": "d",
+                  "Name": "DaysToGerminationAtOptimum",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.WangEngelTempFunction, Models",
+                  "MinTemp": -4.54318125758749,
+                  "OptTemp": 27.5,
+                  "MaxTemp": 38.3125484756731,
+                  "RefTemp": 27.5,
+                  "Beta": 1.0,
+                  "MaximumTemperatureWeighting": 0.5,
+                  "Units": null,
+                  "Name": "WangEngelTempFunction",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.GerminatingWaterPotentialResponse, Models",
+                  "Curvature": 1.80845439962828,
+                  "Name": "GerminatingWaterPotentialResponse",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "BaseWaterPotential",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            -10.0,
+                            30.0
+                          ],
+                          "Y": [
+                            -5.74189813,
+                            -1.21740303
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Germinating.SoilTemperatureSeed",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "d",
+                  "Name": "DormancyPhase",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
