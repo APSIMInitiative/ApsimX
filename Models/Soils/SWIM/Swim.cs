@@ -52,6 +52,26 @@ namespace Models.Soils
         [Link(IsOptional = true)]
         private SwimSubsurfaceDrain subsurfaceDrain = null;
 
+        [Link(IsOptional = true)]
+        private ISoilTemperature soilTemperature = null;
+
+       // Thermal vapour constants
+       // Physical constants
+        private const double Mw = 0.01802;        // water molecular weight (kg mol-1)
+        private const double Gravity = 9.81e2;    // cm s-2
+        private const double RgasSWIM = 8.3143e4; // gas constant in SWIM units
+        private const double Rgas = 8.3143;       // gas constant SI-unit version
+        private const double RhoWater = 1.0e-3;   // water density (kg cm-3)
+        private const double VapourDiffusivity0 = 2.12e-5; // m2 s-1 at 0C
+        private const double KelvinOffset = 273.16; 
+        // Empirical constants
+        private const double VapourTortuosity = 0.66; // vapour tortuosity factor
+        // Constants for Cass et al 1984 enhancement factor
+        private const double EtaA = 9.5;
+        private const double EtaB = 3.0; //matches SHAW and Cass et al table 2 rather than Campbell
+        private const double EtaD = 1.0;
+        private const double EtaE = 4.0;
+
         private const double floatComparisonTolerance = 1e-16;
         private const double divideTolerance = 1e-8;
         private const double effpar = 0.184;
@@ -293,6 +313,10 @@ namespace Models.Soils
         private double[] slos;
         private double[] d0;
         private bool cover_effects = true; // When true, the effect of residue and canopy cover is implemented as in the soilwat model.
+
+        // additional private variables for thermal vapour flow
+        private double[] temperatureKelvin;
+        private double[] etaC; // Cass et al enhancement factor
 
         /// <summary>Base soil albedo</summary>
         [Description("Bare soil albedo")]
@@ -664,7 +688,27 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
 
+        // Additional public variables for thermal vapour flow
+        /// <summary>Relative humidity of soil air (-).</summary>
+        public double[] RelativeHumidity { get; private set; }
 
+        /// <summary>Saturation vapour concentration (kg cm-3).</summary>
+        public double[] SaturationVapourConcentration { get; private set; }
+
+        /// <summary>Slope of saturation vapour concentration with temperature (kg cm-3 K-1).</summary>
+        public double[] VapourConcentrationSlope { get; private set; }
+
+        /// <summary>Free-air vapour diffusivity (cm2 h-1).</summary>
+        public double[] VapourDiffusivity { get; private set; }
+
+        /// <summary>Cass et al. vapour enhancement factor (-).</summary>
+        public double[] VapourEnhancementFactor { get; private set; }
+
+         /// <summary>Thermal vapour flux between adjacent nodes (cm h-1).</summary>
+        public double[] ThermalVapourFlux { get; private set; }
+
+        /// <summary>Net thermal vapour flux at each node (cm h-1).</summary>
+        public double[] NetThermalVapourFlux { get; private set; }
 
         // In the Fortran version, the data for ponding water was held in
         // array members with an index of -1.
@@ -4297,6 +4341,252 @@ namespace Models.Soils
 
             fail = false;
         }
+        /// <summary>
+        /// Calculate thermal-gradient-induced vapour flow following
+        /// Campbell (1985), supplemented by SHAW calculation of the
+        /// saturation vapour density curve as documented in the
+        /// The Simultaneous Heat and Water (SHAW) Model:
+        /// Technical Documentation Version 3.0 (Flerchinger, May 2017)
+        ///
+        /// Flux is calculated as:
+        ///
+        /// qv = - η Dv hr s dT/dz
+        ///
+        /// where:
+        /// η  = Cass et al. 1994 enhancement factor
+        /// Dv = soil vapour diffusivity
+        /// hr = relative humidity
+        /// s  = slope of saturation vapour density curve
+        /// </summary>
+        private void CalculateThermalVapourFlow()
+        {
+            // Exit if no soil temperature model is present.
+            if (soilTemperature == null)
+                return;
+
+            int numNodes = n + 1;
+
+            // ------------------------------------------------------------------
+            // Obtain current soil temperature profile (°C).
+            // ------------------------------------------------------------------
+            // Use daily maximum soil temperature rather than daily average
+            // because thermal vapour flow is driven primarily by daytime
+            // temperature gradients and APSIM does not currently provide
+            // sub-daily soil temperature profiles to SWIM.
+
+            double[] T = soilTemperature.MaximumSoilTemperature;
+
+            // ------------------------------------------------------------------
+            // Allocate working arrays.
+            // ------------------------------------------------------------------
+
+            temperatureKelvin = new double[numNodes];
+
+            SaturationVapourConcentration = new double[numNodes];
+            VapourConcentrationSlope = new double[numNodes];
+            VapourDiffusivity = new double[numNodes];
+            VapourEnhancementFactor = new double[numNodes];
+            RelativeHumidity = new double[numNodes];
+
+            etaC = new double[numNodes];
+
+            // Relative soil water content (θ/θsat)
+            double[] thetaRel = new double[numNodes];
+
+            // ------------------------------------------------------------------
+            // Convert temperature to Kelvin.
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+                temperatureKelvin[i] = T[i] + KelvinOffset;
+
+            // ------------------------------------------------------------------
+            // Saturation vapour concentration.
+            //
+            // Equation from SHAW documentation 
+            // with bug fix consistent with SHAW code to
+            // multiply by molecular weight of water.
+            //
+            // Units: kg cm-3
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                SaturationVapourConcentration[i] =
+                    (6.1104546
+                    + 0.4442351 * T[i]
+                    + 0.014302099 * Math.Pow(T[i], 2)
+                    + 2.6454708e-4 * Math.Pow(T[i], 3)
+                    + 3.0357098e-6 * Math.Pow(T[i], 4)
+                    + 2.0972268e-8 * Math.Pow(T[i], 5)
+                    + 6.0487594e-11 * Math.Pow(T[i], 6)
+                    - 1.469487e-13 * Math.Pow(T[i], 7))
+                    * 100.0
+                    * Mw
+                    / (Rgas * temperatureKelvin[i])
+                    * 1.0e-6;
+            }
+
+            // ------------------------------------------------------------------
+            // Slope of saturation vapour concentration curve.
+            // based on SHAW documentation and code
+            // Units: kg cm-3 K-1
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                if (T[i] > 45.0)
+                {
+                    VapourConcentrationSlope[i] =
+                        0.0000165 * 1.0e-6
+                        + 4944.43
+                        * SaturationVapourConcentration[i]
+                        / (temperatureKelvin[i] * temperatureKelvin[i]);
+                }
+                else
+                {
+                    VapourConcentrationSlope[i] =
+                        (0.4442351
+                        + 0.028604198 * T[i]
+                        + 7.9364124e-4 * Math.Pow(T[i], 2)
+                        + 1.2142839e-5 * Math.Pow(T[i], 3)
+                        + 1.0486134e-7 * Math.Pow(T[i], 4)
+                        + 3.6292556e-10 * Math.Pow(T[i], 5)
+                        - 1.0287809e-12 * Math.Pow(T[i], 6))
+                        * 100.0
+                        * Mw
+                        / (Rgas * temperatureKelvin[i])
+                        * 1.0e-6
+                        - SaturationVapourConcentration[i]
+                        / temperatureKelvin[i];
+                }
+            }
+
+            // ------------------------------------------------------------------
+            // Free-air vapour diffusivity.
+            //
+            // Campbell (1985), Eq. 3.9.
+            //
+            // VapourDiffusivity0 is stored as m2 s-1.
+            // Convert to cm2 h-1 here.
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                VapourDiffusivity[i] =
+                    VapourDiffusivity0
+                    * 10000.0
+                    * 3600.0
+                    * Math.Pow(temperatureKelvin[i] / KelvinOffset, 2.0);
+            }
+
+            // ------------------------------------------------------------------
+            // Relative water content.
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+                thetaRel[i] = th[i] / physical.SAT[i];
+
+            // ------------------------------------------------------------------
+            // Cass et al. enhancement factor parameter C.
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                etaC[i] =
+                    physical.SAT[i]
+                    * (1.0 + 26.0 / Math.Sqrt(physical.ParticleSizeClay[i]));
+            }
+
+            // ------------------------------------------------------------------
+            // Cass et al. enhancement factor.
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                VapourEnhancementFactor[i] =
+                    EtaA
+                    + EtaB * thetaRel[i]
+                    - (EtaA - EtaD)
+                    * Math.Exp(
+                        -Math.Pow(etaC[i] * thetaRel[i], EtaE));
+            }
+
+            // ------------------------------------------------------------------
+            // Relative humidity from Kelvin equation
+            // Campbell (1985) and SWIMv2.1 manual eq 38
+            // ------------------------------------------------------------------
+
+            for (int i = 0; i <= n; i++)
+            {
+                RelativeHumidity[i] =
+                    Math.Exp(
+                        Mw * Gravity * _psi[i]
+                        / (RgasSWIM * temperatureKelvin[i]));
+            }
+
+            // ------------------------------------------------------------------
+            // Thermal vapour fluxes between adjacent nodes.
+            // ------------------------------------------------------------------
+
+            ThermalVapourFlux = new double[n + 1];
+
+            for (int i = 1; i <= n; i++)
+            {
+                double deltaX = x[i] - x[i - 1];
+                double deltaT = T[i] - T[i - 1];
+
+                // Air-filled porosity.
+                double phi1 = physical.SAT[i] / 0.93 - th[i];
+                double phi2 = physical.SAT[i-1] / 0.93 - th[i - 1];
+
+                double meanDv =
+                    (VapourDiffusivity[i] * phi1
+                    + VapourDiffusivity[i - 1] * phi2)
+                    * VapourTortuosity
+                    / 2.0;
+
+                double meanHr =
+                    (RelativeHumidity[i]
+                    + RelativeHumidity[i - 1]) / 2.0;
+
+                double meanSlope =
+                    (VapourConcentrationSlope[i]
+                    + VapourConcentrationSlope[i - 1]) / 2.0;
+
+                double meanEta =
+                    (VapourEnhancementFactor[i]
+                    + VapourEnhancementFactor[i - 1]) / 2.0;
+
+                ThermalVapourFlux[i] =
+                    -meanEta
+                    * meanDv
+                    / RhoWater
+                    * meanHr
+                    * meanSlope
+                    * deltaT
+                    / deltaX;
+            }
+
+            // ------------------------------------------------------------------
+            // Net thermal vapour flux into each node.
+            // Positive values represent a gain of water.
+            // ------------------------------------------------------------------
+
+            NetThermalVapourFlux = new double[numNodes];
+
+            NetThermalVapourFlux[0] = ThermalVapourFlux[1];
+
+            for (int i = 1; i < n; i++)
+            {
+                NetThermalVapourFlux[i] =
+                    -ThermalVapourFlux[i]
+                    + ThermalVapourFlux[i + 1];
+            }
+
+            NetThermalVapourFlux[n] =
+                -ThermalVapourFlux[n];
+        }
 
         private void Baleq(int it, ref int iroots, ref double[] tslos, ref double[][] tcsl, out int ibegin, out int iend, ref double[] a, ref double[] b, ref double[] c, ref double[] rhs, ref PondingData pondingData)
         {
@@ -4360,6 +4650,10 @@ namespace Models.Soils
                 _p[n] = Pf(_psi[n]);
                 Watvar(n, _p[n], out v1, out psip[n], out psipp[n], out th[n], ref thp[n], out hk[n], ref hkp[n]);
             }
+
+            //  calculate the thermal vapour flow using the calculated psi and th 
+            if (soilTemperature != null)
+               CalculateThermalVapourFlow();
 
             //   get fluxes between nodes
             double absgf = Math.Abs(gf);
@@ -4675,7 +4969,7 @@ namespace Models.Soils
                     b[k] = qp2[i] - qp1[j];
                     c[k] = -qp2[j];
                 }
-                rhs[k] = rhs[k] + qs[i] + qex[i] - qssif[i] + qssof[i];
+                rhs[k] = rhs[k] + qs[i] + qex[i] - qssif[i] + qssof[i] - NetThermalVapourFlux[i];
                 b[k] = b[k] - qsp[i] - qssofp[i];
 
                 if (iroots == 0)
