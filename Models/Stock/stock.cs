@@ -2240,6 +2240,66 @@ namespace Models.GrazPlan
             }
         }
 
+        // =========== Digestibility intake per head by group ==================
+         /// <summary>
+        /// Gets the digestibility intake per head by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double[] DigestibilityIntake
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of digestibility by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double DigestibilityIntakeAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, true, false, ref values);
+                return values[0];
+            }
+        }
+
+         // =========== Crude protein intake per head of young ==================
+
+        /// <summary>
+        /// Gets the ME_2_DM intake per head of young animals by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double[] ME_2_DM
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpME_2_DM_TOTAL, false, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of ME_2_DM by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double ME_2_DMAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpME_2_DM_TOTAL, false, true, false, ref values);
+                return values[0];
+            }
+        }
+
+
         // =========== Growth rate of clean fleece ==================
 
         /// <summary>
