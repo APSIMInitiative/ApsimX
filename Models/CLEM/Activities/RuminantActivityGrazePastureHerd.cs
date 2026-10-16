@@ -1,18 +1,15 @@
 ﻿using APSIM.Numerics;
 using Docker.DotNet.Models;
-using Microsoft.IdentityModel.Protocols;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.Functions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Models.CLEM.Activities
@@ -30,11 +27,11 @@ namespace Models.CLEM.Activities
     [Description("Performs grazing of a specified herd and pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrazing)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = true;
@@ -220,7 +217,7 @@ namespace Models.CLEM.Activities
             links.Resolve(herdGroup as IModel, true, recurse: false);
             // commencing event needed to wire up filter group
             var events = new Events(herdGroup);
-            events.PublishToModelAndChildren("Commencing", new object[] { herdGroup, new EventArgs() });
+            events.PublishToModelAndChildren("Commencing", [herdGroup, new EventArgs()]);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -305,8 +302,16 @@ namespace Models.CLEM.Activities
             PotentialIntakePastureBiomassLimiter = 1 - Math.Round(Math.Exp(-RuminantTypeModel.Parameters.Grazing.IntakeCoefficientBiomass * GrazeFoodStoreModel.TonnesPerHectareStartOfTimeStep * 1000), 5);
 
             // calculate green limit for the breed
-            double green = DigestiblePasturePoolGroups.Where(a => a.ProportionGreen == 1).Sum(a => a.Pools.Sum(p => p.AmountAvailable));
-            double proportionGreen = green / DigestiblePasturePoolGroups.Sum(a => a.Pools.Sum(p => p.AmountAvailable));
+            double green = DigestiblePasturePoolGroups.Where(a => a.ProportionGreen == 1).Sum(a =>
+            {
+                static double selector(IGrazeIntakePool p) => p.AmountAvailable;
+                return a.Pools.Sum(selector);
+            });
+            double proportionGreen = green / DigestiblePasturePoolGroups.Sum(a =>
+            {
+                static double selector(IGrazeIntakePool p) => p.AmountAvailable;
+                return a.Pools.Sum(selector);
+            });
 
             PotentialIntakeProportionGreenLimit = 1;
             if (proportionGreen < 0.9)
@@ -314,7 +319,7 @@ namespace Models.CLEM.Activities
                 PotentialIntakeProportionGreenLimit = Math.Max(0.0, (RuminantTypeModel.Parameters.Grazing.GreenDietMax * 100) * (1 - Math.Exp(-RuminantTypeModel.Parameters.Grazing.GreenDietCoefficient * ((proportionGreen * 100) - (RuminantTypeModel.Parameters.Grazing.GreenDietZero * 100))))) / 100.0;
             }
 
-            indRelativeDailyIntake = new double[currentHerdSize, DigestiblePasturePoolGroups.Count()];
+            indRelativeDailyIntake = new double[currentHerdSize, DigestiblePasturePoolGroups.Count];
             indDailyIntakeRemaining = new double[currentHerdSize];
             indDailyGreenIntakeRemaining = new double[currentHerdSize];
             for (int i = 0; i < currentHerdSize; i++)
@@ -565,12 +570,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (GrazeFoodStoreTypeName.Contains("."))
+            if (GrazeFoodStoreTypeName.Contains('.'))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
-                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
             }
         }
