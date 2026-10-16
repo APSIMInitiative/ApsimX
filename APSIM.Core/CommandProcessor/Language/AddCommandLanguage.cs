@@ -54,10 +54,19 @@ internal partial class AddCommand: IModelCommand
         }
         else if (!string.IsNullOrEmpty(filepath))
         {
-            // If filename is relative, make it absolute
-            if (relativeToDirectory != null)
-                filepath = Path.GetFullPath(filepath, relativeToDirectory);
-            modelReference = new ModelInFileReference(filepath, source);
+            try
+            {
+                // If filename is relative, make it absolute
+                if (relativeToDirectory != null)
+                    filepath = Path.GetFullPath(filepath, relativeToDirectory);
+                modelReference = new ModelInFileReference(filepath, source);                
+            }
+            catch (ArgumentException ae)
+            {
+                throw new Exception("Something went wrong when trying create an add command. " +
+                    $"Arguments = filepath: {filepath}, relativeToDirectory: {relativeToDirectory}", ae);
+            }
+
         }
         else
         {

@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
         private double amount = 0;
-        private Dictionary<ResourceRequest, double> pending = new ();
+        private readonly Dictionary<ResourceRequest, double> pending = [];
         private bool marketStoreChecked = false;
 
         private const double TOLERANCE = 0.0000001;
@@ -147,7 +147,7 @@ namespace Models.CLEM.Resources
                     string market = "";
                     if((Parent.Parent as ResourcesHolder).MarketPresent)
                     {
-                        if (!(EquivalentMarketStore is null))
+                        if (EquivalentMarketStore is not null)
                         {
                             market = EquivalentMarketStore.CLEMParentName + ".";
                         }
@@ -194,7 +194,7 @@ namespace Models.CLEM.Resources
         public object ConvertTo(string converterName, double amount)
         {
             // get converted value
-            if (converterName.StartsWith("$"))
+            if (converterName.StartsWith('$'))
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
@@ -229,7 +229,7 @@ namespace Models.CLEM.Resources
                         string market = "";
                         if ((Parent.Parent as ResourcesHolder).MarketPresent)
                         {
-                            if (!(EquivalentMarketStore is null))
+                            if (EquivalentMarketStore is not null)
                             {
                                 market = EquivalentMarketStore.CLEMParentName + ".";
                             }
@@ -252,8 +252,7 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                ResourceUnitsConverter converter = Structure.FindChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() as ResourceUnitsConverter;
-                if (converter != null)
+                if (Structure.FindChildren<ResourceUnitsConverter>().Where(a => string.Compare(a.Name, converterName, true) == 0).FirstOrDefault() is ResourceUnitsConverter converter)
                 {
                     double result = amount;
                     // convert to edible proportion for all HumanFoodStore converters
@@ -292,8 +291,7 @@ namespace Models.CLEM.Resources
         /// <returns>Value to report</returns>
         public double ConversionFactor(string converterName)
         {
-            ResourceUnitsConverter converter = Structure.FindChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
-            if (converter is null)
+            if (Structure.FindChildren<ResourceUnitsConverter>().Where(a => a.Name.Equals(converterName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault() is not ResourceUnitsConverter converter)
             {
                 return 0;
             }
@@ -356,9 +354,9 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
-        /// Bank account transaction occurred
+        /// Resource transaction occurred
         /// </summary>
-        public virtual event EventHandler TransactionOccurred;
+        public event EventHandler TransactionOccurred;
 
         /// <summary>
         /// Amount of last gain transaction
@@ -472,13 +470,9 @@ namespace Models.CLEM.Resources
             amountToRemove = Math.Min(amountToRemove, AmountAvailable);
             if (pendingRequest is not null)
             {
-                if (pending.ContainsKey(pendingRequest))
+                if (!pending.TryAdd(pendingRequest, amountToRemove))
                 {
                     pending[pendingRequest] += amountToRemove;
-                }
-                else
-                {
-                    pending.Add(pendingRequest, amountToRemove);
                 }
             }
             else
@@ -492,13 +486,13 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public void DecreasePending(ResourceRequest request, double amount)
         {
-            if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
+            if (pending.Count == 0 || !request.TransactionPending || !pending.TryGetValue(request, out double value))
             {
                 string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
                 return;
             }
-            amount = Math.Min(amount, pending[request]);
+            amount = Math.Min(amount, value);
             pending[request] -= amount;
         }
 
@@ -526,9 +520,9 @@ namespace Models.CLEM.Resources
             double amountToRemove = request.Provided;
             if (handlePendingTransaction)
             {
-                if (pending.ContainsKey(request))
+                if (pending.TryGetValue(request, out double value))
                 {
-                    amountToRemove = pending[request];
+                    amountToRemove = value;
                     pending.Remove(request);
                 }
                 else
@@ -564,9 +558,9 @@ namespace Models.CLEM.Resources
 
             foreach (var item in pending)
             {
+                item.Key.Provided = item.Value;
                 if (item.Value > 0)
                 {
-                    item.Key.Provided = item.Value;
                     amount -= item.Key.Provided;
                     PerformTransaction(item.Key, true);
                 }

@@ -363,7 +363,7 @@ namespace Models.CLEM.Resources
             }
 
             toDate = toDate == default ? Parameters.Details.CurrentTimeStep.TimeStepStart : toDate;
-            if (toDate == default(DateTime) || fromDate == default(DateTime) || toDate < fromDate)
+            if (toDate == default || fromDate == default || toDate < fromDate)
                 return TimeSpan.Zero;
             else
                 return toDate - fromDate;
@@ -804,6 +804,8 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.ReduceInitialHerd:
                     case HerdChangeReason.MarkedSale:
                     case HerdChangeReason.WeanerSale:
+                    case HerdChangeReason.DiedDystocia:
+                    case HerdChangeReason.DiedToxaemia:
                         return -1;
                     case HerdChangeReason.Born:
                     case HerdChangeReason.TradePurchase:
@@ -830,11 +832,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void MotherLost()
         {
-            if (Mother != null)
-            {
-                Mother.SucklingOffspringList.Remove(this);
-                Mother = null;
-            }
+            Mother?.SucklingOffspringList.Remove(this);
+            Mother = null;
         }
 
         /// <summary>
