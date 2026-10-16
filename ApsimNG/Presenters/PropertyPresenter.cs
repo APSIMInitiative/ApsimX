@@ -177,14 +177,29 @@ namespace UserInterface.Presenters
                     object objectRef = obj;
 
                     //check if our property is a class of some sort (but not a DateTime or list/array). If so, look for a property it holds to use instead.
-                    if (!property.PropertyType.IsPrimitive && property.PropertyType != typeof(DateTime) && !property.PropertyType.IsAssignableTo(typeof(IEnumerable)))
+                    //This is used by clem for properties that are objects with a singular property that should be displayed/editted
+                    //Need to exclude IModels so that things like crop selection in manager scripts work
+                    bool isPrimitive = property.PropertyType.IsPrimitive;
+                    bool isArray = property.PropertyType.IsAssignableTo(typeof(IEnumerable));
+                    bool isDate = typeof(DateTime?).IsAssignableFrom(property.PropertyType);
+                    bool isIModel = typeof(IModel).IsAssignableFrom(property.PropertyType);
+                    bool isEnum = property.PropertyType.IsEnum;
+                    if (!isPrimitive && !isArray && !isDate && !isIModel && !isEnum)
                     {
                         object subObject = property.GetValue(obj);
-                        PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
-                        if (subProperty != null)
+                        IEnumerable<PropertyInfo> propertiesWithDescriptions = GetAllProperties(subObject).Where(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
+                        if (propertiesWithDescriptions.Count() == 1) //classes with a subproperty can only have one, otherwise we don't know which to show/change
                         {
-                            objectRef = subObject;
-                            propertyRef = subProperty;
+                            PropertyInfo subProperty = GetAllProperties(subObject).FirstOrDefault(p => p.GetCustomAttribute<DescriptionAttribute>() != null);
+                            if (subProperty != null)
+                            {
+                                objectRef = subObject;
+                                propertyRef = subProperty;
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception($"Property {property.Name} has been detected as being a class with a subproperty, but has {propertiesWithDescriptions.Count()} properties with a description. Exactly 1 property with a description is allowed.");
                         }
                     }
                     PropertyMap.Add(result.ID, new PropertyObjectPair() { Model = objectRef, Property = propertyRef, Category = categoryAttribute });
