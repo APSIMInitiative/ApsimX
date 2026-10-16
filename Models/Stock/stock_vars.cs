@@ -190,6 +190,12 @@ namespace Models.GrazPlan
         public const int prpPADD_RANK = 41;
         public const int prpINTAKE_MOD = 42;
         public const int prpBASE_EMPTY_WT = 43;
+
+        public const int prpCRUDE_PRO = 44;
+
+        public const int prpDIGESTIBITY = 45;
+
+        public const int prpME_DM_TOTAL = 46;
 #pragma warning restore 1591 //missing xml comment
     }
 
@@ -456,6 +462,17 @@ namespace Models.GrazPlan
                                 case StockProps.prpBASE_EMPTY_WT:
                                     value = animalGroup.EmptyBodyWeight;
                                     break;
+                                case StockProps.prpCRUDE_PRO:
+                                    value = animalGroup.AnimalState.CP_Intake.Total;
+                                    break;
+                                case StockProps.prpDIGESTIBITY:
+                                    value = animalGroup.AnimalState.Digestibility.Total;
+
+                                    break;
+                                case StockProps.prpME_DM_TOTAL:
+                                    value = animalGroup.AnimalState.ME_2_DM.Total;
+                                    break;
+                               
                                 default:
                                     result = false;
                                     break;
