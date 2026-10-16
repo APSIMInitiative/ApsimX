@@ -291,7 +291,7 @@ namespace Models.CLEM
         {
             if (TimeStep == TimeStepTypes.Monthly)
             {
-                DateTime checkEndDate = new DateTime(Clock.EndDate.Year, Clock.EndDate.Month, DateTime.DaysInMonth(Clock.EndDate.Year, Clock.EndDate.Month));
+                DateTime checkEndDate = new(Clock.EndDate.Year, Clock.EndDate.Month, DateTime.DaysInMonth(Clock.EndDate.Year, Clock.EndDate.Month));
                 if (Clock.EndDate < checkEndDate)
                     Clock.EndDate = checkEndDate;
             }
@@ -410,28 +410,28 @@ namespace Models.CLEM
         {
             if (Clock.StartDate.ToShortDateString() == "1/01/0001")
             {
-                string[] memberNames = new string[] { "Clock.StartDate" };
-                yield return new ValidationResult($"Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
+                string[] memberNames = ["Clock.StartDate"];
+                yield return new ValidationResult($"Invalid start date {Clock.StartDate:d}", memberNames);
             }
             if (Clock.EndDate.ToShortDateString() == "1/01/0001")
             {
-                string[] memberNames = new string[] { "Clock.EndDate" };
-                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}", memberNames);
+                string[] memberNames = ["Clock.EndDate"];
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate:d}", memberNames);
             }
             if (Clock.EndDate <= Clock.StartDate)
             {
-                string[] memberNames = new string[] { "Clock.EndDate" };
-                yield return new ValidationResult($"Invalid end date {Clock.EndDate.ToShortDateString()}. End of simulation must be after the start of the simulation.", memberNames);
+                string[] memberNames = ["Clock.EndDate"];
+                yield return new ValidationResult($"Invalid end date {Clock.EndDate:d}. End of simulation must be after the start of the simulation.", memberNames);
             }
 
             if (TimeStep == TimeStepTypes.Monthly & Clock.StartDate.Day != 1)
             {
-                string[] memberNames = new string[] { "Clock.StartDate" };
-                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time step. Invalid start date {Clock.StartDate.ToShortDateString()}", memberNames);
+                string[] memberNames = ["Clock.StartDate"];
+                yield return new ValidationResult($"CLEM must commence on the first day of a month when using monthly time step. Invalid start date {Clock.StartDate:d}", memberNames);
             }
             if (TimeStep == TimeStepTypes.Custom & CustomTimeStep <= 0)
             {
-                string[] memberNames = new string[] { "Custom time-step" };
+                string[] memberNames = ["Custom time-step"];
                 yield return new ValidationResult($"A custom time-step greater than [0] must be supplied when using the custom time step style", memberNames);
             }
         }
@@ -446,13 +446,13 @@ namespace Models.CLEM
                 return;
 
             // validation is performed here
-            // this is done by this component as it is outside of the CLEM/Market branch and needs to be handled itself.
+            // this is done by this component as it is outside of the CLEM/Market branch and needs to handle itself.
             int loopCount = 0;
-            if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
+            if (Clock.StartDate.Year > 1)
             {
                 if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
                 {
-                    DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                    DateTime trackDate = new(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
                     while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
                     {
                         trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
