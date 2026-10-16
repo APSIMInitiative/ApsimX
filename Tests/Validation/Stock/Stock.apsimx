@@ -77304,7 +77304,7 @@
                               "DMD": 0.76,
                               "MEContent": 13.05,
                               "CPConc": 0.134,
-                              "ProtDg": 0.55,
+                              "ProtDg": 0.7,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.0695,
@@ -77440,7 +77440,7 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus(SRW542)"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
@@ -78734,7 +78734,7 @@
                               "DMD": 0.7744,
                               "MEContent": 12.88,
                               "CPConc": 0.1348,
-                              "ProtDg": 0.4,
+                              "ProtDg": 0.7,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.032,
@@ -78870,11 +78870,11 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus(SRW542)"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
-                              "Value": "Male"
+                              "Value": "Castrate"
                             },
                             {
                               "Key": "Age",
@@ -78936,7 +78936,7 @@
                             "        private void OnDoManagement(object sender, EventArgs e)",
                             "        {",
                             "",
-                            "           supplement.Feed(\"Hersom2Mix\",10,\"Feedlot\");",
+                            "           supplement.Feed(\"Hersom2Mix\",15,\"Feedlot\");",
                             "        }",
                             "        ",
                             "    }",
@@ -79938,7 +79938,7 @@
                               "DMD": 0.7440000000000001,
                               "MEContent": 12.01,
                               "CPConc": 0.156,
-                              "ProtDg": 0.4,
+                              "ProtDg": 0.7,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.0345,
@@ -80074,11 +80074,11 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
-                              "Value": "Male"
+                              "Value": "Castrate"
                             },
                             {
                               "Key": "Age",
@@ -80140,7 +80140,7 @@
                             "        private void OnDoManagement(object sender, EventArgs e)",
                             "        {",
                             "",
-                            "           supplement.Feed(\"Sharman1Mix\",10,\"Feedlot\");",
+                            "           supplement.Feed(\"Sharman1Mix\",15,\"Feedlot\");",
                             "        }",
                             "        ",
                             "    }",
@@ -81241,7 +81241,7 @@
                               "DMD": 0.6920000000000001,
                               "MEContent": 11.53,
                               "CPConc": 0.13699999999999998,
-                              "ProtDg": 0.4,
+                              "ProtDg": 0.7,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.043899999999999995,
@@ -81377,11 +81377,11 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
-                              "Value": "Male"
+                              "Value": "Castrate"
                             },
                             {
                               "Key": "Age",
@@ -81443,7 +81443,7 @@
                             "        private void OnDoManagement(object sender, EventArgs e)",
                             "        {",
                             "",
-                            "           supplement.Feed(\"Sharman2Mix\",10,\"Feedlot\");",
+                            "           supplement.Feed(\"Sharman2Mix\",15,\"Feedlot\");",
                             "        }",
                             "        ",
                             "    }",
@@ -82428,7 +82428,7 @@
                             "[SetUpStock].Script.Age = 13",
                             "[SetUpStock].Script.Weight = 342.8",
                             "[FeedStock].Script.Amount = 12",
-                            "[FeedStock].Script.FeedType = Grain"
+                            "[FeedStock].Script.FeedType = grain"
                           ],
                           "CustomDescriptors": [],
                           "Name": "Silage",
@@ -82522,7 +82522,7 @@
                               "DMD": 0.76,
                               "MEContent": 13.05,
                               "CPConc": 0.134,
-                              "ProtDg": 0.4,
+                              "ProtDg": 0.8,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.068,
@@ -82543,7 +82543,7 @@
                               "DMD": 0.6945,
                               "MEContent": 11.36,
                               "CPConc": 0.13,
-                              "ProtDg": 0.4,
+                              "ProtDg": 0.75,
                               "PConc": 0.0032,
                               "SConc": 0.0024,
                               "EEConc": 0.035,
@@ -82679,11 +82679,11 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
-                              "Value": "Male"
+                              "Value": "Castrate"
                             },
                             {
                               "Key": "Age",
@@ -83308,8 +83308,11 @@
                             "diff of [Stock].WeightAll from 1-may to 31-dec as LiveWtGain",
                             "[Weather].MaxT",
                             "[Weather].MinT",
-                            "[FeedStock].Script.FeedType",
-                            " "
+                            "[Stock].CondScoreAll",
+                            "",
+                            "[stock].PastIntakeAll",
+                            "[stock].SuppIntakeAll",
+                            "[stock].SuppEaten"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -83613,6 +83616,74 @@
                               "CumulativeX": false,
                               "Filter": null,
                               "Name": "Observed",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Graph, Models",
+                          "Caption": null,
+                          "Axis": [
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 3,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            },
+                            {
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                              "Title": null,
+                              "Position": 0,
+                              "Inverted": false,
+                              "CrossesAtZero": false,
+                              "LabelOnOneLine": false,
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null
+                            }
+                          ],
+                          "LegendPosition": 0,
+                          "LegendOrientation": 0,
+                          "AnnotationLocation": 0,
+                          "DisabledSeries": [],
+                          "LegendOutsideGraph": false,
+                          "Name": "Intake",
+                          "ResourceName": null,
+                          "Children": [
+                            {
+                              "$type": "Models.Series, Models",
+                              "Type": 1,
+                              "XAxis": 3,
+                              "YAxis": 0,
+                              "ColourArgb": 0,
+                              "FactorToVaryColours": "SimulationName",
+                              "FactorToVaryMarkers": null,
+                              "FactorToVaryLines": null,
+                              "Marker": 11,
+                              "MarkerSize": 0,
+                              "Line": 0,
+                              "LineThickness": 0,
+                              "TableName": "ValidationReport",
+                              "XFieldName": "Clock.Today",
+                              "YFieldName": "stock.SuppIntakeAll.Weight",
+                              "X2FieldName": null,
+                              "Y2FieldName": null,
+                              "ShowInLegend": false,
+                              "IncludeSeriesNameInLegend": true,
+                              "Cumulative": false,
+                              "CumulativeX": false,
+                              "Filter": null,
+                              "Name": "Predicted",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -84014,11 +84085,11 @@
                           "Parameters": [
                             {
                               "Key": "Genotype",
-                              "Value": "Angus"
+                              "Value": "Calibrated(SRW600)"
                             },
                             {
                               "Key": "Sex",
-                              "Value": "Male"
+                              "Value": "Castrate"
                             },
                             {
                               "Key": "Age",
