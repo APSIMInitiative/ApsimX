@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 221,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1937,7 +1937,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.015,
+                  "FixedValue": 0.011,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -1957,7 +1957,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.003,
+                  "FixedValue": 0.005,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -1967,7 +1967,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
+                  "FixedValue": 1.0,
                   "Units": "/d",
                   "Name": "NReallocationFactor",
                   "ResourceName": null,
@@ -2889,7 +2889,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0003,
+                  "FixedValue": 0.0015,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -3415,7 +3415,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.00018,
+                  "FixedValue": 0.0005,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
