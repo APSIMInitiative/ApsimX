@@ -51,8 +51,4 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="CLEM\Resources\" />
-  </ItemGroup>
 </Project>

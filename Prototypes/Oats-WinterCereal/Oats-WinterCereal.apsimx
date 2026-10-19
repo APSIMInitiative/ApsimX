@@ -1,0 +1,872 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "Version": 222,
+  "Name": "Simulations",
+  "ResourceName": null,
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowInDocs": false,
+      "Name": "Replacements",
+      "ResourceName": null,
+      "Children": [
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Soil].Water.Volumetric",
+            "sum([Soil].Water.MM) as ProfileWater",
+            "[Oats].AboveGround.N",
+            "[Oats].AboveGround.NConc",
+            "[Oats].AboveGround.Wt",
+            "[Oats].AboveGroundLive.N",
+            "[Oats].AboveGroundLive.Wt",
+            "[Oats].AboveGroundDead.N",
+            "[Oats].AboveGroundDead.Wt",
+            "[Oats].Ear.N",
+            "[Oats].Ear.NConc",
+            "[Oats].Ear.Wt",
+            "[Oats].Grain.N",
+            "[Oats].Grain.NConc",
+            "[Oats].Grain.Number",
+            "[Oats].Grain.Size",
+            "[Oats].Grain.Wt",
+            "//[Oats].Leaf.AppearedCohortNo",
+            "[Oats].Leaf.CoverGreen",
+            "[Oats].Leaf.CoverTotal",
+            "[Oats].Leaf.Dead.N",
+            "[Oats].Leaf.Dead.Wt",
+            "//[Oats].Leaf.DeadCohortNo",
+            "//[Oats].Leaf.SenescingCohortNo",
+            "//[Oats].Leaf.ExpandedCohortNo",
+            "[Oats].Leaf.Fn",
+            "[Oats].Leaf.Fw",
+            "[Oats].Leaf.Height",
+            "[Oats].Leaf.LAI",
+            "[Oats].Leaf.Live.N",
+            "[Oats].Leaf.Live.NConc",
+            "[Oats].AboveGroundLive.NConc",
+            "[Oats].Leaf.Live.Wt",
+            "[Oats].Leaf.SpecificArea",
+            "[Oats].Phenology.CurrentPhase.Name",
+            "[Oats].Phenology.CurrentStageName",
+            "[Oats].Phenology.Stage",
+            "[Oats].Phenology.Zadok.Stage",
+            "//[Oats].Panicle.Wt",
+            "[Oats].Stem.N",
+            "[Oats].Stem.NConc",
+            "[Oats].Stem.Live.NConc",
+            "[Oats].Stem.Wt",
+            "[Oats].Leaf.Wt",
+            "[Oats].SowingData.Cultivar",
+            "////[Oats].Structure.Height",
+            "////[Oats].Structure.LeafTipsAppeared",
+            "////[Oats].Structure.BranchNumber",
+            "////[Oats].Structure.TotalStemPopn",
+            "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
+            "[Clock].Today.Year",
+            "[Oats].Leaf.Senesced.Wt",
+            "//[Oats].Leaf.GreenCohortNo",
+            "[Soil].SoilWater.LeachNO3 as LeachedNO3",
+            "sum([Soil].Nutrient.MineralN) as TotalMineralN",
+            "[Weather].Rain",
+            "",
+            "",
+            "[Irrigation].IrrigationApplied",
+            "[Fertiliser].NitrogenApplied",
+            "",
+            "",
+            "[SurfaceOrganicMatter].Wt",
+            "[SurfaceOrganicMatter].C",
+            "[SurfaceOrganicMatter].N",
+            "",
+            "sum([Soil].Nutrient.FOM.N) as TotalFOMN",
+            "sum([Soil].Nutrient.Humic.N) as TotalHumicN",
+            "sum([Soil].Nutrient.Microbial.N) as TotalMicrobialN",
+            "",
+            "[Soil].Nutrient.MineralisedN",
+            "sum([Soil].Nutrient.MineralisedN) as MineralisedSoilN",
+            "sum([SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN) as MineralisedSurfOMN",
+            "",
+            "[Soil].OutputWaterLayers.SW"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "GroupByVariableName": "",
+          "Name": "DailyReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "////[Oats].Structure.LeafTipsAppeared",
+            "////[Oats].Structure.FinalLeafNumber",
+            "[Oats].Phenology.FlagLeafDAS",
+            "[Oats].Phenology.FloweringDAS",
+            "[Oats].Phenology.MaturityDAS",
+            "[Oats].Phenology.CurrentPhase.Name",
+            "[Oats].Phenology.CurrentStageName"
+          ],
+          "EventNames": [
+            "[Oats].Harvesting"
+          ],
+          "GroupByVariableName": null,
+          "Name": "HarvestReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Weather].MeanT",
+            "[Weather].Radn",
+            "[Weather].Rain as Rainfall",
+            "[Irrigation].IrrigationApplied",
+            "[Oats].Leaf.Fw",
+            "([Oats].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
+            "[MicroClimate].PrecipitationInterception as Interception",
+            "[Oats].Leaf.Transpiration as Transpiration",
+            "[Soil].SoilWater.Es as Evaporation",
+            "[Soil].SoilWater.Drainage as Drainage",
+            "[Soil].SoilWater.Runoff as Runoff",
+            "sum([Soil].Water.MM) as TotalSoilWater",
+            "",
+            "sum([Soil].Nutrient.MineralisedN) as MineralisedN",
+            "[Fertiliser].NitrogenApplied as FertiliserN",
+            "sum([Soil].Nutrient.Natm) as DenitrifiedN",
+            "([Soil].SoilWater.LeachUrea+[Soil].SoilWater.LeachNH4+[Soil].SoilWater.LeachNO3) as NLeached",
+            "[SurfaceOrganicMatter].N as TotalSurfOMN",
+            "sum([Soil].Nutrient.FOM.N) as TotalFOMN",
+            "sum([Soil].Nutrient.Microbial.N) as TotalMicrobialN",
+            "sum([Soil].Nutrient.Humic.N) as TotalHumicN",
+            "(sum([Soil].NH4.kgha) + sum([Soil].NO3.kgha)) as TotalSoilN",
+            "sum([Soil].Urea.kgha) as TotalUrea",
+            "sum([Soil].NH4.kgha) as TotalNH4",
+            "sum([Soil].NO3.kgha) as TotalNO3",
+            "",
+            "sum([Soil].Nutrient.DenitrifiedN) as Denitrification",
+            "",
+            "[NO3].Flow",
+            "([Soil].SoilWater.Flux[5] + [Soil].SoilWater.Flow[5]) as Drainage70cm",
+            "([NH4].Flow[5] + [NO3].Flow[5]) as Leaching70cm",
+            "",
+            "sum of ([Soil].SoilWater.Flux[5] + [Soil].SoilWater.Flow[5]) from [Clock].StartOfSimulation to [Clock].Today as cumDrainage70cm",
+            "sum of ([NH4].Flow[5] + [NO3].Flow[5]) from [Clock].StartOfSimulation to [Clock].Today as cumLeaching70cm"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "GroupByVariableName": null,
+          "Name": "EnviroReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "",
+            "([Soil].OutputNutrientLayers.NO3[1] + [Soil].OutputNutrientLayers.NH4[1]) as SoilN_0_15",
+            "([Soil].OutputNutrientLayers.NO3[2] + [Soil].OutputNutrientLayers.NH4[2]) as SoilN_15_30",
+            "([Soil].OutputNutrientLayers.NO3[3] + [Soil].OutputNutrientLayers.NH4[3]) as SoilN_30_60",
+            "([Soil].OutputNutrientLayers.NO3[4] + [Soil].OutputNutrientLayers.NH4[4]) as SoilN_60_90",
+            "([Soil].OutputNutrientLayers.NO3[5] + [Soil].OutputNutrientLayers.NH4[5]) as SoilN_90_120",
+            "(SoilN_0_15 + SoilN_15_30 ) as SoilN_0_30",
+            "(SoilN_0_15 + SoilN_15_30 + SoilN_30_60) as SoilN_0_60",
+            "(SoilN_0_15 + SoilN_15_30 + SoilN_30_60 + SoilN_60_90) as SoilN_0_90",
+            "(SoilN_0_90 + SoilN_90_120) as SoilN_0_120",
+            "",
+            "[Soil].Nutrient.MineralN",
+            "[Soil].Nutrient.MineralisedN",
+            "[Soil].OutputWaterLayers.SW",
+            "",
+            "",
+            "[Soil].OutputWaterLayers.NO3[4] as LeachedN_70cm"
+          ],
+          "EventNames": [
+            "",
+            "[Clock].DoReport"
+          ],
+          "GroupByVariableName": null,
+          "Name": "DailyReportWater_n_MineralN",
+          "ResourceName": null,
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Measurements \n\nSoil samples will be collected from each plot: \n\n0-15, 15-30 and 30-60 cm depths (or to stones). \n\nComposite sample of 10 cores 1 m apart following a 10 m transect across the plot. The intensive regime is to account for urine patch variability, and ensure we intercept a proportionally accurate number of urine patches across the plot. \n\nSoil mineral N (nitrate and ammonium) measured at every depth. \n\nBasic mineral analysis for 0-15 cm depth (combined sample from all reps). \n\nFollowing emergence, plant counts will be performed to assess achieved plant population \n\nCrop canopy development will be monitored at regular intervals using a hand-held Greenseeker (reflectance measurements). \n\nBiomass will be measured at three key crop stages of the ‘control treatment’ (all treatments simultaneously measured at each sampling occasion): \n\nGS21 (tillering), September \n\nGS32 (2nd node), October \n\nGS45 (booting) = final harvest, November \n\n \n\nFor each biomass harvest, 3x 0.5 m2 quadrats (1.5 m2 in total) in each plot will be cut at ground level and total fresh biomass weighed. A ≈300g subsample will be taken, weighed after drying at 60°C until constant weight (dry matter content), and then ground and analysed for total N content using a LECO CNS analyser in order to determine crop N uptake. \n\n \n\nAt final harvest, a separate subsample will also be taken and sent to Hills Laboratories to measure feed quality. \n\n \n\nClimate data (rainfall, air and soil temperature, radiation) will be recorded via a local NIWA or on-site weather station for each site. \n\n ",
+              "Name": "Memo",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Phenology].ThermalTime",
+            "//[Leaf].CohortSize",
+            "////[Leaf].CohortParameters.MaxArea",
+            "[Oats].Arbitrator.DM.TotalFixationSupply",
+            "[Oats].Arbitrator.FN",
+            "////[Oats].Structure.Phyllochron",
+            "//[Oats].Leaf.CohortMaxSize",
+            "////[Oats].Leaf.CohortParameters.GrowthDuration",
+            "////[Oats].Leaf.CohortParameters.LagDuration",
+            "////[Oats].Leaf.CohortParameters.SenescenceDuration",
+            "////[Oats].Leaf.CohortParameters.SpecificLeafAreaMax",
+            "////[Oats].Leaf.CohortParameters.SpecificLeafAreaMin",
+            "[Oats].Leaf.Photosynthesis.FT",
+            "[Oats].Leaf.Photosynthesis.FVPD",
+            "[Oats].Leaf.Photosynthesis.RueAct",
+            "//[Oats].Leaf.NextExpandingLeafProportion",
+            "////[Oats].Structure.MeanTillerGrowthRate",
+            "//[LeafSize].Script.LeafAppearedPosition",
+            "//[LeafSize].Script.MostRecentlyAppearedLeafMaxSize",
+            "//[LeafSize].Script.LeafExpandedPosition",
+            "//[LeafSize].Script.MostRecentlyExpandedLeafSize",
+            "[Grain].AccumThermalTime",
+            "//[Oats].Panicle.HeadNumber",
+            "[Oats].Grain.NumberFunction",
+            "sum([Soil].Water.MM) as ProfileWater"
+          ],
+          "EventNames": [
+            "[Clock].DoReport"
+          ],
+          "GroupByVariableName": null,
+          "Name": "SupReport",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PMF.Plant, Models",
+          "Name": "Oats",
+          "ResourceName": "WinterCereal",
+          "Children": [
+            {
+              "$type": "Models.Core.ModelOverrides, Models",
+              "Overrides": [
+                "[Oats].PlantType=Oats"
+              ],
+              "Name": "ModelOverrides",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "Name": "Cultivars",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Most crop parameters can be specified individually for cultivars. Customized cultivar parameters are reported in this section.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 8.5",
+                    "//[Phenology].VrnSensitivity.FixedValue = 7",
+                    "//[Phenology].PpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 75",
+                    "//[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.2,0.35",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3.99,4,5,6,7,8,9",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,1,2,4,7,12,20",
+                    "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 40"
+                  ],
+                  "Name": "Drummond",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 10",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "//[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.2,0.35",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3.99,4,5,6,7,8,9"
+                  ],
+                  "Name": "Drummond_orig",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 8.5",
+                    "//[Phenology].VrnSensitivity.FixedValue = 7",
+                    "//[Phenology].PpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 105",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
+                    "//[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 3",
+                    "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1",
+                    "[Grain].MaximumPotentialGrainSize.FixedValue = 0.05",
+                    "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 50",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.6"
+                  ],
+                  "Name": "Milton",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 10",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1"
+                  ],
+                  "Name": "Hokonui",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 10",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1"
+                  ],
+                  "Name": "Stampede",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 5.3",
+                    "//[Phenology].PpSensitivity.FixedValue = 3.0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 5000",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2",
+                    "//[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.25,0.5"
+                  ],
+                  "Name": "Coolibah",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Coolibah",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Taipan",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaf appearance rate calibrated using data from Gatton 2007 for Taipan and Coolibah",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "//[Phenology].VrnSensitivity.FixedValue = 2",
+                    "//[Phenology].PpSensitivity.FixedValue = 2",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                  ],
+                  "Name": "Wintaroo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "//[Phenology].VrnSensitivity.FixedValue = 4",
+                    "//[Phenology].PpSensitivity.FixedValue = 4",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90"
+                  ],
+                  "Name": "Kangaroo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "//[Phenology].VrnSensitivity.FixedValue = 1",
+                    "//[Phenology].PpSensitivity.FixedValue = 1",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 2",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 80"
+                  ],
+                  "Name": "Brusher",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 12",
+                    "//[Phenology].PpSensitivity.FixedValue = 6",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 4",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 105",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 5000",
+                    "//[Structure].BranchingRate.StressFactors.CoverEffect.XYPairs.X = 0,0.4,0.7"
+                  ],
+                  "Name": "Algerian",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Nugene",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 4",
+                    "//[Phenology].PpSensitivity.FixedValue = 9",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 6",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 80",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Drover",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Genie",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Aladdin",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Comet",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Wizard",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 10",
+                    "//[Phenology].PpSensitivity.FixedValue = 7.5",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 3",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 3",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 90",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 8000"
+                  ],
+                  "Name": "Bond",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "# Comparing cultivars Coronet and PFR 100-05\n\n- Data collected by **Mike George**\n- Data sits in: https://iplant.plantandfood.co.nz/project/I161208\n\n## Context: \n- PFR 100-05 showed faster canopy cloure rates via drone aerial photos\n- Field trial was done to identify mechanisms. \n\n##Main differences between cultivars were:\n\n- Larger leaves by PRR 100-05 (45-80% larger)\n- Taller stems by PFR 100-05 (50% taller)\n\n## Observations\n\n- We agreed to keep only leaf size as genotype difference. Height also differed as:\n- [#Structure].HeightModel.PotentialHeight.XYPairs.Y = 13,204,820,820\n- [#Structure].HeightModel.PotentialHeight.XYPairs.Y = 20,300,1200,1200\n\n## Modifications (by RC, RZ, EK)\n- Changed sowing depth to 40 mm to delay emergence\n- Changed depth at which fertiliser N was applied to 10 cm (initially 40 cm which was an error)\n- Removed the initialisation of the second leaf\n- Changed maximum leaf area to match observations (cultivar-specific)\n- Changed tillering dynamics (cultivar-specific)\n- Changed phyllochron to improve leaf tip appearance (cultivar-specific)\n- Changed the extinction coefficient (cultivar-specific)\n- Changed stem height for a closer fit with measured values\n- Changed stem maximum N conc\n\n",
+                  "Name": "ReadMe",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 110",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3073",
+                    "//[Leaf].InitialLeaves[1].Area = 28.4",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.5,4.0,4.5,4.9",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.1,0.1,0.4,1,0.55",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,1,1,0,0,0,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,4.3,4.5,4.8",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 15000,20000,23000,25000",
+                    "[Stem].MaximumNConc.XYPairs.Y = 0.045,0.04,0.01",
+                    "[Stem].MaximumNConc.XYPairs.X = 3.0, 4.2, 5",
+                    "//[Oats].Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y[1] = 0.0008"
+                  ],
+                  "Name": "Coronet_SAE_Oats_2020",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 110",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4105",
+                    "//[Leaf].InitialLeaves[1].Area = 41.0",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.2,4.0,4.4,4.7",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.12,0.2,1,1,0.55",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,0,1.7,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1 ",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,3.5,4",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 18000,20000,25000",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.X = 3, 4.5, 4.6",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1, 1, 0.2"
+                  ],
+                  "Name": "CROA146",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 110",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4289",
+                    "//[Leaf].InitialLeaves[1].Area = 68.5",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.2,4.0,4.3,4.6",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.12,0.2,1,1,0.55",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,0,1.7,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,3.5,4",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 18000,20000,25000",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.X = 3, 4.5, 4.6",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1, 1, 0.2"
+                  ],
+                  "Name": "107_32",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 135",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4417",
+                    "//[Leaf].InitialLeaves[1].Area = 54.6",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.2,4.0,4.3,4.9",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.12,0.2,1,1,0.25",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,0,1.7,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,3.5,4",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 18000,20000,25000",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.X = 3, 4.5, 4.6",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1, 1, 0.2"
+                  ],
+                  "Name": "Armstrong",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 10.1",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 110",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 5814",
+                    "//[Leaf].InitialLeaves[1].Area = 71.2",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.8,4.5,4.6,4.7",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.1,0.4,1,0.9,0.45",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,1,1,0,0,0,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,4.3,4.5,4.8",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 15000,20000,23000,25000",
+                    "[Stem].MaximumNConc.XYPairs.Y = 0.045,0.035,0.01",
+                    "[Stem].MaximumNConc.XYPairs.X = 3.0, 4.2, 4.8",
+                    "//[Oats].Structure.BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y[1] = 0.0022"
+                  ],
+                  "Name": "100_05",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 110",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.5",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3593",
+                    "//[Leaf].InitialLeaves[1].Area = 45.0",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,3.2,4.0,4.5,4.8",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.12,0.2,1,1,0.3",
+                    "//[Structure].HeightModel.PotentialHeight.XYPairs.Y = 10,150,550,750",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3,4,5,6,7,8",
+                    "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,0,0,1.7,0,0",
+                    "//[Oats].Structure.BranchingRate.StressFactors.CoverEffect.XYPairs.X = 1,1,1",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.X = 3,3.5,4",
+                    "//[Oats].Leaf.CohortParameters.SpecificLeafAreaMax.XYPairs.Y = 18000,20000,25000",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.X = 3, 4.5, 4.6",
+                    "//[Oats].Leaf.CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1, 1, 0.2"
+                  ],
+                  "Name": "Milton2",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 0",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 105",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.6",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 2500",
+                    "//[Leaf].InitialLeaves1.Area = 340",
+                    "//[Leaf].InitialLeaves2.Area = 660",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,4,4.3",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y =  0.05,1,0.05"
+                  ],
+                  "Name": "PFR_100_05",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "//[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "//[Phenology].VrnSensitivity.FixedValue = 0",
+                    "//[Phenology].PpSensitivity.FixedValue = 0",
+                    "//[Phenology].EarlyReproductiveLongDayBase.FixedValue = 0",
+                    "//[Phenology].EarlyReproductivePpSensitivity.FixedValue = 0",
+                    "//[Structure].Phyllochron.BasePhyllochron.FixedValue = 105",
+                    "//[Leaf].ExtinctionCoeff.FixedValue = 0.6",
+                    "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 1640",
+                    "//[Leaf].InitialLeaves1.Area = 200",
+                    "//[Leaf].InitialLeaves2.Area = 400",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.X = 3,4,4.3",
+                    "//[Leaf].CohortParameters.MaxArea.AgeFactor.XYPairs.Y = 0.05,1,0.05"
+                  ],
+                  "Name": "Coronet",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.PreSimulationTools.Virtual, Models",
+      "FileName": "%root%/Tests/Validation/Oats/Oats.apsimx",
+      "ModelPaths": [
+        "[Simulations]"
+      ],
+      "Name": "Virtual",
+      "ResourceName": null,
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}

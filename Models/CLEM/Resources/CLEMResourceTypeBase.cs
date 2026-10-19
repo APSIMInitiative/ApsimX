@@ -1,16 +1,10 @@
-using APSIM.Core;
 using Docker.DotNet.Models;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.PMF;
-using NetTopologySuite.Precision;
 using Newtonsoft.Json;
-using StdUnits;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -28,7 +22,8 @@ namespace Models.CLEM.Resources
         [Link]
         private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
-        private double amount = 0;
+        private double totalAmount = 0;
+        private double totalPending = 0;
         private readonly Dictionary<ResourceRequest, double> pending = [];
         private bool marketStoreChecked = false;
 
@@ -38,19 +33,19 @@ namespace Models.CLEM.Resources
         /// The amount available accounting for unavailable and pending transactions.
         /// </summary>
         [JsonIgnore]
-        public double AmountAvailable { get { return AmountTotal - AmountPending - AmountUnavailable; } }
+        public double AmountAvailable { get { return totalAmount - AmountPending - AmountUnavailable; } }
 
         /// <summary>
         /// Total amount present
         /// </summary>
         [JsonIgnore]
-        public double AmountTotal { get { return amount; } }
+        public double AmountTotal { get { return totalAmount; } }
 
         /// <summary>
         /// Amount in pending transactions
         /// </summary>
         [JsonIgnore]
-        public double AmountPending { get { return pending.Sum(a => a.Value); } }
+        public double AmountPending { get { return totalPending; } } // pending.Sum(a => a.Value); } }
 
         /// <summary>
         /// Amount unavailable
@@ -101,6 +96,7 @@ namespace Models.CLEM.Resources
                 }
             }
             pending.Clear();
+            totalPending = 0;
         }
 
         /// <summary>
@@ -411,8 +407,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         protected void Add(double amountToAdd)
         {
-            amount += amountToAdd;
-            if (amount < TOLERANCE) amount = 0;
+            totalAmount += amountToAdd;
+            //if (totalAmount < TOLERANCE) totalAmount = 0;
         }
 
         /// <summary>
@@ -470,15 +466,20 @@ namespace Models.CLEM.Resources
             amountToRemove = Math.Min(amountToRemove, AmountAvailable);
             if (pendingRequest is not null)
             {
-                if (!pending.TryAdd(pendingRequest, amountToRemove))
+                if (pending.TryAdd(pendingRequest, amountToRemove))
+                {
+                    totalPending += amountToRemove;
+                }
+                else
                 {
                     pending[pendingRequest] += amountToRemove;
+                    totalPending += amountToRemove;
                 }
             }
             else
             {
-                amount -= amountToRemove;
-                if (amount < TOLERANCE) amount = 0;
+                totalAmount -= amountToRemove;
+                //if (totalAmount < TOLERANCE) totalAmount = 0;
             }
             return amountToRemove;
         }
@@ -494,19 +495,8 @@ namespace Models.CLEM.Resources
             }
             amount = Math.Min(amount, value);
             pending[request] -= amount;
+            totalPending -= amount;
         }
-
-        ///// <inheritdoc/>
-        //public void DecreasePendingByProportion(ResourceRequest request, double proportion)
-        //{
-        //    if (pending.Count == 0 || !request.TransactionPending || !pending.ContainsKey(request))
-        //    {
-        //        string warnMessage = $"Attempted to reduce a pending transaction for [r={Name}] that does not exist or is not pending.";
-        //        Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
-        //        return;
-        //    }
-        //    pending[request] *= (1 - proportion);
-        //}
 
         /// <summary>
         /// Performs a transaction by specified amount.
@@ -524,6 +514,7 @@ namespace Models.CLEM.Resources
                 {
                     amountToRemove = value;
                     pending.Remove(request);
+                    totalPending -= value;
                 }
                 else
                 {
@@ -559,13 +550,14 @@ namespace Models.CLEM.Resources
             foreach (var item in pending)
             {
                 item.Key.Provided = item.Value;
-                if (item.Value > 0)
+                if (item.Value >= 0)
                 {
-                    amount -= item.Key.Provided;
+                    totalAmount -= item.Key.Provided;
                     PerformTransaction(item.Key, true);
                 }
             }
             pending.Clear();
+            totalPending = 0;
         }
 
         /// <summary>
@@ -574,13 +566,14 @@ namespace Models.CLEM.Resources
         /// <param name="total">The total amount</param>
         public void Set(double total)
         {
-            amount = total;
+            totalAmount = total;
             if (pending.Count > 0) 
             {
                 string warnMessage = $"Pending transactions for [r={Name}] have not been completed at the time of a Set operation. Amount pending of [a={AmountPending}] was not reported";
                 Warnings.CheckAndWrite(warnMessage, Summary, this, MessageType.Warning);
             }
             pending.Clear();
+            totalPending = 0;
         }
 
         /// <summary>
