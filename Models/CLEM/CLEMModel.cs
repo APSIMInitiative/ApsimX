@@ -224,7 +224,7 @@ namespace Models.CLEM
         {
             get
             {
-                var result = Structure.FindChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                var result = ActivityTimers.Sum(a => a.ActivityDue ? 0 : 1);
                 return (result == 0);
             }
         }

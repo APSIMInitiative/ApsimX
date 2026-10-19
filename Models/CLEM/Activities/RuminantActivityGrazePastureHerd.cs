@@ -286,7 +286,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Caclulate total herd daily pasture required and initialise intake tracking arrays.
+        /// Calculate total herd daily pasture required and initialise intake tracking arrays.
         /// </summary>
         /// <param name="greenAge"></param>
         public double CalculateDailyFeedRequirement(int greenAge)
@@ -496,7 +496,9 @@ namespace Models.CLEM.Activities
             pastureRequest.Provided = Math.Min(pastureRequest.Required, amountPending);
 
             PotentialIntakePastureQualityLimiter = amountPending / requiredTotal;
-            Status = ActivityStatus.Success;
+
+            if(desiredTotal > 0)
+                Status = ActivityStatus.Success;
 
             if (apsimLink is not null) 
             {
@@ -515,8 +517,8 @@ namespace Models.CLEM.Activities
 
             // report shortfalls based on multipliers.
 
-            double qualityShortfall = MathUtilities.PositiveDifference(amountPriorToPending, amountPending);
-            double resourceShortfall = MathUtilities.PositiveDifference(requiredTotal, amountPriorToPending);
+            double qualityShortfall = MathUtilities.RoundToZero(MathUtilities.PositiveDifference(amountPriorToPending, amountPending), GrazeFoodStoreType.PoolMassEpsilon);
+            double resourceShortfall = MathUtilities.RoundToZero(MathUtilities.PositiveDifference(requiredTotal, amountPriorToPending), GrazeFoodStoreType.PoolMassEpsilon);
 
             if (qualityShortfall + resourceShortfall > 0)
             {
