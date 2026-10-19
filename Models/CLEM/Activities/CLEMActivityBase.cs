@@ -534,7 +534,7 @@ namespace Models.CLEM.Activities
             // report all timers in setup step to provide all components in 
             // report all timers that were due this time step
             // report timer status and messages when not from setup
-            foreach (IActivityTimer timer in Structure.FindChildren<IActivityTimer>())
+            foreach (IActivityTimer timer in ActivityTimers)
             {
                 // report activity performed.
                 if (fromSetup | timer.ActivityDue)
@@ -611,6 +611,7 @@ namespace Models.CLEM.Activities
 
             if (!TimingOK)
             {
+                Status = ActivityStatus.NoTask;
                 return;
             }
 

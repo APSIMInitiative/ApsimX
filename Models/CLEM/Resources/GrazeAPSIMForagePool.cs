@@ -86,7 +86,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double GutFill { get => feedDetails.GutFill; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public int Age { get => 10; set => throw new NotImplementedException(); }
+        public int AgeInDays { get => 10; set => throw new NotImplementedException(); }
+        /// <inheritdoc/>
+        public int AgeInMonths { get => 10; set => throw new NotImplementedException(); }
+        /// <inheritdoc/>
+        public bool IsGrowthThisTimeStep { get; private set; } = false;
         /// <inheritdoc/>
         public double Detached { get; set; }
         /// <inheritdoc/>
