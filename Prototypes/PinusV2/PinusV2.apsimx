@@ -2879,7 +2879,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0019,
+                  "FixedValue": 0.0021,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -3344,7 +3344,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": "/d",
                   "Name": "NReallocationFactor",
                   "ResourceName": null,
@@ -3354,7 +3354,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.1,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -3395,7 +3395,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.00114,
+                  "FixedValue": 0.00075,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
