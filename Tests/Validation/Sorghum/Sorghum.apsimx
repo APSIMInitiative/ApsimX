@@ -1375,36 +1375,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(33, \"NO3N\", 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-02-12",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1997-02-12 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1997-02-12 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-03-21",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1997-03-21 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1997-03-21 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -2151,22 +2144,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1996-12-20",
-                                  "Action": "[Fertiliser].Apply(3, \"NO3N\", 50);",
-                                  "Line": "1996-12-20 [Fertiliser].Apply(3, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                                  "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1996-12-23",
-                                  "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                                  "Line": "1996-12-23 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1996-12-23",
-                                  "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                                  "Line": "1996-12-23 [Fertiliser].Apply(10, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                                  "Line": "1996-12-23 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -2425,22 +2411,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(0, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(10, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -3391,22 +3370,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(33, \"NO3N\", 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -4365,22 +4337,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(0, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(10, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-12-23",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1997-12-23 [Fertiliser].Apply(0, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -5057,12 +5022,52 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = Buster",
-                            "[SowingRule].Script.Ftn = 0.1"
+                            "[SowingRule].Script.Ftn = 0.1",
+                            "[FertiliserSchedule]"
                           ],
                           "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1997-11-26",
+                                  "Action": "[Fertiliser].Apply(37.8, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(37.8, \"NH4N\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1997-11-26",
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1998-01-06",
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-01-06 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1998-02-20",
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-02-20 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
+                                }
+                              ],
+                              "Name": "FertiliserSchedule",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -5097,22 +5102,29 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(0, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(33, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(33, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1998-01-06",
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-01-06 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1998-02-20",
-                                  "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                                  "Line": "1998-02-20 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-02-20 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -5371,15 +5383,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(3, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(3, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1997-11-26",
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1998-01-06",
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1998-01-06 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-02-20",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1998-02-20 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1998-02-20 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -6353,8 +6379,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(10, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -7094,15 +7120,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(3, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(3, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -7387,15 +7413,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(33, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -8065,15 +8091,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(3, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(3, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(3.3, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(3.3, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(10, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -8358,15 +8384,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(33, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(10, \"NO3N\", 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(10, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -9308,36 +9334,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-09-06",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1996-09-06 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-09-06",
-                              "Action": "[Fertiliser].Apply(126, \"NO3N\", 50);",
-                              "Line": "1996-09-06 [Fertiliser].Apply(126, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(126.5, \"UreaN\", 50);",
+                              "Line": "1996-09-06 [Fertiliser].Apply(126.5, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-09-16",
-                              "Action": "[Fertiliser].Apply(105, \"NO3N\", 50);",
-                              "Line": "1996-09-16 [Fertiliser].Apply(105, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(105.8, \"UreaN\", 50);",
+                              "Line": "1996-09-16 [Fertiliser].Apply(105.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-11-15",
-                              "Action": "[Fertiliser].Apply(73, \"NO3N\", 50);",
-                              "Line": "1996-11-15 [Fertiliser].Apply(73, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(73.6, \"UreaN\", 50);",
+                              "Line": "1996-11-15 [Fertiliser].Apply(73.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-31",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1996-12-31 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1996-12-31 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -10415,36 +10434,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(45, \"NO3N\", 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(45, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(116, \"NO3N\", 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(116, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(164.68, \"UreaN\", 50);",
+                              "Line": "1997-01-03 [Fertiliser].Apply(164.68, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-02-04",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1997-02-04 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1997-02-04 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-03-11",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1997-03-11 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1997-03-11 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -11327,37 +11332,30 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-12-03",
-                              "Action": "[Fertiliser].Apply(0, \"NO3N\", 50);",
-                              "Line": "1997-12-03 [Fertiliser].Apply(0, \"NO3N\", 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-12-03",
-                              "Action": "[Fertiliser].Apply(40, \"NO3N\", 50);",
-                              "Line": "1997-12-03 [Fertiliser].Apply(40, \"NO3N\", 50);"
+                              "Date": "1997-11-27",
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-27 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-12-04",
-                              "Action": "[Fertiliser].Apply(147, \"NO3N\", 50);",
-                              "Line": "1997-12-04 [Fertiliser].Apply(147, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-12-04 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1998-01-06",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1998-01-06 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Date": "1998-02-04",
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1998-02-04 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1998-02-10",
-                              "Action": "[Fertiliser].Apply(59, \"NO3N\", 50);",
-                              "Line": "1998-02-10 [Fertiliser].Apply(59, \"NO3N\", 50);"
+                              "Date": "1998-03-10",
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1998-03-10 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -12059,8 +12057,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12091,22 +12089,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-13",
-                              "Action": "[Fertiliser].Apply(27, \"NO3N\", 50);",
-                              "Line": "1998-12-13 [Fertiliser].Apply(27, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1998-12-13 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-14",
-                              "Action": "[Fertiliser].Apply(27, \"NO3N\", 50);",
-                              "Line": "1999-01-14 [Fertiliser].Apply(27, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1999-01-14 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12137,22 +12135,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-13",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-12-13 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-12-13 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-14",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1999-01-14 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1999-01-14 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12207,8 +12205,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12239,22 +12237,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-17",
-                              "Action": "[Fertiliser].Apply(27, \"NO3N\", 50);",
-                              "Line": "1998-12-17 [Fertiliser].Apply(27, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1998-12-17 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-23",
-                              "Action": "[Fertiliser].Apply(27, \"NO3N\", 50);",
-                              "Line": "1999-01-23 [Fertiliser].Apply(27, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1999-01-23 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12285,22 +12283,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-17",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1998-12-17 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-12-17 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-23",
-                              "Action": "[Fertiliser].Apply(55, \"NO3N\", 50);",
-                              "Line": "1999-01-23 [Fertiliser].Apply(55, \"NO3N\", 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1999-01-23 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -14684,8 +14682,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1999-11-29",
-                                  "Action": "[Fertiliser].Apply(44, \"NO3N\", 50);",
-                                  "Line": "1999-11-29 [Fertiliser].Apply(44, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(44.16, \"UreaN\", 50);",
+                                  "Line": "1999-11-29 [Fertiliser].Apply(44.16, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "Med",
@@ -14701,22 +14699,22 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1999-11-29",
-                                  "Action": "[Fertiliser].Apply(117, \"NO3N\", 50);",
-                                  "Line": "1999-11-29 [Fertiliser].Apply(117, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(117.76, \"UreaN\", 50);",
+                                  "Line": "1999-11-29 [Fertiliser].Apply(117.76, \"UreaN\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2000-01-07",
-                                  "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                                  "Line": "2000-01-07 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "2000-01-07 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2000-02-11",
-                                  "Action": "[Fertiliser].Apply(119, \"NO3N\", 50);",
-                                  "Line": "2000-02-11 [Fertiliser].Apply(119, \"NO3N\", 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "2000-02-11 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "High",
