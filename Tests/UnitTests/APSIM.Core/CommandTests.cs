@@ -13,14 +13,6 @@ namespace UnitTests.APSIM.Core.Tests;
 [TestFixture]
 public class CommandTests
 {
-    /*class ModelA : Model
-    {
-    }
-
-    class ModelB : Model
-    {
-        public int B1 { get { return 3; } }
-    }*/
 
     /// <summary>Ensure the add command works.</summary>
     [Test]
@@ -172,6 +164,52 @@ public class CommandTests
         cmd.Run(simulation, null, null);
 
         Assert.That(simulation.Children.Count, Is.EqualTo(3));
+    }
+
+    /// <summary>Ensure a delete command can target a model beneath a specified parent.</summary>
+    [Test]
+    public void EnsureDeleteWorksFromParent()
+    {
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Zone { Name = "Zone", Children = [new Models.Report { Name = "Report" }] },
+                new Zone { Name = "OtherZone", Children = [new Models.Report { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulations);
+
+        IModelCommand command = CommandLanguage.StringToCommands(["delete [Report] from [Zone]"], simulations, null).Single();
+        command.Run(simulations, null, null);
+
+        Assert.That(simulations.Children[0].Children, Is.Empty);
+        Assert.That(simulations.Children[1].Children, Has.Count.EqualTo(1));
+    }
+
+    /// <summary>Ensure delete all is limited to the specified parent.</summary>
+    [Test]
+    public void EnsureDeleteAllWorksFromParent()
+    {
+        Simulations simulations = new()
+        {
+            Children =
+            [
+                new Zone
+                {
+                    Name = "Zone",
+                    Children = [new Models.Report { Name = "Report1" }, new Models.Report { Name = "Report2" }]
+                },
+                new Zone { Name = "OtherZone", Children = [new Models.Report { Name = "Report" }] }
+            ]
+        };
+        Node.Create(simulations);
+
+        IModelCommand command = CommandLanguage.StringToCommands(["delete all [Report] from [Zone]"], simulations, null).Single();
+        command.Run(simulations, null, null);
+
+        Assert.That(simulations.Children[0].Children, Is.Empty);
+        Assert.That(simulations.Children[1].Children, Has.Count.EqualTo(1));
     }
 
     /// <summary>Ensure the duplicate command works.</summary>

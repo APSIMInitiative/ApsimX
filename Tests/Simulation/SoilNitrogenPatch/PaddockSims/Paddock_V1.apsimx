@@ -2749,11 +2749,11 @@
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today",
-                "[Decomposition].MineralisedN",
+                "[SurfaceOrganicMatter].SurfaceResidue.Decomposition.MineralisedN",
                 "[Nutrient].MineralisedN",
-                "[NO3].kgha",
-                "[NH4].kgha",
-                "[Urea].kgha"
+                "[Soil].NO3.kgha",
+                "[Soil].NH4.kgha",
+                "[Soil].Urea.kgha"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"

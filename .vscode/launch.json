@@ -4,6 +4,34 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Debug New Workflow",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Debug",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Workflow.dll",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args":[
+                "--payload-directory",
+                "/Tests/Validation",
+                "--env-string",
+                "", // provide this with line endings between env values.
+                "--pr-number",
+                "11578",
+                "--commit-sha",
+                "eb8e30"
+            ]
+        },
 
         {
             "name": "Apsim NG: Debug",

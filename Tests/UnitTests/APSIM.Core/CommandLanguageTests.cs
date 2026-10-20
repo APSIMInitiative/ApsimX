@@ -20,6 +20,8 @@ public class CommandLanguageTests
     [TestCase("add new \"Report to\" to [Zone]")]
     [TestCase("delete [Zone].Report")]
     [TestCase("delete all [Report]")]
+    [TestCase("delete all [Report] from [Zone]")]
+    [TestCase("delete [Report] from [Zone]")]
     [TestCase("duplicate [Zone].Report")]
     [TestCase("duplicate [Zone].Report name NewName")]
     [TestCase("save C:\\temp\\test.apsimx")]
