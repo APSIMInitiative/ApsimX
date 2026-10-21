@@ -4,13 +4,41 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        {
+            "name": "Debug New Workflow",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Debug",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/APSIM.Workflow.dll",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "args":[
+                "--payload-directory",
+                "/Tests/Validation",
+                "--env-string",
+                "", // provide this with line endings between env values.
+                "--pr-number",
+                "11578",
+                "--commit-sha",
+                "eb8e30"
+            ]
+        },
 
         {
             "name": "Apsim NG: Debug",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Debug",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "justMyCode": false,
@@ -34,7 +62,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Release",
-            "program": "${workspaceFolder}/bin/Release/net8.0/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Release/net10.0/ApsimNG.dll",
             "cwd": "${workspaceFolder}",
             "requireExactSource": true,
             "symbolOptions": {
@@ -51,7 +79,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/apsim.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/apsim.dll",
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
@@ -70,11 +98,12 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/Models.exe",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Models.exe",
             "args": [
-                "C:\\Work\\Repos\\APSIMInitiative\\ApsimX\\Examples\\Stock.apsimx"
+                "--apply",
+                "commands.txt"
             ],
-            "cwd": "${workspaceFolder}",
+            "cwd": "C:\\Users\\ric394\\Downloads\\models_workarea",
             "console": "internalConsole",
             "stopAtEntry": false,
             "presentation": {
@@ -88,7 +117,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Clean Debug",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/ApsimZMQServer.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/ApsimZMQServer.dll",
             "args": [
                 "-v", "-a", "127.0.0.1",
                 "-p", "57220", "-P", "interactive",
@@ -119,7 +148,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Debug",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/APSIM.Documentation.dll",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "stopAtEntry": false,
@@ -142,7 +171,7 @@
             "name": "Apsim.Workflow: Debug",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -170,7 +199,7 @@
             "name": "Apsim.Workflow: Splitter",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -194,7 +223,7 @@
             "name": "Apsim.Workflow: Sim Count",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -221,7 +250,7 @@
             "name": "Apsim.Workflow: List directories",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/Apsim.Workflow.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Apsim.Workflow.dll",
             "preLaunchTask": "Build Debug",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
@@ -248,7 +277,7 @@
             "name": "Generate Single: APSIM.Documentation",
             "type": "coreclr",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/Debug/net8.0/APSIM.Documentation.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/APSIM.Documentation.dll",
             "preLaunchTask": "Build Debug",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",

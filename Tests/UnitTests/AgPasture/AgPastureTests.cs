@@ -69,6 +69,7 @@ namespace UnitTests
             root.KNH4 = 0.01;
             root.KNO3 = 0.02;
             root.MaximumNUptake = 10.0;
+            root.NExtractionSWFactorExponent = 1.5;
 
             root.Initialise(zone, 100);
             root.Depth = 300;
@@ -146,6 +147,7 @@ namespace UnitTests
             root.KNH4 = 0.01;
             root.KNO3 = 0.02;
             root.MaximumNUptake = 10.0;
+            root.NExtractionSWFactorExponent = 1.5;
 
             root.Initialise(zone, 100);
             root.Depth = 300;
