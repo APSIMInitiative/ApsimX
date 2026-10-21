@@ -31,7 +31,7 @@ echo "author variable: ${author}"
 echo "PR Number: ${DOCKER_METADATA_OUTPUT_VERSION:3}"
 
 # makes the variable available in subsequent steps.
-jobcount=$(dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --sim-count)
+jobcount=$(dotnet ./bin/Release/net10.0/APSIM.Workflow.dll --sim-count)
 echo "jobcount: ${jobcount}"
 if test -z "${jobcount}"; then
     echo "The job count was found to be empty. Exiting."
@@ -46,4 +46,4 @@ response=$(curl -f "${url}" || exit 1)
 echo "POStats2 open response: ${response}"
 
 echo "Starting to sendjobs to Azure..."
-dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "$PAYLOAD_FOLDER_PATH" --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll --payload-directory "$PAYLOAD_FOLDER_PATH" --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
