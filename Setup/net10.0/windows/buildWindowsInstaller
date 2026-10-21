@@ -28,11 +28,11 @@ else
 fi
 
 #run dotnet 
-dotnet publish -c Release -f net8.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
+dotnet publish -c Release -f net10.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
 
 #run installer generator program
 cd $apsimx
-xvfb-run sh -c "wine /inno/ISCC.exe Setup/net8.0/windows/apsimx.iss"
+xvfb-run sh -c "wine /inno/ISCC.exe Setup/net10.0/windows/apsimx.iss"
 
 
 

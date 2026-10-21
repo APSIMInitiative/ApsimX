@@ -1,4 +1,4 @@
-﻿using APSIM.Core;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using Models.Core;
@@ -112,10 +112,10 @@ namespace Models
                     try
                     {
                         Clock clock = simulation.Node.FindChild<Clock>();
-                        CallMethod(clock, "OnSimulationCommencing", new object[] { null, EventArgs.Empty });
+                        CallMethod(clock, "OnSimulationCommencing", new object?[] { null, EventArgs.Empty });
                         InjectLink(weather, "clock", clock);
-                        CallMethod(weather, "OnSimulationCommencing", new object[] { null, EventArgs.Empty });
-                        CallMethod(weather, "OnDoWeather", new object[] { null, EventArgs.Empty });
+                        CallMethod(weather, "OnSimulationCommencing", new object?[] { null, EventArgs.Empty });
+                        CallMethod(weather, "OnDoWeather", new object?[] { null, EventArgs.Empty });
                         latitudeLongitude = (weather.Latitude, weather.Longitude);
                         latLongCache.Add(cacheKey, latitudeLongitude);
                     }
@@ -128,7 +128,7 @@ namespace Models
         }
 
         /// <summary>Call an event in a model</summary>
-        public static void CallMethod(object instance, string methodName, object[] arguments)
+        public static void CallMethod(object instance, string methodName, object?[] arguments)
         {
             MethodInfo methodToInvoke = instance.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic)!;
             methodToInvoke?.Invoke(instance, arguments);

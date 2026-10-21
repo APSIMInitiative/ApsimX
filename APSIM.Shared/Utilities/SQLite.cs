@@ -1,4 +1,4 @@
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
@@ -741,6 +741,13 @@ namespace APSIM.Shared.Utilities
             connection = new SqliteConnection(connectionString);
             connectionPool[currentThread] = connection;
             connection.Open();
+
+            // Newer SQLite builds disable double-quoted string literals. Re-enable them so that existing
+            // filters in .apsimx files (e.g. Experiment == "Name") keep working.
+            const int SQLITE_DBCONFIG_DQS_DML = 1013;
+            const int SQLITE_DBCONFIG_DQS_DDL = 1014;
+            SQLitePCL.raw.sqlite3_db_config(connection.Handle, SQLITE_DBCONFIG_DQS_DML, 1, out _);
+            SQLitePCL.raw.sqlite3_db_config(connection.Handle, SQLITE_DBCONFIG_DQS_DDL, 1, out _);
             _open = true;
             return connection;
         }
