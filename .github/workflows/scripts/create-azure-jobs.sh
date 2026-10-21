@@ -46,4 +46,4 @@ response=$(curl -f "${url}" || exit 1)
 echo "POStats2 open response: ${response}"
 
 echo "Starting to sendjobs to Azure..."
-dotnet ./bin/Release/net8.0/APSIM.Workflow.dll --payload-directory "$PAYLOAD_FOLDER_PATH" --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll --payload-directory "$PAYLOAD_FOLDER_PATH" --env-string "$AZURE_ENV_CONTENTS" --pr-number "$pr_number" --commit-sha "$commitsha" --full-commit-hash "$INCOMING_COMMIT_SHA" --githubauthorid "$author"
