@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 185,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,
@@ -112,7 +111,6 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
-      "GraphsPerPage": 6,
       "Name": "Replacements",
       "ResourceName": null,
       "Children": [
@@ -147,7 +145,7 @@
             "[Sorghum].Leaf.Live.Wt as LeafGreenWt",
             "[Sorghum].Leaf.Live.N as LeafGreenN",
             "[Sorghum].Stem.Live.Wt as StemGreenWt",
-            "[Sorghum].Stem.Live.N as StemGreenN ",
+            "[Sorghum].Stem.Live.N as StemGreenN",
             "[Sorghum].Rachis.Live.Wt as RachisGreenWt",
             "[Sorghum].Rachis.Live.N as RachisGreenN",
             "[Sorghum].Grain.Live.Wt as GrainGreenWt",
@@ -478,14 +476,12 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "CultivarParameters",
           "ResourceName": null,
           "Children": [
             {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
-              "GraphsPerPage": 6,
               "Name": "Sorghum",
               "ResourceName": null,
               "Children": [
@@ -516,14 +512,12 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": true,
-      "GraphsPerPage": 6,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": true,
-          "GraphsPerPage": 6,
           "Name": "Combined Results",
           "ResourceName": null,
           "Children": [
@@ -1103,7 +1097,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Hermitage",
           "ResourceName": null,
           "Children": [
@@ -1139,8 +1132,7 @@
                             "[SowingRule].Script.Cultivar = QL41xQL36",
                             "[SowingRule].Script.Ftn = 0"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "QL41xQL36",
                           "ResourceName": null,
                           "Children": [],
@@ -1153,8 +1145,7 @@
                             "[SowingRule].Script.Cultivar = Buster",
                             "[SowingRule].Script.Ftn = 0.2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -1171,7 +1162,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE1Base",
                   "ResourceName": null,
                   "Children": [
@@ -1199,9 +1189,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE1.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -28.21,
-                      "Tav": 16.37,
-                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -1233,6 +1220,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -1336,14 +1324,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "QL41xQL36"
-                            },
-                            {
-                              "Key": "Ftn",
-                              "Value": "0"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "01/09/1997 00:00:00"
                             },
@@ -1356,6 +1336,10 @@
                               "Value": "30"
                             },
                             {
+                              "Key": "Cultivar",
+                              "Value": "QL41xQL36"
+                            },
+                            {
                               "Key": "RowSpacing",
                               "Value": "500"
                             },
@@ -1366,6 +1350,10 @@
                             {
                               "Key": "TilleringMethod",
                               "Value": "ObservedTillers"
+                            },
+                            {
+                              "Key": "Ftn",
+                              "Value": "0"
                             }
                           ],
                           "Name": "SowingRule",
@@ -1421,36 +1409,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-02-12",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-02-12 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1997-02-12 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-03-21",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-03-21 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1997-03-21 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -1911,6 +1892,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -1945,18 +1927,8 @@
                                 0.32,
                                 0.33
                               ],
-                              "InitialPAWmm": 11.899999999999995,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -1997,6 +1969,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -2038,6 +2011,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -2079,7 +2053,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -2126,7 +2112,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -2180,8 +2165,7 @@
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = QL41xQL36"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "QL41xQL36",
                           "ResourceName": null,
                           "Children": [],
@@ -2193,8 +2177,7 @@
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = Buster"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -2211,7 +2194,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE2Base",
                   "ResourceName": null,
                   "Children": [
@@ -2239,9 +2221,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE2.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 16.37,
-                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -2273,6 +2252,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -2376,14 +2356,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "QL41xQL36"
-                            },
-                            {
-                              "Key": "Ftn",
-                              "Value": "0"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "01/09/1997 00:00:00"
                             },
@@ -2396,6 +2368,10 @@
                               "Value": "30"
                             },
                             {
+                              "Key": "Cultivar",
+                              "Value": "QL41xQL36"
+                            },
+                            {
                               "Key": "RowSpacing",
                               "Value": "500"
                             },
@@ -2406,6 +2382,10 @@
                             {
                               "Key": "TilleringMethod",
                               "Value": "ObservedTillers"
+                            },
+                            {
+                              "Key": "Ftn",
+                              "Value": "0"
                             }
                           ],
                           "Name": "SowingRule",
@@ -2461,22 +2441,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -2937,6 +2910,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -2971,18 +2945,8 @@
                                 0.32,
                                 0.33
                               ],
-                              "InitialPAWmm": 11.899999999999995,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3023,6 +2987,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -3064,6 +3029,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -3105,7 +3071,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3152,7 +3130,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -3210,7 +3187,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE3Base",
                   "ResourceName": null,
                   "Children": [
@@ -3238,9 +3214,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE3.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 0.0,
-                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -3272,6 +3245,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -3375,14 +3349,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "QL41xQL36"
-                            },
-                            {
-                              "Key": "Ftn",
-                              "Value": "0"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "01/09/1997 00:00:00"
                             },
@@ -3395,6 +3361,10 @@
                               "Value": "15"
                             },
                             {
+                              "Key": "Cultivar",
+                              "Value": "QL41xQL36"
+                            },
+                            {
                               "Key": "RowSpacing",
                               "Value": "500"
                             },
@@ -3405,6 +3375,10 @@
                             {
                               "Key": "TilleringMethod",
                               "Value": "ObservedTillers"
+                            },
+                            {
+                              "Key": "Ftn",
+                              "Value": "0"
                             }
                           ],
                           "Name": "SowingRule",
@@ -3460,22 +3434,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -3901,6 +3868,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -3935,18 +3903,8 @@
                                 0.322,
                                 0.347
                               ],
-                              "InitialPAWmm": 95.99999999999999,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -3987,6 +3945,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -4028,6 +3987,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -4069,7 +4029,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4116,7 +4088,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -4172,8 +4143,7 @@
                             "[SowingRule].Script.Ftn = 0",
                             "[SowingRule].Script.Depth = 15"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "QL41xQL36",
                           "ResourceName": null,
                           "Children": [],
@@ -4187,8 +4157,7 @@
                             "[SowingRule].Script.Ftn = 0.2",
                             "[SowingRule].Script.Depth = 30"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -4205,7 +4174,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE4Base",
                   "ResourceName": null,
                   "Children": [
@@ -4233,9 +4201,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE4.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 0.0,
-                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -4267,6 +4232,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -4370,14 +4336,6 @@
                           ],
                           "Parameters": [
                             {
-                              "Key": "Cultivar",
-                              "Value": "QL41xQL36"
-                            },
-                            {
-                              "Key": "Ftn",
-                              "Value": "0"
-                            },
-                            {
                               "Key": "Date",
                               "Value": "01/09/1997 00:00:00"
                             },
@@ -4390,6 +4348,10 @@
                               "Value": "30"
                             },
                             {
+                              "Key": "Cultivar",
+                              "Value": "QL41xQL36"
+                            },
+                            {
                               "Key": "RowSpacing",
                               "Value": "500"
                             },
@@ -4400,6 +4362,10 @@
                             {
                               "Key": "TilleringMethod",
                               "Value": "ObservedTillers"
+                            },
+                            {
+                              "Key": "Ftn",
+                              "Value": "0"
                             }
                           ],
                           "Name": "SowingRule",
@@ -4455,22 +4421,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-20",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-20 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1996-12-20 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-23",
-                              "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-23 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-12-23",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-12-23 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1996-12-23 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -4605,8 +4564,6 @@
                                 0.32,
                                 0.33
                               ],
-                              "InitialPAWmm": 105.47999999999999,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -4931,17 +4888,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -4982,6 +4932,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -5023,6 +4974,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -5064,7 +5016,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -5111,7 +5075,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -5166,13 +5129,52 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = Buster",
-                            "[SowingRule].Script.Ftn = 0.1"
+                            "[SowingRule].Script.Ftn = 0.1",
+                            "[FertiliserSchedule]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1997-11-26",
+                                  "Action": "[Fertiliser].Apply(37.8, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(37.8, \"NH4N\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1997-11-26",
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1998-01-06",
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-01-06 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1998-02-20",
+                                  "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                                  "Line": "1998-02-20 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
+                                }
+                              ],
+                              "Name": "FertiliserSchedule",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -5186,7 +5188,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE5Base",
                   "ResourceName": null,
                   "Children": [
@@ -5214,9 +5215,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE5.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -28.21,
-                      "Tav": 16.37,
-                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -5248,6 +5246,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -5436,15 +5435,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1997-11-26",
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1998-01-06",
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1998-01-06 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-02-20",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-02-20 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.84, \"NH4NO3N\", 50);",
+                              "Line": "1998-02-20 [Fertiliser].Apply(59.84, \"NH4NO3N\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -5926,6 +5939,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -5960,18 +5974,8 @@
                                 0.322,
                                 0.347
                               ],
-                              "InitialPAWmm": 95.99999999999999,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -6012,6 +6016,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -6053,6 +6058,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -6094,7 +6100,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -6141,7 +6159,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -6201,7 +6218,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE6Base",
                   "ResourceName": null,
                   "Children": [
@@ -6229,9 +6245,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE6.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 16.37,
-                      "Amp": 11.52,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -6263,6 +6276,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -6451,8 +6465,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -6927,6 +6941,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -6961,18 +6976,8 @@
                                 0.322,
                                 0.347
                               ],
-                              "InitialPAWmm": 95.99999999999999,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -7013,6 +7018,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -7054,6 +7060,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -7095,7 +7102,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -7142,7 +7161,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -7200,8 +7218,7 @@
                             "[Soil].Water.InitialValues = 0.307, 0.326, 0.444, 0.429, 0.363, 0.351, 0.336, 0.343, 0.352, 0.347",
                             "[FertiliserSchedule]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [
@@ -7212,15 +7229,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -7243,7 +7260,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE7Base",
                   "ResourceName": null,
                   "Children": [
@@ -7271,9 +7287,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE7.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 0.0,
-                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -7305,6 +7318,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -7493,15 +7507,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -7906,6 +7920,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -7940,18 +7955,8 @@
                                 0.352,
                                 0.347
                               ],
-                              "InitialPAWmm": 128.09999999999997,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -7992,6 +7997,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -8033,6 +8039,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -8074,7 +8081,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -8121,7 +8140,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -8179,8 +8197,7 @@
                             "[Soil].Water.InitialValues = 0.294, 0.381, 0.367, 0.306, 0.29, 0.319, 0.33, 0.343, 0.337, 0.344",
                             "[FertiliserSchedule]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [
@@ -8191,15 +8208,15 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(3, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(3.3, \"NH4N\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(3.3, \"NH4N\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1997-11-26",
-                                  "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1997-11-26 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                                  "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "FertiliserSchedule",
@@ -8222,7 +8239,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "HE8Base",
                   "ResourceName": null,
                   "Children": [
@@ -8250,9 +8266,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/HE8.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -28.21,
-                      "Tav": 0.0,
-                      "Amp": 0.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -8284,6 +8297,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -8472,15 +8486,15 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(33, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(33, \"NH4N\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(33, \"NH4N\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-11-26",
-                              "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-11-26 [Fertiliser].Apply(10, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(10.12, \"UreaN\", 50);",
+                              "Line": "1997-11-26 [Fertiliser].Apply(10.12, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -8885,6 +8899,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -8919,18 +8934,8 @@
                                 0.341,
                                 0.345
                               ],
-                              "InitialPAWmm": 70.89999999999999,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -8971,6 +8976,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -9012,6 +9018,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -9053,7 +9060,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -9100,7 +9119,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -9130,7 +9148,6 @@
         {
           "$type": "Models.Core.Folder, Models",
           "ShowInDocs": false,
-          "GraphsPerPage": 6,
           "Name": "Lawes",
           "ResourceName": null,
           "Children": [
@@ -9165,8 +9182,7 @@
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = Buster"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -9178,8 +9194,7 @@
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = QL41xQL36"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "QL41xQL36",
                           "ResourceName": null,
                           "Children": [],
@@ -9196,7 +9211,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes1996EarlyBase",
                   "ResourceName": null,
                   "Children": [
@@ -9224,9 +9238,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE14.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -27.55,
-                      "Tav": 20.61,
-                      "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -9258,6 +9269,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -9445,36 +9457,29 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-09-06",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-09-06 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1996-09-06",
-                              "Action": "[Fertiliser].Apply(126, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-09-06 [Fertiliser].Apply(126, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(126.5, \"UreaN\", 50);",
+                              "Line": "1996-09-06 [Fertiliser].Apply(126.5, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-09-16",
-                              "Action": "[Fertiliser].Apply(105, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-09-16 [Fertiliser].Apply(105, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(105.8, \"UreaN\", 50);",
+                              "Line": "1996-09-16 [Fertiliser].Apply(105.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-11-15",
-                              "Action": "[Fertiliser].Apply(73, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-11-15 [Fertiliser].Apply(73, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(73.6, \"UreaN\", 50);",
+                              "Line": "1996-11-15 [Fertiliser].Apply(73.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1996-12-31",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1996-12-31 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1996-12-31 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -9486,16 +9491,17 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using System;",
-                            "using Models.Core;",
-                            "using System.Collections.Generic;",
-                            "using System.Text;",
-                            "using Models.Soils;",
-                            "using Models.PMF;",
-                            "using Models;",
-                            "using System.Xml.Serialization;",
+                            "using APSIM.Numerics;",
                             "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models;",
+                            "using Models.PMF;",
+                            "using Models.Soils;",
+                            "using System.Text;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using System;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -9913,6 +9919,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -9941,18 +9948,8 @@
                                 0.399,
                                 0.38
                               ],
-                              "InitialPAWmm": 195.0,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -9987,6 +9984,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -10022,6 +10020,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -10057,7 +10056,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -10104,7 +10115,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -10159,8 +10169,7 @@
                             "[SowingRule].Script.Cultivar = Buster",
                             "[SowingRule].Script.Ftn = 0.5"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -10173,8 +10182,7 @@
                             "[SowingRule].Script.Cultivar = QL41xQL36",
                             "[SowingRule].Script.Ftn = 0.5"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "QL41xQL36",
                           "ResourceName": null,
                           "Children": [],
@@ -10191,7 +10199,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes1996LateBase",
                   "ResourceName": null,
                   "Children": [
@@ -10219,9 +10226,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE15.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -27.55,
-                      "Tav": 20.61,
-                      "Amp": 13.0,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -10253,6 +10257,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -10573,36 +10578,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(45, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(45, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-01-03",
-                              "Action": "[Fertiliser].Apply(116, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-01-03 [Fertiliser].Apply(116, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(164.68, \"UreaN\", 50);",
+                              "Line": "1997-01-03 [Fertiliser].Apply(164.68, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-02-04",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-02-04 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1997-02-04 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-03-11",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-03-11 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1997-03-11 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -10926,6 +10917,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -10954,18 +10946,8 @@
                                 0.379,
                                 0.405
                               ],
-                              "InitialPAWmm": 188.5,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -11000,6 +10982,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -11035,6 +11018,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -11070,7 +11054,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -11117,7 +11113,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -11173,8 +11168,7 @@
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = Buster"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Buster",
                           "ResourceName": null,
                           "Children": [],
@@ -11191,7 +11185,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes1997LateBase",
                   "ResourceName": null,
                   "Children": [
@@ -11219,9 +11212,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE17.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -27.55,
-                      "Tav": 19.77,
-                      "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -11253,6 +11243,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -11495,37 +11486,30 @@
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1997-12-03",
-                              "Action": "[Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-12-03 [Fertiliser].Apply(0, Fertiliser.Types.NO3N, 50);"
-                            },
-                            {
-                              "$type": "Models.Operation, Models",
-                              "Enabled": true,
-                              "Date": "1997-12-03",
-                              "Action": "[Fertiliser].Apply(40, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-12-03 [Fertiliser].Apply(40, Fertiliser.Types.NO3N, 50);"
+                              "Date": "1997-11-27",
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-11-27 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1997-12-04",
-                              "Action": "[Fertiliser].Apply(147, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1997-12-04 [Fertiliser].Apply(147, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                              "Line": "1997-12-04 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1998-01-06",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-01-06 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Date": "1998-02-04",
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1998-02-04 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
-                              "Date": "1998-02-10",
-                              "Action": "[Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-02-10 [Fertiliser].Apply(59, Fertiliser.Types.NO3N, 50);"
+                              "Date": "1998-03-10",
+                              "Action": "[Fertiliser].Apply(59.8, \"UreaN\", 50);",
+                              "Line": "1998-03-10 [Fertiliser].Apply(59.8, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "Operations",
@@ -11849,6 +11833,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -11877,18 +11862,8 @@
                                 0.399,
                                 0.389
                               ],
-                              "InitialPAWmm": 167.3,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -11923,6 +11898,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -11958,6 +11934,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -11993,7 +11970,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -12014,16 +12003,17 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using System;",
-                            "using Models.Core;",
-                            "using System.Collections.Generic;",
-                            "using System.Text;",
-                            "using Models.Soils;",
-                            "using Models.PMF;",
-                            "using Models;",
-                            "using System.Xml.Serialization;",
+                            "using APSIM.Numerics;",
                             "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models;",
+                            "using Models.PMF;",
+                            "using Models.Soils;",
+                            "using System.Text;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using System;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -12155,7 +12145,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -12210,8 +12199,7 @@
                         "[SowingRule].Script.Ftn = 0",
                         "[FertiliserSchedule]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "FertOffCvBuster",
                       "ResourceName": null,
                       "Children": [
@@ -12235,8 +12223,7 @@
                         "[SowingRule].Script.Ftn = 0.2",
                         "[FertiliserSchedule]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "FertLowCvBuster",
                       "ResourceName": null,
                       "Children": [
@@ -12247,8 +12234,8 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12268,8 +12255,7 @@
                         "[SowingRule].Script.Ftn = 0.3",
                         "[FertiliserSchedule]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "FertMedCvBuster",
                       "ResourceName": null,
                       "Children": [
@@ -12280,22 +12266,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-13",
-                              "Action": "[Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-12-13 [Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1998-12-13 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-14",
-                              "Action": "[Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1999-01-14 [Fertiliser].Apply(27, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(27.6, \"UreaN\", 50);",
+                              "Line": "1999-01-14 [Fertiliser].Apply(27.6, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12315,8 +12301,7 @@
                         "[SowingRule].Script.Ftn = 0.4",
                         "[FertiliserSchedule]"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "FertHighCvBuster",
                       "ResourceName": null,
                       "Children": [
@@ -12327,22 +12312,22 @@
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-11-11",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-11-11 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-11-11 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1998-12-13",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1998-12-13 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1998-12-13 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             },
                             {
                               "$type": "Models.Operation, Models",
                               "Enabled": true,
                               "Date": "1999-01-14",
-                              "Action": "[Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);",
-                              "Line": "1999-01-14 [Fertiliser].Apply(55, Fertiliser.Types.NO3N, 50);"
+                              "Action": "[Fertiliser].Apply(55.2, \"UreaN\", 50);",
+                              "Line": "1999-01-14 [Fertiliser].Apply(55.2, \"UreaN\", 50);"
                             }
                           ],
                           "Name": "FertiliserSchedule",
@@ -12361,7 +12346,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes1998Base",
                   "ResourceName": null,
                   "Children": [
@@ -12389,9 +12373,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/LE19.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -27.55,
-                      "Tav": 19.77,
-                      "Amp": 12.82,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -12423,6 +12404,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -12631,16 +12613,17 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using System;",
-                            "using Models.Core;",
-                            "using System.Collections.Generic;",
-                            "using System.Text;",
-                            "using Models.Soils;",
-                            "using Models.PMF;",
-                            "using Models;",
-                            "using System.Xml.Serialization;",
+                            "using APSIM.Numerics;",
                             "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models;",
+                            "using Models.PMF;",
+                            "using Models.Soils;",
+                            "using System.Text;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using System;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -13042,6 +13025,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -13070,18 +13054,8 @@
                                 0.35,
                                 0.374
                               ],
-                              "InitialPAWmm": 55.2,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": false,
                               "Name": "Water",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -13116,6 +13090,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -13151,6 +13126,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -13186,7 +13162,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -13233,7 +13221,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -13283,8 +13270,7 @@
                         "[SowingRule].Script.Density = 2",
                         "[SowingRule].Script.Ftn = 5"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Density_1",
                       "ResourceName": null,
                       "Children": [],
@@ -13298,8 +13284,7 @@
                         "[SowingRule].Script.Density = 4",
                         "[SowingRule].Script.Ftn = 3.27"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Density_2",
                       "ResourceName": null,
                       "Children": [],
@@ -13313,8 +13298,7 @@
                         "[SowingRule].Script.Density = 8",
                         "[SowingRule].Script.Ftn = 1.53"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Density_3",
                       "ResourceName": null,
                       "Children": [],
@@ -13328,8 +13312,7 @@
                         "[SowingRule].Script.Density = 16",
                         "[SowingRule].Script.Ftn = 0.2"
                       ],
-                      "Paths": null,
-                      "Values": null,
+                      "CustomDescriptors": [],
                       "Name": "Density_4",
                       "ResourceName": null,
                       "Children": [],
@@ -13342,7 +13325,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes20Base",
                   "ResourceName": null,
                   "Children": [
@@ -13370,9 +13352,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/Gatton_Tiller_x_Density.met",
                       "ExcelWorkSheetName": "",
-                      "Latitude": -27.55,
-                      "Tav": 19.51,
-                      "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -13404,6 +13383,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -14054,16 +14034,17 @@
                         {
                           "$type": "Models.Manager, Models",
                           "CodeArray": [
-                            "using Models.Interfaces;",
-                            "using System;",
-                            "using Models.Core;",
-                            "using System.Collections.Generic;",
-                            "using System.Text;",
-                            "using Models.Soils;",
-                            "using Models.PMF;",
-                            "using Models;",
-                            "using System.Xml.Serialization;",
+                            "using APSIM.Numerics;",
                             "using APSIM.Shared.Utilities;",
+                            "using System.Xml.Serialization;",
+                            "using Models;",
+                            "using Models.PMF;",
+                            "using Models.Soils;",
+                            "using System.Text;",
+                            "using System.Collections.Generic;",
+                            "using Models.Core;",
+                            "using System;",
+                            "using Models.Interfaces;",
                             "",
                             "namespace Models",
                             "{",
@@ -14398,14 +14379,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.Organic, Models",
                               "FOMCNRatio": 30.0,
                               "Thickness": [
@@ -14497,6 +14470,7 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
@@ -14525,8 +14499,6 @@
                                 0.41,
                                 0.38
                               ],
-                              "InitialPAWmm": 267.0,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -14563,6 +14535,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -14598,6 +14571,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -14633,7 +14607,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -14663,7 +14649,7 @@
                             "        public IPlant Crop { get; set; }",
                             "",
                             "        [Description(\"Type of fertiliser to apply? \")] ",
-                            "        public Fertiliser.Types FertiliserType { get; set; }",
+                            "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                             "    ",
                             "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                             "        public double Amount { get; set; }",
@@ -14673,7 +14659,7 @@
                             "        {",
                             "            Model crop = sender as Model;",
                             "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                            "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                            "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                             "        }",
                             "    }",
                             "}"
@@ -14711,7 +14697,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -14794,8 +14779,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1999-11-29",
-                                  "Action": "[Fertiliser].Apply(44, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1999-11-29 [Fertiliser].Apply(44, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(44.16, \"UreaN\", 50);",
+                                  "Line": "1999-11-29 [Fertiliser].Apply(44.16, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "Med",
@@ -14811,22 +14796,22 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1999-11-29",
-                                  "Action": "[Fertiliser].Apply(117, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "1999-11-29 [Fertiliser].Apply(117, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(117.76, \"UreaN\", 50);",
+                                  "Line": "1999-11-29 [Fertiliser].Apply(117.76, \"UreaN\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2000-01-07",
-                                  "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "2000-01-07 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "2000-01-07 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "2000-02-11",
-                                  "Action": "[Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);",
-                                  "Line": "2000-02-11 [Fertiliser].Apply(119, Fertiliser.Types.NO3N, 50);"
+                                  "Action": "[Fertiliser].Apply(119.6, \"UreaN\", 50);",
+                                  "Line": "2000-02-11 [Fertiliser].Apply(119.6, \"UreaN\", 50);"
                                 }
                               ],
                               "Name": "High",
@@ -14849,7 +14834,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Lawes1999Base",
                   "ResourceName": null,
                   "Children": [
@@ -14877,9 +14861,6 @@
                       "ConstantsFile": null,
                       "FileName": "Met/Gatton_RUE.met",
                       "ExcelWorkSheetName": null,
-                      "Latitude": -27.55,
-                      "Tav": 19.51,
-                      "Amp": 10.55,
                       "Name": "Weather",
                       "ResourceName": null,
                       "Children": [
@@ -14911,6 +14892,7 @@
                       "Slope": 0.0,
                       "AspectAngle": 0.0,
                       "Altitude": 50.0,
+                      "CanopyType": null,
                       "Name": "Paddock",
                       "ResourceName": null,
                       "Children": [
@@ -15274,8 +15256,6 @@
                                 0.41,
                                 0.38
                               ],
-                              "InitialPAWmm": 267.0,
-                              "RelativeTo": "LL15",
                               "FilledFromTop": true,
                               "Name": "Water",
                               "ResourceName": null,
@@ -15543,17 +15523,10 @@
                               "CEC": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
+                              "CECMetadata": null,
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -15588,6 +15561,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NO3",
                               "ResourceName": null,
                               "Children": [],
@@ -15623,6 +15597,7 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "NH4",
                               "ResourceName": null,
                               "Children": [],
@@ -15658,7 +15633,19 @@
                               "MaxDepthSoluteAccessible": 0.0,
                               "RunoffEffectivenessAtMovingSolute": 0.0,
                               "MaxEffectiveRunoff": 0.0,
+                              "ConcInSolution": null,
                               "Name": "Urea",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                              "Thickness": null,
+                              "InitialValues": null,
+                              "InteractionsPerDay": 8,
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -15705,7 +15692,6 @@
                             {
                               "$type": "Models.Core.Folder, Models",
                               "ShowInDocs": false,
-                              "GraphsPerPage": 6,
                               "Name": "CultivarParameters",
                               "ResourceName": null,
                               "Children": [],
@@ -15758,14 +15744,15 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Soils;",
-                "using System.Linq;",
-                "using System.Collections.Generic;",
-                "using Models.Storage;",
-                "using Models.Factorial;",
-                "using Models.Core.Run;",
-                "using Models.Core;",
+                "using APSIM.Core;",
                 "using System;",
+                "using Models.Core;",
+                "using Models.Core.Run;",
+                "using Models.Factorial;",
+                "using Models.Storage;",
+                "using System.Collections.Generic;",
+                "using System.Linq;",
+                "using Models.Soils;",
                 "",
                 "namespace Models",
                 "{",
@@ -15773,8 +15760,10 @@
                 "    /// This script must implement the IGraphPanelScript interface.",
                 "    /// </summary>",
                 "    [Serializable]",
-                "    public class Script : Model, IGraphPanelScript",
+                "    public class Script : Model, IStructureDependency, IGraphPanelScript",
                 "    {",
+                "        ",
+                "        public IStructure Structure { private get; set; }",
                 "        /// <summary>",
                 "        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.",
                 "        /// </summary>",
@@ -15784,7 +15773,7 @@
                 "        {",
                 "            // Get a list of all descendants of the panel's parent which are runnable",
                 "            // (simulations, experiments, etc).",
-                "            List<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().OfType<IModel>().ToList().Cast<ISimulationDescriptionGenerator>().ToList();",
+                "            List<ISimulationDescriptionGenerator> runnables =   Structure.FindChildren<ISimulationDescriptionGenerator>(recurse: true, relativeTo: (INodeModel)panel.Parent).OfType<IModel>().ToList().Cast<ISimulationDescriptionGenerator>().ToList();",
                 "",
                 "            // Remove all simulations which are children of an experiment.",
                 "            runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);",
@@ -15800,7 +15789,7 @@
                 "        /// <param name=\"simulationName\">Simulation name for this tab.</param>",
                 "        public void TransformGraph(Graph graph, string simulationName)",
                 "        {",
-                "            foreach (Series series in graph.FindAllChildren<Series>().OfType<IModel>().ToList())",
+                "            foreach (Series series in   Structure.FindChildren<Series>(recurse: true, relativeTo: (INodeModel)graph).OfType<IModel>().ToList())",
                 "                series.Name = series.Name.Replace(\"Predicted\", \"\").Replace(\"Observed\", \"\").Trim();",
                 "        }",
                 "    }",
