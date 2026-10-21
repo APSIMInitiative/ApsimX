@@ -23,8 +23,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (attributes is null)
-                    attributes = new Dictionary<string, IIndividualAttribute>();
+                attributes ??= new Dictionary<string, IIndividualAttribute>();
                 return attributes;
             }
         }
@@ -49,19 +48,22 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add an attribute to this individual
+        /// Add an attribute to this individual's list
         /// </summary>
         /// <param name="tag">Attribute label</param>
         /// <param name="value">Value to set or change</param>
         public void Add(string tag, IIndividualAttribute value = null)
         {
-            if (attributes is null)
-                attributes = new Dictionary<string, IIndividualAttribute>();
+            attributes ??= new Dictionary<string, IIndividualAttribute>();
 
             if (!attributes.ContainsKey(tag))
+            {
                 attributes.Add(tag, value);
+            }
             else
+            {
                 attributes[tag] = value;
+            }
         }
 
         /// <summary>
@@ -72,9 +74,13 @@ namespace Models.CLEM.Resources
         public IIndividualAttribute GetValue(string tag)
         {
             if (attributes is null || !attributes.ContainsKey(tag))
+            {
                 return null;
+            }
             else
+            {
                 return attributes[tag];
+            }
         }
 
         /// <summary>
@@ -84,7 +90,9 @@ namespace Models.CLEM.Resources
         public void Remove(string tag)
         {
             if (attributes != null && attributes.ContainsKey(tag))
+            {
                 attributes.Remove(tag);
+            }
         }
 
     }

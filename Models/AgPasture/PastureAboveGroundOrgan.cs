@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using APSIM.Numerics;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
-using System.Collections.Generic;
-using Models.PMF.Organs;
-using APSIM.Numerics;
 
 namespace Models.AgPasture
 {
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility, IHasDamageableBiomass
     {
+        /// <summary>Plant model.</summary>
         [Link(Type = LinkType.Ancestor)]
-        PastureSpecies species = null;
+        private PastureSpecies species = null;
 
         /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
@@ -41,28 +42,58 @@ namespace Models.AgPasture
         public GenericTissue[] LiveTissue { get; private set; }
 
         //---------------------------- Parameters -----------------------
+        ////////////// GUI parameters shown to user //////////////
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.04;
+        [Separator("Parameters controlling N content in this organ")]
+        [Description("N concentration for optimum growth")]
+        [Units("kg/kg")]
+        public double NConcOptimum { get; set; }
 
         /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.012;
+        [Description("Minimum N concentration")]
+        [Units("kg/kg")]
+        public double NConcMinimum { get; set; }
 
         /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.05;
+        [Description("Maximum N concentration")]
+        [Units("kg/kg")]
+        public double NConcMaximum { get; set; }
+
+        /// <summary>Maximum reduction in N concentration due to elevated CO2 (0-1).</summary>
+        [Description("Maximum reduction in N concentration due to CO2")]
+        [Units("kg/kg")]
+        public double MaxCO2EffectOnNRequirement { get; set; }
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
-        public double FractionStanding { get; set; } = 1.0;
+        [Separator("Parameters controlling biomass availability for removal")]
+        [Description("Fraction standing, available to harvest")]
+        [Units("kg/kg")]
+        public double FractionStanding { get; set; }
 
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        public double MinimumLiveDM { get; set; } = 10.0;
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>'
+        [Description("Minimum live DM biomass")]
+        [Units("kg/ha")]
+        public double MinimumLiveDM { get; set; }
+
+        /// <summary>Value of minimum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcMinimum = 0.0;
+
+        /// <summary>Value of optimum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcOptimum = 0.0;
+
+        /// <summary>Value of maximum N concentration at start of simulation, for resets (kg/kg).</summary>
+        private double baseNConcMaximum = 0.0;
 
         //----------------------- Constants -----------------------
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //----------------------- States -----------------------
+
+        /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
+        public bool IsAboveGround { get { return true; } }
 
         /// <summary>A list of material (biomass) that can be damaged.</summary>
         public IEnumerable<DamageableBiomass> Material
@@ -74,19 +105,18 @@ namespace Models.AgPasture
             }
         }
 
-        /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
-        public bool IsAboveGround { get { return true; } }
-
-        /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Live biomass. Used by STOCK (g/m2).</summary>
         public Biomass Live { get; private set; } = new Biomass();
 
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
 
-        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Digestibility of live biomass. Used by STOCK (g/g).</summary>
+        [Units("g/g")]
         public double LiveDigestibility { get; private set; }
 
-        /// <summary>Digestibility of dead biomass. Used by STOCK (g/m2).</summary>
+        /// <summary>Digestibility of dead biomass. Used by STOCK (g/g).</summary>
+        [Units("g/g")]
         public double DeadDigestibility { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
@@ -96,11 +126,10 @@ namespace Models.AgPasture
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double DMLive { get; private set; }
-        //public double DMLive { get { return LiveTissue.Sum(tissue => tissue.DM.Wt); } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get { return DeadTissue.DM.Wt; } }
+        public double DMDead { get; private set; }
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -111,9 +140,11 @@ namespace Models.AgPasture
         public double StandingLiveHerbageWt { get { return DMLive * FractionStanding; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
+        [Units("kg/kg")]
         public double StandingLiveDigestibility { get { return DigestibilityLive; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
+        [Units("kg/kg")]
         public double StandingDeadDigestibility { get { return DigestibilityDead; } }
 
         /// <summary>Standing dead herbage weight (kg/ha).</summary>
@@ -156,20 +187,19 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
 
-        /// <summary>Total N in this tissue (kg/ha).</summary>
+        /// <summary>Total N amount in this organ (kg/ha).</summary>
         [Units("kg/ha")]
         public double NTotal { get { return NLive + NDead; } }
 
-        /// <summary>N in the live (green) tissues (kg/ha).</summary>
+        /// <summary>N amount in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double NLive { get; private set; }
-        //public double NLive { get { return LiveTissue.Sum(tissue => tissue.DM.N); } }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDead { get { return DeadTissue.DM.N; } }
+        public double NDead { get; private set; }
 
-        /// <summary>Average total N concentration.</summary>
+        /// <summary>Average total N concentration in this organ (kg/kg).</summary>
         [Units("kg/kg")]
         public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
@@ -182,33 +212,43 @@ namespace Models.AgPasture
         public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
 
         /// <summary>Luxury N remobilised into new growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NLuxuryRemobilised { get { return LiveTissue.Sum(tissue => tissue.NRemobilised); } }
 
         /// <summary>Senesced N available for remobilisation (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenescedRemobilisable { get { return DeadTissue.NRemobilisable; } }
 
         /// <summary>Senesced N remobilised into new growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenescedRemobilised { get { return DeadTissue.NRemobilised; } }
 
         /// <summary>DM senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMSenesced { get { return MatureTissue.DMTransferredOut; } }
 
         /// <summary>N senescing from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NSenesced { get { return MatureTissue.NTransferredOut; } }
 
         /// <summary>DM detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMDetached { get { return DeadTissue.DMTransferredOut; } }
 
         /// <summary>N detached from this organ (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NDetached { get { return DeadTissue.NTransferredOut; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMRemoved { get { return LiveTissue.Sum(tissue => tissue.DMRemoved) + DeadTissue.DMRemoved; } }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NRemoved { get { return LiveTissue.Sum(tissue => tissue.NRemoved) + DeadTissue.NRemoved; } }
 
         /// <summary>Fraction of DM removed from organ.</summary>
@@ -216,9 +256,11 @@ namespace Models.AgPasture
         public double FractionRemoved { get { return removedFraction; } }
 
         /// <summary>DM added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double DMGrowth { get { return EmergingTissue.DMTransferredIn; } }
 
         /// <summary>N added to this organ via growth (kg/ha).</summary>
+        [Units("kg/ha")]
         public double NGrowth { get { return EmergingTissue.NTransferredIn; } }
 
         /// <summary>Average digestibility of all biomass.</summary>
@@ -227,6 +269,11 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                {
+                    return 1.0;
+                }
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
                                             + DeadTissue.Digestibility * DeadTissue.DM.Wt,
                                             DMTotal, 0.0);
@@ -239,6 +286,11 @@ namespace Models.AgPasture
         {
             get
             {
+                if (LiveTissue == null)
+                {
+                    return 1.0;
+                }
+
                 return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt),
                                             DMLive, 0.0);
             }
@@ -264,6 +316,16 @@ namespace Models.AgPasture
         {
             LiveTissue = new GenericTissue[] { EmergingTissue, DevelopingTissue, MatureTissue };
             MinimumLiveDM = minimumLiveWt;
+
+            // record base N concentration values (to be used on reset)
+            baseNConcMinimum = NConcMinimum;
+            baseNConcOptimum = NConcOptimum;
+            baseNConcMaximum = NConcMaximum;
+
+            // check the maximum potential reduction in N conc that can result from elevated CO2
+            double maxNGap = MathUtilities.Divide(baseNConcOptimum - baseNConcMinimum, baseNConcOptimum, 0.0);
+            MaxCO2EffectOnNRequirement = Math.Min(MaxCO2EffectOnNRequirement, 0.99 * maxNGap);
+            // Note: using 99% of gap between minimum and optimum to avoid potential errors if difference is needed
         }
 
         /// <summary>Set this organ's biomass state.</summary>
@@ -285,8 +347,33 @@ namespace Models.AgPasture
             MatureTissue.SetBiomass(matureWt, matureN);
             DeadTissue.SetBiomass(deadWt, deadN);
 
-            // Tissue states have changed so recalculate our states.
+            // reset the N concentrations to base values
+            NConcMinimum = baseNConcMinimum;
+            NConcOptimum = baseNConcOptimum;
+            NConcMaximum = baseNConcMaximum;
+
+            // tissue states have changed so recalculate states at organ level.
             CalculateStates();
+        }
+
+        /// <summary>Adjust the values of N concentration as function of atmospheric CO2.</summary>
+        /// <param name="co2Factor">Value representing the extent of CO2 effect (>=0.0).</param>
+        /// <remarks>The CO2 factor is above one for low CO2 (higher N), and less than one with elevated CO2 (lower N conc).</remarks>
+        public void UpdateNConcentrations(double co2Factor)
+        {
+            // adjust CO2 factor for maximum concentration
+            double co2FactorForMaximum = 1.0 + 0.5 * (co2Factor - 1.0);
+            // maximum N was reduced in Ecomod (same as optimum), but not in classic AgPasture. Using half of effect here...
+
+            // adjust the value for optimum N concentration
+            double adjustment = 1.0 - MaxCO2EffectOnNRequirement + MaxCO2EffectOnNRequirement * co2Factor;
+            NConcOptimum = baseNConcOptimum * adjustment;
+
+            // adjust the value for maximum N concentration
+            adjustment = 1.0 - MaxCO2EffectOnNRequirement + MaxCO2EffectOnNRequirement * co2FactorForMaximum;
+            NConcMaximum = Math.Max(NConcOptimum, baseNConcMaximum * adjustment); // cannot go below optimum
+
+            // NConcMinimum is not modified, it represents 'structural N' and this is assumed not to change with CO2...
         }
 
         /// <summary>Remove biomass from organ.</summary>
@@ -298,28 +385,29 @@ namespace Models.AgPasture
         /// <returns>The amount of biomass (live+dead) removed from the plant (g/m2).</returns>
         public double RemoveBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
         {
-            // The fractions passed in are based on the total biomass
+            // the fractions passed in are based on the total biomass
             var previousDM = Tissue.Sum(tissue => tissue.DM.Wt);
 
-            // Live removal
-            for (int t = 0; t < Tissue.Length - 1; t++)
+            // remove live tissue
+            foreach (GenericTissue tissue in LiveTissue)
             {
-                Tissue[t].RemoveBiomass(liveToRemove, liveToResidue);
+                tissue.RemoveBiomass(liveToRemove, liveToResidue);
             }
 
-            // Dead removal
-            Tissue[Tissue.Length - 1].RemoveBiomass(deadToRemove, deadToResidue);
+            // remove dead tissue
+            DeadTissue.RemoveBiomass(deadToRemove, deadToResidue);
 
-            // Calculate the fraction of DM removed from this organ
+            // calculate the fraction of DM removed from this organ
             double removedDM = Tissue.Sum(tissue => tissue.DMRemoved);
             removedFraction = MathUtilities.Divide(removedDM, previousDM, 0.0);
 
-            // Tissue states have changed so recalculate our states.
+            // tissue states have changed so recalculate our states.
             CalculateStates();
 
-            // Update LAI and herbage digestibility
+            // update LAI and herbage digestibility
             species.EvaluateLAI();
             species.EvaluateDigestibility();
+
             return removedDM;
         }
 
@@ -327,9 +415,9 @@ namespace Models.AgPasture
         public void ClearDailyTransferredAmounts()
         {
             removedFraction = 0.0;
-            for (int t = 0; t < Tissue.Length; t++)
+            foreach (GenericTissue tissue in Tissue)
             {
-                Tissue[t].ClearDailyTransferredAmounts();
+                tissue.ClearDailyTransferredAmounts();
             }
         }
 
@@ -337,27 +425,37 @@ namespace Models.AgPasture
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         public void KillOrgan(double fractionToRemove)
         {
-            if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
+            if (fractionToRemove > Tolerance)
             {
-                for (int t = 0; t < Tissue.Length - 1; t++)
+                fractionToRemove = Math.Min(fractionToRemove, 1.0);
+                foreach (GenericTissue tissue in LiveTissue)
                 {
-                    DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
-                    Tissue[t].AddBiomass(-Tissue[t].DM.Wt * fractionToRemove, -Tissue[t].DM.N * fractionToRemove);
+                    DeadTissue.AddBiomass(tissue.DM.Wt * fractionToRemove, tissue.DM.N * fractionToRemove);
+                    tissue.RemoveBiomass(fractionToRemove, 0.0);
                 }
-            }
 
-            // Tissue states have changed so recalculate our states.
-            CalculateStates();
+                // tissue states have changed so recalculate our states.
+                CalculateStates();
+            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
         public void CalculateTissueTurnover(double[] turnoverRate)
         {
-            EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue, NConcOptimum);
-            DevelopingTissue.DoTissueTurnover(turnoverRate[1], MatureTissue, NConcOptimum);
-            MatureTissue.DoTissueTurnover(turnoverRate[2], DeadTissue, NConcOptimum);
-            DeadTissue.DoTissueTurnover(turnoverRate[3], null, NConcMinimum);
+            EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue);
+            DevelopingTissue.DoTissueTurnover(turnoverRate[1], MatureTissue);
+            MatureTissue.DoTissueTurnover(turnoverRate[2], DeadTissue);
+            DeadTissue.DoTissueTurnover(turnoverRate[3], null);
+        }
+
+        /// <summary>Computes the N amount that is potentially remobilisable for all tissues.</summary>
+        public void CalculateRemobilisableN()
+        {
+            EmergingTissue.GetRemobilisableN(NConcOptimum);
+            DevelopingTissue.GetRemobilisableN(NConcOptimum);
+            MatureTissue.GetRemobilisableN(NConcOptimum);
+            DeadTissue.GetRemobilisableN(NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
@@ -369,16 +467,18 @@ namespace Models.AgPasture
             double previousN = NTotal;
 
             // update all tissues
-            EmergingTissue.Update();
-            DevelopingTissue.Update();
-            MatureTissue.Update();
-            DeadTissue.Update();
+            foreach (GenericTissue tissue in Tissue)
+            {
+                tissue.Update();
+            }
 
             CalculateStates();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(previousDM + DMGrowth - DMDetached, DMTotal, 0.000001);
-            bool nIsOk = MathUtilities.FloatsAreEqual(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached, NTotal, 0.000001);
+            double prevTotal = previousDM + DMGrowth - DMDetached;
+            bool dmIsOk = Math.Abs(prevTotal - DMTotal) < 0.000001;
+            prevTotal = previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached;
+            bool nIsOk = Math.Abs(prevTotal - NTotal) < 0.000001;
             return (dmIsOk || nIsOk);
         }
 
@@ -386,7 +486,9 @@ namespace Models.AgPasture
         private void CalculateStates()
         {
             DMLive = LiveTissue.Sum(tissue => tissue.DM.Wt);
+            DMDead = DeadTissue.DM.Wt;
             NLive = LiveTissue.Sum(tissue => tissue.DM.N);
+            NDead = DeadTissue.DM.N;
 
             Live.StructuralWt = DMLive / 10.0;  // to g/m2
             Live.StructuralN = NLive / 10.0;    // to g/m2

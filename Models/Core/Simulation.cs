@@ -11,6 +11,7 @@ using System.Threading;
 using System.Data;
 using Models.Soils;
 using APSIM.Core;
+using Docker.DotNet.Models;
 
 namespace Models.Core
 {
@@ -23,12 +24,8 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(CroptimizR))]
     [Serializable]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel, IStructureDependency
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus, IScopedModel
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         [Link]
         private ISummary summary = null;
 
@@ -36,6 +33,8 @@ namespace Models.Core
         private IClock clock = null;
 
         private IReportsStatus reportStatus = null;
+
+        private Metadata metadata = null;
 
         /// <summary>Invoked when simulation is about to commence.</summary>
         public event EventHandler Commencing;
@@ -145,13 +144,13 @@ namespace Models.Core
             var simulationDescription = new SimulationDescription(this);
 
             // Add a folderName descriptor.
-            var folderNode = Structure.FindParent<Folder>(recurse: true);
+            var folderNode = Node.FindParent<Folder>(recurse: true);
             if (folderNode != null)
                 simulationDescription.Descriptors.Add(new SimulationDescriptor("FolderName", folderNode.Name));
 
             simulationDescription.Descriptors.Add(new SimulationDescriptor("SimulationName", Name));
 
-            foreach (var zone in Structure.FindChildren<Zone>(recurse: true))
+            foreach (var zone in Node.FindChildren<Zone>(recurse: true))
                 simulationDescription.Descriptors.Add(new SimulationDescriptor("Zone", zone.Name));
 
             return new List<SimulationDescription>() { simulationDescription };
@@ -168,7 +167,7 @@ namespace Models.Core
                 RemoveDisabledModels(this);
 
                 // Standardise the soil.
-                var soils = Structure.FindChildren<Soil>(recurse: true);
+                var soils = Node.FindChildren<Soil>(recurse: true);
                 foreach (Soils.Soil soil in soils)
                     soil.Sanitise();
 
@@ -178,19 +177,19 @@ namespace Models.Core
                 // Note the ToList(). This is important because some models can
                 // add/remove models from the simulations tree in their OnPreLink()
                 // method, and FindAllDescendants() is lazy.
-                Structure.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
+                Node.FindChildren<IModel>(recurse: true).ToList().ForEach(model => model.OnPreLink());
 
                 if (ModelServices == null || ModelServices.Count < 1)
                 {
-                    var simulations = Structure.FindParent<Simulations>(recurse: true);
+                    var simulations = Node.FindParent<Simulations>(recurse: true);
                     if (simulations != null)
                         ModelServices = simulations.GetServices();
                     else
                     {
                         ModelServices = new List<object>();
-                        IDataStore storage = Structure.Find<IDataStore>();
+                        IDataStore storage = Node.Find<IDataStore>();
                         if (storage != null)
-                            ModelServices.Add(Structure.Find<IDataStore>());
+                            ModelServices.Add(Node.Find<IDataStore>());
                     }
                 }
 
@@ -202,6 +201,9 @@ namespace Models.Core
 
                 // Resolve all links
                 links.Resolve(this, true, throwOnFail: true);
+
+                IDataStore datastore = this.Node.FindChild<IDataStore>();
+                metadata = new Metadata(this, datastore);
 
                 StoreFactorsInDataStore();
 
@@ -231,7 +233,7 @@ namespace Models.Core
                 cancelToken = new CancellationTokenSource();
 
             // Find a report status model if it exists.
-            reportStatus = Structure.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
+            reportStatus = Node.FindChildren<IReportsStatus>(recurse: true).FirstOrDefault();
 
             try
             {
@@ -274,6 +276,7 @@ namespace Models.Core
         /// </summary>
         public void Cleanup(System.Threading.CancellationTokenSource cancelToken)
         {
+            metadata.Save();
             UnsubscribeFromEvents?.Invoke(this, EventArgs.Empty);
         }
 
@@ -352,5 +355,12 @@ namespace Models.Core
             }
         }
 
+        /// <summary>Called when [Sowing] is broadcast</summary>
+        [EventSubscribe("Sowing")]
+        protected void OnSowing(object sender, EventArgs e)
+        {
+            metadata.OnSowing(sender, e);
+            return;
+        }
     }
 }

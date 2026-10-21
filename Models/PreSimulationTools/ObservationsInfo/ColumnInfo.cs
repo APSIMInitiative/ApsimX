@@ -201,9 +201,9 @@ namespace Models.PreSimulationTools.ObservationsInfo
         /// This works out if the given column name actually matches an apsim variable using the locator
         /// </summary>
         /// <param name="columnName">The name to match</param>
-        /// <param name="sims">Reference to Simulations</param>
+        /// <param name="sim">Reference to Simulations or Simulation</param>
         /// <returns>Returns null if the name doesn't match, or a VariableComposite reference if it was found.</returns>
-        public static VariableComposite NameMatchesAPSIMModel(string columnName, Simulations sims)
+        public static VariableComposite NameMatchesAPSIMModel(string columnName, IModel sim)
         {
             string nameWithoutBrackets = columnName;
             //remove any characters between ( and ) as these are often layers of a model
@@ -222,11 +222,13 @@ namespace Models.PreSimulationTools.ObservationsInfo
                 return null;
 
             string[] nameParts = nameWithoutBrackets.Split('.');
-            IModel firstPart = sims.Node.FindChild<IModel>(nameParts[0], recurse: true);
+            IModel firstPart = sim.Node.FindChild<IModel>(nameParts[0], recurse: true);
             if (firstPart == null)
                 return null;
 
-            sims.Links.Resolve(firstPart, true, true, false);
+            if (sim is Simulations sims)
+                sims.Links.Resolve(firstPart, true, true, false);
+
             StringBuilder fullPath = new StringBuilder(firstPart.FullPath);
             for (int i = 1; i < nameParts.Length; i++)
             {
@@ -236,7 +238,7 @@ namespace Models.PreSimulationTools.ObservationsInfo
 
             try
             {
-                VariableComposite variable = sims.Node.GetObject(fullPath.ToString());
+                VariableComposite variable = sim.Node.GetObject(fullPath.ToString());
                 return variable;
             }
             catch 

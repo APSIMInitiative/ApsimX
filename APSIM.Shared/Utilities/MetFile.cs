@@ -255,10 +255,14 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
+        /// Loads the MetFile with the given byte array.
         /// </summary>
-        /// <param name="filepath"></param>
-        /// <param name="bytes"></param>
+        /// <remarks>
+        /// If filepath contains .bin file extension a bin file is created.
+        /// Otherwise if it contains a .met file extension a met file is created.
+        /// </remarks>
+        /// <param name="filepath">the output filepath</param>
+        /// <param name="bytes">an array of bytes</param>
         public void Load(string filepath, byte[] bytes)
         {
             if (filepath.ToLower().EndsWith(".met"))
@@ -316,6 +320,10 @@ namespace APSIM.Shared.Utilities
             if (!DateTime.TryParseExact(startDate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                 throw new Exception($"Cannot read met file. Start date is {startDate} which must be in yyyy-MM-dd format");
 
+            // Record the start date in the internal MetData so other APIs
+            // (e.g. GetDay) can compute offsets correctly.
+            data.StartDate = date;
+
             for(int i = 0; i < values.Length; i += numColumns)
             {
                 MetRow row = new MetRow();
@@ -324,11 +332,43 @@ namespace APSIM.Shared.Utilities
 
                 for(int j = 0; j < numColumns; j++)
                 {
-                    row.Inputs.Add(values[i].ToString());
-                    row.Values.Add(values[i]);
+                    if (columns[j].ToLower() == "date")
+                        row.Inputs.Add(row.Date.ToString("yyyy-MM-dd"));
+                    else
+                        row.Inputs.Add(values[i+j].ToString());
+                    row.Values.Add(values[i+j]);
                 }
                 data.Rows.Add(row);
             }
+        }
+
+        /// <summary>
+        /// Load data into a MetFile object using a List of string Lists.
+        /// </summary>
+        /// <param name="constants">The constants for the MetFile.</param>
+        /// <param name="columns">Used to order the values appropriately.</param>
+        /// <param name="units">the units for columns.</param>
+        /// <param name="startDate">the start of the value set.</param>
+        /// <param name="numberOfDays">Number of days in the weather file.</param>
+        /// <param name="valueLists">
+        /// List of string Lists containing the met file values. 
+        /// Each List should contain all values of one column, date, rain or mint for example.
+        /// Warning: Care should be taken to ensure the lists are in the same order
+        /// as the columns.
+        /// </param>
+        public void Load(string[] constants, string[] columns, string[] units, string startDate, int numberOfDays, List<List<double>> valueLists)
+        {
+            // Create an array that Load method can use.
+            List<double> valuesArrayList = new();
+            for(int j = 0; j < numberOfDays; j++)
+            {
+                for(int i = 0; i < columns.Length; i++)
+                    valuesArrayList.Add(valueLists[i][j]);
+            }
+            double[] values = valuesArrayList.ToArray();
+
+            // Then feed the array into another load method to get MetData.
+            Load(constants, columns, units, values, startDate);
         }
 
         /// <summary>
@@ -356,6 +396,74 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Returns a dictionary of constant names to constant values
+        /// </summary>
+        public Dictionary<string,string> GetConstants()
+        {
+            Dictionary<string,string> constants = new Dictionary<string, string>();
+            foreach(string constant in Contants)
+                constants.Add(constant, GetConstant(constant));
+            return constants;
+        }
+
+        /// <summary>
+        /// Returns the unit string for the given column name
+        /// </summary>
+        /// <param name="name"></param>
+        public string GetColumnUnit(string name)
+        {
+            foreach(MetColumn column in data.Columns)
+                if (column.Name == name)
+                    return column.Unit;
+            return null;
+        }
+
+        /// <summary>
+        /// Returns a dictionary of column name to column unit
+        /// </summary>
+        public Dictionary<string,string> GetColumnUnits()
+        {
+            Dictionary<string,string> columns = new Dictionary<string, string>();
+            foreach(string column in Columns)
+                columns.Add(column, GetColumnUnit(column));
+            return columns;
+        }
+
+        /// <summary>
+        /// Returns the data type as a string for the given column name
+        /// </summary>
+        /// <param name="name"></param>
+        public string GetColumnDataType(string name)
+        {
+            Type dataType = null;
+            foreach(MetColumn column in data.Columns)
+                if (column.Name == name)
+                    dataType = column.DataType;
+
+            if (dataType == typeof(DateTime))
+                return "datetime";
+            else if (dataType == typeof(double))
+                return "double";
+            else if (dataType == typeof(int))
+                return "int";
+            else if (dataType == typeof(string))
+                return "string";
+            else
+                return dataType.ToString();
+        }
+
+        /// <summary>
+        /// Returns a dictionary of column name to column data type
+        /// </summary>
+        public Dictionary<string,string> GetColumnDataTypes()
+        {
+            Dictionary<string,string> columns = new Dictionary<string, string>();
+            foreach(string column in Columns)
+                columns.Add(column, GetColumnDataType(column));
+            return columns;
+        }
+
+        /// <summary>
         /// Returns the double values for the given date
         /// </summary>
         public double[] GetDay(DateTime date)
@@ -366,10 +474,21 @@ namespace APSIM.Shared.Utilities
             else
             {
                 foreach(MetRow row in data.Rows)
-                if (date == row.Date)
-                    return row.Values.ToArray();
+                    if (date == row.Date)
+                        return row.Values.ToArray();
             }
             throw new Exception($"Date {date.ToString("yyyy-MM-dd")} not found in MetFile");
+        }
+
+        /// <summary>
+        /// Returns all data in a 2D array of string
+        /// </summary>
+        public string[][] GetData()
+        {
+            List<string[]> output = new List<string[]>();
+            foreach(MetRow row in data.Rows)
+                output.Add(row.Inputs.ToArray());
+            return output.ToArray();
         }
 
         /// <summary>
@@ -454,7 +573,7 @@ namespace APSIM.Shared.Utilities
             {
                 List<string> constants = new List<string>();
                 foreach(MetConstant constant in data.Contants)
-                    if (string.IsNullOrEmpty(constant.Name))
+                    if (!string.IsNullOrEmpty(constant.Name))
                         constants.Add(constant.Name);
                 return constants.ToArray();
             }
@@ -604,6 +723,27 @@ namespace APSIM.Shared.Utilities
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates a MetFile object from a string in the format of a text met file.
+        /// </summary>
+        /// <param name="content">The string content of the met file</param>
+        /// <returns>A MetFile object</returns>
+        public static MetFile Create(string content)
+        {
+            return new MetFile()
+            {
+                data = ReadMet(content)
+            };
+        }
+
+        ///<summary>
+        /// Return false if MetFile.data is empty.
+        /// </summary>
+        public bool IsEmpty()
+        {
+            return data.Rows.Count == 0;
         }
 
         ////////////////////////////////////////////////////////////////////////
@@ -802,6 +942,9 @@ namespace APSIM.Shared.Utilities
                     metData.Contants.Add(new MetConstant("! "+ trimmed));
                 }
             }
+
+            if (string.IsNullOrEmpty(columnNameLine))
+                throw new Exception("A row without symbols and with the required columns maxt, mint and rain was never found. Unable to read met file.");
             
             //work out our column names and units
             string[] columnParts = columnNameLine.Split(" ");

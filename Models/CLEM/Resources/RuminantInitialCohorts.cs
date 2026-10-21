@@ -1,9 +1,11 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Docker.DotNet.Models;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Models.CLEM.Resources
@@ -16,11 +18,29 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Holds the list of initial cohorts for a given ruminant herd")]
+    [Version(1, 0, 3, "Includes ruminant cohort file reader option")]
     [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantInitialCohorts : CLEMModel
     {
+        [Link]
+        private ResourcesHolder resources = null;
+        private string nameOfManagedPastureFound = "";
+
+        /// <summary>
+        /// Managed pasture to move to
+        /// </summary>
+        [Description("Pasture to place on")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified", typeof(GrazeFoodStore) } })]
+        public string ManagedPastureName { get; set; } = "Not specified";
+
+        /// <summary>
+        /// Name of model linked to ManagedPastureName that individuals will be moved to.
+        /// </summary>
+        public string NameOfManagedPastureForLocation => nameOfManagedPastureFound;
+
         /// <summary>
         /// Determines if any SetPreviousConception components were found
         /// </summary>
@@ -39,64 +59,44 @@ namespace Models.CLEM.Resources
         public bool WeightWarningOccurred = false;
 
         /// <summary>
-        /// Constructor
+        /// Overrides the base class method to allow for initialization and needs to be done before StartOfSimulation.
         /// </summary>
-        protected RuminantInitialCohorts()
+        [EventSubscribe("DoInitialSummary")]
+        private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+            if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
+            {
+                CLEMModel managedPasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ManagedPastureName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as CLEMModel;
+                nameOfManagedPastureFound = managedPasture?.Name ?? "";
+            }
+
+            foreach (FileRuminantCohorts cohortsReader in Structure.FindChildren<FileRuminantCohorts>().ToList())
+            {
+                foreach (RuminantTypeCohort cohort in cohortsReader.ReadCohortsFromFile())
+                {
+                    cohort.Parent = this;
+                    cohort.MinimumTimeStepInterval = this.MinimumTimeStepInterval;
+                    Structure.AddChild(cohort);
+                    Links links = new();
+                    links.Resolve(cohort as IModel, true, recurse: false);
+                }
+            }
         }
 
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
         /// <returns>A list of ruminants</returns>
-        public List<Ruminant> CreateIndividuals()
+        public List<Ruminant> CreateIndividuals(DateTime date)
         {
-            List<ISetAttribute> initialCohortAttributes = Structure.FindChildren<ISetAttribute>().ToList();
-            List<Ruminant> individuals = new List<Ruminant>();
+            List<ISetAttribute> initialCohortAttributes = [.. Structure.FindChildren<ISetAttribute>()];
+            List<Ruminant> individuals = [];
             foreach (RuminantTypeCohort cohort in Structure.FindChildren<RuminantTypeCohort>())
-                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList()));
-
+            {
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes, date));
+            }
             return individuals;
         }
-
-        #region descriptive summary
-
-        ///<inheritdoc/>
-        public override List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)> GetChildrenInSummary()
-        {
-            return new List<(IEnumerable<IModel> models, bool include, string borderClass, string introText, string missingText)>
-            {
-                (Structure.FindChildren<ISetAttribute>().Cast<IModel>(), false, "", "", "")
-            };
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            string html = "";
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags()
-        {
-            string html = "</table>";
-            if (WeightWarningOccurred)
-                html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            return html;
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags()
-        {
-            WeightWarningOccurred = false;
-            ConceptionsFound = Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
-            AttributesFound = Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
-            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound ? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
-        }
-
-        #endregion
     }
 }
 

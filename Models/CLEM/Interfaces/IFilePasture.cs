@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
-    /// Pasture datacube reader interface
+    /// Pasture data cube reader interface
     /// </summary>
     public interface IFilePasture
     {

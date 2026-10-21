@@ -36,6 +36,10 @@
         /// <summary>
         /// Not available
         /// </summary>
-        NotAvailable
+        NotAvailable,
+        /// <summary>
+        /// No breeding has happened
+        /// </summary>
+        NoBreeding
     }
 }

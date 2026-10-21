@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 216,
+  "Version": 217,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6998,7 +6998,7 @@
                 "[Nutrient].FOMCarbohydrate.InitialCarbon",
                 "[Nutrient].FOMCellulose.InitialCarbon",
                 "[Nutrient].FOMLignin.InitialCarbon",
-                "sum([Nutrient].FOMCarbohydrate.Decomposition.MineralisedN)+sum([Nutrient].FOMCellulose.Decomposition.MineralisedN)+sum([Nutrient].FOMLignin.Decomposition.MineralisedN as FOMMineralisation)",
+                "sum([Nutrient].FOMCarbohydrate.Decomposition.MineralisedN)+sum([Nutrient].FOMCellulose.Decomposition.MineralisedN)+sum([Nutrient].FOMLignin.Decomposition.MineralisedN) as FOMMineralisation",
                 "sum([Nutrient].Microbial.Decomposition.MineralisedN)",
                 "sum([Nutrient].Humic.Decomposition.MineralisedN)",
                 "[Water].MM",

@@ -110,7 +110,7 @@ namespace Models.Core
             if (storage != null)
             {
                 storage.Writer.AddCheckpoint(checkpointName, filesReferenced);
-                storage.Reader.Refresh();
+                storage.Refresh();
             }
         }
 
@@ -182,9 +182,7 @@ namespace Models.Core
                 else if (child is DataStore)
                 {
                     DataStore storage = child as DataStore;
-                    storage.Close();
                     storage.UpdateFileName();
-                    storage.Open();
                 }
             }
         }

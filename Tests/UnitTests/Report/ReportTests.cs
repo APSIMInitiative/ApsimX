@@ -425,6 +425,26 @@ namespace UnitTests.Report
             Assert.That(values.Last(), Is.EqualTo(1));
         }
 
+        /// <summary>
+        /// This test reproduces a bug where nonstandard yearly aggregations would
+        /// never be in capture window.
+        /// </summary>
+        [Test]
+        public void EnsureNonStandardYearlyAggregationWorks()
+        {
+            clock.StartDate = new(2017, 11, 11);
+            clock.EndDate = new(2018, 11, 10);
+
+            report.VariableNames =
+            [
+                // Parentheses force the report to read it as an expression.
+                "sum of (1) from 11-nov to 10-nov as Days"
+            ];
+            runner.Run();
+            var values = storage.Get<double>("Days");
+            Assert.That(values.Last(), Is.EqualTo(365));
+        }
+
         [Test]
         public void FactorsTableIsWritten()
         {
@@ -457,7 +477,7 @@ namespace UnitTests.Report
             sim.Prepare();
 
             storage.Writer.WaitForIdle();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             Assert.That(storage.Reader.GetData("_Factors"), Is.Not.Null);
 
@@ -589,7 +609,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -622,7 +642,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -654,7 +674,7 @@ namespace UnitTests.Report
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
             datastore.Writer.Stop();
-            datastore.Reader.Refresh();
+            datastore.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);

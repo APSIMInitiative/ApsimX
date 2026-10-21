@@ -1554,7 +1554,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -2099,7 +2099,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -2642,7 +2642,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -3185,7 +3185,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -3728,7 +3728,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -4264,7 +4264,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -4807,7 +4807,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Zone].Area",
+                            "[Soil].Parent.Area as Zone.Area",
                             "Parent.Distance as Distance",
                             "[Wheat].AboveGround.Wt as BiomassWt",
                             "[Wheat].Grain.Wt as GrainWt",
@@ -12871,7 +12871,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -13573,7 +13573,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -14275,7 +14275,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -14977,7 +14977,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -15679,7 +15679,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -16381,7 +16381,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -17083,7 +17083,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -17785,7 +17785,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -20077,7 +20077,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -20771,7 +20771,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -21465,7 +21465,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -22159,7 +22159,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -22853,7 +22853,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -23547,7 +23547,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -24241,7 +24241,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -24935,7 +24935,7 @@
                               "VariableNames": [
                                 "[Clock].Today",
                                 "[Clock].Today.Year as Year",
-                                "[Zone].Area",
+                                "[Soil].Parent.Area as Zone.Area",
                                 "Parent.Distance as Distance",
                                 "[Maize].Phenology.CurrentStageName as Stage",
                                 "[Maize].Grain.Live.Wt as GrainWt",
@@ -27144,7 +27144,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -27670,7 +27670,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -28196,7 +28196,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -28722,7 +28722,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -29248,7 +29248,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -29774,7 +29774,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -30300,7 +30300,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -30826,7 +30826,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -31352,7 +31352,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -31878,7 +31878,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -32404,7 +32404,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",
@@ -32914,7 +32914,7 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year as Year",
-                        "[Zone].Area",
+                        "[Soil].Parent.Area as Zone.Area",
                         "Parent.Distance as Distance",
                         "[Wheat].AboveGround.Wt as BiomassWt",
                         "[Wheat].Grain.Wt as GrainWt",

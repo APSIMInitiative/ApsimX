@@ -16,8 +16,8 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Method to determine whether the activity is due based on a specified date
         /// </summary>
-        /// <returns>Whether the activity is due based on the specified date</returns>
-        bool Check(DateTime dateToCheck);
+        /// <returns>Whether the activity is due based on the specified start and end date of a time-step</returns>
+        bool Check(DateTime date);
 
         /// <summary>
         /// Timer due and performed trigger
@@ -26,7 +26,7 @@ namespace Models.CLEM.Interfaces
         void OnActivityPerformed(EventArgs e);
 
         /// <summary>
-        /// A status message to provide with this perfromed item
+        /// A status message to provide with this performed item
         /// </summary>
         string StatusMessage { get; set; }
     }

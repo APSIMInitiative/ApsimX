@@ -43,7 +43,9 @@ namespace Models.CLEM.Resources
         public void Add(HumanFoodStorePool pool)
         {
             if (pool.Amount > 0)
+            {
                 amount += pool.Amount;
+            }
         }
 
         /// <summary>
@@ -54,7 +56,9 @@ namespace Models.CLEM.Resources
         public void Add(double amount)
         {
             if (amount > 0)
+            {
                 this.amount += amount;
+            }
         }
 
         /// <summary>
@@ -65,8 +69,8 @@ namespace Models.CLEM.Resources
         /// <param name="reason"></param>
         public double Remove(double removeAmount, CLEMModel activity, string reason)
         {
-            removeAmount = Math.Min(this.amount, removeAmount);
-            this.amount -= removeAmount;
+            removeAmount = Math.Min(amount, removeAmount);
+            amount -= removeAmount;
             return removeAmount;
         }
         #endregion

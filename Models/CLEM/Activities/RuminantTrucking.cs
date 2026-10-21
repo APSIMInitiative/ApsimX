@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
-using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using APSIM.Numerics;
@@ -23,6 +22,7 @@ namespace Models.CLEM.Activities
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
     [Version(1, 1, 1, "Release of trucking")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
+    [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
     public class RuminantTrucking : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
         private int numberToDo;
@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) truckDetails;
 
         /// <inheritdoc/>
-        [Category("General", "")]
+        [Category("Farm", "General")]
         [Description("Purchase or sales identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
@@ -41,7 +41,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Distance to market
         /// </summary>
-        [Category("General", "")]
+        [Category("Farm", "General")]
         [Description("Travel distance (km)")]
         [Required, GreaterThanValue(0)]
         public double DistanceToMarket { get; set; }
@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Number animals per truck load
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Number of animals per load unit (deck/pod)")]
         [Required, GreaterThanValue(0)]
         public double NumberPerLoadUnit { get; set; }
@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum load units per truck
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units (deck/pod) per truck (0 any)")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadUnitsPerTruck { get; set; }
@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Maximum load units per truck
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Maximum load units (deck/pod) per truck")]
         [Required, GreaterThanValue(0)]
         public double MaximumLoadUnitsPerTruck { get; set; }
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Load units per trailer
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Load units (deck/pod) per trailer")]
         [Required, GreaterThanValue(0)]
         public double[] LoadUnitsPerTrailer { get; set; }
@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum number of load units before transporting (0 continuous)
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units before transporting (0 continuous)")]
         [Required, GreaterThanEqualValue(0)]
         public double MinimumLoadUnitsBeforeTransporting { get; set; }
@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Minimum number of load units before adding a trailer if available (0 continuous)
         /// </summary>
-        [Category("Load rules", "")]
+        [Category("Farm", "Load rules")]
         [Description("Minimum load units before adding trailer (0 continuous)")]
         [Required, GreaterThanEqualValue(0)]
         public double[] MinimumLoadUnitsBeforeAddTrailer { get; set; }
@@ -131,7 +131,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantTrucking()
         {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
@@ -196,7 +195,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.InitialiseHerd(false, true);
+            InitialiseHerd(false, true);
             filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
 
             weightToNumberPerLoadUnit = GetCompanionModelsByIdentifier<Relationship>(false, false, "Live weight to load unit size")?.FirstOrDefault()??null;
@@ -223,13 +222,14 @@ namespace Models.CLEM.Activities
             individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked, Structure).ToList();
             numberToDo = individualsToBeTrucked?.Count() ?? 0;
 
-            // work out how many can be trucked and return to parent of untrucked for next trucking settings if available.
+            // work out how many can be trucked and return to parent of not trucked for next trucking settings if available.
 
             truckDetails = EstimateTrucking();
 
             foreach (var iChild in Structure.FindChildren<IActivityCompanionModel>().OfType<CLEMActivityBase>())
+            {
                 iChild.Status = (Status == ActivityStatus.Skipped)? ActivityStatus.NotNeeded: ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
-            //iChild.Status = (Status == ActivityStatus.Skipped) ? ActivityStatus.Skipped : ((parentNumberToDo > 0) ? ActivityStatus.NotNeeded : ActivityStatus.NoTask);
+            }
 
             parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
@@ -336,12 +336,16 @@ namespace Models.CLEM.Activities
             int trailerCnt = 0;
             int trailerId = 0;
 
-            if(!individualsToBeTrucked.Any())
+            if (individualsToBeTrucked.Count == 0)
+            {
                 return (0, 0, 0, 0, 0);
+            }
 
             double loadsRemaining = individualsToBeTrucked.Count / NumberPerLoadUnit;
             if (weightToNumberPerLoadUnit != null)
-                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight));
+            {
+                loadsRemaining = individualsToBeTrucked.Sum(a => 1 / weightToNumberPerLoadUnit.SolveY(a.Weight.Live));
+            }
 
             if (MathUtilities.IsGreaterThanOrEqual(loadsRemaining, MinimumLoadUnitsBeforeTransporting))
             {
@@ -361,7 +365,9 @@ namespace Models.CLEM.Activities
                             vehicleMass += TruckTareMass;
                         }
                         else
+                        {
                             break;
+                        }
                     }
                     else
                     {
@@ -373,7 +379,7 @@ namespace Models.CLEM.Activities
                                 {
                                     loadingTruck = false;
                                 }
-                                else if (truckLoadCnt < MaximumLoadUnitsPerTruck) // LoadUnitsPerTrailer[trailerId])
+                                else if (truckLoadCnt < MaximumLoadUnitsPerTruck)
                                 {
                                     // add trailer
                                     trailerCnt++;
@@ -385,7 +391,9 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
+                            {
                                 break;
+                            }
                         }
                         else
                         {
@@ -406,12 +414,12 @@ namespace Models.CLEM.Activities
                             else
                             {
                                 if (weightToNumberPerLoadUnit != null)
-                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight);
+                                    individualContribution = 1 / weightToNumberPerLoadUnit.SolveY(individualsToBeTrucked[indCnt].Weight.Live);
                                 if (MathUtilities.IsLessThanOrEqual(unitLoad + individualContribution, 1.0))
                                 {
                                     unitLoad += individualContribution;
                                     totalUnits += individualContribution;
-                                    payload += individualsToBeTrucked[indCnt].Weight;
+                                    payload += individualsToBeTrucked[indCnt].Weight.Live;
 
                                     indCnt++;
                                 }
@@ -430,7 +438,9 @@ namespace Models.CLEM.Activities
                 individualsToBeTrucked = individualsToBeTrucked.Take(indCnt).ToList();
 
                 if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                {
                     throw new ApsimXException(this, $"Unable to truck all required individuals [a={NameWithParent}]{Environment.NewLine}Adjust trucking rules or set OnPartialResourcesAvailableAction to [UseResourcesAvailable]");
+                }
                 else if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.SkipActivity && (indCnt == 0 || individualsToBeTrucked.Count > indCnt))
                 {
                     AddStatusMessage("No individuals loaded");
@@ -454,63 +464,26 @@ namespace Models.CLEM.Activities
                 }
 
                 if (numberToDo == truckDetails.individualsTransported)
+                {
                     SetStatusSuccessOrPartial();
+                }
                 else
                 {
                     if (truckDetails.individualsTransported == 0)
                     {
-                        this.Status = ActivityStatus.Warning;
+                        Status = ActivityStatus.Warning;
                         AddStatusMessage("No individuals loaded");
                     }
                     else
-                        this.Status = ActivityStatus.Partial;
+                    {
+                        Status = ActivityStatus.Partial;
+                    }
                 }
             }
             else
-                Status = ActivityStatus.NoTask;
-        }
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">It is {CLEMModel.DisplaySummaryValueSnippet(DistanceToMarket.ToString("0.##"))} km to market</div>");
-
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each load unit (pod/deck) holds {CLEMModel.DisplaySummaryValueSnippet(NumberPerLoadUnit, warnZero:true)} head (of specified individuals)");
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck ");
-                if (MinimumLoadUnitsPerTruck > 0)
-                    htmlWriter.Write($" requires a minimum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units and ");
-                htmlWriter.Write($"has a maximum of {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted");
-                if (MinimumLoadUnitsBeforeTransporting > 0)
-                    htmlWriter.Write($" and requires at least {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.");
-                htmlWriter.Write("</div>");
-
-                if(LoadUnitsPerTrailer.Count() > 1)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Trailers from first to last hold ");
-                else
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\">The trailer holds ");
-                htmlWriter.Write($"{CLEMModel.DisplaySummaryValueSnippet<double>(LoadUnitsPerTrailer, warnZero: true)} load units");
-
-                if (MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
-                    htmlWriter.Write($" and requires {CLEMModel.DisplaySummaryValueSnippet(MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer");
-                htmlWriter.Write(".</div>");
-
-                htmlWriter.Write($"\r\n<div class=\"activityentry\">Each truck has a Tare Mass (with average fuel) of {CLEMModel.DisplaySummaryValueSnippet(TruckTareMass.ToString("0.##"), warnZero: true)} kg ");
-                htmlWriter.Write($"with an Aggregate Trailer Mass {CLEMModel.DisplaySummaryValueSnippet<double>(AggregateTrailerMass, warnZero:true)} (kg)");
-                if (AggregateTrailerMass.Count() > 1)
-                    htmlWriter.Write($" from first to last trailer");
-                htmlWriter.Write("</div>");
-
-                return htmlWriter.ToString();
+                Status = ActivityStatus.NoTask;
             }
         }
-
-        #endregion
-
     }
 }

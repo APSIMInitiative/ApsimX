@@ -43,6 +43,33 @@ namespace UnitTests.Core
             Assert.That((simulation.Children[0] as Clock).Today, Is.EqualTo(new DateTime(1980, 01, 02)));
         }
 
+        /// <summary>An invalid date range throws the expected exception.</summary>
+        [Test]
+        public void InvalidClockDateRangeThrowsExpectedException()
+        {
+            var simulation = new Simulation()
+            {
+                Name = "Sim",
+                FileName = Path.GetTempFileName(),
+                Children = new List<IModel>()
+                {
+                    new Clock()
+                    {
+                        StartDate = new DateTime(1980, 1, 2),
+                        EndDate = new DateTime(1980, 1, 1)
+                    },
+                    new MockSummary()
+                }
+            };
+            Node.Create(simulation);
+
+            simulation.Prepare();
+            var exception = Assert.Throws<SimulationException>(() => simulation.Run());
+            Assert.That(exception.InnerException.Message, Is.EqualTo(
+                $"Invalid date configuration: The end date {new DateTime(1980, 1, 1)} is before the start date {new DateTime(1980, 1, 2)}. " +
+                "Modify your dates in the Clock model to continue."));
+        }
+
         /// <summary>Ensures a simulation with exceptions throws.</summary>
         [Test]
         public void EnsureRunErrorsAreThrown()

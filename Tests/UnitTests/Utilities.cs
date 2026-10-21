@@ -88,7 +88,7 @@ namespace UnitTests
             return returnValue;
         }
 
-        /// <summary>Call a private method in a model</summary>
+        /// <summary>Set a private or public property in a model</summary>
         public static void SetProperty(object model, string propertyName, object value)
         {
             PropertyInfo property = model.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);

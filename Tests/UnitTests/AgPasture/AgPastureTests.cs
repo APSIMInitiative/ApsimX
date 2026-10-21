@@ -65,12 +65,14 @@ namespace UnitTests
             var root = zone.Node.FindChild<PastureBelowGroundOrgan>(recurse: true);
 
             // set some properties in root.
-            root.Depth = 300;
-
-            root.GetType().GetProperty("BottomLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                          .SetValue(root, 2);
+            root.MaximumPotentialRootingDepth = 500;
+            root.KNH4 = 0.01;
+            root.KNO3 = 0.02;
+            root.MaximumNUptake = 10.0;
+            root.NExtractionSWFactorExponent = 1.5;
 
             root.Initialise(zone, 100);
+            root.Depth = 300;
             ZoneWaterAndN zoneWaterAndN = new(zone)
             {
                 Water = [30, 30, 30],
@@ -141,12 +143,14 @@ namespace UnitTests
             var root = zone.Node.FindChild<PastureBelowGroundOrgan>(recurse: true);
 
             // set some properties in root.
-            root.Depth = 300;
-
-            root.GetType().GetProperty("BottomLayer", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-                          .SetValue(root, 2);
+            root.MaximumPotentialRootingDepth = 500;
+            root.KNH4 = 0.01;
+            root.KNO3 = 0.02;
+            root.MaximumNUptake = 10.0;
+            root.NExtractionSWFactorExponent = 1.5;
 
             root.Initialise(zone, 100);
+            root.Depth = 300;
             ZoneWaterAndN zoneWaterAndN = new(zone)
             {
                 Water = [30, 30, 30],

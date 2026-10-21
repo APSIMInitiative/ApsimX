@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using System.IO;
 using System.Linq;
-using APSIM.Shared.Utilities;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
@@ -41,8 +40,7 @@ namespace Models.CLEM.Activities
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No finance required", typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
-        [System.ComponentModel.DefaultValueAttribute("No finance required")]
-        public string AccountName { get; set; }
+        public string AccountName { get; set; } = "No finance required";
 
         /// <summary>
         /// Resource type to sell
@@ -65,14 +63,6 @@ namespace Models.CLEM.Activities
         [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public ResourceActivitySell()
-        {
-            this.SetDefaults();
-        }
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
@@ -100,23 +90,29 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            // get bank account object to use
-            if(AccountName != "No finance required")
+            if (AccountName != "No finance required")
+            {
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
+            }
 
-            // get resource type to sell
             resourceToSell = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             // find market if present
             Market market = Resources.FoundMarket;
             // find a suitable store to place resource
-            if(market != null)
+            if (market != null)
+            {
                 resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
+            }
 
-            if(resourceToPlace != null)
+            if (resourceToPlace != null)
+            {
                 price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
 
-            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
+            if (price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
+            {
                 price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
+            }
         }
 
         /// <summary>
@@ -133,24 +129,26 @@ namespace Models.CLEM.Activities
                         amount = Value;
                         break;
                     case ResourceSellStyle.ProportionOfStore:
-                        amount = resourceToSell.Amount * Value;
+                        amount = resourceToSell.AmountAvailable * Value;
                         break;
                     case ResourceSellStyle.ProportionOfLastGain:
                         amount = resourceToSell.LastGain * Value;
                         break;
                     case ResourceSellStyle.ReserveAmount:
-                        amount = Math.Max(0,resourceToSell.Amount - Value);
+                        amount = Math.Max(0,resourceToSell.AmountAvailable - Value);
                         break;
                     case ResourceSellStyle.ReserveProportion:
-                        amount = resourceToSell.Amount * (1 - Value);
+                        amount = resourceToSell.AmountAvailable * (1 - Value);
                         break;
                     default:
                         break;
                 }
                 amount = Math.Max(0, amount);
                 double units = amount / price.PacketSize;
-                if(price.UseWholePackets)
+                if (price.UseWholePackets)
+                {
                     units = Math.Truncate(units);
+                }
 
                 return units;
             }
@@ -162,7 +160,9 @@ namespace Models.CLEM.Activities
             unitsToSkip = 0;
             unitsToDo = unitsAvailableForSale;
             if (price.UseWholePackets)
+            {
                 unitsToDo = Math.Truncate(unitsToDo);
+            }
 
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
@@ -208,7 +208,7 @@ namespace Models.CLEM.Activities
             if(MathUtilities.IsPositive(unitsToDo-unitsToSkip))
             {
                 // remove resource
-                ResourceRequest purchaseRequest = new ResourceRequest
+                ResourceRequest purchaseRequest = new()
                 {
                     ActivityModel = this,
                     Required = (unitsToDo-unitsToSkip) * price.PacketSize,
@@ -216,7 +216,7 @@ namespace Models.CLEM.Activities
                     Category = TransactionCategory,
                     RelatesToResource = (resourceToSell as CLEMModel).NameWithParent
                 };
-                resourceToSell.Remove(purchaseRequest);
+                resourceToSell.RemoveFromResource(purchaseRequest);
 
                 // transfer money earned
                 if (bankAccount != null)
@@ -227,31 +227,25 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                     }
 
-                    bankAccount.Add((unitsToDo - unitsToSkip) * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
+                    bankAccount.AddToResource((unitsToDo - unitsToSkip) * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = (unitsToDo - unitsToSkip) * price.PricePerPacket;
                         purchaseRequest.Category = TransactionCategory;
                         purchaseRequest.RelatesToResource = (resourceToSell as CLEMModel).NameWithParent;
-                        (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                        (bankAccount.EquivalentMarketStore as FinanceType).RemoveFromResource(purchaseRequest);
                     }
                 }
 
-                SetStatusSuccessOrPartial(unitsToSkip > 0);
+                SetStatusSuccessOrPartial(MathUtilities.IsPositive(unitsToSkip));
             }
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
             // check that this activity has a parent of type CropActivityManageProduct
-
             switch (SellStyle)
             {
                 case ResourceSellStyle.ProportionOfStore:
@@ -259,54 +253,11 @@ namespace Models.CLEM.Activities
                 case ResourceSellStyle.ReserveProportion:
                     if (Value > 1)
                     {
-                        string[] memberNames = new string[] { "Selling style" };
-                        results.Add(new ValidationResult("The specified selling style expects a value between 0 and 1", memberNames));
+                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", new string[] { "Selling style" });
                     }
                     break;
                 default:
                     break;
-            }
-            return results;
-        }
-
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Sell ");
-                switch (SellStyle)
-                {
-                    case ResourceSellStyle.SpecifiedAmount:
-                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> of ");
-                        break;
-                    case ResourceSellStyle.ProportionOfStore:
-                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of ");
-                        break;
-                    case ResourceSellStyle.ProportionOfLastGain:
-                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of the last gain transaction recorded for ");
-                        break;
-                    case ResourceSellStyle.ReserveAmount:
-                        htmlWriter.Write("all but <span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> as reserve of ");
-                        break;
-                    case ResourceSellStyle.ReserveProportion:
-                        htmlWriter.Write("all but leaving <span class=\"resourcelink\">" + Value.ToString("##0%") + "</span> percent of store as reserve of ");
-                        break;
-                    default:
-                        break;
-                }
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
-                if (AccountName != "No finance required")
-                {
-                    htmlWriter.Write(" with sales placed in ");
-                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
-                }
-                htmlWriter.Write("</div>");
-                return htmlWriter.ToString();
             }
         }
 

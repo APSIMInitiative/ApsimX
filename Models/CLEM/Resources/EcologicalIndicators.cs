@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         public double StockingRate { get; set; }
 
         /// <summary>
-        /// Utilisation percentage
+        /// Utilisation percentage (%)
         /// </summary>
         public double Utilisation { get; set; }
 

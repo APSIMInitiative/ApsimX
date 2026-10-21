@@ -66,7 +66,6 @@ namespace Models.GrazPlan.Organs
             string sUnit = PastureModel.MassUnit;
             PastureModel.MassUnit = "kg/ha";
             double result = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL);
-            //double result = PastureModel.GetRootMass(GrazType.ptROOT, GrazType.TOTAL, GrazType.TOTAL);
             PastureModel.MassUnit = sUnit;
             return result;
              
@@ -301,6 +300,8 @@ namespace Models.GrazPlan.Organs
 
     /// <summary>
     /// Calculate the values for live and dead biomasses from Established and Dead cohorts.
+    /// Herbage Pool - comp - Live, dead;  Part - leaf, stem; DMD - 12 classes 
+    /// Root Pool - Comp - live , dead; age ; layers
     /// </summary>
     private void CalculateLiveDead()
         {
@@ -325,6 +326,14 @@ namespace Models.GrazPlan.Organs
                                         
                     deadBiomass.StructuralWt = HerbageMassTotalDMD(stDEAD,ptSTEM,TOTAL); 
                     deadBiomass.StructuralN = PastureModel.GetHerbageNutr(stDEAD, ptSTEM,TOTAL,TPlantElement.N);
+                }
+                if(Name == "Root")
+                {
+                    liveBiomass.StructuralWt = PastureModel.GetRootMass(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL); 
+                    liveBiomass.StructuralN = PastureModel.GetRootNutr(GrazType.sgGREEN, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N);
+
+                    deadBiomass.StructuralWt = PastureModel.GetRootMass(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL); //Pasture model does not track Root dead wts. 
+                    deadBiomass.StructuralN = PastureModel.GetRootNutr(GrazType.sgDRY, GrazType.TOTAL, GrazType.TOTAL, TPlantElement.N); //Pasture model does not track Root dead N
                 }
             }
         }
@@ -378,8 +387,7 @@ namespace Models.GrazPlan.Organs
     public double RemoveBiomass( double liveToRemove = 0,  double deadToRemove = 0,   double liveToResidue = 0,   double deadToResidue = 0,   double fractionStanding = 0)
     {
         double totalBiomass = 0.0;
-        double totalBiomassRemoved = 0.0;
-        double PostDMTotal = 0.0;
+        double postDMTotal = 0.0;
         
         double totalDM =  PastureModel.GetHerbageMass(stESTAB, TOTAL, TOTAL) +  PastureModel.GetHerbageMass(stDEAD, TOTAL, TOTAL);
         if (totalDM > 0.0)
@@ -434,15 +442,15 @@ namespace Models.GrazPlan.Organs
                 }
                 for (int cls=1; cls <= HerbClassNo; cls++)
                 {
-                    double PostDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
-                    double PostDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
-                    PostDMTotal += PostDMlive + PostDMdead;
+                    double postDMlive = PastureModel.GetHerbageMass(stESTAB, part, cls) ;
+                    double postDMdead = PastureModel.GetHerbageMass(stDEAD, part, cls);
+                    postDMTotal += postDMlive + postDMdead;
                 }   
                                
                 //update live and dead biomasses
                 CalculateLiveDead();
-                double RemoveDM = totalBiomass - totalBiomassRemoved;
-                return RemoveDM;    
+                double removedDM = totalBiomass - postDMTotal;
+                return removedDM;    
             }
             else
                 throw new Exception($"There is insufficient biomass to remove.");

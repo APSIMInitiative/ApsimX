@@ -1,0 +1,96 @@
+﻿using APSIM.Numerics;
+using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.Linq;
+
+namespace Models.CLEM.Groupings
+{
+    /// <summary>
+    /// Manages the death of ruminants each time step based using the original IAT/NABSA approach The base mortality
+    /// rate is modified by adult body condition or the mother's body condition for sucklings
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(RuminantActivityDeath))]
+    [Description("Manages the death of specified ruminants based on their condition.")]
+    [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
+    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
+    public class RuminantDeathGroup : RuminantGroup, IRuminantDeathGroup, IValidatableObject
+    {
+        [Link(IsOptional = true)]
+        private readonly CLEMEvents events = null;
+
+        /// <inheritdoc/>
+        public virtual List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals)
+        {
+            List<Ruminant> deaths = [];
+
+            // order descending to ensure mothers' deaths are determined before juveniles.
+            foreach (var ind in individuals)
+            {
+                double mortalityRate;
+                if (!ind.IsWeaned)
+                {
+                    // ToDo: see if we can remove the breed parameter from grow below
+                    if (ind.Mother == null)
+                    {
+                        // if no mother assigned
+                        // removed the old additional check usiong critical cow weight (now deleted)
+                        mortalityRate = ind.Parameters.GrowMortality.JuvenileMortalityMaximum;
+                    }
+                    else
+                    {
+                        // if mother's weight >= criticalCowWeight * SFR
+                        mortalityRate = Math.Exp(-Math.Pow(ind.Parameters.GrowMortality.JuvenileMortalityCoefficient * (ind.Mother.Weight.RelativeCondition), ind.Parameters.GrowMortality.JuvenileMortalityExponent));
+                    }
+
+                    mortalityRate += ind.Parameters.Grow.MortalityBase;
+                    mortalityRate = Math.Min(mortalityRate, ind.Parameters.GrowMortality.JuvenileMortalityMaximum);
+                }
+                else
+                    mortalityRate = 1 - (1 - ind.Parameters.Grow.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.Parameters.GrowMortality.MortalityCoefficient * (ind.Weight.RelativeCondition - ind.Parameters.GrowMortality.MortalityIntercept)), ind.Parameters.GrowMortality.MortalityExponent)));
+
+                // convert mortality from annual (calculated) to time-step (applied).
+                mortalityRate /= (DateTime.IsLeapYear(events.Clock.Today.Year) ? 366 : 365) / events.Interval;
+
+                if (MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), mortalityRate))
+                {
+                    ind.Died = true;
+                    ind.SaleFlag = HerdChangeReason.DiedMortality;
+                    deaths.Add(ind);
+                }
+            }
+            return deaths;
+        }
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (Structure.Find<RuminantParametersGrow>() is null)
+            {
+                string[] memberNames = new string[] { "Missing Ruminant.Grow parameters" };
+                results.Add(new ValidationResult($"[a=RuminantActivityDeath] requires parameters defined in [r=Ruminant.Parameters.RuminantParametersGrow].{Environment.NewLine}Ensure [r=Ruminant.Parameters.RuminantParametersGrow] is present and has the parameters for your breed provided..", memberNames));
+            }
+            return results;
+        }
+        #endregion
+    }
+
+}
+

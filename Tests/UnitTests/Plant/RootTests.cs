@@ -50,7 +50,7 @@ namespace UnitTests.Core
             // Get the results.
             DataStore storage = simulations.Node.FindChild<DataStore>(recurse: true);
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
             var dataTable = storage.Reader.GetData("Report");
 
             var fasw = DataTableUtilities.GetColumnAsDoubles(dataTable, "FASW", CultureInfo.InvariantCulture);

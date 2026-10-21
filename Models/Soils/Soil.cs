@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
+using Models.Interfaces;
 using Models.WaterModel;
 
 namespace Models.Soils
@@ -250,9 +249,13 @@ namespace Models.Soils
                     if (physical.BD[layer] == MathUtilities.MissingValue || double.IsNaN(physical.BD[layer]))
                         message.AppendLine($"BD value missing in layer {layerNumber}");
                     else if (MathUtilities.GreaterThan(physical.BD[layer], specific_bd, 3))
-                        message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of 2.65");
+                        message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is greater than the theoretical maximum of {specific_bd}");
                     else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
-                        message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")}");
+                    {
+                        //If rocks percentage is above 75%, skip lower bulk density threshold check
+                        if (MathUtilities.LessThan(physical.Rocks[layer], 0.75, 3))
+                            message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")} and Rocks are less than 75%");
+                    }
 
                     if (physical.KS != null)
                     {
@@ -327,6 +330,10 @@ namespace Models.Soils
                 }
             }
 
+            // Get warnings related to soil temperature models.
+            List<string> soilTempWarnings = CheckSoilTemperatureModels();
+            warning.AddRange(soilTempWarnings);
+
             if (summary != null && warning.Count > 0)
             {
                 foreach(string line in warning)
@@ -336,5 +343,23 @@ namespace Models.Soils
             if (message.Length > 0)
                 throw new Exception(message.ToString());
         }
+
+        /// <summary>
+        /// Checks for multiple ISoilTemperature children.
+        /// </summary>
+        /// <exception cref="Exception"/>
+        public List<string> CheckSoilTemperatureModels()
+        {
+            List<string> warnings = new();
+            List<ISoilTemperature> soilTemperatures = Children.OfType<ISoilTemperature>().ToList();
+            if (soilTemperatures.Count(soilTemp => (soilTemp as INodeModel).Enabled) > 1)
+            {
+                warnings.Add(
+                $"WARNING: Soils should only use one type of Soil temperature" +
+                $" model to avoid unintended behaviour. More than one model found in {FullPath}");
+            }
+            return warnings;
+        }
+
     }
 }

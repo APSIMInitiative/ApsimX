@@ -169,7 +169,7 @@ namespace Models.PreSimulationTools
                 storage = Node.FindParent<DataStore>(recurse: true);
 
             //Clear the tables at the start, since we need to read into them again
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             // Check for conflicts between sheet names and Report model names.
             // A Report model's table name equals its model name, so importing an observed
@@ -268,7 +268,7 @@ namespace Models.PreSimulationTools
             }
 
             storage.Writer.Stop();
-            storage.Reader.Refresh();
+            storage.Refresh();
 
             ColumnData = new List<ColumnInfo>();
             DerivedData = new List<DerivedInfo>();

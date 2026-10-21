@@ -1,4 +1,3 @@
-
 # ApsimX
 
 ApsimX is the next generation of [APSIM](https://www.apsim.info)

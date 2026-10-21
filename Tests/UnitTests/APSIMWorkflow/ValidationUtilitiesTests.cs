@@ -35,4 +35,22 @@ public class ValidationLocationUtilityTest
         int count = ValidationLocationUtility.GetSimulationCount();
         Assert.That(count, Is.GreaterThan(0)); // Assuming there are valid validation directories in the test setup.
     }
+
+    [Test]
+    public void TestRemoveExcludedPaths_RemovesExcludedPaths()
+    {
+        string[] samplePaths = [
+            "/Tests/Validation/Wheat/Wheat.apsimx",
+            "/Tests/Validation/Maize/Maize.apsimx",
+            "/Examples/CsvWeather.apsimx",
+            "/Tests/Validation/Canola/Canola.apsimx"
+        ];
+
+        string[] filtered = Program.RemoveExcludedPaths(samplePaths);
+
+        Assert.That(filtered, Does.Not.Contain("/Tests/Validation/Wheat/Wheat.apsimx"));
+        Assert.That(filtered, Does.Not.Contain("/Examples/CsvWeather.apsimx"));
+        Assert.That(filtered, Does.Contain("/Tests/Validation/Maize/Maize.apsimx"));
+        Assert.That(filtered, Does.Contain("/Tests/Validation/Canola/Canola.apsimx"));
+    }
 }

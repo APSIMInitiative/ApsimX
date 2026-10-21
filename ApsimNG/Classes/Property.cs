@@ -283,12 +283,18 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.CultivarName:
                     DisplayMethod = PropertyType.DropDown;
+
                     IPlant plant = null;
-                    PropertyInfo plantProperty = model.GetType().GetProperties().FirstOrDefault(p => typeof(IPlant).IsAssignableFrom(p.PropertyType));
-                    if (plantProperty != null)
-                        plant = plantProperty.GetValue(model) as IPlant;
+                    if (!string.IsNullOrEmpty(attrib.PlantName))
+                        plant = model.Node.Find<IPlant>(attrib.PlantName);
                     else
-                        plant = model.Node.Find<IPlant>();
+                    {
+                        PropertyInfo plantProperty = model.GetType().GetProperties().FirstOrDefault(p => typeof(IPlant).IsAssignableFrom(p.PropertyType));
+                        if (plantProperty != null)
+                            plant = plantProperty.GetValue(model) as IPlant;
+                        else
+                            plant = model.Node.Find<IPlant>();
+                    }
                     if (plant != null)
                         DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     else

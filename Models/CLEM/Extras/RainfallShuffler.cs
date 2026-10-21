@@ -23,7 +23,7 @@ namespace Models.CLEM
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
-    public class RainfallShuffler: CLEMModel, IValidatableObject, IStructureDependency
+    public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
         private IClock clock = null;
@@ -32,18 +32,16 @@ namespace Models.CLEM
         /// Month for the start of rainfall/growth season
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Description("Month for the start of rainfall season")]
         [Required, Month]
-        public MonthsOfYear StartSeasonMonth { get; set; }
+        public MonthsOfYear StartSeasonMonth { get; set; } = MonthsOfYear.January;
 
         /// <summary>
         /// The CLEMZone iteration number that will not perform any shuffle. Allows the base (natural) rainfall sequence to be included in experiments
         /// </summary>
         [Summary]
-        [System.ComponentModel.DefaultValueAttribute(-1)]
-        [Description("Iteration number where shuffle is ignored")]
-        public int DoNotShuffleIteration { get; set; }
+        [Description("Iteration number where shuffle is ignored (-1 all simulations")]
+        public int DoNotShuffleIteration { get; set; } = -1;
 
         /// <summary>
         /// List of shuffled years
@@ -56,16 +54,6 @@ namespace Models.CLEM
         /// </summary>
         [JsonIgnore]
         public DateTime[] ShuffledYearsArray { get; set; }
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RainfallShuffler()
-        {
-            this.SetDefaults();
-            base.ModelSummaryStyle = HTMLSummaryStyle.Default;
-        }
 
         /// <summary>An event handler to allow us to initialise resources</summary>
         /// <param name="sender">The sender.</param>
@@ -101,50 +89,14 @@ namespace Models.CLEM
         }
 
         #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            var results = new List<ValidationResult>();
-
             if (Structure.Find<RandomNumberGenerator>() is null)
             {
-                string[] memberNames = new string[] { "Missing random number generator" };
-                results.Add(new ValidationResult($"The [RainfallShiffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        #region descriptive summary
-
-        /// <inheritdoc/>
-        public override string ModelSummary()
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\nThe rainfall year starts in ");
-                if (StartSeasonMonth == MonthsOfYear.NotSet)
-                    htmlWriter.Write("<span class=\"errorlink\">Not set");
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">");
-                    htmlWriter.Write(StartSeasonMonth.ToString());
-                }
-                htmlWriter.Write("</span>");
-                htmlWriter.Write("\r\n</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
-                htmlWriter.Write("\r\n</div>");
-                return htmlWriter.ToString();
+                yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", new string[] { "Missing random number generator" });
             }
         }
-
         #endregion
     }
 
