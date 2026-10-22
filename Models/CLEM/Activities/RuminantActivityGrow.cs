@@ -350,7 +350,11 @@ namespace Models.CLEM.Activities
                     }
 
                     // TODO: NABSA adjusts potential intake for digestibility of fodder here.
-                    // This is now done in RuminantActivityGrazePasture
+                    // This was then done in RuminantActivityGrazePasture
+                    // But now is handled by Ruminant.Intake and thus needs to be called here and the two parameters are no longer required for the grazePasture activity as they aree in the ruminant parameters.
+
+                    ind.Intake.AdjustIntakeBasedOnFeedQuality(ind is RuminantFemale female ? female.IsLactating: false, ind);
+                    ind.Intake.UpdateGutFill();
 
                     // calculate energy
                     if (ind.Intake.SolidsDaily.Actual > 0)

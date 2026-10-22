@@ -31,6 +31,15 @@ namespace UnitTests.Storage
         }
 
 
+        /// <summary>Double-quoted string literals (used by existing manager script filters) must still work.</summary>
+        [Test]
+        public void DoubleQuotedStringLiteralWorks()
+        {
+            var data = database.ExecuteQuery("SELECT \"Current\" AS Name");
+
+            Assert.That(data.Rows[0]["Name"], Is.EqualTo("Current"));
+        }
+
         /// <summary>Read all data from a table</summary>
         [Test]
         public void ReadAllDataFromATable()
