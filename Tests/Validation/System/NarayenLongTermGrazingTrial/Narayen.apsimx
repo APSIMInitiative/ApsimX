@@ -1202,8 +1202,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 },
                 {
@@ -1212,8 +1212,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 },
                 {
@@ -1222,8 +1222,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 },
                 {
@@ -1232,8 +1232,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 },
                 {
@@ -1242,8 +1242,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 },
                 {
@@ -1252,8 +1252,8 @@
                   "LiveDigestibility": "0.7",
                   "DeadDigestibility": "0.3",
                   "LiveFractionConsumable": 1.0,
-                  "DeadFractionConsumable": 1.0,
-                  "LiveMinimumBiomass": 100.0,
+                  "DeadFractionConsumable": 0.001,
+                  "LiveMinimumBiomass": 20.0,
                   "DeadMinimumBiomass": 0.0
                 }
               ],
@@ -2767,7 +2767,7 @@
                       "YFieldName": "Stock.NumberAll",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
@@ -2835,7 +2835,7 @@
                       "YFieldName": "Stock.WeightAll",
                       "X2FieldName": null,
                       "Y2FieldName": null,
-                      "ShowInLegend": false,
+                      "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
