@@ -2256,7 +2256,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets the intake per head of digestibility by group
+        /// Gets total intake per head of digestibility by group
         /// </summary>
         [Units("MJ/d")]
         public double DigestibilityIntakeAll
@@ -2269,10 +2269,10 @@ namespace Models.GrazPlan
             }
         }
 
-         // =========== Crude protein intake per head of young ==================
+         // =========== ME_2_DM intake per head of animals ===================
 
         /// <summary>
-        /// Gets the ME_2_DM intake per head of young animals by group
+        /// Gets  ME_2_DM  intake per head by group
         /// </summary>
         [Units("MJ/d")]
         public double[] ME_2_DM
@@ -2286,7 +2286,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets the intake per head of ME_2_DM by group
+        /// Gets total ME_2_DM intake per head by group
         /// </summary>
         [Units("MJ/d")]
         public double ME_2_DMAll
