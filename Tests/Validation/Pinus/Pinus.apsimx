@@ -32168,8 +32168,8 @@
                                     {
                                       "$type": "Models.Soils.SoilCrop, Models",
                                       "LL": [
-                                        0.15,
-                                        0.15,
+                                        0.12,
+                                        0.12,
                                         0.15,
                                         0.2,
                                         0.24,
@@ -32191,7 +32191,10 @@
                                         0.0,
                                         0.0
                                       ],
-                                      "LLMetadata": null,
+                                      "LLMetadata": [
+                                        null,
+                                        null
+                                      ],
                                       "KLMetadata": null,
                                       "XFMetadata": null,
                                       "Name": "PinusSoil",
