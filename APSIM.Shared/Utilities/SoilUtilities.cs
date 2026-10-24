@@ -428,6 +428,53 @@ namespace APSIM.Shared.Utilities
             return fromValues;
         }
 
+        /// <summary>Map soil variables (using concentration) from one layer structure to another, interpolating in the log10 domain.</summary>
+        /// <param name="fromValues">The from values (natural domain, must be &gt; 0).</param>
+        /// <param name="fromThickness">The from thickness.</param>
+        /// <param name="toThickness">To thickness.</param>
+        /// <param name="defaultValueForBelowProfile">The default value for below profile (natural domain).</param>
+        /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <param name="modelName">Model name for error reporting</param>
+        /// <returns></returns>
+        public static double[] MapConcentrationLog10(double[] fromValues, double[] fromThickness,
+                                                      double[] toThickness,
+                                                      double defaultValueForBelowProfile,
+                                                      bool allowMissingValues = false,
+                                                      string modelName = null)
+        {
+            if (fromValues == null)
+                return null;
+
+            // Convert to log10 domain, preserving missing values and guarding against non-positive values.
+            double[] log10Values = new double[fromValues.Length];
+            for (int i = 0; i < fromValues.Length; i++)
+            {
+                double v = fromValues[i];
+                if (double.IsNaN(v))
+                    log10Values[i] = double.NaN;
+                else if (v <= 0)
+                {
+                    string prefix = string.IsNullOrEmpty(modelName) ? "MapConcentrationLog10" : modelName;
+                    throw new Exception($"In {prefix}, cannot take log10 of a non-positive value ({v}) at layer {i + 1}.");
+                }
+                else
+                    log10Values[i] = Math.Log10(v);
+            }
+
+            double log10Default = defaultValueForBelowProfile > 0 ? Math.Log10(defaultValueForBelowProfile) : defaultValueForBelowProfile;
+
+            double[] mappedLog10 = MapConcentration(log10Values, fromThickness, toThickness, log10Default, allowMissingValues, modelName);
+
+            if (mappedLog10 == null)
+                return null;
+
+            double[] result = new double[mappedLog10.Length];
+            for (int i = 0; i < mappedLog10.Length; i++)
+                result[i] = double.IsNaN(mappedLog10[i]) ? double.NaN : Math.Pow(10, mappedLog10[i]);
+
+            return result;
+        }
+
         /// <summary>Map soil variables from one layer structure to another.</summary>
         /// <param name="fromValues">The f values.</param>
         /// <param name="fromThickness">The f thickness.</param>
