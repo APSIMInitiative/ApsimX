@@ -45521,7 +45521,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -46527,7 +46527,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -47533,7 +47533,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -48539,7 +48539,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -49744,7 +49744,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -50815,7 +50815,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -51886,7 +51886,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
@@ -52957,7 +52957,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster",
+                              "Specification": "[Sowing].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Navigator, Oxford, Rosalind, Schooner, Scope, Shepherd, Stirling, Urambie, Westminster, Planet, Spartacus",
                               "Name": "Cv",
                               "ResourceName": null,
                               "Children": [],
