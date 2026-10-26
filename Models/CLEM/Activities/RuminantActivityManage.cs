@@ -477,55 +477,51 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "RemoveOldFemalesFromHerd",
-                            "RemoveOldSiresFromHerd",
-                            "RemoveSiresFromPurchases",
-                            "RemoveBreedersFromPurchases",
-                            "RemoveSiresFromHerd",
-                            "RemoveBreedersFromHerd",
-                            "RemoveFemaleReplacementBreeders",
-                            "RemoveFemalePreBreeders",
-                            "SelectSiresFromSales",
-                            "SelectYoungMalesFromSales",
-                            "SelectYoungFemalesFromSales",
-                            "SelectBreedersFromSales",
-                            "SelectYoungMalesFromGrowOut",
-                            "SelectYoungFemalesFromGrowOut",
-                            "SelectMalesForGrowOut",
-                            "SelectFemalesForGrowOut",
-                            "SelectUnweanedFemalesAsReplacements"
-                        },
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Herd size - before activity",
-                            "Adjust - new grow out males",
-                            "Adjust - new grow out females",
-                            "Destock - grow out males",
-                            "Destock - grow out females",
-                            "Destock - old sires",
-                            "Destock - old female breeders",
-                            "Destock - excess female breeders",
-                            "Destock - excess sires",
-                            "Stock - female breeder purchases",
-                            "Stock - sire purchases",
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                       identifiers: [
+                                            "RemoveOldFemalesFromHerd",
+                                            "RemoveOldSiresFromHerd",
+                                            "RemoveSiresFromPurchases",
+                                            "RemoveBreedersFromPurchases",
+                                            "RemoveSiresFromHerd",
+                                            "RemoveBreedersFromHerd",
+                                            "RemoveFemaleReplacementBreeders",
+                                            "RemoveFemalePreBreeders",
+                                            "SelectSiresFromSales",
+                                            "SelectYoungMalesFromSales",
+                                            "SelectYoungFemalesFromSales",
+                                            "SelectBreedersFromSales",
+                                            "SelectYoungMalesFromGrowOut",
+                                            "SelectYoungFemalesFromGrowOut",
+                                            "SelectMalesForGrowOut",
+                                            "SelectFemalesForGrowOut",
+                                            "SelectUnweanedFemalesAsReplacements"
+                                        ],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Herd size - before activity",
+                                            "Adjust - new grow out males",
+                                            "Adjust - new grow out females",
+                                            "Destock - grow out males",
+                                            "Destock - grow out females",
+                                            "Destock - old sires",
+                                            "Destock - old female breeders",
+                                            "Destock - excess female breeders",
+                                            "Destock - excess sires",
+                                            "Stock - female breeder purchases",
+                                            "Stock - sire purchases",
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to reset initial cohort sizes before creating the herd.</summary>
@@ -575,7 +571,7 @@ namespace Models.CLEM.Activities
                 return;
             }
 
-            List<string> information = new();
+            List<string> information = [];
             string warn = string.Empty;
 
             // calculate the number of breeders, sucklings, weaners and prebreeders
@@ -696,7 +692,7 @@ namespace Models.CLEM.Activities
 
             if (Structure.FindChildren<RuminantActivityGroup>().Any())
             {
-                selectHerdAvailable = new List<Ruminant>();
+                selectHerdAvailable = [];
             }
 
             // get the mortality rate for the herd if available or assume zero
@@ -819,7 +815,7 @@ namespace Models.CLEM.Activities
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
                 List<RuminantFemale> preBreeders = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityFemale > -334) & !a.Attributes.Exists("GrowOut")).ToList();
-                numberFemalePreBreedersInHerd = preBreeders.Count();
+                numberFemalePreBreedersInHerd = preBreeders.Count;
                 int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == PredictedHerdBreed && a.IsPreBreeder).Count();
 
                 // these are the breeders already marked for sale
@@ -1365,7 +1361,7 @@ namespace Models.CLEM.Activities
                         {
                             reduceBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveBreedersFromHerd");
                             // try taking from oldest to youngest.
-                            SortByProperty srt = new SortByProperty() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
+                            SortByProperty srt = new() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
                             reduceBreedersFilters.FirstOrDefault().Children.Add(srt);
                         }
 
@@ -1669,7 +1665,7 @@ namespace Models.CLEM.Activities
                     {
                         reducePreBreedersFilters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "RemoveFemalePreBreeders");
                         // try taking from oldest to youngest.
-                        SortByProperty srt = new SortByProperty() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
+                        SortByProperty srt = new() { PropertyOfIndividual = "Age", SortDirection = System.ComponentModel.ListSortDirection.Descending };
                         reducePreBreedersFilters.FirstOrDefault().Children.Add(srt);
                     }
                     foreach (var removeFilter in reducePreBreedersFilters)
@@ -1852,7 +1848,7 @@ namespace Models.CLEM.Activities
                         yield return sires;
                     }
 
-                    if (GrazeFoodStoreNameSires.Contains("."))
+                    if (GrazeFoodStoreNameSires.Contains('.'))
                     {
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameSires) is null)
@@ -1870,7 +1866,7 @@ namespace Models.CLEM.Activities
                         yield return breeders;
                     }
 
-                    if (GrazeFoodStoreNameBreeders.Contains("."))
+                    if (GrazeFoodStoreNameBreeders.Contains('.'))
                     {
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameBreeders) is null)
@@ -1940,14 +1936,14 @@ namespace Models.CLEM.Activities
                 }
                 if (Math.Round(sumProportions, 4) != 1)
                 {
-                    return new ValidationResult($"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={Name}] do not add up to 1.", new string[] { "Invalid proportions set" });
+                    return new ValidationResult($"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={Name}] do not add up to 1.", ["Invalid proportions set"]);
                 }
             }
             else
             {
                 if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
                 {
-                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent sires of breeding age [RuminantType.General.MaleMinimumAge1stMating] and size [RuminantType.General.MaleMinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males, otherwise add a male or adjust the 1st breeding criteria.", new string[] { "No breeding males specified" });
+                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent sires of breeding age [RuminantType.General.MaleMinimumAge1stMating] and size [RuminantType.General.MaleMinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0] or turn off manage breeding males, otherwise add a male or adjust the 1st breeding criteria.", ["No breeding males specified"]);
                 }
             }
             return null;
@@ -1967,14 +1963,14 @@ namespace Models.CLEM.Activities
                 }
                 if (Math.Round(sumProportions, 4) != 1)
                 {
-                    return new ValidationResult($"The proportions set in each [r=SpecifyRuminant] representing breeding females in [a={Name}] do not add up to 1.", new string[] { "Invalid proportions set" });
+                    return new ValidationResult($"The proportions set in each [r=SpecifyRuminant] representing breeding females in [a={Name}] do not add up to 1.", ["Invalid proportions set"]);
                 }
             }
             else
             {
                 if (MaximumProportionBreedersPerPurchase > 0)
                 {
-                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent breeding females of age [RuminantType.General.MinimumAge1stMating] and size [RuminantType.General.MinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females, otherwise add a female or adjust the 1st breeding criteria.", new string[] { "No breeding females specified" });
+                    return new ValidationResult($"No purchases specified by [r=SpecifyRuminant] in [a={Name}] represent breeding females of age [RuminantType.General.MinimumAge1stMating] and size [RuminantType.General.MinimumSize1stMating] required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0] or turn off manage breeding females, otherwise add a female or adjust the 1st breeding criteria.", ["No breeding females specified"]);
                 }
             }
             return null;

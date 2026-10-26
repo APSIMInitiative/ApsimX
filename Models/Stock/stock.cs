@@ -4137,10 +4137,7 @@ namespace Models.GrazPlan
 
         #region Private functions ============================================
 
-        /// <summary>
-        /// Do a request for all the biomasses in every paddock
-        /// Note: This could be optimised to not request paddocks that are unstocked (drafting still needs to get the amounts)
-        /// </summary>
+       
         private void RequestAvailableToAnimal()
         {
             ForageProvider forageProvider;
@@ -4156,9 +4153,17 @@ namespace Models.GrazPlan
                     if (string.Compare(forageProvider.OwningPaddock.Name, paddInfo.Name, true) == 0)
                     {
                         if (forageProvider.ForageObj != null)
-                        {
-                            pastureGreen = forageProvider.ForageObj.Material.Where(m => m.IsLive)
-                                                                            .Sum(m => m.Consumable.Wt); // g/m^2
+                        {   
+                            if (forageProvider.ForageObj.Name == "SurfaceOrganicMatter")
+                            {
+                                pastureGreen += forageProvider.ForageObj.GrazeableMaterial.Where(m => m.IsLive).Sum(m => m.Consumable.Wt);
+                            }
+                            else
+                            {
+                                pastureGreen += forageProvider.ForageObj.Material.Where(m => m.IsLive)
+                                .Sum(m => m.Consumable.Wt);
+                            }
+                                                    
                         }
                     }
                 }
