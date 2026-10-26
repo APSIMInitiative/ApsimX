@@ -43,6 +43,16 @@ public class Fertiliser : Model, IStructureDependency
     [Units("kg/ha")]
     public double NitrogenApplied { get; private set; } = 0;
 
+    /// <summary>The NO3N applied.</summary>
+    [Units("kgN/ha")]
+    public double NO3NApplied { get; private set; }
+
+    /// <summary>
+    /// The NH4N applied.
+    /// </summary>
+    [Units("kgN/ha")]
+    public double NH4NApplied { get; private set; }
+
     /// <summary>Apply fertiliser.</summary>
     /// <param name="amount">The amount.</param>
     /// <param name="type">The type.</param>
@@ -78,6 +88,8 @@ public class Fertiliser : Model, IStructureDependency
                                      fertiliser: this,
                                      fertiliserTypeName: type);
                 NitrogenApplied += amount;
+                NH4NApplied += amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NH4").fraction;
+                NO3NApplied += amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NO3").fraction;
             }
             else
             {
@@ -117,6 +129,8 @@ public class Fertiliser : Model, IStructureDependency
     private void OnDoDailyInitialisation(object sender, EventArgs e)
     {
         NitrogenApplied = 0;
+        NH4NApplied = 0;
+        NO3NApplied = 0;
     }
 
     /// <summary>Invoked by clock at start of each daily timestep to do all fertiliser applications for the day.</summary>
@@ -128,7 +142,10 @@ public class Fertiliser : Model, IStructureDependency
         foreach (FertiliserPool pool in Children.Where(child => child is FertiliserPool)
                                                 .ToArray())
         {
-            NitrogenApplied += pool.PerformRelease();
+            var amt = pool.PerformRelease();
+            NitrogenApplied += amt;
+            NH4NApplied += amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NH4").fraction;
+            NO3NApplied += amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NO3").fraction;
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
