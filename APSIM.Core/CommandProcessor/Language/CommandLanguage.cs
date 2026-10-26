@@ -72,8 +72,9 @@ public class CommandLanguage
     /// <param name="lines">Collection of strings, one for each line.</param>
     /// <param name="relativeTo">The node owning the collection of strings.</param>
     /// <param name="relativeToDirectory">Directory that file names are relative to.</param>
+    /// <param name="multiple">Should property set commands apply to all matching instances?</param>
     /// <returns></returns>
-    public static IEnumerable<IModelCommand> StringToCommands(IEnumerable<string> lines, INodeModel relativeTo, string relativeToDirectory)
+    public static IEnumerable<IModelCommand> StringToCommands(IEnumerable<string> lines, INodeModel relativeTo, string relativeToDirectory, bool multiple = false)
     {
         List<IModelCommand> commands = [];
 
@@ -106,14 +107,14 @@ public class CommandLanguage
                 if (command == null)
                     command = new();
                 else
-                    commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory));
+                    commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory, multiple));
 
                 command.Clear();
                 command.Append(sanitisedLine.Trim());
             }
         }
         if (command != null)
-            commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory));
+            commands.Add(ConvertCommandParameterToModelCommand(command.ToString(), relativeTo, relativeToDirectory, multiple));
 
         return commands;
     }
@@ -294,7 +295,7 @@ public class CommandLanguage
     /// <param name="relativeTo">The node that owns the command string.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
     /// <returns>An instance of a model command.</returns>
-    private static IModelCommand ConvertCommandParameterToModelCommand(string command, INodeModel relativeTo, string relativeToDirectory)
+    private static IModelCommand ConvertCommandParameterToModelCommand(string command, INodeModel relativeTo, string relativeToDirectory, bool multiple = false)
     {
         command = command.Trim();
         if (command.StartsWith("add", StringComparison.InvariantCultureIgnoreCase))
@@ -314,7 +315,7 @@ public class CommandLanguage
         else if (command.StartsWith("move", StringComparison.InvariantCultureIgnoreCase))
             return MoveCommand.Create(command);
         else if (command.Contains('='))
-            return SetPropertyCommand.Create(command, relativeToDirectory);
+            return SetPropertyCommand.Create(command, relativeToDirectory, multiple);
 
         throw new Exception($"Unknown command: {command}");
     }
