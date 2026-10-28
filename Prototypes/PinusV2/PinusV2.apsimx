@@ -3903,7 +3903,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "40*([Pinus].Stem.Volub/(([Pinus].Population+0.0001)*10000))^0.33",
+                      "Expression": "34.51738*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.36429*([Pinus].Age)^0.04967",
                       "Name": "DBHEquation",
                       "ResourceName": null,
                       "Children": [],
