@@ -610,7 +610,8 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// This method combines the functionality of MapConcentration and MapConcentrationLog10 so that we don't have 
-        /// a bunch of repeated copy they both use (normally around error checking).
+        /// a bunch of repeated code they both use
+        /// Do not attach optional parameters to this function, optionals only go on the public facing methods
         /// </summary>
         /// <param name="fromValues"></param>
         /// <param name="fromThickness"></param>
@@ -673,7 +674,7 @@ namespace APSIM.Shared.Utilities
             {
                 for (int i = 0; i < values.Count; i++)
                 {
-                    double value = fromValues[i];
+                    double value = values[i];
                     if (double.IsNaN(value))
                         values[i] = double.NaN;
                     else if (value <= 0)
