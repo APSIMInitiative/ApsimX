@@ -4086,7 +4086,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "29*([Pinus].Stem.Volub/(([Pinus].Population + 0.0001)*10000))^0.4",
+                      "Expression": "33.15012*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.33566*([Pinus].Age)^-0.11783",
                       "Name": "HeightFunction",
                       "ResourceName": null,
                       "Children": [],
