@@ -2903,7 +2903,7 @@ namespace Models.Soils
             {
                 summary.WriteMessage(this, "     APSwim Numerical Diagnostics", MessageType.Diagnostic);
                 summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
-                summary.WriteMessage(this, "      depth      Theta         psi        K           p          p*", MessageType.Diagnostic);
+                summary.WriteMessage(this, "      depth         Theta         psi         K              p          p*", MessageType.Diagnostic);
                 summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
 
                 double k;
@@ -2911,7 +2911,7 @@ namespace Models.Soils
                 for (int layer = 0; layer < x.Length; layer++)
                 {
                     Watvar(layer, _p[layer], out dummy1, out dummy2, out dummy3, out dummy4, ref dummy5, out k, ref dummy6);
-                    summary.WriteMessage(this, String.Format("     {0,6:F1}         {1,9:F7} {2,10:0.###} {3,10:F3} {4,10:F3} {5,10:F3}",
+                    summary.WriteMessage(this, String.Format("     {0,6:F1}         {1,9:F7} {2,10:F3} {3,15:F8} {4,10:F3} {5,10:F3}",
                                       x[layer] * 10.0,
                                       th[layer],
                                       _psi[layer],
