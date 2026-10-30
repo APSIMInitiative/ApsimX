@@ -269,7 +269,10 @@
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
                 "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
                 "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Bumpa",
               "ResourceName": null,
@@ -845,13 +848,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 9",
-                "[Phenology].CAMP.FLNparams.PpLN = 3",
+                "[Phenology].CAMP.FLNparams.MinLN = 7.75 // 9",
+                "[Phenology].CAMP.FLNparams.PpLN = 5.5 // 3",
                 "[Phenology].CAMP.FLNparams.VrnLN = 0",
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 59.1603",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.1",
-                "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8"
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85 // 59.1603",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 1.6 // 1.1",
+                "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 130",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Valetta",
               "ResourceName": null,
@@ -948,7 +954,9 @@
                 "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 80 // 85 // 95 // 85",
                 "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140"
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.33",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Booma",
               "ResourceName": null,
@@ -996,14 +1004,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 9",
-                "[Phenology].CAMP.FLNparams.PpLN = 6",
-                "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                "[Phenology].CAMP.FLNparams.MinLN = 8 // 9",
+                "[Phenology].CAMP.FLNparams.PpLN = 0 // 6",
+                "[Phenology].CAMP.FLNparams.VrnLN = 2 // 0",
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 87.5 // 85",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.025 // 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140"
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 60 // 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Hooded",
               "ResourceName": null,
@@ -1032,14 +1042,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 8.5 // 9",
-                "[Phenology].CAMP.FLNparams.PpLN = 6",
-                "[Phenology].CAMP.FLNparams.VrnLN = 0",
+                "[Phenology].CAMP.FLNparams.MinLN = 8 // 8.5 // 9",
+                "[Phenology].CAMP.FLNparams.PpLN = 0 // 6",
+                "[Phenology].CAMP.FLNparams.VrnLN = 2 // 0",
                 "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 95 // 85",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 87.5 // 95 // 85",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.025 // 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140"
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 60 // 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Quench",
               "ResourceName": null,
@@ -1050,14 +1062,16 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].CAMP.FLNparams.MinLN = 8.5 // 9",
-                "[Phenology].CAMP.FLNparams.PpLN = 6",
-                "[Phenology].CAMP.FLNparams.VrnLN = 2",
-                "[Phenology].CAMP.FLNparams.VxPLN = 0",
-                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 85",
-                "[Phenology].PhyllochronPpSensitivity.FixedValue = 2",
+                "[Phenology].CAMP.FLNparams.MinLN = 8 // 8.5 // 9",
+                "[Phenology].CAMP.FLNparams.PpLN = 0 // 6",
+                "[Phenology].CAMP.FLNparams.VrnLN = 1 // 2",
+                "[Phenology].CAMP.FLNparams.VxPLN = -0.875 // 0",
+                "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 115 // 85",
+                "[Phenology].PhyllochronPpSensitivity.FixedValue = 0 // 2",
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
-                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 140"
+                "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70 // 140",
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5.625",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Retriever",
               "ResourceName": null,
@@ -1132,7 +1146,8 @@
                 "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                 "",
                 "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150 // 250",
-                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3"
+                "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                "[Phenology].GrainFilling.Target.FixedValue = 545"
               ],
               "Name": "Triumph",
               "ResourceName": null,
