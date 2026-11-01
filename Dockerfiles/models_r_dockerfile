@@ -1,6 +1,11 @@
 # The R sensitivity package seems to have a dependency on shiny - not sure why
 FROM apsiminitiative/rsensitivity AS base
 
+# The published base image may predate the .NET 10 upgrade, so ensure the runtime is present.
+USER root
+RUN apt update -q --silent && \
+    apt install -y dotnet-runtime-10.0
+
 COPY entrypoint.sh /entrypoint.sh
 COPY ./app /app
 COPY ./Prototypes /validation_files/Prototypes

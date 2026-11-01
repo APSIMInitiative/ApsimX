@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
 
                     if (readyToWean)
                     {
-                        ind.Wean(true, reason, clock.Today);
+                        ind.Wean(true, reason, events.TimeStepEnd);
 
                         // leave where weaned or move to specified location
                         if (GrazeFoodStoreName != "Leave at current location")
@@ -252,7 +252,11 @@ namespace Models.CLEM.Activities
                         }
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), clock.Today, ind);
+
+                        //conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind);
+                        //DateTime weanerConceptionDate = ind.DateOfBirth.AddDays(-1 * Convert.ToInt32(ind.Mother?.Parameters.General.GestationLength.InDays, System.Globalization.CultureInfo.InvariantCulture));
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind, false, events);
+
                         ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;

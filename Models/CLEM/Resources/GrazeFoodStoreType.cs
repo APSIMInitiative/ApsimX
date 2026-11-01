@@ -37,6 +37,15 @@ namespace Models.CLEM.Resources
         private double biomassAddedThisYear;
         private double biomassConsumed;
 
+        // Cache over total biomass for sward quality reporting.
+        private double weightedSumDMD; // sum(pool.Amount * pool.DMD)
+        private double weightedSumN;   // sum(pool.Amount * pool.N)
+
+        /// <summary>
+        /// Smallest amount of pool mass or pending permitted.
+        /// </summary>
+        public const double PoolMassEpsilon = 1e-6;
+
         /// <inheritdoc/>
         [Description("Units (nominal)")]
         [Category("Simulation", "Details")]
@@ -259,6 +268,8 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public double CalculateGutFill(double dmd)
         {
+            if (GreenDMD == MinimumDMD)
+                return GutFillLowQuality;
             return GutFillLowQuality + ((dmd - MinimumDMD) / (GreenDMD - MinimumDMD)) * (GutFillHighQuality - GutFillLowQuality);
         }
 
@@ -266,21 +277,21 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public double OverallPastureBiomass { get; private set; }
 
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Intake")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required]
-        public double IntakeTropicalQualityCoefficient { get; set; } = 0.16;
+        ///// <summary>
+        ///// Coefficient to adjust intake for tropical herbage quality
+        ///// </summary>
+        //[Category("Advanced", "Intake")]
+        //[Description("Coefficient to adjust intake for tropical herbage quality")]
+        //[Required]
+        //public double IntakeTropicalQualityCoefficient { get; set; } = 0.16;
 
-        /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Intake")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required]
-        public double IntakeQualityCoefficient { get; set; } = 1.7;
+        ///// <summary>
+        ///// Coefficient to adjust intake for herbage quality
+        ///// </summary>
+        //[Category("Advanced", "Intake")]
+        //[Description("Coefficient to adjust intake for herbage quality")]
+        //[Required]
+        //public double IntakeQualityCoefficient { get; set; } = 1.7;
 
         /// <summary>
         /// Initial pasture biomass
@@ -357,7 +368,7 @@ namespace Models.CLEM.Resources
         {
             if (getByAge)
             {
-                return Pools.Where(a => (index < 12) ? a.Age == index : a.Age >= 12);
+                return Pools.Where(a => (index < 12) ? (a.AgeInMonths == index) : (a.AgeInMonths >= 12));
             }
 
             if (index < Pools.Count)
@@ -422,6 +433,30 @@ namespace Models.CLEM.Resources
             }
         }
 
+        // Single full sweep
+        private void RecalculateWeightedSumsFromPools()
+        {
+            weightedSumDMD = 0;
+            weightedSumN = 0;
+
+            foreach (var p in Pools)
+            {
+                var amount = Math.Max(0, p.Amount);
+                if (amount <= PoolMassEpsilon) continue;
+
+                weightedSumDMD += amount * p.DryMatterDigestibility;
+                weightedSumN += amount * p.NitrogenPercent;
+            }
+        }
+
+        // Delta helper for total biomass changes
+        private void ApplyAvailableDelta(double deltaKg, double dmd, double n)
+        {
+            if (Math.Abs(deltaKg) <= PoolMassEpsilon) return;
+            weightedSumDMD += deltaKg * dmd;
+            weightedSumN += deltaKg * n;
+        }
+
         /// <summary>
         /// Calculated total pasture (all pools) Dry Matter Digestibility (%)
         /// </summary>
@@ -429,12 +464,19 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double dmd = 0;
-                double amount = AmountAvailable;
-                if (amount > 0)
+                if (AmountTotal == 0)
                 {
-                    dmd = Pools.Sum(a => a.AmountAvailable * a.DryMatterDigestibility) / amount;
+                    return 0;
                 }
+
+                double dmd = weightedSumDMD / AmountTotal;
+
+                //double dmd = 0;
+                //double amount = AmountAvailable;
+                //if (amount > 0)
+                //{
+                //    dmd = Pools.Sum(a => a.AmountAvailable * a.DryMatterDigestibility) / amount;
+                //}
 
                 return Math.Max(MinimumDMD, dmd);
             }
@@ -447,12 +489,19 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                double n = 0;
-                double amount = AmountAvailable;
-                if (amount > 0)
+                if (AmountTotal == 0)
                 {
-                    n = Pools.Sum(a => a.AmountAvailable * a.NitrogenPercent) / amount;
+                    return 0;
                 }
+
+                double n = weightedSumN / AmountTotal;
+
+                //double n = 0;
+                //double amount = AmountAvailable;
+                //if (amount > 0)
+                //{
+                //    n = Pools.Sum(a => a.AmountAvailable * a.NitrogenPercent) / amount;
+                //}
 
                 return Math.Max(MinimumNitrogen, n);
             }
@@ -487,36 +536,72 @@ namespace Models.CLEM.Resources
                 case "Amount":
                     if (age < 0)
                     {
-                        valueToUse = Pools.Sum(a => a.AmountAvailable);
+                        valueToUse = AmountAvailable;
                     }
                     else
                     {
-                        valueToUse = Pool(age, true).Sum(a => a.AmountAvailable);
+                        var poolsByAge = Pool(age, true);
+                        if (poolsByAge is not null)
+                        {
+                            foreach (var pool in poolsByAge)
+                            {
+                                valueToUse += pool.AmountAvailable;
+                            }
+                        }
                     }
 
                     break;
                 case "Growth":
-                    valueToUse = Pool(0, true).Sum(a => a.Growth);
+                    {
+                        var poolsByAge = Pool(0, true);
+                        if (poolsByAge is not null)
+                        {
+                            foreach (var pool in poolsByAge)
+                            {
+                                valueToUse += pool.Growth;
+                            }
+                        }
+                    }
                     break;
                 case "Consumed":
                     if (age < 0)
                     {
-                        valueToUse = Pools.Sum(a => a.Consumed);
+                        foreach (var pool in Pools)
+                        {
+                            valueToUse += pool.Consumed;
+                        }
                     }
                     else
                     {
-                        valueToUse = Pool(age, true).Sum(a => a.Consumed);
+                        var poolsByAge = Pool(age, true);
+                        if (poolsByAge is not null)
+                        {
+                            foreach (var pool in poolsByAge)
+                            {
+                                valueToUse += pool.Consumed;
+                            }
+                        }
                     }
 
                     break;
                 case "Detached":
                     if (age < 0)
                     {
-                        valueToUse = Pools.Sum(a => a.Detached);
+                        foreach (var pool in Pools)
+                        {
+                            valueToUse += pool.Detached;
+                        }
                     }
                     else
                     {
-                        valueToUse = Pool(age, true).Sum(a => a.Detached);
+                        var poolsByAge = Pool(age, true);
+                        if (poolsByAge is not null)
+                        {
+                            foreach (var pool in poolsByAge)
+                            {
+                                valueToUse += pool.Detached;
+                            }
+                        }
                     }
 
                     break;
@@ -527,14 +612,36 @@ namespace Models.CLEM.Resources
                     }
                     else
                     {
-                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        if (pools.Count() == 1)
+                        var pools = Pool(age, true);
+                        if (pools is null)
                         {
-                            valueToUse = pools.FirstOrDefault().NitrogenPercent;
+                            return 0;
+                        }
+
+                        double amount = 0;
+                        double weightedN = 0;
+                        bool seenPool = false;
+                        GrazeFoodStorePool firstPool = null;
+                        foreach (var pool in pools)
+                        {
+                            seenPool = true;
+                            firstPool ??= pool;
+                            amount += pool.AmountAvailable;
+                            weightedN += pool.NitrogenPercent * pool.AmountAvailable;
+                        }
+
+                        if (!seenPool)
+                        {
+                            return 0;
+                        }
+
+                        if (Math.Abs(amount) <= PoolMassEpsilon)
+                        {
+                            valueToUse = firstPool.NitrogenPercent;
                         }
                         else
                         {
-                            valueToUse = pools.Sum(a => a.NitrogenPercent * a.AmountAvailable) / pools.Sum(a => a.AmountAvailable);
+                            valueToUse = weightedN / amount;
                         }
                     }
                     return valueToUse;
@@ -545,21 +652,54 @@ namespace Models.CLEM.Resources
                     }
                     else
                     {
-                        IEnumerable<GrazeFoodStorePool> pools = Pool(age, true);
-                        if (pools.Count() == 1)
+                        var pools = Pool(age, true);
+                        if (pools is null)
                         {
-                            valueToUse = pools.FirstOrDefault().DryMatterDigestibility;
+                            return 0;
+                        }
+
+                        double amount = 0;
+                        double weightedDmd = 0;
+                        bool seenPool = false;
+                        GrazeFoodStorePool firstPool = null;
+                        foreach (var pool in pools)
+                        {
+                            seenPool = true;
+                            firstPool ??= pool;
+                            amount += pool.AmountAvailable;
+                            weightedDmd += pool.DryMatterDigestibility * pool.AmountAvailable;
+                        }
+
+                        if (!seenPool)
+                        {
+                            return 0;
+                        }
+
+                        if (Math.Abs(amount) <= PoolMassEpsilon)
+                        {
+                            valueToUse = firstPool.DryMatterDigestibility;
                         }
                         else
                         {
-                            valueToUse = pools.Sum(a => a.DryMatterDigestibility * a.AmountAvailable) / pools.Sum(a => a.AmountAvailable);
+                            valueToUse = weightedDmd / amount;
                         }
                     }
                     return valueToUse;
                 case "Age":
                     if (age < 0)
                     {
-                        return Pools.Sum(a => a.AmountAvailable * a.Age) / this.AmountAvailable;
+                        if (AmountAvailable <= PoolMassEpsilon)
+                        {
+                            return 0;
+                        }
+
+                        double weightedAge = 0;
+                        foreach (var pool in Pools)
+                        {
+                            weightedAge += pool.AmountAvailable * pool.AgeInMonths;
+                        }
+
+                        return weightedAge / AmountAvailable;
                     }
 
                     return valueToUse;
@@ -627,6 +767,8 @@ namespace Models.CLEM.Resources
         {
             Pools?.Clear();
             Pools = null;
+            weightedSumDMD = 0;
+            weightedSumN = 0;
         }
 
         /// <summary>An event handler to allow us to clear pools.</summary>
@@ -650,31 +792,56 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMDetachPasture")]
         private void OnCLEMDetachPasture(object sender, EventArgs e)
         {
-            // detach and carryover detach are monthly so divide by 30.4 to daily and apply for time-step
-            if (DetachRate <= 1 | CarryoverDetachRate <= 1)
+            DetachPasture(events.Interval, 30.4);
+        }
+
+        /// <summary>
+        /// Detach pasture based on specified detachment rate for pools less than and greater than or equal to 12 months
+        /// old
+        /// </summary>
+        /// <param name="daysInTimeStep">Number of days in the time step</param>
+        /// <param name="daysInMonth">Number of days in a month for conversion from monthly to daily rates</param>
+        /// <exception cref="ApsimXException"></exception>
+        public void DetachPasture(int daysInTimeStep, double daysInMonth)
+        {
+            if (daysInMonth == 0)
+                return;
+
+            if (daysInMonth <= 0)
+                throw new ApsimXException(this, $"Core logic error: Invalid days in month provided [{daysInMonth}] to detach pasture by [r={this.NameWithParent}]");
+
+            if (DetachRate < 0)
+                throw new ApsimXException(this, $"Core logic error: Negative detachment rate applied by [r={this.NameWithParent}]");
+
+            if (CarryoverDetachRate < 0)
+                throw new ApsimXException(this, $"Core logic error: Negative carryover detachment rate applied by [r={this.NameWithParent}]");
+
+            double detached = 0;
+            foreach (var pool in Pools)
             {
-                double detached = 0;
-                foreach (var pool in Pools)
+                if (pool.AmountPending > PoolMassEpsilon)
                 {
-                    if (pool.AmountPending > 0)
-                    {
-                        throw new ApsimXException(this, "Core logic error: Cannot detach pasture as there is pending growth or grazing. Check timers of managing activities to ensure they run after detachment");
-                    }
-
-                    double detach = Math.Min(1.0, DetachRate / 30.4 * events.Interval);
-                    if (pool.Age >= 12)
-                    {
-                        detach = CarryoverDetachRate / 30.4 * events.Interval;
-                    }
-                    detached += pool.Detach(detach);
+                    throw new ApsimXException(this, "Core logic error: Cannot detach pasture as there is pending growth or grazing. Check timers of managing activities to ensure they run after detachment or pending resources are handled before detachment");
                 }
 
-
-                if (detached > 0)
+                if (pool.AmountPending > 0)
                 {
-                    base.RemoveFromResource(detached, null);
-                    ReportTransaction(TransactionType.Loss, detached, null, null, "Detached", this);
+                    // clear numerical dust from pending before detachment
+                    pool.ReducePending(pool.AmountPending);
                 }
+
+                double rate = (pool.AgeInMonths >= 12) ? CarryoverDetachRate : DetachRate;
+                double detach = Math.Min(1.0, rate / daysInMonth * daysInTimeStep);
+
+                double detachedPool = pool.Detach(detach);
+                detached += detachedPool;
+                ApplyAvailableDelta(-detachedPool, pool.DryMatterDigestibility, pool.NitrogenPercent);
+            }
+
+            if (detached > 0)
+            {
+                base.RemoveFromResource(detached, null);
+                ReportTransaction(TransactionType.Loss, detached, null, null, "Detached", this);
             }
         }
 
@@ -686,27 +853,36 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            // Nitrogen and DMD are monthly so divide by 30.4 to daily and apply for time-step
-            if (DecayNitrogen != 0 | (DecayDMD > 0 && DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD))
+            AgePasture(events.Interval, 30.4);
+        }
+
+        /// <summary>
+        /// Age pasture by days in the time step
+        /// </summary>
+        /// <param name="daysInTimeStep">Number of days in the time step</param>
+        /// <param name="daysInMonth">Number of days in a month for conversion from monthly to daily rates</param>
+        /// <exception cref="ApsimXException"></exception>
+        public void AgePasture(int daysInTimeStep, double daysInMonth)
+        {
+            foreach (var pool in Pools)
             {
-                // decay N and DMD of pools and age by 1 month
-                foreach (var pool in Pools)
+                // N is a loss of N% (x = x -loss)
+                if (DecayNitrogen > 0)
                 {
-                    // N is a loss of N% (x = x -loss)
-                    pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - (DecayNitrogen / 30.4 * events.Interval), MinimumNitrogen);
-
-                    if (DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
-                    {
-                        // DMD is a proportional loss (x = x*(1-proploss))
-                        pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / 30.4 * events.Interval)), MinimumDMD);
-                    }
-
-                    int age = Convert.ToInt32((events.Clock.Today - pool.GrowthDate).TotalDays / 30.4);
-                    pool.Age = age;
+                    pool.NitrogenPercent = Math.Max(pool.NitrogenPercent - (DecayNitrogen / daysInMonth * daysInTimeStep), MinimumNitrogen);
                 }
-                // remove all pools with less than 1g of food
-                Pools.RemoveAll(a => a.Amount < 0.001);
+
+                if (DecayDMD > 0 && DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
+                {
+                    // DMD is a proportional loss (x = x*(1-proploss))
+                    pool.DryMatterDigestibility = Math.Max(pool.DryMatterDigestibility * (1 - (DecayDMD / daysInMonth * daysInTimeStep)), MinimumDMD);
+                }
+
+                pool.UpdateAge(pool.GrowthDate, events.TimeStepStart.AddDays(events.Interval));
             }
+            // remove all pools with less than 1g of food
+            Pools.RemoveAll(a => a.Amount < 0.001);
+            RecalculateWeightedSumsFromPools();
 
             if (events.IsEcologicalIndicatorsCalculationDue())
             {
@@ -715,17 +891,17 @@ namespace Models.CLEM.Resources
                 biomassAddedThisYear = 0;
                 biomassConsumed = 0;
             }
-
         }
 
         /// <summary>Store amount of pasture available for everyone at the start of the step (kg per hectare)</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMPastureReady")]
-        private void ONCLEMPastureReady(object sender, EventArgs e)
+        private void OnCLEMPastureReady(object sender, EventArgs e)
         {
             // do not return zero as there is always something there and zero affects calculations.
             base.Set(Pools.Sum(a => a.Amount));
+            RecalculateWeightedSumsFromPools();
 
             TonnesPerHectareStartOfTimeStep = Math.Max(TonnesPerHectare, 0.01);
         }
@@ -758,7 +934,6 @@ namespace Models.CLEM.Resources
         /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
         public void SetupStartingPasturePools(double area, double firstMonthsGrowth)
         {
-
             if (area <= 0) return;
             if (NumberMonthsForInitialBiomass <= 0) return;
 
@@ -790,6 +965,8 @@ namespace Models.CLEM.Resources
                     break;
             }
             Pools.Clear();
+            weightedSumDMD = 0;
+            weightedSumN = 0;
 
             List<GrazeFoodStorePool> newPools = [];
 
@@ -827,13 +1004,11 @@ namespace Models.CLEM.Resources
 
                 if (insideGrowthWindow) // (month <= 3 | month >= 11)
                 {
-                    GrazeFoodStorePool newPool = new(0, this)
+                    GrazeFoodStorePool newPool = new(0, this, growDate, events.Clock.Today)
                     {
                         GrossEnergyContent = this.GrossEnergyContent,
                         MetabolisableEnergyContent = this.MetabolisableEnergyContent,
                         FatPercent = this.FatPercent,
-                        GrowthDate = growDate,
-                        Age = monthCount,
                         StartingAmount = propBiomass,
                         RumenDegradableProteinPercent = this.RumenDegradableProteinPercent,
                         NitrogenPercent = currentN
@@ -870,7 +1045,7 @@ namespace Models.CLEM.Resources
                 double thisMonthsGrowth = firstMonthsGrowth * area;
                 if (thisMonthsGrowth > 0)
                 {
-                    if (newPools.Where(a => a.Age == 0).FirstOrDefault() is GrazeFoodStorePool thisMonth)
+                    if (newPools.Where(a => a.AgeInDays == 0).FirstOrDefault() is GrazeFoodStorePool thisMonth)
                     {
                         thisMonth.InitialBiomassSet(Math.Max(0, thisMonth.AmountAvailable - thisMonthsGrowth));
                     }
@@ -883,7 +1058,7 @@ namespace Models.CLEM.Resources
                 string reason = "Initialise";
                 if (newPools.Count > 0)
                 {
-                    reason = "Initialise pool " + pool.Age.ToString();
+                    reason = "Initialise pool " + pool.AgeInMonths.ToString();
                 }
 
                 AddToResource(pool, null, null, reason);
@@ -917,6 +1092,46 @@ namespace Models.CLEM.Resources
             return nestedGroups.ToList();
         }
 
+        /// <summary>
+        /// Finalise pending transactions and reconcile pool totals once at end of timestep.
+        /// </summary>
+        /// <param name="sender">The sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("CLEMManagePendingTransactions")]
+        public override void ManagePendingTransactions(object sender, EventArgs e)
+        {
+            base.ManagePendingTransactions(sender, e);
+
+            bool needsPoolCleanup = false;
+            foreach (var pool in Pools)
+            {
+                if (pool.AmountPending > 0 && pool.AmountPending <= PoolMassEpsilon)
+                {
+                    pool.ReducePending(pool.AmountPending);
+                }
+
+                if (pool.Amount <= PoolMassEpsilon)
+                {
+                    needsPoolCleanup = true;
+                }
+            }
+
+            if (needsPoolCleanup)
+            {
+                Pools.RemoveAll(a => a.Amount <= PoolMassEpsilon && a.AmountPending <= PoolMassEpsilon);
+            }
+
+            // single exact sweep to align base amount and quality aggregates with pool state
+            RecalculateWeightedSumsFromPools();
+            double poolTotal = 0;
+            foreach (var pool in Pools)
+            {
+                poolTotal += pool.Amount;
+            }
+
+            base.Set(poolTotal);
+        }
+
         #region transactions
 
         /// <summary>
@@ -926,11 +1141,14 @@ namespace Models.CLEM.Resources
         /// Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being
         /// added
         /// </param>
-        /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <param name="activity">Reference to the activity adding resource</param>
+        /// <param name="relatesToResource">Optional relates to resource as string for reporting</param>
+        /// <param name="category">Transaction category</param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
+            if (events is null)
+                throw new ApsimXException(this, $"Core logic error: Cannot add to [r={this.NameWithParent}] as the [Clock.CLEMEvents] is not available. Check that the [Clock.CLEMEvents] is present in the simulation.");
+
             GrazeFoodStorePool pool = new(0, this)
             {
                 GrossEnergyContent = GrossEnergyContent,
@@ -943,11 +1161,10 @@ namespace Models.CLEM.Resources
 
             switch (resourceAmount)
             {
-                case GrazeFoodStorePool _:
+                case GrazeFoodStorePool incomingPool:
                     // coming from the advanced PastureActivityManage
-                    GrazeFoodStorePool incomingPool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
-                    if (incomingPool.Age == 0 && grazeFoodStoreFertilityLimiter is not null)
+                    if (incomingPool.IsGrowthThisTimeStep && grazeFoodStoreFertilityLimiter is not null)
                     {
                         pool.NitrogenPercent = Math.Max(MinimumNitrogen, incomingPool.NitrogenPercent * grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(incomingPool.AmountAvailable / Manager.Area));
                         pool.DryMatterDigestibility = Math.Min(100, Math.Max(MinimumDMD, pool.NitrogenPercent * NToDMDCoefficient + NToDMDIntercept));
@@ -958,28 +1175,27 @@ namespace Models.CLEM.Resources
                         pool.DryMatterDigestibility = incomingPool.DryMatterDigestibility;
                     }
                     pool.GutFill = CalculateGutFill(pool.DryMatterDigestibility);
-                    pool.Age = incomingPool.Age;
                     pool.InitialBiomassSet(incomingPool.Amount);
-                    pool.GrowthDate = incomingPool.GrowthDate;
+                    pool.UpdateAge(incomingPool.GrowthDate, events.TimeStepStart);
                     break;
-                case FoodResourcePacket _:
+                case FoodResourcePacket packet:
                     // coming from the CropActivityManage
-                    FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
+                    // TODO: does this need to track age (growthdate etc)?
                     pool.InitialBiomassSet(packet.Amount);
                     pool.NitrogenPercent = packet.NitrogenPercent;
                     pool.DryMatterDigestibility = packet.DryMatterDigestibility;
+                    pool.UpdateAge(events.TimeStepStart, events.TimeStepStart);
                     break;
-                case double _:
+                case double amount:
                     // add amount at current rates
-                    pool.InitialBiomassSet((double)resourceAmount);
+                    pool.InitialBiomassSet(amount);
                     pool.NitrogenPercent = this.SwardNitrogenPercent;
-                    pool.DryMatterDigestibility = SwardDryMatterDigestibility; //this.EstimateDMD(this.Nitrogen);
+                    pool.DryMatterDigestibility = SwardDryMatterDigestibility; 
+                    pool.UpdateAge(events.TimeStepStart, events.TimeStepStart);
                     break;
                 default:
                     throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
-
-
 
             if (pool.Amount > 0)
             {
@@ -988,6 +1204,8 @@ namespace Models.CLEM.Resources
                     Pools.Insert(0, pool);
                 else
                     Pools[0].Add(pool);
+
+                ApplyAvailableDelta(pool.Amount, pool.DryMatterDigestibility, pool.NitrogenPercent);
 
                 // update biomass available
                 if (!category.StartsWith("Initialise"))
@@ -1005,7 +1223,7 @@ namespace Models.CLEM.Resources
         /// <param name="amountToRemove">Amount to remove from resource store</param>
         /// <param name="pendingRequest">
         /// Provides a the request if this is a pending transaction that has not yet been completed. This will not
-        /// reduce the amount total until available until the transaction is completed.
+        /// reduce the amount total available until the transaction is completed.
         /// </param>
         /// <returns>Amount removed</returns>
         protected double Remove(double amountToRemove, ResourceRequest pendingRequest)
@@ -1015,11 +1233,16 @@ namespace Models.CLEM.Resources
             // add pending amount to each pool
             if (pendingRequest.AdditionalDetails is IEnumerable<FoodResourceStore> foodStores)
             {
+                double scaleToProvided = (pendingRequest.Required > 0)
+                    ? Math.Min(1.0, amountToRemove / pendingRequest.Required)
+                    : 0;
+
                 foreach (var foodStore in foodStores)
                 {
                     for (int i = 0; i < foodStore.Pools.Count; i++)
                     {
-                        foodStore.Pools[i].SetPending(foodStore.Details.Amount * foodStore.PoolProportions[i]);
+                        double pendingAmount = foodStore.Details.Amount * scaleToProvided * foodStore.PoolProportions[i];
+                        foodStore.Pools[i].SetPending(pendingAmount);
                     }
                 }
             }
@@ -1030,17 +1253,18 @@ namespace Models.CLEM.Resources
         /// Decrease pending for specified food resource store
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="store"></param>
-        /// <param name="amount"></param>
+        /// <param name="store">Food store to modify</param>
+        /// <param name="amount">Amount to decrease (kg/day)</param>
         public void DecreasePendingByStore(ResourceRequest request, FoodResourceStore store, double amount)
         {
+            double amountForTimeStep = amount * store.NumberOfDaysInTimestep;
             for (int i = 0; i < store.Pools.Count; i++)
             {
-                store.Pools[i].ReducePending(amount * store.PoolProportions[i]);
+                store.Pools[i].ReducePending(amountForTimeStep * store.PoolProportions[i]);
             }
 
             // do removal from pending
-            base.DecreasePending(request, amount * store.NumberOfDaysInTimestep);
+            base.DecreasePending(request, amountForTimeStep);
         }
 
         /// <summary>
@@ -1083,6 +1307,8 @@ namespace Models.CLEM.Resources
                             return;
                         }
                         Pools.Clear();
+                        weightedSumDMD = 0;
+                        weightedSumN = 0;
                         request.Provided = amountCleared;
                         // use generic removal to handle pending and reporting transaction if needed 
                         base.RemoveFromResource(request);
@@ -1112,8 +1338,10 @@ namespace Models.CLEM.Resources
                 {
                     for (int i = 0; i < foodStore.Pools.Count; i++)
                     {
-                        provided += foodStore.Pools[i].AmountPending;
-                        biomassConsumed += foodStore.Pools[i].AmountPending;
+                        double pendingToConsume = foodStore.Pools[i].AmountPending;
+                        provided += pendingToConsume;
+                        biomassConsumed += pendingToConsume;
+                        ApplyAvailableDelta(-pendingToConsume, foodStore.Pools[i].DryMatterDigestibility, foodStore.Pools[i].NitrogenPercent);
                         foodStore.Pools[i].ConsumePending();
                     }
                 }
@@ -1145,6 +1373,7 @@ namespace Models.CLEM.Resources
                 dryMatterDigestibility += pool.DryMatterDigestibility * amountRemoveed;
                 nitrogen += pool.NitrogenPercent * amountRemoveed;
                 pool.Remove(amountRemoveed); // "Cut and carry"
+                ApplyAvailableDelta(-amountRemoveed, pool.DryMatterDigestibility, pool.NitrogenPercent);
             }
             request.Provided = amountCollected;
 

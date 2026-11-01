@@ -15,7 +15,7 @@ namespace UnitTests.CLEM
     /// This does not Consider newborn individuals created from RuminantFemale.Births
     /// </summary>
     [TestFixture]
-    public class RuminantInitialiseTests
+    public class RuminantInitialiseTest
     {
         private Simulations singleSheepSim;
         private RuminantTypeCohort sheepCohort;

@@ -222,6 +222,42 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double N { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
 
+        /// <summary>Total carbohydrate carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Carbohydrate carbon content")]
+        [Units("kg/ha")]
+        public double CarbohydrateC { get { return SumSurfOMPool(0, x => x.C); } }
+
+        /// <summary>Total carbohydrate nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Carbohydrate nitrogen content")]
+        [Units("kg/ha")]
+        public double CarbohydrateN { get { return SumSurfOMPool(0, x => x.N); } }
+
+        /// <summary>Total cellulose carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Cellulose carbon content")]
+        [Units("kg/ha")]
+        public double CelluloseC { get { return SumSurfOMPool(1, x => x.C); } }
+
+        /// <summary>Total cellulose nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Cellulose nitrogen content")]
+        [Units("kg/ha")]
+        public double CelluloseN { get { return SumSurfOMPool(1, x => x.N); } }
+
+        /// <summary>Total lignin carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Lignin carbon content")]
+        [Units("kg/ha")]
+        public double LigninC { get { return SumSurfOMPool(2, x => x.C); } }
+
+        /// <summary>Total lignin nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Lignin nitrogen content")]
+        [Units("kg/ha")]
+        public double LigninN { get { return SumSurfOMPool(2, x => x.N); } }
+
         /// <summary>Total mass of all surface organic phosphor</summary>
         [Summary]
         [Description("Phosphorus content")]
@@ -534,6 +570,12 @@ namespace Models.Surface
         private double SumSurfOMStandingLying(SurfOrganicMatterType var, Func<OMFractionType, double> func)
         {
             return var.Lying.Sum<OMFractionType>(func) + var.Standing.Sum<OMFractionType>(func);
+        }
+
+        /// <summary>Sums a carbon or nitrogen component for one surface organic matter fraction.</summary>
+        private double SumSurfOMPool(int pool, Func<OMFractionType, double> func)
+        {
+            return SurfOM.Sum(om => func(om.Standing[pool]) + func(om.Lying[pool]));
         }
 
         /// <summary>Sums the surf om.</summary>
