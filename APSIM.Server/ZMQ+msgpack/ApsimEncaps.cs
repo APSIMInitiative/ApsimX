@@ -1,16 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
-using System.Text;
 using System.Threading;
-using System.Threading.Channels;
 using System.Data;
-using MessagePack;
-using APSIM.ZMQServer.IO;
-using APSIM.Shared.Utilities;
+using System.Text.Json;
 using Models.Core;
 using Models.Storage;
 
@@ -91,7 +84,7 @@ namespace APSIM.ZMQServer
         public byte[] getVariableFromModel(string variablePath)
         {
             var v = sims.FindAllByPath(variablePath).ToArray().Select(x => x.Value);
-            byte[] bytes = MessagePackSerializer.Serialize(v);
+            byte[] bytes = JsonSerializer.Serialize(v);
             return (bytes);
         }
 #endif
@@ -122,7 +115,7 @@ namespace APSIM.ZMQServer
                 throw new Exception($"Column {fieldName} does not exist in table {tableName}");
 
             var data = Result.AsEnumerable().Select(r => r[fieldName]).ToArray();
-            byte[] bytes = MessagePackSerializer.Serialize(data);
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(data);
             return (bytes);
         }
 

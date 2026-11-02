@@ -11,7 +11,7 @@
 #ifdef VERSION
 #define AppVerNo VERSION
 #else
-#define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\net8.0\win-x64\publish\Models.exe", PRODUCT_VERSION) 
+#define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\net10.0\win-x64\publish\Models.exe", PRODUCT_VERSION) 
 #endif
 #define GtkVer "3.24.24"
 #define GtkArchive "gtk-" + GtkVer + ".zip"
@@ -314,7 +314,7 @@ end;
 // this is the main function that detects the required version
 function IsRequiredDotNetDetected(): Boolean;  
 begin
-    result := HasDotNetCore('6.0.0');
+    result := HasDotNetCore('10.0.0');
 end;
 
 function InitializeSetup(): Boolean;
@@ -327,11 +327,11 @@ begin
   if not IsRequiredDotNetDetected() then 
   begin
       result := false;
-      answer := MsgBox('The Microsoft .NET Core Runtime 6.0 or above is required.' + #13#10 + #13#10 +
+      answer := MsgBox('The Microsoft .NET Core Runtime 10.0 or above is required.' + #13#10 + #13#10 +
       'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);
       if (answer = MROK) then
       begin
-        ShellExecAsOriginalUser('open', 'https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.23/dotnet-runtime-8.0.23-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        ShellExecAsOriginalUser('open', 'https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.0/dotnet-runtime-10.0.0-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         result := true
       end;
   end;
@@ -344,10 +344,10 @@ Name: {localappdata}\VirtualStore\Apsim\*.*; Type: filesandordirs
 Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 
 [Files]
-Source: {#ApsimX}\bin\Release\net8.0\win-x64\publish\*; DestDir: {app}\bin; Flags: ignoreversion;
+Source: {#ApsimX}\bin\Release\net10.0\win-x64\publish\*; DestDir: {app}\bin; Flags: ignoreversion;
 ;fixme
 Source: {#ApsimX}\DeploymentSupport\Windows\Bin64\sqlite3.dll; DestDir: {app}\bin; Flags: ignoreversion;
-Source: {#ApsimX}\bin\Release\net8.0\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
+Source: {#ApsimX}\bin\Release\net10.0\win-x64\publish\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: {#ApsimX}\APSIM.Documentation\Resources\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 Source: {#ApsimX}\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 Source: {#ApsimX}\ApsimNG\Resources\CommonReportVariables\*; DestDir: {app}\ApsimNG\Resources\CommonReportVariables; Flags: recursesubdirs

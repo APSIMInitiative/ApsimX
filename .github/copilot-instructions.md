@@ -10,9 +10,9 @@
 
 ## First steps for any coding task
 1. Read relevant docs before editing:
-   - `Docs/content/Development/compile.md`
-   - `Docs/content/Development/Software/CodingStyle.md`
-   - `Docs/content/Contribute/pullrequests.md`
+   - `https://docs.apsim.info/docs/development/compile`
+   - `https://docs.apsim.info/docs/development/software/codingstyle`
+   - `https://docs.apsim.info/docs/contribute/pullrequests`
 2. Keep changes tightly scoped to one concern.
 3. Prefer modifying existing files and patterns over introducing new abstractions.
 
@@ -30,13 +30,15 @@ Notes:
 
 ## Coding conventions to follow
 - Follow Microsoft C# conventions with project-specific guidance in:
-  - `Docs/content/Development/Software/CodingStyle.md`
+  - `https://docs.apsim.info/docs/development/software/codingstyle`
   - `.editorconfig`
 - Prefer:
   - PascalCase for types/members, camelCase for method args/private fields.
   - Allman-style braces.
   - Minimal inheritance where composition is practical.
 - Keep public property implementations trivial when possible.
+- Avoid `global::` qualification in C#; prefer normal `using` directives or aliases, and resolve namespace conflicts without introducing unnecessary global qualification.
+- Prefer clear, debuggable `for` loops over LINQ when they make the code easier to read and debug.
 
 ## Contribution and PR expectations
 - Ensure PRs are focused and small where possible.
@@ -62,7 +64,7 @@ Documented issues from repository docs/workflows:
 2. **Package install issue on Debian/Ubuntu**
    - Error: `E: Unable to locate package dotnet-runtime-8.0`
    - Workaround: install .NET packages from Microsoft package repositories (not default Debian repos).
-   - Source: `Docs/content/Development/compile.md`
+   - Source: `https://docs.apsim.info/docs/development/compile`
 
 3. **Model validation workflow can fail when branch is stale**
    - Error condition: merge step in `.github/workflows/run-model-validations.yml` fails when PR branch cannot merge cleanly with `upstream/master`.
