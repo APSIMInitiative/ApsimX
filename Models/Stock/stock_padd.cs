@@ -1061,11 +1061,10 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
 
     double greenDMDMass = 0.0;
     double deadDMDMass = 0.0;
-
     double greenN = 0.0;
     double deadN = 0.0;
-
     double greenPropn = 0.0;
+
      // Account for ungrazeable green material
     if (this.PastureGreenDM > GrazType.Ungrazeable)
         greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
@@ -1077,22 +1076,21 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
         if (dead == null)
             throw new Exception($"Cannot find dead material for {live.Name}");
 
-        if (live.Consumable.Wt <= 0.0 && dead.Consumable.Wt <= 0.0)
-            continue;
+        // if (live.Consumable.Wt <= 0.0 && dead.Consumable.Wt <= 0.0)
+        //     continue;
+        if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
+        {
+            double liveDM = greenPropn * live.Consumable.Wt;
+            double deadDM = dead.Consumable.Wt;
+            result.TotalGreen += liveDM;
+            result.TotalDead += deadDM;
 
-        double liveDM = greenPropn * live.Consumable.Wt;
-        double deadDM = dead.Consumable.Wt;
-
-        result.TotalGreen += liveDM;
-        result.TotalDead += deadDM;
-
-        // Digestible biomass contribution
-        greenDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(live) *  greenPropn * live.Consumable.StructuralWt + greenPropn * live.Consumable.StorageWt  + greenPropn * live.Consumable.MetabolicWt;
-
-        deadDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(dead) *  dead.Consumable.StructuralWt  + dead.Consumable.StorageWt + dead.Consumable.MetabolicWt;
-
-        greenN += greenPropn * live.Consumable.N;
-        deadN += dead.Consumable.N;
+            // Digestible biomass contribution for live and dead biomass
+            greenDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(live) *  greenPropn * live.Consumable.StructuralWt + greenPropn * live.Consumable.StorageWt  + greenPropn * live.Consumable.MetabolicWt;
+            deadDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(dead) *  dead.Consumable.StructuralWt  + dead.Consumable.StorageWt + dead.Consumable.MetabolicWt;
+            greenN += greenPropn * live.Consumable.N;
+            deadN += dead.Consumable.N;
+        }
     }
 
     double greenTotalDM = result.TotalGreen;
@@ -1129,7 +1127,7 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
     if(deadTotalDM > 0.0)
             {
                 deadMeanDMD = deadDMDMass / deadTotalDM;
-                deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.30);
+                deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.45);
                  deadNConc = deadN / deadTotalDM ;
             }
         
@@ -1142,14 +1140,9 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
            
     for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
     {
-        result.Herbage[idx].Biomass = greenDMDPropns[idx] * greenTotalDM + deadDMDPropns[idx] * deadTotalDM;
-
-               
-        //result.Herbage[idx].CrudeProtein = greenNConc * GrazType.N2Protein + deadNConc * GrazType.N2Protein;
+        result.Herbage[idx].Biomass = greenDMDPropns[idx] * greenTotalDM + deadDMDPropns[idx] * deadTotalDM;              
         result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
-
         result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
-
         result.Herbage[idx].Degradability =  Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
         result.Herbage[idx].HeightRatio = 1.0;
         result.Herbage[idx].PhosContent = 0.0;
@@ -1166,7 +1159,6 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
             case "AGPWhiteClover":
             result.LegumePropn = 1.0;
             break;
-
             default:
             result.LegumePropn = 0.0;
             break;
@@ -1260,7 +1252,7 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
                     amountRemoved += amountOfOrganToRemove;
                 }
             }
-                //Console.WriteLine(forageHostName + " AmoutRemoved : "+ amountRemoved + "TotalRemoved :"+ totalRemoved);
+                
                 if (!MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
                     throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
 
