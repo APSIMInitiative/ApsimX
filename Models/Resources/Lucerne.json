@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 222,
+  "Version": 223,
   "Name": "Simulations",
   "Children": [
     {
@@ -3137,7 +3137,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "$type": "Models.Functions.DivideFunction, Models",
               "NumeratorErrVal": 0.0,
               "DenominatorErrVal": 0.0,
               "Name": "SLW_act",
@@ -8785,7 +8785,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.ProtectedDivideFunction, Models",
+          "$type": "Models.Functions.DivideFunction, Models",
           "NumeratorErrVal": 0.0,
           "DenominatorErrVal": 0.0,
           "Name": "LSR_act",

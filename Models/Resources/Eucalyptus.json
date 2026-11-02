@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 222,
+  "Version": 223,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -4754,7 +4754,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.ProtectedDivideFunction, Models",
+          "$type": "Models.Functions.DivideFunction, Models",
           "NumeratorErrVal": 0.0,
           "DenominatorErrVal": 0.0,
           "Name": "RootShootRatio",
