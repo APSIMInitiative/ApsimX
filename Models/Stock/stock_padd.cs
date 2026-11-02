@@ -826,7 +826,7 @@ namespace Models.GrazPlan
         /// This object may then get scaled to kg/ha
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
-        /// <returns>The grazing inputs</returns>
+        // /// <returns>The grazing inputs</returns>
         // private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
         // {
         //     GrazType.GrazingInputs result = new GrazType.GrazingInputs();
@@ -896,110 +896,16 @@ namespace Models.GrazPlan
         //             result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
         //         }
 
-        //         if (forageObj is IPlant plant)
-        //         {
-        //             switch (plant.PlantType)
-        //             {
-        //                 case "AGPLucerne":
-        //                 case "AGPRedClover":
-        //                 case "AGPWhiteClover":
-        //                     result.LegumePropn = 1;
-        //                     break;
-        //                 default:
-        //                     result.LegumePropn = 0;
-        //                     break;
-        //             }
-        //         }
+        //         // Console.WriteLine(ForageHostName);
+        //         // Console.WriteLine($"Green={result.TotalGreen}");
+        //         // Console.WriteLine($"Dead={result.TotalDead}");
+        //         // Console.WriteLine($"MeanDMD={meanDMD}");
 
-        //         result.SelectFactor = 0;    // TODO: set from Plant model value
-
-        //         // TODO: Store any seed pools
-        //     }
-
-        //     return result;
-        // }
-
-
-        //  private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
-        // {
-        //     GrazType.GrazingInputs result = new GrazType.GrazingInputs();
-        //     GrazType.zeroGrazingInputs(ref result);
-
-        //     result.TotalGreen = 0;
-        //     result.TotalDead = 0;
-
-        //     //double totalDMD = 0;
-        //     //double totalN = 0;
-        //     //double nConc;
-        //     //double meanDMD;
-        //     double greenDMD = 0;
-        //     double deadDMD = 0;
-        //     double greenN = 0;
-        //     double deadN = 0;
-        //     double deadMeanDMD;
-        //     double greenMeanDMD;
-        //     // calculate the green available based on the total green in this paddock
-        //     double greenPropn = 0;
-
-        //     // ** should really take into account the height ratio here e.g. Params.HeightRatio
-        //     if (this.PastureGreenDM > GrazType.Ungrazeable)
-        //     {
-        //         greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
-        //     }
-
-        //     // calculate the total live and dead biomass from the Grazeable materials in forageObj (ModelWithDigestibleBiomass)
-        //     foreach (var live in forageObj.GrazeableMaterial.Where(m => m.IsLive))
-        //     {
-        //         // Find corresponding dead material
-        //         var dead = forageObj.GrazeableMaterial.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
-        //         if (dead == null)
-        //             throw new Exception($"Cannot find dead material for {live.Name}.");
-
-        //         if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
-        //         {
-        //             result.TotalGreen += (greenPropn * live.Consumable.Wt);   // g/m^2
-        //             result.TotalDead += dead.Consumable.Wt;
-
-        //             // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-        //             greenDMD = (owningPaddock.ForagesModel.GetDigestibility(live) * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
-        //             deadDMD = (owningPaddock.ForagesModel.GetDigestibility(dead) * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt);
-        //             //totalDMD += dmd;
-        //             greenN = greenPropn * live.Consumable.N;
-        //             deadN =  dead.Consumable.N;
-                    
-        //             //totalN += (greenPropn * live.Consumable.N) + (dead.Consumable.Wt > 0 ? dead.Consumable.N : 0);   // g/m^2
-        //         }
-        //     }
-
-            
-        //     // TODO: Improve this routine
-        //     double availGreenDM = result.TotalGreen;
-        //     double  avaialDeadDM = result.TotalDead;
-        //     if (availGreenDM + avaialDeadDM  > 0)
-        //     {
-        //         //meanDMD = totalDMD / availDM; // calc the average dmd for the plant
-        //        // nConc = totalN / availDM;     // N conc
-        //         // get the dmd distribution
-        //         greenMeanDMD = greenDMD/availGreenDM;
-        //         deadMeanDMD = deadDMD/avaialDeadDM;
-
-        //         double[] greenDMDPropns; // = new double[GrazType.DigClassNo + 1];
-        //         double[] deadDMDPropns;   
-
-        //         // green 0.85-0.45, dead 0.70-0.30
-        //         greenDMDPropns = ForageInfo.CalcDMDDistribution(greenMeanDMD, 0.85, 0.45);    // FIX ME: the DMD ranges should be organ- and development-specific values
-        //         deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.30);
-        //         for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
-        //         {
-        //             result.Herbage[idx].Biomass = greenDMDPropns[idx] * availGreenDM + deadDMDPropns[idx] * avaialDeadDM;
-        //             //result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
-        //             result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
-        //             result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
-        //             result.Herbage[idx].HeightRatio = 1;
-        //             result.Herbage[idx].PhosContent = 0;    // N * 0.05?
-        //             result.Herbage[idx].SulfContent = 0;    // N * 0.07?
-        //             result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
-        //         }
+        //         // for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+        //         // {
+        //         //     Console.WriteLine(
+        //         //         $"Class {idx} Biomass={result.Herbage[idx].Biomass:F2}");
+        //         // }
 
         //         if (forageObj is IPlant plant)
         //         {
@@ -1025,7 +931,127 @@ namespace Models.GrazPlan
         // }
 
 
- private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
+
+
+//  private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
+// {
+//     GrazType.GrazingInputs result = new GrazType.GrazingInputs();
+//     GrazType.zeroGrazingInputs(ref result);
+
+//     result.TotalGreen = 0.0;
+//     result.TotalDead = 0.0;
+
+//     double greenDMDMass = 0.0;
+//     double deadDMDMass = 0.0;
+
+//     double greenN = 0.0;
+//     double deadN = 0.0;
+
+//     double greenPropn = 0.0;
+//      // Account for ungrazeable green material
+//     if (this.PastureGreenDM > GrazType.Ungrazeable)
+//     greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
+
+//     foreach (var live in forageObj.GrazeableMaterial.Where(m => m.IsLive))
+//     {
+//         var dead = forageObj.GrazeableMaterial.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
+
+//         if (dead == null)
+//             throw new Exception($"Cannot find dead material for {live.Name}");
+
+//         if (live.Consumable.Wt <= 0.0 && dead.Consumable.Wt <= 0.0)
+//             continue;
+
+//         double liveDM = greenPropn * live.Consumable.Wt;
+//         double deadDM = dead.Consumable.Wt;
+
+//         result.TotalGreen += liveDM;
+//         result.TotalDead += deadDM;
+
+//         // Digestible biomass contribution
+//         greenDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(live) *  greenPropn * live.Consumable.StructuralWt + greenPropn * live.Consumable.StorageWt  + greenPropn * live.Consumable.MetabolicWt;
+
+//         deadDMDMass +=  owningPaddock.ForagesModel.GetDigestibility(dead) *  dead.Consumable.StructuralWt  + dead.Consumable.StorageWt + dead.Consumable.MetabolicWt;
+
+//         greenN += greenPropn * live.Consumable.N;
+//         deadN += dead.Consumable.N;
+//     }
+
+//     double greenTotalDM = result.TotalGreen;
+//     double deadTotalDM = result.TotalDead;
+//     double totalDM = greenTotalDM + deadTotalDM;
+
+//     if (totalDM <= 0.0)
+//         return result;
+
+//     double greenMeanDMD =   (greenTotalDM > 0.0)
+//     ? greenDMDMass / greenTotalDM
+//     : 0.0;
+
+//     double deadMeanDMD =
+//     (deadTotalDM > 0.0)
+//     ? deadDMDMass / deadTotalDM
+//     : 0.0;
+
+//     double totalN = greenN + deadN;
+//     double nConc = totalN / totalDM;
+
+//     // Build separate distributions
+//     double[] greenDMDPropns =
+//     greenTotalDM > 0.0
+//     ? ForageInfo.CalcDMDDistribution(greenMeanDMD, 0.85, 0.45)
+//     : new double[GrazType.DigClassNo + 1];
+
+//     double[] deadDMDPropns =
+//     deadTotalDM > 0.0
+//     ? ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.30)
+//     : new double[GrazType.DigClassNo + 1];
+
+//     for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+//     {
+//         result.Herbage[idx].Biomass =
+//         greenDMDPropns[idx] * greenTotalDM
+//         + deadDMDPropns[idx] * deadTotalDM;
+
+//         result.Herbage[idx].CrudeProtein =
+//         nConc * GrazType.N2Protein;
+
+//         result.Herbage[idx].Digestibility =
+//         GrazType.ClassDig[idx];
+
+//         result.Herbage[idx].Degradability =
+//         Math.Min(0.90,
+//         result.Herbage[idx].Digestibility + 0.10);
+
+//         result.Herbage[idx].HeightRatio = 1.0;
+//         result.Herbage[idx].PhosContent = 0.0;
+//         result.Herbage[idx].SulfContent = 0.0;
+//         result.Herbage[idx].AshAlkalinity = 0.70;
+//     }
+
+//     if (forageObj is IPlant plant)
+//     {
+//         switch (plant.PlantType)
+//         {
+//             case "AGPLucerne":
+//             case "AGPRedClover":
+//             case "AGPWhiteClover":
+//             result.LegumePropn = 1.0;
+//             break;
+
+//             default:
+//             result.LegumePropn = 0.0;
+//             break;
+//         }
+//     }
+
+//     result.SelectFactor = 0; // existing behaviour
+
+//     return result;
+// }
+
+
+private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass forageObj)
 {
     GrazType.GrazingInputs result = new GrazType.GrazingInputs();
     GrazType.zeroGrazingInputs(ref result);
@@ -1042,7 +1068,7 @@ namespace Models.GrazPlan
     double greenPropn = 0.0;
      // Account for ungrazeable green material
     if (this.PastureGreenDM > GrazType.Ungrazeable)
-    greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
+        greenPropn = 1.0 - (GrazType.Ungrazeable / this.PastureGreenDM);
 
     foreach (var live in forageObj.GrazeableMaterial.Where(m => m.IsLive))
     {
@@ -1072,49 +1098,59 @@ namespace Models.GrazPlan
     double greenTotalDM = result.TotalGreen;
     double deadTotalDM = result.TotalDead;
     double totalDM = greenTotalDM + deadTotalDM;
+    double totalN = greenN + deadN;
+    double nConc = totalN / totalDM; 
 
     if (totalDM <= 0.0)
         return result;
 
-    double greenMeanDMD =   (greenTotalDM > 0.0)
-    ? greenDMDMass / greenTotalDM
-    : 0.0;
+    double[] greenDMDPropns;
+    double greenMeanDMD;
+    double greenNConc;
+    if(greenTotalDM > 0.0)
+    {
+        greenMeanDMD = greenDMDMass / greenTotalDM;
+        greenDMDPropns = ForageInfo.CalcDMDDistribution(greenMeanDMD, 0.85, 0.45);
+        greenNConc = greenN / greenTotalDM;
 
-    double deadMeanDMD =
-    (deadTotalDM > 0.0)
-    ? deadDMDMass / deadTotalDM
-    : 0.0;
-
-    double totalN = greenN + deadN;
-    double nConc = totalN / totalDM;
-
-    // Build separate distributions
-    double[] greenDMDPropns =
-    greenTotalDM > 0.0
-    ? ForageInfo.CalcDMDDistribution(greenMeanDMD, 0.85, 0.45)
-    : new double[GrazType.DigClassNo + 1];
-
-    double[] deadDMDPropns =
-    deadTotalDM > 0.0
-    ? ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.30)
-    : new double[GrazType.DigClassNo + 1];
-
+    }
+         
+    else
+    {
+        greenMeanDMD = 0.0;
+        greenDMDPropns = new double[GrazType.DigClassNo + 1];
+        greenNConc = 0.0;
+    }
+    
+    double deadMeanDMD;
+    double deadNConc;
+   
+     double[] deadDMDPropns;
+    if(deadTotalDM > 0.0)
+            {
+                deadMeanDMD = deadDMDMass / deadTotalDM;
+                deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.30);
+                 deadNConc = deadN / deadTotalDM ;
+            }
+        
+    else
+    {
+        deadMeanDMD = 0.0;
+        deadDMDPropns = new double[GrazType.DigClassNo + 1];
+        deadNConc = 0.0;
+    }
+           
     for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
     {
-        result.Herbage[idx].Biomass =
-        greenDMDPropns[idx] * greenTotalDM
-        + deadDMDPropns[idx] * deadTotalDM;
+        result.Herbage[idx].Biomass = greenDMDPropns[idx] * greenTotalDM + deadDMDPropns[idx] * deadTotalDM;
 
-        result.Herbage[idx].CrudeProtein =
-        nConc * GrazType.N2Protein;
+               
+        //result.Herbage[idx].CrudeProtein = greenNConc * GrazType.N2Protein + deadNConc * GrazType.N2Protein;
+        result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
 
-        result.Herbage[idx].Digestibility =
-        GrazType.ClassDig[idx];
+        result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
 
-        result.Herbage[idx].Degradability =
-        Math.Min(0.90,
-        result.Herbage[idx].Digestibility + 0.10);
-
+        result.Herbage[idx].Degradability =  Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
         result.Herbage[idx].HeightRatio = 1.0;
         result.Herbage[idx].PhosContent = 0.0;
         result.Herbage[idx].SulfContent = 0.0;
@@ -1224,7 +1260,7 @@ namespace Models.GrazPlan
                     amountRemoved += amountOfOrganToRemove;
                 }
             }
-
+                //Console.WriteLine(forageHostName + " AmoutRemoved : "+ amountRemoved + "TotalRemoved :"+ totalRemoved);
                 if (!MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
                     throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
 
