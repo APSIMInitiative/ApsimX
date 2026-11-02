@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 222; } }
+    public static int LatestVersion { get { return 223; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8150,6 +8150,20 @@ internal class Converter
         }
 
         JsonUtilities.RenameVariables(root, changes);
+    }
+
+    /// <summary>
+    /// ProtectedDivideFunction has been deprecated, replace with DivideFunction
+    /// which now includes protected division functionality.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion223(JObject root, string fileName)
+    {
+        foreach (JObject protectedDivide in JsonUtilities.ChildrenOfType(root, "ProtectedDivideFunction"))
+        {
+            protectedDivide["$type"] = "Models.Functions.DivideFunction, Models";
+        }
     }
 }
 

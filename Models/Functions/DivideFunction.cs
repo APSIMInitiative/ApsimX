@@ -1,20 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.Functions
 {
-    /// <summary>A class that divides all child functions.</summary>
-    /// <remarks>Returns zero if nominator is zero, returns double.maxValue if denominator is zero.</remarks>
+    /// <summary>
+    /// Sets return to the value of the first child function then recurses through each subsequent child setting return to return/child[n].value.
+    /// Protected so does not return null values.  
+    /// Returns NumeratorErrValue if the value of the first child function is zero
+    /// Returns DemonimatorErrValue if any of the subsequent children functions have a value of zero.
+    /// </summary>
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
+    [Description("Recursively divide child functions with configurable protection against zero numerators and denominators")]
     public class DivideFunction : Model, IFunction
     {
-        /// <summary>The child functions</summary>
+        /// <summary>Value to return if the running numerator is zero.</summary>
+        [Description("Value to return if numerator is 0:")]
+        public double NumeratorErrVal { get; set; } = 0.0;
+
+        /// <summary>Value to return if a denominator is zero.</summary>
+        [Description("Value to return if denominator is 0:")]
+        public double DenominatorErrVal { get; set; } = double.PositiveInfinity;
+
         private List<IFunction> ChildFunctions;
 
         [EventSubscribe("StartOfSimulation")]
@@ -30,35 +43,27 @@ namespace Models.Functions
             if (ChildFunctions == null)
                 ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
-            double returnValue = 0.0;
-            if (ChildFunctions.Count > 0)
-            {
-                IFunction F = ChildFunctions[0];
-                returnValue = F.Value(arrayIndex);
+            if (ChildFunctions.Count == 0)
+                return 0.0;
 
-                if ((returnValue != 0.0) && (ChildFunctions.Count > 1))
-                {
-                    for (int i = 1; i < ChildFunctions.Count; i++)
-                    {
-                        F = ChildFunctions[i];
-                        double denominator = F.Value(arrayIndex);
-                        if (denominator == 0.0)
-                        {
-                            if (returnValue < 0.0)
-                            {
-                                returnValue = double.NegativeInfinity;
-                            }
-                            else
-                            {
-                                returnValue = double.PositiveInfinity;
-                            }
-                        }
-                        else
-                        {
-                            returnValue = MathUtilities.Divide(returnValue, denominator, 0.0);
-                        }
-                    }
-                }
+            double returnValue = ChildFunctions[0].Value(arrayIndex);
+
+            // Protect initial numerator
+            if (MathUtilities.FloatsAreEqual(returnValue, 0.0))
+                return NumeratorErrVal;
+
+            for (int i = 1; i < ChildFunctions.Count; i++)
+            {
+                double denominator = ChildFunctions[i].Value(arrayIndex);
+
+                if (MathUtilities.FloatsAreEqual(denominator, 0.0))
+                    return DenominatorErrVal;
+
+                returnValue /= denominator;
+
+                // Optional protection after each divide
+                if (MathUtilities.FloatsAreEqual(returnValue, 0.0))
+                    return NumeratorErrVal;
             }
 
             return returnValue;
