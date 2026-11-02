@@ -44,6 +44,8 @@ namespace Models.Functions
             int n = children?.Length ?? 0;
             if (n < 2)
                 throw new Exception($"Error in ProtectedDivideFunction {Name}: 2 child functions required, only found {n}");
+            if (n > 2)
+                throw new Exception($"Error in ProtectedDivideFunction {Name}: function does not recurs through children.  Any more than two functions will be ignored");
 
             double numerator = children[0].Value(arrayIndex);
             double denominator = children[1].Value(arrayIndex);
