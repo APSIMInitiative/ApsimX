@@ -14,9 +14,6 @@ namespace Models.Functions
     [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction
     {
-        /// <summary>The ys are all the same</summary>
-        private bool YsAreAllTheSame = false;
-
         /// <summary>Gets the xy pairs.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
@@ -63,33 +60,17 @@ namespace Models.Functions
             XYPairs.Y = y;
         }
 
-        /// <summary>Called when model has been created.</summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-            if (XYPairs != null)
-            {
-                for (int i = 1; i < XYPairs.Y.Length; i++)
-                    if (XYPairs.Y[i] != XYPairs.Y[i - 1])
-                    {
-                        YsAreAllTheSame = false;
-                        return;
-                    }
-
-                // If we get this far then the Y values must all be the same.
-                YsAreAllTheSame = XYPairs.Y.Length > 0;
-            }
-        }
-
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public double Value(int arrayIndex = -1)
         {
-            // Shortcut exit when the Y values are all the same. Runs quicker.
+            // Shortcut exit when the Y values are all the same: XValue need not be evaluated.
+            // Checked on every call rather than cached when the model is created, because
+            // ModelOverrides, cultivar commands and manager scripts can change Y afterwards.
             try
             {
-                if (YsAreAllTheSame)
+                if (YsAreAllTheSame(XYPairs.Y))
                     return XYPairs.Y[0];
                 else
                     return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
@@ -98,6 +79,16 @@ namespace Models.Functions
             {
                 throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
             }
+        }
+
+        /// <summary>Are there Y values and are they all the same?</summary>
+        /// <param name="y">The Y values.</param>
+        private static bool YsAreAllTheSame(double[] y)
+        {
+            for (int i = 1; i < y.Length; i++)
+                if (y[i] != y[i - 1])
+                    return false;
+            return y.Length > 0;
         }
 
         /// <summary>Values for x.</summary>
