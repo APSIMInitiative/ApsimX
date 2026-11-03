@@ -22,11 +22,11 @@ namespace Models.Soils
     public class Water : Model
     {
         /// <summary>Finds the 'Physical' node.</summary>
-        [Link]
+        [Link(Type=LinkType.Sibling)]
         private IPhysical Physical = null;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        [Link]
+        [Link(Type=LinkType.Sibling)]
         private ISoilWater WaterModel = null;
 
         private double initialFractionFull = double.NaN;
