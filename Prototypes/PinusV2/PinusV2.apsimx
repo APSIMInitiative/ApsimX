@@ -4115,7 +4115,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "[Stem].BarkWt*10/[Stem].BarkDensity",
+                  "Expression": "divide([Stem].BarkWt*10,[Stem].BarkDensity)",
                   "Name": "VolBark",
                   "ResourceName": null,
                   "Children": [],
@@ -4125,7 +4125,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "[Pinus].Stem.WoodWt*10/[Pinus].Stem.WoodDensity",
+                  "Expression": "max(0, [Stem].Vol - [Stem].VolBark)",
                   "Name": "Volub",
                   "ResourceName": null,
                   "Children": [],
@@ -4334,10 +4334,21 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "[Stem].WoodDensity*0.6",
+                      "Expression": "[Stem].WoodDensityOfStand * 10 * [Stem].BarkDensity.WoodDensity.RatioToStem\n",
                       "Name": "WoodDensity",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.8,
+                          "Units": "0-1",
+                          "Name": "RatioToStem",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4382,7 +4393,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "(0.4837+(0.3037-0.4837)*EXP(((-0.452)*[Pinus].Age/12.65))^2.07)*1000",
+                      "Expression": "divide([Stem].WoodWt*10,[Stem].Volub)",
                       "Name": "WoodDensity",
                       "ResourceName": null,
                       "Children": [],
