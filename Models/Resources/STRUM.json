@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 223,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -6651,7 +6651,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.DivideFunction, Models",
+          "$type": "Models.Functions.ProtectedDivideFunction, Models",
           "NumeratorErrVal": 0.0,
           "DenominatorErrVal": 0.0,
           "Name": "CanopyArea",
@@ -6736,7 +6736,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Functions.DivideFunction, Models",
+          "$type": "Models.Functions.ProtectedDivideFunction, Models",
           "NumeratorErrVal": 0.0,
           "DenominatorErrVal": 0.0,
           "Name": "TranspirationPerLeafArea",
