@@ -48,6 +48,20 @@ namespace UserInterface.Presenters
             if (_view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
 
+            // Links are normally resolved at run time; models may need them to display values.
+            if (_model != null)
+            {
+                try
+                {
+                    _explorerPresenter.ApsimXFile.Links.Resolve(_model, allLinks: true, recurse: false, throwOnFail: false);
+                }
+                catch (Exception exception)
+                {
+                    _explorerPresenter.MainPresenter.ShowError(new Exception($"Unable to resolve the links of {_model.Name}, so some values may not display. " +
+                        "Check that the model is in a valid location and that the models it depends on (e.g. Physical for a Water node) exist, then reselect this node.", exception), overwrite: true);
+                }
+            }
+
             Refresh();
         }
 

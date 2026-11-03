@@ -6,11 +6,11 @@ using NUnit.Framework;
 
 namespace UnitTests.Soils
 {
-    /// <summary>Tests for the Water class when links have not been resolved (e.g. in the GUI).</summary>
+    /// <summary>Tests for the Water class after links are resolved, as the GUI does.</summary>
     [TestFixture]
     public class WaterTests
     {
-        private static Soil CreateSoil(string relativeTo)
+        private static Soil CreateSoil()
         {
             var soil = new Soil
             {
@@ -39,32 +39,34 @@ namespace UnitTests.Soils
                     {
                         Thickness = new double[] { 100, 300 },
                         InitialValues = new double[] { 0.3, 0.3 },
-                        RelativeTo = relativeTo
+                        RelativeTo = "LL15"
                     }
                 }
             };
             Node.Create(soil);
+            new Links().Resolve(soil, true);
             return soil;
         }
 
         [Test]
-        public void RelativeToLLUsesLL15WithoutResolvedLinks()
+        public void RelativeToLLUsesLL15AfterLinksResolved()
         {
-            var water = CreateSoil("LL15").Node.FindChild<Water>();
+            var water = CreateSoil().Node.FindChild<Water>();
             Assert.That(water.RelativeToLL, Is.EqualTo(new double[] { 0.27, 0.267 }));
         }
 
         [Test]
-        public void RelativeToLLUsesCropLLWithoutResolvedLinks()
+        public void RelativeToLLUsesCropLLAfterLinksResolved()
         {
-            var water = CreateSoil("Wheat").Node.FindChild<Water>();
+            var water = CreateSoil().Node.FindChild<Water>();
+            water.RelativeTo = "Wheat";
             Assert.That(water.RelativeToLL, Is.EqualTo(new double[] { 0.28, 0.29 }));
         }
 
         [Test]
         public void RelativeToLLThrowsWhenCropMissing()
         {
-            var water = CreateSoil("LL15").Node.FindChild<Water>();
+            var water = CreateSoil().Node.FindChild<Water>();
             Assert.Throws<ApsimXException>(() => water.RelativeTo = "Maize");
         }
 

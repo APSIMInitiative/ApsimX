@@ -162,7 +162,7 @@ namespace Models.Soils
             }
             set
             {
-                IPhysical physical = FindPhysical();
+                IPhysical physical = Physical;
                 if (physical != null)
                 {
                     double[] airdry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, Thickness, physical.AirDry.Last());
@@ -238,7 +238,7 @@ namespace Models.Soils
             {
                 double percent = FractionFull;
                 filledFromTop = value;
-                if (FindPhysical() != null)
+                if (Physical != null)
                     UpdateInitialValuesFromFractionFull(percent);
             }
         }
@@ -249,7 +249,7 @@ namespace Models.Soils
         {
             get
             {
-                IPhysical physical = FindPhysical();
+                IPhysical physical = Physical;
                 if (physical != null && Thickness != null)
                 {
                     double newFractionFull;
@@ -319,7 +319,7 @@ namespace Models.Soils
         /// <exception cref="InvalidOperationException"></exception>
         private void UpdateInitialValuesFromFractionFull(double value)
         {
-            IPhysical physical = FindPhysical();
+            IPhysical physical = Physical;
             if (physical != null)
             {
                 double[] airdry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, Thickness, physical.AirDry.Last());
@@ -445,7 +445,7 @@ namespace Models.Soils
         /// </summary>
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
-            IPhysical physical = FindPhysical();
+            IPhysical physical = Physical;
             if (physical == null)
                 return true; //when loading from file physical will be none, in this case, just accept the
 
@@ -472,29 +472,13 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Finds the Physical node, falling back to a sibling lookup when links have not been resolved (e.g. in the GUI).
-        /// </summary>
-        /// <returns>The Physical node or null if not found.</returns>
-        private IPhysical FindPhysical()
-        {
-            if (Physical != null)
-                return Physical;
-
-            if (Node != null)
-                return Node.FindSibling<IPhysical>();
-
-            return null;
-        }
-
-        /// <summary>
-        /// Gets the Physical node, throwing if it cannot be found.
+        /// Gets the linked Physical node, throwing if the link has not been resolved.
         /// </summary>
         private IPhysical GetPhysical()
         {
-            IPhysical physical = FindPhysical();
-            if (physical == null)
+            if (Physical == null)
                 throw new ApsimXException(this, $"Unable to locate a Physical node for {Name}. {Name} located at {FullPath}.");
-            return physical;
+            return Physical;
         }
 
         /// <summary>
@@ -503,12 +487,10 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = Node?.FindSibling<Physical>();
-            if (physical == null)
-                throw new ApsimXException(this, $"Unable to locate a Physical node when updating {Name}.");
-            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
+            IPhysical physical = GetPhysical();
+            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical as INodeModel);
             if (plantCrop == null)
-                throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
+                throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {(physical as IModel)?.Name}.");
             return plantCrop;
         }
     }
