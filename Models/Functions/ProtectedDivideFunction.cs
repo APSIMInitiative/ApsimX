@@ -26,7 +26,7 @@ namespace Models.Functions
 
         /// <summary>Value to return if a denominator is zero.</summary>
         [Description("Value to return if denominator is 0:")]
-        public double DenominatorErrVal { get; set; } = 0.0;
+        public double DenominatorErrVal { get; set; } = double.PositiveInfinity;
 
         private List<IFunction> ChildFunctions;
 
