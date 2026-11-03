@@ -183,14 +183,13 @@ namespace Models.Soils
         {
             get
             {
-                IPhysical physical = GetPhysical();
-                return APSoilUtilities.CalcPAWC(physical.Thickness, physical.LL15, Volumetric, null);
+                return APSoilUtilities.CalcPAWC(Physical.Thickness, Physical.LL15, Volumetric, null);
             }
         }
 
         /// <summary>Plant available water SW-LL15 (mm).</summary>
         [Units("mm")]
-        public double[] PAWmm => MathUtilities.Multiply(PAW, GetPhysical().Thickness);
+        public double[] PAWmm => MathUtilities.Multiply(PAW, Physical.Thickness);
 
         [JsonIgnore]
         private string relativeToCheck = "LL15";
@@ -340,8 +339,7 @@ namespace Models.Soils
                 if (InitialValues == null || InitialValues.Length != Thickness.Length)
                     return 0;
                 var ll = RelativeToLL;
-                IPhysical physical = GetPhysical();
-                double[] dul = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.DUL.Last());
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
 
                 double depthSoFar = 0;
                 for (int layer = 0; layer < Thickness.Length; layer++)
@@ -359,8 +357,7 @@ namespace Models.Soils
             }
             set
             {
-                IPhysical physical = GetPhysical();
-                double[] dul = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.DUL.Last());
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                 InitialValues = SoilUtilities.DistributeToDepthOfWetSoil(value, Thickness, RelativeToLL, dul);
             }
         }
@@ -370,23 +367,22 @@ namespace Models.Soils
         {
             get
             {
-                IPhysical physical = GetPhysical();
                 double[] values;
                 if (RelativeTo == "LL15")
-                    values = physical.LL15;
+                    values = Physical.LL15;
                 else
                 {
                     var plantCrop = GetCropSoil();
                     if (plantCrop == null)
                     {
                         RelativeTo = "LL15";
-                        values = physical.LL15;
+                        values = Physical.LL15;
                     }
                     else
                         values = plantCrop.LL;
                 }
 
-                return SoilUtilities.MapConcentration(values, physical.Thickness, Thickness, values.Last());
+                return SoilUtilities.MapConcentration(values, Physical.Thickness, Thickness, values.Last());
             }
         }
 
@@ -402,7 +398,7 @@ namespace Models.Soils
                 {
                     SoilCrop plantCrop = GetCropSoil();
                     if (plantCrop != null)
-                        return SoilUtilities.MapConcentration(plantCrop.XF, GetPhysical().Thickness, Thickness, plantCrop.XF.Last());
+                        return SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
                 }
                 return Enumerable.Repeat(1.0, Thickness.Length).ToArray();
             }
@@ -443,7 +439,7 @@ namespace Models.Soils
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
             if (Physical == null)
-                return true; //when loading from file Physical will be none, in this case, just accept the
+                return true; //when loading from file physical will be none, in this case, just accept the
 
             if (Physical.AirDry == null || Physical.SAT == null)
                 return true;   //we need these to check, but WEIRDO simulations doesn't have an airdry
@@ -468,25 +464,14 @@ namespace Models.Soils
         }
 
         /// <summary>
-        /// Gets the linked Physical node, throwing if the link has not been resolved.
-        /// </summary>
-        private IPhysical GetPhysical()
-        {
-            if (Physical == null)
-                throw new ApsimXException(this, $"Unable to locate a Physical node for {Name}. {Name} located at {FullPath}.");
-            return Physical;
-        }
-
-        /// <summary>
         /// Attempts to get an appropriate SoilCrop.
         /// </summary>
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            IPhysical physical = GetPhysical();
-            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical as INodeModel);
+            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: Physical as INodeModel);
             if (plantCrop == null)
-                throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {(physical as IModel)?.Name}.");
+                throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {(Physical as IModel)?.Name}.");
             return plantCrop;
         }
     }
