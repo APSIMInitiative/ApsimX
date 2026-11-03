@@ -19,12 +19,8 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IStructureDependency
+    public class Water : Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>Finds the 'Physical' node.</summary>
         [Link]
         private IPhysical Physical = null;
@@ -435,10 +431,10 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
+            Soil ancestorSoil = Node.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
+                ancestorSoilCropLists = Node.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;
@@ -510,7 +506,7 @@ namespace Models.Soils
             var physical = Node?.FindSibling<Physical>();
             if (physical == null)
                 throw new ApsimXException(this, $"Unable to locate a Physical node when updating {Name}.");
-            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
+            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
             if (plantCrop == null)
                 throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
             return plantCrop;
