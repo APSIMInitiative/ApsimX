@@ -4177,51 +4177,52 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Pinus].Stem.Live.Wt",
+                          "Name": "StemWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": "0-1",
+                          "Expression": "[WoodWtFactor].Fmax - ([WoodWtFactor].Fmax - [WoodWtFactor].F0) * exp(-[Pinus].IndividualTreeStemWt / [WoodWtFactor].K)",
                           "Name": "WoodWtFactor",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Pinus].Stem.Live.Wt",
-                              "Name": "XValue",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.887,
+                              "Units": "0-1",
+                              "Name": "Fmax",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                2000.0,
-                                10000.0,
-                                20000.0,
-                                100000.0
-                              ],
-                              "Y": [
-                                0.8,
-                                0.9,
-                                0.93,
-                                0.95,
-                                0.98
-                              ],
-                              "Name": "XYPairs",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.841,
+                              "Units": "0-1",
+                              "Name": "F0",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 100000.0,
+                              "Units": "g/tree",
+                              "Name": "K",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Pinus].Stem.Live.Wt",
-                          "Name": "StemWt",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -5776,7 +5777,11 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90"
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5812,7 +5817,11 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90"
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6225,8 +6234,8 @@
                     "//[FineRoot].MaximumNConc.FixedValue = 0.019",
                     "//[FineRoot].MinimumNConc.FixedValue = 0.003",
                     "",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.X=0, 2000, 10000, 20000, 100000, 200000, 400000",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.Y=0.6, 0.85,  0.9, 0.9,   0.901,   0.901,   0.901",
+                    "//[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.X=0, 2000, 10000, 20000, 100000, 200000, 400000",
+                    "//[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.Y=0.6, 0.85,  0.9, 0.9,   0.901,   0.901,   0.901",
                     "",
                     "//[Cone].SenescenceRate.FixedValue=0.001",
                     "//[Cone].DetachmentRateFunction.FixedValue=0.01",
@@ -6493,7 +6502,11 @@
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
                     "",
-                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.013"
+                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.013",
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
