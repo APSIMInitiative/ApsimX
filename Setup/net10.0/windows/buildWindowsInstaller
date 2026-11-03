@@ -2,12 +2,14 @@
 #
 # This script will build a windows installer for .NET Core APSIM NG using innosetup and signing with 
 #
-# Takes two arguments:
+# Takes up to three arguments:
 # 1. Version number
 # 2. Optional output file name. Default value is apsim-$version.deb.
 # 3. Optional stage: publish | package | all (default).
 #    publish - version stamp and dotnet publish only (so binaries can be code signed).
 #    package - build the installer from an existing (signed) publish folder.
+
+set -e
 
 # Get version number (first argument).
 # Abort with error if no version number provided.
