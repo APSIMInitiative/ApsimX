@@ -5,30 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Apsim NG: Debug",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "Build Debug",
-            "program": "${workspaceFolder}/bin/Debug/net10.0/ApsimNG.dll",
-            "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "requireExactSource": false,
-            "logging": {
-                "moduleLoad": false,
-                "threadExit": false
-            },
-            "symbolOptions": {
-                "searchMicrosoftSymbolServer": false
-            },
-            "presentation": {
-                "hidden": false,
-                "group": "1 - APSIM UI",
-                "order": 1,
-                "focus": true
-            }
-        },
-        {
             "name": "Debug New Workflow",
             "type": "coreclr",
             "request": "launch",
@@ -58,6 +34,30 @@
         },
 
         {
+            "name": "Apsim NG: Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Build Debug",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/ApsimNG.dll",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "requireExactSource": false,
+            "logging": {
+                "moduleLoad": false,
+                "threadExit": false
+            },
+            "symbolOptions": {
+                "searchMicrosoftSymbolServer": false
+            },
+            "presentation": {
+                "hidden": false,
+                "group": "APSIM UI",
+                "order": 1,
+                "focus": true
+            }
+        },
+        {
             "name": "Apsim NG: Release",
             "type": "coreclr",
             "request": "launch",
@@ -70,7 +70,7 @@
             },
             "presentation": {
                 "hidden": false,
-                "group": "1 - APSIM UI",
+                "group": "APSIM UI",
                 "order": 2
             }
         },
@@ -108,7 +108,7 @@
             "stopAtEntry": false,
             "presentation": {
                 "hidden": false,
-                "group": "2 - Models",
+                "group": "Models",
                 "order": 1
             }
         },
