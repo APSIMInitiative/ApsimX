@@ -143,7 +143,22 @@
             "[Pinus].Leaf.ExtinctionCoefficient.XValue",
             "[Pinus].Leaf.ExtinctionCoefficient.XValue.Height",
             "[Pinus].Leaf.ExtinctionCoefficient.XValue.Spacing",
-            "[Pinus].Leaf.ExtinctionCoefficient"
+            "[Pinus].Leaf.ExtinctionCoefficient",
+            "",
+            "[Pinus].FineRoot.Live.Wt",
+            "[Pinus].Leaf.Live.N",
+            "[Pinus].Branch.Live.N",
+            "[Pinus].Branch.Dead.N",
+            "[Pinus].Stem.N",
+            "[Pinus].BelowGround.N",
+            "[Pinus].CoarseRoot.Live.N as Pinus.Live.CoarseRoot.N",
+            "[Pinus].FineRoot.Live.N as Pinus.Live.FineRoot.N",
+            "max of [Pinus].LAI from [Clock].StartOfYear to [Clock].EndOfYear as LAIMax",
+            "[Pinus].Leaf.SpecificLeafArea as SLA",
+            "[Pinus].Leaf.N*10 as TotalFoliarNkgpha",
+            "[Pinus].Stem.MAIub as MAIub",
+            "[Pinus].Stem.WoodDensity as Pinus.Stem.WoodDensityOfStanding",
+            "[Pinus].Population*10000 as stemspha"
           ],
           "EventNames": [
             "[Clock].DoReport"
