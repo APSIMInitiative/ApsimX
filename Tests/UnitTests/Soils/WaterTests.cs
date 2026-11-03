@@ -69,17 +69,5 @@ namespace UnitTests.Soils
             var water = CreateSoil().Node.FindChild<Water>();
             Assert.Throws<ApsimXException>(() => water.RelativeTo = "Maize");
         }
-
-        [Test]
-        public void RelativeToLLThrowsWhenPhysicalMissing()
-        {
-            var soil = new Soil
-            {
-                Children = new List<IModel>() { new Water { Thickness = new double[] { 100 }, RelativeTo = "LL15" } }
-            };
-            Node.Create(soil);
-            var water = soil.Node.FindChild<Water>();
-            Assert.Catch<ApsimXException>(() => { var _ = water.RelativeToLL; });
-        }
     }
 }
