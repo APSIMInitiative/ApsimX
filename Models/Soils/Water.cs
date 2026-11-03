@@ -479,7 +479,16 @@ namespace Models.Soils
         /// Finds the Physical node, falling back to a sibling lookup when links have not been resolved (e.g. in the GUI).
         /// </summary>
         /// <returns>The Physical node or null if not found.</returns>
-        private IPhysical FindPhysical() => Physical ?? Node?.FindSibling<IPhysical>();
+        private IPhysical FindPhysical()
+        {
+            if (Physical != null)
+                return Physical;
+
+            if (Node != null)
+                return Node.FindSibling<IPhysical>();
+
+            return null;
+        }
 
         /// <summary>
         /// Gets the Physical node, throwing if it cannot be found.
