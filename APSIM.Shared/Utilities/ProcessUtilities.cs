@@ -57,7 +57,8 @@ namespace APSIM.Shared.Utilities
                 FileInfo file = new FileInfo(filename);
                 Stream fin = file.Open(FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 /*Int32 iRead =*/
-                fin.Read(data, 0, 4096);
+                // Files can be shorter than the buffer (e.g. small scripts), so don't require a full read.
+                fin.ReadAtLeast(data, data.Length, throwOnEndOfStream: false);
                 fin.Close();
 
                 // If we are running on Linux, the executable/so will start with the string 0x7f + 'ELF'

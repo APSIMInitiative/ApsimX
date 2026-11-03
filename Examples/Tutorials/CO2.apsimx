@@ -54,7 +54,7 @@
               "Children": [
                 {
                   "$type": "Models.Climate.CO2Value, Models",
-                  "FileName": "%root%\\Examples\\WeatherFiles\\CO2.csv",
+                  "FileName": "%root%\\Examples\\WeatherFiles\\NOAA_GlobalCO2.csv",
                   "ConstantValue": 0.0,
                   "Name": "File",
                   "ResourceName": null,

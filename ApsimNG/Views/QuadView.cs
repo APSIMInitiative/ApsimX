@@ -1,6 +1,5 @@
 ﻿using Gtk;
 using System;
-using System.Data;
 
 namespace UserInterface.Views
 {
@@ -33,40 +32,40 @@ namespace UserInterface.Views
 
     public class QuadView : ViewBase
     {
-        private double horizontalSlider = -1;
+        private double _horizontalSlider = -1;
 
-        private Paned topPaned;
+        private Paned _topPaned;
 
-        private Paned leftPaned;
+        private Paned _leftPaned;
 
-        private Paned rightPaned;
+        private Paned _rightPaned;
 
-        private ViewBase TopLeft;
+        private ViewBase _topLeft;
 
-        private ViewBase TopRight;
+        private ViewBase _topRight;
 
-        private ViewBase BottomLeft;
+        private ViewBase _bottomLeft;
 
-        private ViewBase BottomRight;
+        private ViewBase _bottomRight;
 
         /// <summary>Constructor</summary>
         /// <param name="owner">The owner widget.</param>
         public QuadView(ViewBase owner) : base(owner)
         {
             //Create our main structure of four quads
-            topPaned = new Paned(Orientation.Horizontal);
+            _topPaned = new Paned(Orientation.Horizontal);
 
-            leftPaned = new Paned(Orientation.Vertical);
-            leftPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopLeft.ToString()});
-            leftPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomLeft.ToString()});
-            topPaned.Add1(leftPaned);
+            _leftPaned = new Paned(Orientation.Vertical);
+            _leftPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopLeft.ToString()});
+            _leftPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomLeft.ToString()});
+            _topPaned.Add1(_leftPaned);
 
-            rightPaned = new Paned(Orientation.Vertical);
-            rightPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopRight.ToString()});
-            rightPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomRight.ToString()});
-            topPaned.Add2(rightPaned);
+            _rightPaned = new Paned(Orientation.Vertical);
+            _rightPaned.Add1(new ScrolledWindow() {Name = WidgetPosition.TopRight.ToString()});
+            _rightPaned.Add2(new ScrolledWindow() {Name = WidgetPosition.BottomRight.ToString()});
+            _topPaned.Add2(_rightPaned);
 
-            mainWidget = topPaned;
+            mainWidget = _topPaned;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             //clear all the quads to start with
@@ -85,31 +84,31 @@ namespace UserInterface.Views
             //hide right or left panel if no content on those sides
             int paneWidth = MainWidget.ParentWindow.Width;
             int paneHeight = MainWidget.ParentWindow.Height;
-            if (TopLeft == null && BottomLeft == null)
-                topPaned.Position = 0;
-            else if (TopRight == null && BottomRight == null)
-                topPaned.Position = paneWidth;
+            if (_topLeft == null && _bottomLeft == null)
+                _topPaned.Position = 0;
+            else if (_topRight == null && _bottomRight == null)
+                _topPaned.Position = paneWidth;
             else
             {
-                if (horizontalSlider >= 0)
-                    topPaned.Position = (int)Math.Round(paneWidth * horizontalSlider);
+                if (_horizontalSlider >= 0)
+                    _topPaned.Position = (int)Math.Round(paneWidth * _horizontalSlider);
                 else
-                    topPaned.Position = (int)Math.Round(paneWidth * 0.5);
+                    _topPaned.Position = (int)Math.Round(paneWidth * 0.5);
             }
 
-            if (TopLeft == null)
-                leftPaned.Position = 0;
-            else if (BottomLeft == null)
-                leftPaned.Position = paneHeight;
+            if (_topLeft == null)
+                _leftPaned.Position = 0;
+            else if (_bottomLeft == null)
+                _leftPaned.Position = paneHeight;
             else
-                leftPaned.Position = (int)Math.Round(paneHeight * 0.5);
+                _leftPaned.Position = (int)Math.Round(paneHeight * 0.5);
 
-            if (TopRight == null)
-                rightPaned.Position = 0;
-            else if (BottomRight == null)
-                rightPaned.Position = paneHeight;
+            if (_topRight == null)
+                _rightPaned.Position = 0;
+            else if (_bottomRight == null)
+                _rightPaned.Position = paneHeight;
             else
-                rightPaned.Position = (int)Math.Round(paneHeight * 0.5);
+                _rightPaned.Position = (int)Math.Round(paneHeight * 0.5);
 
 
             // Position the splitter to give the "Properties" section as much space as it needs, and no more
@@ -122,14 +121,14 @@ namespace UserInterface.Views
                 {
                     propertyView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
                     natHeight += 20;
-                    if (position == WidgetPosition.TopLeft)
-                        leftPaned.Position = natHeight;
-                    else if (position == WidgetPosition.TopRight)
-                        rightPaned.Position = natHeight;
-                    else if (position == WidgetPosition.BottomLeft)
-                        leftPaned.Position = paneHeight - natHeight;
-                    else if (position == WidgetPosition.BottomRight)
-                        rightPaned.Position = paneHeight - natHeight;
+                    if (position == WidgetPosition.TopLeft && GetView(WidgetPosition.BottomLeft) != null)
+                        _leftPaned.Position = natHeight;
+                    else if (position == WidgetPosition.TopRight && GetView(WidgetPosition.BottomRight) != null)
+                        _rightPaned.Position = natHeight;
+                    else if (position == WidgetPosition.BottomLeft && GetView(WidgetPosition.TopLeft) != null)
+                        _leftPaned.Position = paneHeight - natHeight;
+                    else if (position == WidgetPosition.BottomRight && GetView(WidgetPosition.TopRight) != null)
+                        _rightPaned.Position = paneHeight - natHeight;
                 }
             }
 
@@ -143,14 +142,14 @@ namespace UserInterface.Views
                 {
                     markdownView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
                     natHeight += 20;
-                    if (position == WidgetPosition.TopLeft)
-                        leftPaned.Position = natHeight;
-                    else if (position == WidgetPosition.TopRight)
-                        rightPaned.Position = natHeight;
-                    else if (position == WidgetPosition.BottomLeft)
-                        leftPaned.Position = paneHeight - natHeight;
-                    else if (position == WidgetPosition.BottomRight)
-                        rightPaned.Position = paneHeight - natHeight;
+                    if (position == WidgetPosition.TopLeft && GetView(WidgetPosition.BottomLeft) != null)
+                        _leftPaned.Position = natHeight;
+                    else if (position == WidgetPosition.TopRight && GetView(WidgetPosition.BottomRight) != null)
+                        _rightPaned.Position = natHeight;
+                    else if (position == WidgetPosition.BottomLeft && GetView(WidgetPosition.TopLeft) != null)
+                        _leftPaned.Position = paneHeight - natHeight;
+                    else if (position == WidgetPosition.BottomRight && GetView(WidgetPosition.TopRight) != null)
+                        _rightPaned.Position = paneHeight - natHeight;
                 }
             }
 
@@ -161,14 +160,14 @@ namespace UserInterface.Views
                 ButtonView buttonView = view as ButtonView;
                 buttonView.MainWidget.GetPreferredHeight(out int minHeight, out int natHeight);
                 natHeight += 20;
-                if (position == WidgetPosition.TopLeft)
-                    leftPaned.Position = natHeight;
-                else if (position == WidgetPosition.TopRight)
-                    rightPaned.Position = natHeight;
-                else if (position == WidgetPosition.BottomLeft)
-                    leftPaned.Position = paneHeight - natHeight;
-                else if (position == WidgetPosition.BottomRight)
-                    rightPaned.Position = paneHeight - natHeight;
+                if (position == WidgetPosition.TopLeft && GetView(WidgetPosition.BottomLeft) != null)
+                    _leftPaned.Position = natHeight;
+                else if (position == WidgetPosition.TopRight && GetView(WidgetPosition.BottomRight) != null)
+                    _rightPaned.Position = natHeight;
+                else if (position == WidgetPosition.BottomLeft && GetView(WidgetPosition.TopLeft) != null)
+                    _leftPaned.Position = paneHeight - natHeight;
+                else if (position == WidgetPosition.BottomRight && GetView(WidgetPosition.TopRight) != null)
+                    _rightPaned.Position = paneHeight - natHeight;
             }
         }
 
@@ -214,27 +213,27 @@ namespace UserInterface.Views
         {
             if (position == WidgetPosition.TopLeft)
             {
-                if (TopLeft != null)
-                    TopLeft.Dispose();
-                TopLeft = null;
+                if (_topLeft != null)
+                    _topLeft.Dispose();
+                _topLeft = null;
             }
             else if (position == WidgetPosition.TopRight)
             {
-                if (TopRight != null)
-                    TopRight.Dispose();
-                TopRight = null;
+                if (_topRight != null)
+                    _topRight.Dispose();
+                _topRight = null;
             }
             else if (position == WidgetPosition.BottomLeft)
             {
-                if (BottomLeft != null)
-                    BottomLeft.Dispose();
-                BottomLeft = null;
+                if (_bottomLeft != null)
+                    _bottomLeft.Dispose();
+                _bottomLeft = null;
             }
             else if (position == WidgetPosition.BottomRight)
             {
-                if (BottomRight != null)
-                    BottomRight.Dispose();
-                BottomRight = null;
+                if (_bottomRight != null)
+                    _bottomRight.Dispose();
+                _bottomRight = null;
             }
         }
 
@@ -250,13 +249,13 @@ namespace UserInterface.Views
         public ViewBase GetView(WidgetType type)
         {
             if (PositionToWidgetType(WidgetPosition.TopLeft) == type)
-                return TopLeft;
+                return _topLeft;
             else if (PositionToWidgetType(WidgetPosition.TopRight) == type)
-                return TopRight;
+                return _topRight;
             else if (PositionToWidgetType(WidgetPosition.BottomLeft) == type)
-                return BottomLeft;
+                return _bottomLeft;
             else if (PositionToWidgetType(WidgetPosition.BottomRight) == type)
-                return BottomRight;
+                return _bottomRight;
             else
                 return null;
         }
@@ -264,45 +263,45 @@ namespace UserInterface.Views
         public ViewBase GetView(WidgetPosition position)
         {
             if (position == WidgetPosition.TopLeft)
-                return TopLeft;
+                return _topLeft;
             else if (position == WidgetPosition.TopRight)
-                return TopRight;
+                return _topRight;
             else if (position == WidgetPosition.BottomLeft)
-                return BottomLeft;
+                return _bottomLeft;
             else if (position == WidgetPosition.BottomRight)
-                return BottomRight;
+                return _bottomRight;
             else
                 throw new Exception("QuadView GetView function requires a position, WidgetPosition.Any cannot be used.");
         }
 
         public void OverrideSlider(double percentage)
         {
-            horizontalSlider = percentage;
+            _horizontalSlider = percentage;
         }
 
         private void SetView(ViewBase view, WidgetPosition position)
         {
             if (position == WidgetPosition.TopLeft)
-                TopLeft = view;
+                _topLeft = view;
             else if (position == WidgetPosition.TopRight)
-                TopRight = view;
+                _topRight = view;
             else if (position == WidgetPosition.BottomLeft)
-                BottomLeft = view;
+                _bottomLeft = view;
             else if (position == WidgetPosition.BottomRight)
-                BottomRight = view;
+                _bottomRight = view;
         }
 
         private WidgetType PositionToWidgetType(WidgetPosition position)
         {
             ViewBase view = null;
             if (position == WidgetPosition.TopLeft)
-                view = TopLeft;
+                view = _topLeft;
             else if (position == WidgetPosition.TopRight)
-                view = TopRight;
+                view = _topRight;
             else if (position == WidgetPosition.BottomLeft)
-                view = BottomLeft;
+                view = _bottomLeft;
             else if (position == WidgetPosition.BottomRight)
-                view = BottomRight;
+                view = _bottomRight;
             
             if (view is GraphView)
                 return WidgetType.Graph;
@@ -338,14 +337,14 @@ namespace UserInterface.Views
         {
             try
             {
-                if (TopLeft != null)
-                    TopLeft.Dispose();
-                if (TopRight != null)
-                    TopRight.Dispose();
-                if (BottomLeft != null)
-                    BottomLeft.Dispose();
-                if (BottomRight != null)
-                    BottomRight.Dispose();
+                if (_topLeft != null)
+                    _topLeft.Dispose();
+                if (_topRight != null)
+                    _topRight.Dispose();
+                if (_bottomLeft != null)
+                    _bottomLeft.Dispose();
+                if (_bottomRight != null)
+                    _bottomRight.Dispose();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;

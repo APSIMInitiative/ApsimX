@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -1834,7 +1834,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Data from:\r\n\r\n[martin2001effect]\r\n\r\n\tThe response of oats (Avena sativa L.) to timing and intensity of drought was determined in a mobile\r\nrainshelter, which excluded rainfall during crop growth. Ten irrigation treatments subjected the crops to\r\ndrought of varying duration at different stages during plant growth; the crops were otherwise fully\r\nirrigated. Oat grain yield generally increased linearly with cumulative water use, and decreased linearly as\r\nthe maximum potential soil moisture deficit experienced during crop growth increased, regardless of the\r\ntiming of drought. The exception to this was the no drought (fully irrigated) treatment, where lodging\r\nreduced panicle number and grain weight compared to early drought treatments. Drought affected yield\r\nmainly by reducing panicle and grain number, effects on grain weight were small. . Relieving early drought\r\nthrough late irrigation led to more late tillers, more panicles, heavier grains, and later maturity. Full and\r\nlate drought increased screenings.\r\n\r\n",
+                  "Text": "Data from:\r\n\r\n[#martin2001effect]\r\n\r\n\tThe response of oats (Avena sativa L.) to timing and intensity of drought was determined in a mobile\r\nrainshelter, which excluded rainfall during crop growth. Ten irrigation treatments subjected the crops to\r\ndrought of varying duration at different stages during plant growth; the crops were otherwise fully\r\nirrigated. Oat grain yield generally increased linearly with cumulative water use, and decreased linearly as\r\nthe maximum potential soil moisture deficit experienced during crop growth increased, regardless of the\r\ntiming of drought. The exception to this was the no drought (fully irrigated) treatment, where lodging\r\nreduced panicle number and grain weight compared to early drought treatments. Drought affected yield\r\nmainly by reducing panicle and grain number, effects on grain weight were small. . Relieving early drought\r\nthrough late irrigation led to more late tillers, more panicles, heavier grains, and later maturity. Full and\r\nlate drought increased screenings.\r\n\r\n",
                   "Name": "Experiment Description",
                   "ResourceName": null,
                   "Children": [],
@@ -1860,8 +1860,7 @@
                             "[Water].Thickness=200,200,200,200,200,200,200,200",
                             "[Water].InitialValues=0.32,0.3,0.27,0.24,0.23,0.23,0.13,0.17"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Nil",
                           "ResourceName": null,
                           "Children": [
@@ -2037,8 +2036,7 @@
                             "[Water].Thickness=200,200,200,200,200,200,200,200",
                             "[Water].InitialValues=0.3,0.3,0.28,0.26,0.29,0.28,0.11,0.12"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Full",
                           "ResourceName": null,
                           "Children": [
@@ -2350,8 +2348,7 @@
                             "[Water].Thickness=200,200,200,200,200,200,200,200",
                             "[Water].InitialValues=0.28,0.3,0.26,0.28,0.27,0.28,0.2,0.22"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "LD1",
                           "ResourceName": null,
                           "Children": [
@@ -2532,8 +2529,7 @@
                             "[Water].Thickness=200,200,200,200,200,200,200,200",
                             "[Water].InitialValues=0.32,0.3,0.26,0.19,0.25,0.21,0.13,0.2"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "LD4",
                           "ResourceName": null,
                           "Children": [
@@ -2758,8 +2754,7 @@
                             "[Water].Thickness=200,200,200,200,200,200,200,200",
                             "[Water].InitialValues=0.25,0.33,0.27,0.22,0.2,0.25,0.19,0.17"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "ED1",
                           "ResourceName": null,
                           "Children": [
@@ -3049,7 +3044,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "LincRS9899",
                   "ResourceName": null,
                   "Children": [
@@ -3678,6 +3672,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -6732,7 +6727,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "PaddockCPT",
                   "ResourceName": null,
                   "Children": [
@@ -7264,6 +7258,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -7655,8 +7650,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Coronet",
                               "ResourceName": null,
                               "Children": [
@@ -7703,8 +7697,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Armstrong",
                               "ResourceName": null,
                               "Children": [
@@ -7751,8 +7744,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Milton2",
                               "ResourceName": null,
                               "Children": [
@@ -7799,8 +7791,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "CROA146",
                               "ResourceName": null,
                               "Children": [
@@ -7847,8 +7838,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "107_32",
                               "ResourceName": null,
                               "Children": [
@@ -7895,8 +7885,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "100_05",
                               "ResourceName": null,
                               "Children": [
@@ -7943,8 +7932,7 @@
                               "Specifications": [
                                 "[SowingHarvesting]"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Fallow",
                               "ResourceName": null,
                               "Children": [
@@ -7981,7 +7969,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "A_Block_2020x",
                       "ResourceName": null,
                       "Children": [
@@ -9266,6 +9253,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -18296,8 +18284,7 @@
                               "Specifications": [
                                 "[TreatmentSpecificActions].Script.NitFactor = 0"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "80",
                               "ResourceName": null,
                               "Children": [],
@@ -18309,8 +18296,7 @@
                               "Specifications": [
                                 "[TreatmentSpecificActions].Script.NitFactor = 50"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "125",
                               "ResourceName": null,
                               "Children": [],
@@ -18322,8 +18308,7 @@
                               "Specifications": [
                                 "[TreatmentSpecificActions].Script.NitFactor = 300"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "320",
                               "ResourceName": null,
                               "Children": [],
@@ -18346,8 +18331,7 @@
                                 "[IrrigationSchedule]",
                                 "[TreatmentSpecificActions].Script.IrrFactor = true"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Full",
                               "ResourceName": null,
                               "Children": [
@@ -18535,8 +18519,7 @@
                                 "[IrrigationSchedule]",
                                 "[TreatmentSpecificActions].Script.IrrFactor = false"
                               ],
-                              "Paths": null,
-                              "Values": null,
+                              "CustomDescriptors": [],
                               "Name": "Nil",
                               "ResourceName": null,
                               "Children": [
@@ -18577,7 +18560,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Rainshelter2017",
                   "ResourceName": null,
                   "Children": [
@@ -19776,6 +19758,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -23732,7 +23715,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "FRNL Experiment: Data from [malcolm2016catch]\r\n\r\nNote: the 2015 version of this experiment established inconsistently and data is not of the same quality as that generated in 2016.\r\n\r\nGrazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November 2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.\r\n\r\n\r\n\r\n",
+                      "Text": "FRNL Experiment: Data from [#malcolm2016catch]\r\n\r\nNote: the 2015 version of this experiment established inconsistently and data is not of the same quality as that generated in 2016.\r\n\r\nGrazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November 2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.\r\n\r\n\r\n\r\n",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -23761,8 +23744,7 @@
                                     "[Operations]",
                                     "[Fertilise].Script.SDSwitch = 1.0"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "July",
                                   "ResourceName": null,
                                   "Children": [
@@ -23793,8 +23775,7 @@
                                     "[Operations]",
                                     "[Fertilise].Script.SDSwitch = 2.0"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug",
                                   "ResourceName": null,
                                   "Children": [
@@ -23834,8 +23815,7 @@
                                   "Specifications": [
                                     "[Fertilize]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -23865,8 +23845,7 @@
                                   "Specifications": [
                                     "[Fertilize]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "400",
                                   "ResourceName": null,
                                   "Children": [
@@ -23905,7 +23884,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "ABlock",
                       "ResourceName": null,
                       "Children": [
@@ -24861,6 +24839,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -25203,7 +25182,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "FRNL Experiment: Data from [malcolm2016catch]\r\n\r\n\r\n\r\nGrazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November\r\n2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.\r\n\r\n\r\n\r\n",
+                      "Text": "FRNL Experiment: Data from [#malcolm2016catch]\r\n\r\n\r\n\r\nGrazing winter forage crops is an important management strategy for profitable livestock production in many New Zealand regions where there is commonly a pasture feed deficit during this period. However, the high stocking densities that are often associated with these systems can have negative environmental effects, such as nitrogen (N) leaching losses to groundwater. This field study investigated the potential biomass production and reduced risk of N leaching from establishing oats (Avena sativa L.) as a green-chop catch crop after winter-grazed forage kale (Brassica oleracea var. acephala L.) in Canterbury, New Zealand. Oat crops were direct-drilled on two sowing dates (early: 1 July 2015 and late: 1 August 2015) and were managed under high (400 kg N/ha) and low (0 kg N/ha) N load conditions, representing urine-patch and inter urine-patch areas. For the early-sown crops yields were 6.1 (low N) and 11.8 t DM/ha (high N) at final harvest (50% ear emergence) on 19 November\r\n2015. For the late-sown crops yields were 6.7 (low N) and 10.1 t DM/ha (high N) at the same development stage (26 November 2015). By establishing oats as a catch crop in winter soil profile mineral-N (0-120 cm depth) was reduced by up to 86% (early) and 80% (late) in the high N (simulated urine-patch) treatments compared with the respective fallow treatment. These results indicated the technical feasibility of direct drilling oats as catch crops immediately after winter forage grazing, with likely production and environmental benefits such as the reduced risk of N leaching losses.\r\n\r\n\r\n\r\n",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -25231,8 +25210,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "July",
                                   "ResourceName": null,
                                   "Children": [
@@ -25276,8 +25254,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug",
                                   "ResourceName": null,
                                   "Children": [
@@ -25330,7 +25307,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "RS2016",
                       "ResourceName": null,
                       "Children": [
@@ -25895,6 +25871,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -26458,8 +26435,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -26496,8 +26472,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300",
                                   "ResourceName": null,
                                   "Children": [
@@ -26550,7 +26525,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "ABlock2017cc",
                       "ResourceName": null,
                       "Children": [
@@ -26737,7 +26711,7 @@
                               "InitialResidueName": "pasture",
                               "InitialResidueType": "pasture",
                               "InitialResidueMass": 2500.0,
-                              "InitialStandingFraction": "NaN",
+                              "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 40.0,
                               "Name": "SurfaceOrganicMatter",
@@ -27331,6 +27305,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -30263,8 +30238,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Jul",
                                   "ResourceName": null,
                                   "Children": [
@@ -30308,8 +30282,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug",
                                   "ResourceName": null,
                                   "Children": [
@@ -30362,7 +30335,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "TempLys2017",
                       "ResourceName": null,
                       "Children": [
@@ -30511,7 +30483,7 @@
                               "InitialResidueName": "pasture",
                               "InitialResidueType": "pasture",
                               "InitialResidueMass": 1500.0,
-                              "InitialStandingFraction": "NaN",
+                              "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 40.0,
                               "Name": "SurfaceOrganicMatter",
@@ -31120,6 +31092,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -32023,8 +31996,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Jul",
                                   "ResourceName": null,
                                   "Children": [
@@ -32068,8 +32040,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug",
                                   "ResourceName": null,
                                   "Children": [
@@ -32122,7 +32093,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "BalmoralLys2017",
                       "ResourceName": null,
                       "Children": [
@@ -32271,7 +32241,7 @@
                               "InitialResidueName": "pasture",
                               "InitialResidueType": "pasture",
                               "InitialResidueMass": 2500.0,
-                              "InitialStandingFraction": "NaN",
+                              "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 40.0,
                               "Name": "SurfaceOrganicMatter",
@@ -32868,6 +32838,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -33771,8 +33742,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Jun_Rate0",
                                   "ResourceName": null,
                                   "Children": [
@@ -33817,8 +33787,7 @@
                                     "",
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Jun_Rate300",
                                   "ResourceName": null,
                                   "Children": [
@@ -33862,8 +33831,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug_Rate0",
                                   "ResourceName": null,
                                   "Children": [
@@ -33907,8 +33875,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "Aug_Rate300",
                                   "ResourceName": null,
                                   "Children": [
@@ -33961,7 +33928,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "MorvenSoil",
                       "ResourceName": null,
                       "Children": [
@@ -34110,7 +34076,7 @@
                               "InitialResidueName": "wheat",
                               "InitialResidueType": "wheat",
                               "InitialResidueMass": 1000.0,
-                              "InitialStandingFraction": "NaN",
+                              "InitialStandingFraction": 0.0,
                               "InitialCPR": 0.0,
                               "InitialCNR": 80.0,
                               "Name": "SurfaceOrganicMatter",
@@ -34691,6 +34657,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -36690,7 +36657,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "* \tTrial location: Springston, Canterbury\n*\tCoordinates: 43.641°S, 172.349°E\n*\tSoil: Balmoral\n*\tWeather station: Broadfield\n*\tThis experiment evaluated oat populations (i.e. target of 0 [fallow],150, 300, 450 plants/m2) \n*\tTwo row spacings (75 & 150 cm) were also evaluated in the trial (see factors)\n*\tNote that these ppopulations were not achieved so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a kale crop\n*\tThis is a grazed field and grazing occured on the winter (kale) crop prior to sowing oats\n*\tIrrigation: a total of 210 mm was applied to all treatments (source: BM. SM)\n\n*\tAccording to the DairyNZ fact sheet (https://www.dairynz.co.nz/media/253803/1-74_Kale_growing_a_high_yielding_crop.pdf), Kale yield can vary (12-17 t DM)depending on the variety (short, intermediate & giant). Utilisation efficiency is 80-85%.\n*\tAccording to Chakwizira et al 2015(https://www.tandfonline.com/doi/epdf/10.1080/00288233.2015.1016538?needAccess=true&role=button), a well fertilised crop contains ~1.3%.\n*\tBased on a 15 t DM/ha (average yield), aboveground residue will be 2.25 t DM/ha. \n* \tRoot biomass is assumed to be 9.9 % (i.e. 1.485 t DM/ha) according to Urlic et al 2015(https://www.researchgate.net/publication/273506706_Phosphorus-Use_Efficiency_of_Kale_Genotypes_from_Coastal_Croatia/figures?lo=1).\n*\tWe can approximate that Root N conc is ~1.3% based on Canola research data",
+                      "Text": "* \tTrial location: Springston, Canterbury\n*\tCoordinates: 43.641°S, 172.349°E\n*\tSoil: Balmoral\n*\tWeather station: Broadfield\n*\tThis experiment evaluated oat populations (i.e. target of 0 [#fallow],150, 300, 450 plants/m2) \n*\tTwo row spacings (75 & 150 cm) were also evaluated in the trial (see factors)\n*\tNote that these ppopulations were not achieved so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a kale crop\n*\tThis is a grazed field and grazing occured on the winter (kale) crop prior to sowing oats\n*\tIrrigation: a total of 210 mm was applied to all treatments (source: BM. SM)\n\n*\tAccording to the DairyNZ fact sheet (https://www.dairynz.co.nz/media/253803/1-74_Kale_growing_a_high_yielding_crop.pdf), Kale yield can vary (12-17 t DM)depending on the variety (short, intermediate & giant). Utilisation efficiency is 80-85%.\n*\tAccording to Chakwizira et al 2015(https://www.tandfonline.com/doi/epdf/10.1080/00288233.2015.1016538?needAccess=true&role=button), a well fertilised crop contains ~1.3%.\n*\tBased on a 15 t DM/ha (average yield), aboveground residue will be 2.25 t DM/ha. \n* \tRoot biomass is assumed to be 9.9 % (i.e. 1.485 t DM/ha) according to Urlic et al 2015(https://www.researchgate.net/publication/273506706_Phosphorus-Use_Efficiency_of_Kale_Genotypes_from_Coastal_Croatia/figures?lo=1).\n*\tWe can approximate that Root N conc is ~1.3% based on Canola research data",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -36718,8 +36685,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0Width75",
                                   "ResourceName": null,
                                   "Children": [
@@ -36756,8 +36722,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0Width150",
                                   "ResourceName": null,
                                   "Children": [
@@ -36794,8 +36759,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "150Width75",
                                   "ResourceName": null,
                                   "Children": [
@@ -36832,8 +36796,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "150Width150",
                                   "ResourceName": null,
                                   "Children": [
@@ -36870,8 +36833,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300Width75",
                                   "ResourceName": null,
                                   "Children": [
@@ -36908,8 +36870,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300Width150",
                                   "ResourceName": null,
                                   "Children": [
@@ -36946,8 +36907,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "450Width75",
                                   "ResourceName": null,
                                   "Children": [
@@ -36984,8 +36944,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "450Width150",
                                   "ResourceName": null,
                                   "Children": [
@@ -37031,7 +36990,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "BalmoralSoil",
                       "ResourceName": null,
                       "Children": [
@@ -38042,6 +38000,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -39617,7 +39576,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "* \tTrial location: Barhill, Canterbury\n*\tCoordinates:43.757°S, 171.932°E\n*\tSoil: Templeton\n*\tWeather station: Chertsey Cws\n*\tThis experiment evaluated oat populations (i.e. target of 0 [fallow],150, 300 plants/m2) \n*\tNote that these populations were not achieved so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a kale crop\n*\tThis is a grazed field and grazing occured on the winter (kale) crop prior to sowing oats\n*\tA total of 100 kg N/ha as urea was applied to oats & the crop grown to grain.\n",
+                      "Text": "* \tTrial location: Barhill, Canterbury\n*\tCoordinates:43.757°S, 171.932°E\n*\tSoil: Templeton\n*\tWeather station: Chertsey Cws\n*\tThis experiment evaluated oat populations (i.e. target of 0 [#fallow],150, 300 plants/m2) \n*\tNote that these populations were not achieved so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a kale crop\n*\tThis is a grazed field and grazing occured on the winter (kale) crop prior to sowing oats\n*\tA total of 100 kg N/ha as urea was applied to oats & the crop grown to grain.\n",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -39654,8 +39613,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -39692,8 +39650,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "150",
                                   "ResourceName": null,
                                   "Children": [
@@ -39730,8 +39687,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300",
                                   "ResourceName": null,
                                   "Children": [
@@ -39777,7 +39733,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Springston_Temp_Soil",
                       "ResourceName": null,
                       "Children": [
@@ -40520,6 +40475,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -42448,7 +42404,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "* \tTrial location: Winton, Southland\n*\tCoordinates: 46.198°S, 168.307°E\n*\tSoil: Caroline - descried as moderately deep (see https://greatsouth.nz/storage/app/media/data_sheets/R_13_4_5382.pdf)\n*\tIn the above web document, Caroline is said to be similar to Lumsden, Makarewa & Jacobstown soils.\n*\tWeather station: On-site. However measurements were not taken daily and so the Gore NIWA station was used\n*\tThe experiment evaluated oat populations (i.e. target of 0 [fallow],150, 300, 450 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a swedes\n*\tThis is a grazed field.",
+                      "Text": "* \tTrial location: Winton, Southland\n*\tCoordinates: 46.198°S, 168.307°E\n*\tSoil: Caroline - descried as moderately deep (see https://greatsouth.nz/storage/app/media/data_sheets/R_13_4_5382.pdf)\n*\tIn the above web document, Caroline is said to be similar to Lumsden, Makarewa & Jacobstown soils.\n*\tWeather station: On-site. However measurements were not taken daily and so the Gore NIWA station was used\n*\tThe experiment evaluated oat populations (i.e. target of 0 [#fallow],150, 300, 450 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a swedes\n*\tThis is a grazed field.",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -42476,8 +42432,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -42514,8 +42469,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "150",
                                   "ResourceName": null,
                                   "Children": [
@@ -42552,8 +42506,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300",
                                   "ResourceName": null,
                                   "Children": [
@@ -42590,8 +42543,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "450",
                                   "ResourceName": null,
                                   "Children": [
@@ -42637,7 +42589,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "WintonMakarewaSoil",
                       "ResourceName": null,
                       "Children": [
@@ -43343,6 +43294,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -45258,7 +45210,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "* \tTrial location: Wrey's Bush, Southland\n*\tCoordinates: 46.021°S, 168.090°E\n*\tSoil: Aparima\n*\tWeather station: Birchwood Wxt Aws\n*\tThe experiment evaluated oat populations (i.e. target of 0 [fallow],150, 300, 450 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a swedes\n*\tThis is a grazed field.",
+                      "Text": "* \tTrial location: Wrey's Bush, Southland\n*\tCoordinates: 46.021°S, 168.090°E\n*\tSoil: Aparima\n*\tWeather station: Birchwood Wxt Aws\n*\tThe experiment evaluated oat populations (i.e. target of 0 [#fallow],150, 300, 450 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a swedes\n*\tThis is a grazed field.",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -45295,8 +45247,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -45333,8 +45284,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "150",
                                   "ResourceName": null,
                                   "Children": [
@@ -45371,8 +45321,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300",
                                   "ResourceName": null,
                                   "Children": [
@@ -45409,8 +45358,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "450",
                                   "ResourceName": null,
                                   "Children": [
@@ -45456,7 +45404,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "WreysBush_Aparima",
                       "ResourceName": null,
                       "Children": [
@@ -46243,6 +46190,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -48153,7 +48101,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "* \tTrial location: Hokitika, West Coast\n*\tCoordinates: 42.771°S, 170.909°E\n*\tSoil: Descriped as heavy glay - using Huangarua soil in this simulation\n*\tWeather station: Hokitika AWS\n*\tThe experiment evaluated oat populations (i.e. target of 0 [fallow], 300 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a turnip-swedes\n*\tThis is a grazed field.\n",
+                      "Text": "* \tTrial location: Hokitika, West Coast\n*\tCoordinates: 42.771°S, 170.909°E\n*\tSoil: Descriped as heavy glay - using Huangarua soil in this simulation\n*\tWeather station: Hokitika AWS\n*\tThe experiment evaluated oat populations (i.e. target of 0 [#fallow], 300 plants/m2)- row spacing was 150 cm \n*\tNote: target populations were not achieved and so, actual plant counts are used in the model (see factors).\n* \tThe paddock was previously in a turnip-swedes\n*\tThis is a grazed field.\n",
                       "Name": "Experiment Description",
                       "ResourceName": null,
                       "Children": [],
@@ -48181,8 +48129,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "0",
                                   "ResourceName": null,
                                   "Children": [
@@ -48219,8 +48166,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "300",
                                   "ResourceName": null,
                                   "Children": [
@@ -48266,7 +48212,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Kowhotirangix",
                       "ResourceName": null,
                       "Children": [
@@ -49121,6 +49066,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -51064,8 +51010,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "JulRate0",
                                   "ResourceName": null,
                                   "Children": [
@@ -51102,8 +51047,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "JulRate300",
                                   "ResourceName": null,
                                   "Children": [
@@ -51140,8 +51084,7 @@
                                   "Specifications": [
                                     "[SowingHarvesting]"
                                   ],
-                                  "Paths": null,
-                                  "Values": null,
+                                  "CustomDescriptors": [],
                                   "Name": "SepRate300",
                                   "ResourceName": null,
                                   "Children": [
@@ -51187,7 +51130,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Waikiwi",
                       "ResourceName": null,
                       "Children": [
@@ -52806,6 +52748,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -55954,7 +55897,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "Gatton2007Base",
                           "ResourceName": null,
                           "Children": [
@@ -56449,6 +56391,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -59110,7 +59053,6 @@
                         },
                         {
                           "$type": "Models.Core.Simulation, Models",
-                          "Descriptors": null,
                           "Name": "Gatton2007BaseLate",
                           "ResourceName": null,
                           "Children": [
@@ -59605,6 +59547,7 @@
                                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                       "Thickness": null,
                                       "InitialValues": null,
+                                      "InteractionsPerDay": 8,
                                       "Name": "Temperature",
                                       "ResourceName": null,
                                       "Children": [],
@@ -60563,18 +60506,14 @@
                                     "{",
                                     "    [Serializable] ",
                                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                                    "    public class Script : Model, IStructureDependency",
+                                    "    public class Script : Model",
                                     "    {",
                                     "        [Link] private Plant Oats;",
                                     "        [Link] private Clock Clock;",
-                                    "        [field:NonSerialized]",
-                                    "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cut Date\")]",
                                     "        public DateTime CutDate { get; set; }",
                                     "",
-                                    "",
-                                    "        ",
                                     "        [EventSubscribe(\"StartOfSimulation\")]",
                                     "        private void OnSimulationCommencing(object sender, EventArgs e)",
                                     "        {",
@@ -60588,17 +60527,17 @@
                                     "            if (Clock.Today.Date == CutDate)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Root.RemoveBiomass(liveToRemove: 0.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
-                                    "",
                                     "            }",
                                     "        }",
                                     "    }",
@@ -60635,12 +60574,10 @@
                                     "{",
                                     "    [Serializable] ",
                                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                                    "    public class Script : Model, IStructureDependency",
+                                    "    public class Script : Model",
                                     "    {",
                                     "        [Link] private Plant Oats;",
                                     "        [Link] private Clock Clock;",
-                                    "        [field:NonSerialized]",
-                                    "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cut Date1\")]",
                                     "        public DateTime CutDate1 { get; set; }",
@@ -60662,12 +60599,13 @@
                                     "            if (Clock.Today.Date == CutDate1)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
@@ -60677,12 +60615,13 @@
                                     "            if (Clock.Today.Date == CutDate2)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                  var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.8, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
@@ -60723,7 +60662,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Wellcamp2006Base",
                       "ResourceName": null,
                       "Children": [
@@ -61278,6 +61216,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -61784,12 +61723,10 @@
                                     "{",
                                     "    [Serializable] ",
                                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                                    "    public class Script : Model, IStructureDependency",
+                                    "    public class Script : Model",
                                     "    {",
                                     "        [Link] private Plant Oats;",
                                     "        [Link] private Clock Clock;",
-                                    "        [field:NonSerialized]",
-                                    "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cut Date\")]",
                                     "        public DateTime CutDate { get; set; }",
@@ -61809,12 +61746,13 @@
                                     "            if (Clock.Today.Date == CutDate)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
@@ -61856,12 +61794,10 @@
                                     "{",
                                     "    [Serializable] ",
                                     "    [System.Xml.Serialization.XmlInclude(typeof(Model))]",
-                                    "    public class Script : Model, IStructureDependency",
+                                    "    public class Script : Model",
                                     "    {",
                                     "        [Link] private Plant Oats;",
                                     "        [Link] private Clock Clock;",
-                                    "        [field:NonSerialized]",
-                                    "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cut Date1\")]",
                                     "        public DateTime CutDate1 { get; set; }",
@@ -61883,12 +61819,13 @@
                                     "            if (Clock.Today.Date == CutDate1)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
@@ -61898,12 +61835,13 @@
                                     "            if (Clock.Today.Date == CutDate2)",
                                     "            {",
                                     "                //Remove.SetPhenologyStage = 3.5;",
-                                    "                var Panicle =   Structure.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
-                                    "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
-                                    "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
-                                    "                var Grain =   Structure.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
-                                    "                var Root =   Structure.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
-                                    "                Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                    "                var Panicle =   Node.FindChild<IHasDamageableBiomass>(\"Panicle\", relativeTo: (INodeModel)Oats);",
+                                    "                var Leaf =   Node.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Oats);",
+                                    "                var Stem =   Node.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Oats);",
+                                    "                var Grain =   Node.FindChild<IHasDamageableBiomass>(\"Grain\", relativeTo: (INodeModel)Oats);",
+                                    "                var Root =   Node.FindChild<IHasDamageableBiomass>(\"Root\", relativeTo: (INodeModel)Oats);",
+                                    "                if (Panicle != null)",
+                                    "                    Panicle.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Leaf.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Stem.RemoveBiomass(liveToRemove: 0.7, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
                                     "                Grain.RemoveBiomass(liveToRemove: 1.0, deadToRemove: 0.0, liveToResidue: 0.0, deadToResidue: 0.0);",
@@ -61944,7 +61882,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Roma2006Base",
                       "ResourceName": null,
                       "Children": [
@@ -62424,6 +62361,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -66173,7 +66111,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "Tarlee2007Base",
                       "ResourceName": null,
                       "Children": [
@@ -66796,6 +66733,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -68361,7 +68299,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2011Base",
                       "ResourceName": null,
                       "Children": [
@@ -68916,6 +68853,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -69120,7 +69058,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -69366,7 +69304,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2012Base",
                       "ResourceName": null,
                       "Children": [
@@ -69921,6 +69858,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -70125,7 +70063,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -70468,7 +70406,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2014Base",
                       "ResourceName": null,
                       "Children": [
@@ -71023,6 +70960,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -71297,7 +71235,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -71543,7 +71481,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2015Base",
                       "ResourceName": null,
                       "Children": [
@@ -72098,6 +72035,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -72351,7 +72289,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -72597,7 +72535,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2016Base",
                       "ResourceName": null,
                       "Children": [
@@ -73152,6 +73089,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -73405,7 +73343,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -73650,7 +73588,6 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Descriptors": null,
                       "Name": "LRC2017Base",
                       "ResourceName": null,
                       "Children": [
@@ -74205,6 +74142,7 @@
                                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                                   "Thickness": null,
                                   "InitialValues": null,
+                                  "InteractionsPerDay": 8,
                                   "Name": "Temperature",
                                   "ResourceName": null,
                                   "Children": [],
@@ -74444,7 +74382,7 @@
                                     "        private string SowDate;",
                                     "        private string CutDate1;",
                                     "        private string CutDate2;",
-                                    "        [field:NonSerialized]",
+                                    "        ",
                                     "        public IStructure Structure { private get; set; }",
                                     "",
                                     "        [Description(\"Cultivar\")]",
@@ -76991,7 +76929,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "Tarlee2007example",
               "ResourceName": null,
               "Children": [
@@ -77614,6 +77551,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],
@@ -78243,8 +78181,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate10",
                           "ResourceName": null,
                           "Children": [
@@ -78281,8 +78218,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate5",
                           "ResourceName": null,
                           "Children": [
@@ -78319,8 +78255,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate15",
                           "ResourceName": null,
                           "Children": [
@@ -78357,8 +78292,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate25",
                           "ResourceName": null,
                           "Children": [
@@ -78395,8 +78329,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate50",
                           "ResourceName": null,
                           "Children": [
@@ -78433,8 +78366,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate100",
                           "ResourceName": null,
                           "Children": [
@@ -78471,8 +78403,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate150",
                           "ResourceName": null,
                           "Children": [
@@ -78509,8 +78440,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate200",
                           "ResourceName": null,
                           "Children": [
@@ -78547,8 +78477,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate250",
                           "ResourceName": null,
                           "Children": [
@@ -78585,8 +78514,7 @@
                           "Specifications": [
                             "[SowingHarvesting]"
                           ],
-                          "Paths": null,
-                          "Values": null,
+                          "CustomDescriptors": [],
                           "Name": "Rate300",
                           "ResourceName": null,
                           "Children": [
@@ -78632,7 +78560,6 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
-              "Descriptors": null,
               "Name": "WaikiwiSoil",
               "ResourceName": null,
               "Children": [
@@ -80302,6 +80229,7 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Thickness": null,
                           "InitialValues": null,
+                          "InteractionsPerDay": 8,
                           "Name": "Temperature",
                           "ResourceName": null,
                           "Children": [],

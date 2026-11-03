@@ -66,7 +66,7 @@ if [[ $2 == "build" || -z "$2" ]]; then
     # Build the installer.
     echo Building installer...
     outfile="$DIR"/apsim-$version.$ext
-    bash ./Setup/net8.0/$script $full_version "$outfile"
+    bash ./Setup/net10.0/$script $full_version "$outfile"
 fi
 
 if [[ "$2" == "upload" || -z "$2" ]]; then

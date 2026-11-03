@@ -27,14 +27,15 @@ namespace APSIM.Shared.Extensions
             // Read the first N bytes of the stream, where N is the length of
             // this encoding's byte order mark.
             byte[] buf = new byte[bom.Length];
-            stream.Read(buf, 0, bom.Length);
+            // The stream may be shorter than the byte order mark.
+            int bytesRead = stream.ReadAtLeast(buf, bom.Length, throwOnEndOfStream: false);
 
             // Reset stream position after the read.
             stream.Seek(position, SeekOrigin.Begin);
 
             // Check if the first bytes match the byte order mark. If they do,
             // return the length of the byte order mark. Otherwise, return 0.
-            if (Equal(bom, buf))
+            if (bytesRead == bom.Length && Equal(bom, buf))
                 return (uint)bom.Length;
             return 0;
         }

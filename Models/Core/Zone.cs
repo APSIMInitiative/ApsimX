@@ -80,8 +80,11 @@ namespace Models.Core
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (Area <= 0)
-                throw new Exception("Zone area must be greater than zero.  See Zone: " + Name);
+            if (double.IsNaN(Area) || Area <= 0.0)
+            {
+                throw new Exception("The value for area must be greater than zero. See Zone: " + Name);
+            }
+
             Validate();
             CheckSensibility();
         }

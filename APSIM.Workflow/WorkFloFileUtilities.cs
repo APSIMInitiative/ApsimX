@@ -36,6 +36,7 @@ public static class WorkFloFileUtilities
             string workFloFileContents = $"""
             name: workflo_apsim_validation_pr_{options.PullRequestNumber}
             pool: {options.AzurePool}
+            vmsize: Standard_D2d_v5
             inputfiles:
             - .env
             - workflow.yml

@@ -6,7 +6,6 @@ using Models.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -75,13 +74,13 @@ namespace Models.CLEM
                 InitialiseFilters(false);
             }
 
-            if (properties.ContainsKey(name))
+            if (properties.TryGetValue(name, out List<PropertyInfo> value))
             {
-                return properties[name];
+                return value;
             }
             else
             {
-                return new List<PropertyInfo>();
+                return [];
             }
         }
 
@@ -121,31 +120,6 @@ namespace Models.CLEM
                 Expression.Convert(current, typeof(object)),
                 input).Compile();
         }
-
-
-        ///// <inheritdoc/>
-        //public object GetPropertyValue(string name, object parentTopLevel)
-        //{
-        //    if (properties is null)
-        //    {
-        //        InitialiseFilters(false);
-        //    }
-
-        //    if (properties.TryGetValue(name, out List<PropertyInfo> value))
-        //    {
-        //        var parentLevel = parentTopLevel;
-        //        foreach (var propInfo in value[..1])
-        //        {
-        //            parentLevel = propInfo.GetValue(parentLevel, null);
-        //        }
-        //        return value.Last().GetValue(parentLevel, null);
-        //    }
-        //    else
-        //    {
-        //        int number = 0;
-        //        return number;
-        //    }
-        //}
 
         /// <summary>
         /// Clear all rules

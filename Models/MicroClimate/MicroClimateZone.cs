@@ -239,6 +239,12 @@ namespace Models
         [Units("0-1")]
         public double CanopyCover { get { return RadiationInterception / Radn; } }
 
+        /// <summary>Gets the Green canopy cover.</summary>
+        [Description("Green canopy cover (0-1)")]
+        [Units("0-1")]
+        public double GreenCanopyCover { get { return RadiationInterceptionOnGreen / Radn; } }
+
+
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
         [Units("mm")]
@@ -526,7 +532,23 @@ namespace Models
         /// <summary>Send an energy balance event</summary>
         public void SetCanopyEnergyTerms()
         {
+            //calculate the total green/dead for the canopy first, as AgPasture needs to know this
+            double totalGreen = 0;
+            double totalDead = 0;
             for (int j = 0; j <= Canopies.Count - 1; j++)
+            {
+                if (Canopies[j].Canopy != null)
+                {
+                    for (int i = 0; i <= numLayers - 1; i++)
+                    {
+                        totalGreen += CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, RadnGreenFraction(j));
+                        totalDead += CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, 1 - RadnGreenFraction(j));
+                    }
+                }
+            }
+
+            for (int j = 0; j <= Canopies.Count - 1; j++)
+            {
                 if (Canopies[j].Canopy != null)
                 {
                     CanopyEnergyBalanceInterceptionlayerType[] lightProfile = new CanopyEnergyBalanceInterceptionlayerType[numLayers];
@@ -538,8 +560,10 @@ namespace Models
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * SimulationAreaM2 * RadnGreenFraction(j);
-                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * SimulationAreaM2 * (1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreen = CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, RadnGreenFraction(j));
+                        lightProfile[i].AmountOnDead = CalculateCanpoyEnergy(Canopies[j].Rs[i], SimulationAreaM2, 1 - RadnGreenFraction(j));
+                        lightProfile[i].AmountOnGreenTotal = totalGreen;
+                        lightProfile[i].AmountOnDeadTotal = totalDead;
                         totalPETa += Canopies[j].PETa[i];
                         totalPETr += Canopies[j].PETr[i];
                         totalPotentialEp += Canopies[j].PET[i];
@@ -549,6 +573,13 @@ namespace Models
                     Canopies[j].Canopy.WaterDemand = totalPotentialEp;
                     Canopies[j].Canopy.LightProfile = lightProfile;
                 }
+            }
+        }
+
+        /// <summary>AmountOnGreen and AmountOnDead Calucation for SetCanopyEnergyTerms</summary>
+        private double CalculateCanpoyEnergy(double Rs, double area, double radiation)
+        {
+            return Rs * area * radiation;
         }
 
         /// <summary>Break the combined Canopy into layers</summary>

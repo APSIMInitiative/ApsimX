@@ -229,7 +229,9 @@ namespace Gtk.Sheet
             string sql = String.Empty;
             string sort = String.Empty;
 
-            sort = "ORDER BY \"SimulationID\", \"Clock.Today\"";
+            sort = "ORDER BY \"SimulationID\"";
+            if (dataStore.ColumnNames(tableName).Contains("Clock.Today"))
+                sort += ", \"Clock.Today\"";
             if (orderBy.Length > 0)
                 sort = $"ORDER BY \"{orderBy}\", \"SimulationID\"";
             Cleanup();

@@ -15,12 +15,8 @@ namespace Models.Functions
     [Description("Maintains a moving sum of a given value for a user-specified number of simulation days")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class MovingSumFunction : Model, IFunction, IStructureDependency
+    public class MovingSumFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>The number of days over which to calculate the moving sum</summary>
         [Description("Number of Days")]
         public int NumberOfDays { get; set; }
@@ -34,13 +30,19 @@ namespace Models.Functions
             get
             {
                 IFunction value;
-                IEnumerable<IFunction> ChildFunctions = Structure.FindChildren<IFunction>();
+                IEnumerable<IFunction> ChildFunctions = Node.FindChildren<IFunction>();
                 if (ChildFunctions.Count() == 1)
                     value = ChildFunctions.First();
                 else
                     throw new ApsimXException(this, "Moving sum function " + this.Name + " must only have one child node.");
                 return value;
             }
+        }
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>

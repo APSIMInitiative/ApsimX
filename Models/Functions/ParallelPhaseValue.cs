@@ -14,12 +14,8 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
-    public class ParallelPhaseValue : Model, IFunction, IStructureDependency
+    public class ParallelPhaseValue : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>The name of the parallel phase that this function is active in</summary>
         [Description("Parallel Phase Name")]
         public string ParallelPhaseName { get; set; }
@@ -56,7 +52,7 @@ namespace Models.Functions
         private void onPostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (pPhase.IsInPhase)
             {
@@ -89,6 +85,12 @@ namespace Models.Functions
             }
         }
 
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -96,7 +98,7 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             currentValue = StartValue.Value();
-            pPhase = Structure.FindChild<IParallelPhase>(ParallelPhaseName, relativeTo: plant as INodeModel, recurse: true);
+            pPhase = Node.FindChild<IParallelPhase>(ParallelPhaseName, relativeTo: plant as INodeModel, recurse: true);
         }
     }
 }

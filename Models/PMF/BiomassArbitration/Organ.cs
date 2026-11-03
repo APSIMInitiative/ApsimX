@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using BruTile;
 using Models.Core;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
+using Models.Zones;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Zone = Models.Core.Zone;
 
 namespace Models.PMF
@@ -674,13 +675,15 @@ namespace Models.PMF
         private void AddSOMtoZones(double wt, double n, double fractionStanding = 0)
         {
             int zi = 0;
-
             if (dimensionsOverZones == null)
             {
                 Zone z = Structure.FindParent<Zone>(recurse: true);
+                double area = 1.0; // default area of 1 as model does mass / m2 by default.
+                if (z.GetType() == typeof(RectangularZone))
+                    area = z.Area;
                 ISurfaceOrganicMatter somZone = Structure.FindChild<ISurfaceOrganicMatter>(relativeTo: z);
-                somZone.Add(wt/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
-                    n/(z.Area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, fractionStanding, parentPlant.PlantType, Name);
+                somZone.Add(wt/(area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, 
+                    n/(area * Constants.ha2sm) * Constants.gPerSm2kgPerHa, fractionStanding, parentPlant.PlantType, Name);
             }
             else
             {
