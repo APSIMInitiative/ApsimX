@@ -5360,7 +5360,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3E-06,
+                  "FixedValue": 0.01,
                   "Units": null,
                   "Name": "KNH4",
                   "ResourceName": null,
