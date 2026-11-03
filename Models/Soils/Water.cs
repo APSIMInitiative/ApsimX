@@ -26,7 +26,7 @@ namespace Models.Soils
         private IPhysical Physical = null;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        [Link(Type=LinkType.Sibling)]
+        [Link(Type=LinkType.Sibling, IsOptional = true)]
         private ISoilWater WaterModel = null;
 
         private double initialFractionFull = double.NaN;
