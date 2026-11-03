@@ -162,13 +162,12 @@ namespace Models.Soils
             }
             set
             {
-                IPhysical physical = Physical;
-                if (physical != null)
+                if (Physical != null)
                 {
-                    double[] airdry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, Thickness, physical.AirDry.Last());
-                    double[] dul = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.DUL.Last());
-                    double[] sat = SoilUtilities.MapConcentration(physical.SAT, physical.Thickness, Thickness, physical.SAT.Last());
-                    double[] thickness = physical.Thickness;
+                    double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
+                    double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                    double[] sat = SoilUtilities.MapConcentration(Physical.SAT, Physical.Thickness, Thickness, Physical.SAT.Last());
+                    double[] thickness = Physical.Thickness;
 
                     if (FilledFromTop)
                         InitialValues = SoilUtilities.DistributeAmountWaterFromTop(value, thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
@@ -249,11 +248,10 @@ namespace Models.Soils
         {
             get
             {
-                IPhysical physical = Physical;
-                if (physical != null && Thickness != null)
+                if (Physical != null && Thickness != null)
                 {
                     double newFractionFull;
-                    double[] dul = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.DUL.Last());
+                    double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
                     double[] dulMM = MathUtilities.Multiply(dul, Thickness);
                     if (InitialValues == null)
                         return 0;
@@ -263,7 +261,7 @@ namespace Models.Soils
                         {
                             //Get layer indices that have a XF as 0.
                             var plantCrop = GetCropSoil();
-                            var xf = SoilUtilities.MapConcentration(                            plantCrop.XF, physical.Thickness, Thickness, plantCrop.XF.Last());
+                            var xf = SoilUtilities.MapConcentration(plantCrop.XF, Physical.Thickness, Thickness, plantCrop.XF.Last());
 
                             double[] initialValuesMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, InitialValuesMM);
                             double[] relativeToLLMMMinusEmptyXFLayers = MathUtilities.Multiply(xf, RelativeToLLMM);
@@ -319,12 +317,11 @@ namespace Models.Soils
         /// <exception cref="InvalidOperationException"></exception>
         private void UpdateInitialValuesFromFractionFull(double value)
         {
-            IPhysical physical = Physical;
-            if (physical != null)
+            if (Physical != null)
             {
-                double[] airdry = SoilUtilities.MapConcentration(physical.AirDry, physical.Thickness, Thickness, physical.AirDry.Last());
-                double[] dul = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.DUL.Last());
-                double[] sat = SoilUtilities.MapConcentration(physical.DUL, physical.Thickness, Thickness, physical.SAT.Last());
+                double[] airdry = SoilUtilities.MapConcentration(Physical.AirDry, Physical.Thickness, Thickness, Physical.AirDry.Last());
+                double[] dul = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.DUL.Last());
+                double[] sat = SoilUtilities.MapConcentration(Physical.DUL, Physical.Thickness, Thickness, Physical.SAT.Last());
                 if (FilledFromTop)
                     InitialValues = SoilUtilities.DistributeWaterFromTop(value, Thickness, airdry, RelativeToLL, dul, sat, RelativeToXF);
                 else
@@ -445,23 +442,22 @@ namespace Models.Soils
         /// </summary>
         public bool AreInitialValuesWithinPhysicalBoundaries()
         {
-            IPhysical physical = Physical;
-            if (physical == null)
-                return true; //when loading from file physical will be none, in this case, just accept the
+            if (Physical == null)
+                return true; //when loading from file Physical will be none, in this case, just accept the
 
-            if (physical.AirDry == null || physical.SAT == null)
+            if (Physical.AirDry == null || Physical.SAT == null)
                 return true;   //we need these to check, but WEIRDO simulations doesn't have an airdry
 
             if (InitialValues.Length != Thickness.Length)
                     return false;
 
-            var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, physical.Thickness, MathUtilities.LastValue(physical.LL15));
+            var mappedInitialValues = SoilUtilities.MapConcentration(InitialValues, Thickness, Physical.Thickness, MathUtilities.LastValue(Physical.LL15));
 
             for (int i = 0; i < mappedInitialValues.Length; i++)
             {
                 double water = mappedInitialValues[i];
-                double airDry = physical.AirDry[i];
-                double sat = physical.SAT[i];
+                double airDry = Physical.AirDry[i];
+                double sat = Physical.SAT[i];
                 if (!MathUtilities.FloatsAreEqual(water, airDry) && water < airDry)
                     throw new Exception($"A water initial value of {water} on layer {i+1} was less than AirDry of {airDry}.");
                 else if (!MathUtilities.FloatsAreEqual(water, sat) && water > sat)
