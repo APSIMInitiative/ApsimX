@@ -4115,7 +4115,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "[Stem].BarkWt/[Stem].BarkDensity",
+                  "Expression": "[Stem].BarkWt*10/[Stem].BarkDensity",
                   "Name": "VolBark",
                   "ResourceName": null,
                   "Children": [],
