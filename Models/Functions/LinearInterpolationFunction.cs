@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using APSIM.Core;
 using Models.Core;
 
@@ -17,8 +16,6 @@ namespace Models.Functions
         /// <summary>Gets the xy pairs.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
-
-        private Dictionary<double, double> cache = new Dictionary<double, double>();
 
         /// <summary>The x value to use for interpolation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -53,11 +50,11 @@ namespace Models.Functions
         /// <param name="y">y values.</param>
         public LinearInterpolationFunction(string xProperty, double[] x, double[] y)
         {
-            VariableReference XValue = new VariableReference();
-            XValue.VariableName = xProperty;
             XYPairs = new XYPairs();
             XYPairs.X = x;
             XYPairs.Y = y;
+            VariableReference XValue = new VariableReference();
+            XValue.VariableName = xProperty;
         }
 
         /// <summary>Gets the value.</summary>
@@ -65,30 +62,10 @@ namespace Models.Functions
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public double Value(int arrayIndex = -1)
         {
-            // Shortcut exit when the Y values are all the same: XValue need not be evaluated.
-            // Checked on every call rather than cached when the model is created, because
-            // ModelOverrides, cultivar commands and manager scripts can change Y afterwards.
-            try
-            {
-                if (YsAreAllTheSame(XYPairs.Y))
-                    return XYPairs.Y[0];
-                else
-                    return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
-            }
-            catch (Exception err)
-            {
-                throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
-            }
-        }
-
-        /// <summary>Are there Y values and are they all the same?</summary>
-        /// <param name="y">The Y values.</param>
-        private static bool YsAreAllTheSame(double[] y)
-        {
-            for (int i = 1; i < y.Length; i++)
-                if (y[i] != y[i - 1])
-                    return false;
-            return y.Length > 0;
+            if (XYPairs == null)
+                throw new Exception($"LinearInterp Function at {this.FullPath} does not have an XYPairs linked to it");
+                
+            return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
         }
 
         /// <summary>Values for x.</summary>
@@ -96,6 +73,9 @@ namespace Models.Functions
         /// <returns></returns>
         public double ValueForX(double XValue)
         {
+            if (XYPairs == null)
+                throw new Exception($"LinearInterp Function at {this.FullPath} does not have an XYPairs linked to it");
+
             return XYPairs.ValueIndexed(XValue);
         }
     }
