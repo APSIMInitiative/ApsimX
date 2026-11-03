@@ -941,66 +941,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
-                  "Units": "0-1",
-                  "Name": "BelowGround",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": "0-1",
-                      "Name": "CoarseRootFraction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Units": "0-1",
-                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
-                      "Name": "FineRootFraction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
                   "Expression": "1 - [Pinus].Partitioning.BelowGround",
@@ -1213,6 +1153,57 @@
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "max(0.2, 0.45 - 0.0625*[Pinus].Age)",
+                  "Name": "BelowGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": "0-1",
+                      "Name": "CoarseRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
+                      "Name": "FineRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -2426,57 +2417,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "LeafResidenceTime",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        6.0,
-                        9.0
-                      ],
-                      "Y": [
-                        350.0,
-                        380.0,
-                        450.0,
-                        500.0,
-                        550.0,
-                        650.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Pinus].Age",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "FLAI",
                   "ResourceName": null,
                   "Children": [
@@ -2493,8 +2433,8 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        11.0,
-                        13.0
+                        6.0,
+                        8.0
                       ],
                       "Y": [
                         1.0,
@@ -2818,7 +2758,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "1 - Exp(-[ExtinctionCoefficient] * [Leaf].LAI)",
+                  "Expression": "[CoverGreenFunction].Occupancy * (1 - exp(-[Leaf].ExtinctionCoefficient * [Leaf].LAI / [CoverGreenFunction].Occupancy))",
                   "Name": "CoverGreenFunction",
                   "ResourceName": null,
                   "Children": [
@@ -2881,6 +2821,27 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "max(0.01, min(1, [Pinus].Population * 3.14159 * ([CoverGreenFunction].Occupancy.CrownRadiusGrowthRate * [Pinus].Age)^2))",
+                      "Name": "Occupancy",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.35,
+                          "Units": "m/y",
+                          "Name": "CrownRadiusGrowthRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -2898,6 +2859,76 @@
                       "FixedValue": 0.5,
                       "Units": null,
                       "Name": "ExtinctionCoefficientDead",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "LeafResidenceTime",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeBased",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0,
+                            2.0,
+                            3.0,
+                            6.0,
+                            9.0
+                          ],
+                          "Y": [
+                            350.0,
+                            380.0,
+                            450.0,
+                            500.0,
+                            550.0,
+                            650.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Pinus].Age",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "01",
+                      "Expression": "max(0.3, [Leaf].FLAI)",
+                      "Name": "CanopyLimit",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
