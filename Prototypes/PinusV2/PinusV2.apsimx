@@ -77,7 +77,7 @@
             "[Pinus].Stem.MAIub",
             "[Pinus].Stem.VolBark",
             "[Pinus].Stem.Volub",
-            "[Pinus].Stem.WoodDensityOfStanding",
+            "[Pinus].Stem.WoodDensity",
             "[Pinus].Stem.BarkDensity",
             "[Pinus].Stem.WoodWt",
             "[Pinus].Stem.Wt",
@@ -157,7 +157,7 @@
             "[Pinus].Leaf.SpecificLeafArea as SLA",
             "[Pinus].Leaf.N*10 as TotalFoliarNkgpha",
             "[Pinus].Stem.MAIub as MAIub",
-            "[Pinus].Stem.WoodDensity as Pinus.Stem.WoodDensityOfStanding",
+            "[Pinus].Stem.WoodDensityOfStand*10 as Pinus.Stem.WoodDensityOfStanding",
             "[Pinus].Population*10000 as stemspha",
             "[Pinus].Stem.WoodDensityOfGrowth*10 as RingWoodDensity"
           ],
