@@ -18,11 +18,11 @@ while IFS= read -r file; do
     echo "Signing $file"
     smctl sign --keypair-alias "$alias" --input "$file" --simple
     count=$((count+1))
-done < <(python3 "$DIR/list-unsigned-binaries.py" "$dir")
+done < <(bash "$DIR/list-unsigned-binaries.sh" "$dir")
 echo "Signed $count file(s)."
 
 # Fail if anything is still unsigned.
-remaining=$(python3 "$DIR/list-unsigned-binaries.py" "$dir")
+remaining=$(bash "$DIR/list-unsigned-binaries.sh" "$dir")
 if [[ -n "$remaining" ]]; then
     echo "The following files are still unsigned:"
     echo "$remaining"
