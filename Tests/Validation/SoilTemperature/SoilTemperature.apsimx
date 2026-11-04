@@ -16987,6 +16987,22 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "",
+                  "InitialResidueType": "base_type",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 0.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 0,
                   "ASCOrder": null,
@@ -17430,6 +17446,14 @@
                       ],
                       "Name": "LayerStructure",
                       "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -17533,6 +17557,22 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "SurfOM": [],
+                  "Canopies": [],
+                  "InitialResidueName": "",
+                  "InitialResidueType": "base_type",
+                  "InitialResidueMass": 0.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 0.0,
+                  "Name": "SurfaceOrganicMatter",
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Soils.Soil, Models",
                   "RecordNumber": 0,
                   "ASCOrder": null,
@@ -17961,6 +18001,14 @@
                       ],
                       "Name": "LayerStructure",
                       "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "Name": "Nutrient",
+                      "ResourceName": "Nutrient",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -23916,6 +23964,22 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
+                      "Canopies": [],
+                      "InitialResidueName": "",
+                      "InitialResidueType": "base_type",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 0.0,
+                      "Name": "SurfaceOrganicMatter",
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Soils.Soil, Models",
                       "RecordNumber": 0,
                       "ASCOrder": null,
@@ -24294,6 +24358,14 @@
                           ],
                           "Name": "LayerStructure",
                           "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -25027,6 +25099,22 @@
                       "ReadOnly": false
                     },
                     {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "SurfOM": [],
+                      "Canopies": [],
+                      "InitialResidueName": "",
+                      "InitialResidueType": "base_type",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 0.0,
+                      "Name": "SurfaceOrganicMatter",
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Soils.Soil, Models",
                       "RecordNumber": 0,
                       "ASCOrder": null,
@@ -25380,6 +25468,14 @@
                           ],
                           "Name": "LayerStructure",
                           "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "Name": "Nutrient",
+                          "ResourceName": "Nutrient",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
