@@ -2242,7 +2242,7 @@
                             1.0
                           ],
                           "Y": [
-                            0.0,
+                            0.5,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -2926,9 +2926,18 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Units": "01",
+                      "Units": "0-1",
                       "Expression": "max(0.3, [Leaf].FLAI)",
                       "Name": "CanopyLimit",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaf residence time in days (d)",
+                      "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5838,7 +5847,10 @@
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5878,7 +5890,10 @@
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6563,7 +6578,10 @@
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700"
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
