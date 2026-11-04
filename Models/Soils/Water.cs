@@ -19,18 +19,14 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.QuadView")]
     [PresenterName("UserInterface.Presenters.QuadPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class Water : Model, IStructureDependency
+    public class Water : Model
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>Finds the 'Physical' node.</summary>
-        [Link]
+        [Link(Type=LinkType.Sibling)]
         private IPhysical Physical = null;
 
         /// <summary>Finds the 'SoilWater' node.</summary>
-        [Link]
+        [Link(Type=LinkType.Sibling)]
         private ISoilWater WaterModel = null;
 
         private double initialFractionFull = double.NaN;
@@ -183,7 +179,13 @@ namespace Models.Soils
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]
-        public double[] PAW => APSoilUtilities.CalcPAWC(Physical.Thickness, Physical.LL15, Volumetric, null);
+        public double[] PAW
+        {
+            get
+            {
+                return APSoilUtilities.CalcPAWC(Physical.Thickness, Physical.LL15, Volumetric, null);
+            }
+        }
 
         /// <summary>Plant available water SW-LL15 (mm).</summary>
         [Units("mm")]
@@ -422,10 +424,10 @@ namespace Models.Soils
             IEnumerable<SoilCrop> ancestorSoilCropLists = new List<SoilCrop>();
             // LL15 is here as this is the default value.
             List<string> newSoilCropNames = new List<string> { "LL15" };
-            Soil ancestorSoil = Structure.FindParent<Soil>(recurse: true);
+            Soil ancestorSoil = Node.FindParent<Soil>(recurse: true);
             if (ancestorSoil != null)
             {
-                ancestorSoilCropLists = Structure.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
+                ancestorSoilCropLists = Node.FindChildren<SoilCrop>(relativeTo: ancestorSoil, recurse: true);
                 newSoilCropNames.AddRange(ancestorSoilCropLists.Select(s => s.Name.Replace("Soil", "")));
             }
             return newSoilCropNames;
@@ -467,14 +469,9 @@ namespace Models.Soils
         /// <exception cref="Exception"></exception>
         private SoilCrop GetCropSoil()
         {
-            var physical = Structure.Find<Physical>();
-            if (physical == null)
-                physical = Structure.Find<Physical>();
-                if (physical == null)
-                    throw new Exception($"Unable to locate a Physical node when updating {this.Name}.");
-            var plantCrop = Structure.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: physical);
+            var plantCrop = Node.FindChild<SoilCrop>(RelativeTo + "Soil", relativeTo: Physical as INodeModel);
             if (plantCrop == null)
-                throw new Exception($"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {physical.Name}.");
+                throw new ApsimXException(this, $"Unable to locate an appropriate SoilCrop with the name of {RelativeTo + "Soil"} under {(Physical as IModel)?.Name}.");
             return plantCrop;
         }
     }
