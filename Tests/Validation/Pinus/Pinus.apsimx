@@ -2288,9 +2288,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "1983-06-28",
+                                  "Date": "1983-09-28",
                                   "Action": "[Fertiliser].Apply(amount: 200, type: \"NH4N\", 0)",
-                                  "Line": "1983-06-28 [Fertiliser].Apply(amount: 200, type: \"NH4N\", 0)"
+                                  "Line": "1983-09-28 [Fertiliser].Apply(amount: 200, type: \"NH4N\", 0)"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2329,6 +2329,1055 @@
                                 }
                               ],
                               "Name": "IFP",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1974-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1975-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1976-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1977-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.02);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.02);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-04-13",
+                                  "Action": "[TreeThinning].Script.DoThin(0.025);",
+                                  "Line": "1987-04-13 [TreeThinning].Script.DoThin(0.025);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-10-09",
+                                  "Action": "[TreeThinning].Script.DoThin(0.457);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.457);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-08-01",
+                                  "Action": "[TreeThinning].Script.DoThin(0.021);",
+                                  "Line": "1989-08-01 [TreeThinning].Script.DoThin(0.021);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-06-15",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)",
+                                  "Line": "1973-06-15 [Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1983-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4N\", 0)//thinning N input",
+                                  "Line": "1983-06-01 [Fertiliser].Apply(amount: 40, type: \"NH4N\", 0)//thinning N input"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1983-08-25",
+                                  "Action": "[AutomaticIrrigation].Script.TurnOn()",
+                                  "Line": "1983-08-25 [AutomaticIrrigation].Script.TurnOn()"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1989-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1990-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1990-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "2003-12-31",
+                                  "Action": "[AutomaticIrrigation].Script.TurnOff()",
+                                  "Line": "2003-12-31 [AutomaticIrrigation].Script.TurnOff()"
+                                }
+                              ],
+                              "Name": "ILP",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1974-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1975-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1976-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1976-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1977-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1977-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1978-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1979-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1980-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.005);",
+                                  "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.005);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-10-09",
+                                  "Action": "[TreeThinning].Script.DoThin(0.427);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.427);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-05-01",
+                                  "Action": "[TreeThinning].Script.DoThin(0.02);",
+                                  "Line": "1989-05-01 [TreeThinning].Script.DoThin(0.02);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1992-01-01",
+                                  "Action": "[TreeThinning].Script.DoThin(0.023);",
+                                  "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.023);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-06-15",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)",
+                                  "Line": "1973-06-15 [Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1983-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4N\", 0)//thinning N input",
+                                  "Line": "1983-06-01 [Fertiliser].Apply(amount: 40, type: \"NH4N\", 0)//thinning N input"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1983-08-25",
+                                  "Action": "[AutomaticIrrigation].Script.TurnOn()",
+                                  "Line": "1983-08-25 [AutomaticIrrigation].Script.TurnOn()"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1984-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1984-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1985-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1986-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1986-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-09-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-09-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-10-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-10-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-11-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-11-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-12-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1987-12-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-01-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-01-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-02-01",
+                                  "Action": "[Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-02-01 [Fertiliser].Apply(amount: 40, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-03-01",
+                                  "Action": "[Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-03-01 [Fertiliser].Apply(amount: 35, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-04-01",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-04-01 [Fertiliser].Apply(amount: 20, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-05-01",
+                                  "Action": "[Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-05-01 [Fertiliser].Apply(amount: 10, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-06-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-06-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-07-01",
+                                  "Action": "[Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-07-01 [Fertiliser].Apply(amount: 5, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-08-01",
+                                  "Action": "[Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation",
+                                  "Line": "1988-08-01 [Fertiliser].Apply(amount: 15, type: \"NH4NO3N\", 0)  // liquid fertiliser via irrigation"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-10-09",
+                                  "Action": "[AutomaticIrrigation].Script.TurnOff()",
+                                  "Line": "1988-10-09 [AutomaticIrrigation].Script.TurnOff()"
+                                }
+                              ],
+                              "Name": "IL",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
