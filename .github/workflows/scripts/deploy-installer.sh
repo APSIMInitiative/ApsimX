@@ -76,6 +76,8 @@ if [[ $2 == "build" || -z "$2" ]]; then
 fi
 
 if [[ "$2" == "upload" || -z "$2" ]]; then
+    # Bash requires at least one command in the body while upload is disabled.
+    :
 
     # Temporarily disable installer upload
     # Finally, upload the installer.
