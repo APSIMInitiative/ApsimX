@@ -2276,42 +2276,6 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FW",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0,
-                            1.5
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.SupplyFunctions.RUECO2Function, Models",
                       "PhotosyntheticPathway": "C3",
                       "Name": "FCO2",
@@ -2324,6 +2288,16 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].RadiationIntercepted",
                       "Name": "RadnInt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
+                      "Expression": "min(1, [Leaf].Fw)^2",
+                      "Name": "FW",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
