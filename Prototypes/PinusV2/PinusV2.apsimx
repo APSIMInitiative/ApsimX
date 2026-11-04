@@ -2906,7 +2906,9 @@
                             2.0,
                             3.0,
                             6.0,
-                            9.0
+                            9.0,
+                            15.0,
+                            25.0
                           ],
                           "Y": [
                             350.0,
@@ -2914,7 +2916,9 @@
                             500.0,
                             650.0,
                             900.0,
-                            1100.0
+                            1100.0,
+                            1100.0,
+                            650.0
                           ],
                           "Name": "XYPairs",
                           "ResourceName": null,
@@ -3047,7 +3051,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0015,
+                  "FixedValue": 0.0018,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -3553,7 +3557,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.00075,
+                  "FixedValue": 0.001,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -3573,7 +3577,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0005,
+                  "FixedValue": 0.0007,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -5876,7 +5880,7 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5924,7 +5928,7 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6620,7 +6624,7 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 19.5",
                     "[Pinus].Stem.WoodDensityOfGrowth.NEffect.FixedValue = 0.075",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
