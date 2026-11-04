@@ -1168,15 +1168,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": "0-1",
-                      "Name": "CoarseRootFraction",
+                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
+                      "Name": "FineRootFraction",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -1190,13 +1190,13 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": "0-1",
-                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
-                      "Name": "FineRootFraction",
+                      "Expression": "0.5 + 0.4*[Leaf].Fn",
+                      "Name": "CoarseRootFraction",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Text": "Coarse root allocations go down in favour of fine roots when N is limited",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
