@@ -4697,7 +4697,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
-                  "Expression": "[WoodDensityOfGrowth].Juvenile + ([WoodDensityOfGrowth].Mature - [WoodDensityOfGrowth].Juvenile) * [Pinus].Age / ([Pinus].Stem.WoodDensityOfGrowth.AgeParameter + [Pinus].Age)",
+                  "Expression": "([WoodDensityOfGrowth].Juvenile + ([WoodDensityOfGrowth].Mature - [WoodDensityOfGrowth].Juvenile) * [Pinus].Age / ([Pinus].Stem.WoodDensityOfGrowth.AgeParameter + [Pinus].Age)) * (1 - [WoodDensityOfGrowth].NEffect * [Leaf].Fn)",
                   "Name": "WoodDensityOfGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -4712,7 +4712,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 37.0,
+                      "FixedValue": 21.7,
                       "Units": null,
                       "Name": "Juvenile",
                       "ResourceName": null,
@@ -4722,7 +4722,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 50.0,
+                      "FixedValue": 58.4,
                       "Units": null,
                       "Name": "Mature",
                       "ResourceName": null,
@@ -4732,9 +4732,19 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 5.0,
+                      "FixedValue": 16.8,
                       "Units": null,
                       "Name": "AgeParameter",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "0-1",
+                      "Name": "NEffect",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5860,7 +5870,11 @@
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
                     "",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
-                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5902,7 +5916,11 @@
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
                     "",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
-                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6591,7 +6609,12 @@
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
                     "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
                     "",
-                    "[Pinus].Leaf.MinimumNConc.FixedValue = 0.009"
+                    "[Pinus].Leaf.MinimumNConc.FixedValue = 0.009",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 43.2",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 65.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 19.5",
+                    "[Pinus].Stem.WoodDensityOfGrowth.NEffect.FixedValue = 0.075"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
