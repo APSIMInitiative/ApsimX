@@ -30,6 +30,15 @@ namespace APSIM.Documentation.Models.Types
                     new Table(DocumentationUtilities.GetPhaseTable(model as Phenology))),
             };
 
+            foreach(IPhase child in model.Node.FindChildren<IPhase>())
+            {
+                if (child as GenericPhase == null)
+                {
+                    Section S = GetSummaryAndRemarksSection(child);
+                    subTags.Add(S);
+                }
+            }
+
             section.Add(new Section("Phenology", subTags));
             return new List<ITag>() {section};
         }
