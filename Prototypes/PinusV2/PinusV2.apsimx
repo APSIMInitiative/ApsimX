@@ -984,7 +984,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.85,
+                          "FixedValue": 0.88,
                           "Units": null,
                           "Name": "Mature",
                           "ResourceName": null,
@@ -1963,11 +1963,21 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
+                  "FixedValue": 0.007,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This value comes from observed leaf N in validation dataset (radiata 10th percentile 6.95 mg/g)",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2109,7 +2119,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.55,
+                      "FixedValue": 1.75,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "ResourceName": null,
@@ -5843,7 +5853,6 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
@@ -5886,7 +5895,6 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
@@ -6572,7 +6580,6 @@
                     "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y=0, 1, 1, 0",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
                     "",
                     "[Pinus].Leaf.MaximumNConc.FixedValue = 0.013",
                     "",
@@ -6581,7 +6588,9 @@
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
                     "",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
-                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5"
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Leaf.MinimumNConc.FixedValue = 0.009"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
