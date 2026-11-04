@@ -1,6 +1,5 @@
 using System;
 using APSIM.Core;
-using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.PMF;
@@ -12,11 +11,17 @@ namespace Models.Functions
 {
     /// <summary>
     /// Calculates the soil water stress factor on the germination rate, fW(ψ, T), at the sowing depth.
+    /// 
     /// The seed layer matric potential ψ is taken from the soil water balance model ([Soil].Water.Potential),
     /// so germination uses the same state variable as the rest of the simulation (SoilWater or SWIM).
-    /// The base water potential ψb(T) (child BaseWaterPotential) is
-    /// the drought limit below which germination stops. fW = 1 when ψ ≥ 0,
-    /// fW = ((ψ - ψb) / (0 - ψb))^q when ψb &lt; ψ &lt; 0 and fW = 0 when ψ ≤ ψb.
+    /// 
+    /// The base water potential ψb(T) (child BaseWaterPotential) is the drought limit below which germination stops. 
+    /// 
+    /// ```
+    /// fW = 0 when ψ ≤ ψb.
+    /// fW = 1 when ψ ≥ 0
+    /// fW = ((ψ - ψb) / (0 - ψb))^q when ψb &lt; ψ &lt; 0 
+    /// ```
     /// </summary>
     [Serializable]
     [Description("Returns the soil water potential factor on germination rate")]

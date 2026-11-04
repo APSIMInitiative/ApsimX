@@ -10,17 +10,34 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This phase goes from a start stage to an end stage and
-    /// predicts the day on which 50% of the seeds have germinated (T50) at any temperature and water
-    /// potential at the sowing depth. Germination of the median seed is treated as a progress rate: each
-    /// day the seed progresses by a fraction of the way to germination, r(T, ψ) = Rmax · f(T) · fW(ψ, T) (d⁻¹),
-    /// where Rmax = 1 / DaysToGerminationAtOptimum, f(T) is the Wang and Engel beta function of the seed
-    /// layer soil temperature (child WangEngelTempFunction, a WangEngelTempFunction with MinTemp = Tb,
-    /// OptTemp = To and MaxTemp = Tx; 1 at To and 0 outside Tb..Tx) and fW(ψ, T) is the soil water
-    /// potential response (GerminatingWaterPotentialResponse). The rate is zero during the optional
-    /// dormancy phase (days after sowing) and when the seed layer soil temperature is below the optional
-    /// minimum germination temperature (MinSoilTemperature). Progress accumulates from the sowing day,
-    /// and germination occurs on the day the accumulated rate reaches 1, at the earliest on the day after sowing.
+    /// This phase goes from a start stage to an end stage and predicts the day on which 50% of the seeds have 
+    /// germinated (T50) at any temperature and water potential at the sowing depth. 
+    /// 
+    /// Germination of the median seed is treated as a progress rate: 
+    /// 
+    /// each day the seed progresses by a fraction of the way to germination:
+    /// ```
+    /// r(T, ψ) = Rmax · f(T) · fW(ψ, T) (d⁻¹),
+    /// ```
+    /// where:
+    /// 
+    /// Rmax = 1 / DaysToGerminationAtOptimum
+    /// 
+    /// f(T) is the Wang Engel beta function of the seed layer soil temperature
+    /// 
+    /// WangEngelTempFunction is:
+    /// ```
+    /// MinTemp = Tb
+    /// OptTemp = To
+    /// MaxTemp = Tx; (1 at To and 0 outside Tb..Tx)
+    /// fW(ψ, T) is the soil water potential response (GerminatingWaterPotentialResponse). 
+    /// ```
+    /// 
+    /// The rate is zero during the optional dormancy phase (days after sowing) and when the seed layer soil 
+    /// minimum germination temperature (MinSoilTemperature). 
+    /// 
+    /// Progress accumulates from the sowing day, and germination occurs on the day the accumulated rate reaches 1, 
+    /// at the earliest on the day after sowing.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
