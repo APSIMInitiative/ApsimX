@@ -26,7 +26,7 @@ namespace Models.Functions
 
         /// <summary>Value to return if a denominator is zero.</summary>
         [Description("Value to return if denominator is 0:")]
-        public double DenominatorErrVal { get; set; } = double.PositiveInfinity;
+        public double DenominatorErrVal { get; set; } = 0;
 
         private List<IFunction> ChildFunctions;
 
@@ -43,8 +43,8 @@ namespace Models.Functions
             if (ChildFunctions == null)
                 ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
-            if (ChildFunctions.Count == 0)
-                return 0.0;
+            if (ChildFunctions.Count <= 1)
+                throw new Exception("Protected divide function must have at least two child functions");
 
             double returnValue = ChildFunctions[0].Value(arrayIndex);
 
@@ -60,10 +60,6 @@ namespace Models.Functions
                     return DenominatorErrVal;
 
                 returnValue /= denominator;
-
-                // Optional protection after each divide
-                if (MathUtilities.FloatsAreEqual(returnValue, 0.0))
-                    return NumeratorErrVal;
             }
 
             return returnValue;
