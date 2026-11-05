@@ -147,6 +147,23 @@ namespace Models.Core
                             else
                                 throw new Exception($"Unable to resolve ancestor link {field.Name} in object of type {obj.GetType()}: object is not a model");
                         }
+                        else if (link.Type == LinkType.Sibling)
+                        {
+                            matches = new List<object>();
+                            if (obj is IModel model)
+                            {
+                                IModel sibling = GetSibling(model, fieldType);
+                                if (sibling == null)
+                                {
+                                    if (throwOnFail && !link.IsOptional)
+                                        throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no siblings of type {fieldType.Name}");
+                                    continue;
+                                }
+                                matches.Add(sibling);
+                            }
+                            else
+                                throw new Exception($"Unable to resolve sibling link {field.Name} in object of type {obj.GetType()}: object is not a model");
+                        }
                         else if (link.Type == LinkType.Path)
                         {
                             var locator = (obj as Model).Node;
@@ -211,6 +228,17 @@ namespace Models.Core
         private IModel GetParent(IModel model, Type type)
         {
             return model.Node.FindParents<IModel>().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
+        }
+
+        /// <summary>
+        /// Determine the type of an object and return its parent of the specified type.
+        /// </summary>
+        /// <param name="model">A model.</param>
+        /// <param name="type">The type of sibling to find.</param>
+        /// <returns>The matching sibling</returns>
+        private IModel GetSibling(IModel model, Type type)
+        {
+            return model.Node.FindSiblings<IModel>().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
