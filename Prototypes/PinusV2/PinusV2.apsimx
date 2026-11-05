@@ -1837,15 +1837,6 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FN",
-                      "Name": "FN",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].Photosynthesis.FVPD",
                       "Name": "FVPD",
                       "ResourceName": null,
@@ -2121,7 +2112,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.75,
+                      "FixedValue": 1.55,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "ResourceName": null,
@@ -2155,8 +2146,8 @@
                               "X": [
                                 2.0,
                                 13.0,
-                                14.0,
-                                32.0
+                                25.0,
+                                35.0
                               ],
                               "Y": [
                                 0.0,
@@ -2369,7 +2360,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "0.0071*2.71828^-(0.042*[Pinus].Age)",
+                      "Expression": "0.0037+0.0034*2.71828^-(0.11*[Pinus].Age)",
                       "Name": "SLAPotential",
                       "ResourceName": null,
                       "Children": [
