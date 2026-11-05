@@ -1945,7 +1945,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.011,
+                  "FixedValue": 0.016,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -1965,7 +1965,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.007,
+                  "FixedValue": 0.006,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -6583,7 +6583,7 @@
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
                     "",
-                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.013",
+                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.016",
                     "",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
