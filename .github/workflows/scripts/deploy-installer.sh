@@ -76,31 +76,27 @@ if [[ $2 == "build" || -z "$2" ]]; then
 fi
 
 if [[ "$2" == "upload" || -z "$2" ]]; then
-    # Bash requires at least one command in the body while upload is disabled.
-    :
+    #Finally, upload the installer.
+    echo Uploading installer...
+    url="https://builds.apsim.info/api/nextgen/upload/installer?revision=$revision&platform=$build_platform"
+    retry=0
+    maxRetries=3
+    interval=60 # in seconds
 
-    # Temporarily disable installer upload
-    # Finally, upload the installer.
-    # echo Uploading installer...
-    # url="https://builds.apsim.info/api/nextgen/upload/installer?revision=$revision&platform=$build_platform"
-    # retry=0
-    # maxRetries=3
-    # interval=60 # in seconds
+    if [[ $# -gt 2 ]]; then
+        outfile=$3
+    fi
 
-    # if [[ $# -gt 2 ]]; then
-    #     outfile=$3
-    # fi
-
-    # until [ ${retry} -ge ${maxRetries} ]
-    # do
-    #     upload && break
-    #     retry=$((retry+1))
-    #     echo "Retrying [${retry}/${maxRetries}] in ${interval}(s) "
-    #     sleep ${interval}
-    #     interval=$((interval * 2))
-    # done
-    # if [ ${retry} -ge ${maxRetries} ]; then
-    # echo "Failed to upload installer after ${maxRetries} attempts!"
-    # exit 1
-    # fi
+    until [ ${retry} -ge ${maxRetries} ]
+    do
+        upload && break
+        retry=$((retry+1))
+        echo "Retrying [${retry}/${maxRetries}] in ${interval}(s) "
+        sleep ${interval}
+        interval=$((interval * 2))
+    done
+    if [ ${retry} -ge ${maxRetries} ]; then
+    echo "Failed to upload installer after ${maxRetries} attempts!"
+    exit 1
+    fi
 fi
