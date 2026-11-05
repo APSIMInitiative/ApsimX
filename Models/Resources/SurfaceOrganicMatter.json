@@ -687,6 +687,21 @@
             },
             {
               "$type": "Models.Surface.ResidueType, Models",
+              "fom_type": "Pinus",
+              "derived_from": "base_type",
+              "fraction_C": 0.5,
+              "po4ppm": 0.0,
+              "nh4ppm": 0.0,
+              "no3ppm": 0.0,
+              "specific_area": 0.0002,
+              "cf_contrib": 1,
+              "pot_decomp_rate": 0.003,
+              "fr_c": [ 0.1, 0.5, 0.4 ],
+              "fr_n": [ 0.1, 0.5, 0.4 ],
+              "fr_p": [ 0.1, 0.5, 0.4 ]
+            },
+            {
+              "$type": "Models.Surface.ResidueType, Models",
               "fom_type": "fababean",
               "derived_from": "base_type",
               "fraction_C": 0.0,
