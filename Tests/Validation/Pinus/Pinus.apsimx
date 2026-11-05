@@ -1874,8 +1874,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.563);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.563);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.563,0.44);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.563,0.44);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2010,8 +2010,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.46);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.46);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.46,0.44);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.46,0.44);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2153,8 +2153,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.555);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.555);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.555,0.41);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.555,0.41);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2275,8 +2275,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.462);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.462);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.462,0.36);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.462,0.36);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2383,8 +2383,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.457);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.457);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.457,0.33);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.457,0.33);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -2995,8 +2995,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.427);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.427);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.427,0.32);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.427,0.32);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -3432,8 +3432,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1988-10-09",
-                                  "Action": "[TreeThinning].Script.DoThin(0.352);",
-                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.352);"
+                                  "Action": "[TreeThinning].Script.DoThin(0.352,0.24);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.352,0.24);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -4413,9 +4413,10 @@
                             {
                               "$type": "Models.Manager, Models",
                               "CodeArray": [
-                                "",
                                 "using APSIM.Core;",
                                 "using Models.Soils;",
+                                "using Models.Interfaces;",
+                                "using APSIM.Shared.Utilities;",
                                 "using System.Xml.Serialization;",
                                 "using Models.PMF;",
                                 "using Models.Core;",
@@ -4423,6 +4424,7 @@
                                 "using System;",
                                 "using Newtonsoft.Json;",
                                 "using Models.PMF.Interfaces;",
+                                "using Models.Functions;",
                                 "",
                                 "namespace Models",
                                 "{",
@@ -4432,40 +4434,51 @@
                                 "    {",
                                 "        [Link] private Plant Pinus;",
                                 "        [Link] private Clock Clock;",
-                                "        ",
+                                "               ",
                                 "        public IStructure Structure { private get; set; }",
-                                "",
-                                "",
                                 "        ",
-                                "        [EventSubscribe(\"StartOfSimulation\")]",
-                                "        private void OnSimulationCommencing(object sender, EventArgs e)",
-                                "        {",
-                                "            ",
-                                "        }",
-                                "        ",
+                                "        /// <summary>Remove a fraction of stems, taking the same fraction of biomass (average trees).</summary>",
                                 "        public void DoThin(double ThinFr)",
                                 "        {",
-                                "            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.",
+                                "            DoThin(ThinFr, ThinFr);",
+                                "        }",
                                 "",
-                                "                //Harvest with manager specified removal fractions",
-                                "                Pinus.structure?.DoThin(ThinFr);",
-                                "                var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
-                                "                var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
-                                "                var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
-                                "                var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
-                                "                var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
-                                "                Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                                "                Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                                "                Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                                "                FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
-                                "                CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr, deadToResidue: 0.0);",
+                                "        /// <summary>",
+                                "        /// Remove a fraction of stems (StemFr) and a separate fraction of biomass (BiomassFr).",
+                                "        /// BiomassFr less than StemFr represents thinning from below (smaller trees removed); greater, thinning from above.",
+                                "        /// StemFr below 0.1 is treated as mortality (all biomass to residue); otherwise a commercial thinning (stems removed).",
+                                "        /// </summary>",
+                                "        public void DoThin(double StemFr, double BiomassFr)",
+                                "        {",
+                                "            Pinus.structure?.DoThin(BiomassFr);",
+                                "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
+                                "            var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
+                                "            var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
+                                "            var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
+                                "            var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
+                                "            ",
+                                "            if (StemFr<0.1)  // small removal: treat as mortality",
+                                "               {",
+                                "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               }",
+                                "            else",
+                                "               {",
+                                "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: 0.0);",
+                                "               Stem.RemoveBiomass(liveToRemove: BiomassFr, deadToRemove: BiomassFr, liveToResidue: 0.0, deadToResidue: 0.0);",
+                                "               Branch.RemoveBiomass(liveToRemove: 0.0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+                                "               }",
                                 "",
-                                "                Pinus.Population = Pinus.Population*(1-ThinFr);",
+                                "            Pinus.Population = Pinus.Population*(1-StemFr);",
                                 "        }",
                                 "    }",
                                 "}",
-                                "",
-                                "                "
+                                ""
                               ],
                               "Parameters": [],
                               "Name": "TreeThinning",
