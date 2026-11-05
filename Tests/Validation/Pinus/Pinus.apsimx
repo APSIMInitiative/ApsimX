@@ -3382,6 +3382,72 @@
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Operations, Models",
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-06-15",
+                                  "Action": "[Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)",
+                                  "Line": "1973-06-15 [Fertiliser].Apply(amount: 20, type: \"NH4N\", 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1973-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1973-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1974-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
+                                  "Line": "1974-12-31 [TreeThinning].Script.DoThin(0.05);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1975-12-31",
+                                  "Action": "[TreeThinning].Script.DoThin(0.042);",
+                                  "Line": "1975-12-31 [TreeThinning].Script.DoThin(0.042);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-04-01",
+                                  "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                  "Line": "1987-04-01 [TreeThinning].Script.DoThin(0.011);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-06-01",
+                                  "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                  "Line": "1988-06-01 [TreeThinning].Script.DoThin(0.011);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1988-10-09",
+                                  "Action": "[TreeThinning].Script.DoThin(0.352);",
+                                  "Line": "1988-10-09 [TreeThinning].Script.DoThin(0.352);"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1989-06-15",
+                                  "Action": "[TreeThinning].Script.DoThin(0.193);",
+                                  "Line": "1989-06-15 [TreeThinning].Script.DoThin(0.193);"
+                                }
+                              ],
+                              "Name": "UT",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
@@ -32797,85 +32863,7 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "OperationsList": [
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1963-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1963-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1964-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1964-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1965-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1965-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1966-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1966-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1967-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1967-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1968-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1968-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1969-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
-                                  "Line": "1969-07-15 [TreeThinning].Script.DoThin(0.06);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1970-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
-                                  "Line": "1970-07-15 [TreeThinning].Script.DoThin(0.06);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1971-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Line": "1971-07-15 [TreeThinning].Script.DoThin(0.05);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1972-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Line": "1972-07-15 [TreeThinning].Script.DoThin(0.03);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1973-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Line": "1973-07-15 [TreeThinning].Script.DoThin(0.03);"
-                                }
-                              ],
+                              "OperationsList": [],
                               "Name": "C",
                               "ResourceName": null,
                               "Children": [],
@@ -32888,93 +32876,9 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
-                                  "Date": "1963-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1963-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1964-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1964-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1965-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1965-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1966-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1966-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1967-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1967-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1968-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.10);",
-                                  "Line": "1968-07-15 [TreeThinning].Script.DoThin(0.10);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1969-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
-                                  "Line": "1969-07-15 [TreeThinning].Script.DoThin(0.06);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1970-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.06);",
-                                  "Line": "1970-07-15 [TreeThinning].Script.DoThin(0.06);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1971-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                  "Line": "1971-07-15 [TreeThinning].Script.DoThin(0.05);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1972-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Line": "1972-07-15 [TreeThinning].Script.DoThin(0.03);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1973-07-15",
-                                  "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                  "Line": "1973-07-15 [TreeThinning].Script.DoThin(0.03);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
                                   "Date": "1978-05-31",
                                   "Action": "[Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);",
                                   "Line": "1978-05-31 [Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);"
-                                },
-                                {
-                                  "$type": "Models.Operation, Models",
-                                  "Enabled": true,
-                                  "Date": "1979-05-31",
-                                  "Action": "[Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);",
-                                  "Line": "1979-05-31 [Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -33022,8 +32926,8 @@
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
                                   "Date": "1986-05-31",
-                                  "Action": "[Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);",
-                                  "Line": "1986-05-31 [Fertiliser].Apply(amount: 116.6, type: \"UreaN\", 0);"
+                                  "Action": "[Fertiliser].Apply(amount: 106, type: \"NH4N\", 0);",
+                                  "Line": "1986-05-31 [Fertiliser].Apply(amount: 106, type: \"NH4N\", 0);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
@@ -82438,7 +82342,7 @@
                     },
                     {
                       "$type": "Models.Core.Simulation, Models",
-                      "Name": "HQP321GYMBL2TWC",
+                      "Name": "HQP321R2",
                       "ResourceName": null,
                       "Children": [
                         {
@@ -94086,6 +93990,339 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
+                                          "Date": "1991-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1991-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1992-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1993-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "1998-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "1999-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2000-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "2000-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        }
+                                      ],
+                                      "Name": "F1H1",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F0H0",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.067);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.067);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.018);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.018);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.019);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.019);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.029);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.029);"
+                                        }
+                                      ],
+                                      "Name": "F0H0",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F1H0",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.050);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.050);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.018);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.018);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.036);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.036);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.028);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.028);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.019);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.019);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.049);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.049);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.247);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.247);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.123);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.123);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1983-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1984-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1984-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1985-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1985-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1986-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1986-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1987-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1988-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1989-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
                                           "Date": "1990-01-30",
                                           "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
                                           "Line": "1990-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
@@ -94133,7 +94370,128 @@
                                           "Line": "2000-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
                                         }
                                       ],
-                                      "Name": "F1H1",
+                                      "Name": "F1H0",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F0H1",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.067);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.067);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.028);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.028);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.094);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.094);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.094);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.094);"
+                                        }
+                                      ],
+                                      "Name": "F0H1",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
@@ -94329,6 +94687,353 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
+                                          "Date": "1991-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1991-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1992-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1993-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "1998-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "1999-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2000-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);",
+                                          "Line": "2000-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
+                                        }
+                                      ],
+                                      "Name": "F1H1",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F0H0",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-01-01",
+                                          "Action": "[TreeSowingRule].Script.CultivarName=elliottiiIMPAC",
+                                          "Line": "1983-01-01 [TreeSowingRule].Script.CultivarName=elliottiiIMPAC"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.058);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.058);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.018);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.018);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.036);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.036);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.028);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.028);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.010);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.010);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.039);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.039);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.020);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.020);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.010);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.010);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.011);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.011);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.096);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.096);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.118);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.118);"
+                                        }
+                                      ],
+                                      "Name": "F0H0",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F1H0",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-01-01",
+                                          "Action": "[TreeSowingRule].Script.CultivarName=elliottiiIMPAC",
+                                          "Line": "1983-01-01 [TreeSowingRule].Script.CultivarName=elliottiiIMPAC"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.117);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.117);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.038);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.038);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.020);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.020);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.070);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.070);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.032);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.032);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.311);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.311);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.161);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.161);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1983-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1984-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1984-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1985-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1985-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1986-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1986-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1987-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1988-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-30",
+                                          "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
+                                          "Line": "1989-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
                                           "Date": "1990-01-30",
                                           "Action": "[Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);",
                                           "Line": "1990-01-30 [Fertiliser].Apply(amount: 36, type: \"NH4N\", 0);"
@@ -94376,7 +95081,135 @@
                                           "Line": "2000-01-30 [Fertiliser].Apply(amount: 242.6, type: \"NH4N\", 0);"
                                         }
                                       ],
-                                      "Name": "F1H1",
+                                      "Name": "F1H0",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Factorial.CompositeFactor, Models",
+                                  "Specifications": [
+                                    "[Management]"
+                                  ],
+                                  "CustomDescriptors": [],
+                                  "Name": "F0H1",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Operations, Models",
+                                      "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-01-01",
+                                          "Action": "[TreeSowingRule].Script.CultivarName=elliottiiIMPAC",
+                                          "Line": "1983-01-01 [TreeSowingRule].Script.CultivarName=elliottiiIMPAC"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1987-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.075);",
+                                          "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.075);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1988-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1989-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1990-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1992-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.018);",
+                                          "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.018);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1993-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.028);",
+                                          "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.028);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1994-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.009);",
+                                          "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.009);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1996-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.010);",
+                                          "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.010);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1997-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.010);",
+                                          "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.010);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1998-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.029);",
+                                          "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.029);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1999-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2001-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.000);",
+                                          "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.000);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2005-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.100);",
+                                          "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.100);"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "2008-01-01",
+                                          "Action": "[TreeThinning].Script.DoThin(0.044);",
+                                          "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.044);"
+                                        }
+                                      ],
+                                      "Name": "F0H1",
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
