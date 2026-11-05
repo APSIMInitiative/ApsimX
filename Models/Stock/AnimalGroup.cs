@@ -1981,7 +1981,7 @@ namespace Models.GrazPlan
                                            timeStepState.Digestibility.Supp * timeStepState.DM_Intake.Supp +
                                            timeStepState.Digestibility.Herbage * timeStepState.DM_Intake.Herbage,
                                            timeStepState.DM_Intake.Solid);
-
+            timeStepState.Digestibility.Total = timeStepState.Digestibility.Solid;
             if (this.lactStatus == GrazType.LactType.Suckling)
             {
                 // Milk terms
@@ -2023,6 +2023,7 @@ namespace Models.GrazPlan
             timeStepState.ME_Intake.Solid = timeStepState.ME_Intake.Herbage + timeStepState.ME_Intake.Supp;
             timeStepState.ME_Intake.Total = timeStepState.ME_Intake.Solid + timeStepState.ME_Intake.Milk;
             timeStepState.ME_2_DM.Solid = StdMath.XDiv(timeStepState.ME_Intake.Solid, timeStepState.DM_Intake.Solid);
+            timeStepState.ME_2_DM.Total = timeStepState.ME_2_DM.Solid;
         }
 
         /// <summary>
