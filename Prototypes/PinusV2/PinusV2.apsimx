@@ -159,7 +159,8 @@
             "[Pinus].Stem.MAIub as MAIub",
             "[Pinus].Stem.WoodDensityOfStand*10 as Pinus.Stem.WoodDensityOfStanding",
             "[Pinus].Population*10000 as stemspha",
-            "[Pinus].Stem.WoodDensityOfGrowth*10 as RingWoodDensity"
+            "[Pinus].Stem.WoodDensityOfGrowth*10 as RingWoodDensity",
+            "[SurfaceOrganicMatter].Wt/10 as Litter.Wt"
           ],
           "EventNames": [
             "[Clock].DoReport"
