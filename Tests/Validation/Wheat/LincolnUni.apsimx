@@ -170,7 +170,6 @@
             "[Wheat].Leaf.Dead.NConc",
             "[Wheat].Leaf.Dead.Wt",
             "[Wheat].Leaf.DeadWtProportion",
-            "[Wheat].Leaf.ExtinctionCoefficient",
             "[Wheat].Leaf.Fn",
             "[Wheat].Leaf.Fw",
             "[Wheat].Leaf.Height",
