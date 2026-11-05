@@ -88,12 +88,7 @@ namespace APSIM.Documentation.Models.Types
             // -------------------------------------------------------------------------------
             Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
             if (phenology != null)
-            {
-                DataTable dataTable = DocumentationUtilities.GetPhaseTable(phenology);
-                Section PhenologySection = new Section("Phenology", new Table(dataTable));
-                PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
-                newTags.Add(PhenologySection);
-            }
+                newTags.AddRange(AutoDocumentation.Document(phenology));
 
             // Document Arbitrator Model
             // -------------------------------------------------------------------------------

@@ -62,6 +62,12 @@ month=$(TZ=Australia/Brisbane date +%-m)
 full_version=$year.$month.$version.0
 ISSUE_NUMBER=$(echo $version | cut -d. -f 4)
 
+# Windows binaries are code signed between the "publish" and "package" stages.
+if [[ $platform = windows && ( "$2" == "publish" || "$2" == "package" ) ]]; then
+    bash ./Setup/net10.0/$script $full_version "$DIR/apsim-$version.$ext" "$2"
+    exit 0
+fi
+
 if [[ $2 == "build" || -z "$2" ]]; then
     # Build the installer.
     echo Building installer...
@@ -70,8 +76,7 @@ if [[ $2 == "build" || -z "$2" ]]; then
 fi
 
 if [[ "$2" == "upload" || -z "$2" ]]; then
-
-    # Finally, upload the installer.
+    #Finally, upload the installer.
     echo Uploading installer...
     url="https://builds.apsim.info/api/nextgen/upload/installer?revision=$revision&platform=$build_platform"
     retry=0

@@ -51,7 +51,7 @@ jobs:
       strategy:
         fail-fast: false # allow other jobs to complete if one fails
         matrix:
-          os-and-args: [macos, debian, "windows build"] 
+          os-and-args: [macos, debian, "windows publish"] 
       runs-on: ubuntu-latest
       container:
         image: apsiminitiative/apsimng-build:latest
@@ -95,11 +95,116 @@ jobs:
           BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
         run: ./.github/workflows/scripts/deploy-installer.sh ${{ matrix.os-and-args }}
 
+      # Windows binaries are published here, then signed and packaged by the jobs below.
+      - name: Upload published Windows binaries
+        if: startsWith(matrix.os-and-args, 'windows')
+        uses: actions/upload-artifact@v7
+        with:
+          name: windows-unsigned-binaries
+          path: /__w/ApsimX/ApsimX/bin/Release/net10.0/win-x64/publish
+          if-no-files-found: error
+
+    # Code signs all unsigned DLLs and EXEs. Smart App Control evaluates each binary, not just the installer.
+    sign-windows-binaries:
+      if: github.event.pull_request.merged == true
+      needs: [check-for-resolves, create-releases]
+      runs-on: ubuntu-latest
+      steps:
+
+        - name: Checkout code
+          uses: actions/checkout@v7
+          with:
+            allow-unsafe-pr-checkout: true
+
+        - name: Download unsigned Windows binaries
+          uses: actions/download-artifact@v8
+          with:
+            name: windows-unsigned-binaries
+            path: publish
+
+        - name: Setup SM_CLIENT_CERT_FILE from base64 secret data
+          env:
+            SM_CLIENT_CERT_FILE_B64: ${{ secrets.SM_CLIENT_CERT_FILE_B64 }}
+          run: |
+            echo "$SM_CLIENT_CERT_FILE_B64" | base64 --decode > "$RUNNER_TEMP/sm_client_cert.p12"
+            chmod 600 "$RUNNER_TEMP/sm_client_cert.p12"
+            echo "SM_CLIENT_CERT_FILE=$RUNNER_TEMP/sm_client_cert.p12" >> "$GITHUB_ENV"
+
+        - name: Setup Software Trust Manager
+          uses: digicert/code-signing-software-trust-action@v1
+          env:
+            SM_HOST: ${{ vars.SM_HOST }}
+            SM_API_KEY: ${{ secrets.SM_API_KEY }}
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
+
+        - name: Sign DLLs and EXEs
+          env:
+            SM_HOST: ${{ vars.SM_HOST }}
+            SM_API_KEY: ${{ secrets.SM_API_KEY }}
+            SM_CLIENT_CERT_PASSWORD: ${{ secrets.SM_CLIENT_CERT_PASSWORD }}
+          run: bash ./.github/workflows/scripts/sign-binaries.sh publish key_1460956160
+
+        - name: Upload signed Windows binaries
+          uses: actions/upload-artifact@v7
+          with:
+            name: windows-signed-binaries
+            path: publish
+            if-no-files-found: error
+
+    # Builds the Windows installer from the signed binaries.
+    package-windows-installer:
+      if: github.event.pull_request.merged == true
+      needs: sign-windows-binaries
+      runs-on: ubuntu-latest
+      container:
+        image: apsiminitiative/apsimng-build:latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          allow-unsafe-pr-checkout: true
+
+      - name: Make all directories safe (we are in a container. so it is ok :))
+        run: git config --global --add safe.directory "*"
+
+      - name: Make sure we have ownership of ApsimX
+        run: chown -R root:root /__w/ApsimX/ApsimX
+
+      - name: Make GitHub home directory belong to root user
+        run: chown -R root:root /github/home
+
+      - name: Download signed Windows binaries
+        uses: actions/download-artifact@v8
+        with:
+          name: windows-signed-binaries
+          path: bin/Release/net10.0/win-x64/publish
+
+      - name: Set script permissions
+        run: chmod +x -R ./.github/workflows/scripts/
+
+      # This is used purely for PR number extraction.
+      - name: Get PR number
+        id: meta_apsimplusr
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: apsiminitiative/apsimplusr
+          flavor: latest=true
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+
+      - name: Create Windows installer
+        env:
+          DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
+          BUILDS_JWT: ${{ secrets.BUILDS_JWT }}
+        run: ./.github/workflows/scripts/deploy-installer.sh windows package
+
       - name: Upload a Windows Installer Build Artifact
         uses: actions/upload-artifact@v7
         with:
           name: windows-installer
           path: /__w/ApsimX/ApsimX/Setup/net10.0/windows/Output/APSIMSetup.exe
+          if-no-files-found: error
 
 
     # Performs code signing for the Windows installer using the Software Trust Manager. 
@@ -108,7 +213,7 @@ jobs:
       if: github.event.pull_request.merged == true
       env:
         OUTFILE: APSIMSetup.exe
-      needs: [check-for-resolves, create-releases]
+      needs: [check-for-resolves, package-windows-installer]
       runs-on: ubuntu-latest
       permissions:
         contents: write
