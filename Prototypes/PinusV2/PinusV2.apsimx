@@ -6580,7 +6580,7 @@
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
                     "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 0.8",
                     "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
                     "",
                     "[Pinus].Leaf.MinimumNConc.FixedValue = 0.009",
