@@ -99,7 +99,11 @@ namespace Models.PMF
         {
             get
             {
-                return new SortedSet<string>(Structure.FindChildren<Cultivar>(relativeTo: this, recurse: true).SelectMany(c => c.GetNames())).ToArray();
+                IEnumerable<string> names = Structure.FindChildren<Cultivar>(relativeTo: this, recurse: true).SelectMany(c => c.GetNames());                
+                IEnumerable<string> duplicates = names.GroupBy(s => s.Trim(), StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1).Select(g => g.Key);
+                if (duplicates.Count() > 0)
+                    throw new Exception($"{Name}: Duplicate Cultivar definitions found: {String.Join(", ", duplicates.ToArray())}. If you are attempting to overwrite a cultivar, please either use a new name or a Replacements Folder.");
+                return new SortedSet<string>().ToArray();
             }
         }
 
