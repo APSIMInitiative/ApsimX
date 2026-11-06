@@ -143,7 +143,24 @@
             "[Pinus].Leaf.ExtinctionCoefficient.XValue",
             "[Pinus].Leaf.ExtinctionCoefficient.XValue.Height",
             "[Pinus].Leaf.ExtinctionCoefficient.XValue.Spacing",
-            "[Pinus].Leaf.ExtinctionCoefficient"
+            "[Pinus].Leaf.ExtinctionCoefficient",
+            "",
+            "[Pinus].FineRoot.Live.Wt",
+            "[Pinus].Leaf.Live.N",
+            "[Pinus].Branch.Live.N",
+            "[Pinus].Branch.Dead.N",
+            "[Pinus].Stem.N",
+            "[Pinus].BelowGround.N",
+            "[Pinus].CoarseRoot.Live.N as Pinus.Live.CoarseRoot.N",
+            "[Pinus].FineRoot.Live.N as Pinus.Live.FineRoot.N",
+            "max of [Pinus].LAI from [Clock].StartOfYear to [Clock].EndOfYear as LAIMax",
+            "[Pinus].Leaf.SpecificLeafArea as SLA",
+            "[Pinus].Leaf.N*10 as TotalFoliarNkgpha",
+            "[Pinus].Stem.MAIub as MAIub",
+            "[Pinus].Stem.WoodDensityOfStand*10 as Pinus.Stem.WoodDensityOfStanding",
+            "[Pinus].Population*10000 as stemspha",
+            "[Pinus].Stem.WoodDensityOfGrowth*10 as RingWoodDensity",
+            "[SurfaceOrganicMatter].Wt/10 as Litter.Wt"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -926,66 +943,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2,
-                  "Units": "0-1",
-                  "Name": "BelowGround",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": "0-1",
-                      "Name": "CoarseRootFraction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Units": "0-1",
-                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
-                      "Name": "FineRootFraction",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
-                          "Name": "Memo",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
                   "Expression": "1 - [Pinus].Partitioning.BelowGround",
@@ -1029,7 +986,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.85,
+                          "FixedValue": 0.88,
                           "Units": null,
                           "Name": "Mature",
                           "ResourceName": null,
@@ -1198,6 +1155,57 @@
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "max(0.2, 0.45 - 0.0625*[Pinus].Age)",
+                  "Name": "BelowGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
+                      "Name": "FineRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "0.5 + 0.4*[Leaf].Fn",
+                      "Name": "CoarseRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Coarse root allocations go down in favour of fine roots when N is limited",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1829,15 +1837,6 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FN",
-                      "Name": "FN",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].Photosynthesis.FVPD",
                       "Name": "FVPD",
                       "ResourceName": null,
@@ -1937,7 +1936,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.011,
+                  "FixedValue": 0.013,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -1957,11 +1956,21 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.005,
+                  "FixedValue": 0.006,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This value comes from observed leaf N in validation dataset (radiata 10th percentile 6.95 mg/g)",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2069,7 +2078,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -2103,7 +2112,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.55,
+                      "FixedValue": 1.45,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "ResourceName": null,
@@ -2137,8 +2146,8 @@
                               "X": [
                                 2.0,
                                 13.0,
-                                14.0,
-                                32.0
+                                25.0,
+                                35.0
                               ],
                               "Y": [
                                 0.0,
@@ -2236,7 +2245,7 @@
                             1.0
                           ],
                           "Y": [
-                            0.0,
+                            0.5,
                             1.0
                           ],
                           "Name": "XYPairs",
@@ -2248,42 +2257,6 @@
                         {
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[Leaf].Fn",
-                          "Name": "XValue",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "FW",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0,
-                            1.5
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Fw",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -2307,6 +2280,16 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].RadiationIntercepted",
                       "Name": "RadnInt",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": null,
+                      "Expression": "min(1, [Leaf].Fw)^2",
+                      "Name": "FW",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2377,7 +2360,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "0.0071*2.71828^-(0.042*[Pinus].Age)",
+                      "Expression": "0.0037+0.0034*2.71828^-(0.11*[Pinus].Age)",
                       "Name": "SLAPotential",
                       "ResourceName": null,
                       "Children": [
@@ -2411,57 +2394,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "LeafResidenceTime",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        1.0,
-                        2.0,
-                        3.0,
-                        6.0,
-                        9.0
-                      ],
-                      "Y": [
-                        350.0,
-                        380.0,
-                        450.0,
-                        500.0,
-                        550.0,
-                        650.0
-                      ],
-                      "Name": "XYPairs",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Pinus].Age",
-                      "Name": "XValue",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "FLAI",
                   "ResourceName": null,
                   "Children": [
@@ -2478,8 +2410,8 @@
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
                         0.0,
-                        11.0,
-                        13.0
+                        4.0,
+                        7.0
                       ],
                       "Y": [
                         1.0,
@@ -2803,7 +2735,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "1 - Exp(-[ExtinctionCoefficient] * [Leaf].LAI)",
+                  "Expression": "[CoverGreenFunction].Occupancy * (1 - exp(-[Leaf].ExtinctionCoefficient * [Leaf].LAI / [CoverGreenFunction].Occupancy))",
                   "Name": "CoverGreenFunction",
                   "ResourceName": null,
                   "Children": [
@@ -2866,6 +2798,27 @@
                       ],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "max(0.01, min(1, [Pinus].Population * 3.14159 * ([CoverGreenFunction].Occupancy.CrownRadiusGrowthRate * [Pinus].Age)^2))",
+                      "Name": "Occupancy",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.35,
+                          "Units": "m/y",
+                          "Name": "CrownRadiusGrowthRate",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -2883,6 +2836,89 @@
                       "FixedValue": 0.5,
                       "Units": null,
                       "Name": "ExtinctionCoefficientDead",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "LeafResidenceTime",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeBased",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0,
+                            2.0,
+                            3.0,
+                            6.0,
+                            9.0,
+                            15.0,
+                            25.0
+                          ],
+                          "Y": [
+                            350.0,
+                            400.0,
+                            500.0,
+                            650.0,
+                            900.0,
+                            1100.0,
+                            1100.0,
+                            650.0
+                          ],
+                          "Name": "XYPairs",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Pinus].Age",
+                          "Name": "XValue",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "max(0.3, [Leaf].FLAI)",
+                      "Name": "CanopyLimit",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Leaf residence time in days (d)",
+                      "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -2981,7 +3017,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0015,
+                  "FixedValue": 0.0018,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -3487,7 +3523,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.00075,
+                  "FixedValue": 0.001,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -3507,7 +3543,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0005,
+                  "FixedValue": 0.0007,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -4100,7 +4136,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "[Stem].BarkWt/[Stem].BarkDensity",
+                  "Expression": "divide([Stem].BarkWt*10,[Stem].BarkDensity)",
                   "Name": "VolBark",
                   "ResourceName": null,
                   "Children": [],
@@ -4110,7 +4146,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": null,
-                  "Expression": "[Pinus].Stem.WoodWt*10/[Pinus].Stem.WoodDensity",
+                  "Expression": "max(0, [Stem].Vol - [Stem].VolBark)",
                   "Name": "Volub",
                   "ResourceName": null,
                   "Children": [],
@@ -4177,51 +4213,52 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Pinus].Stem.Live.Wt",
+                          "Name": "StemWt",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": "0-1",
+                          "Expression": "[WoodWtFactor].Fmax - ([WoodWtFactor].Fmax - [WoodWtFactor].F0) * exp(-[Pinus].IndividualTreeStemWt / [WoodWtFactor].K)",
                           "Name": "WoodWtFactor",
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Pinus].Stem.Live.Wt",
-                              "Name": "XValue",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.887,
+                              "Units": "0-1",
+                              "Name": "Fmax",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                2000.0,
-                                10000.0,
-                                20000.0,
-                                100000.0
-                              ],
-                              "Y": [
-                                0.8,
-                                0.9,
-                                0.93,
-                                0.95,
-                                0.98
-                              ],
-                              "Name": "XYPairs",
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.841,
+                              "Units": "0-1",
+                              "Name": "F0",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 100000.0,
+                              "Units": "g/tree",
+                              "Name": "K",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Pinus].Stem.Live.Wt",
-                          "Name": "StemWt",
-                          "ResourceName": null,
-                          "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -4318,10 +4355,21 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "[Stem].WoodDensity*0.6",
+                      "Expression": "[Stem].WoodDensityOfStand * 10 * [Stem].BarkDensity.WoodDensity.RatioToStem\n",
                       "Name": "WoodDensity",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.8,
+                          "Units": "0-1",
+                          "Name": "RatioToStem",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4366,7 +4414,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "(0.4837+(0.3037-0.4837)*EXP(((-0.452)*[Pinus].Age/12.65))^2.07)*1000",
+                      "Expression": "divide([Stem].WoodWt*10,[Stem].Volub)",
                       "Name": "WoodDensity",
                       "ResourceName": null,
                       "Children": [],
@@ -4619,7 +4667,7 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
-                  "Expression": "[WoodDensityOfGrowth].Juvenile + ([WoodDensityOfGrowth].Mature - [WoodDensityOfGrowth].Juvenile) * [Pinus].Age / ([Pinus].Stem.WoodDensityOfGrowth.AgeParameter + [Pinus].Age)",
+                  "Expression": "([WoodDensityOfGrowth].Juvenile + ([WoodDensityOfGrowth].Mature - [WoodDensityOfGrowth].Juvenile) * [Pinus].Age / ([Pinus].Stem.WoodDensityOfGrowth.AgeParameter + [Pinus].Age)) * (1 - [WoodDensityOfGrowth].NEffect * [Leaf].Fn)",
                   "Name": "WoodDensityOfGrowth",
                   "ResourceName": null,
                   "Children": [
@@ -4634,7 +4682,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 37.0,
+                      "FixedValue": 21.7,
                       "Units": null,
                       "Name": "Juvenile",
                       "ResourceName": null,
@@ -4644,7 +4692,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 50.0,
+                      "FixedValue": 58.4,
                       "Units": null,
                       "Name": "Mature",
                       "ResourceName": null,
@@ -4654,9 +4702,19 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 5.0,
+                      "FixedValue": 16.8,
                       "Units": null,
                       "Name": "AgeParameter",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": "0-1",
+                      "Name": "NEffect",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -5333,7 +5391,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3E-06,
+                  "FixedValue": 0.01,
                   "Units": null,
                   "Name": "KNH4",
                   "ResourceName": null,
@@ -5776,7 +5834,19 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90"
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
+                    "",
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5812,7 +5882,19 @@
                     "",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90"
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.0",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
+                    "",
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6225,8 +6307,8 @@
                     "//[FineRoot].MaximumNConc.FixedValue = 0.019",
                     "//[FineRoot].MinimumNConc.FixedValue = 0.003",
                     "",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.X=0, 2000, 10000, 20000, 100000, 200000, 400000",
-                    "[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.Y=0.6, 0.85,  0.9, 0.9,   0.901,   0.901,   0.901",
+                    "//[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.X=0, 2000, 10000, 20000, 100000, 200000, 400000",
+                    "//[Stem].WoodWt.WoodWt.WoodWtFactor.XYPairs.Y=0.6, 0.85,  0.9, 0.9,   0.901,   0.901,   0.901",
                     "",
                     "//[Cone].SenescenceRate.FixedValue=0.001",
                     "//[Cone].DetachmentRateFunction.FixedValue=0.01",
@@ -6491,9 +6573,24 @@
                     "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y=0, 1, 1, 0",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
-                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Mature.FixedValue = .90",
                     "",
-                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.013"
+                    "[Pinus].Leaf.MaximumNConc.FixedValue = 0.016",
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 0.8",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Leaf.MinimumNConc.FixedValue = 0.0075",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 43.2",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 65.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 19.5",
+                    "[Pinus].Stem.WoodDensityOfGrowth.NEffect.FixedValue = 0.075",
+                    "",
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
@@ -6530,7 +6627,6 @@
         {
           "$type": "Models.Manager, Models",
           "CodeArray": [
-            "",
             "using APSIM.Core;",
             "using Models.Soils;",
             "using Models.Interfaces;",
@@ -6558,54 +6654,48 @@
             "        ",
             "        public IStructure Structure { private get; set; }",
             "        ",
+            "        /// <summary>Remove a fraction of stems, taking the same fraction of biomass (average trees).</summary>",
             "        public void DoThin(double ThinFr)",
             "        {",
-            "            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.",
-            "            //Set thinning bias away from average for biomass components (not for population), e.g. 0.5 for thinning from below, and 2 for thinning from above, ",
-            "            //i.e. average individual tree size changes",
+            "            DoThin(ThinFr, ThinFr);",
+            "        }",
             "",
-            "",
-            "",
-            "            double ThinBias = 1.0;",
-            "            //double ThinBias = 0.2;   ",
-            "            //if (ThinFr>0.4)",
-            "            //{",
-            "            //    ThinBias = 0.7;  ",
-            "            //    LocationFraction.FixedValue = 0.7;             ",
-            "            //}",
-            "",
-            "            //Harvest with manager specified removal fractions",
-            "            Pinus.structure?.DoThin(ThinFr*ThinBias);",
+            "        /// <summary>",
+            "        /// Remove a fraction of stems (StemFr) and a separate fraction of biomass (BiomassFr).",
+            "        /// BiomassFr less than StemFr represents thinning from below (smaller trees removed); greater, thinning from above.",
+            "        /// StemFr below 0.1 is treated as mortality (all biomass to residue); otherwise a commercial thinning (stems removed).",
+            "        /// </summary>",
+            "        public void DoThin(double StemFr, double BiomassFr)",
+            "        {",
+            "            Pinus.structure?.DoThin(BiomassFr);",
             "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
             "            var Stem =   Structure.FindChild<IHasDamageableBiomass>(\"Stem\", relativeTo: (INodeModel)Pinus);",
             "            var Branch =   Structure.FindChild<IHasDamageableBiomass>(\"Branch\", relativeTo: (INodeModel)Pinus);",
             "            var FineRoot =   Structure.FindChild<IHasDamageableBiomass>(\"FineRoot\", relativeTo: (INodeModel)Pinus);",
             "            var CoarseRoot =   Structure.FindChild<IHasDamageableBiomass>(\"CoarseRoot\", relativeTo: (INodeModel)Pinus);",
             "            ",
-            "            if (ThinFr<0.1)  // large enough change to more likely be thinning event",
+            "            if (StemFr<0.1)  // small removal: treat as mortality",
             "               {",
-            "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
+            "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               Stem.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               Branch.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
             "               }",
             "            else",
             "               {",
-            "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: 0.0);",
-            "               Stem.RemoveBiomass(liveToRemove: ThinFr*ThinBias, deadToRemove: ThinFr*ThinBias, liveToResidue: 0.0, deadToResidue: 0.0);",
-            "               Branch.RemoveBiomass(liveToRemove: 0.0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
-            "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: ThinFr*ThinBias, deadToResidue: ThinFr*ThinBias);",
+            "               Leaf.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: 0.0);",
+            "               Stem.RemoveBiomass(liveToRemove: BiomassFr, deadToRemove: BiomassFr, liveToResidue: 0.0, deadToResidue: 0.0);",
+            "               Branch.RemoveBiomass(liveToRemove: 0.0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               FineRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
+            "               CoarseRoot.RemoveBiomass(liveToRemove: 0, deadToRemove: 0.0, liveToResidue: BiomassFr, deadToResidue: BiomassFr);",
             "               }",
-            "            ",
             "",
-            "            Pinus.Population = Pinus.Population*(1-ThinFr);",
+            "            Pinus.Population = Pinus.Population*(1-StemFr);",
             "        }",
             "    }",
             "}",
-            "",
-            "                "
+            ""
           ],
           "Parameters": [],
           "Name": "TreeThinning",
