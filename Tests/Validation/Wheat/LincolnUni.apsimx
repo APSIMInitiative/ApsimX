@@ -272,8 +272,10 @@
             "        private void DoReportCalculations(object sender, EventArgs e)",
             "        {",
             "            double haunStage = (double)Structure.Get(\"Wheat.Phenology.HaunStage.Value()\", relativeTo: zone);",
-            "            double maxLeafSize = (double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
-            "            double leafSizeToday = (double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
+            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.MaximumSize.Value()\".  Uncomment below when simple leaf model incuded",
+            "            double maxLeafSize = 1;//(double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
+            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.Size.Value()\".  Uncomment below when simple leaf model incuded",
+            "            double leafSizeToday = 1;//(double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
             "            ",
             "            daysForLeaf += 1;",
             "            sumLeafSize += leafSizeToday;",
@@ -1160,7 +1162,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -7753,7 +7754,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
@@ -19284,7 +19284,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [],
