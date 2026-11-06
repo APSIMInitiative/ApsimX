@@ -1162,7 +1162,7 @@
                             },
                             {
                               "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "AddFunction",
+                              "Name": "Calculation",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1252,7 +1252,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.3,
+                      "FixedValue": 0.1,
                       "Units": "",
                       "Name": "BollModifierBase",
                       "ResourceName": null,
@@ -1262,7 +1262,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 3.0,
+                      "FixedValue": 5.0,
                       "Units": null,
                       "Name": "BollModifierMultiplier",
                       "ResourceName": null,
@@ -2580,7 +2580,7 @@
                     {
                       "$type": "Models.Functions.AccumulateFunction, Models",
                       "StartStageName": "Emergence",
-                      "EndStageName": "Maturity",
+                      "EndStageName": "Cutout",
                       "ResetStageName": null,
                       "FractionRemovedOnCut": 1.0,
                       "FractionRemovedOnHarvest": 1.0,
@@ -5635,7 +5635,7 @@
                             {
                               "$type": "Models.Functions.PhaseLookupValue, Models",
                               "Start": "StartFlowering",
-                              "End": "Cutout",
+                              "End": "Maturity",
                               "Name": "BurDevelopment",
                               "ResourceName": null,
                               "Children": [
@@ -5688,27 +5688,46 @@
                                           "ReadOnly": false
                                         },
                                         {
-                                          "$type": "Models.Functions.SubtractFunction, Models",
+                                          "$type": "Models.Functions.MaximumFunction, Models",
                                           "Name": "TTRemaining",
                                           "ResourceName": null,
                                           "Children": [
                                             {
-                                              "$type": "Models.Functions.ExpressionFunction, Models",
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 0.0,
                                               "Units": null,
-                                              "Expression": "[Phenology].EarlyFlowering.Target",
-                                              "Name": "BurGrowthTT",
+                                              "Name": "Zero",
                                               "ResourceName": null,
                                               "Children": [],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             },
                                             {
-                                              "$type": "Models.Functions.ExpressionFunction, Models",
-                                              "Units": null,
-                                              "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase",
-                                              "Name": "BurGrowthTTComplete",
+                                              "$type": "Models.Functions.SubtractFunction, Models",
+                                              "Name": "Calculation",
                                               "ResourceName": null,
-                                              "Children": [],
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                                  "Units": null,
+                                                  "Expression": "[Phenology].EarlyFlowering.Target + [Phenology].Maturing.Target",
+                                                  "Name": "BurGrowthTT",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                                  "Units": null,
+                                                  "Expression": "[Phenology].EarlyFlowering.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                                  "Name": "BurGrowthTTComplete",
+                                                  "ResourceName": null,
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
                                               "Enabled": true,
                                               "ReadOnly": false
                                             }
