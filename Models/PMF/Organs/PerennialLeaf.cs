@@ -352,8 +352,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void SetNSupply(object sender, EventArgs e)
         {
-            double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
             double lrt = LeafResidenceTime.Value();
+            double ageLimit = RetranslocationAgeLimit * lrt;
+            double LabileN = Math.Max(0, cohort.SelectWhere(l => l.Age < ageLimit, l => l.Live.StorageN)
+                                         - cohort.SelectWhere(l => l.Age < ageLimit, l => l.Live.StorageWt) * MinimumNConc.Value());
             double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= lrt, l => l.Live.StorageN);
 
             NSupply.ReAllocation = senescingStorageN * NReallocationFactor.Value();
@@ -460,6 +462,21 @@ namespace Models.PMF.Organs
         [Units("/d")]
         IFunction NRetranslocationFactor = null;
 
+        /// <summary>
+        /// Optional. Leaf age, as a fraction of leaf residence time, beyond which daily N retranslocation
+        /// may no longer draw on a leaf's storage N. Older leaves keep their storage N until senescence, when
+        /// NReallocationFactor sets how much is withdrawn; the rest is shed with the litter.
+        /// If absent, a default of 0.5 is used.
+        /// </summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("0-1")]
+        IFunction NRetranslocationAgeLimit = null;
+
+        /// <summary>Age limit (fraction of leaf residence time) used when NRetranslocationAgeLimit is not given.</summary>
+        private const double DefaultRetranslocationAgeLimit = 0.5;
+
+        private double RetranslocationAgeLimit => NRetranslocationAgeLimit?.Value() ?? DefaultRetranslocationAgeLimit;
+
         /// <summary>The dm retranslocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -546,7 +563,11 @@ namespace Models.PMF.Organs
                 storageN: nitrogen.Storage,
                 sla: SpecificLeafAreaFunction.Value());
 
-            cohort.DoNitrogenRetranslocation(nitrogen.Retranslocation + nitrogen.Reallocation);
+            double lrt = LeafResidenceTime.Value();
+            double ageLimit = RetranslocationAgeLimit * lrt;
+            double remaining = cohort.DoNitrogenRetranslocation(nitrogen.Reallocation, l => l.Age >= lrt);
+            remaining = cohort.DoNitrogenRetranslocation(nitrogen.Retranslocation + remaining, l => l.Age < ageLimit);
+            cohort.DoNitrogenRetranslocation(remaining);
         }
 
         /// <summary>Gets or sets the maximum nconc.</summary>

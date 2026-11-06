@@ -335,6 +335,28 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
+        /// Remove storage N from leaves matching a predicate (in cohort order) and return any amount that could not be removed.
+        /// </summary>
+        /// <param name="removal">Amount of N to remove (g/m2).</param>
+        /// <param name="predicate">Only leaves matching this predicate are drawn on.</param>
+        public double DoNitrogenRetranslocation(double removal, Func<PerennialLeafCohort, bool> predicate)
+        {
+            if (removal <= 0)
+                return 0;
+            foreach (PerennialLeafCohort leaf in leaves.Where(predicate))
+            {
+                double delta = Math.Min(leaf.Live.StorageN, removal);
+                if (delta > 0)
+                {
+                    leaf.Live.StorageN -= delta;
+                    live.StorageN -= delta;
+                    removal -= delta;
+                }
+            }
+            return Math.Max(0, removal);
+        }
+
+        /// <summary>
         /// Retranslocate nitrogen from leaves.
         /// </summary>
         /// <param name="removal">Amount of nitrogen to be retranslocated.</param>
