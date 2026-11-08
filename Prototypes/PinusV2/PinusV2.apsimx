@@ -986,7 +986,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.88,
+                          "FixedValue": 0.84,
                           "Units": null,
                           "Name": "Mature",
                           "ResourceName": null,
@@ -2112,7 +2112,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.45,
+                      "FixedValue": 1.35,
                       "Units": "g/MJ",
                       "Name": "RUE",
                       "ResourceName": null,
@@ -2489,8 +2489,8 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            8.0,
-                            26.0,
+                            2.0,
+                            20.0,
                             33.0,
                             34.0
                           ],
@@ -2997,7 +2997,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.0006,
                   "Units": "/d",
                   "Name": "SenescenceRate",
                   "ResourceName": null,
@@ -3007,7 +3007,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0021,
+                  "FixedValue": 0.0025,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -3017,7 +3017,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0018,
+                  "FixedValue": 0.0012,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
@@ -3027,7 +3027,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.003,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "ResourceName": null,
@@ -3482,7 +3482,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -3523,7 +3523,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
+                  "FixedValue": 0.0011,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "ResourceName": null,
@@ -3543,7 +3543,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0007,
+                  "FixedValue": 0.0005,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "ResourceName": null,
