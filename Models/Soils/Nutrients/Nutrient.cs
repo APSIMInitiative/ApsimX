@@ -79,6 +79,10 @@ namespace Models.Soils.Nutrients
         [Link(Type = LinkType.Child)]
         private readonly NFlow[] nutrientFlows = null;
 
+        /// <summary>Optional child mineral N immobilisation processes.</summary>
+        [Link(Type = LinkType.Child, IsOptional = true)]
+        private readonly MineralNImmobilisation[] immobilisations = null;
+
         /// <summary>Surface residue decomposition pool.</summary>
         [Link(ByName = true)]
         private readonly OrganicPool surfaceResidue = null;
@@ -329,6 +333,9 @@ namespace Models.Soils.Nutrients
             denitrification = nutrientFlows.First(flow => flow.Name == "Denitrification");
             nitrification = nutrientFlows.First(flow => flow.Name == "Nitrification");
             organicFlows = Structure.FindChildren<OrganicFlow>(recurse: true).ToList();
+            if (immobilisations != null)
+                foreach (var immobilisation in immobilisations)
+                    immobilisation.Initialise(soilPhysical.Thickness.Length);
 
             Reset();
             FOM = new CompositeNutrientPool(new IOrganicPool[] { FOMCarbohydrate, FOMCellulose, FOMLignin });
@@ -368,6 +375,9 @@ namespace Models.Soils.Nutrients
                 pool.DoFlow();
             foreach (var flow in nutrientFlows)
                 flow.DoFlow();
+            if (immobilisations != null)
+                foreach (var immobilisation in immobilisations)
+                    immobilisation.DoFlow(NO3, NH4);
 
             CalculateVariables();
         }
@@ -413,6 +423,10 @@ namespace Models.Soils.Nutrients
                 for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     mineralisedN[i] += flow.MineralisedN[i];
             }
+            if (immobilisations != null)
+                foreach (var immobilisation in immobilisations)
+                    for (int i = 0; i < soilPhysical.Thickness.Length; i++)
+                        mineralisedN[i] -= immobilisation.Immobilised[i];
 
             Array.Clear(denitrifiedN);
             Array.Clear(nitrifiedN);
