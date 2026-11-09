@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 216,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -37148,14 +37148,6 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -37347,7 +37339,7 @@
                             "sum([Soil].Water.PAWmm) as TotalPAWmm",
                             "([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as TotalSW180cm",
                             "[Soil].Water.PAWmm",
-                            "[Soil].CERESSoilTemperature.AverageSoilTemperature"
+                            "[ISoilTemperature].AverageSoilTemperature"
                           ],
                           "EventNames": [
                             "[Clock].DoReport"
@@ -42558,7 +42550,7 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -51213,7 +51205,7 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -57508,14 +57500,6 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.CERESSoilTemperature, Models",
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -65371,6 +65355,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 75.0,
                               "CNRed": 20.0,
@@ -75226,7 +75212,7 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -75849,6 +75835,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 75.0,
                               "CNRed": 20.0,
@@ -78979,7 +78967,7 @@
                               "Thickness": null,
                               "InitialValues": null,
                               "InteractionsPerDay": 8,
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,

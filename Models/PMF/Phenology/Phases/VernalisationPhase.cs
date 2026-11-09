@@ -89,6 +89,7 @@ namespace Models.PMF.Phen
         public void ResetPhase()
         {
             relativeVernalisationAtEmergence = 0.0;
+            fractionCompleteYesterday = 0;
             ProgressThroughPhase = 0.0;
             DateToProgress = "";
             startDate = DateTime.MinValue;
