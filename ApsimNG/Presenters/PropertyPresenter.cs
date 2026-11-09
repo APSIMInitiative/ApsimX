@@ -197,7 +197,7 @@ namespace UserInterface.Presenters
                                 propertyRef = subProperty;
                             }
                         }
-                        else
+                        else if (propertiesWithDescriptions.Count() > 1)
                         {
                             throw new Exception($"Property {property.Name} has been detected as being a class with a subproperty, but has {propertiesWithDescriptions.Count()} properties with a description. Exactly 1 property with a description is allowed.");
                         }
