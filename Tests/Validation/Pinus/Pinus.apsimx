@@ -4173,39 +4173,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -14328,39 +14296,7 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                  "Depth": 600.0,
-                                  "DestinationName": "Humic",
-                                  "Name": "NImmobilisation",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.01,
-                                      "Units": null,
-                                      "Name": "Rate",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 30.0,
-                                      "Units": null,
-                                      "Name": "Threshold",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -21367,39 +21303,7 @@
                               "$type": "Models.Soils.Nutrients.Nutrient, Models",
                               "Name": "Nutrient",
                               "ResourceName": "Nutrient",
-                              "Children": [
-                                {
-                                  "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                  "Depth": 600.0,
-                                  "DestinationName": "Humic",
-                                  "Name": "NImmobilisation",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.01,
-                                      "Units": null,
-                                      "Name": "Rate",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 30.0,
-                                      "Units": null,
-                                      "Name": "Threshold",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -27373,39 +27277,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -33480,39 +33352,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -39605,39 +39445,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -40487,39 +40295,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -41982,39 +41758,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -48540,39 +48284,7 @@
                                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                       "Name": "Nutrient",
                                       "ResourceName": "Nutrient",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                          "Depth": 600.0,
-                                          "DestinationName": "Humic",
-                                          "Name": "NImmobilisation",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.01,
-                                              "Units": null,
-                                              "Name": "Rate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 30.0,
-                                              "Units": null,
-                                              "Name": "Threshold",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -54766,39 +54478,7 @@
                                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                       "Name": "Nutrient",
                                       "ResourceName": "Nutrient",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                          "Depth": 600.0,
-                                          "DestinationName": "Humic",
-                                          "Name": "NImmobilisation",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.01,
-                                              "Units": null,
-                                              "Name": "Rate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 30.0,
-                                              "Units": null,
-                                              "Name": "Threshold",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -61027,39 +60707,7 @@
                                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                       "Name": "Nutrient",
                                       "ResourceName": "Nutrient",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                          "Depth": 600.0,
-                                          "DestinationName": "Humic",
-                                          "Name": "NImmobilisation",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.01,
-                                              "Units": null,
-                                              "Name": "Rate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 30.0,
-                                              "Units": null,
-                                              "Name": "Threshold",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -66634,39 +66282,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -72158,39 +71774,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -77689,39 +77273,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -83213,39 +82765,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -88744,39 +88264,7 @@
                                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                   "Name": "Nutrient",
                                   "ResourceName": "Nutrient",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                      "Depth": 600.0,
-                                      "DestinationName": "Humic",
-                                      "Name": "NImmobilisation",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.01,
-                                          "Units": null,
-                                          "Name": "Rate",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 30.0,
-                                          "Units": null,
-                                          "Name": "Threshold",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -96246,39 +95734,7 @@
                                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                       "Name": "Nutrient",
                                       "ResourceName": "Nutrient",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                          "Depth": 600.0,
-                                          "DestinationName": "Humic",
-                                          "Name": "NImmobilisation",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.01,
-                                              "Units": null,
-                                              "Name": "Rate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 30.0,
-                                              "Units": null,
-                                              "Name": "Threshold",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
@@ -106336,39 +105792,7 @@
                                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
                                       "Name": "Nutrient",
                                       "ResourceName": "Nutrient",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Soils.Nutrients.MineralNImmobilisation, Models",
-                                          "Depth": 600.0,
-                                          "DestinationName": "Humic",
-                                          "Name": "NImmobilisation",
-                                          "ResourceName": null,
-                                          "Children": [
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 0.01,
-                                              "Units": null,
-                                              "Name": "Rate",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            },
-                                            {
-                                              "$type": "Models.Functions.Constant, Models",
-                                              "FixedValue": 30.0,
-                                              "Units": null,
-                                              "Name": "Threshold",
-                                              "ResourceName": null,
-                                              "Children": [],
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
