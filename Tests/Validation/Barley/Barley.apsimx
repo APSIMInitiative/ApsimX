@@ -187,7 +187,8 @@
             "Observed.xlsx",
             "LaTrobeCE_Obs.xlsx",
             "Obs_APSIMX_NPIField2019_Barley.xlsx",
-            "Obs_APSIMX_NPIField2020_Barley.xlsx"
+            "Obs_APSIMX_NPIField2020_Barley.xlsx",
+            "Obs_APSIMX_SouthernFarmingSystem_Barley.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -273,7 +274,11 @@
             "FlagLeafDate",
             "Species",
             "Habit",
-            "StandardName"
+            "StandardName",
+            "SimulationName",
+            "SampleStage",
+            "Barley.AboveGround.WtError",
+            "Barley.Grain.WtError"
           ],
           "Name": "Observations",
           "ResourceName": null,
@@ -320,6 +325,21 @@
           "FieldName4UsedForMatch": null,
           "AllColumns": false,
           "Name": "DailyObsPred",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "DailyReport",
+          "ObservedTableName": "Observed",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "Clock.Today",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": true,
+          "Name": "SouthernFarmingSystemObsPred",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
