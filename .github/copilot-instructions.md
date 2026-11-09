@@ -39,7 +39,9 @@ Notes:
 - Keep public property implementations trivial when possible.
 - Avoid `global::` qualification in C#; prefer normal `using` directives or aliases, and resolve namespace conflicts without introducing unnecessary global qualification.
 - Prefer clear, debuggable `for` loops over LINQ when they make the code easier to read and debug.
-
+- Avoid `[Link(IsOptional = true)]`; treat it as a bad practice unless it is clearly necessary.
+  - When suggesting code, use a required `[Link]` or another design instead (e.g. look up a child/sibling model by type).
+  - When reviewing PRs, flag any new use of `IsOptional = true` and ask the author to justify it or remove it.
 ## Contribution and PR expectations
 - Ensure PRs are focused and small where possible.
 - Link PRs to issues (`working on #...` or `resolves #...`) per contribution docs.
