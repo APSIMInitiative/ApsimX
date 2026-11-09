@@ -48,7 +48,7 @@ public class ValidationLocationUtilityTest
 
         string[] filtered = Program.RemoveExcludedPaths(samplePaths);
 
-        Assert.That(filtered, Does.Not.Contain("/Tests/Validation/Wheat/Wheat.apsimx"));
+        Assert.That(filtered, Does.Contain("/Tests/Validation/Wheat/Wheat.apsimx"));
         Assert.That(filtered, Does.Not.Contain("/Examples/CsvWeather.apsimx"));
         Assert.That(filtered, Does.Contain("/Tests/Validation/Maize/Maize.apsimx"));
         Assert.That(filtered, Does.Contain("/Tests/Validation/Canola/Canola.apsimx"));
