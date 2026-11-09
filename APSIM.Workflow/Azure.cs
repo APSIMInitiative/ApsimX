@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Auth;
 using Microsoft.Azure.Batch.Common;
@@ -140,6 +141,8 @@ public class Azure
         if (!File.Exists(scriptPath))
             throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
         CopyFilesToAzure(scriptPath, storageConnectionString, storageName);
+        BlobContainerClient outputContainer = new(storageConnectionString, storageName);
+        Uri outputContainerUri = CreateDatabaseUploadUri(outputContainer, DateTimeOffset.UtcNow);
 
         // Get a time formatted like 2026.9.30-14:30
         string now = DateTime.UtcNow.ToString("yyyy.M.d-HH:mm", CultureInfo.InvariantCulture);
@@ -160,6 +163,7 @@ public class Azure
             {
                 UserIdentity = new UserIdentity("admin"),
                 ResourceFiles = resourceFiles,
+                OutputFiles = [CreateDatabaseOutputFile(outputContainerUri, cloudTaskName, apsimFilePath)],
                 EnvironmentSettings = envVars.Select(e => new EnvironmentSetting(e.Key, e.Value))
                     .Append(new EnvironmentSetting("Path", azureApsimFilePath)) // Path has to be added here so it's unique for each task.
                     .ToList(),
@@ -196,6 +200,32 @@ public class Azure
             batchClient.JobOperations.AddTaskAsync(azureJob.Id, cloudTasks).Wait();
             cloudTasks.Clear();
         }    
+    }
+
+    /// <summary>Creates a seven-day, container-scoped SAS for database uploads.</summary>
+    /// <param name="container">The job's blob container.</param>
+    /// <param name="submissionTime">The job submission time.</param>
+    public static Uri CreateDatabaseUploadUri(BlobContainerClient container, DateTimeOffset submissionTime)
+    {
+        return container.GenerateSasUri(
+            BlobContainerSasPermissions.Create | BlobContainerSasPermissions.Write,
+            submissionTime.AddDays(7));
+    }
+
+    /// <summary>Creates the Batch upload specification for a task's database.</summary>
+    /// <param name="containerUri">Container URI with permission to write output files.</param>
+    /// <param name="taskName">Unique Batch task name.</param>
+    /// <param name="apsimFilePath">Validation file path relative to the validation root.</param>
+    public static OutputFile CreateDatabaseOutputFile(Uri containerUri, string taskName, string apsimFilePath)
+    {
+        string databasePath = Path.ChangeExtension(apsimFilePath.TrimStart('/'), ".db").Replace('\\', '/');
+        if (databasePath.IndexOfAny(['*', '?', '[', ']', '$']) >= 0)
+            throw new ArgumentException($"Database path contains characters unsupported by Batch output file patterns: {databasePath}", nameof(apsimFilePath));
+        string blobPath = $"databases/{taskName}/{databasePath}";
+        return new OutputFile(
+            databasePath,
+            new OutputFileDestination(new OutputFileBlobContainerDestination(containerUri.ToString(), blobPath)),
+            new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion));
     }
 
 
