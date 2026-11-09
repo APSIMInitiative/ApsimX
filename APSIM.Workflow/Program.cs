@@ -25,20 +25,6 @@ public class Program
 
     private static ILogger<Program> logger;
 
-    /// <summary>
-    /// relative paths for simulation files that should not be included because
-    /// they either will not run, or are not meant to run, or are ran in a different
-    /// manner.
-    /// </summary>
-    public static string[] EXCLUDED_SIMS_FILEPATHS = {
-            "/Prototypes/CroptimizR/template.apsimx",
-            "/Examples/Optimisation/CroptimizRExample.apsimx",
-            "/Examples/CsvWeather.apsimx", //has no output
-            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v2_BivariateNormal.apsimx", //has no output
-            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx" //has no output
-        };
-
-
     /// <summary> Main entry point for APSIM.WorkFlow</summary>
     /// <param name="args">command line arguments</param>
     public static int Main(string[] args)
@@ -208,7 +194,7 @@ public class Program
     public static bool ContainsExcludedPath(string path)
     {
         string normalizedPath = path.NormalizePath().TrimStart('/');
-        return EXCLUDED_SIMS_FILEPATHS.Any(excluded =>
+        return PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Any(excluded =>
             normalizedPath.Contains(excluded.NormalizePath().TrimStart('/'), StringComparison.OrdinalIgnoreCase));
     }
 
