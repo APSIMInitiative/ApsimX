@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using APSIM.Shared.Utilities;
 using Azure.Storage;
 using Azure.Storage.Blobs;
@@ -14,6 +15,19 @@ namespace UnitTests.APSIMWorkflowTests;
 [TestFixture]
 public class AzureOutputTests
 {
+    [Test]
+    public void JobMetadataIdentifiesOutputWithoutCredentials()
+    {
+        Uri containerUri = new("https://storage.invalid/job-storage");
+        var metadata = WorkflowAzure.CreateValidationJobMetadata(containerUri, "123", "abcdef");
+
+        Assert.That(metadata.Single(item => item.Name == "output_container_uri").Value, Is.EqualTo(containerUri.AbsoluteUri));
+        Assert.That(metadata.Single(item => item.Name == "pull_request_number").Value, Is.EqualTo("123"));
+        Assert.That(metadata.Single(item => item.Name == "commit_sha").Value, Is.EqualTo("abcdef"));
+        Assert.Throws<ArgumentException>(() => WorkflowAzure.CreateValidationJobMetadata(
+            new Uri("https://storage.invalid/job-storage?sig=fake"), "123", "abcdef"));
+    }
+
     [Test]
     public void DatabaseOutputUsesTaskSpecificPathAndUploadsOnCompletion()
     {
@@ -56,6 +70,26 @@ public class AzureOutputTests
         Assert.That(query, Does.Contain("sr=c"));
         Assert.That(query, Does.Contain("sp=cw"));
         Assert.That(query, Does.Contain("se=2026-01-09T03:04:05Z"));
+    }
+
+    [Test]
+    public void ReadUriIsContainerScopedWithOnlyReadAndListPermissions()
+    {
+        string key = Convert.ToBase64String(new byte[32]);
+        BlobContainerClient container = new(new Uri("https://storage.invalid/job-storage"), new StorageSharedKeyCredential("testaccount", key));
+        DateTimeOffset expiry = DateTimeOffset.UtcNow.AddHours(2);
+
+        Uri uri = WorkflowAzure.CreateDatabaseReadUri(container, expiry);
+        var parameters = uri.Query.TrimStart('?').Split('&')
+            .Select(parameter => parameter.Split('=', 2))
+            .ToDictionary(parts => parts[0], parts => Uri.UnescapeDataString(parts[1]));
+
+        Assert.That(uri.Host, Is.EqualTo("storage.invalid"));
+        Assert.That(uri.AbsolutePath, Is.EqualTo("/job-storage"));
+        Assert.That(parameters["sr"], Is.EqualTo("c"));
+        Assert.That(parameters["sp"], Is.EqualTo("rl"));
+        Assert.That(DateTimeOffset.Parse(parameters["se"]), Is.EqualTo(expiry).Within(TimeSpan.FromSeconds(1)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => WorkflowAzure.CreateDatabaseReadUri(container, DateTimeOffset.UtcNow.AddSeconds(-1)));
     }
 
     [Test]

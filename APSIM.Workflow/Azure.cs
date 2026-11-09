@@ -187,6 +187,7 @@ public class Azure
                 azureJob = batchClient.JobOperations.CreateJob();
                 azureJob.Id = uniqueJobName;
                 azureJob.PoolInformation = new PoolInformation { PoolId = poolName };
+                azureJob.Metadata = CreateValidationJobMetadata(outputContainer.Uri, prNumber, envVars["FULL_COMMIT_HASH"]);
                 azureJob.OnAllTasksComplete = OnAllTasksComplete.TerminateJob;
                 azureJob.UsesTaskDependencies = true;
                 azureJob.JobPreparationTask = new JobPreparationTask("bash workflow.sh initialise")
@@ -198,8 +199,25 @@ public class Azure
                 azureJob.Commit();
             }
             batchClient.JobOperations.AddTaskAsync(azureJob.Id, cloudTasks).Wait();
+            Console.WriteLine($"Azure job {azureJob.Id} submitted; database output container: {outputContainer.Uri}");
             cloudTasks.Clear();
         }    
+    }
+
+    /// <summary>Creates non-secret metadata identifying the validation outputs.</summary>
+    /// <param name="containerUri">URI of the output container without a SAS.</param>
+    /// <param name="prNumber">Pull request number.</param>
+    /// <param name="commitSha">Full commit SHA.</param>
+    public static IList<MetadataItem> CreateValidationJobMetadata(Uri containerUri, string prNumber, string commitSha)
+    {
+        if (!string.IsNullOrEmpty(containerUri.Query) || !string.IsNullOrEmpty(containerUri.Fragment))
+            throw new ArgumentException("The output container URI must not contain credentials.", nameof(containerUri));
+
+        return [
+            new MetadataItem("output_container_uri", containerUri.AbsoluteUri),
+            new MetadataItem("pull_request_number", prNumber),
+            new MetadataItem("commit_sha", commitSha)
+        ];
     }
 
     /// <summary>Creates a seven-day, container-scoped SAS for database uploads.</summary>
@@ -210,6 +228,19 @@ public class Azure
         return container.GenerateSasUri(
             BlobContainerSasPermissions.Create | BlobContainerSasPermissions.Write,
             submissionTime.AddDays(7));
+    }
+
+    /// <summary>Creates a container-scoped SAS for reading validation databases.</summary>
+    /// <param name="container">The output container, authenticated with a storage account key.</param>
+    /// <param name="expiresOn">The time at which the SAS expires.</param>
+    public static Uri CreateDatabaseReadUri(BlobContainerClient container, DateTimeOffset expiresOn)
+    {
+        if (expiresOn <= DateTimeOffset.UtcNow)
+            throw new ArgumentOutOfRangeException(nameof(expiresOn), "The SAS expiry must be in the future.");
+
+        return container.GenerateSasUri(
+            BlobContainerSasPermissions.Read | BlobContainerSasPermissions.List,
+            expiresOn);
     }
 
     /// <summary>Creates the Batch upload specification for a task's database.</summary>
