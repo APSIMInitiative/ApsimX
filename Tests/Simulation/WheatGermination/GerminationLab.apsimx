@@ -94,7 +94,7 @@
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
+      "ShowInDocs": true,
       "Name": "Validation",
       "ResourceName": null,
       "Children": [
@@ -1640,7 +1640,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "PredObs",
               "ResourceName": null,
               "Children": [
@@ -1818,7 +1818,7 @@
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowInDocs": false,
+      "ShowInDocs": true,
       "Name": "Sensibility",
       "ResourceName": null,
       "Children": [
@@ -4441,7 +4441,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -4723,7 +4723,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -5005,7 +5005,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-Yield",
               "ResourceName": null,
               "Children": [
@@ -5287,7 +5287,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -5569,7 +5569,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -5851,7 +5851,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_Yield",
               "ResourceName": null,
               "Children": [
@@ -6133,7 +6133,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_SeedTemperature",
               "ResourceName": null,
               "Children": [
@@ -6415,7 +6415,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_SeedWaterPotential",
               "ResourceName": null,
               "Children": [
@@ -6697,7 +6697,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_WaterFactor",
               "ResourceName": null,
               "Children": [
@@ -9865,7 +9865,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -10147,7 +10147,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -10429,7 +10429,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Scatter-Yield",
               "ResourceName": null,
               "Children": [
@@ -10711,7 +10711,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_GerminationDAS",
               "ResourceName": null,
               "Children": [
@@ -10993,7 +10993,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_EmergenceDAS",
               "ResourceName": null,
               "Children": [
@@ -11275,7 +11275,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_Yield",
               "ResourceName": null,
               "Children": [
@@ -11557,7 +11557,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_SeedTemperature",
               "ResourceName": null,
               "Children": [
@@ -11839,7 +11839,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_SeedWaterPotential",
               "ResourceName": null,
               "Children": [
@@ -12121,7 +12121,7 @@
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowInDocs": false,
+              "ShowInDocs": true,
               "Name": "Box_WaterFactor",
               "ResourceName": null,
               "Children": [
