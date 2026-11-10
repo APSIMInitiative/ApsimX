@@ -123,7 +123,7 @@ public class Program
                     );
                     logger.LogInformation($"Azure jobs successfully submitted!");
                     // Wait for a few minutes before resizing.
-                    Thread.Sleep(TimeSpan.FromMinutes(3));
+                    Thread.Sleep(TimeSpan.FromMinutes(8));
                     Azure.EnablePoolAutoReszing(envDict["AZURE_PRIMARY_ACCESS_KEY"], poolName);
                     logger.LogInformation($"Azure pool successfully resized!");
                     stopwatch.Stop();
