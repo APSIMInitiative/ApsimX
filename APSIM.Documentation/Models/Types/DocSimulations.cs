@@ -6,6 +6,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Factorial;
 using Graph = Models.Graph;
 using System;
 using Models.PMF;
@@ -73,10 +74,11 @@ namespace APSIM.Documentation.Models.Types
             tags.Add(new Section(title, memoTags));
 
             //Then just document the folders that aren't replacements
-            foreach (IModel child in sims.Node.FindChildren<Folder>())
+            foreach (IModel child in sims.Node.FindChildren<IModel>())
             {
-                if(!Folder.IsModelReplacementsFolder(child))
-                    tags.AddRange(AutoDocumentation.DocumentModel(child));
+                if (child is Memo || child is Graph || child is Folder || child is Simulation || child is Experiment)
+                    if(!Folder.IsModelReplacementsFolder(child))
+                        tags.AddRange(AutoDocumentation.DocumentModel(child));
             }
             
             return tags;
