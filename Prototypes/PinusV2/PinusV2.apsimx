@@ -5303,7 +5303,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
+                  "FixedValue": 3.0,
                   "Units": "mm/d",
                   "Name": "RootFrontVelocity",
                   "ResourceName": null,
