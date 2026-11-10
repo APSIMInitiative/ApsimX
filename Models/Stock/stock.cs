@@ -2240,6 +2240,39 @@ namespace Models.GrazPlan
             }
         }
 
+        // =========== Digestibility intake per head by group ==================
+         /// <summary>
+        /// Gets the digestibility intake per head by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double[] DigestibilityIntake
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets total intake per head of digestibility by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double DigestibilityIntakeAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, true, false, ref values);
+                return values[0];
+            }
+        }
+        
+
+
+
+
         // =========== Growth rate of clean fleece ==================
 
         /// <summary>

@@ -1127,7 +1127,7 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
     if(deadTotalDM > 0.0)
             {
                 deadMeanDMD = deadDMDMass / deadTotalDM;
-                deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.3);
+                deadDMDPropns = ForageInfo.CalcDMDDistribution(deadMeanDMD, 0.70, 0.45);
                  deadNConc = deadN / deadTotalDM ;
             }
         
