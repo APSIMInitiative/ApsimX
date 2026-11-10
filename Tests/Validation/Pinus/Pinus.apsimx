@@ -52867,7 +52867,29 @@
                           "Children": [
                             {
                               "$type": "Models.Operations, Models",
-                              "OperationsList": [],
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.95",
+                                  "Line": "1987-05-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.95"
+                                }
+                              ],
                               "Name": "0N0",
                               "ResourceName": null,
                               "Children": [],
@@ -52876,7 +52898,22 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "OperationsList": [],
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                }
+                              ],
                               "Name": "1N0",
                               "ResourceName": null,
                               "Children": [],
@@ -52885,7 +52922,36 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "OperationsList": [],
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].KillCrop(0.5)",
+                                  "Line": "1987-05-15 [AGPRyegrass].KillCrop(0.5)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.318",
+                                  "Line": "1987-05-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.318"
+                                }
+                              ],
                               "Name": "2N0",
                               "ResourceName": null,
                               "Children": [],
@@ -52894,7 +52960,29 @@
                             },
                             {
                               "$type": "Models.Operations, Models",
-                              "OperationsList": [],
+                              "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].KillCrop(1)",
+                                  "Line": "1987-05-15 [AGPRyegrass].KillCrop(1)"
+                                }
+                              ],
                               "Name": "3N0",
                               "ResourceName": null,
                               "Children": [],
@@ -52904,6 +52992,27 @@
                             {
                               "$type": "Models.Operations, Models",
                               "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.95",
+                                  "Line": "1987-05-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.95"
+                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -52959,6 +53068,20 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1987-09-01",
                                   "Action": "[Fertiliser].Apply(amount: 50, type: \"NH4SO4N\", 0);",
                                   "Line": "1987-09-01 [Fertiliser].Apply(amount: 50, type: \"NH4SO4N\", 0);"
@@ -53011,6 +53134,34 @@
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].KillCrop(0.5)",
+                                  "Line": "1987-05-15 [AGPRyegrass].KillCrop(0.5)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.318",
+                                  "Line": "1987-05-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.318"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
                                   "Date": "1987-09-01",
                                   "Action": "[Fertiliser].Apply(amount: 50, type: \"NH4SO4N\", 0);",
                                   "Line": "1987-09-01 [Fertiliser].Apply(amount: 50, type: \"NH4SO4N\", 0);"
@@ -53060,6 +53211,27 @@
                             {
                               "$type": "Models.Operations, Models",
                               "OperationsList": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                  "Line": "1985-07-15 [AGPRyegrass].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1985-07-15",
+                                  "Action": "[AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636",
+                                  "Line": "1985-07-15 [AGPRyegrass].PastureSpeciesConstants.ReferencePhotosyntheticRate = 0.636"
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Enabled": true,
+                                  "Date": "1987-05-15",
+                                  "Action": "[AGPRyegrass].KillCrop(1)",
+                                  "Line": "1987-05-15 [AGPRyegrass].KillCrop(1)"
+                                },
                                 {
                                   "$type": "Models.Operation, Models",
                                   "Enabled": true,
@@ -53175,7 +53347,7 @@
                               "RecordNumber": 0,
                               "ASCOrder": null,
                               "ASCSubOrder": null,
-                              "SoilType": "Podzolised sand",
+                              "SoilType": "Sand",
                               "LocalName": null,
                               "Site": "Tarpeena",
                               "NearestTown": null,
@@ -53315,6 +53487,47 @@
                                       "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Soils.SoilCrop, Models",
+                                      "LL": [
+                                        0.025,
+                                        0.02,
+                                        0.02,
+                                        0.02,
+                                        0.04,
+                                        0.2,
+                                        0.22,
+                                        0.22
+                                      ],
+                                      "KL": [
+                                        0.08,
+                                        0.08,
+                                        0.06,
+                                        0.05,
+                                        0.04,
+                                        0.03,
+                                        0.02,
+                                        0.01
+                                      ],
+                                      "XF": [
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        1.0,
+                                        0.6,
+                                        0.5,
+                                        0.3,
+                                        0.2
+                                      ],
+                                      "LLMetadata": null,
+                                      "KLMetadata": null,
+                                      "XFMetadata": null,
+                                      "Name": "AGPRyegrassSoil",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": true,
@@ -53399,8 +53612,8 @@
                                     20.0
                                   ],
                                   "FBiom": [
-                                    0.02,
-                                    0.015,
+                                    0.05,
+                                    0.03,
                                     0.01,
                                     0.01,
                                     0.01,
@@ -53933,6 +54146,37 @@
                               ],
                               "GroupByVariableName": null,
                               "Name": "AnnualReport",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.AgPasture.PastureSpecies, Models",
+                              "InitialisePlantAtStartOfSimulation": false,
+                              "InitialShootDM": 0.0,
+                              "InitialRootDM": 0.0,
+                              "InitialRootDepth": 0.0,
+                              "PotentialRootingDepth": -1.0,
+                              "Name": "AGPRyegrass",
+                              "ResourceName": "AGPRyegrass",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Report, Models",
+                              "VariableNames": [
+                                "[Clock].Today",
+                                "[AGPRyegrass].AboveGroundWt/10 as WeedWt",
+                                "[AGPRyegrass].AboveGroundN/10 as WeedN",
+                                "[AGPRyegrass].LAI as WeedLAI"
+                              ],
+                              "EventNames": [
+                                "[Clock].DoReport"
+                              ],
+                              "GroupByVariableName": null,
+                              "Name": "WeedReport",
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
@@ -105436,6 +105680,20 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                          "Line": "1983-03-01 [AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250",
+                                          "Line": "1983-03-01 [AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
                                           "Date": "1987-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.067);",
                                           "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.067);"
@@ -105554,6 +105812,20 @@
                                     {
                                       "$type": "Models.Operations, Models",
                                       "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                          "Line": "1983-03-01 [AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250",
+                                          "Line": "1983-03-01 [AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250"
+                                        },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
@@ -106133,6 +106405,20 @@
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                          "Line": "1983-03-01 [AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250",
+                                          "Line": "1983-03-01 [AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
                                           "Date": "1983-01-01",
                                           "Action": "[TreeSowingRule].Script.CultivarName=elliottiiIMPAC",
                                           "Line": "1983-01-01 [TreeSowingRule].Script.CultivarName=elliottiiIMPAC"
@@ -106258,6 +106544,20 @@
                                     {
                                       "$type": "Models.Operations, Models",
                                       "OperationsList": [
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)",
+                                          "Line": "1983-03-01 [AGPPaspalum].Sow(cultivar: \"\", population: 1, depth: 10, rowSpacing: 0)"
+                                        },
+                                        {
+                                          "$type": "Models.Operation, Models",
+                                          "Enabled": true,
+                                          "Date": "1983-03-01",
+                                          "Action": "[AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250",
+                                          "Line": "1983-03-01 [AGPPaspalum].PastureSpeciesConstants.PlantHeightMaximum = 250"
+                                        },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
@@ -106869,6 +107169,53 @@
                                           "KLMetadata": null,
                                           "XFMetadata": null,
                                           "Name": "PinusSoil",
+                                          "ResourceName": null,
+                                          "Children": [],
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Soils.SoilCrop, Models",
+                                          "LL": [
+                                            0.098,
+                                            0.095,
+                                            0.103,
+                                            0.107,
+                                            0.115,
+                                            0.125,
+                                            0.131,
+                                            0.133,
+                                            0.136,
+                                            0.139
+                                          ],
+                                          "KL": [
+                                            0.06,
+                                            0.06,
+                                            0.059,
+                                            0.053,
+                                            0.044,
+                                            0.034,
+                                            0.023,
+                                            0.012,
+                                            0.001,
+                                            0.0
+                                          ],
+                                          "XF": [
+                                            1.0,
+                                            0.97,
+                                            0.831,
+                                            0.814,
+                                            0.786,
+                                            0.744,
+                                            0.0,
+                                            0.0,
+                                            0.0,
+                                            0.0
+                                          ],
+                                          "LLMetadata": null,
+                                          "KLMetadata": null,
+                                          "XFMetadata": null,
+                                          "Name": "AgPPaspalumSoil",
                                           "ResourceName": null,
                                           "Children": [],
                                           "Enabled": true,
@@ -107511,6 +107858,37 @@
                                   ],
                                   "GroupByVariableName": null,
                                   "Name": "AnnualReport",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                                  "InitialisePlantAtStartOfSimulation": false,
+                                  "InitialShootDM": 0.0,
+                                  "InitialRootDM": 0.0,
+                                  "InitialRootDepth": 0.0,
+                                  "PotentialRootingDepth": -1.0,
+                                  "Name": "AGPPaspalum",
+                                  "ResourceName": "AGPPaspalum",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Report, Models",
+                                  "VariableNames": [
+                                    "[Clock].Today",
+                                    "[AGPPaspalum].AboveGroundWt/10 as WeedWt",
+                                    "[AGPPaspalum].AboveGroundN/10 as WeedN",
+                                    "[AGPPaspalum].LAI as WeedLAI"
+                                  ],
+                                  "EventNames": [
+                                    "[Clock].DoReport"
+                                  ],
+                                  "GroupByVariableName": null,
+                                  "Name": "WeedReport",
                                   "ResourceName": null,
                                   "Children": [],
                                   "Enabled": true,
