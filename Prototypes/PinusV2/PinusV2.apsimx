@@ -1242,7 +1242,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -2968,7 +2968,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -3039,7 +3039,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.003,
+                  "FixedValue": 0.0005,
                   "Units": "/d",
                   "Name": "DetachmentRateFunction",
                   "ResourceName": null,
@@ -4134,7 +4134,7 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154",
+                      "Expression": "10.384*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.2653*([Pinus].Age)^0.2722",
                       "Name": "HeightFunction",
                       "ResourceName": null,
                       "Children": [],
@@ -4802,7 +4802,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.0,
                   "Units": "/d",
                   "Name": "NRetranslocationFactor",
                   "ResourceName": null,
@@ -5851,14 +5851,19 @@
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
                     "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
                     "",
-                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.1",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.25",
                     "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
                     "",
                     "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154",
+                    "",
+                    "[Leaf].MinimumNConc.FixedValue = 0.0025",
+                    "[Leaf].MaximumNConc.FixedValue = 0.008"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5906,7 +5911,9 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -5939,6 +5946,49 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "elliottiiIMPAC",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=4, 24, 33, 38",
+                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y=0, 1, 1, 0",
+                    "",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
+                    "",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.Fmax.FixedValue = 0.937",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.F0.FixedValue = 0.819",
+                    "[Stem].WoodWt.WoodWt.WoodWtFactor.K.FixedValue = 27700",
+                    "",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.25",
+                    "[Leaf].FLAI.XYPairs.X = 0, 3, 4.5",
+                    "",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Juvenile.FixedValue = 37.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
+                    "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 5.0",
+                    "",
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154",
+                    "",
+                    "[Leaf].MinimumNConc.FixedValue = 0.0025",
+                    "[Leaf].MaximumNConc.FixedValue = 0.008"
+                  ],
+                  "Name": "hybrid",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the IMPAC site.  \r\n\r\n",
+                      "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6602,7 +6652,9 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.AgeParameter.FixedValue = 19.5",
                     "[Pinus].Stem.WoodDensityOfGrowth.NEffect.FixedValue = 0.075",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650"
+                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
