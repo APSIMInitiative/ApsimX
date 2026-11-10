@@ -7142,23 +7142,95 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Carbon status during bunch initiation, used for next season's bunches per shoot: the share of the vine's DM supply that can come from reserves, (retranslocation + reallocation supply) / (fixation + retranslocation + reallocation supply), averaged from stage 3.2 (shortly after budburst) to 6.5 (mid-ripening). Replaces the supply/demand ratio FDM, which stayed above 1 in long-term simulations so the carbon effect never acted, and whose level varied with vine size between sites. Calibrated on the RetainedNodeNum experiment (2008-2011), 2026-11.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.AccumulateByNumericPhase, Models",
                       "StartStageName": 3.2,
-                      "EndStageName": 5.2,
+                      "EndStageName": 6.5,
                       "ResetStageName": "BudBurst",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
                       "FractionRemovedOnGraze": 0.0,
                       "FractionRemovedOnPrune": 0.0,
-                      "Name": "FDMIni",
+                      "Name": "ReserveShareIni",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Grapevine].Arbitrator.FDM",
-                          "Name": "FDM",
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "ReserveShare",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "ReserveSupply",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Arbitrator.DM.TotalRetranslocationSupply",
+                                  "Name": "Retranslocation",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Arbitrator.DM.TotalReallocationSupply",
+                                  "Name": "Reallocation",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.AddFunction, Models",
+                              "Name": "TotalSupply",
+                              "ResourceName": null,
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Arbitrator.DM.TotalFixationSupply",
+                                  "Name": "Fixation",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Arbitrator.DM.TotalRetranslocationSupply",
+                                  "Name": "Retranslocation",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Arbitrator.DM.TotalReallocationSupply",
+                                  "Name": "Reallocation",
+                                  "ResourceName": null,
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -7169,7 +7241,7 @@
                     {
                       "$type": "Models.Functions.AccumulateByNumericPhase, Models",
                       "StartStageName": 3.2,
-                      "EndStageName": 5.2,
+                      "EndStageName": 6.5,
                       "ResetStageName": "BudBurst",
                       "FractionRemovedOnCut": 0.0,
                       "FractionRemovedOnHarvest": 0.0,
@@ -8199,6 +8271,15 @@
                                   "ResourceName": null,
                                   "Children": [
                                     {
+                                      "$type": "Models.Memo, Models",
+                                      "Text": "Bunches-per-shoot carbon factor: 0.8 when the reserve share during initiation is <= 0.32, rising linearly to 1 at >= 0.47. Values below 1e-6 mean no initiation window has been recorded yet (first season) and give 1.",
+                                      "Name": "Memo",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
                                       "$type": "Models.Functions.VariableReference, Models",
                                       "VariableName": "[Berry].MetFactors.BUN_CarbonIni_Record",
                                       "Name": "XValue",
@@ -8209,7 +8290,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.1,
+                                      "FixedValue": 1E-06,
                                       "Units": null,
                                       "Name": "FirstYear",
                                       "ResourceName": null,
@@ -8229,7 +8310,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "FDMIni",
+                                      "Name": "ReserveShareResponse",
                                       "ResourceName": null,
                                       "Children": [
                                         {
@@ -8244,15 +8325,11 @@
                                         {
                                           "$type": "Models.Functions.XYPairs, Models",
                                           "X": [
-                                            0.0,
-                                            0.2,
-                                            1.0,
-                                            2.0
+                                            0.32,
+                                            0.47
                                           ],
                                           "Y": [
-                                            0.0,
                                             0.8,
-                                            1.0,
                                             1.0
                                           ],
                                           "Name": "XYPairs",
