@@ -17,8 +17,6 @@ using APSIM.Documentation.Graphing;
 using APSIM.Core;
 using APSIM.Shared.Documentation.Extensions;
 using OxyPlot;
-using APSIM.Shared.Graphing;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace APSIM.Documentation
 {
@@ -520,7 +518,7 @@ namespace APSIM.Documentation
             List<(string, string)> htmlSegments = new List<(string, string)>();
             int counter = 0;
 
-            Regex regex = new Regex(@"\<([\w\W][^\<]*)\>");
+            Regex regex = new Regex(@"\<([\w\W][^\<\>]*)\>");
             MatchCollection matches = regex.Matches(output);
 
             foreach(Match match in matches)
