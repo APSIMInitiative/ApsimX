@@ -914,20 +914,11 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
-                  "IsEmerged": true,
+                  "IsEmerged": false,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Emergence = 80 degree days with base temp 12",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
