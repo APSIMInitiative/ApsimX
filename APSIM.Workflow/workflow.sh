@@ -39,6 +39,17 @@ if [[ $(type -t $1_finally) == function ]]; then
     exit_code=$finally_exit_code
   fi
 fi
+# Return a failure exit code if the database is missing.
+if [[ "$1" == run_00001 ]]; then
+  database_path=".${Path#/wd}"
+  database_path="${database_path%.apsimx}.db"
+  if [[ "$Path" != /wd/*.apsimx || ! -f "$database_path" ]]; then
+    echo "Database not found at $database_path; custom datastore paths are not supported." &>> local.stdout.txt
+    if [[ $exit_code -eq 0 ]]; then
+      exit_code=1
+    fi
+  fi
+fi
 end_time=$(date +%s.%N)
 elapsed=$(echo "$end_time - $start_time" | bc -l)
 echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt
