@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using APSIM.Numerics;
-using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Surface;
 
@@ -9,6 +9,8 @@ namespace Models.AgPasture
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class GenericTissue : Model
     {
         /// <summary>Name of species.</summary>
@@ -31,50 +33,69 @@ namespace Models.AgPasture
         private const double CNratioCellWall = 100.0;
 
         /// <summary>Minimum significant difference between two values.</summary>
-        internal const double Epsilon = 0.000000001;
+        internal const double Tolerance = 0.000000001;
 
         //---------------------------- Parameters -----------------------
+        ////////////// GUI parameters shown to user //////////////
 
         /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
+        [Separator("Parameters for N remobilisation and digestibility")]
+        [Description("Fraction of remobilisable N available per day")]
+        [Units("0-1")]
         public double FractionNRemobilisable { get; set; }
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
-        public double FractionSugarNewGrowth { get; set; } = 0.0;
+        [Description("Fraction of sugar in new growth")]
+        [Units("0-1")]
+        public double FractionSugarNewGrowth { get; set; }
 
         /// <summary>Digestibility of cell walls (0-1).</summary>
+        [Description("Digestibility of cell wall")]
+        [Units("0-1")]
         public double DigestibilityCellWall { get; set; }
 
         /// <summary>Digestibility of proteins (0-1).</summary>
-        public double DigestibilityProtein { get; set; } = 1.0;
+        [Description("Digestibility of proteins")]
+        [Units("0-1")]
+        public double DigestibilityProtein { get; set; }
 
         //----------------------- Daily Deltas -----------------------
         // These get applied once each day during Update()
 
         /// <summary>DM transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMTransferredOut { get; private set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NTransferredOut { get; private set; }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double DMRemoved { get; private set; }
 
         /// <summary>The fraction of DM removed from this tissue.</summary>
+        [JsonIgnore]
         public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemoved { get; private set; }
 
         /// <summary>N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; set; }
+        [JsonIgnore]
+        public double NRemobilisable { get; private set; }
 
         /// <summary>N remobilised into new growth (kg/ha).</summary>
+        [JsonIgnore]
         public double NRemobilised { get; set; }
 
         //----------------------- States -----------------------
@@ -97,6 +118,7 @@ namespace Models.AgPasture
         {
             biomass.Wt = dmAmount;
             biomass.N = nAmount;
+
             calculateDigestibility();
         }
 
@@ -146,13 +168,10 @@ namespace Models.AgPasture
             biomass.Wt += DMTransferredIn - DMTransferredOut;
             biomass.N += NTransferredIn - (NTransferredOut + NRemobilised);
 
-            // ensure values near zero are zeroed (prevent small negatives)
-            if (MathUtilities.FloatsAreEqual(biomass.Wt, 0.0, Epsilon))
+            // ensure that small values are zeroed (prevent small negatives)
+            if (Math.Abs(biomass.Wt) < Tolerance)
             {
                 biomass.Wt = 0.0;
-            }
-            if (MathUtilities.FloatsAreEqual(biomass.N, 0.0, Epsilon))
-            {
                 biomass.N = 0.0;
             }
 
@@ -164,6 +183,20 @@ namespace Models.AgPasture
             if (biomass.N < 0.0)
             {
                 throw new Exception($"{species.Name} {Name} tissue has negative N content");
+            }
+
+            // check that N concentration are within bounds
+            if (biomass.Wt > Tolerance)
+            {
+                double nConc = biomass.N / biomass.Wt;
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMinimum < -Tolerance)
+                {
+                    throw new Exception($"{species.Name} {Name} tissue has N content lower than minimum");
+                }
+                if (nConc - (Parent as PastureAboveGroundOrgan).NConcMaximum > Tolerance)
+                {
+                    throw new Exception($"{species.Name} {Name} tissue has N content greater than maximum");
+                }
             }
 
             calculateDigestibility();
@@ -202,35 +235,27 @@ namespace Models.AgPasture
         /// <remarks>The nConc threshold should be the optimum for live tissue and for dead is the minimum.</remarks>
         public void GetRemobilisableN(double nConcThreshold)
         {
-            if ((DMTransferredOut > 0.0) || (DMTransferredIn > 0.0))
+            // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
+            double potentialRemobilisableN = 0.0;
+
+            // first, get the available N in the tissue
+            if (this.Name != "DeadTissue")
             {
-                // get the N amount remobilisable (all N in this tissue above the given nConc threshold)
-                double potentialRemobilisableN = 0.0;
-
-                // first, get the available N in the tissue
-                if (this.Name != "DeadTissue")
-                {
-                    potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
-                    // NOTE: N already in dead tissue is no longer available for remobilisation
-                }
-
-                // then get the N that is available in the material being transferred in (includes N into dead, i.e. senesced)
-                potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
-
-                // only a fraction of the potentially remobilisable N can actually be remobilised each day
-                NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
+                potentialRemobilisableN = (biomass.Wt - DMTransferredOut) * Math.Max(0.0, biomass.NConc - nConcThreshold);
+                // NOTE: N already in dead tissue is no longer available for remobilisation
             }
+
+            // then get the N that is available in the material being transferred in (includes N into dead, i.e. senesced)
+            potentialRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConcThreshold);
+
+            // only a fraction of the potentially remobilisable N can actually be remobilised each day
+            NRemobilisable = Math.Max(0.0, potentialRemobilisableN * FractionNRemobilisable);
         }
 
         /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
         /// <param name="fraction">The fraction to remove (0-1)</param>
         public void DoRemobiliseN(double fraction)
         {
-            if (fraction > 1.0)
-            {
-                throw new Exception($"{species.Name} {Name} fraction of N remobilised is > 1");
-            }
-
             NRemobilised = NRemobilisable * fraction;
         }
 

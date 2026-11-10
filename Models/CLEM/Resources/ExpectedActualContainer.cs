@@ -75,6 +75,7 @@ namespace Models.CLEM.Resources
         {
             if (!isSuckling)
             {
+                MaximumExpected = 0;
                 Expected = 0;
             }
 

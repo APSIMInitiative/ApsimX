@@ -568,7 +568,8 @@ namespace UserInterface.Views
                 if (filled)
                 {
                     series.MarkerFill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-                    series.MarkerStroke = OxyColors.White;
+                    // sets the outline/stroke of the graph marker
+                    series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B); 
                 }
 
                 if (xError != null || yError != null)

@@ -13,12 +13,8 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A + B * exp(x * C)")]
-    public class ExponentialFunction : Model, IFunction, IStructureDependency
+    public class ExponentialFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>ExponentialFunction Constructor</summary>
         public ExponentialFunction()
         {
@@ -38,6 +34,11 @@ namespace Models.Functions
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
 
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -45,7 +46,7 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (ChildFunctions.Count() == 1)
             {

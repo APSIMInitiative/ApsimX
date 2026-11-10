@@ -248,7 +248,7 @@ namespace Models.PMF.SimplePlantModels
             set { _DBHatMaturity = constrain(value, 5, 100); }
         }
 
-        /// <summary>Height of the bottom of the canop (10-100000 mm)</summary>
+        /// <summary>Area of canopy (0.1-1000 m^2) for tree with DBH specified above</summary>
         [Description("Area of canopy (0.1-1000 m^2) for tree with DBH specified above")]
         [Bounds(Lower = .1, Upper = 1000)]
         [Units("m^2")]

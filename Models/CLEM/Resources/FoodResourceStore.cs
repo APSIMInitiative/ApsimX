@@ -159,7 +159,7 @@ namespace Models.CLEM.Resources
                 }
             }
             Details.ClearAmount();
-            ProportionGreen = pools.Count == 0 ? 0 : pools.Where(p => p.Age <= greenAge).Sum(a => a.AmountAvailable) / totalInPools;
+            ProportionGreen = pools.Count == 0 ? 0 : pools.Where(p => p.AgeInMonths <= greenAge).Sum(a => a.AmountAvailable) / totalInPools;
         }
 
         /// <summary>

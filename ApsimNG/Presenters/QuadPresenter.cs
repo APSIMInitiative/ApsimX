@@ -11,7 +11,6 @@ using System;
 using UserInterface.EventArguments;
 using System.Linq;
 using Models.PreSimulationTools;
-using APSIM.Core;
 
 namespace UserInterface.Presenters
 {
@@ -19,18 +18,18 @@ namespace UserInterface.Presenters
     public class QuadPresenter : IPresenter
     {
         /// <summary>Parent explorer presenter.</summary>
-        private ExplorerPresenter explorerPresenter;
+        private ExplorerPresenter _explorerPresenter;
 
         /// <summary>The base view.</summary>
-        private QuadView view = null;
+        private QuadView _view = null;
 
         /// <summary>The model.</summary>
-        private IModel model;
+        private IModel _model;
 
-        private bool hasSuccessfullyBuiltPresenters = false;
+        private bool _hasSuccessfullyBuiltPresenters = false;
 
         /// <summary>Sub-presenters that are added to this presenter</summary>
-        private List<ISubPresenter> presenters;
+        private List<ISubPresenter> _presenters;
 
         /// <summary>Default constructor</summary>
         public QuadPresenter() {}
@@ -41,13 +40,27 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
-            this.model = model as IModel;
-            this.view = v as QuadView;
-            this.explorerPresenter = explorerPresenter;
-            this.presenters = new List<ISubPresenter>();
+            _model = model as IModel;
+            _view = v as QuadView;
+            _explorerPresenter = explorerPresenter;
+            _presenters = new List<ISubPresenter>();
 
-            if (this.view == null)
+            if (_view == null)
                 throw new System.Exception("QuadPresenter only works with a QuadView");
+
+            // Links are normally resolved at run time; models may need them to display values.
+            if (_model != null)
+            {
+                try
+                {
+                    _explorerPresenter.ApsimXFile.Links.Resolve(_model, allLinks: true, recurse: false, throwOnFail: false);
+                }
+                catch (Exception exception)
+                {
+                    _explorerPresenter.MainPresenter.ShowError(new Exception($"Unable to resolve the links of {_model.Name}, so some values may not display. " +
+                        "Check that the model is in a valid location and that the models it depends on (e.g. Physical for a Water node) exist, then reselect this node.", exception), overwrite: true);
+                }
+            }
 
             Refresh();
         }
@@ -57,7 +70,7 @@ namespace UserInterface.Presenters
         {
             DisconnectEvents();
             DestroyPresenters();
-            view.Dispose();
+            _view.Dispose();
         }
 
         /// <summary>Refresh this presenter and all sub presenters</summary>
@@ -65,17 +78,17 @@ namespace UserInterface.Presenters
         {
             DisconnectEvents();
 
-            if (!hasSuccessfullyBuiltPresenters)
+            if (!_hasSuccessfullyBuiltPresenters)
                 CreatePresenters();
 
             List<Exception> errors = new List<Exception>();
-            if (model is FactorFromFile factorFromFile)
+            if (_model is FactorFromFile factorFromFile)
             {
                 try { factorFromFile.GetCompositeFactors(); }
                 catch (Exception exception) { errors.Add(exception); }
             }
 
-            foreach (ISubPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in _presenters)
             {
                 try
                 {
@@ -89,7 +102,7 @@ namespace UserInterface.Presenters
             
             try
             {
-                view.Refresh();
+                _view.Refresh();
             }
             catch (Exception exception)
             {
@@ -97,7 +110,7 @@ namespace UserInterface.Presenters
             }
 
             if (errors.Count > 0)
-                explorerPresenter.MainPresenter.ShowError(errors, overwrite:true);
+                _explorerPresenter.MainPresenter.ShowError(errors, overwrite:true);
 
             ConnectEvents();
         }
@@ -105,7 +118,7 @@ namespace UserInterface.Presenters
         /// <summary>Connect all widget events.</summary>
         private void ConnectEvents()
         {
-            foreach (ISubPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in _presenters)
             {
                 presenter.ConnectEvents();
                 if (presenter is GridPresenter grid)
@@ -118,13 +131,13 @@ namespace UserInterface.Presenters
                     update.Click += OnUpdateClick;
             }
 
-            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            _explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
         /// <summary>Disconnect all widget events.</summary>
         private void DisconnectEvents()
         {
-            foreach (ISubPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in _presenters)
             {
                 presenter.DisconnectEvents();
                 if (presenter is GridPresenter grid)
@@ -136,7 +149,7 @@ namespace UserInterface.Presenters
                 if (presenter is UpdatePresenter update)
                     update.Click -= OnUpdateClick;
             }
-            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
+            _explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
 
         /// <summary>
@@ -149,25 +162,27 @@ namespace UserInterface.Presenters
             {
                 DestroyPresenters();
 
-                if (model is XYPairs)
+                if (_model is XYPairs)
                     CreateLayoutXYPairs();
-                else if (model is Physical)
+                else if (_model is Physical)
                     CreateLayoutPhysical();
-                else if (model is WaterBalance)
+                else if (_model is WaterBalance)
                     CreateLayoutWaterBalance();
-                else if (model is CompositeFactor)
+                else if (_model is CompositeFactor)
                     CreateLayoutCompositeFactor();
-                else if (model is FactorFromFile)
+                else if (_model is FactorFromFile)
                     CreateLayoutFactorFromFile();
-                else if (model is Virtual)
+                else if (_model is Virtual)
                     CreateLayoutVirtual();
+                else if (_model is FrostHeatDamageFunctions)
+                    CreateLayoutFrostHeatDamageFunctions();
                 else
                     CreateLayoutGeneric();
-                hasSuccessfullyBuiltPresenters = true;
+                _hasSuccessfullyBuiltPresenters = true;
             }
             catch (Exception exception)
             {
-                explorerPresenter.MainPresenter.ShowError(exception, overwrite:true);
+                _explorerPresenter.MainPresenter.ShowError(exception, overwrite:true);
             }
         }
 
@@ -176,7 +191,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void DestroyPresenters()
         {
-            foreach (ISubPresenter presenter in presenters)
+            foreach (ISubPresenter presenter in _presenters)
             {
                 if (presenter is GridPresenter grid)
                     grid.Detach();
@@ -196,7 +211,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model with changes</param>
         private void OnModelChanged(object changedModel)
         {
-            model = changedModel as IModel;
+            _model = changedModel as IModel;
             Refresh();
         }
 
@@ -213,12 +228,12 @@ namespace UserInterface.Presenters
             DisconnectEvents();
             try
             {
-                foreach (ISubPresenter presenter in presenters)
+                foreach (ISubPresenter presenter in _presenters)
                     presenter.Refresh();
             }
             catch (Exception exception)
             {
-                explorerPresenter.MainPresenter.ShowError(exception);
+                _explorerPresenter.MainPresenter.ShowError(exception);
             }
             finally
             {
@@ -239,11 +254,11 @@ namespace UserInterface.Presenters
             try
             {
                 ChangeProperty command = new ChangeProperty(model, property, lines);
-                explorerPresenter.CommandHistory.Add(command);
+                _explorerPresenter.CommandHistory.Add(command);
             }
             catch (Exception exception)
             {
-                explorerPresenter.MainPresenter.ShowError(exception);
+                _explorerPresenter.MainPresenter.ShowError(exception);
             }
             finally
             {
@@ -258,7 +273,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private void OnListSelectionChanged(object sender, EventArgsValue e)
         {
-            if (model is FactorFromFile factorFromFile)
+            if (_model is FactorFromFile factorFromFile)
             {
                 DisconnectEvents();
                 try
@@ -268,7 +283,7 @@ namespace UserInterface.Presenters
                 }
                 catch (Exception exception)
                 {
-                    explorerPresenter.MainPresenter.ShowError(exception);
+                    _explorerPresenter.MainPresenter.ShowError(exception);
                 }
                 finally
                 {
@@ -292,20 +307,20 @@ namespace UserInterface.Presenters
         /// <param name="position">Which quad to use</param>
         private void AddGraph(WidgetPosition position)
         {
-            GraphView graphView = view.AddComponent(WidgetType.Graph, position) as GraphView;
+            GraphView graphView = _view.AddComponent(WidgetType.Graph, position) as GraphView;
             QuadGraphPresenter graphPresenter = new QuadGraphPresenter();
-            graphPresenter.Attach(model, graphView, explorerPresenter);
+            graphPresenter.Attach(_model, graphView, _explorerPresenter);
             graphPresenter.Refresh();
 
             //Check if graph actually has content, hide if not
             if (graphView.Width > 0 && graphView.Height > 0)
             {
-                presenters.Add(graphPresenter);
+                _presenters.Add(graphPresenter);
             }
             else
             {
                 graphPresenter.Detach();
-                view.RemoveComponent(position);
+                _view.RemoveComponent(position);
             }
         }
 
@@ -315,13 +330,13 @@ namespace UserInterface.Presenters
         /// <param name="position">Which quad to use</param>
         private void AddGrid(WidgetPosition position)
         {
-            ViewBase gridContainer = view.AddComponent(WidgetType.Grid, position);
+            ViewBase gridContainer = _view.AddComponent(WidgetType.Grid, position);
             GridPresenter gridPresenter = new GridPresenter();
-            gridPresenter.Attach(model, gridContainer, explorerPresenter);
+            gridPresenter.Attach(_model, gridContainer, _explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All", "Units" });
             gridPresenter.Refresh();
 
-            presenters.Add(gridPresenter);
+            _presenters.Add(gridPresenter);
         }
 
         /// <summary>
@@ -331,8 +346,8 @@ namespace UserInterface.Presenters
         /// <param name="text">Text to display in this view</param>
         private void AddText(WidgetPosition position, string text)
         {
-            view.AddComponent(WidgetType.Text, position);
-            view.SetLabelText(text);
+            _view.AddComponent(WidgetType.Text, position);
+            _view.SetLabelText(text);
         }
 
         /// <summary>
@@ -341,19 +356,19 @@ namespace UserInterface.Presenters
         /// <param name="position">Which quad to use</param>
         private void AddProperty(WidgetPosition position)
         {
-            PropertyView propertyView = view.AddComponent(WidgetType.Property, position) as PropertyView;
+            PropertyView propertyView = _view.AddComponent(WidgetType.Property, position) as PropertyView;
             PropertyPresenter propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, propertyView, explorerPresenter);
+            propertyPresenter.Attach(_model, propertyView, _explorerPresenter);
 
             //Check if properties actually has content, hide if not
             if (propertyView.AnyProperties)
             {
-                presenters.Add(propertyPresenter);
+                _presenters.Add(propertyPresenter);
             }
             else
             {
                 propertyPresenter.Detach();
-                view.RemoveComponent(position);
+                _view.RemoveComponent(position);
             }
         }
 
@@ -365,11 +380,11 @@ namespace UserInterface.Presenters
         /// <param name="readOnly">Whether the text in this view can be changed by the user</param>
         private void AddCode(WidgetPosition position, bool readOnly)
         {
-            EditorView editorView = view.AddComponent(WidgetType.Code, position) as EditorView;
+            EditorView editorView = _view.AddComponent(WidgetType.Code, position) as EditorView;
             editorView.ReadOnly = readOnly;
             EditorPresenter editorPresenter = new EditorPresenter();
-            editorPresenter.Attach(model, editorView, explorerPresenter);
-            presenters.Add(editorPresenter);
+            editorPresenter.Attach(_model, editorView, _explorerPresenter);
+            _presenters.Add(editorPresenter);
         }
 
         /// <summary>
@@ -378,7 +393,7 @@ namespace UserInterface.Presenters
         /// <param name="lines"></param>
         private void SetCode(string[] lines)
         {
-            foreach(ISubPresenter presenter in presenters)
+            foreach(ISubPresenter presenter in _presenters)
                 if (presenter is EditorPresenter editor)
                     editor.SetCode(lines);
         }
@@ -390,10 +405,10 @@ namespace UserInterface.Presenters
         /// <param name="table"></param>
         private void AddList(WidgetPosition position)
         {
-            ExperimentView experimentView = view.AddComponent(WidgetType.List, position) as ExperimentView;
+            ExperimentView experimentView = _view.AddComponent(WidgetType.List, position) as ExperimentView;
             ListPresenter listPresenter = new ListPresenter();
-            listPresenter.Attach(model, experimentView, explorerPresenter);
-            presenters.Add(listPresenter);
+            listPresenter.Attach(_model, experimentView, _explorerPresenter);
+            _presenters.Add(listPresenter);
         }
 
         /// <summary>
@@ -403,10 +418,10 @@ namespace UserInterface.Presenters
         /// <param name="table"></param>
         private void AddUpdateButton(WidgetPosition position)
         {
-            ButtonView buttonView = view.AddComponent(WidgetType.Button, position) as ButtonView;
+            ButtonView buttonView = _view.AddComponent(WidgetType.Button, position) as ButtonView;
             UpdatePresenter updatePresenter = new UpdatePresenter();
-            updatePresenter.Attach(model, buttonView, explorerPresenter);
-            presenters.Add(updatePresenter);
+            updatePresenter.Attach(_model, buttonView, _explorerPresenter);
+            _presenters.Add(updatePresenter);
         }
 
         /// <summary>
@@ -424,11 +439,11 @@ namespace UserInterface.Presenters
         /// </summary>
         private void CreateLayoutXYPairs()
         {
-            DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+            DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(_model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
 
-            XYPairs xypairs = model as XYPairs;
+            XYPairs xypairs = _model as XYPairs;
             if (xypairs == null)
-                throw new System.Exception($"Model {model.Name} is not an XY Pairs but is trying to use the XY Pairs view layout");
+                throw new System.Exception($"Model {_model.Name} is not an XY Pairs but is trying to use the XY Pairs view layout");
             
             string description = "";
             if (descriptionName != null)
@@ -448,7 +463,7 @@ namespace UserInterface.Presenters
             CreateLayoutGeneric();
             string warnings = "Note: values in red are estimates only and needed for the simulation of soil temperature. Overwrite with local values wherever possible";
             AddText(WidgetPosition.TopLeft, warnings);
-            view.OverrideSlider(0.6);
+            _view.OverrideSlider(0.6);
         }
 
         /// <summary>
@@ -457,7 +472,7 @@ namespace UserInterface.Presenters
         private void CreateLayoutWaterBalance()
         {
             CreateLayoutGeneric();
-            view.OverrideSlider(0.3);
+            _view.OverrideSlider(0.3);
         }
 
         /// <summary>
@@ -468,7 +483,7 @@ namespace UserInterface.Presenters
             AddCode(WidgetPosition.TopLeft, false);
             AddText(WidgetPosition.TopRight, "Simulation Descriptors:");
             AddGrid(WidgetPosition.BottomRight);
-            view.OverrideSlider(0.7);
+            _view.OverrideSlider(0.7);
         }
 
         /// <summary>
@@ -480,7 +495,7 @@ namespace UserInterface.Presenters
             AddUpdateButton(WidgetPosition.TopRight);
             AddList(WidgetPosition.BottomLeft);
             AddCode(WidgetPosition.BottomRight, true);
-            view.OverrideSlider(0.6);
+            _view.OverrideSlider(0.6);
         }
 
         /// <summary>
@@ -491,7 +506,16 @@ namespace UserInterface.Presenters
             AddUpdateButton(WidgetPosition.TopRight);
             AddProperty(WidgetPosition.TopLeft);
             AddCode(WidgetPosition.BottomRight, true);
-            view.OverrideSlider(0.3);
+            _view.OverrideSlider(0.3);
+        }
+
+        /// <summary>
+        /// Create layout for a FrostHeatDamageFunctions, property and text
+        /// </summary>
+        private void CreateLayoutFrostHeatDamageFunctions()
+        {
+            AddProperty(WidgetPosition.TopLeft);
+            AddText(WidgetPosition.TopRight, FrostHeatDamageFunctions.HelpText);
         }
     }
 }

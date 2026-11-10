@@ -239,6 +239,12 @@ namespace Models
         [Units("0-1")]
         public double CanopyCover { get { return RadiationInterception / Radn; } }
 
+        /// <summary>Gets the Green canopy cover.</summary>
+        [Description("Green canopy cover (0-1)")]
+        [Units("0-1")]
+        public double GreenCanopyCover { get { return RadiationInterceptionOnGreen / Radn; } }
+
+
         /// <summary>Gets the radiation term of PET.</summary>
         [Description("Radiation component of PET")]
         [Units("mm")]

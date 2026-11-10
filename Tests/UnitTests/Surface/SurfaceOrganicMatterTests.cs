@@ -55,6 +55,56 @@ namespace UnitTests.SurfaceOrganicMatterTests
         }
 
         /// <summary>
+        /// Checks the reported C and N totals for each surface organic matter fraction.
+        /// </summary>
+        [Test]
+        public void ReportsCarbonAndNitrogenByPool()
+        {
+            var surfaceOrganicMatter = new SurfaceOrganicMatter();
+            var firstResidue = new SurfOrganicMatterType("first", "residue");
+            var secondResidue = new SurfOrganicMatterType("second", "residue");
+
+            firstResidue.Standing[0].C = 1;
+            firstResidue.Standing[0].N = 2;
+            firstResidue.Lying[0].C = 3;
+            firstResidue.Lying[0].N = 4;
+            secondResidue.Standing[0].C = 5;
+            secondResidue.Standing[0].N = 6;
+            secondResidue.Lying[0].C = 7;
+            secondResidue.Lying[0].N = 8;
+
+            firstResidue.Standing[1].C = 10;
+            firstResidue.Standing[1].N = 50;
+            firstResidue.Lying[1].C = 20;
+            firstResidue.Lying[1].N = 60;
+            secondResidue.Standing[1].C = 30;
+            secondResidue.Standing[1].N = 70;
+            secondResidue.Lying[1].C = 40;
+            secondResidue.Lying[1].N = 80;
+
+            firstResidue.Standing[2].C = 100;
+            firstResidue.Standing[2].N = 500;
+            firstResidue.Lying[2].C = 200;
+            firstResidue.Lying[2].N = 600;
+            secondResidue.Standing[2].C = 300;
+            secondResidue.Standing[2].N = 700;
+            secondResidue.Lying[2].C = 400;
+            secondResidue.Lying[2].N = 800;
+
+            surfaceOrganicMatter.SurfOM.Add(firstResidue);
+            surfaceOrganicMatter.SurfOM.Add(secondResidue);
+
+            Assert.That(surfaceOrganicMatter.CarbohydrateC, Is.EqualTo(16));
+            Assert.That(surfaceOrganicMatter.CarbohydrateN, Is.EqualTo(20));
+            Assert.That(surfaceOrganicMatter.CelluloseC, Is.EqualTo(100));
+            Assert.That(surfaceOrganicMatter.CelluloseN, Is.EqualTo(260));
+            Assert.That(surfaceOrganicMatter.LigninC, Is.EqualTo(1000));
+            Assert.That(surfaceOrganicMatter.LigninN, Is.EqualTo(2600));
+            Assert.That(surfaceOrganicMatter.C, Is.EqualTo(1116));
+            Assert.That(surfaceOrganicMatter.N, Is.EqualTo(2880));
+        }
+
+        /// <summary>
         /// Ensures ReadParam() rejects InitialStandingFraction outside the [0, 1] range.
         /// </summary>
         [TestCase(-0.01)]

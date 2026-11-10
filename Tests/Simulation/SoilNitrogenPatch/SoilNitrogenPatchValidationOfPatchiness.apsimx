@@ -1556,8 +1556,7 @@
                     "([Reporting]Script.SoilNO3[2]-[Reporting]Script.SoilNO3[1]) as dltSoilNO3",
                     "([Reporting]Script.SoilDenit[2]-[Reporting]Script.SoilDenit[1]) as dltSoilDenit",
                     "([Reporting]Script.SoilDenit[2]-[Reporting]Script.SoilDenit[1]) as dltSoilDenit",
-                    "([Reporting]Script.TotalWt[2]-[Reporting]Script.TotalWt[1]) as dltTotalWt",
-                    "[AGPRyegrass].NitrogenUptake."
+                    "([Reporting]Script.TotalWt[2]-[Reporting]Script.TotalWt[1]) as dltTotalWt"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
