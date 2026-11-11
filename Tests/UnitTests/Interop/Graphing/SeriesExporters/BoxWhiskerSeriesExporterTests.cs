@@ -43,7 +43,7 @@ namespace UnitTests.Graphing.SeriesExporters
             Assert.That(boxPlot.OutlierSize, Is.EqualTo(7));
 
             // Colours
-            Assert.That(boxPlot.Stroke, Is.EqualTo(OxyColors.Transparent));
+            Assert.That(boxPlot.Stroke, Is.EqualTo(OxyColors.Red));
             Assert.That(boxPlot.Fill, Is.EqualTo(OxyColors.Red));
 
             // Title

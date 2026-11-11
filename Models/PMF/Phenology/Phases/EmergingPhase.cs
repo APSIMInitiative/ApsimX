@@ -104,6 +104,7 @@ namespace Models.PMF.Phen
             ProgressThroughPhase = 0;
             Target = 0;
             DateToProgress = null;
+            fractionCompleteYesterday = 0;
             startDate = DateTime.MinValue;
         }
 

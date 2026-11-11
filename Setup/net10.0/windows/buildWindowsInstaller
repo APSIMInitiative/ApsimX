@@ -2,9 +2,14 @@
 #
 # This script will build a windows installer for .NET Core APSIM NG using innosetup and signing with 
 #
-# Takes two arguments:
+# Takes up to three arguments:
 # 1. Version number
 # 2. Optional output file name. Default value is apsim-$version.deb.
+# 3. Optional stage: publish | package | all (default).
+#    publish - version stamp and dotnet publish only (so binaries can be code signed).
+#    package - build the installer from an existing (signed) publish folder.
+
+set -e
 
 # Get version number (first argument).
 # Abort with error if no version number provided.
@@ -17,22 +22,27 @@ cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
 apsimx="$(cd ../../.. >/dev/null && pwd )"
 echo "apsimx path: $apsimx"
 
-# Version stamp the Models and ApsimNG assemblies.
-sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
-cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+stage="${3:-all}"
+publish_dir="$apsimx/bin/Release/net10.0/win-x64/publish"
 
-if [[ $# -ge 2 ]]; then
-    outfile="$2"
-else
-    outfile="apsim-$version.exe"
+if [[ $stage == "all" || $stage == "publish" ]]; then
+    # Version stamp the Models and ApsimNG assemblies.
+    sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
+    cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+
+    #run dotnet 
+    dotnet publish -c Release -f net10.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
+
+    # Place sqlite3.dll in the publish folder so that it is code signed with the other binaries.
+    cp "$apsimx/DeploymentSupport/Windows/Bin64/sqlite3.dll" "$publish_dir/"
 fi
 
-#run dotnet 
-dotnet publish -c Release -f net10.0 -r win-x64 -m:1 --no-self-contained "$apsimx/ApsimX.sln"
-
-#run installer generator program
-cd $apsimx
-xvfb-run sh -c "wine /inno/ISCC.exe Setup/net10.0/windows/apsimx.iss"
+if [[ $stage == "all" || $stage == "package" ]]; then
+    test -f "$publish_dir/Models.exe" || { echo "Publish folder not found: $publish_dir"; exit 1; }
+    #run installer generator program
+    cd $apsimx
+    xvfb-run sh -c "wine /inno/ISCC.exe Setup/net10.0/windows/apsimx.iss"
+fi
 
 
 

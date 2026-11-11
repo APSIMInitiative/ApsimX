@@ -26,7 +26,12 @@ namespace Models.Core
         /// <summary>
         /// A link to an ancestor model.
         /// </summary>
-        Ancestor
+        Ancestor,
+
+        /// <summary>
+        /// A link to a sibling model, a model with the same parent.
+        /// </summary>
+        Sibling
     }
 
     /// <summary>
