@@ -1844,28 +1844,28 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1979-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1980-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1980-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1981-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1981-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1982-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.01);",
                                   "Line": "1982-12-31 [TreeThinning].Script.DoThin(0.01);"
@@ -1994,28 +1994,28 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1985-06-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.068);",
                                   "Line": "1985-06-15 [TreeThinning].Script.DoThin(0.068);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1986-06-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.029);",
                                   "Line": "1986-06-15 [TreeThinning].Script.DoThin(0.029);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1987-08-27",
                                   "Action": "[TreeThinning].Script.DoThin(0.015);",
                                   "Line": "1987-08-27 [TreeThinning].Script.DoThin(0.015);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1988-04-03",
                                   "Action": "[TreeThinning].Script.DoThin(0.032);",
                                   "Line": "1988-04-03 [TreeThinning].Script.DoThin(0.032);"
@@ -2116,14 +2116,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1978-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1978-12-31 [TreeThinning].Script.DoThin(0.05);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1979-12-31",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1979-12-31 [TreeThinning].Script.DoThin(0.05);"
@@ -2158,14 +2158,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1987-08-27",
                                   "Action": "[TreeThinning].Script.DoThin(0.014);",
                                   "Line": "1987-08-27 [TreeThinning].Script.DoThin(0.014);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1988-04-03",
                                   "Action": "[TreeThinning].Script.DoThin(0.014);",
                                   "Line": "1988-04-03 [TreeThinning].Script.DoThin(0.014);"
@@ -2409,7 +2409,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1987-04-13",
                                   "Action": "[TreeThinning].Script.DoThin(0.025);",
                                   "Line": "1987-04-13 [TreeThinning].Script.DoThin(0.025);"
@@ -2423,7 +2423,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1989-08-01",
                                   "Action": "[TreeThinning].Script.DoThin(0.021);",
                                   "Line": "1989-08-01 [TreeThinning].Script.DoThin(0.021);"
@@ -3042,14 +3042,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1989-05-01",
                                   "Action": "[TreeThinning].Script.DoThin(0.02);",
                                   "Line": "1989-05-01 [TreeThinning].Script.DoThin(0.02);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1992-01-01",
                                   "Action": "[TreeThinning].Script.DoThin(0.023);",
                                   "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.023);"
@@ -3465,14 +3465,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1987-04-01",
                                   "Action": "[TreeThinning].Script.DoThin(0.011);",
                                   "Line": "1987-04-01 [TreeThinning].Script.DoThin(0.011);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1988-06-01",
                                   "Action": "[TreeThinning].Script.DoThin(0.011);",
                                   "Line": "1988-06-01 [TreeThinning].Script.DoThin(0.011);"
@@ -13999,7 +13999,7 @@
                           "Parameters": [
                             {
                               "Key": "RowSpace",
-                              "Value": "2.67"
+                              "Value": "2.8674"
                             },
                             {
                               "Key": "RowWidth",
@@ -14089,14 +14089,14 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1942-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.1107, 0.08856);",
                               "Line": "1942-07-15 [TreeThinning].Script.DoThin(0.1107, 0.08856);"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1950-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.029718876, 0.00891566);",
                               "Line": "1950-07-15 [TreeThinning].Script.DoThin(0.029718876, 0.00891566);"
@@ -14117,14 +14117,14 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1959-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.01998002, 0.00599401);",
                               "Line": "1959-07-15 [TreeThinning].Script.DoThin(0.01998002, 0.00599401);"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1964-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.02039, 0.006117);",
                               "Line": "1964-07-15 [TreeThinning].Script.DoThin(0.02039, 0.006117);"
@@ -14145,21 +14145,21 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1971-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.01769, 0.005307);",
                               "Line": "1971-07-15 [TreeThinning].Script.DoThin(0.01769, 0.005307);"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1974-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.04449, 0.013347);",
                               "Line": "1974-07-15 [TreeThinning].Script.DoThin(0.04449, 0.013347);"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1978-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.06208, 0.018624);",
                               "Line": "1978-07-15 [TreeThinning].Script.DoThin(0.06208, 0.018624);"
@@ -14173,7 +14173,7 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1986-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.07580, 0.02274);",
                               "Line": "1986-07-15 [TreeThinning].Script.DoThin(0.07580, 0.02274);"
@@ -14187,14 +14187,14 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1990-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.05324, 0.015972);",
                               "Line": "1990-07-15 [TreeThinning].Script.DoThin(0.05324, 0.015972);"
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1992-07-15",
                               "Action": "[TreeThinning].Script.DoThin(0.05775, 0.017325);",
                               "Line": "1992-07-15 [TreeThinning].Script.DoThin(0.05775, 0.017325);"
@@ -21030,7 +21030,7 @@
                           "Parameters": [
                             {
                               "Key": "RowSpace",
-                              "Value": "2.67"
+                              "Value": "2.6114"
                             },
                             {
                               "Key": "RowWidth",
@@ -21191,7 +21191,7 @@
                           "OperationsList": [
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1948-05-15",
                               "Action": "[TreeThinning].Script.DoThin(0.02429, 0.007287);",
                               "Line": "1948-05-15 [TreeThinning].Script.DoThin(0.02429, 0.007287);"
@@ -21205,7 +21205,7 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1955-05-15",
                               "Action": "[TreeThinning].Script.DoThin(0.01255, 0.003765);",
                               "Line": "1955-05-15 [TreeThinning].Script.DoThin(0.01255, 0.003765);"
@@ -21219,7 +21219,7 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1959-05-15",
                               "Action": "[TreeThinning].Script.DoThin(0.02642, 0.007926);",
                               "Line": "1959-05-15 [TreeThinning].Script.DoThin(0.02642, 0.007926);"
@@ -21233,7 +21233,7 @@
                             },
                             {
                               "$type": "Models.Operation, Models",
-                              "Enabled": true,
+                              "Enabled": false,
                               "Date": "1966-05-15",
                               "Action": "[TreeThinning].Script.DoThin(0.04075, 0.012225);",
                               "Line": "1966-05-15 [TreeThinning].Script.DoThin(0.04075, 0.012225);"
@@ -26087,14 +26087,14 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1976-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.02);",
                                   "Line": "1976-07-15 [TreeThinning].Script.DoThin(0.02);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1977-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.003);",
                                   "Line": "1977-07-15 [TreeThinning].Script.DoThin(0.003);"
@@ -26108,49 +26108,49 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1979-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.01);",
                                   "Line": "1979-07-15 [TreeThinning].Script.DoThin(0.01);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1980-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.003);",
                                   "Line": "1980-07-15 [TreeThinning].Script.DoThin(0.003);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1981-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.016);",
                                   "Line": "1981-07-15 [TreeThinning].Script.DoThin(0.016);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1982-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.067);",
                                   "Line": "1982-07-15 [TreeThinning].Script.DoThin(0.067);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1983-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.060);",
                                   "Line": "1983-07-15 [TreeThinning].Script.DoThin(0.060);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1984-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.021);",
                                   "Line": "1984-07-15 [TreeThinning].Script.DoThin(0.021);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1985-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.037);",
                                   "Line": "1985-07-15 [TreeThinning].Script.DoThin(0.037);"
@@ -26188,7 +26188,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1976-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.005);",
                                   "Line": "1976-07-15 [TreeThinning].Script.DoThin(0.005);"
@@ -26202,7 +26202,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1978-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.005);",
                                   "Line": "1978-07-15 [TreeThinning].Script.DoThin(0.005);"
@@ -26258,7 +26258,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1984-07-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.019);",
                                   "Line": "1984-07-15 [TreeThinning].Script.DoThin(0.019);"
@@ -33047,7 +33047,7 @@
                               "Parameters": [
                                 {
                                   "Key": "RowSpace",
-                                  "Value": "2.4384"
+                                  "Value": "2.2869"
                                 },
                                 {
                                   "Key": "RowWidth",
@@ -40006,7 +40006,7 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "1978-11-15",
                                   "Action": "[TreeThinning].Script.DoThin(0.05);",
                                   "Line": "1978-11-15 [TreeThinning].Script.DoThin(0.05);"
@@ -58408,22 +58408,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.07);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.07);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0117);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0117);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0016);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0016);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0016);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0016);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -58495,22 +58495,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.1);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.1);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0448);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0448);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.055);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.055);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0243);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0243);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.02);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.02);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0087);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0087);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -58657,22 +58657,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.06);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.06);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0021);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0021);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.03);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.03);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.001);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.001);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.02);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.02);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0007);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0007);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -58819,22 +58819,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.008);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.008);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.006);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.006);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -64593,22 +64593,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.005);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.005);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.005);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.005);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -64680,22 +64680,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.1);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.1);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0231);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0231);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.005);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.005);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0011);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0011);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.021);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.021);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0047);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0047);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -64842,22 +64842,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.08);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.08);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0289);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0289);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.05);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0179);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0179);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.02);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.02);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0071);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0071);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -65004,22 +65004,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.05);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0066);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0066);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.05);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.05);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0066);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0066);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.014);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.014);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0018);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -65895,14 +65895,14 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1988-10-16",
                                       "Action": "[TreeThinning].Script.DoThin(0.005);",
                                       "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.005);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1989-10-16",
                                       "Action": "[TreeThinning].Script.DoThin(0.021);",
                                       "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.021);"
@@ -70822,22 +70822,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.07);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.07);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0376);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0376);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.055);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.055);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0294);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0294);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0053);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0053);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -70909,22 +70909,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.1);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.1);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0359);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0359);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.015);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.015);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0052);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0052);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.024);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.024);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0084);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0084);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -71071,22 +71071,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.16);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.16);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.1163);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.1163);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.09);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.09);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0647);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0647);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.025);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.025);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0178);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0178);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -71233,22 +71233,22 @@
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1987-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.01);",
-                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.01);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1987-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1988-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.068);",
-                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.068);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1988-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
                                           "Enabled": true,
                                           "Date": "1989-10-16",
-                                          "Action": "[TreeThinning].Script.DoThin(0.015);",
-                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.015);"
+                                          "Action": "[TreeThinning].Script.DoThin(0.0);",
+                                          "Line": "1989-10-16 [TreeThinning].Script.DoThin(0.0);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
@@ -99681,21 +99681,21 @@
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "2002-03-02",
                                   "Action": "[TreeThinning].Script.DoThin(0.012);",
                                   "Line": "2002-03-02 [TreeThinning].Script.DoThin(0.012);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "2003-07-27",
                                   "Action": "[TreeThinning].Script.DoThin(0.006);",
                                   "Line": "2003-07-27 [TreeThinning].Script.DoThin(0.006);"
                                 },
                                 {
                                   "$type": "Models.Operation, Models",
-                                  "Enabled": true,
+                                  "Enabled": false,
                                   "Date": "2006-06-20",
                                   "Action": "[TreeThinning].Script.DoThin(0.005);",
                                   "Line": "2006-06-20 [TreeThinning].Script.DoThin(0.005);"
@@ -104932,7 +104932,7 @@
                                       "OperationsList": [
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1987-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.058);",
                                           "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.058);"
@@ -104960,7 +104960,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -104981,21 +104981,21 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1997-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.019);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.019);"
@@ -105165,7 +105165,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1987-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.067);",
                                           "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.067);"
@@ -105179,7 +105179,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1989-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105193,7 +105193,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.018);"
@@ -105214,14 +105214,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.009);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1997-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105249,14 +105249,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2005-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.019);",
                                           "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.019);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2008-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.029);",
                                           "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.029);"
@@ -105300,21 +105300,21 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1987-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.050);",
                                           "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.050);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1988-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1989-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105342,14 +105342,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1994-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.036);",
                                           "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.036);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.028);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.028);"
@@ -105363,7 +105363,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.019);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.019);"
@@ -105377,7 +105377,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2001-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.049);",
                                           "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.049);"
@@ -105519,7 +105519,7 @@
                                       "OperationsList": [
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1987-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.067);",
                                           "Line": "1987-01-01 [TreeThinning].Script.DoThin(0.067);"
@@ -105533,7 +105533,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1989-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105568,7 +105568,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105582,7 +105582,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105596,21 +105596,21 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2001-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.028);",
                                           "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.028);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2005-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.094);",
                                           "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.094);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2008-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.094);",
                                           "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.094);"
@@ -105664,14 +105664,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1988-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.037);",
                                           "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.037);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1989-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.019);",
                                           "Line": "1989-01-01 [TreeThinning].Script.DoThin(0.019);"
@@ -105685,49 +105685,49 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.010);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.010);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1993-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.020);",
                                           "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.020);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1994-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.020);",
                                           "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.020);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.021);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.021);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1997-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.011);",
                                           "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.011);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.022);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.022);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1999-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.011);",
                                           "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.011);"
@@ -105904,7 +105904,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1988-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1988-01-01 [TreeThinning].Script.DoThin(0.009);"
@@ -105918,14 +105918,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1990-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1990-01-01 [TreeThinning].Script.DoThin(0.018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.036);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.036);"
@@ -105939,49 +105939,49 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1994-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.028);",
                                           "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.028);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.010);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.010);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1997-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.039);",
                                           "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.039);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.020);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.020);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1999-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.010);",
                                           "Line": "1999-01-01 [TreeThinning].Script.DoThin(0.010);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2001-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.011);",
                                           "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.011);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2005-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.096);",
                                           "Line": "2005-01-01 [TreeThinning].Script.DoThin(0.096);"
@@ -106067,7 +106067,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.038);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.038);"
@@ -106081,14 +106081,14 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1994-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.020);",
                                           "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.020);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.070);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.070);"
@@ -106116,7 +106116,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2001-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.032);",
                                           "Line": "2001-01-01 [TreeThinning].Script.DoThin(0.032);"
@@ -106293,42 +106293,42 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1992-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.018);",
                                           "Line": "1992-01-01 [TreeThinning].Script.DoThin(0.018);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1993-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.028);",
                                           "Line": "1993-01-01 [TreeThinning].Script.DoThin(0.028);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1994-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.009);",
                                           "Line": "1994-01-01 [TreeThinning].Script.DoThin(0.009);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1996-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.010);",
                                           "Line": "1996-01-01 [TreeThinning].Script.DoThin(0.010);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1997-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.010);",
                                           "Line": "1997-01-01 [TreeThinning].Script.DoThin(0.010);"
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "1998-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.029);",
                                           "Line": "1998-01-01 [TreeThinning].Script.DoThin(0.029);"
@@ -106356,7 +106356,7 @@
                                         },
                                         {
                                           "$type": "Models.Operation, Models",
-                                          "Enabled": true,
+                                          "Enabled": false,
                                           "Date": "2008-01-01",
                                           "Action": "[TreeThinning].Script.DoThin(0.044);",
                                           "Line": "2008-01-01 [TreeThinning].Script.DoThin(0.044);"
@@ -112089,14 +112089,14 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1994-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.001);",
                                       "Line": "1994-02-15 [TreeThinning].Script.DoThin(0.001);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1995-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1995-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -112110,7 +112110,7 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1997-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1997-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -112124,14 +112124,14 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1999-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.005);",
                                       "Line": "1999-02-15 [TreeThinning].Script.DoThin(0.005);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2000-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.004);",
                                       "Line": "2000-02-15 [TreeThinning].Script.DoThin(0.004);"
@@ -112162,7 +112162,7 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1993-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.002);",
                                       "Line": "1993-02-15 [TreeThinning].Script.DoThin(0.002);"
@@ -112176,7 +112176,7 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1995-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1995-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -112190,35 +112190,35 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1997-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.009);",
                                       "Line": "1997-02-15 [TreeThinning].Script.DoThin(0.009);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1998-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.005);",
                                       "Line": "1998-02-15 [TreeThinning].Script.DoThin(0.005);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1999-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.003);",
                                       "Line": "1999-02-15 [TreeThinning].Script.DoThin(0.003);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2000-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.007);",
                                       "Line": "2000-02-15 [TreeThinning].Script.DoThin(0.007);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2001-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "2001-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -112361,49 +112361,49 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1995-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.009);",
                                       "Line": "1995-02-15 [TreeThinning].Script.DoThin(0.009);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1996-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.002);",
                                       "Line": "1996-02-15 [TreeThinning].Script.DoThin(0.002);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1997-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.014);",
                                       "Line": "1997-02-15 [TreeThinning].Script.DoThin(0.014);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1998-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.002);",
                                       "Line": "1998-02-15 [TreeThinning].Script.DoThin(0.002);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1999-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.008);",
                                       "Line": "1999-02-15 [TreeThinning].Script.DoThin(0.008);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2000-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.005);",
                                       "Line": "2000-02-15 [TreeThinning].Script.DoThin(0.005);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2001-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.004);",
                                       "Line": "2001-02-15 [TreeThinning].Script.DoThin(0.004);"
@@ -114345,35 +114345,35 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1993-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.002);",
                                       "Line": "1993-02-15 [TreeThinning].Script.DoThin(0.002);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1994-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.003);",
                                       "Line": "1994-02-15 [TreeThinning].Script.DoThin(0.003);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1995-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1995-02-15 [TreeThinning].Script.DoThin(0.010);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1996-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.004);",
                                       "Line": "1996-02-15 [TreeThinning].Script.DoThin(0.004);"
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1997-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1997-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -114387,7 +114387,7 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "1999-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.010);",
                                       "Line": "1999-02-15 [TreeThinning].Script.DoThin(0.010);"
@@ -114401,7 +114401,7 @@
                                     },
                                     {
                                       "$type": "Models.Operation, Models",
-                                      "Enabled": true,
+                                      "Enabled": false,
                                       "Date": "2001-02-15",
                                       "Action": "[TreeThinning].Script.DoThin(0.003);",
                                       "Line": "2001-02-15 [TreeThinning].Script.DoThin(0.003);"

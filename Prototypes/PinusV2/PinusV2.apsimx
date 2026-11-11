@@ -303,7 +303,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Mortality, and therefore its efect on population density (stocking), is set by the user of the model as a thinning operation.    \n\n\n",
+                  "Text": "Kept at zero: this generic plant mortality reduces stem numbers without removing biomass. Pinus mortality is in StemMortality (applied through the TreeThinning script).",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -313,6 +313,66 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Units": "/y",
+              "Name": "StemMortality",
+              "Expression": "[StemMortality].Background + [StemMortality].RateAtMaximum * max(0, ([Pinus].Stem.SizeClass.StandDensityIndex / [StemMortality].MaximumSDI - [StemMortality].Onset) / (1 - [StemMortality].Onset))",
+              "ResourceName": null,
+              "Enabled": true,
+              "ReadOnly": false,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Annual stem mortality, applied monthly by the TreeThinning script through the stem size distribution (smallest trees first, with the thinning-from-below selectivity), so dead trees' leaves and branches go to litter and the DBH distribution stays consistent. Stands are also never allowed above MaximumSDI. Structure follows the self-thinning literature: background mortality plus competition mortality starting at Onset x MaximumSDI (Reineke stand density index, stems/ha at 25.4 cm quadratic mean DBH; Long 1985; Williams 1994; Mason 2023 NZ radiata) and rising linearly to RateAtMaximum at MaximumSDI. Calibrated on 241 inter-measurement intervals from the validation sites with real stocking records (background 0.38%/yr and 1.5%/yr at the maximum fitted as well as an unconstrained fit). MaximumSDI: radiata 1600 (published indirect values 1500-2200, Mason 2023, Vanclay & Sands 2009; validation radiata stands peak at 1020-1230 on mostly dry sites); southern pines 1100 (loblolly 900-1250, Zhao et al. 2020, VanderSchaaf 2006; set in the taeda, elliottii, caribaea and hybrid cultivars; unverified for slash, Caribbean and hybrids). Background mortality published at 0.5-1%/yr (loblolly 0.8%/yr, Zeide & Zhang 2006).",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.004,
+                  "Units": "/y",
+                  "Name": "Background",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.015,
+                  "Units": "/y",
+                  "Name": "RateAtMaximum",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1600.0,
+                  "Units": "/ha",
+                  "Name": "MaximumSDI",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.55,
+                  "Units": "0-1",
+                  "Name": "Onset",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -5904,7 +5964,8 @@
                     "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
-                    "[Leaf].MaximumNConc.FixedValue = 0.008"
+                    "[Leaf].MaximumNConc.FixedValue = 0.008",
+                    "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -5954,7 +6015,8 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154"
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
+                    "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6021,7 +6083,8 @@
                     "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
-                    "[Leaf].MaximumNConc.FixedValue = 0.008"
+                    "[Leaf].MaximumNConc.FixedValue = 0.008",
+                    "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100"
                   ],
                   "Name": "hybrid",
                   "ResourceName": null,
@@ -6695,7 +6758,8 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154"
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
+                    "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
@@ -6758,6 +6822,25 @@
             "        private Models.Forestry.StemSizeDistribution SizeClass;",
             "        ",
             "        public IStructure Structure { private get; set; }",
+            "",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].StemMortality\")]",
+            "        private IFunction StemMortality;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].StemMortality.MaximumSDI\")]",
+            "        private IFunction MaximumSDI;",
+            "",
+            "        /// <summary>",
+            "        /// Monthly stem mortality: the annual rate from [Pinus].StemMortality, smallest trees first, then any excess over MaximumSDI.",
+            "        /// Removals below 10% of stems use the mortality branch of DoThin (leaves, branches and fine roots to litter, stems off site as standing dead).",
+            "        /// </summary>",
+            "        [EventSubscribe(\"StartOfMonth\")]",
+            "        private void OnStartOfMonth(object sender, EventArgs e)",
+            "        {",
+            "            if (!Pinus.IsAlive || Pinus.Population <= 0) return;",
+            "            double annual = Math.Min(0.5, Math.Max(0, StemMortality.Value()));",
+            "            if (annual > 0) DoThinBySize(1 - Math.Pow(1 - annual, 1.0 / 12.0), SizeClass.MaximumRemovalSelectivity);",
+            "            double sdi = SizeClass.StandDensityIndex, smax = MaximumSDI.Value();",
+            "            if (sdi > smax && sdi > 0) DoThinBySize(Math.Min(0.5, 1 - smax / sdi), SizeClass.MaximumRemovalSelectivity);",
+            "        }",
             "",
             "        /// <summary>Move a fraction of coarse roots into soil FOM, distributed like the live fine roots (CoarseRoot is a GenericOrgan, so its residue would otherwise go to the surface).</summary>",
             "        private void CoarseRootToSoil(IHasDamageableBiomass CoarseRoot, IHasDamageableBiomass FineRoot, double fr)",
