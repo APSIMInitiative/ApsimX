@@ -70,6 +70,18 @@ public class Program
             {
                 Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
             }
+            else if (options.JobComplete)
+            {
+                string payload = AvaUtilities.BuildPayload(
+                    options.PullRequestNumber,
+                    options.FullCommitHash,
+                    options.JobPath,
+                    options.JobTime,
+                    AvaUtilities.ReadLogLines(options.LogFile));
+                using var client = new System.Net.Http.HttpClient();
+                AvaUtilities.PostAsync(client, payload, AvaUtilities.JobCompleteRoute).GetAwaiter().GetResult();
+                logger.LogInformation("A.V.A server notified that the job is complete.");
+            }
             if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
                 Stopwatch stopwatch = new Stopwatch();
