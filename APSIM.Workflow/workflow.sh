@@ -7,9 +7,6 @@ function initialise {
     sleep 10
   fi
   # Installs jq if missing for A.V.A job complete call.
-  if ! command -v jq > /dev/null;then
-    sudo apt-get install -y jq
-  fi
   # Pull down the apsim next gen and apsim performance stats collector docker images
   sudo docker pull "apsiminitiative/apsimplusr:pr-$PR_NUMBER"
   sudo docker pull apsiminitiative/postats2-collector:latest
@@ -65,19 +62,12 @@ echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt
 # Notify the A.V.A server that the job is complete.
 # A job here is a single APSIM file which will be a single experiment.
 function notify_job_complete {
-  local rel_path="${Path#/wd/}"
-  local payload
-  payload=$(jq -n \
-    --arg pr "$PR_NUMBER" \
-    --arg commit "$FULL_COMMIT_HASH" \
-    --arg path "$rel_path" \
-    --arg time "$(printf '%.1f' "$elapsed")" \
-    --slurpfile data <(jq -R . local.stdout.txt | jq -s .) \
-    '{pullRequest: $pr, commit: $commit, path: $path, time: $time, data: $data[0]}')
-
-  curl -sS -X POST "https://ava.apsim.info/api/pr/jobcomplete" \
-    -H "Content-Type: application/json" \
-    -d "$payload" >> local.stdout.txt 2>&1 || true
+  # Runs APSIM.Workflow from the apsimplusr container to post the result to A.V.A.
+  # A failed notification must not change the job's exit code.
+  local job_time
+  job_time=$(printf '%.1f' "$elapsed")
+  local log_file=/wd/local.stdout.txt
+  sudo docker run --rm -v $PWD:/wd -w=/wd --entrypoint dotnet "apsiminitiative/apsimplusr:pr-$PR_NUMBER" /app/APSIM.Workflow.dll --job-complete --pr-number "$PR_NUMBER" --full-commit-hash "$FULL_COMMIT_HASH" --job-path "$Path" --job-time "$job_time" --log-file "$log_file" &>> local.stdout.txt || true
 }
 
 notify_job_complete
