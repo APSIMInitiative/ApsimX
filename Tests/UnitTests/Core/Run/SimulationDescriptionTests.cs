@@ -275,7 +275,7 @@ namespace UnitTests.Core.Run
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
             Simulations sims = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
-            Runner runner = new Runner(sims);
+            Runner runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
 
             // The above should throw. The simulations contains a replacements node which

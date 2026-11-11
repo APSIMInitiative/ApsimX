@@ -35,7 +35,7 @@ namespace APSIM.ZMQServer
             var ds = sims.Node.FindChild<DataStore>();
             if (ds != null)
               ds.UseInMemoryDB = true;
-            runner = new Runner(sims, numberOfProcessors: (int)options.WorkerCpuCount);
+            runner = new Runner([sims], numberOfProcessors: (int)options.WorkerCpuCount);
             jobRunner = new ServerJobRunner(this);
             runner.Use(jobRunner);
         }

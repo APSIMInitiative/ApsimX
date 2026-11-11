@@ -65,7 +65,7 @@ namespace UnitTests
             Node root = Node.Create(simulations);
 
             // Run simulations.
-            Runner runner = new Runner(root.Model as Simulations);
+            Runner runner = new Runner([root.Model as Simulations]);
             List<Exception> errors = runner.Run();
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));

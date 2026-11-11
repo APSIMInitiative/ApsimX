@@ -38,7 +38,7 @@ namespace UnitTests.Core
             weather.FileName = metFile;
 
             // run the simulation and get list of errors
-            Runner runner = new Runner(sims);
+            Runner runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
             foreach (var ex in errors)
                 Console.WriteLine(ex.ToString());
@@ -100,7 +100,7 @@ namespace UnitTests.Core
             weather.FileName = metFile;
 
             // run the simulation and get list of errors
-            Runner runner = new Runner(sims);
+            Runner runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
             foreach (var ex in errors)
                 Console.WriteLine(ex.ToString());

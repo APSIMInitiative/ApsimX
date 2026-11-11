@@ -113,6 +113,26 @@
             }
         },
         {
+            "name": "Models: Debug Scoped",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Clean Debug",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/Models.exe",
+            "args": [
+                "${workspaceFolder}/Tests/Validation/Wheat/Wheat.apsimx",
+                "--scope",
+                ".Simulations.Validation.SE Queensland.APS26"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "presentation": {
+                "hidden": false,
+                "group": "Models",
+                "order": 1
+            }
+        },
+        {
             "name": "APSIM Server: Debug",
             "type": "coreclr",
             "request": "launch",

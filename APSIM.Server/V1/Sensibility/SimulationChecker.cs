@@ -39,7 +39,7 @@ namespace APSIM.Server.Sensibility
         public SimulationChecker(IModel model, bool wait)
         {
             this.wait = wait;
-            runner = new Runner(model, runPostSimulationTools: false, runTests: false, wait: true);
+            runner = new Runner([model], runPostSimulationTools: false, runTests: false, wait: true);
             runner.Use(new SimulationCheckerJobRunner());
         }
 

@@ -95,7 +95,7 @@ namespace UnitTests.Functions
             DataStore storage = sims.Node.FindChild<DataStore>(recurse: true);
             storage.UseInMemoryDB = true;
 
-            Runner runner = new Runner(sims);
+            Runner runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new AggregateException(errors);

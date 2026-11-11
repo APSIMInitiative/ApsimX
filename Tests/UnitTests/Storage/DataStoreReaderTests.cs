@@ -210,7 +210,7 @@ namespace UnitTests.Storage
                 // and ensure that they are not the same.
                 string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
                 // Run the simulation
-                var runner = new Runner(sims);
+                var runner = new Runner([sims]);
                 runner.Run();
                 string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
                 Assert.That(checkpointNamesAfterRun, Is.Not.EqualTo(checkpointNamesBeforeRun), "Storage reader failed to update checkpoint names after simulation was run.");

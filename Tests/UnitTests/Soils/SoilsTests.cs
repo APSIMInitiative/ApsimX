@@ -92,7 +92,7 @@ namespace UnitTests.Soils
             simNode.ReplaceChild(oldWeather, newWeather);
 
             // Run the file.
-            var runner = new Runner(node.Model as IModel);
+            var runner = new Runner([node.Model as IModel]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];

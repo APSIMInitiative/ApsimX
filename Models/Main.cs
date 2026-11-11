@@ -12,7 +12,6 @@ using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
 using Models.Core.Run;
-using Models.Factorial;
 using Models.Storage;
 using Models.Utilities.Extensions;
 using Newtonsoft.Json.Linq;
@@ -59,14 +58,6 @@ namespace Models
 
             // Holds the switch(es) used in the command line call.
             ParserResult<Options> result = parser.ParseArguments<Options>(args);
-
-            if (args.Contains("--apply"))
-            {
-                if (string.IsNullOrEmpty(result.Value.Apply))
-                    throw new Exception("No config file was given with the --apply switch." +
-                        $"Arguments given: {string.Join(" ", args.ToList())}");
-            }
-
             result.WithParsed(Run).WithNotParsed(HandleParseError);
             return exitCode;
         }
@@ -101,6 +92,9 @@ namespace Models
         {
             try
             {
+                if (options.Apply != null && options.Apply.Length == 0)
+                    throw new Exception($"No config file was given with the --apply switch.");
+
                 string[] files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive)).ToArray();
                 // Required to warn user that file was not found even though --apply switch used.
                 if (options.Files.ToList().Count > 0
@@ -187,34 +181,45 @@ namespace Models
                 }
                 else
                 {
-                    Runner runner = null;
-                    if (!string.IsNullOrWhiteSpace(options.Playlist))
-                    {
-                        runner = CreateRunnerForPlaylistOption(options, files);
-                    }
-                    else
+                    List<Simulations> allSims = CreateSimsList(files);
+                    List<IModel> relativeTos = new List<IModel>();
+                    foreach(Simulations sims in allSims)
                     {
                         if (options.InMemoryDB)
+                            sims.Node.FindChild<DataStore>().UseInMemoryDB = true;
+
+                        if (!string.IsNullOrWhiteSpace(options.Playlist))
                         {
-                            List<Simulations> sims = CreateSimsList(files);
-                            foreach (Simulations sim in sims)
-                                sim.Node.FindChild<DataStore>().UseInMemoryDB = true;
-                            runner = new Runner(sims,
-                                            options.RunTests,
-                                            runType: options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                            Playlist playlistModel = sims.Node.FindChild<Playlist>();
+                            if (playlistModel.Enabled == false)
+                                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
+                            IEnumerable<Playlist> playlists = new List<Playlist> { sims.Node.FindChild<Playlist>(options.Playlist) };
+                            if (playlists.Any() && playlists.First() == null)
+                                throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {sims.FileName}.");
+                            relativeTos.AddRange(playlists);
+                        }
+                        else if (!string.IsNullOrWhiteSpace(options.Scope))
+                        {
+                            IModel model = sims.Node.Get(options.Scope, LocatorFlags.ModelsOnly) as IModel;
+                            if (model == null)
+                                throw new ArgumentException($"A model with path {options.Scope} could not be found in {sims.FileName}.");
+                            else
+                                relativeTos.AddRange(model);
                         }
                         else
                         {
-                            runner = new Runner(files,
-                                            options.RunTests,
-                                            runType: options.RunType,
-                                            numberOfProcessors: options.NumProcessors,
-                                            simulationNamePatternMatch: options.SimulationNameRegex);
+                            relativeTos.AddRange(sims);
                         }
                     }
-                    RunSimulations(runner, options);
+                    
+                    Runner runner = new Runner(relativeTos,
+                                    runSimulations: true,
+                                    runPostSimulationTools: true,
+                                    options.RunTests,
+                                    runType: options.RunType,
+                                    numberOfProcessors: options.NumProcessors,
+                                    simulationNamePatternMatch: options.SimulationNameRegex);
+                    RunSimulations(runner, options.Verbose, options.ExportToCsv);
 
                     // If errors occurred, write them to the console.
                     if (exitCode != 0)
@@ -304,7 +309,7 @@ namespace Models
         private static void ExecuteCommands(Options options, List<string> commandsList, string file, string relativeToDirectory, DataRow row = null)
         {
             // Create am APSIM runner for a commands.
-            var runner = new Runner(relativeTo: null as IModel,
+            var runner = new Runner(relativeTo: [null],
                                     runSimulations: true,
                                     runPostSimulationTools: true,
                                     options.RunTests,
@@ -342,38 +347,6 @@ namespace Models
             // Convert all command strings into commands and run them.
             var commands = CommandLanguage.StringToCommands(commandsList, relativeTo, relativeToDirectory);
             CommandProcessor.Run(commands, relativeTo, runner);
-        }
-
-        /// <summary>
-        /// Creates a runner specifically for the playlist option/switch.
-        /// </summary>
-        /// <param name="options">Switches used on the command line</param>
-        /// <param name="files">The files included when models is called. Can be null.</param>
-        /// <returns>Runner that uses the Playlist model as the parameter 'relativeTo'.</returns>
-        /// <exception cref="ArgumentException"></exception>
-        private static Runner CreateRunnerForPlaylistOption(Options options, string[] files)
-        {
-            Runner runner;
-            if (files != null)
-            {
-                if (files.Length > 1)
-                    throw new ArgumentException("The playlist switch cannot be run with more than one file.");
-            }
-            Simulations file = FileFormat.ReadFromFile<Simulations>(files.First()).Model as Simulations;
-            Playlist playlistModel = file.Node.FindChild<Playlist>();
-            if (playlistModel.Enabled == false)
-                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
-            IEnumerable<Playlist> playlists = new List<Playlist> { file.Node.FindChild<Playlist>(options.Playlist) };
-            if (playlists.Any() && playlists.First() == null)
-                throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {file.FileName}.");
-            runner = new Runner(playlists,
-                                runSimulations: true,
-                                runPostSimulationTools: true,
-                                options.RunTests,
-                                runType: options.RunType,
-                                numberOfProcessors: options.NumProcessors,
-                                simulationNamePatternMatch: options.SimulationNameRegex);
-            return runner;
         }
 
         private static void ReplaceObsoleteArguments(ref string[] args)
@@ -541,13 +514,14 @@ namespace Models
         /// Runs a specified runner.
         /// </summary>
         /// <param cref="Runner" name="runner">The runner to be ran.</param>
-        /// <param cref="Options" name="options">The command line switches/flags.</param>
-        private static void RunSimulations(Runner runner, Options options)
+        /// <param cref="Runner" name="verbose">Run in verbose mode</param>
+        /// <param cref="Runner" name="exportToCSV">Output to csv</param>
+        private static void RunSimulations(Runner runner, bool verbose, bool exportToCSV)
         {
             runner.SimulationCompleted += OnJobCompleted;
-            if (options.Verbose)
+            if (verbose)
                 runner.SimulationCompleted += WriteCompleteMessage;
-            if (options.ExportToCsv)
+            if (exportToCSV)
                 runner.SimulationGroupCompleted += OnSimulationGroupCompleted;
             runner.AllSimulationsCompleted += OnAllJobsCompleted;
             // Run simulations.

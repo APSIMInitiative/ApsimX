@@ -49,7 +49,7 @@ namespace UnitTests
             simulations.Node = Node.Create(simulations);
             simulations.Links.Resolve(simulations, true, true, false);
 
-            Runner runner = new Runner(simulations);
+            Runner runner = new Runner([simulations]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
@@ -159,7 +159,7 @@ namespace UnitTests
             simulations.Node = Node.Create(simulations);
             simulations.Links.Resolve(simulations, true, true, false);
 
-            Runner runner = new Runner(simulations);
+            Runner runner = new Runner([simulations]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("Errors: ", errors);
@@ -273,7 +273,7 @@ namespace UnitTests
             simulations.Node = Node.Create(simulations);
             simulations.Links.Resolve(simulations, true, true, false);
 
-            Runner runner = new Runner(simulations);
+            Runner runner = new Runner([simulations]);
             List<Exception> errors = runner.Run();
 
             Assert.That(errors, Is.Not.Null.And.Not.Empty, "Expected an error but none was thrown.");
