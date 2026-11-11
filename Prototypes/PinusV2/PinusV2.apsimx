@@ -5860,7 +5860,7 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
                     "[Leaf].MaximumNConc.FixedValue = 0.008"
@@ -5913,7 +5913,7 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154"
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -5977,7 +5977,7 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154",
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
                     "[Leaf].MaximumNConc.FixedValue = 0.008"
@@ -6654,7 +6654,7 @@
                     "",
                     "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
                     "",
-                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*([Pinus].Age)^-0.05154"
+                    "[Stem].Ht.HeightFunction.Expression = 28.26798*([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^0.35762*(max(0.1, [Pinus].Age))^-0.05154"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
