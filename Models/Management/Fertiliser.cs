@@ -20,7 +20,7 @@ public class Fertiliser : Model
     /// Store an array of double for how much has been applied to each 
     /// solute each day. Is reset at start of day.
     /// </summary>
-    private double[] dailyAppliedToSolutes;
+    private double[] dailyAppliedToSolutes = null;
 
     /// <summary>The soil</summary>
     [Link] private readonly IPhysical physical = null;
@@ -170,6 +170,14 @@ public class Fertiliser : Model
     /// <exception cref="Exception"></exception>
     private void IncrementDailyApplied(string name, double value)
     {
+        //Leave early if no amount is actually being applied
+        if (value <= 0)
+            return;
+
+        //if fertiliser is applied before initialisation, initialise array
+        if (dailyAppliedToSolutes == null)
+            dailyAppliedToSolutes = new double[solutes.Length];
+
         for(int i = 0; i < solutes.Length; i++)
         {
             if (solutes[i].Name == name)
