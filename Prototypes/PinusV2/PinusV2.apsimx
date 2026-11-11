@@ -85,7 +85,8 @@
             "[Pinus].Stem.SizeClass.DBH50thPercentile",
             "[Pinus].Stem.SizeClass.DBH10thPercentile",
             "[Pinus].Stem.SizeClass.DBH90thPercentile",
-            "[Pinus].Stem.SizeClass.Location",
+            "[Pinus].Stem.SizeClass.CoefficientOfVariation",
+            "[Pinus].Stem.SizeClass.StandDensityIndex",
             "[Pinus].Stem.SizeClass.WeibullScale",
             "[Pinus].Stem.SizeClass.WeibullShape",
             "[Pinus].FineRoot.Wt",
@@ -4449,29 +4450,18 @@
                 },
                 {
                   "$type": "Models.Forestry.StemSizeDistribution, Models",
-                  "SizeClassNumber": 10,
+                  "SizeClassNumber": 12,
                   "SizeClassInterval": 5.0,
+                  "MaximumRemovalSelectivity": 1.83,
                   "Name": "SizeClass",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Units": "",
-                      "Expression": "[Pinus].Stem.DBH * [Fraction].FixedValue",
-                      "Name": "Location",
+                      "$type": "Models.Memo, Models",
+                      "Text": "Two-parameter Weibull DBH distribution held as a state. Scale follows the stand mean DBH so the mean is preserved; the coefficient of variation (CV), and hence the shape, starts at EstablishmentShape, changes with growth through GrowthAsymmetry, and is reset by thinning or mortality according to which trees are removed (see the TreeThinning script: DoThin infers the size selectivity from the stem and biomass fractions, DoThinBySize takes a selectivity). Calibrated on BFG tree measurements 1983-2000 (8 plots, 36 dates).",
+                      "Name": "Memo",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
-                          "Name": "Fraction",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -4485,21 +4475,72 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Pinus].Stem.BA",
-                      "Name": "BasalArea",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": "",
                       "Expression": "[Pinus].Population * 10000.0",
                       "Name": "StemPopulation",
                       "ResourceName": null,
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 6.0,
+                      "Units": "-",
+                      "Name": "EstablishmentShape",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Weibull shape when the stand first has a mean DBH (CV about 0.19). Set so that, with GrowthAsymmetry, the modelled spread in 1983 (age 10) matches the BFG plots (observed CV 0.16-0.21, mean 0.188; model 0.190). The 2-parameter fits across all BFG records give 6.823 for 10-year-old trees.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "-",
+                      "Expression": "min(1, max(0, ([Pinus].Stem.SizeClass.StandDensityIndex / 1000 - 0.25) / 0.15)) * max(0 - 0.3, min(1.0, 1.50 * [Pinus].Stem.SizeClass.StandDensityIndex / 1000 - 0.70))",
+                      "Name": "GrowthAsymmetry",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Growth asymmetry (alpha - 1): diameter increment scales with D^alpha across trees, so ln(CV) changes by (alpha - 1) x ln(mean DBH ratio). Fitted to 269 plot-by-interval estimates from BFG tracked trees 1983-2000 (nonlinear fit of increment = a x D^alpha per plot and measurement interval): alpha - 1 = 1.50 x RD - 0.70, where RD = Reineke stand density index / 1000 (plot-clustered SE of slope 0.24; plot random effect negligible; leave-one-plot-out slopes 1.36-1.66). Mean alpha by RD: 0.84 (0.2-0.4), 0.93 (0.4-0.5), 1.12 (0.5-0.6), 1.22 (0.6-0.7), 1.61 (0.7-1.0). Water and N stress, LAI and time since thinning added nothing once RD was included. Bounded to the observed range (alpha - 1 from -0.3 to +1.0) and faded to zero (constant spread) below RD 0.25-0.40, before canopy closure, where trees barely compete: applied from planting, the fitted line would shrink the spread unrealistically. Consistent with published evidence: asymmetry rises with crowding, productivity and light competition (Pretzsch & Biber 2010; Pretzsch 2021, 2022; Wichmann 2001), is near or below 1 before canopy closure and after thinning from below (Binkley 2004, 2006; Bradford et al. 2010; Soares et al. 2017), and drought pushes it toward 1 (Pretzsch & Dieler 2011; Pretzsch et al. 2018).",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.5,
+                      "Units": "-",
+                      "Name": "SizeMassExponent",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Exponent relating tree stem mass to DBH (mass ~ D^2.5), used to convert stems removed to biomass removed.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -6713,8 +6754,8 @@
             "        [Link] private Plant Pinus;",
             "        [Link] private Clock Clock;",
             "        ",
-            "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.SizeClass.Location.Fraction\")] ",
-            "        private Constant LocationFraction;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.SizeClass\")]",
+            "        private Models.Forestry.StemSizeDistribution SizeClass;",
             "        ",
             "        public IStructure Structure { private get; set; }",
             "",
@@ -6753,6 +6794,22 @@
             "        /// not part of the forest floor). Otherwise a commercial thinning (stems removed). In both cases coarse roots go to soil FOM, not the surface.",
             "        /// </summary>",
             "        public void DoThin(double StemFr, double BiomassFr)",
+            "        {",
+            "            SizeClass.ApplyRemoval(StemFr, BiomassFr);   // infer which sizes were removed and update the DBH distribution",
+            "            RemoveStemsAndBiomass(StemFr, BiomassFr);",
+            "        }",
+            "",
+            "        /// <summary>",
+            "        /// Remove a fraction of stems chosen by size; the stem size distribution works out the biomass fraction removed.",
+            "        /// Selectivity: about 1.8 for thinning from below (BFG 1988 thinning, 7 of 8 plots 1.6-2.0), 0 random, negative from above.",
+            "        /// </summary>",
+            "        public void DoThinBySize(double StemFr, double Selectivity)",
+            "        {",
+            "            double BiomassFr = SizeClass.RemoveBySize(StemFr, Selectivity);",
+            "            RemoveStemsAndBiomass(StemFr, BiomassFr);",
+            "        }",
+            "",
+            "        private void RemoveStemsAndBiomass(double StemFr, double BiomassFr)",
             "        {",
             "            Pinus.structure?.DoThin(BiomassFr);",
             "            var Leaf =   Structure.FindChild<IHasDamageableBiomass>(\"Leaf\", relativeTo: (INodeModel)Pinus);",
