@@ -76,7 +76,7 @@ namespace APSIM.Documentation.Models.Types
             //Then just document the folders that aren't replacements
             foreach (IModel child in sims.Node.FindChildren<IModel>())
             {
-                if (child is Memo || child is Graph || child is Folder || child is Simulation || child is Experiment)
+                if (child is Graph || child is Folder || child is Simulation || child is Experiment)
                     if(!Folder.IsModelReplacementsFolder(child))
                         tags.AddRange(AutoDocumentation.DocumentModel(child));
             }

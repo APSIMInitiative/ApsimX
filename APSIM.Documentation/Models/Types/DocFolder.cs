@@ -130,7 +130,9 @@ namespace APSIM.Documentation.Models.Types
                     List<ITag> justTheGraphs = new List<ITag>();
                     foreach(ITag graphSection in graphSections)
                         if (graphSection is Section gs)
-                            justTheGraphs.Add(gs.Children[0]);
+                            foreach(ITag child in gs.Children)
+                                if (child is APSIM.Shared.Documentation.Graph graph)
+                                    justTheGraphs.Add(graph);
 
                     string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model);
 
