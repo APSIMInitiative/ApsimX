@@ -12,14 +12,15 @@ namespace Models;
 /// <summary>This model is responsible for applying fertiliser.</summary>
 [Serializable]
 [ValidParent(ParentType = typeof(Zone))]
-public class Fertiliser : Model, IStructureDependency
+public class Fertiliser : Model
 {
-    /// <summary>Structure instance supplied by APSIM.core.</summary>
-    [field: NonSerialized]
-    public IStructure Structure { private get; set; }
-
-
     private double[] cumThickness;
+
+    /// <summary>
+    /// Store an array of double for how much has been applied to each 
+    /// solute each day. Is reset at start of day.
+    /// </summary>
+    private double[] dailyAppliedToSolutes;
 
     /// <summary>The soil</summary>
     [Link] private readonly IPhysical physical = null;
@@ -45,13 +46,13 @@ public class Fertiliser : Model, IStructureDependency
 
     /// <summary>The NO3N applied.</summary>
     [Units("kgN/ha")]
-    public double NO3NApplied { get; private set; }
+    public double NO3NApplied { get {return GetDailyApplied("NO3");} }
 
     /// <summary>
     /// The NH4N applied.
     /// </summary>
     [Units("kgN/ha")]
-    public double NH4NApplied { get; private set; }
+    public double NH4NApplied { get {return GetDailyApplied("NH4");} }
 
     /// <summary>Apply fertiliser.</summary>
     /// <param name="amount">The amount.</param>
@@ -74,7 +75,7 @@ public class Fertiliser : Model, IStructureDependency
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
             // find fertiliser release function (child of FertiliserType)
-            var releaseRate = Structure.FindChild<IFunction>("Release", relativeTo: fertiliserType);
+            var releaseRate = Node.FindChild<IFunction>("Release", relativeTo: fertiliserType);
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
 
@@ -88,8 +89,8 @@ public class Fertiliser : Model, IStructureDependency
                                      fertiliser: this,
                                      fertiliserTypeName: type);
                 NitrogenApplied += amount;
-                NH4NApplied += amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NH4").fraction;
-                NO3NApplied += amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NO3").fraction;
+                IncrementDailyApplied("NH4", amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NH4").fraction);
+                IncrementDailyApplied("NO3", amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NO3").fraction);
             }
             else
             {
@@ -129,8 +130,7 @@ public class Fertiliser : Model, IStructureDependency
     private void OnDoDailyInitialisation(object sender, EventArgs e)
     {
         NitrogenApplied = 0;
-        NH4NApplied = 0;
-        NO3NApplied = 0;
+        dailyAppliedToSolutes = new double[solutes.Length];
     }
 
     /// <summary>Invoked by clock at start of each daily timestep to do all fertiliser applications for the day.</summary>
@@ -144,8 +144,8 @@ public class Fertiliser : Model, IStructureDependency
         {
             var amt = pool.PerformRelease();
             NitrogenApplied += amt;
-            NH4NApplied += amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NH4").fraction;
-            NO3NApplied += amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NO3").fraction;
+            IncrementDailyApplied("NH4", amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NH4").fraction);
+            IncrementDailyApplied("NO3", amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NO3").fraction);
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
@@ -160,5 +160,38 @@ public class Fertiliser : Model, IStructureDependency
     internal void InvokeNotification(FertiliserApplicationType fertiliserApplicationType)
     {
         Fertilised?.Invoke(this, fertiliserApplicationType);
+    }
+
+    /// <summary>
+    /// Increment the daily applied value for a solute
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <param name="value">Amount to increment it by</param>
+    /// <exception cref="Exception"></exception>
+    private void IncrementDailyApplied(string name, double value)
+    {
+        for(int i = 0; i < solutes.Length; i++)
+        {
+            if (solutes[i].Name == name)
+            {
+                dailyAppliedToSolutes[i] += value;
+                return;
+            }
+        }
+        throw new Exception($"Cannot find {name} solute applied value");
+    }
+
+    /// <summary>
+    /// Get the daily applied value for a solute
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    private double GetDailyApplied(string name)
+    {
+        for(int i = 0; i < solutes.Length; i++)
+            if (solutes[i].Name == name)
+                return dailyAppliedToSolutes[i];
+        throw new Exception($"Cannot find {name} solute applied value");
     }
 }
