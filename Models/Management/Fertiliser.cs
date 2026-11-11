@@ -110,17 +110,13 @@ public class Fertiliser : Model
         }
     }
 
-    /// <summary>
-    /// Add a fertiliser solute specification to an array that will be passed to a pool.
-    /// </summary>
-    /// <param name="name">Name of the solute</param>
-    /// <param name="fraction">Fration of solute in fertiliser type</param>
-    /// <param name="solutesTuple">The array to add to.</param>
-    private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
+    /// <summary>Invoked by clock at start of simulation.</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("StartOfSimulation")]
+    private void OnStartOfSimulation(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(name))
-            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
-                              fraction));
+        DailyReset();
     }
 
     /// <summary>Invoked by clock at start of each daily timestep.</summary>
@@ -129,8 +125,7 @@ public class Fertiliser : Model
     [EventSubscribe("DoDailyInitialisation")]
     private void OnDoDailyInitialisation(object sender, EventArgs e)
     {
-        NitrogenApplied = 0;
-        dailyAppliedToSolutes = new double[solutes.Length];
+        DailyReset();
     }
 
     /// <summary>Invoked by clock at start of each daily timestep to do all fertiliser applications for the day.</summary>
@@ -163,6 +158,28 @@ public class Fertiliser : Model
     }
 
     /// <summary>
+    /// Resets daily variables
+    /// </summary>
+    private void DailyReset()
+    {
+        NitrogenApplied = 0;
+        dailyAppliedToSolutes = new double[solutes.Length];
+    }
+
+    /// <summary>
+    /// Add a fertiliser solute specification to an array that will be passed to a pool.
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <param name="fraction">Fration of solute in fertiliser type</param>
+    /// <param name="solutesTuple">The array to add to.</param>
+    private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
+    {
+        if (!string.IsNullOrEmpty(name))
+            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
+                              fraction));
+    }
+
+    /// <summary>
     /// Increment the daily applied value for a solute
     /// </summary>
     /// <param name="name">Name of the solute</param>
@@ -176,11 +193,11 @@ public class Fertiliser : Model
 
         //if fertiliser is applied before initialisation, initialise array
         if (dailyAppliedToSolutes == null)
-            dailyAppliedToSolutes = new double[solutes.Length];
+            DailyReset();
 
         for(int i = 0; i < solutes.Length; i++)
         {
-            if (solutes[i].Name == name)
+            if (solutes[i].Name.ToLower() == name.ToLower())
             {
                 dailyAppliedToSolutes[i] += value;
                 return;
@@ -197,8 +214,12 @@ public class Fertiliser : Model
     /// <exception cref="Exception"></exception>
     private double GetDailyApplied(string name)
     {
+        //if fertiliser is asked before initialisation
+        if (dailyAppliedToSolutes == null)
+            throw new Exception($"Cannot return fertiliser applied before simulation is initalised");
+
         for(int i = 0; i < solutes.Length; i++)
-            if (solutes[i].Name == name)
+            if (solutes[i].Name.ToLower() == name.ToLower())
                 return dailyAppliedToSolutes[i];
         throw new Exception($"Cannot find {name} solute applied value");
     }
