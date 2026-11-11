@@ -3553,7 +3553,35 @@
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "InitialWt",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Area.Calculation.Initial",
+                          "Name": "InitialArea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].SpecificArea",
+                          "Name": "SLA",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4429,120 +4457,42 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "SLA_DSSAT",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "SLA",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "SLA",
+                                  "$type": "Models.Functions.SubDailyInterpolation, Models",
+                                  "agregationMethod": 0,
+                                  "Name": "TemperatureFunction",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].SpecificArea.SLAMax",
-                                      "Name": "SLAMax",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.SubDailyInterpolation, Models",
-                                      "agregationMethod": 0,
-                                      "Name": "TemperatureFunction",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            12.0,
-                                            22.0,
-                                            30.0
-                                          ],
-                                          "Y": [
-                                            0.25,
-                                            0.25,
-                                            1.0,
-                                            1.0
-                                          ],
-                                          "Name": "Response",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
-                                          "TempRangeFactors": null,
-                                          "Name": "InterpolationMethod",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        12.0,
+                                        22.0,
+                                        30.0
                                       ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Units": null,
-                                      "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*([Weather].Radn / 2.02)))/[Leaf].SpecificArea.SLAMax",
-                                      "Name": "PARSLA",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Units": null,
-                                      "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[Leaf].SpecificArea.TURSLA))",
-                                      "Name": "WaterStressFunction",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "VPDStressFunction",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            13.0,
-                                            30.0,
-                                            40.0,
-                                            50.0
-                                          ],
-                                          "Y": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                          ],
-                                          "Name": "XYPairs",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Weather].VPD",
-                                          "Name": "XValue",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
+                                      "Y": [
+                                        0.25,
+                                        0.25,
+                                        1.0,
+                                        1.0
                                       ],
+                                      "Name": "Response",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                                      "TempRangeFactors": null,
+                                      "Name": "InterpolationMethod",
+                                      "ResourceName": null,
+                                      "Children": [],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -4551,12 +4501,64 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 10000.0,
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
                                   "Units": null,
-                                  "Name": "Constant",
+                                  "Expression": "[SLAMin]+([SLAMax]-[SLAMin])*EXP([SLAPAR]*([Weather].Radn / 2.02))",
+                                  "Name": "PARSLA",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.008,
+                                      "Units": null,
+                                      "Name": "SLAMin",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.06,
+                                      "Units": null,
+                                      "Name": "SLAMax",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": -0.14,
+                                      "Units": null,
+                                      "Name": "SLAPAR",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
+                                  "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[TURSLA]))",
+                                  "Name": "WaterStressFunction",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.8,
+                                      "Units": null,
+                                      "Name": "TURSLA",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -4569,46 +4571,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 80.0,
-                      "Units": null,
-                      "Name": "SLAMin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
-                      "Units": null,
-                      "Name": "SLAMax",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": -0.14,
-                      "Units": null,
-                      "Name": "SLAPAR",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.8,
-                      "Units": null,
-                      "Name": "TURSLA",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
