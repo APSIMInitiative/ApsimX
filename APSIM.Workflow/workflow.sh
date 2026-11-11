@@ -6,7 +6,6 @@ function initialise {
     sudo snap install docker
     sleep 10
   fi
-  # Installs jq if missing for A.V.A job complete call.
   # Pull down the apsim next gen and apsim performance stats collector docker images
   sudo docker pull "apsiminitiative/apsimplusr:pr-$PR_NUMBER"
   sudo docker pull apsiminitiative/postats2-collector:latest
