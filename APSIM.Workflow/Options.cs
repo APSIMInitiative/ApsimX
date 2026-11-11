@@ -4,7 +4,9 @@ namespace APSIM.Workflow;
 
 /// <summary>
 /// Specifies the command line options for the APSIM.Workflow application.
+/// This is the default verb, so existing invocations without a verb continue to work.
 /// </summary>
+[Verb("workflow", isDefault: true, HelpText = "Run the validation workflow (default).")]
 public class Options
 {
     /// <summary>
@@ -76,22 +78,5 @@ public class Options
     /// </summary>
     [Option("full-commit-hash", Required= false, HelpText ="The full commit hash. Used for PO Stats system.")]
     public string FullCommitHash {get;set;} = "";  
-
-    /// <summary>Notify the A.V.A server that a job has completed.</summary>
-    [Option("job-complete", Required = false, HelpText = "Notify the A.V.A server that a job has completed. Uses --pr-number, --full-commit-hash, --job-path, --job-time and --log-file.")]
-    public bool JobComplete { get; set; }
-
-    /// <summary>Path of the APSIM file that the completed job ran.</summary>
-    [Option("job-path", Required = false, HelpText = "Path of the APSIM file the completed job ran.")]
-    public string JobPath { get; set; } = "";
-
-    /// <summary>Elapsed time of the job in seconds.</summary>
-    [Option("job-time", Required = false, HelpText = "Elapsed time of the job in seconds.")]
-    public string JobTime { get; set; } = "";
-
-    /// <summary>Log file whose lines are sent as the job data.</summary>
-    [Option("log-file", Required = false, HelpText = "Log file whose lines are sent to the A.V.A server.")]
-    public string LogFile { get; set; } = "";
-
 }
     

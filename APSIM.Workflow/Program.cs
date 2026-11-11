@@ -39,9 +39,35 @@ public class Program
         });
         logger = loggerFactory.CreateLogger<Program>();
 
-        Parser.Default.ParseArguments<Options>(args).WithParsed(RunOptions).WithNotParsed(HandleParseError);
+        Parser.Default.ParseArguments<Options, JobCompleteOptions>(args)
+            .WithParsed<Options>(RunOptions)
+            .WithParsed<JobCompleteOptions>(RunJobComplete)
+            .WithNotParsed(HandleParseError);
 
         return exitCode;
+    }
+
+    /// <summary>Notifies the A.V.A server that a job has completed.</summary>
+    /// <param name="options">The job complete options.</param>
+    private static void RunJobComplete(JobCompleteOptions options)
+    {
+        try
+        {
+            string payload = AvaUtilities.BuildPayload(
+                options.PullRequestNumber,
+                options.FullCommitHash,
+                options.JobPath,
+                options.JobTime,
+                AvaUtilities.ReadLogLines(options.LogFile));
+            using var client = new System.Net.Http.HttpClient();
+            AvaUtilities.PostAsync(client, payload, AvaUtilities.JobCompleteRoute).GetAwaiter().GetResult();
+            logger.LogInformation("A.V.A server notified that the job is complete.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: " + ex.Message);
+            exitCode = 1;
+        }
     }
 
 
@@ -69,18 +95,6 @@ public class Program
             else if (options.SimulationCount)
             {
                 Console.WriteLine(ValidationLocationUtility.GetSimulationCount());
-            }
-            else if (options.JobComplete)
-            {
-                string payload = AvaUtilities.BuildPayload(
-                    options.PullRequestNumber,
-                    options.FullCommitHash,
-                    options.JobPath,
-                    options.JobTime,
-                    AvaUtilities.ReadLogLines(options.LogFile));
-                using var client = new System.Net.Http.HttpClient();
-                AvaUtilities.PostAsync(client, payload, AvaUtilities.JobCompleteRoute).GetAwaiter().GetResult();
-                logger.LogInformation("A.V.A server notified that the job is complete.");
             }
             if (!string.IsNullOrEmpty(options.DirectoryPath))
             {
