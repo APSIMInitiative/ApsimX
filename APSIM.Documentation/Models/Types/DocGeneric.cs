@@ -60,7 +60,14 @@ namespace APSIM.Documentation.Models.Types
             if (model.Node != null)
             {
                 bool hasDocumentation = false;
-                if (model.Node.FindParent<Simulations>(recurse:true).Node.FindChild<M.Documentation>(recurse:true) != null)
+
+                Simulations sims = null;
+                if (model is Simulations)
+                    sims = model as Simulations;
+                else
+                    sims = model.Node.FindParent<Simulations>(recurse:true);
+                
+                if (sims.Node.FindChild<M.Documentation>(recurse:true) != null)
                     hasDocumentation = true;
 
                 if (!hasDocumentation)
