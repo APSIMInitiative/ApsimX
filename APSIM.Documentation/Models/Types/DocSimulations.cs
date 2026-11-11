@@ -6,6 +6,7 @@ using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.Factorial;
 using Graph = Models.Graph;
 using System;
 using Models.PMF;
@@ -18,7 +19,6 @@ namespace APSIM.Documentation.Models.Types
     /// </summary>
     public class DocSimulations : DocGeneric
     {
-        private static string PATH_REVIEW = "/Tests/UnderReview/";
         private static string PATH_VALIDATION = "/Tests/Validation/";
         private static string PATH_TUTORIAL = "/Examples/Tutorials/";
 
@@ -39,15 +39,14 @@ namespace APSIM.Documentation.Models.Types
 
             if (!string.IsNullOrEmpty(sims.FileName))
             {
-                if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
-                    sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
-                {
-                    tags.AddRange(DocumentValidation(model as Simulations));
-                    documentFile = true;
-                }
-                else if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
+                if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
                 {
                     tags.AddRange(DocumentTutorial(model as Simulations));
+                    documentFile = true;
+                }
+                else
+                {
+                    tags.AddRange(DocumentFile(model as Simulations));
                     documentFile = true;
                 }
             }
@@ -57,6 +56,31 @@ namespace APSIM.Documentation.Models.Types
                 tags.Add(GetSummaryAndRemarksSection(sims));
             }
 
+            return tags;
+        }
+
+        private List<ITag> DocumentFile(Simulations sims)
+        {
+            string title = GetSimulationsName(sims);
+
+            List<ITag> tags = new List<ITag>();
+
+            List<Memo> memos = sims.Node.FindChildren<Memo>().ToList();
+            List<ITag> memoTags = new List<ITag>();
+            foreach (IModel child in memos)
+                memoTags.AddRange(AutoDocumentation.DocumentModel(child));
+
+            //Sort out heading
+            tags.Add(new Section(title, memoTags));
+
+            //Then just document the folders that aren't replacements
+            foreach (IModel child in sims.Node.FindChildren<IModel>())
+            {
+                if (child is Graph || child is Folder || child is Simulation || child is Experiment)
+                    if(!Folder.IsModelReplacementsFolder(child))
+                        tags.AddRange(AutoDocumentation.DocumentModel(child));
+            }
+            
             return tags;
         }
 
@@ -247,8 +271,7 @@ namespace APSIM.Documentation.Models.Types
         /// </summary>
         public static string GetSimulationsName(Simulations sims)
         {
-            if (sims.FileName.Contains(PATH_REVIEW) || sims.FileName.Contains(PATH_REVIEW.Replace('/', '\\')) ||
-                sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
+            if (sims.FileName.Contains(PATH_VALIDATION) || sims.FileName.Contains(PATH_VALIDATION.Replace('/', '\\')))
             {
                 string name = Path.GetFileNameWithoutExtension(sims.FileName);
                 IEnumerable<IModel> models = sims.Node.FindChildren<IModel>(recurse: true);

@@ -1,33 +1,34 @@
-﻿using System;
-using System.Linq;
-using APSIM.Core;
+﻿using APSIM.Core;
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
 using Models.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// Returns special values if
-    /// the numerator is 0 or if the denominator is 0.
+    /// Sets return to the value of the first child function then recurses through each subsequent child setting return to return/child[n].value.
+    /// Protected so does not return null values.  
+    /// Returns NumeratorErrValue if the value of the first child function is zero
+    /// Returns DemonimatorErrValue if any of the subsequent children functions have a value of zero.
     /// </summary>
-    /// <remarks>
-    /// Currently used in sorghum/maize code to mimic divide functions
-    /// in old apsim which return 10 if the denominator is 0 or 0 if
-    /// the numerator is 0.
-    /// </remarks>
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
+    [Description("Recursively divide child functions with configurable protection against zero numerators and denominators")]
     public class ProtectedDivideFunction : Model, IFunction
     {
-        /// <summary>Value to return if numerator is 0.</summary>
+        /// <summary>Value to return if the running numerator is zero.</summary>
         [Description("Value to return if numerator is 0:")]
-        public double NumeratorErrVal { get; set; }
+        public double NumeratorErrVal { get; set; } = 0.0;
 
-        /// <summary>Value to return if denominator is 0.</summary>
+        /// <summary>Value to return if a denominator is zero.</summary>
         [Description("Value to return if denominator is 0:")]
-        public double DenominatorErrVal { get; set; }
+        public double DenominatorErrVal { get; set; } = 0;
+
+        private List<IFunction> ChildFunctions;
 
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
@@ -35,26 +36,33 @@ namespace Models.Functions
             FunctionUtilities.ValidateFunctionChildren(Node);
         }
 
-        /// <summary>
-        /// Returns the value of the function.
-        /// </summary>
+        /// <summary>Gets the value.</summary>
+        /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            IFunction[] children = Node.FindChildren<IFunction>().ToArray();
-            int n = children?.Length ?? 0;
-            if (n < 2)
-                throw new Exception($"Error in ProtectedDivideFunction {Name}: 2 child functions required, only found {n}");
+            if (ChildFunctions == null)
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
-            double numerator = children[0].Value(arrayIndex);
-            double denominator = children[1].Value(arrayIndex);
+            if (ChildFunctions.Count <= 1)
+                throw new Exception("Protected divide function must have at least two child functions");
 
-            if (MathUtilities.FloatsAreEqual(numerator, 0))
+            double returnValue = ChildFunctions[0].Value(arrayIndex);
+
+            // Protect initial numerator
+            if (MathUtilities.FloatsAreEqual(returnValue, 0.0))
                 return NumeratorErrVal;
 
-            if (MathUtilities.FloatsAreEqual(denominator, 0))
-                return DenominatorErrVal;
+            for (int i = 1; i < ChildFunctions.Count; i++)
+            {
+                double denominator = ChildFunctions[i].Value(arrayIndex);
 
-            return numerator / denominator;
+                if (MathUtilities.FloatsAreEqual(denominator, 0.0))
+                    return DenominatorErrVal;
+
+                returnValue /= denominator;
+            }
+
+            return returnValue;
         }
     }
 }
