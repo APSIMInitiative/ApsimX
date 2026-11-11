@@ -68,6 +68,9 @@ namespace UnitTests.Documentation
                 {
                     string textE = (expected as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
                     string textA = (actual as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
+                    //clean out HTML tags that cause this to fail on linux
+                    WebDocs.GetAllHTMLSegments(textE, out textE);
+                    WebDocs.GetAllHTMLSegments(textA, out textA);
                     Assert.That(textA, Is.EqualTo(textE), message: errorMessage);
                 }
             }
