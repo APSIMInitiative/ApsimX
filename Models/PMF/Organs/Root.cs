@@ -98,16 +98,15 @@ namespace Models.PMF.Organs
     ///
     /// **Storage (non-structural) dry matter**
     ///
-    /// Root biomass is held in soil-layer pools; the Live biomass of the organ is the sum of these pools.  All flows that change root
-    /// storage are therefore applied to the layer pools so that they persist and the carbon balance closes:
+    /// Root biomass is held in soil-layer pools; the Live biomass of the organ is the sum of these pools.  Flows that change root
+    /// storage are therefore applied to the layer pools so that they persist:
     ///
     /// ```
     /// ReallocationSupply = sum(StorageWt<sub>layer</sub>) x SenescenceRate x DMReallocationFactor
     /// RetranslocationSupply = Max(0, sum(StorageWt<sub>layer</sub>) - ReallocationSupply) x DMRetranslocationFactor
     /// ```
     ///
-    /// The DM actually taken by the arbitrator through retranslocation and reallocation is removed from each layer in proportion to its storage.
-    /// Reallocated DM comes from senescing tissue, so the storage that senesces to the soil on that day is reduced by the amount reallocated.
+    /// The DM actually taken by the arbitrator through retranslocation is removed from each layer in proportion to its storage.
     /// Maintenance respiration (MaintenanceRespirationFunction, /d) is removed from the storage and metabolic DM of each layer.
     /// DMReallocationFactor and DMRetranslocationFactor are optional; when absent the corresponding supply is zero.
     ///
@@ -298,9 +297,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The N supply for reallocation</summary>
         private double nReallocationSupply = 0.0;
-
-        /// <summary>Storage DM reallocated today from each layer of the plant zone (g/m2), excluded from today's senescence to soil</summary>
-        private double[] plantZoneStorageReallocated = null;
 
         /// <summary>Constructor</summary>
         public Root()
@@ -644,11 +640,6 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double RetranslocationWt { get; private set; }
 
-        /// <summary>Storage DM removed from the root today by reallocation from senescing roots (g/m2)</summary>
-        [JsonIgnore]
-        [Units("g/m^2")]
-        public double ReallocationWt { get; private set; }
-
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
         public Biomass Allocated { get; set; }
@@ -843,29 +834,24 @@ namespace Models.PMF.Organs
             foreach (ZoneState Z in Zones)
                 Z.PartitionRootMass(TotalRAw, Allocated);
 
-            // Remove the storage DM supplied to the arbitrator. This is done after partitioning today's growth
+            // Remove the storage DM retranslocated by the arbitrator. This is done after partitioning today's growth
             // because PartitionRootMass recalculates root activity from layer mass and must see the same mass as TotalRAw.
-            RemoveSuppliedStorage(dryMatter.Retranslocation, dryMatter.Reallocation);
+            RemoveRetranslocatedStorage(dryMatter.Retranslocation);
             needToRecalculateLiveDead = true;
         }
 
         /// <summary>
-        /// Remove the storage DM taken by the arbitrator through retranslocation and reallocation from the
-        /// soil-layer pools, in proportion to the storage DM in each layer (the same basis used to compute the supplies).
+        /// Remove the storage DM taken by the arbitrator through retranslocation from the soil-layer pools,
+        /// in proportion to the storage DM in each layer (the same basis used to compute the supply).
         /// </summary>
         /// <param name="retranslocated">Storage DM retranslocated (g/m2)</param>
-        /// <param name="reallocated">Storage DM reallocated (g/m2)</param>
-        private void RemoveSuppliedStorage(double retranslocated, double reallocated)
+        private void RemoveRetranslocatedStorage(double retranslocated)
         {
-            if (retranslocated < -BiomassToleranceValue || reallocated < -BiomassToleranceValue)
-                throw new Exception("Negative DM retranslocation or reallocation allocated to " + Name);
+            if (retranslocated < -BiomassToleranceValue)
+                throw new Exception("Negative DM retranslocation allocated to " + Name);
 
             RetranslocationWt = Math.Max(0.0, retranslocated);
-            ReallocationWt = Math.Max(0.0, reallocated);
-            plantZoneStorageReallocated = new double[PlantZone.LayerLive.Length];
-
-            double amount = RetranslocationWt + ReallocationWt;
-            if (amount <= 0.0)
+            if (RetranslocationWt <= 0.0)
                 return;
 
             double totalStorageWt = 0.0;
@@ -873,19 +859,13 @@ namespace Models.PMF.Organs
                 for (int i = 0; i < Z.LayerLive.Length; i++)
                     totalStorageWt += Z.LayerLive[i].StorageWt;
 
-            if (amount - totalStorageWt > BiomassToleranceValue)
-                throw new Exception("DM retranslocation and reallocation exceed the storage DM in " + Name);
+            if (RetranslocationWt - totalStorageWt > BiomassToleranceValue)
+                throw new Exception("DM retranslocation exceeds the storage DM in " + Name);
 
-            double fractionRemoved = Math.Min(1.0, MathUtilities.Divide(amount, totalStorageWt, 0.0));
-            double reallocatedShare = ReallocationWt / amount;
+            double fractionRemoved = Math.Min(1.0, MathUtilities.Divide(RetranslocationWt, totalStorageWt, 0.0));
             foreach (ZoneState Z in Zones)
                 for (int i = 0; i < Z.LayerLive.Length; i++)
-                {
-                    double removed = Z.LayerLive[i].StorageWt * fractionRemoved;
-                    Z.LayerLive[i].StorageWt -= removed;
-                    if (Z == PlantZone)
-                        plantZoneStorageReallocated[i] = removed * reallocatedShare;
-                }
+                    Z.LayerLive[i].StorageWt -= Z.LayerLive[i].StorageWt * fractionRemoved;
             needToRecalculateLiveDead = true;
         }
 
@@ -1110,8 +1090,6 @@ namespace Models.PMF.Organs
             Removed.Clear();
             MaintenanceRespiration = 0.0;
             RetranslocationWt = 0.0;
-            ReallocationWt = 0.0;
-            plantZoneStorageReallocated = null;
         }
 
         /// <summary>Recalculate live and dead biomass if necessary</summary>
@@ -1291,37 +1269,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>
-        /// Senesce a fraction of the live roots in the plant zone to the soil.
-        /// Storage DM reallocated today has already been removed from the layers and came from this senescing tissue,
-        /// so it is not sent to the soil a second time: in each layer the senescing storage DM is
-        /// Max(0, fraction x StorageWt - reallocated).
-        /// </summary>
-        /// <param name="fraction">Fraction of live root biomass senescing today (0-1).</param>
-        private void DoSenescence(double fraction)
-        {
-            // RemoveBiomass senesces the same fraction of every pool. Storage withheld from the layers
-            // before the call and returned afterwards reduces the senescing storage by fraction x withheld,
-            // which equals the reallocated amount when withheld = reallocated / fraction.
-            double[] withheld = null;
-            if (fraction > 0.0 && plantZoneStorageReallocated != null)
-            {
-                withheld = new double[PlantZone.LayerLive.Length];
-                for (int i = 0; i < withheld.Length && i < plantZoneStorageReallocated.Length; i++)
-                {
-                    withheld[i] = Math.Min(PlantZone.LayerLive[i].StorageWt, plantZoneStorageReallocated[i] / fraction);
-                    PlantZone.LayerLive[i].StorageWt -= withheld[i];
-                }
-            }
-
-            RemoveBiomass(liveToResidue: fraction);
-
-            if (withheld != null)
-                for (int i = 0; i < withheld.Length; i++)
-                    PlantZone.LayerLive[i].StorageWt += withheld[i];
-            needToRecalculateLiveDead = true;
-        }
-
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1334,7 +1281,7 @@ namespace Models.PMF.Organs
                     Z.GrowRootDepth();
 
                 // Do Root Senescence
-                DoSenescence(senescenceRate.Value());
+                RemoveBiomass(liveToResidue: senescenceRate.Value());
 
                 // Do maintenance respiration. Live is recalculated from the layer pools, so respiration
                 // must be removed from the layers for it to persist.
