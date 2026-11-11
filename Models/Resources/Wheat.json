@@ -3708,6 +3708,8 @@
           "TipsAtEmergence": 0,
           "CohortsAtInitialisation": 0,
           "FractionDied": 0.0,
+          "MostRecentLeafMaxSize": 0.0,
+          "MostRecentLeafSize": 0.0,
           "MostRecentlyExpandedPosition": 0,
           "MostRecentlyExpandedSize": 0.0,
           "MostRecentlyExpandedPotentialSize": 0.0,
@@ -5461,9 +5463,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].MostRecentlyExpandedSize",
               "Name": "Size",
               "ResourceName": null,
               "Children": [],
@@ -5471,9 +5472,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 1.0,
-              "Units": null,
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].MostRecentlyExpandedPotentialSize",
               "Name": "MaximumSize",
               "ResourceName": null,
               "Children": [],
