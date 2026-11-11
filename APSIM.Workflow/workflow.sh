@@ -6,6 +6,10 @@ function initialise {
     sudo snap install docker
     sleep 10
   fi
+  # Installs jq if missing for A.V.A job complete call.
+  if ! command -v jq > /dev/null;then
+    sudo apt-get install -y jq
+  fi
   # Pull down the apsim next gen and apsim performance stats collector docker images
   sudo docker pull "apsiminitiative/apsimplusr:pr-$PR_NUMBER"
   sudo docker pull apsiminitiative/postats2-collector:latest
@@ -31,7 +35,10 @@ start_time=$(date +%s.%N)
   set -e;
   $1 &>> local.stdout.txt
 );
+
 exit_code=$?
+
+# If a finally function exists run it.
 if [[ $(type -t $1_finally) == function ]]; then
   $1_finally &>> local.stdout.txt
   finally_exit_code=$?
@@ -39,6 +46,7 @@ if [[ $(type -t $1_finally) == function ]]; then
     exit_code=$finally_exit_code
   fi
 fi
+
 # Return a failure exit code if the database is missing.
 if [[ "$1" == run_00001 ]]; then
   database_path=".${Path#/wd}"
@@ -53,6 +61,26 @@ fi
 end_time=$(date +%s.%N)
 elapsed=$(echo "$end_time - $start_time" | bc -l)
 echo "Elapsed time: $elapsed seconds" &>> local.stdout.txt
+
+# Notify the A.V.A server that the job is complete.
+# A job here is a single APSIM file which will be a single experiment.
+function notify_job_complete {
+  local rel_path="${Path#/wd/}"
+  local payload
+  payload=$(jq -n \
+    --arg pr "$PR_NUMBER" \
+    --arg commit "$FULL_COMMIT_HASH" \
+    --arg path "$rel_path" \
+    --arg time "$(printf '%.1f' "$elapsed")" \
+    --slurpfile data <(jq -R . local.stdout.txt | jq -s .) \
+    '{pullRequest: $pr, commit: $commit, path: $path, time: $time, data: $data[0]}')
+
+  curl -sS -X POST "https://ava.apsim.info/api/pr/jobcomplete" \
+    -H "Content-Type: application/json" \
+    -d "$payload" >> local.stdout.txt 2>&1 || true
+}
+
+notify_job_complete
 if [ $exit_code -gt 0 ]; then
   exit $exit_code
 fi
