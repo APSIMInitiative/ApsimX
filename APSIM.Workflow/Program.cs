@@ -53,7 +53,7 @@ public class Program
         {
             if (options.SplitFiles != null)
             {
-                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
+                // FileSplitter.Run(options.DirectoryPath, options.SplitFiles, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
                 return;
             }
             else if (options.ValidationLocations)
@@ -61,7 +61,7 @@ public class Program
                 if (options.Verbose)
                     logger.LogInformation("Validation locations:");
 
-                foreach (string dir in ValidationLocationUtility.GetValidationFilePaths())
+                foreach (string dir in RemoveExcludedPaths(ValidationLocationUtility.GetValidationFilePaths()))
                 {
                     Console.WriteLine(dir);
                 }
