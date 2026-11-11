@@ -272,10 +272,8 @@
             "        private void DoReportCalculations(object sender, EventArgs e)",
             "        {",
             "            double haunStage = (double)Structure.Get(\"Wheat.Phenology.HaunStage.Value()\", relativeTo: zone);",
-            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.MaximumSize.Value()\".  Uncomment below when simple leaf model incuded",
-            "            double maxLeafSize = 1;//(double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
-            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.Size.Value()\".  Uncomment below when simple leaf model incuded",
-            "            double leafSizeToday = 1;//(double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
+            "            double maxLeafSize = (double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
+            "            double leafSizeToday = (double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
             "            ",
             "            daysForLeaf += 1;",
             "            sumLeafSize += leafSizeToday;",
@@ -19704,23 +19702,6 @@
                   "GreenCropNDVI": 0.82,
                   "DeadCropNDVI": 0.1,
                   "Name": "Spectral",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[OutputMaxLeafSize].Script.LeafSize",
-                    "[OutputMaxLeafSize].Script.LeafPosition",
-                    "[OutputMaxLeafSize].Script.MaxLeafSize"
-                  ],
-                  "EventNames": [
-                    "[OutputMaxLeafSize].Script.ReportLeafSize"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "MaxLeafSizeReport1",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
