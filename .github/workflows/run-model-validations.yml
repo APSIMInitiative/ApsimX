@@ -81,6 +81,10 @@ jobs:
         run: |
           cd Models && dotnet publish -f net10.0 -o ../app && cd ../APSIM.Workflow && dotnet publish  -f net10.0
 
+      - name: Split Large Validation Files
+        run: ./.github/workflows/scripts/split-large-files.sh
+        continue-on-error: true 
+
       - name: Start validation process
         env:
           PULL_REQUEST: ${{ github.event.pull_request.number }}

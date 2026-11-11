@@ -53,7 +53,7 @@ public class Program
         {
             if (options.SplitFiles != null)
             {
-                FileSplitter.Run(options.DirectoryPath, options.SplitFiles, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
+                // FileSplitter.Run(options.DirectoryPath, options.SplitFiles, Path.GetDirectoryName(options.DirectoryPath) + "/", logger);
                 return;
             }
             else if (options.ValidationLocations)
