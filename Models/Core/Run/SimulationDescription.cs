@@ -143,14 +143,6 @@ namespace Models.Core.Run
         {
             try
             {
-                // It is possible that the base simulation is still in the process of being
-                // initialised in another thread. Block until initialisation completes rather
-                // than polling the flag in a tight loop.
-                if (baseSimulation.IsInitialising && !baseSimulation.Node.WaitForInitialisation(TimeSpan.FromSeconds(10)))
-                    throw new Exception("Node initialisation timed out");
-                if (baseSimulation.Node.InitialisationException != null)
-                    throw new Exception("Exception thrown during initialisation", baseSimulation.Node.InitialisationException);
-
                 AddReplacements();
 
                 Node newNode = baseSimulation.Node.Clone();
