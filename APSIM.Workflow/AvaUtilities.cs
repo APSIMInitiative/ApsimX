@@ -36,7 +36,7 @@ public static class AvaUtilities
         if (path is not null)
             relativePath = path;
         if (relativePath.StartsWith(containerMountPrefix, StringComparison.Ordinal))
-            relativePath = relativePath[containerMountPrefix.Length..];
+            relativePath = relativePath[(containerMountPrefix.Length - 1)..];
 
         Dictionary<string, object> payload = new()
         {
