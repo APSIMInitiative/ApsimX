@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace APSIM.Workflow;
+namespace APSIM.Workflow.Verbs;
 
 /// <summary>
 /// Command line options for the job-complete verb, which notifies the A.V.A server
