@@ -569,9 +569,9 @@ save {Path.GetFileName(apsimxFileName)}";
 
             Assert.That(File.Exists(newTempConfigFile), Is.True);
 
-            // Don't pass a path to the command file. Force main to use working directory.
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(newTempConfigFile));
-            Utilities.RunModels($"--apply {Path.GetFileName(newTempConfigFile)}");
+            // Pass the full command file path. The load/save commands remain pathless
+            // and should resolve relative to the command file location.
+            Utilities.RunModels($"--apply {newTempConfigFile}");
 
             string text = File.ReadAllText(file.FileName);
             // Reload simulation from file text. Needed to see changes made.
