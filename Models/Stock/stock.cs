@@ -2240,6 +2240,124 @@ namespace Models.GrazPlan
             }
         }
 
+        // =========== Digestibility intake per head by group ==================
+         /// <summary>
+        /// Gets the digestibility intake per head by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double[] DigestibilityIntake
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets total intake per head of digestibility by group
+        /// </summary>
+        [Units("MJ/d")]
+        public double DigestibilityIntakeAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpDIGESTIBITY, false, true, false, ref values);
+                return values[0];
+            }
+        }
+        
+                // =========== Potential intake ==================
+
+        /// <summary>
+        /// Gets the potential intake by animal group
+        /// </summary>
+        [Units("kg/d")]
+        public double[] PotIntake
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, false, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the animal-number-weighted mean potential intake
+        /// </summary>
+        [Units("kg/d")]
+        public double PotIntakeAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, false, true, false, ref values);
+                return values[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the potential intake by tag number
+        /// </summary>
+        [Units("kg/d")]
+        public double[] PotIntakeTag
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, false, false, true, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the potential intake of unweaned young by animal group
+        /// </summary>
+        [Units("kg/d")]
+        public double[] PotIntakeYng
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.Count()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, true, false, false, ref values);
+                return values;
+            }
+        }
+
+        /// <summary>
+        /// Gets the animal-number-weighted mean potential intake of unweaned young
+        /// </summary>
+        [Units("kg/d")]
+        public double PotIntakeYngAll
+        {
+            get
+            {
+                double[] values = new double[1];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, true, true, false, ref values);
+                return values[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the potential intake of unweaned young by tag number
+        /// </summary>
+        [Units("kg/d")]
+        public double[] PotIntakeYngTag
+        {
+            get
+            {
+                double[] values = new double[this.StockModel.HighestTag()];
+                StockVars.PopulateRealValue(this.StockModel, StockProps.prpPOT_INTAKE, true, false, true, ref values);
+                return values;
+            }
+        }
+
+
+
+
         // =========== Growth rate of clean fleece ==================
 
         /// <summary>
