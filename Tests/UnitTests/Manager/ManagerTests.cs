@@ -126,9 +126,7 @@ namespace UnitTests.ManagerTests
                     }
                 }
             };
-
-            var runner = new Runner([simulations]);
-            Assert.Throws<AggregateException>(() => runner.Run());
+            Assert.Throws<Exception>(() => Node.Create(simulations));            
         }
 
         /// <summary>

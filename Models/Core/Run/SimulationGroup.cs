@@ -90,27 +90,8 @@ namespace Models.Core.Run
                 Initialise();
         }
 
-        /// <summary>Contstructor</summary>
-        /// <param name="fileName">The name of the file to run.</param>
-        /// <param name="runTests">Run tests?</param>
-        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
-        public SimulationGroup(string fileName,
-                             bool runTests = true,
-                             string simulationNamePatternMatch = null)
-        {
-            this.FileName = fileName;
-            this.runSimulations = true;
-            this.runPreAndPostSimulationTools = true;
-            this.runTests = runTests;
-
-            if (simulationNamePatternMatch != null)
-                patternMatch = new Regex(simulationNamePatternMatch);
-
-            Task.Run(() => { Initialise(); });
-        }
-
         /// <summary>Name of file where the jobs came from.</summary>
-        public string FileName { get; set; }
+        public string FileName { get { return rootModel.Node.FileName; } }
 
         /// <summary>A list of exceptions thrown before and after the simulation runs. Will be null when no exceptions found.</summary>
         public List<Exception> PrePostExceptionsThrown { get; private set; }
@@ -245,11 +226,6 @@ namespace Models.Core.Run
                     rootModel = relativeTo;
                     while (rootModel.Parent != null)
                         rootModel = rootModel.Parent;
-
-                    if (rootModel is Simulations)
-                        FileName = (rootModel as Simulations).FileName;
-                    else if (rootModel is Simulation)
-                        FileName = (rootModel as Simulation).FileName;
 
                     // Check for duplicate simulation names.
                     string[] duplicates = FindDuplicateSimulationNames().ToArray();
