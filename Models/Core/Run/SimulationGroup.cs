@@ -161,14 +161,6 @@ namespace Models.Core.Run
             if (!initialised)
                 SpinWait.SpinUntil(() => initialised);
 
-            // It is possible that the base simulation is still in the process of being
-            // initialised in another thread. Block until initialisation completes rather
-            // than polling the flag in a tight loop.
-            if (rootModel.Node.IsInitialising && !rootModel.Node.WaitForInitialisation(TimeSpan.FromSeconds(10)))
-                throw new Exception("Node initialisation timed out");
-            if (rootModel.Node.InitialisationException != null)
-                throw new Exception("Exception thrown during initialisation", rootModel.Node.InitialisationException);
-
             foreach (IDataStore datastore in rootModel.Node.FindAll<IDataStore>())
                 if (datastore.Writer != null)
                     datastore.Writer.TablesModified.Clear();
@@ -223,12 +215,12 @@ namespace Models.Core.Run
 
                 if (relativeTo != null)
                 {
-                    // If this simulation was not created from deserialisation then we need
-                    // to parent all child models correctly and call OnCreated for each model.
-                    bool hasBeenDeserialised = relativeTo.Children.Count > 0 &&
-                                               relativeTo.Children[0].Parent == relativeTo;
-                    if (!hasBeenDeserialised)
-                        throw new NotImplementedException();
+                    // It is possible that the base simulation is still in the process of being
+                    // initialised in another thread.
+                    if (rootModel.Node.IsInitialising && !rootModel.Node.WaitForInitialisation(TimeSpan.FromSeconds(10)))
+                        throw new Exception("Node initialisation timed out");
+                    if (rootModel.Node.InitialisationException != null)
+                        throw new Exception("Exception thrown during initialisation", rootModel.Node.InitialisationException);
 
                     // Find the root model.
                     rootModel = relativeTo;
