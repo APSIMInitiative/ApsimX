@@ -222,7 +222,7 @@ namespace Models.Core.Run
 
                     // It is possible that the base simulation is still in the process of being
                     // initialised in another thread.
-                    if (rootModel.Node.IsInitialising && !rootModel.Node.WaitForInitialisation(TimeSpan.FromSeconds(10)))
+                    if (rootModel.Node.IsInitialising && !rootModel.Node.WaitForInitialisation(TimeSpan.FromSeconds(60)))
                         throw new Exception("Node initialisation timed out");
                     if (rootModel.Node.InitialisationException != null)
                         throw new Exception("Exception thrown during initialisation", rootModel.Node.InitialisationException);
