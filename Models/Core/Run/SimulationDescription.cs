@@ -144,12 +144,12 @@ namespace Models.Core.Run
             try
             {
                 // It is possible that the base simulation is still in the process of being
-                // initialised in another thread. If so, wait up to 10 seconds to let it finish.
-                int nSleeps = 0;
-                while (baseSimulation.IsInitialising && nSleeps++ < 1000)
-                    Thread.Sleep(10);
-                if (baseSimulation.Node.IsInitialising)
-                    throw new Exception("Simulation initialisation does not appear to be complete.");
+                // initialised in another thread. Block until initialisation completes rather
+                // than polling the flag in a tight loop.
+                if (baseSimulation.IsInitialising && !baseSimulation.Node.WaitForInitialisation(TimeSpan.FromSeconds(10)))
+                    throw new Exception("Node initialisation timed out");
+                if (baseSimulation.Node.InitialisationException != null)
+                    throw new Exception("Exception thrown during initialisation", baseSimulation.Node.InitialisationException);
 
                 AddReplacements();
 

@@ -100,6 +100,9 @@ namespace APSIM.Shared.JobRunning
 
                 if (wait)
                     SpinWait.SpinUntil(() => completed);
+
+                if (backgroundTask.Exception != null)
+                    throw backgroundTask.Exception;
             }
         }
 
@@ -143,6 +146,8 @@ namespace APSIM.Shared.JobRunning
                 }
                 catch (Exception err)
                 {
+                    if (ExceptionThrownByRunner == null)
+                        throw new Exception("Error in Simulation", err);
                     ExceptionThrownByRunner = err;
                 }
 

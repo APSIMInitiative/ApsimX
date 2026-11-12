@@ -128,7 +128,7 @@ namespace UnitTests.ManagerTests
             };
 
             var runner = new Runner([simulations]);
-            Assert.That(runner.Run(), Is.Not.Null);
+            Assert.Throws<AggregateException>(() => runner.Run());
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace UnitTests.ManagerTests
                     }
                 }
             };
-            //Apsim.InitialiseModel(simulations);
+            Node.Create(simulations);
 
             var storage = simulations.Children[0].Children[2] as MockStorage;
 
