@@ -13,8 +13,28 @@ namespace APSIM.Workflow
     {
         private static readonly string RELATIVE_PATH_PREFIX = "./";
 
+        /// <summary> List of R simulation files paths</summary>
+        private static string[] R_SIMS_FILEPATHS = {
+            "/Prototypes/CroptimizR/template.apsimx",
+            "/Examples/Optimisation/CroptimizRExample.apsimx",
+            "/Examples/Tutorials/Sensitivity_SobolMethod.apsimx",
+            "/Examples/Tutorials/Sensitivity_MorrisMethod.apsimx",
+            "/Examples/Tutorials/Sensitivity_FactorialANOVA.apsimx",
+            "/Examples/Sensitivity/Sobol.apsimx",
+            "/Examples/Sensitivity/Morris.apsimx"
+        };
+
+        /// <summary> List of excluded simulation file paths</summary>
+        private static string[] EXCLUDED_SIMS_FILEPATHS = {
+            "/Prototypes/CroptimizR/template.apsimx",
+            "/Examples/Optimisation/CroptimizRExample.apsimx",
+            "/Examples/CsvWeather.apsimx", //has no output
+            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v2_BivariateNormal.apsimx", //has no output
+            "/Tests/Simulation/SoilNitrogenPatch/PaddockSims/Edited_v5_BivariateNormal.apsimx" //has no output
+        };
+
         /// <summary>The locations where validation directories are expected to be found.</summary>
-        public static readonly string[] VALIDATION_LOCATIONS =
+        private static readonly string[] VALIDATION_LOCATIONS =
         [
             "Prototypes/",
             "Tests/Simulation/",
@@ -32,48 +52,38 @@ namespace APSIM.Workflow
             List<string> validation_directories = [];
             foreach (string location in VALIDATION_LOCATIONS)
             {
-                var directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                string directory = Path.GetFullPath(RELATIVE_PATH_PREFIX + location);
+                //if directory didn't exist, try finding it using the apsim directory
                 if (!Directory.Exists(directory))
-                {
                     directory = PathUtilities.GetAbsolutePath(RELATIVE_PATH_PREFIX + location, PathUtilities.GetApsimXDirectory());
-                }
-                if (Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories).Any())
+                
+                string[] files = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
+                foreach (string file in files)
                 {
-                    var apsimxFiles = Directory.GetFiles(directory, "*.apsimx", SearchOption.AllDirectories);
-                    foreach (var apsimxFile in apsimxFiles)
+                    //clean path
+                    string apsimxFile = file.Replace("\\", "/");
+
+                    //check if it matches any of the excluded paths
+                    bool containsExcludedPath = false;
+                    foreach(string excludedPath in EXCLUDED_SIMS_FILEPATHS)
+                        if (apsimxFile.Contains(excludedPath))
+                            containsExcludedPath = true;
+                    
+                    if (!containsExcludedPath)
                     {
-                        if (!PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Contains("/" + apsimxFile.NormalizePath()))
+                        if (apsimxFile.Contains(location))
                         {
-                            var apsimxNormalizedFilePath = apsimxFile.NormalizePath();
-                            if (apsimxNormalizedFilePath.Contains(location))
-                            {
-                                var locationFolderIndex = apsimxNormalizedFilePath.IndexOf(location);
-                                validation_directories.Add("/" + apsimxNormalizedFilePath.Substring(locationFolderIndex)); // for linux compatibility
-                            }
-                            else
-                            {
-                                throw new Exception("The location: " + location + " was not found in the apsimx file path: " + apsimxNormalizedFilePath);
-                            }
+                            int locationFolderIndex = apsimxFile.IndexOf(location);
+                            validation_directories.Add("/" + apsimxFile.Substring(locationFolderIndex)); // for linux compatibility
+                        }
+                        else
+                        {
+                            throw new Exception("The location: " + location + " was not found in the apsimx file path: " + apsimxFile);
                         }
                     }
                 }
             }
             return validation_directories.ToArray();
-        }
-        
-
-        /// <summary>
-        /// Get the number of simulations/validation locations available.
-        /// </summary>
-        public static int GetSimulationCount()
-        {
-            return GetValidationFilePaths().Length - PayloadUtilities.EXCLUDED_SIMS_FILEPATHS.Length;
-        }
-        
-        /// <summary>Normalize a file path to use forward slashes instead of backslashes.</summary>
-        public static string NormalizePath(this string path)
-        {
-            return path.Replace("\\", "/");
         }
     }
 }
