@@ -53,7 +53,7 @@ namespace UnitTests
             clock.StartDate = new DateTime(2019, 1, 1);
             clock.EndDate = new DateTime(2019, 1, 10);
 
-            string output = Utilities.RunModels(file, "/Csv");
+            string output = Utilities.RunModels(file, "--csv");
 
             string csvFile = Path.ChangeExtension(file.FileName, ".Report.csv");
             Assert.That(File.Exists(csvFile), Is.True, "Models.exe failed to create a csv file when passed the /Csv command line argument. Output of Models.exe: " + output);

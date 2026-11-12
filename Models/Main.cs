@@ -217,6 +217,7 @@ namespace Models
                                     runPostSimulationTools: true,
                                     options.RunTests,
                                     runType: options.RunType,
+                                    wait: true,
                                     numberOfProcessors: options.NumProcessors,
                                     simulationNamePatternMatch: options.SimulationNameRegex);
                     RunSimulations(runner, options.Verbose, options.ExportToCsv);
