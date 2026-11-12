@@ -193,6 +193,8 @@ namespace Models.GrazPlan
 
         public const int prpDIGESTIBITY = 44;
 
+        public const int prpPOT_INTAKE = 46;
+
 
 #pragma warning restore 1591 //missing xml comment
     }
@@ -463,6 +465,9 @@ namespace Models.GrazPlan
                                 case StockProps.prpDIGESTIBITY:
                                     value = animalGroup.AnimalState.Digestibility.Total;
 
+                                    break;
+                                case StockProps.prpPOT_INTAKE:
+                                    value = animalGroup.PotIntake;
                                     break;
 
                                 default:
