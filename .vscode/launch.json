@@ -22,8 +22,7 @@
                 "searchMicrosoftSymbolServer": false
             },
             "args":[
-                "--payload-directory",
-                "/Tests/Validation",
+                "azure-jobs",
                 "--env-string",
                 "", // provide this with line endings between env values.
                 "--pr-number",

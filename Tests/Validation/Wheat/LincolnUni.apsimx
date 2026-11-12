@@ -71,6 +71,21 @@
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+          "PredictedTableName": "MaxLeafSizeReport",
+          "ObservedTableName": "MaxLeafSize",
+          "FieldNameUsedForMatch": "SimulationName",
+          "FieldName2UsedForMatch": "OutputMaxLeafSize.Script.LeafPosition",
+          "FieldName3UsedForMatch": null,
+          "FieldName4UsedForMatch": null,
+          "AllColumns": false,
+          "Name": "LeafSizeObsPred",
+          "ResourceName": null,
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "Enabled": true,
@@ -272,10 +287,8 @@
             "        private void DoReportCalculations(object sender, EventArgs e)",
             "        {",
             "            double haunStage = (double)Structure.Get(\"Wheat.Phenology.HaunStage.Value()\", relativeTo: zone);",
-            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.MaximumSize.Value()\".  Uncomment below when simple leaf model incuded",
-            "            double maxLeafSize = 1;//(double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
-            "            //Fixme.  Current wheat model does not have \"Wheat.Leaf.Size.Value()\".  Uncomment below when simple leaf model incuded",
-            "            double leafSizeToday = 1;//(double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
+            "            double maxLeafSize = (double)Structure.Get(\"Wheat.Leaf.MaximumSize.Value()\", relativeTo: zone);",
+            "            double leafSizeToday = (double)Structure.Get(\"Wheat.Leaf.Size.Value()\", relativeTo: zone);",
             "            ",
             "            daysForLeaf += 1;",
             "            sumLeafSize += leafSizeToday;",
@@ -19708,23 +19721,6 @@
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[OutputMaxLeafSize].Script.LeafSize",
-                    "[OutputMaxLeafSize].Script.LeafPosition",
-                    "[OutputMaxLeafSize].Script.MaxLeafSize"
-                  ],
-                  "EventNames": [
-                    "[OutputMaxLeafSize].Script.ReportLeafSize"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "MaxLeafSizeReport1",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -21778,6 +21774,74 @@
                       "CumulativeX": false,
                       "Filter": "",
                       "Name": "Predicted",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "MaxLeafSizeObsPred",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "N",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 4,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "LeafSizeObsPred",
+                      "XFieldName": "Observed.OutputMaxLeafSize.Script.MaxLeafSize",
+                      "YFieldName": "Predicted.OutputMaxLeafSize.Script.MaxLeafSize",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Actual",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
