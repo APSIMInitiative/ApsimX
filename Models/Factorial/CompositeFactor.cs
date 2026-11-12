@@ -122,6 +122,13 @@ namespace Models.Factorial
             set { Specifications = value.ToArray(); } 
         }
 
+        /// <summary>
+        /// The command language lines generated from the specifications. These are the
+        /// commands applied to each simulation this CompositeFactor is part of.
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<string> Commands => SpecificationsToCommandLines();
+
         /// <summary>Parameterless constructor needed for serialisation</summary>
         public CompositeFactor()
         {
@@ -161,24 +168,9 @@ namespace Models.Factorial
         /// <param name="simulationDescription">A description of a simulation.</param>
         public void ApplyToSimulation(SimulationDescription simulationDescription)
         {
-            List<CompositeFactorPair> pairs = ParseSpecifications();
+            foreach (IModelCommand command in GetCommands())
+                simulationDescription.AddOverride(command);
 
-            // Add a simulation override for each path / value combination.
-            foreach(CompositeFactorPair pair in pairs)
-            {
-                if (pair.Value is INodeModel model)
-                {
-                    ModelReference reference = new ModelReference(model);
-                    ReplaceCommand command = new ReplaceCommand(reference, pair.Path, true, ReplaceCommand.MatchType.NameOrType);
-                    simulationDescription.AddOverride(command);
-                }
-                else
-                {
-                    SetPropertyCommand command = new SetPropertyCommand(pair.Path, "=", pair.Value.ToString(), multiple: true);
-                    simulationDescription.AddOverride(command);
-                }
-            }
-            
             List<SimulationDescriptor> descriptors = new List<SimulationDescriptor>();
             if (Parent == null) //used by sobol and morris
             {
@@ -203,12 +195,11 @@ namespace Models.Factorial
             if (Node == null)
                 return new List<string>();
 
-            List<CompositeFactorPair> pairs = ParseSpecifications();
             Simulations sims = Node.FindParent<Simulations>(recurse: true);
             List<string> values = new List<string>();
-            foreach(CompositeFactorPair pair in pairs)
-                if (pair.ValueType == typeof(string))
-                    values.Add(pair.Value.ToString());
+            foreach (IModelCommand command in GetCommands())
+                if (command is SetPropertyCommand setCommand)
+                    values.Add(setCommand.Value.ToString());
             IEnumerable<string> result = values.Where(str => File.Exists(PathUtilities.GetAbsolutePath(str, sims.FileName)));
             return result;
         }
@@ -217,6 +208,20 @@ namespace Models.Factorial
         public void RemovePathsFromReferencedFileNames()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Convert the specification lines into model commands using the command language.
+        /// </summary>
+        private IEnumerable<IModelCommand> GetCommands()
+        {
+            List<string> lines = Commands.ToList();
+            if (lines.Count == 0)
+                return [];
+            string relativeDirectory = string.IsNullOrEmpty(Node?.FileName) ? null : Path.GetDirectoryName(Node.FileName);
+            // Models held in _models are not children of this factor, so resolve them relative to the parent.
+            INodeModel relativeTo = Children.Count == 0 && Parent is INodeModel parent ? parent : this;
+            return CommandLanguage.StringToCommands(lines, relativeTo, relativeDirectory, multiple: true);
         }
 
         private void CreateSpecifications(string path, object value)
@@ -245,14 +250,16 @@ namespace Models.Factorial
         }
 
         /// <summary>
-        /// Parse the specification into paths and values.
+        /// Convert the specifications into command language lines. Specifications containing an
+        /// '=' are property settings and are used as is. Specifications without an '='
+        /// name a model to replace, which becomes a replace command using the matching child model.
         /// </summary>
-        private List<CompositeFactorPair> ParseSpecifications()
+        private List<string> SpecificationsToCommandLines()
         {
-            List<CompositeFactorPair> pairs = [];
+            List<string> commands = [];
 
             if (Specifications is null)
-                return pairs;
+                return commands;
 
             List<string> specifications = [];
             if (Children.Count == 0)
@@ -267,23 +274,24 @@ namespace Models.Factorial
             }
 
             if (specifications.Count == 0)
-                return pairs;
+                return commands;
 
             List<IModel> models = [];
             foreach (string specification in specifications)
             {
-                string path = specification;
-                object value = null;
-
-                if (path.Contains('='))
+                if (specification.Contains('='))
                 {
-                    value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
-                    if (value == null || value as string == "")
+                    int equalsIndex = specification.IndexOf('=');
+                    string value = specification.Substring(equalsIndex + 1).Trim();
+                    if (value.Length == 0)
                         throw new Exception($"Error in composite factor {Name}: Unable to parse factor specification {specification}: No value was provided");
-                    pairs.Add(new CompositeFactorPair(path.Trim(), value.ToString().Trim(), typeof(string)));
+                    commands.Add($"{specification.Substring(0, equalsIndex).Trim()}={value}");
                 }
                 else
                 {
+                    string path = specification.Trim();
+                    object value = null;
+
                     // Find the model that we are to replace.
                     Experiment experiment = Parent.Node.FindParent<Experiment>(recurse: true);
                     Simulation baseSimulation = experiment.Node.FindChild<Simulation>(relativeTo: experiment);
@@ -339,7 +347,10 @@ namespace Models.Factorial
                             value = match;
                     }
 
-                    pairs.Add(new CompositeFactorPair(path.Trim(), value, typeof(IModel)));
+                    string target = path.Contains('.') ? path : $"[{modelToReplace.Name}]";
+                    IModel replacement = (IModel)value;
+                    string replacementPath = replacement.Parent != null ? $"[{replacement.Parent.Name}].{replacement.Name}" : $"[{replacement.Name}]";
+                    commands.Add($"replace all {target} with {replacementPath}");
                     models.Add(value as IModel);
                 }
             }
@@ -351,7 +362,7 @@ namespace Models.Factorial
                 if (model.Enabled && !(model is Memo))
                     throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
 
-            return pairs;
+            return commands;
         }
 
         internal List<string> RetrieveActiveSpecifications(IEnumerable<IModel> children, string[] specifications)
@@ -452,30 +463,6 @@ namespace Models.Factorial
 
             List<SimulationDescriptor> descriptors = description.Descriptors.ToList();
             return descriptors.Except(CustomDescriptors).ToList();
-        }
-
-        /// <summary>
-        /// A private class to help track the properties of a specification.
-        /// Should not be saved to a file and just generated from text 
-        /// specifications.
-        /// </summary>
-        private class CompositeFactorPair
-        {
-            /// <summary>Path to change</summary>
-            public string Path {get; private set;}
-
-            /// <summary>Value/Model to change to</summary>
-            public object Value {get; private set;}
-
-            /// <summary>The type of the value</summary>
-            public Type ValueType {get; private set;}
-
-            public CompositeFactorPair(string path, object value, Type valueType)
-            {
-                Path = path;
-                Value = value;
-                ValueType = valueType;
-            }
         }
     }
 }

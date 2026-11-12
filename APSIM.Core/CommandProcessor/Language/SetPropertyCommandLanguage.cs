@@ -11,11 +11,12 @@ public partial class SetPropertyCommand: IModelCommand
     /// </summary>
     /// <param name="command">The command to parse.</param>
     /// <param name="relativeToDirectory">Directory name that the command filenames are relative to</param>
+    /// <param name="multiple">Apply the property set to all matching instances?</param>
     /// <returns>A new model instance</returns>
     /// <remarks>
     /// [Simulation].Name=NewName
     /// </remarks>
-    public static IModelCommand Create(string command, string relativeToDirectory)
+    public static IModelCommand Create(string command, string relativeToDirectory, bool multiple = false)
     {
         string[] keywords = ["", KEYWORD_FROM];
         string[] patterns = [PATTERN_VALUE, PATTERN_FROM];
@@ -37,7 +38,7 @@ public partial class SetPropertyCommand: IModelCommand
             if (relativeToDirectory != null)
                 file = Path.GetFullPath(file, relativeToDirectory);
 
-        return new SetPropertyCommand(model, operate, value, file);
+        return new SetPropertyCommand(model, operate, value, file, multiple);
     }
 
     /// <summary>
