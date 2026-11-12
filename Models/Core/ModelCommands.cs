@@ -30,7 +30,7 @@ public class ModelCommands : Model, ICodeEditor
     /// </summary>
     public void Run()
     {
-        var runner = new Runner(this);
+        var runner = new Runner([this]);
 
         var commands = CommandLanguage.StringToCommands(Code, this, Path.GetDirectoryName(simulation.FileName));
         CommandProcessor.Run(commands, this, runner);

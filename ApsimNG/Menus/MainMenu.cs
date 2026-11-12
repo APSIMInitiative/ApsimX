@@ -200,7 +200,7 @@ namespace UserInterface.Presenters
                 if (model == null)
                     throw new InvalidOperationException("Unable to find a model which may be run.");
 
-                Runner runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                Runner runner = new Runner([model], runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                 command = new RunCommand(model.Name, runner, explorer);
                 command.Do();
             }

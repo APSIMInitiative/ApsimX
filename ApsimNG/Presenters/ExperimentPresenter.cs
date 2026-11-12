@@ -258,7 +258,7 @@ namespace UserInterface.Presenters
                 var selectedSimulations = GetSelectedSimulationNamesFromView();
 
                 // Before running the simulations, disable all simulations except for those which are selected.
-                var runner = new Runner(experiment, simulationNamesToRun: selectedSimulations, wait: false);
+                var runner = new Runner([experiment], simulationNamesToRun: selectedSimulations, wait: false);
                 RunCommand runCmd = new RunCommand(experiment.Name, runner, explorerPresenter);
                 runCmd.Do();
             }

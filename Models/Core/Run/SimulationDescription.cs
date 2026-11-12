@@ -143,14 +143,6 @@ namespace Models.Core.Run
         {
             try
             {
-                // It is possible that the base simulation is still in the process of being
-                // initialised in another thread. If so, wait up to 10 seconds to let it finish.
-                int nSleeps = 0;
-                while (baseSimulation.IsInitialising && nSleeps++ < 1000)
-                    Thread.Sleep(10);
-                if (baseSimulation.Node.IsInitialising)
-                    throw new Exception("Simulation initialisation does not appear to be complete.");
-
                 AddReplacements();
 
                 Node newNode = baseSimulation.Node.Clone();

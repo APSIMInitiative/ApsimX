@@ -126,9 +126,7 @@ namespace UnitTests.ManagerTests
                     }
                 }
             };
-
-            var runner = new Runner(simulations);
-            Assert.That(runner.Run(), Is.Not.Null);
+            Assert.Throws<Exception>(() => Node.Create(simulations));            
         }
 
         /// <summary>
@@ -179,7 +177,7 @@ namespace UnitTests.ManagerTests
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {
-                Runner runner = new Runner(sims);
+                Runner runner = new Runner([sims]);
                 List<Exception> errors = runner.Run();
                 if (errors != null && errors.Count > 0)
                     throw errors[0];
@@ -241,11 +239,11 @@ namespace UnitTests.ManagerTests
                     }
                 }
             };
-            //Apsim.InitialiseModel(simulations);
+            Node.Create(simulations);
 
             var storage = simulations.Children[0].Children[2] as MockStorage;
 
-            var runner = new Runner(simulations);
+            var runner = new Runner([simulations]);
             runner.Run();
 
             double[] actual = storage.Get<double>("[Script2].B");
@@ -264,7 +262,7 @@ namespace UnitTests.ManagerTests
             Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // Run the file.
-            var Runner = new Runner(file);
+            var Runner = new Runner([file]);
             Runner.Run();
 
             Summary sum = file.Node.FindChild<Summary>(recurse: true);
@@ -287,7 +285,7 @@ namespace UnitTests.ManagerTests
             var tree = FileFormat.ReadFromString<Simulations>(json, e => {return;}, false);
             Simulations file = tree.Model as Simulations;
 
-            var Runner = new Runner(file);
+            var Runner = new Runner([file]);
             Runner.Run();
 
             Assert.Pass();

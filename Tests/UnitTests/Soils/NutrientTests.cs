@@ -26,7 +26,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             Simulations file = FileFormat.ReadFromString<Simulations>(json).Model as Simulations;
 
             // Run the file.
-            var Runner = new Runner(file);
+            var Runner = new Runner([file]);
             Runner.Run();
 
             // Get the output data table.

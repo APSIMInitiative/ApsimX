@@ -67,7 +67,7 @@ namespace UnitTests.Core.Run
             var progress = new List<double>();
 
             // Create a runner for our folder.
-            Runner runner = new Runner(folder);
+            Runner runner = new Runner([folder]);
             IEnumerable<string> generatedFiles = GenerateApsimXFiles.Generate(runner, 1, path, (s) => { progress.Add(s); });
 
             Assert.That(progress.Count, Is.EqualTo(2));
@@ -133,7 +133,7 @@ namespace UnitTests.Core.Run
                 ]
             };
             var node = Node.Create(simulations);
-            Runner runner = new Runner(node.Model as Simulations);
+            Runner runner = new Runner([node.Model as Simulations]);
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {

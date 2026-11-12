@@ -63,7 +63,7 @@ namespace UnitTests.Core.Run
                 var tree = Node.Create(simulation);
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun);
+                Runner runner = new Runner([simulation], runType: typeOfRun);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 Assert.That(errors.Count, Is.EqualTo(0));
@@ -139,7 +139,7 @@ namespace UnitTests.Core.Run
                 };
                 var tree = Node.Create(folder);
 
-                Runner runner = new Runner(folder, runType: typeOfRun);
+                Runner runner = new Runner([folder], runType: typeOfRun);
 
                 // Run simulations.
                 List<Exception> errors = runner.Run();
@@ -220,7 +220,7 @@ namespace UnitTests.Core.Run
                 };
                 var tree = Node.Create(folder);
 
-                Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
+                Runner runner = new Runner([folder], runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
                 // Run simulations.
                 List<Exception> errors = runner.Run();
@@ -268,7 +268,7 @@ namespace UnitTests.Core.Run
                 var tree = Node.Create(simulation);
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun);
+                Runner runner = new Runner([simulation], runType: typeOfRun);
                 var exceptions = runner.Run();
 
                 // Make sure an exception is returned.
@@ -323,7 +323,7 @@ namespace UnitTests.Core.Run
                     }
                 };
                 var sims = Node.Create(simulations);
-                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests: true);
+                Runner runner = new Runner([sims.Model as Simulations], runType: typeOfRun, runTests: true);
 
                 // Run simulations.
                 var exceptions = runner.Run();
@@ -384,7 +384,7 @@ namespace UnitTests.Core.Run
                 var sims = Node.Create(simulations);
 
                 // Run simulations.
-                Runner runner = new Runner(sims.Model as Simulations, runType: typeOfRun, runTests:true);
+                Runner runner = new Runner([sims.Model as Simulations], runType: typeOfRun, runTests:true);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 Assert.That(errors.Count, Is.EqualTo(0));
@@ -426,7 +426,7 @@ namespace UnitTests.Core.Run
                 var tree = Node.Create(simulation);
 
                 // Run simulations.
-                Runner runner = new Runner(simulation, runType: typeOfRun);
+                Runner runner = new Runner([simulation], runType: typeOfRun);
 
                 IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
@@ -486,7 +486,7 @@ namespace UnitTests.Core.Run
             };
             var tree = Node.Create(sims);
 
-            Runner runner = new Runner(sim1);
+            Runner runner = new Runner([sim1]);
             List<Exception> errors = runner.Run();
 
             // We ran sim1 only. Therefore two post-simulation tools
@@ -523,7 +523,7 @@ namespace UnitTests.Core.Run
                 };
                 var tree = Node.Create(simulation);
 
-                Runner runner = new Runner(simulation, runType: typeOfRun);
+                Runner runner = new Runner([simulation], runType: typeOfRun);
 
                 IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
@@ -599,7 +599,7 @@ namespace UnitTests.Core.Run
 
             var tree = Node.Create(sims);
 
-            Runner runner = new Runner(sims, simulationNamesToRun: new[] { "sim1" });
+            Runner runner = new Runner([sims], simulationNamesToRun: new[] { "sim1" });
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -613,7 +613,7 @@ namespace UnitTests.Core.Run
             };
             Assert.That(testPostSim.TablesModified.OrderBy(x => x), Is.EqualTo(tablesMod.OrderBy(x => x)));
 
-            runner = new Runner(sims, simulationNamesToRun: new[] { "sim2" });
+            runner = new Runner([sims], simulationNamesToRun: new[] { "sim2" });
             errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -628,7 +628,7 @@ namespace UnitTests.Core.Run
             Assert.That(testPostSim.TablesModified.OrderBy(x => x), Is.EqualTo(tablesMod.OrderBy(x => x)));
 
             // Now run both sims
-            runner = new Runner(sims);
+            runner = new Runner([sims]);
             errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -672,7 +672,7 @@ namespace UnitTests.Core.Run
                 };
                 var tree = Node.Create(simulation);
 
-                Runner runner = new Runner(simulation, runType:typeOfRun, runSimulations:false);
+                Runner runner = new Runner([simulation], runType:typeOfRun, runSimulations:false);
 
                 IRunner.AllJobsCompletedArgs argsOfAllCompletedJobs = null;
                 runner.AllSimulationsCompleted += (sender, e) => { argsOfAllCompletedJobs = e; };
@@ -730,7 +730,7 @@ namespace UnitTests.Core.Run
                 };
                 var tree = Node.Create(sims);
 
-                Runner runner = new Runner(sims, runType: runType, runSimulations: false);
+                Runner runner = new Runner([sims], runType: runType, runSimulations: false);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors.Count, Is.EqualTo(0), errors.Count > 0 ? errors[0].ToString() : "");
 
@@ -791,8 +791,10 @@ namespace UnitTests.Core.Run
             sims.Rename("Sim2");
             File.WriteAllText(Path.Combine(path, "Sim2.apsimx"), sims.ToJSONString());
 
-            var runner = new Runner(Path.Combine(path, "*.apsimx"));
-            runner.Run();
+            Options options = new Options();
+            options.Files = [Path.Combine(path, "*.apsimx")];
+            options.NumProcessors = -1;
+            Program.Run(options);
 
             // Check simulation 1 database
             database = new SQLite();
