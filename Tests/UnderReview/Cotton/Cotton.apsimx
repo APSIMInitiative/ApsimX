@@ -7536,9 +7536,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": null,
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Cotton].Partitioning.BelowGround",
                               "Name": "PartitionFraction",
                               "ResourceName": null,
                               "Children": [],
@@ -8680,6 +8679,214 @@
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Group, Models",
+              "Name": "Partitioning",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Partitioning of daily growth into the various plant parts is calculated using partitioning fractions.  The sum of all partitioning fractions should equal one.  To ensure this, a simple staged approach is used here based on primary, secondary and (where required) tertiary partitioning.\n\n1) partitioning to below and above ground growth is calculated.\n2) Below ground growth is partitioned between fine and coarse root material (the sum of which should equal the below ground partition fraction)\n3) Above ground growth is partitioned into woody material.  The remainder is partitioned to foliage.\n4) The above ground woody partition fraction is then partitioned to stem and branch.  The partitioning to cone is calculated as the remainder of woody growth.\n5) The net result of all partitioning calculation should be a value of 1.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.2,
+                  "Units": "0-1",
+                  "Name": "BelowGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": "0-1",
+                      "Name": "CoarseRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
+                      "Name": "FineRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "1 - [Cotton].Partitioning.BelowGround",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "[WoodyFraction].Juvenile + ([WoodyFraction].Mature - [WoodyFraction].Juvenile) * [Pinus].IndividualTreeStemWt / ([Pinus].Partitioning.AboveGround.WoodyFraction.SizeParameter + [Pinus].IndividualTreeStemWt)",
+                      "Name": "WoodyFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Juvenile",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.85,
+                          "Units": null,
+                          "Name": "Mature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10000.0,
+                          "Units": null,
+                          "Name": "SizeParameter",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.25,
+                          "Units": null,
+                          "Name": "BranchFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": null,
+                          "Expression": "1 - [Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction",
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "[Cotton].Partitioning.BelowGround",
+                  "Name": "RootFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "All below ground growth is assumed to go into root growth",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "[Cotton].Partitioning.RootFraction",
+                  "Name": "TotalFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
