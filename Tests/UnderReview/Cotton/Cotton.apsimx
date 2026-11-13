@@ -8756,7 +8756,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Partitioning of daily growth into the various plant parts is calculated using partitioning fractions.  The sum of all partitioning fractions should equal one.  To ensure this, a simple staged approach is used here based on primary, secondary and (where required) tertiary partitioning.\n\n1) partitioning to below and above ground growth is calculated.\n2) Below ground growth is partitioned between fine and coarse root material (the sum of which should equal the below ground partition fraction)\n3) Above ground growth is partitioned into woody material.  The remainder is partitioned to foliage.\n4) The above ground woody partition fraction is then partitioned to stem and branch.  The partitioning to cone is calculated as the remainder of woody growth.\n5) The net result of all partitioning calculation should be a value of 1.",
+                  "Text": "Partitioning of daily growth into the various plant parts is calculated using partitioning fractions.  The sum of all partitioning fractions should equal one.  To ensure this, a simple staged approach is used here based on primary, secondary and (where required) tertiary partitioning.\n\n1) partitioning to below and above ground growth is calculated.\n2) Below ground growth is partitioned to the root model\n3) Above ground growth is partitioned into reproductive material.  The remainder is partitioned to Vegetative material.\n4) The above ground vegetative fraction is then partitioned to stem and leaf.  \n5) The above ground reproductive fraction is then partitioned to bur, seed and lint.\n5) The net result of all partitioning calculation should be a value of 1.",
                   "Name": "Memo",
                   "ResourceName": null,
                   "Children": [],
@@ -8772,7 +8772,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                      "Text": "Below ground growth in Cotton is assumed to remain constant over time, from emergence to maturity.",
                       "Name": "Memo",
                       "ResourceName": null,
                       "Children": [],
@@ -8973,7 +8973,7 @@
       "Children": [
         {
           "$type": "Models.Map, Models",
-          "Zoom": 8.1,
+          "Zoom": 6.0,
           "Center": {
             "$type": "Models.Mapping.Coordinate, Models",
             "Latitude": -26.8152,
@@ -8987,7 +8987,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "ExperimentalClimaticConditions",
           "ResourceName": null,
           "Children": [
@@ -9473,7 +9473,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "CombinedResults",
           "ResourceName": null,
           "Children": [
