@@ -172,7 +172,7 @@ namespace APSIM.Shared.Mapping
             // It should normally be invisible, as it will be covered by the BruTile tile layer.
 
             string countriesJson;
-            string resourceName = "APSIM.Shared.Resources.countries.json"; // Fully qualified name
+            string resourceName = "APSIM.Documentation.Resources.countries.json"; // Fully qualified name
             var assembly = Assembly.GetExecutingAssembly();
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
