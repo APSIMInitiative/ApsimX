@@ -461,18 +461,31 @@ namespace APSIM.Documentation
                 }
                 else
                 {
-                    IModel referencedModel = referencedModels.First().Value as IModel;
-                    List<ITag> tags = AutoDocumentation.Document(referencedModel);
-                    if (tags.Count == 1)
+                    var obj = referencedModels.First().Value;
+                    if (obj is IModel referencedModel)
                     {
-                        ITag firstTag = tags.FirstOrDefault();
-                        if (firstTag != null && firstTag is Section)
-                            tags = (firstTag as Section).Children;
+                        List<ITag> tags = AutoDocumentation.Document(referencedModel);
+                        if (tags.Count == 1)
+                        {
+                            ITag firstTag = tags.FirstOrDefault();
+                            if (firstTag != null && firstTag is Section)
+                                tags = (firstTag as Section).Children;
+                        }
+                        string markdown = ConvertToMarkdown(tags, "", root, referencedModel).Trim();
+                        output = output.Remove(match.Index + offset, value.Length);
+                        output = output.Insert(match.Index + offset, markdown);
+                        offset += markdown.Length - value.Length;
                     }
-                    string markdown = ConvertToMarkdown(tags, "", root, referencedModel).Trim();
-                    output = output.Remove(match.Index + offset, value.Length);
-                    output = output.Insert(match.Index + offset, markdown);
-                    offset += markdown.Length - value.Length;
+                    else
+                    {
+                        string text = reference;
+                        if (obj != null)
+                            text = obj.ToString();
+
+                        output = output.Remove(match.Index + offset, value.Length);
+                        output = output.Insert(match.Index + offset, text);
+                        offset += text.Length - value.Length;
+                    }
                 }
             }
 
