@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Logging;

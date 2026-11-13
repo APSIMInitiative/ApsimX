@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 
@@ -22,9 +22,9 @@ namespace APSIM.Documentation.Models.Types
         {
             Section section = GetSummaryAndRemarksSection(model);
 
-            Section parameters = new Section("Parameters", new List<ITag>());
+            Section parameters = new Section("Parameters", new List<ITag>(), model);
             foreach (KeyValuePair<string, string> pair in (model as Manager).Parameters)
-                parameters.Add(new Paragraph(pair.Key + " = " + pair.Value));
+                parameters.Add(new Paragraph(pair.Key + " = " + pair.Value, model));
 
             section.Add(parameters);
 

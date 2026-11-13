@@ -1,5 +1,5 @@
 ﻿using APSIM.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;

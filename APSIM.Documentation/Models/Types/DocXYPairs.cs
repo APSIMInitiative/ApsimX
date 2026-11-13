@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Functions;
@@ -72,8 +72,8 @@ namespace APSIM.Documentation.Models.Types
                 table.Rows.Add(row);
             }
 
-            Table tableTag = new Table(table);
-            string tableMarkdown = WebDocs.ConvertToMarkdown(new List<ITag> {tableTag}, "", xyPairs);
+            Table tableTag = new Table(table,model);
+            string tableMarkdown = WebDocs.ConvertToMarkdown(new List<ITag> {tableTag}, "", xyPairs, xyPairs);
 
             SKImage graphImage = WebDocs.GetGraphImage(CreateGraph(), 600, 600, 192);
             string imgMarkdown = WebDocs.GetMarkdownImageFromSKImage(graphImage);
@@ -91,7 +91,7 @@ namespace APSIM.Documentation.Models.Types
 
             html = $"<div class=\"docs-table-container\" style=\"margin-top:-50px\">\n{html}</div>\n";
 
-            return new List<ITag> {new Paragraph(html)};
+            return new List<ITag> {new Paragraph(html,model)};
         }
 
         private Graph CreateGraph()

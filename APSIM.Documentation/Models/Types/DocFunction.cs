@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.Functions;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             string text = GetFunctionText(this.model as IFunction);
-            Paragraph paragraph = new Paragraph(text);
+            Paragraph paragraph = new Paragraph(text, model);
             return new List<ITag>() {paragraph};
         }
 

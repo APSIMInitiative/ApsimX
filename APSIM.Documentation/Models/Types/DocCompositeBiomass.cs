@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF;
 
@@ -28,8 +28,8 @@ namespace APSIM.Documentation.Models.Types
             foreach (string name in (model as CompositeBiomass).OrganNames)
                 organs += $"- {name}" + Environment.NewLine;
 
-            section.Add(new Paragraph($"{model.Name} summarises the following biomass objects:"));
-            section.Add(new Paragraph(organs));
+            section.Add(new Paragraph($"{model.Name} summarises the following biomass objects:", model));
+            section.Add(new Paragraph(organs, model));
 
             return new List<ITag>() {section};
         }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation.Mapping;
+using APSIM.Documentation.Tag.Mapping;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>
     /// A map which can be displayed in autodocs.

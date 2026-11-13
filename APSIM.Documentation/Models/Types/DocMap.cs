@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using ModelsMap = Models.Map;
 using Models.Core;
-using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
+using DocumentationCoordinate = APSIM.Documentation.Tag.Mapping.Coordinate;
 using ModelsCoordinate = Models.Mapping.Coordinate;
 
 namespace APSIM.Documentation.Models.Types

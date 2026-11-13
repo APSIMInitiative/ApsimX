@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.Functions;
 using M = Models;

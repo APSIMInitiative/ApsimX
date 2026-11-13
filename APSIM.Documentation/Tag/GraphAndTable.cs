@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Graphing;
 /*
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>Describes an auto-doc graph and table command.</summary>
     public class GraphAndTable : ITag

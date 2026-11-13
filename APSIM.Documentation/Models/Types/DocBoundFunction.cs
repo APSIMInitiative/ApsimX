@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models.Functions;
@@ -41,7 +41,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 if (child != Upper && child != Lower)
                 {
-                    section.Add(new Paragraph($"{model.Name} is the value of {child.Name} bound between a lower and upper bound where:"));
+                    section.Add(new Paragraph($"{model.Name} is the value of {child.Name} bound between a lower and upper bound where:", model));
                     section.Add(AutoDocumentation.DocumentModel(child));
                 }
             }

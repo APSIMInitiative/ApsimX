@@ -1,5 +1,5 @@
 using APSIM.Shared.Utilities;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using APSIM.Documentation.Models;
 using Models.Core;
 using System.Collections.Generic;
@@ -66,8 +66,8 @@ namespace UnitTests.Documentation
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
-                    string textE = (expected as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
-                    string textA = (actual as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
+                    string textE = (expected as Paragraph).Text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
+                    string textA = (actual as Paragraph).Text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
                     //clean out HTML tags that cause this to fail on linux
                     WebDocs.GetAllHTMLSegments(textE, out textE);
                     WebDocs.GetAllHTMLSegments(textA, out textA);
@@ -115,7 +115,7 @@ namespace UnitTests.Documentation
             input = "This is a reference to the memo name {[Documentation].Name} and some more text.";
             expected = $"This is a reference to the memo name {memoName} and some more text.";
             (simulations.Children[0] as Models.Documentation).Text = input;
-            output = WebDocs.ReplaceInserts(input, simulations);
+            output = WebDocs.ReplaceInserts(input, simulations, simulations);
             Assert.That(output, Is.EqualTo(expected));
 
             //Check that it doesn't try to do this with a code block which has { } in them
@@ -134,7 +134,7 @@ namespace UnitTests.Documentation
             input += " \n";
             expected = input;
             (simulations.Children[0] as Models.Documentation).Text = input;
-            output = WebDocs.ReplaceInserts(input, simulations);
+            output = WebDocs.ReplaceInserts(input, simulations, simulations);
             Assert.That(output, Is.EqualTo(expected));
         }
     }

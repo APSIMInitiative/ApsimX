@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF.Interfaces;
 
@@ -27,8 +27,8 @@ namespace APSIM.Documentation.Models.Types
             if (parentOrgan != null)
             {
                 string organName = parentOrgan.Name;
-                section.Add(new Paragraph($"*{model.Name} = [{organName}].maximumNConc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*"));
-                section.Add(new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch."));
+                section.Add(new Paragraph($"*{model.Name} = [{organName}].maximumNConc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*", model));
+                section.Add(new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch.", model));
             }
 
             return new List<ITag>() {section};

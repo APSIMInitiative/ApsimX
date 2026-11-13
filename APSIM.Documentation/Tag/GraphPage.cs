@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>
     /// A graph tag.
