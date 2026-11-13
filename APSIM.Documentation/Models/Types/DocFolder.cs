@@ -134,7 +134,7 @@ namespace APSIM.Documentation.Models.Types
                                 if (child is APSIM.Documentation.Tag.Graph graph)
                                     justTheGraphs.Add(graph);
 
-                    string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model);
+                    string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model, model);
 
                     MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
                     string html = Markdown.ToHtml(markdown, pipeline);

@@ -115,7 +115,7 @@ namespace UnitTests.Documentation
             input = "This is a reference to the memo name {[Documentation].Name} and some more text.";
             expected = $"This is a reference to the memo name {memoName} and some more text.";
             (simulations.Children[0] as Models.Documentation).Text = input;
-            output = WebDocs.ReplaceInserts(input, simulations);
+            output = WebDocs.ReplaceInserts(input, simulations, simulations);
             Assert.That(output, Is.EqualTo(expected));
 
             //Check that it doesn't try to do this with a code block which has { } in them
@@ -134,7 +134,7 @@ namespace UnitTests.Documentation
             input += " \n";
             expected = input;
             (simulations.Children[0] as Models.Documentation).Text = input;
-            output = WebDocs.ReplaceInserts(input, simulations);
+            output = WebDocs.ReplaceInserts(input, simulations, simulations);
             Assert.That(output, Is.EqualTo(expected));
         }
     }

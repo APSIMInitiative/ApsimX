@@ -134,8 +134,8 @@ namespace APSIM.Documentation
         public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
             tags.Add(new Section("References",model));
-            string markdown = ConvertToMarkdown(tags, "", model);
-            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
+            string markdown = ConvertToMarkdown(tags, "", model, model);
+            string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model, model);
             markdown = headerImg + markdown;
             List<(string, string)> htmlSegments = GetAllHTMLSegments(markdown, out string output1);
             List<ICitation> citations = ProcessCitations(output1, out string output2);
@@ -241,7 +241,7 @@ namespace APSIM.Documentation
         /// <summary>
         ///
         /// </summary>
-        public static string ConvertToMarkdown(List<ITag> tags, string heading, IModel model)
+        public static string ConvertToMarkdown(List<ITag> tags, string heading, IModel root, IModel model)
         {
             string output = "";
 
@@ -257,8 +257,9 @@ namespace APSIM.Documentation
                 {
                     sectionCount += 1;
                     string sectionHeader = $"{header}{headingPrefix}{sectionCount}";
-                    output += $"{sectionHeader} {section.Title}\n\n";
-                    output += ConvertToMarkdown(section.Children, sectionHeader, model);
+                    string text = $"{sectionHeader} {section.Title}\n\n";
+                    text += ConvertToMarkdown(section.Children, sectionHeader, root, model);
+                    output += ReplaceInserts(text, root, section.Reference);
                 }
                 else if (tag is Paragraph paragraph)
                 {
@@ -276,7 +277,7 @@ namespace APSIM.Documentation
                                     hashes += "#";
                             text = hashes + text.Replace("#", "");
                         }
-                        text = ReplaceImagePathWithEncodedString(text);
+                        text = ReplaceInserts(ReplaceImagePathWithEncodedString(text), root, paragraph.Reference);
                         output += $"{text}\n";
                     }
                     output += "\n";
@@ -293,6 +294,7 @@ namespace APSIM.Documentation
                         columnWidths.Add(maxLength);
                     }
 
+                    string text = "";
                     int colCount = table.Data.Table.Columns.Count;
                     string line1 = "|";
                     string line2 = "|";
@@ -309,7 +311,7 @@ namespace APSIM.Documentation
                             line2 += "-";
                         line2 += " |";
                     }
-                    output += line1 + "\n" + line2 + "\n";
+                    text += line1 + "\n" + line2 + "\n";
 
                     int rowCount = table.Data.Table.Rows.Count;
                     for(int i = 0; i < rowCount; i++)
@@ -325,9 +327,10 @@ namespace APSIM.Documentation
                                 line += " ";
                             line += " |";
                         }
-                        output += line + "\n";
+                        text += line + "\n";
                     }
-                    output += "\n";
+                    text += "\n";
+                    output += ReplaceInserts(text, root, table.Reference);
                 }
                 else if (tag is Image img)
                 {
@@ -351,9 +354,6 @@ namespace APSIM.Documentation
                     output += imgMarkdown;
                 }
             }
-
-            output = ReplaceInserts(output, model);
-
             return output;
         }
 
@@ -439,7 +439,7 @@ namespace APSIM.Documentation
         /// <summary>
         /// Replace content covered by curly braces with apsim content
         /// </summary>
-        public static string ReplaceInserts(string input, IModel model)
+        public static string ReplaceInserts(string input, IModel root, IModel model)
         {
             string output = input;
             Regex regex = new Regex(@"{([^}\s]+)}");
@@ -449,9 +449,19 @@ namespace APSIM.Documentation
             {
                 string value = match.Value;
                 string reference = match.Groups[1].Value;
-                IModel referencedModel = model.Node.Get(reference, LocatorFlags.ModelsOnly, model.Node.Model) as IModel;
-                if (referencedModel != null)
+                IEnumerable<VariableComposite> referencedModels = model.Node.GetAllObjects(reference, LocatorFlags.ModelsOnly);
+                if (referencedModels. Count() == 0)
+                    throw new Exception($"Documentation '{model.FullPath}' cannot find reference to {reference}");
+                else if (referencedModels. Count() > 2)
                 {
+                    string error = $"Documentation '{model.FullPath}' has reference {reference} which is ambigious and could refer to multiple models. Give a longer path to differentiate between models with the same name/type.\nDuplicates are: \n";
+                    foreach(VariableComposite variable in referencedModels)
+                        error += $"{(variable.Value as IModel).FullPath}\n";
+                    throw new Exception(error);
+                }
+                else
+                {
+                    IModel referencedModel = referencedModels.First().Value as IModel;
                     List<ITag> tags = AutoDocumentation.Document(referencedModel);
                     if (tags.Count == 1)
                     {
@@ -459,21 +469,10 @@ namespace APSIM.Documentation
                         if (firstTag != null && firstTag is Section)
                             tags = (firstTag as Section).Children;
                     }
-                    string markdown = ConvertToMarkdown(tags, "", referencedModel).Trim();
+                    string markdown = ConvertToMarkdown(tags, "", root, referencedModel).Trim();
                     output = output.Remove(match.Index + offset, value.Length);
                     output = output.Insert(match.Index + offset, markdown);
                     offset += markdown.Length - value.Length;
-                }
-                else
-                {
-                    var obj = model.Node.Get(reference, LocatorFlags.None, model.Node.Model);
-                    string text = reference;
-                    if (obj != null)
-                        text = obj.ToString();
-
-                    output = output.Remove(match.Index + offset, value.Length);
-                    output = output.Insert(match.Index + offset, text);
-                    offset += text.Length - value.Length;
                 }
             }
 
