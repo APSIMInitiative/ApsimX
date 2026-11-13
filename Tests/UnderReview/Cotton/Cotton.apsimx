@@ -946,6 +946,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Vegetative].Target.GetType().Name})**\n\n{[Vegetative].Target}\n\n{[Vegetative].Target.SquaringTT}\n\n\n**Progression ({[Vegetative].Progression.GetType().Name})**\n\n{[Vegetative].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.SubtractFunction, Models",
                       "Name": "Target",
                       "ResourceName": null,
@@ -994,6 +1003,15 @@
                   "Name": "Squaring",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Squaring].Target.GetType().Name})**\n\n{[Squaring].Target}\n\n{[Squaring].Target.FloweringTT}\n\n\n**Progression ({[Squaring].Progression.GetType().Name})**\n\n{[Squaring].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.SubtractFunction, Models",
                       "Name": "Target",
@@ -1053,6 +1071,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[EarlyFlowering].Target.GetType().Name})**\n\n{[EarlyFlowering].Target}\n\n\n**Progression ({[EarlyFlowering].Progression.GetType().Name})**\n\n{[EarlyFlowering].Progression}\n\n{[EarlyFlowering].Progression.BollModifier}\n\nBollModifer = BollModifierBase + (BollRatio - BollModifier/2) * BollModifierMultiplier\n\n{[EarlyFlowering].BollModifierBase}\n\n{[EarlyFlowering].BollModifierMultiplier}",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Memo, Models",
                       "Text": "8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
@@ -1111,7 +1138,7 @@
                             },
                             {
                               "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "AddFunction",
+                              "Name": "Calculation",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1232,6 +1259,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Maturing].Target.GetType().Name})**\n\n{[Maturing].Target}\n\n\n**Progression ({[Maturing].Progression.GetType().Name})**\n\n{[Maturing].Progression}\n\n{[Maturing].Progression.GrowthFactor}\n\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Memo, Models",
                       "Text": "15/09/2025: TOTAL GROWTH RATE, NOT BOLL GROWTH RATE\n\n======================================================\n\n8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
@@ -1275,7 +1311,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "GrowthLinearInterpolation",
+                          "Name": "GrowthFactor",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1301,8 +1337,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[GrowthFactor].Calculation",
                               "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "Calculation",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1369,6 +1414,15 @@
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Ripening].Target.GetType().Name})**\n\n{[Ripening].Target}\n\n\n**Progression ({[Ripening].Progression.GetType().Name})**\n\n{[Ripening].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 50.0,
@@ -4594,6 +4648,15 @@
               "Name": "Stem",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "\n**Stem Dry Matter Demands**\n\nDemands for structural, metabolic and storage pools are provided to the organ arbitrator to simulate ongoing stem growth.  The demands for each dry matter pool are calculated as follows:\n\n```\n{[Cotton].Stem.PotentialGrowth}\n\n// The fractional partitioning of this potential growth into structural, storage and metabolic pools is as follows:\n\n{[Cotton].Stem.DMDemands.Structural}\n{[Cotton].Stem.DMDemands.Structural.Fraction}\n\n{[Cotton].Stem.DMDemands.Storage}\n{[Cotton].Stem.DMDemands.Storage.StorageFraction}\n\n{[Cotton].Stem.DMDemands.Metabolic}\n\n\n```\n\nThe fraction of daily growth partitioned to stems is specified as a function of growth stage.\n\n{[Cotton].Stem.PotentialGrowth.PartitionFraction}\n\n**Stem Nitrogen Demand and Allocation**\n\nStem Nitrogen allocation to structural, storage and metabolic biomass pools is calculated by the OrganArbitrator as described above.  The stem model calculates the demands for each of these pools from information on the minimum, critical and maximum stem Nitrogen concentration for each predicted stage of development.\n\nThe minimum stem nitrogen concentration is used to describe the nitrogen content of the structural stem material. The difference between minimum and critical nitrogen concentration is assumed to correspond to metabolic stem material.  Storage nitrogen is equated with the difference between maximum and critical nitrogen concentrations.  The values of each of these is specified as follows.\n\n```\n// minimum and critical are set to be equal to provide a configuration where stem N is held in structural and storage pools only.\n{[Cotton].Stem.MinimumNconc}\n{[Cotton].Stem.CriticalNconc}\n```\nStorage N is parameterised therefore as the difference between minimum/critical N concentration and the following maximum N concentration.\n{[Cotton].Stem.MaximumNconc}\n\n**Senescence and Detachment**\n\nStem senescence can be specified to occur at differing rates before and after cutout.  \n\n```\n{[Cotton].Stem.SenescenceRate}\n\n{[Cotton].Stem.DetachmentRateFunction}\n\n```\n\nwhere\n\nName | Description | Units\n-|-|-\nSenescenceRate | Fraction of live stem that senesces on the current day | /day\nDetachmentRate | Fraction of dead stem that detaches on the current day | /day\n\n**DM and N reuse within the plant**\n\nNon-structural DM and N (ie storage or metabolic pools) can be available for reuse elsewhere within the plant to meet other demands via reallocation of DM or N from senescing biomass or retranslocation from live biomass during some growth phases (e.g. reallocation of N from senescing stem or retranslocation from stem N storage to support daily growth.  The potential fraction of DM or N that is available on any day is specified as follows:\n\n```\n{[Cotton].Stem.DMRetranslocationFactor}\n{[Cotton].Stem.DMReallocationFactor}\n{[Cotton].Stem.NRetranslocationFactor}\n{[Cotton].Stem.NReallocationFactor}\n\n```",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
