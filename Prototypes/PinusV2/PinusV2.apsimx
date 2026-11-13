@@ -1308,10 +1308,49 @@
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
-                  "Expression": "max(0.2, 0.45 - 0.0625*[Pinus].Age)",
+                  "Expression": "max([Pinus].Partitioning.BelowGround.Mature, [Pinus].Partitioning.BelowGround.Juvenile - ([Pinus].Partitioning.BelowGround.Juvenile - [Pinus].Partitioning.BelowGround.Mature) * [Pinus].Stem.Ht / [Pinus].Partitioning.BelowGround.HeightAtMature)",
                   "Name": "BelowGround",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Fraction of daily growth allocated below ground, no Age: max(Mature, Juvenile - (Juvenile - Mature) x Height / HeightAtMature). Falls from 0.45 for seedlings to 0.18 once trees are 3.5 m tall, so fast-growing stands shift to above-ground growth sooner than slow ones. Replaces max(0.2, 0.45 - 0.0625 x Age) (2026-11-14). The floor was lowered from 0.20 to 0.18 because SETRES below-ground biomass (the only root data; taeda, ages 8-16) was over-predicted by 22-42%: with the 0.18 floor below-ground biomass NSE rose from 0.85 to 0.93 and above-ground mass and wood weight improved. Tested heights at which the floor is reached: 2.0-8.0 m; faster declines over-predict young above-ground growth (EM88, Tarpeena), slower ones over-predict SETRES roots. The Age-based form with the same 0.18 floor scored slightly higher (mean NSE 0.838 vs 0.835). Fine/coarse split below ground is set by Leaf.Fn (CoarseRootFraction). Stress effects on allocation (3-PG style) not yet included.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.45,
+                      "Units": null,
+                      "Name": "Juvenile",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.18,
+                      "Units": null,
+                      "Name": "Mature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 3.5,
+                      "Units": "m",
+                      "Name": "HeightAtMature",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": "0-1",
@@ -2503,10 +2542,19 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "0.0037+0.0034*2.71828^-(0.11*[Pinus].Age)",
+                      "Expression": "0.0037+0.0034*2.71828^-([Pinus].Leaf.SpecificLeafAreaFunction.SLAPotential.HeightDecay*[Pinus].Stem.Ht)",
                       "Name": "SLAPotential",
                       "ResourceName": null,
                       "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Potential SLA (m2/g), no Age: 0.0037 + 0.0034 x exp(-HeightDecay x Height). Replaces exp(-0.11 x Age) (2026-11-14). SLA falls as trees grow taller (more shaded, higher-light-acclimated and hydraulically limited foliage), so slow stands keep juvenile needles longer and fast stands lose them sooner. HeightDecay 0.16 /m: tested 0.098 (reproduces the old age curve on average), 0.13, 0.16, 0.20; 0.16 best fits BFG canopy SLA (85 obs, ages 10-14, ~0.0045; NSE -1.14 -> -0.28) and improved LAI (0.709 -> 0.732) and leaf mass.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.06,
@@ -2522,6 +2570,16 @@
                           "FixedValue": 3E-07,
                           "Units": null,
                           "Name": "Slope",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.16,
+                          "Units": "/m",
+                          "Name": "HeightDecay",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -2956,15 +3014,34 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": "0-1",
-                      "Expression": "max(0.01, min(1, [Pinus].Population * 3.14159 * ([CoverGreenFunction].Occupancy.CrownRadiusGrowthRate * [Pinus].Age)^2))",
+                      "Expression": "max(0.01, min(1, [Pinus].Population * 3.14159 * ([Occupancy].CrownRadiusCoefficient * max(0.1, [Pinus].Stem.Ht)^[Occupancy].CrownRadiusExponent)^2))",
                       "Name": "Occupancy",
                       "ResourceName": null,
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Fraction of ground occupied by crowns, no Age: Population x pi x crown radius^2 (capped at 1), crown radius (m) = CrownRadiusCoefficient x Height^CrownRadiusExponent. Replaces crown radius = 0.35 x Age (2026-11-14): canopy closure now follows tree size, so fast sites close earlier and slow sites later, and heavy thinning reopens the canopy in proportion to tree size. 0.55 x H^0.6 gives crown radius 1.4 m at 5 m, 2.2 m at 10 m and 3.3 m at 20 m height; chosen from tested forms (0.36 H^0.78, which reproduces the old closure timing on average, 0.25 H, 0.45 H^0.7, 0.7 H^0.5, 0.9 H^0.4) as the best overall fit without refitting height growth (mean NSE 0.831 unchanged, Vol 0.906 -> 0.918, BA 0.800 -> 0.802, Ht 0.976 -> 0.968). Not yet checked against measured crown widths.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.35,
-                          "Units": "m/y",
-                          "Name": "CrownRadiusGrowthRate",
+                          "FixedValue": 0.55,
+                          "Units": "m",
+                          "Name": "CrownRadiusCoefficient",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.6,
+                          "Units": null,
+                          "Name": "CrownRadiusExponent",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -3006,12 +3083,12 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "AgeBased",
+                      "Name": "HeightBased",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "This function specifies that lead residence time increases with age. Values are mainly based on [#cremer1992relations] and [#beets1987specific].\r\n\r\n\r\n\r\n",
+                          "Text": "Needle residence time (d) as a function of mean tree height (m), not Age (2026-11-14). Radiata breakpoints 0.3, 1, 2, 4, 6, 9.5, 16, 25 m are the median simulated radiata heights at the former ages 0, 1, 2, 3, 6, 9, 15, 25 y; values mainly from Cremer 1992 and Beets & Pollock 1987. Southern pines set their own Y (350-650 d) and X (taeda 0.3, 0.85, 1.7, 2.6, 4, 6, 12, 25.5 m; caribaea, hybrids and slash 0.3, 1.2, 4.5, 7, 12, 16, 21, 25 m, from their simulated heights at the same ages) in the cultivars. Lower or higher radiata breakpoints were tested and fitted LAI slightly worse.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -3021,13 +3098,13 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.0,
+                            0.3,
                             1.0,
                             2.0,
-                            3.0,
+                            4.0,
                             6.0,
-                            9.0,
-                            15.0,
+                            9.5,
+                            16.0,
                             25.0
                           ],
                           "Y": [
@@ -3048,7 +3125,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Pinus].Age",
+                          "VariableName": "[Pinus].Stem.Ht",
                           "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
@@ -3077,6 +3154,46 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "max(0.3, 1 - [Pinus].Leaf.LeafResidenceTime.DroughtEffect.Sensitivity * (1 - [TreeThinning].Script.SeasonalFw))",
+                      "Units": null,
+                      "Name": "DroughtEffect",
+                      "ResourceName": null,
+                      "Enabled": true,
+                      "ReadOnly": false,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "DORMANT (Sensitivity = 0): seasonal drought shortens needle retention. Residence time is multiplied by max(0.3, 1 - Sensitivity x (1 - SeasonalFw)), where SeasonalFw is a running mean (TimeConstant days) of Leaf.Fw kept in the TreeThinning script ([TreeThinning].Script.SeasonalFw). Because PerennialLeaf senesces every cohort older than the current residence time each day, a dry season sheds the oldest needle cohorts. Basis: John McGrath (pers. comm. 2026-11) - radiata needles in WA (Mediterranean summer drought) rarely last beyond 2 seasons, versus 3-4 seasons in eastern Australia. Prototype 2026-11-14 (radiata only, base residence times scaled up to compensate): Sensitivity 0.2-0.5 narrowed the BFG irrigated vs rainfed LAI contrast in the right direction (irrigated I bias -7.7% -> -3.8%, ILP -13.5% -> -10.5%), but cut growth at the dry radiata sites where volume is already under-predicted (FSA703A -12.5% -> -19%, Tower Hill Volub -2% -> -7.5%), mean NSE 0.839 -> 0.830. Applying it to southern pines (with scaled residence times) inflated IMPAC LAI (+25% -> +55%). To activate: set Sensitivity (~0.2-0.3) and lengthen HeightBased residence times (~x1.15-1.25) for radiata; test against WA needle retention data (McGrath) and re-tune dry-site productivity.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Sensitivity",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 45.0,
+                          "Units": "d",
+                          "Name": "TimeConstant",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ]
                     }
                   ],
                   "Enabled": true,
@@ -6170,7 +6287,8 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.HeightParameter.FixedValue = 8.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.X = 0.3, 1.2, 4.5, 7.0, 12.0, 16.0, 21.0, 25.0",
                     "",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
@@ -6231,7 +6349,8 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 62.5",
                     "[Pinus].Stem.WoodDensityOfGrowth.HeightParameter.FixedValue = 8.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.X = 0.3, 1.2, 4.5, 7.0, 12.0, 16.0, 21.0, 25.0",
                     "",
                     "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100",
                     "[Pinus].Stem.HeightGrowth.MaximumHeight.FixedValue = 35",
@@ -6303,7 +6422,8 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.Mature.FixedValue = 50.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.HeightParameter.FixedValue = 8.0",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.X = 0.3, 1.2, 4.5, 7.0, 12.0, 16.0, 21.0, 25.0",
                     "",
                     "",
                     "[Leaf].MinimumNConc.FixedValue = 0.0025",
@@ -6988,7 +7108,8 @@
                     "[Pinus].Stem.WoodDensityOfGrowth.HeightParameter.FixedValue = 14.0",
                     "[Pinus].Stem.WoodDensityOfGrowth.NEffect.FixedValue = 0.075",
                     "",
-                    "[Leaf].LeafResidenceTime.AgeBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.Y = 350, 380, 450, 500, 550, 650, 650, 650",
+                    "[Leaf].LeafResidenceTime.HeightBased.XYPairs.X = 0.3, 0.85, 1.7, 2.6, 4.0, 6.0, 12.0, 25.5",
                     "",
                     "[Pinus].StemMortality.MaximumSDI.FixedValue = 1100",
                     "[Pinus].Stem.HeightGrowth.MaximumHeight.FixedValue = 35",
@@ -7066,6 +7187,20 @@
             "        private IFunction StemMortality;",
             "        [Link(Type = LinkType.Path, Path = \"[Pinus].StemMortality.MaximumSDI\")]",
             "        private IFunction MaximumSDI;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].Leaf.LeafResidenceTime.DroughtEffect.TimeConstant\")]",
+            "        private IFunction SeasonalFwTimeConstant;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].Leaf\")]",
+            "        private Models.PMF.Organs.PerennialLeaf SeasonalLeaf;",
+            "",
+            "        /// <summary>Running mean of the leaf water stress factor (time constant TimeConstant days); drives the (dormant) drought shortening of needle residence time.</summary>",
+            "        public double SeasonalFw { get; private set; } = 1;",
+            "",
+            "        [EventSubscribe(\"EndOfDay\")]",
+            "        private void OnEndOfDaySeasonalFw(object sender, EventArgs e)",
+            "        {",
+            "            double fw = Pinus.IsAlive && SeasonalLeaf.LAI > 0 ? Math.Max(0, Math.Min(1, SeasonalLeaf.Fw)) : 1;",
+            "            SeasonalFw += (fw - SeasonalFw) / Math.Max(1, SeasonalFwTimeConstant.Value());",
+            "        }",
             "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.HeightGrowth.InitialHeight\")]",
             "        private IFunction InitialHeight;",
             "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.HeightGrowth.MaximumHeight\")]",
