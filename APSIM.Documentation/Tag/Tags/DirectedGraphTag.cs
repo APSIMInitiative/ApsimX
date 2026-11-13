@@ -1,6 +1,6 @@
 using APSIM.Shared.Graphing;
 
-namespace APSIM.Shared.Documentation.Tags
+namespace APSIM.Documentation.Tag.Tags
 {
     /// <summary>
     /// A map which can be displayed in autodocs.

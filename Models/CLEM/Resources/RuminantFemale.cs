@@ -1,7 +1,7 @@
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

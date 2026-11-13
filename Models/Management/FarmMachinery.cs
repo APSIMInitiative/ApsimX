@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
 using System.Data;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using APSIM.Core;
 
 // TODO

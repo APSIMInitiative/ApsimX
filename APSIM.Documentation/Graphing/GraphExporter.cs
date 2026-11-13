@@ -1,5 +1,5 @@
 using Image = System.Drawing.Image;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using OxyPlot;
 using System.IO;
 using System;

@@ -8,7 +8,7 @@ using System.Linq;
 using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Interop.Graphing.Extensions;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using ApsimNG.Graphing;

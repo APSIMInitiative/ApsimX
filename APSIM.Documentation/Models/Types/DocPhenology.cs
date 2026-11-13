@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF.Phen;
 
@@ -25,9 +25,10 @@ namespace APSIM.Documentation.Models.Types
 
             List<ITag> subTags = new()
             {
-                new Paragraph("."),
+                new Paragraph(".", model),
                 new Section("List of Plant Model Components",
-                    new Table(DocumentationUtilities.GetPhaseTable(model as Phenology))),
+                    new Table(DocumentationUtilities.GetPhaseTable(model as Phenology), model),
+                    model),
             };
 
             foreach(IPhase child in model.Node.FindChildren<IPhase>())
@@ -39,7 +40,7 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
 
-            section.Add(new Section("Phenology", subTags));
+            section.Add(new Section("Phenology", subTags, model));
             return new List<ITag>() {section};
         }
     }

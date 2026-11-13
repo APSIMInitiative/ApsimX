@@ -1,10 +1,10 @@
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using System;
 using System.Collections.Generic;
 using MigraDoc.DocumentObjectModel;
 using Models.Core;
 using System.IO;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 
 namespace APSIM.Documentation.Models
 {

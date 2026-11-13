@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Documentation.Extensions;
+﻿using APSIM.Documentation.Tag.Extensions;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;

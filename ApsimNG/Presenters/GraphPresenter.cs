@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using UserInterface.EventArguments;

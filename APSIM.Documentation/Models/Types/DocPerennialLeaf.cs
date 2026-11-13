@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.Functions;
 
@@ -29,7 +29,7 @@ namespace APSIM.Documentation.Models.Types
             foreach (var constant in model.Node.FindChildren<Constant>())
                 subTags.AddRange(AutoDocumentation.DocumentModel(constant));
 
-            section.Add(new Section("Constants", subTags));
+            section.Add(new Section("Constants", subTags, model));
 
             return new List<ITag>() {section};
         }

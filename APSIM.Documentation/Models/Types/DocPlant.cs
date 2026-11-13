@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection.Metadata;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Functions;
 using Models.Core;
@@ -35,7 +35,7 @@ namespace APSIM.Documentation.Models.Types
             Section mainSection = GetSummaryAndRemarksSection(model);
 
 
-            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections."));
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections.", model));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            mainSection.Add(new Table(tableData));
+            mainSection.Add(new Table(tableData, model));
 
             // Write Composite Biomass Table
             // -------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ namespace APSIM.Documentation.Models.Types
             }
             if (tableDataBiomass.Rows.Count > 0)
             {
-                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
+                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass, model), model));
             }
 
             newTags.Add(mainSection);
@@ -94,12 +94,12 @@ namespace APSIM.Documentation.Models.Types
             // -------------------------------------------------------------------------------
             OrganArbitrator arbitrator = (OrganArbitrator)this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator));
             if (arbitrator != null)
-                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
+                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children, model));
 
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
-                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf)));
+                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf), model));
 
             //Write children
             // -------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ namespace APSIM.Documentation.Models.Types
                     }
                     cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p>{altNames}", commands });
                 }
-                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
+                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable, model), model));
             }
 
             return newTags;

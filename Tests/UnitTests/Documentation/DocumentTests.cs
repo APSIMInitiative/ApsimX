@@ -1,5 +1,5 @@
 using APSIM.Shared.Utilities;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using APSIM.Documentation.Models;
 using Models.Core;
 using System.Collections.Generic;
@@ -66,8 +66,8 @@ namespace UnitTests.Documentation
                 }
                 else if (expected.GetType() == typeof(Paragraph))
                 {
-                    string textE = (expected as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
-                    string textA = (actual as Paragraph).text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
+                    string textE = (expected as Paragraph).Text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
+                    string textA = (actual as Paragraph).Text.Replace("\r", "").Replace("\n", "").Replace("\"", "").Replace("\\", "");
                     //clean out HTML tags that cause this to fail on linux
                     WebDocs.GetAllHTMLSegments(textE, out textE);
                     WebDocs.GetAllHTMLSegments(textA, out textA);

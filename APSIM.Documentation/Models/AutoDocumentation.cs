@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 using Models.Functions;
@@ -164,7 +164,7 @@ namespace APSIM.Documentation.Models
             string rootPath = PathUtilities.GetAbsolutePath("%root%", null);
             string filePath = PathUtilities.GetAbsolutePath(sims.FileName, null);
 
-            Section all = new Section(Path.GetFileNameWithoutExtension(sims.FileName));
+            Section all = new Section(Path.GetFileNameWithoutExtension(sims.FileName),model);
             foreach (IModel child in model.Node.FindChildren<Memo>())
                 all.Children.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 

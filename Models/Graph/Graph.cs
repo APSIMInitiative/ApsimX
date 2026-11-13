@@ -409,18 +409,5 @@ namespace Models
             }
             return y2;
         }
-
-        /// <summary>
-        /// Generated a 'standardised' graph, using the given series definitions.
-        /// This is used to speed up the loading of pages of graphs - where we
-        /// will load data for all series definitions in parallel ahead of time.
-        /// </summary>
-        public APSIM.Shared.Documentation.Graph ToGraph(IEnumerable<SeriesDefinition> definitions)
-        {
-            LegendConfiguration legend = new LegendConfiguration(this.LegendOrientation, this.LegendPosition, !this.LegendOutsideGraph);
-            var xAxis = this.Axis.FirstOrDefault(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top);
-            var yAxis = this.Axis.FirstOrDefault(a => a.Position == AxisPosition.Left || a.Position == AxisPosition.Right);
-            return new APSIM.Shared.Documentation.Graph(this.Name, this.FullPath, this.GetSeries(definitions), xAxis, yAxis, legend);
-        }
     }
 }

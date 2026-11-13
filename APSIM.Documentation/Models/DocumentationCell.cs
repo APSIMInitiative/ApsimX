@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 
 namespace APSIM.Documentation.Models
 {

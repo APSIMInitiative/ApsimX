@@ -1,6 +1,6 @@
 ﻿using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;

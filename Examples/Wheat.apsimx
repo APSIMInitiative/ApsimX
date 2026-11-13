@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 168,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
     {
       "$type": "Models.Core.Simulation, Models",
-      "Descriptors": null,
       "Name": "Simulation",
       "ResourceName": null,
       "Children": [
@@ -32,7 +31,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "%root%/Examples/WeatherFiles/Dalby.met",
+          "FileName": "WeatherFiles/AU_Dalby.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "ResourceName": null,
@@ -59,7 +58,7 @@
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
-          "ResourceName": null,
+          "ResourceName": "MicroClimate",
           "Children": [],
           "Enabled": true,
           "ReadOnly": false
@@ -70,6 +69,7 @@
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "CanopyType": null,
           "Name": "Field",
           "ResourceName": null,
           "Children": [
@@ -142,9 +142,9 @@
                     300.0,
                     300.0
                   ],
-                  "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "ParticleSizeClay": null,
                   "Rocks": null,
                   "Texture": null,
                   "BD": [
@@ -391,6 +391,7 @@
                   "CEC": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
+                  "CECMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
@@ -419,18 +420,8 @@
                     0.457070570557793,
                     0.452331759845006
                   ],
-                  "InitialPAWmm": 361.2454283127387,
-                  "RelativeTo": "LL15",
                   "FilledFromTop": false,
                   "Name": "Water",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -473,6 +464,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NO3",
                   "ResourceName": null,
                   "Children": [],
@@ -508,6 +500,7 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "NH4",
                   "ResourceName": null,
                   "Children": [],
@@ -543,7 +536,19 @@
                   "MaxDepthSoluteAccessible": 0.0,
                   "RunoffEffectivenessAtMovingSolute": 0.0,
                   "MaxEffectiveRunoff": 0.0,
+                  "ConcInSolution": null,
                   "Name": "Urea",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                  "Thickness": null,
+                  "InitialValues": null,
+                  "InteractionsPerDay": 8,
+                  "Name": "Temperature",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -580,15 +585,16 @@
             {
               "$type": "Models.Manager, Models",
               "CodeArray": [
-                "using Models.Interfaces;",
-                "using APSIM.Shared.Utilities;",
-                "using Models.Utilities;",
-                "using Models.Soils;",
-                "using Models.PMF;",
-                "using Models.Core;",
-                "using System;",
-                "using System.Linq;",
+                "using APSIM.Numerics;",
                 "using Models.Climate;",
+                "using System.Linq;",
+                "using System;",
+                "using Models.Core;",
+                "using Models.PMF;",
+                "using Models.Soils;",
+                "using Models.Utilities;",
+                "using APSIM.Shared.Utilities;",
+                "using Models.Interfaces;",
                 "",
                 "namespace Models",
                 "{",
@@ -660,7 +666,7 @@
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": "Wheat"
+                  "Value": "[Wheat]"
                 },
                 {
                   "Key": "StartDate",
@@ -672,11 +678,11 @@
                 },
                 {
                   "Key": "MinESW",
-                  "Value": "100.0"
+                  "Value": "100"
                 },
                 {
                   "Key": "MinRain",
-                  "Value": "25.0"
+                  "Value": "25"
                 },
                 {
                   "Key": "RainDays",
@@ -688,15 +694,15 @@
                 },
                 {
                   "Key": "SowingDepth",
-                  "Value": "30.0"
+                  "Value": "30"
                 },
                 {
                   "Key": "RowSpacing",
-                  "Value": "250.0"
+                  "Value": "250"
                 },
                 {
                   "Key": "Population",
-                  "Value": "120.0"
+                  "Value": "120"
                 }
               ],
               "Name": "Sow using a variable rule",
@@ -725,7 +731,7 @@
                 "        public IPlant Crop { get; set; }",
                 "",
                 "        [Description(\"Type of fertiliser to apply? \")] ",
-                "        public Fertiliser.Types FertiliserType { get; set; }",
+                "        [Display(Type = DisplayType.FertiliserType)]public string FertiliserType { get; set; }",
                 "    ",
                 "        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]",
                 "        public double Amount { get; set; }",
@@ -735,7 +741,7 @@
                 "        {",
                 "            Model crop = sender as Model;",
                 "            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())",
-                "                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);",
+                "                Fertiliser.Apply(amount: Amount, type: FertiliserType);",
                 "        }",
                 "    }",
                 "}"
@@ -743,7 +749,7 @@
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": "Wheat"
+                  "Value": "[Wheat]"
                 },
                 {
                   "Key": "FertiliserType",
@@ -751,7 +757,7 @@
                 },
                 {
                   "Key": "Amount",
-                  "Value": "160.0"
+                  "Value": "160"
                 }
               ],
               "Name": "Fertilise at sowing",
@@ -795,7 +801,7 @@
               "Parameters": [
                 {
                   "Key": "Crop",
-                  "Value": "Wheat"
+                  "Value": "[Wheat]"
                 }
               ],
               "Name": "Harvest",
@@ -818,6 +824,7 @@
               "Position": 3,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -828,6 +835,7 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
+              "LabelOnOneLine": false,
               "Minimum": null,
               "Maximum": null,
               "Interval": null
@@ -880,7 +888,6 @@
     },
     {
       "$type": "Models.Storage.DataStore, Models",
-      "useFirebird": false,
       "CustomFileName": null,
       "Name": "DataStore",
       "ResourceName": null,

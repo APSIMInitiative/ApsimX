@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Globalization;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using APSIM.Shared.Utilities;
 
 namespace APSIM.Core;

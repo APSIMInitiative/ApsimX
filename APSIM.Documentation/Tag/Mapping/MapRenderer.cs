@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationMap = APSIM.Documentation.Tag.Map;
 
 namespace APSIM.Shared.Mapping
 {

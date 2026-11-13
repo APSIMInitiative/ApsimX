@@ -18,7 +18,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using APSIM.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using Models.PreSimulationTools;
 using System.Reflection;
 using Models.Utilities;

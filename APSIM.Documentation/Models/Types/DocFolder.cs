@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models;
@@ -59,7 +59,7 @@ namespace APSIM.Documentation.Models.Types
                     row[1] = experiment.GetDesign();
                     table.Rows.Add(row);
                 }
-                experimentsTag.Add(new Table(table));
+                experimentsTag.Add(new Table(table, model));
                 section.Add(experimentsTag);
             }
 
@@ -131,7 +131,7 @@ namespace APSIM.Documentation.Models.Types
                     foreach(ITag graphSection in graphSections)
                         if (graphSection is Section gs)
                             foreach(ITag child in gs.Children)
-                                if (child is APSIM.Shared.Documentation.Graph graph)
+                                if (child is APSIM.Documentation.Tag.Graph graph)
                                     justTheGraphs.Add(graph);
 
                     string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model);
@@ -146,12 +146,12 @@ namespace APSIM.Documentation.Models.Types
 
                     html = $"<div class=\"docs-table-container\">\n{html}</div>\n";
 
-                    graphs.Add(new Paragraph(html));
+                    graphs.Add(new Paragraph(html, model));
                 }
                 if (graphs.Count() > 0)
                 {
                     string title = parent.Substring(parent.LastIndexOf('.')+1);
-                    output.Add(new Section(title, graphs));
+                    output.Add(new Section(title, graphs, model));
                 }
             }
             return output;

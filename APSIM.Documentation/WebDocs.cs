@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Models.Core;
 using System.IO;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Data;
@@ -15,7 +15,7 @@ using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
 using APSIM.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using OxyPlot;
 
 namespace APSIM.Documentation
@@ -133,7 +133,7 @@ namespace APSIM.Documentation
         /// <param name="model">Model being documented</param>
         public static string TagsToHTMLString(List<ITag> tags, IModel model)
         {
-            tags.Add(new Section("References"));
+            tags.Add(new Section("References",model));
             string markdown = ConvertToMarkdown(tags, "", model);
             string headerImg = ConvertToMarkdown(new List<ITag>(){AddHeaderImageTag()},"", model);
             markdown = headerImg + markdown;
@@ -263,7 +263,7 @@ namespace APSIM.Documentation
                 else if (tag is Paragraph paragraph)
                 {
 
-                    List<string> lines = paragraph.text.Split("\n").ToList();
+                    List<string> lines = paragraph.Text.Split("\n").ToList();
                     lines = ConvertMarkdownCode(lines);
                     foreach (string line in lines)
                     {
@@ -284,21 +284,21 @@ namespace APSIM.Documentation
                 else if (tag is Table table)
                 {
                     List<int> columnWidths = new List<int>();
-                    foreach(DataColumn col in table.data.Table.Columns)
+                    foreach(DataColumn col in table.Data.Table.Columns)
                     {
                         int maxLength = col.ColumnName.Length;
-                        foreach(DataRow row in table.data.Table.Rows)
+                        foreach(DataRow row in table.Data.Table.Rows)
                             if (row[col].ToString().Length > maxLength)
                                 maxLength = row[col].ToString().Replace("\n", "").Replace("\r", "").Length;
                         columnWidths.Add(maxLength);
                     }
 
-                    int colCount = table.data.Table.Columns.Count;
+                    int colCount = table.Data.Table.Columns.Count;
                     string line1 = "|";
                     string line2 = "|";
                     for(int i = 0; i < colCount; i++)
                     {
-                        string content = table.data.Table.Columns[i].ColumnName;
+                        string content = table.Data.Table.Columns[i].ColumnName;
                         line1 += $" {content}";
                         for(int k = 0; k < columnWidths[i]-content.Length; k++)
                             line1 += " ";
@@ -311,14 +311,14 @@ namespace APSIM.Documentation
                     }
                     output += line1 + "\n" + line2 + "\n";
 
-                    int rowCount = table.data.Table.Rows.Count;
+                    int rowCount = table.Data.Table.Rows.Count;
                     for(int i = 0; i < rowCount; i++)
                     {
                         string line = "|";
-                        DataRow row = table.data.Table.Rows[i];
+                        DataRow row = table.Data.Table.Rows[i];
                         for(int j = 0; j < colCount; j++)
                         {
-                            DataColumn col = table.data.Table.Columns[j];
+                            DataColumn col = table.Data.Table.Columns[j];
                             string content = row[col].ToString().Replace("\n", "").Replace("\r", "");
                             line += $" {content}";
                             for(int k = 0; k < columnWidths[j]-content.Length; k++)

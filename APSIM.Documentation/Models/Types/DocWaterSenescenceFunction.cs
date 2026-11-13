@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.Functions;
 
@@ -27,7 +27,7 @@ namespace APSIM.Documentation.Models.Types
 
             section.Add(AutoDocumentation.DocumentModel(waterSenFuncModel.Node.FindChild<IModel>("senWaterTimeConst")));
             section.Add(AutoDocumentation.DocumentModel(waterSenFuncModel.Node.FindChild<IModel>("senThreshold")));
-            section.Add(new Paragraph("SDRatio is the Water Supply divided by the Water Demand (found in Arbitrator). It will return 1.0 unless there is less Supply than Demand"));
+            section.Add(new Paragraph("SDRatio is the Water Supply divided by the Water Demand (found in Arbitrator). It will return 1.0 unless there is less Supply than Demand", model));
 
             return new List<ITag>() {section};
         }

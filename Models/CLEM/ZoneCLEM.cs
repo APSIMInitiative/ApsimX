@@ -1,5 +1,5 @@
 using APSIM.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Documentation.Tag.Extensions;
 using DocumentFormat.OpenXml.EMMA;
 using Models.CLEM.Activities;
 using Models.CLEM.DescriptiveSummary;
