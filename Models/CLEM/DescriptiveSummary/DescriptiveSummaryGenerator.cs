@@ -15,7 +15,7 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class DescriptiveSummaryGenerator
 {
-    private List<(string tag, string id, bool disabled)> openBlockIds = [];
+    private readonly List<(string tag, string id, bool disabled)> openBlockIds = [];
 
     private StringBuilder sb;
 
@@ -210,7 +210,7 @@ public class DescriptiveSummaryGenerator
         { "FontLight", ("floralwhite","#281A0E") },
     };
 
-    private Dictionary<string, (string light, string dark)> colours = new()
+    private readonly Dictionary<string, (string light, string dark)> colours = new()
     {
         { "BodyBackground", ("white", "#101010") },
         { "BodyFont", ("black", "#d0d0d0") },

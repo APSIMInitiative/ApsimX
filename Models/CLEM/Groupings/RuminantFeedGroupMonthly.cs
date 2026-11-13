@@ -24,7 +24,7 @@ namespace Models.CLEM.Groupings
     public class RuminantFeedGroupMonthly : RuminantFeedGroup, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Daily value to supply for each month

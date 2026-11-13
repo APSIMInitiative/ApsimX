@@ -27,7 +27,7 @@ namespace Models.CLEM.Reporting
         public IStructure Structure { private get; set; }
 
         [Link]
-        private IDataStore dataStore = null;
+        private readonly IDataStore dataStore = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes

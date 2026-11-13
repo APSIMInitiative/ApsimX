@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ModelAssociations(singleInstance: true)]
     public class ActivitiesHolder: CLEMModel
     {
-        private ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
+        private readonly ActivityFolder timeStep = new() { Name = "TimeStep", Status = ActivityStatus.NoTask };
         private int nextUniqueID = 1;
         private bool foundReportActivitiesPerformed = false;
 

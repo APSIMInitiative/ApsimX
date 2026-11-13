@@ -26,7 +26,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         private int shortenLactationMonths;
         private double milkingsPerConceptionsCycle;

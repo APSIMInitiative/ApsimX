@@ -33,9 +33,9 @@ namespace Models.CLEM
         public new IStructure Structure { get; set; }
 
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
         [Link]
-        private Simulation simulation = null;
+        private readonly Simulation simulation = null;
         [Link]
         private readonly DataStore dataStore = null;
 

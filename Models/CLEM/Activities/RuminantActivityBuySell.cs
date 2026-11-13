@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         private int numberToSkip;
         private int numberTrucksToSkipIndividuals;
         private int fundsNeededPurchaseSkipIndividuals;
-        private double herdValue = 0;
+        private readonly double herdValue = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
         private bool truckingWithImplications = false;

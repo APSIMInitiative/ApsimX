@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
     public abstract class CLEMRuminantActivityBase : CLEMActivityBase
     {
-        private bool reportedRestrictedBreed = false;
+        private readonly bool reportedRestrictedBreed = false;
         private bool reportedRestrictedHerd = false;
         private bool allowMultipleBreeds;
         private bool allowMultipleHerds;

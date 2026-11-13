@@ -17,10 +17,10 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class GrazeAPSIMForagePool : IGrazeIntakePool
     {
-        private ModelWithDigestibleBiomass biomassModel;
-        private IFeed feedDetails;
+        private readonly ModelWithDigestibleBiomass biomassModel;
+        private readonly IFeed feedDetails;
         private double amount = 0;
-        private double nitrogen = 0;
+        private readonly double nitrogen = 0;
         private const double gm2Tokgha = 10.0;
 
         /// <summary>

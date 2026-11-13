@@ -37,8 +37,8 @@ namespace Models.CLEM.Resources
         private readonly List<string> mandatoryAttributes = [];
         private readonly List<string> warningsMultipleEntry = [];
         private readonly List<string> warningsNotFound = [];
-        private MeanTracker meanOfFemaleMaturityAge = new MeanTracker();
-        private MeanTracker meanOfMaleMaturityAge = new MeanTracker();
+        private readonly MeanTracker meanOfFemaleMaturityAge = new MeanTracker();
+        private readonly MeanTracker meanOfMaleMaturityAge = new MeanTracker();
 
         /// <summary>
         /// Access to the CLEM time step for all ruminants of this Ruminant Type

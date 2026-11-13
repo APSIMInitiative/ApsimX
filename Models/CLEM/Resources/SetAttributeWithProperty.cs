@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
     public class SetAttributeWithProperty : CLEMModel, ISetAttribute
     {
         [NonSerialized]
-        private PropertyInfo propertyInfo;
+        private readonly PropertyInfo propertyInfo;
 
         private IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
 

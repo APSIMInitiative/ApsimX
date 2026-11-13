@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
         private Forages forages;
         private Zone paddock;
         private SimpleGrazing simpleGrazing;
-        private List<FoodResourceStore> intakeStoreRequests = [];
+        private readonly List<FoodResourceStore> intakeStoreRequests = [];
         private double consumableWt = 0;
         private double totalWt = 0;
 

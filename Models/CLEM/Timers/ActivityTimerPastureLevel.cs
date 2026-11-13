@@ -28,9 +28,9 @@ namespace Models.CLEM.Timers
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
-
-        [Link] readonly IClock clock = null;
+        private readonly ResourcesHolder resources = null;
+        [Link]
+        readonly IClock clock = null;
 
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;

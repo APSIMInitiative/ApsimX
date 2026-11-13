@@ -28,7 +28,7 @@ namespace Models.CLEM
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;
         private double shortfallPacketSize = 1;

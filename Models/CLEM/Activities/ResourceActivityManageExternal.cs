@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         [NonSerialized]
         private List<(IResourceType resource, double amount)> resourcesForMonth;
         IEnumerable<string> resourceTypesToInclude = null;
-        Dictionary<string, (IResourceType, double)> allResources = new Dictionary<string, (IResourceType, double)>();
+        readonly Dictionary<string, (IResourceType, double)> allResources = new Dictionary<string, (IResourceType, double)>();
 
         /// <summary>
         /// Name of the model for the resource input file

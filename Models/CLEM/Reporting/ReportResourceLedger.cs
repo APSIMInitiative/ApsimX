@@ -30,9 +30,9 @@ namespace Models.CLEM.Reporting
     public class ReportResourceLedger : Report, ICLEMUI
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private ISummary summary = null;
+        private readonly ISummary summary = null;
 
         /// <summary>
         /// Gets or sets report groups for outputting

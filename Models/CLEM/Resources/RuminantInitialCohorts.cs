@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
     public class RuminantInitialCohorts : CLEMModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private string nameOfManagedPastureFound = "";
 
         /// <summary>

@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
         private RuminantHerd ruminantHerd;
-        private ConceptionStatusChangedEventArgs conceptionArgs = new ();
+        private readonly ConceptionStatusChangedEventArgs conceptionArgs = new ();
 
         /// <summary>
         /// Gross energy content of forage (MJ/kg DM)

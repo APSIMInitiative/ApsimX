@@ -29,7 +29,7 @@ namespace Models.CLEM.Resources
         private readonly IClock clock = null;
         private ResourceBaseWithTransactions parent;
         private double amount = 0;
-        private Dictionary<ResourceRequest, double> pending = new ();
+        private readonly Dictionary<ResourceRequest, double> pending = new ();
         private bool marketStoreChecked = false;
 
         private const double TOLERANCE = 0.0000001;

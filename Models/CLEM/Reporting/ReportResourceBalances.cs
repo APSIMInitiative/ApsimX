@@ -30,9 +30,9 @@ namespace Models.CLEM.Reporting
     public class ReportResourceBalances : Report, ICLEMUI
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
 
         private IEnumerable<IActivityTimer> timers;
 

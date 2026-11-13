@@ -25,8 +25,7 @@ namespace Models.CLEM
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
-
+        private readonly ResourcesHolder resources = null;
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
         private FinanceType financeType = null;

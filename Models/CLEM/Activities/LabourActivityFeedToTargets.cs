@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         private ResourcesHolder resourcesHolder = null;
 
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household

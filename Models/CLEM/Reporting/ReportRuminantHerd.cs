@@ -25,7 +25,7 @@ namespace Models.CLEM.Reporting
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
         /// <summary>

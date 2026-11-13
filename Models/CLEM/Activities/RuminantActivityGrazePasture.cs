@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private IEnumerable<RuminantActivityGrazePastureHerd> grazeHerdChildren;
         private double[] totalNeededDaily;
         private double[] totalRequestedTimeStep;

@@ -28,9 +28,9 @@ namespace Models.CLEM
     public class SummariseRuminantHerd : CLEMModel
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link(IsOptional = true)]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private int timestep = 0;
         private RuminantHerd ruminantHerd;
 

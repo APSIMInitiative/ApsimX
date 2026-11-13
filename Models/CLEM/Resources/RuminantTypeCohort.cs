@@ -35,9 +35,9 @@ namespace Models.CLEM.Resources
     {
         private SetPreviousConception setPreviousConception = null;
         [Link]
-        private RuminantHerd ruminantHerd = null;
+        private readonly RuminantHerd ruminantHerd = null;
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         /// <summary>
         /// Associated Ruminant Herd

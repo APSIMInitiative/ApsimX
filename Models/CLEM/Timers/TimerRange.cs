@@ -10,7 +10,7 @@ namespace Models.CLEM.Timers
     public class TimerRange
     {
         private readonly CLEMEvents events;
-        private bool minimalSetup;
+        private readonly bool minimalSetup;
 
         /// <summary>
         /// Start of range
@@ -31,8 +31,8 @@ namespace Models.CLEM.Timers
         /// </summary>
         public bool WholeTimeStepInRange { get; set; } = false;
 
-        private IEnumerable<ActivityTimerSequence> sequenceTimerList;
-        private AgeSpecifier repeatInterval = new int[] { 0, 0, 0 };
+        private readonly IEnumerable<ActivityTimerSequence> sequenceTimerList;
+        private readonly AgeSpecifier repeatInterval = new int[] { 0, 0, 0 };
 
         /// <summary>
         /// Constructor

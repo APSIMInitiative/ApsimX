@@ -26,7 +26,7 @@ namespace Models.CLEM
     public class RainfallShuffler: CLEMModel, IValidatableObject
     {
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season

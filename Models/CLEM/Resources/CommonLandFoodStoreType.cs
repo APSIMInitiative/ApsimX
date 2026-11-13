@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType, IGrazeFoodStoreType
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         /// <inheritdoc/>
         [JsonIgnore]

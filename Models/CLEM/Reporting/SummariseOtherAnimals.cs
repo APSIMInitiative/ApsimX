@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class SummariseOtherAnimals : CLEMModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private int timestep = 0;
         private OtherAnimals otherAnimals;
 

@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private ResourceRequest pastureRequest = null;
         private double shortfallReportingCutoff = 0.01;
         private bool isStandAloneModel = true;

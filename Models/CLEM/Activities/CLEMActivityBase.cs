@@ -37,9 +37,9 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        private Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
         private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = new Dictionary<(string type, string identifier, string unit), double?>();
-        private Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
+        private readonly Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
         private readonly List<string> statusMessageList = new List<string>();
 
         /// <summary>
