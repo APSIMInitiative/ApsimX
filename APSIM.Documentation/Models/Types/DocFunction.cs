@@ -81,7 +81,7 @@ namespace APSIM.Documentation.Models.Types
                 return $"Each time {budNumberFunction.SetStage} occurs, bud number on each main-stem is set to:" +
                 $"{budNumberFunction.Node.FindChild<IModel>("FractionOfBudBurst").Name} * SowingData.BudNumber (from manager at establishment)";
             else if (function is PhaseLookup phaseLookup)
-                return $"//{functionAsModel.Name} is calculated using specific dependant on growth phase.\n" + GetFunctionChildText(function, "");
+                return $"{functionAsModel.Name} is calculated using calculations dependant on the current growth phase.</br>" + GetFunctionChildText(function, "");
             else if (function is PhaseLookupValue phaseLookupValue)
                 return $"if phenological stage is between {phaseLookupValue.Start} and {phaseLookupValue.End}\n" + GetFunctionChildText(function, "    ");
             else if (function is PhotoperiodFunction photoperiodFunction)
