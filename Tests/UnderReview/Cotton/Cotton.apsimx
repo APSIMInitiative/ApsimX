@@ -5293,53 +5293,11 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Cotton].Partitioning.StemFraction",
                       "Name": "PartitionFraction",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "Cutout",
-                          "Name": "PreCutOut",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": null,
-                              "Name": "StemFraction",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Cutout",
-                          "End": "Maturity",
-                          "Name": "PostCutOut",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": null,
-                              "Name": "StemFraction",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -8934,9 +8892,60 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "StemFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "Cutout",
+                      "Name": "PreCutOut",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Cutout",
+                      "End": "Maturity",
+                      "Name": "PostCutOut",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.ExpressionFunction, Models",
                   "Units": "0-1",
-                  "Expression": "[Cotton].Partitioning.RootFraction",
+                  "Expression": "[Cotton].Partitioning.RootFraction + [Cotton].Partitioning.StemFraction",
                   "Name": "TotalFraction",
                   "ResourceName": null,
                   "Children": [
