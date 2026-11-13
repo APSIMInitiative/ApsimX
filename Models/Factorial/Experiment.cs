@@ -62,6 +62,8 @@ namespace Models.Factorial
             StringBuilder design = new StringBuilder(GetTreatmentDescription(factors));
             foreach (Permutation permutation in Structure.FindChildren<Permutation>(relativeTo: factors))
                 design.Append(GetTreatmentDescription(permutation));
+            foreach (CompositeFactor compositeFactor in Structure.FindChildren<CompositeFactor>(relativeTo: factors))
+                design.Append(compositeFactor.Name + " ");
 
             var simulationNames = GenerateSimulationDescriptions().Select(s => s.Name);
             design.Append($" ({simulationNames.Count()})");

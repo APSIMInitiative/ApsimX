@@ -128,9 +128,7 @@
             "[Weather].VPD",
             "[Weather].CO2",
             "",
-            "[Cotton].AvRadn",
             "",
-            "//[Cotton].Leaf.WaterStressFunction.RootWaterTension",
             "[Boll].LintFraction + [Boll].SeedFraction + [Boll].BurFraction as SumOfBollFractions",
             "[Boll].PotentialHarvestIndex",
             "",
@@ -173,10 +171,6 @@
             "[Cotton].Arbitrator.N.TotalPlantSupply",
             "sum([Cotton].Arbitrator.N.Fixation) as NFixed",
             "",
-            "//(ln([Cotton].WholePlantGrowthRate)) as RGR",
-            "",
-            "//[Soil].Temperature",
-            "",
             "[Cotton].Leaf.Photosynthesis.RueAct",
             "[Cotton].Leaf.Photosynthesis.RueReductionFactor",
             "",
@@ -193,10 +187,8 @@
             "[Cotton].Phenology.SquaringDAS",
             "[Cotton].Phenology.FloweringDAS",
             "[Cotton].Phenology.CutoutDAS",
-            "//[Cotton].Phenology.OpenbollsDAS",
             "[Cotton].Phenology.MaturityDAS",
             "",
-            "//[Cotton].Phenology.EarlyFlowering.BollRatio",
             "[Cotton].Phenology.EarlyFlowering.FractionComplete",
             "[Cotton].AboveGround.Wt",
             "[Cotton].AboveGround.N",
@@ -262,7 +254,6 @@
             "[Cotton].Stem.DMDemand.Total",
             "([Cotton].Bur.DMDemand.Total+[Cotton].Lint.DMDemand.Total+[Cotton].Seed.DMDemand.Total) as BollDemand",
             "([Cotton].Stem.DMDemand.Total+[Cotton].Leaf.DMDemand.Total) as VegetativeDemand",
-            "//([Cotton].Stem.DMDemand.Total+[Cotton].Leaf.DMDemand.Total+[Cotton].Lint.DMDemand.Total+[Cotton].Seed.DMDemand.Total+[Cotton].Bur.DMDemand.Total) as ShootDMDemand",
             "([Cotton].Stem.DMDemand.Total+[Cotton].Leaf.DMDemand.Total+[Cotton].Root.DMDemand.Total) as ShootDMDemand",
             "",
             "[Cotton].Root.DMDemand.Total",
@@ -274,18 +265,8 @@
             "[Cotton].Lint.LiveFWt",
             "[Cotton].Root.Wt",
             "[Cotton].Root.Depth",
-            "//[Soil].Water.Volumetric",
             "",
             "",
-            "//([Soil].Water.PAWmm[1]+[Soil].Water.PAWmm[2]+[Soil].Water.PAWmm[3]+[Soil].Water.PAWmm[4]+[Soil].Water.PAWmm[5]+[Soil].Water.PAWmm[6]) as ESW1800",
-            "//sum([Soil].Water.Volumetric) as TotalSWC",
-            "//sum([Soil].Water.MM) as TotalWaterMM",
-            "//([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]+[Soil].Water.MM[7]) as SW1500mm",
-            "//([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as SW1800mm",
-            "//([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]) as SW1200mm",
-            "//(sum([CottonSoil].PAWmm)/sum([CottonSoil].PAWCmm)) as AvailableSoilMoisture",
-            "//([CottonSoil].PAWmm[1]+[CottonSoil].PAWmm[2]+[CottonSoil].PAWmm[3]+[CottonSoil].PAWmm[4]+[CottonSoil].PAWmm[5]) as PAWTop5Layers",
-            "//-(([CottonSoil].PAWCmm[1]+[CottonSoil].PAWCmm[2]+[CottonSoil].PAWCmm[3]+[CottonSoil].PAWCmm[4]+[CottonSoil].PAWCmm[5])-([CottonSoil].PAWmm[1]+[CottonSoil].PAWmm[2]+[CottonSoil].PAWmm[3]+[CottonSoil].PAWmm[4]+[CottonSoil].PAWmm[5])) as SoilWaterDeficit120",
             "[Irrigation].IrrigationApplied",
             "[Cotton].Boll.Wt",
             "[Cotton].Lint.Wt",
@@ -296,20 +277,6 @@
             "([Cotton].Seed.Wt+[Cotton].Lint.Wt) as SeedLint",
             "",
             "[Cotton].Bur.Wt",
-            "//sum([Soil].Water.MM) as TotalSWmm",
-            "//[Soil].Water.MM",
-            "",
-            "//([Soil].Water.MM[1]+[Soil].Water.MM[2]+[Soil].Water.MM[3]+[Soil].Water.MM[4]+[Soil].Water.MM[5]+[Soil].Water.MM[6]) as SWmm1800",
-            "",
-            "//[Soil].Water.PAWmm[1] as ESW1",
-            "//[Soil].Water.PAWmm[2] as ESW2",
-            "//[Soil].Water.PAWmm[3] as ESW3",
-            "//[Soil].Water.PAWmm[4] as ESW4",
-            "//[Soil].Water.PAWmm[5] as ESW5",
-            "//[Soil].Water.PAWmm[6] as ESW6",
-            "//[Soil].Water.PAWmm[7] as ESW7",
-            "",
-            "//[Soil].Water.PAWmm[1] as PAW1",
             "[Cotton].Arbitrator.SDRatio",
             "[Cotton].Arbitrator.SDRatioBound",
             "",
@@ -339,10 +306,6 @@
             "[Cotton].Bur.N",
             "[Cotton].Bur.NConc",
             "",
-            "//[FurrowIrrigation].Script.crit_fr_asw as CRITFRASW",
-            "//[FurrowIrrigation].Script.asw_depth as ASWDEPTH",
-            "//[FurrowIrrigation].Script.applied_furrow_irrigation as FURROW_APPLIED",
-            "",
             "[Irrigation].IrrigationApplied",
             "",
             "[Cotton].Boll.HarvestIndex",
@@ -352,8 +315,6 @@
             "[Phenology].CurrentPhaseName",
             "[Arbitrator].TotalDMFixationSupply",
             "",
-            "//[Phenology].BollPeriod",
-            "//[Phenology].BollFilling.Target",
             "",
             "[Cotton].Total.GrowthRate",
             "[Cotton].AboveGround.GrowthRate",
@@ -374,7 +335,6 @@
             "",
             "",
             "",
-            "//[Cotton].Leaf.Plastochron",
             "([Cotton].Leaf.FinalLeafNumber*[Cotton].SowingData.Population) as LeafNumber",
             "",
             "[Cotton].Leaf.FirstFruitingBranch",
@@ -384,7 +344,6 @@
             "",
             "([Weather].Radn / [Weather].MeanT) as MJperC",
             "[Nutrient].Microbial.N",
-            "//([SurfaceOrganicMatter].C / [SurfaceOrganicMatter].N) as SOMcnr ",
             "[SurfaceOrganicMatter].Wt",
             "",
             "",
@@ -404,7 +363,6 @@
             "[Cotton].Phenology.EarlyFlowering.Target",
             "",
             "[Root].AirFilledPoreSpace",
-            "//[Root].SWAvailabilityRatio",
             "",
             "[Phenology].EarlyFlowering.Progression.BollModifier.AddFunction.MultiplyFunction.BollRatioSensitivity.BollRatio as BollRatio",
             "",
@@ -914,20 +872,11 @@
                   "$type": "Models.PMF.Phen.EmergingPhase, Models",
                   "Start": "Germination",
                   "End": "Emergence",
-                  "IsEmerged": true,
+                  "IsEmerged": false,
                   "TTForTimeStep": 0.0,
                   "Name": "Emerging",
                   "ResourceName": null,
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Emergence = 80 degree days with base temp 12",
-                      "Name": "Memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
@@ -997,6 +946,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Vegetative].Target.GetType().Name})**\n\n{[Vegetative].Target}\n\n{[Vegetative].Target.SquaringTT}\n\n\n**Progression ({[Vegetative].Progression.GetType().Name})**\n\n{[Vegetative].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Functions.SubtractFunction, Models",
                       "Name": "Target",
                       "ResourceName": null,
@@ -1045,6 +1003,15 @@
                   "Name": "Squaring",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Squaring].Target.GetType().Name})**\n\n{[Squaring].Target}\n\n{[Squaring].Target.FloweringTT}\n\n\n**Progression ({[Squaring].Progression.GetType().Name})**\n\n{[Squaring].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.SubtractFunction, Models",
                       "Name": "Target",
@@ -1104,6 +1071,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[EarlyFlowering].Target.GetType().Name})**\n\n{[EarlyFlowering].Target}\n\n\n**Progression ({[EarlyFlowering].Progression.GetType().Name})**\n\n{[EarlyFlowering].Progression}\n\n{[EarlyFlowering].Progression.BollModifier}\n\nBollModifer = BollModifierBase + (BollRatio - BollModifier/2) * BollModifierMultiplier\n\n{[EarlyFlowering].BollModifierBase}\n\n{[EarlyFlowering].BollModifierMultiplier}",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Memo, Models",
                       "Text": "8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
@@ -1162,7 +1138,7 @@
                             },
                             {
                               "$type": "Models.Functions.AddFunction, Models",
-                              "Name": "AddFunction",
+                              "Name": "Calculation",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1283,6 +1259,15 @@
                   "ResourceName": null,
                   "Children": [
                     {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Maturing].Target.GetType().Name})**\n\n{[Maturing].Target}\n\n\n**Progression ({[Maturing].Progression.GetType().Name})**\n\n{[Maturing].Progression}\n\n{[Maturing].Progression.GrowthFactor}\n\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Memo, Models",
                       "Text": "15/09/2025: TOTAL GROWTH RATE, NOT BOLL GROWTH RATE\n\n======================================================\n\n8/11/2023 - Concept: **Bange, M. P., & Milroy, S. P. (2004). Growth and dry matter partitioning of diverse cotton genotypes. Field Crops Research, 87(1), 73-87. https://doi.org/10.1016/j.fcr.2003.09.007**\n\nAdd (water)stress effect in cases where severe water deficit cutout reached earlier. See Hearn, 1969 paper where when 2/3 water supply depleted --> node production halts and plant shifts into cutout.\n\nFrom PhD Warren Conaty:\n\nWater stress also alters the time taken for a boll to reach maturity. Water deficits result in the hastening of maturity, whilst excessive soil water tends to slow maturity (Hearn, 1994; Hearn, 1979; Marani and Amirav, 1971b; Marani and Amirav, 1971a). This occurs as a result of the inherent plant water relations fixed within commercial cotton cultivars derived from its wild xerophytic ancestors. As a result, when two thirds of the soil water is used, vegetative growth ceases, boll setting and square production cease and the retained bolls mature. Boll setting and square production can resume, if conditions are favourable, when mature bolls open, leading to a second fruiting flush (Hearn, 1979).",
                       "Name": "Memo",
@@ -1326,7 +1311,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "GrowthLinearInterpolation",
+                          "Name": "GrowthFactor",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -1352,8 +1337,17 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[GrowthFactor].Calculation",
                               "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "Calculation",
                               "ResourceName": null,
                               "Children": [
                                 {
@@ -1420,6 +1414,15 @@
                   "Name": "Ripening",
                   "ResourceName": null,
                   "Children": [
+                    {
+                      "$type": "Models.Documentation, Models",
+                      "Text": "\n**Target ({[Ripening].Target.GetType().Name})**\n\n{[Ripening].Target}\n\n\n**Progression ({[Ripening].Progression.GetType().Name})**\n\n{[Ripening].Progression}\n",
+                      "Name": "Documentation",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 50.0,
@@ -1686,6 +1689,15 @@
               "Name": "Leaf",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "\n\n**Canopy Development**\n\nLeaf area development is calculated as the net effect of leaf growth and senescence, removal of leaf by animals of management, and changes in specific leaf area of previous growth.  \n\n\nCalculations are as follows:\n \n```\n\nArea  = InitialArea + AccumulatedChange\nInitialArea = AreaPerPlant x Population\nAccumulatedChange = AreaGrowth - AreaSenesced - AreaRemoved\nIf current growth stage is between emergence and maturity\n   AreaGrowth = AreaGrowth + SpecificLeafArea x Allocated.StructuralWt\nIf current growth stage is between emergence and HarvestRipe\n   AreaSenesced = AreaSenesced + SpecificLeafAreaCanopy x Senesced.StructuralWt\nIf current growth stage is between emergence and HarvestRipe\n   AreaRemoved = AreaRemoved + SpecificLeafAreaCanopy x Removed.StructuralWt\n\n\n```\n \nwhere\n \nName | Description | Units\n-|-|-\nArea | Green leaf area per unit ground area | m^2^/m^2^\nInitialArea | Leaf area of an individual plant at emerence | m^2^\nAreaGrowth | Accumulated leaf area growth from emergence to maturity | m^2^/m^2^\nAreaSenesced | Accumulated leaf area senescence from emergence to harvest ripe | m^2^/m^2^\nAreaRemoved | Accumulated leaf area removed (e.g. grazing) from emergence to harvest ripe| m^2^/m^2^\nSpecificLeafArea | Area per unit mass of green leaf for today's leaf growth | m^2^/g\nSpecificLeafAreaCanopy | Area per unit mass of green leaf currently in the entire crop canopy | m^2^/g\nAllocated.StructuralWt | Mass of dm allocated to the leaf from daily growth by the organ arbitrator. | g/m^2^\nSenesced.StructuralWt | Mass of live dm senesced on the current day. | g/m^2^\nRemoved.StructuralWt | Mass of live dm removed on the current day. | g/m^2^\nThermalTime | Daily thermal time calculated by the phenology model | ^o^C\n\n\n**Potential Leaf Growth**\n\nPotential growth in leaf area is used to calculate the leaf dry matter demand.  The potential increase in leaf area is calculated with estimates of leaf appearance, branching dynamics and plant population.  The appearance and sizes of leaves are calculated for main stem leaves and sympodial leaves.  \n\nNote that leaf biomass is assumed to consist of entirely structural dry matter.\n\nCalculations are as follows:\n\n```\n\nDMDemand.Structural.Wt = deltaLAIPotential x SpecificLeafArea\nDMDemand.Storage.Wt = 0.0\nDMDemand.Metabolic.Wt = 0.0\nDeltaLAIPotential = AreaLargestLeaf x RelativeArea x Population x StemNumberPerPlant x LAR x ExpansionStressFactor\nLAR = ThermalTime / Phyllochron\n\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nDMDemand.Structural.Wt | Daily potential leaf structural growth (ie daily DMD demand for leaf growth) | g/m<sup>2</sup>\ndeltaLAIPotential | Daily potential increase in LAI if DM supply from arbitrator is adequate | m<sup>2</sup>/m<sup>2</sup>/d\nAreaLargestLeaf | The area of the largest leaf on the main stem. | m<sup>2</sup>\nRelativeArea | The size of the currently expanding leaf compared to the largest leaf on the main stem | 0-1\nStemNumberPerPlant | The number of currently expanding stems on each plant. | /plant\nLAR | The Leaf Appearance Rate, or the number of leaves appearing on the current day. | /day\nThermalTime | Daily thermal time calculated by the phenology model | <sup>o</sup>C\nPhyllochron | The thermal time required for the appearance of each leaf on the main stem. | <sup>o</sup>C\n\n\n**Branching Dynamics**\n\nThe number of stems on each plant is calculated as an accumulation of fruiting and vegetative branches.  \n\nCalculations are as follows:\n\n```\nBranchNumberPerPlant = FruitingBranchNumber + VegetativeBranchNumber\n\nFruitingBranchNumber = 2 + number of nodes grown from squaring to cutout\nVegetativeBranchNumber = 0\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nBranchNumberPerPlant | Total number of branches on each plant | /plant\nFruitingBranchNumber | Number of branches on each plant that will initiate a boll. | /plant\nVegetativeBranchNumber | Number of branches on each plant that will NOT initiate a boll. | /plant\n\n\n**Specific Green Leaf Area**\n\nThe cotton model estimates the specific leaf area of daily leaf growth directly rather than as an emergent property of separate area and mass growth functions as used in many earlier APSIM models.  Specific Leaf Area is a function of ambiant light conditions (ie via an estimate of daily Photosynthetically Active Radiation) which is then discounted by water stress or air temperature.\n\n```\nSpecificLeafArea = PotentialSpecificLeafArea x min (SWFactor, TemperatureFactor)\n\n{[Cotton].Leaf.SpecificArea.Stage2.HoldFunction.SLA.PotentialSpecificLeafArea}\n\n```\n\nwhere\n \nName | Description | Units\n-|-|-\nSpecificLeafArea | Area per unit mass of green leaf for today's leaf growth | m<sup>2</sup>/g\nPotentialSpecificLeafArea | SpecificLeafArea for daily leaf growth under current light conditions | m<sup>2</sup>/g\nSLAmax | Specific Leaf Area under high light conditions| m<sup>2</sup>/g\nSLAmax | Specific Leaf Area under low light conditions| m<sup>2</sup>/g\nSLApar | Parameter describing the shape of the response of SLA to incoming PAR | unitless\nSWFactor | Water Factor to reduce SpecificLeafArea under water limiting conditions </br> {[Cotton].Leaf.SpecificArea.Stage2.HoldFunction.SLA.SWFactor} </br> {[Cotton].Leaf.SpecificArea.Stage2.HoldFunction.SLA.SWFactor.TURSLA} | 0-1\nTemperatureFactor | Temperature Factor to reduce SpecificLeafArea under low temperature conditions | 0-1\n\n\n**Canopy Light Extinction Coefficients**\n\nCanopy light interception is calculated by the methods described above (see light interception section in this chapter) using light extinction coefficients.  The extinction coefficient for green leaf is assumed to change with row spacing.  \n\n{[Cotton].Leaf.ExtinctionCoefficient}\n\n",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
                   "Name": "Photosynthesis",
@@ -2913,7 +2925,7 @@
                         },
                         {
                           "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
+                          "Name": "Calculation",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -2935,81 +2947,18 @@
                               "FractionRemovedOnHarvest": 0.0,
                               "FractionRemovedOnGraze": 0.0,
                               "FractionRemovedOnPrune": 0.0,
-                              "Name": "FB",
+                              "Name": "AccumulatedNodes",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "FB",
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "8/1/12/2023\n\nDifferentiate in fruiting and vegetative branch appearance.\n\nNode of first fruiting branch / the appearance of the first fruiting branch is sensitive to a number of environmental factors (Hesketh and Low, 1966; Moraghan et al., 1968)\n\nFROM: The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and TestingB. S. Jackson, G. F. Arkin and A. B. HearnAmerican Society of Agricultural Engineers 1988 Vol. 31 Issue 3 Pages 846–854\n\nEach branch originates at a node on the main stem. The ﬁrst branches to form are vegetative, and after the ﬁrst fruiting branch arises generally no new vegetative branches are produced, FROM:\n\nA qualitative simulation model for cotton growth and developmentR. E. Plant, T. A. Kerby, L. J. Zelinski and D. S. MunkComputers and Electronics in Agriculture 1998 Vol. 20 Pages 165-183\n\nPLANT DENSITY effect on VB initiation\n\n=================================================\n\nSEE BRANCHING IN CANOLA MODEL\n\n=================================================\n\nFor TEMP effects on branching see:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA.\n\nDistinguish between Vegetative and Fruiting branching? Seems to be a different relationship with temperature: FIG. 6A page 5",
+                                  "Name": "Memo",
                                   "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "8/1/12/2023\n\nDifferentiate in fruiting and vegetative branch appearance.\n\nNode of first fruiting branch / the appearance of the first fruiting branch is sensitive to a number of environmental factors (Hesketh and Low, 1966; Moraghan et al., 1968)\n\nFROM: The Cotton Simulation Model \"COTTAM\": Fruiting Model Calibration and TestingB. S. Jackson, G. F. Arkin and A. B. HearnAmerican Society of Agricultural Engineers 1988 Vol. 31 Issue 3 Pages 846–854\n\nEach branch originates at a node on the main stem. The ﬁrst branches to form are vegetative, and after the ﬁrst fruiting branch arises generally no new vegetative branches are produced, FROM:\n\nA qualitative simulation model for cotton growth and developmentR. E. Plant, T. A. Kerby, L. J. Zelinski and D. S. MunkComputers and Electronics in Agriculture 1998 Vol. 20 Pages 165-183\n\nPLANT DENSITY effect on VB initiation\n\n=================================================\n\nSEE BRANCHING IN CANOLA MODEL\n\n=================================================\n\nFor TEMP effects on branching see:\n\nHodges, H.F., Reddy, K.R., McKinion, J.M. and Reddy, V.R., 1993. Temperature Effects on Cotton, Mississippi State University, Mississippi, USA.\n\nDistinguish between Vegetative and Fruiting branching? Seems to be a different relationship with temperature: FIG. 6A page 5",
-                                      "Name": "Memo",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
-                                      "Name": "DeltaNode",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
+                                  "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "StartSquaring",
-                      "End": "Cutout",
-                      "Name": "VegetativeBranches",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.AccumulateFunction, Models",
-                          "StartStageName": "StartSquaring",
-                          "EndStageName": "Cutout",
-                          "ResetStageName": null,
-                          "FractionRemovedOnCut": 0.0,
-                          "FractionRemovedOnHarvest": 0.0,
-                          "FractionRemovedOnGraze": 0.0,
-                          "FractionRemovedOnPrune": 0.0,
-                          "Name": "VB",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "VB production is a function of soil temperature!\n\nOn vegetative branching: I did a quick Google search on the bus yesterday and found that vegetative branching can be (partly) explained by higher root activity affecting the plant’s hormonal balance. In the tropics, warm soil temperatures increase root metabolic activity, which is probably why we see more vegetative branches in the NT and at Forest Hill compared with the Narrabri region. This also fits with Paul Grundy’s comment that vegetative branching is “soil related”.\n\n=================================================\n\n\nDo we need to separate out the max leaf area on the VB compared with the fruiting branches?\n\nDM Supply/demand ratio on VB appearance?\n\nOr change to shading effect?\n\n==================================================\n\nFROM:\n\nHigh plant density inhibits vegetative branching in cotton by altering hormone contents and photosynthetic productionT. Li, Y. Zhang, J. Dai, H. Dong and X. KongField Crops Research 2019 Vol. 230 Pages 121-131DOI: 10.1016/j.fcr.2018.10.016\n\n5. Conclusion\nHigh plant density significantly inhibited VB growth and develop-\nment through a set of physiological changes and associated gene ex-\npression. **The decreased photosynthesis** resulting from reduced RuBP\ncarboxylase activity and chlorophyll content in VB leaves was one of\nthe main reasons for the poor VB growth. High plant density promoted\nthe apical dominance which increased the expression of GhYUC5 gene\nand IAA content in the main-stem tips and induced the expression of\nGhPIN1 to promote IAA transport from the apical part to the root. The\nincreased IAA content and expression of GhPIN1 increased the SLs\ncontent by increasing the expression of GhD14 and reducing the content\nof CKs by decreasing the expression of GhIPT3 in the VB tips. Moreover,\nhigh plant density led to shade avoidance syndrome, which decreased\nthe IAA content and auxin polar transport by down-regulating GhYUC5,\nGhPIN1 and GhPIN5 genes. It also decreased the CKs content by down-\nregulating the GhIPT3 gene, and the GA and BR contents in the VB tips,\nbut increased the content of SLs in the VB tips by up-regulating GhD14.\nThe decreased IAA, CKs, GA and BR contents along with the increased\nSLs content in the VB tips was another important reason for the in-\nhibited growth and development of VB",
-                              "Name": "Memo",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "VB",
-                              "ResourceName": null,
-                              "Children": [
+                                },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
                                   "VariableName": "[Leaf].NodeNumber.Change.DeltaNode",
@@ -3018,86 +2967,6 @@
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "BranchingRate",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        1.0,
-                                        3.9,
-                                        4.0,
-                                        6.9,
-                                        7.0,
-                                        30.0
-                                      ],
-                                      "Y": [
-                                        0.0,
-                                        0.0,
-                                        0.0,
-                                        0.0,
-                                        0.0,
-                                        0.0
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].NodeNumber",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "Name": "DensityFactor",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.XYPairs, Models",
-                                      "X": [
-                                        7.0,
-                                        8.6,
-                                        10.4,
-                                        11.0
-                                      ],
-                                      "Y": [
-                                        1.0,
-                                        0.44,
-                                        0.27,
-                                        0.15
-                                      ],
-                                      "Name": "XYPairs",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Cotton].SowingData.Population",
-                                      "Name": "XValue",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
@@ -3112,11 +2981,22 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "29/01/2029:\n\nAdd coverfactor --> see peanut\n\nI have cover data from the RS trial from ceptometer",
-                      "Name": "Memo",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "VegetativeBranches",
                       "ResourceName": null,
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This version of the model assumes no vegetative branches",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -3727,7 +3607,35 @@
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "ResourceName": null,
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.DivideFunction, Models",
+                      "Name": "InitialWt",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Area.Calculation.Initial",
+                          "Name": "InitialArea",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].SpecificArea",
+                          "Name": "SLA",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4603,18 +4511,31 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "SLA_DSSAT",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "SLA",
                               "ResourceName": null,
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "SLA",
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
+                                  "Expression": "[SLAMin]+([SLAMax]-[SLAMin])*EXP([SLAPAR]*([Weather].Radn / 2.02))",
+                                  "Name": "PotentialSpecificLeafArea",
                                   "ResourceName": null,
                                   "Children": [
                                     {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].SpecificArea.SLAMax",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.008,
+                                      "Units": null,
+                                      "Name": "SLAMin",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.06,
+                                      "Units": null,
                                       "Name": "SLAMax",
                                       "ResourceName": null,
                                       "Children": [],
@@ -4622,101 +4543,12 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.SubDailyInterpolation, Models",
-                                      "agregationMethod": 0,
-                                      "Name": "TemperatureFunction",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            12.0,
-                                            22.0,
-                                            30.0
-                                          ],
-                                          "Y": [
-                                            0.25,
-                                            0.25,
-                                            1.0,
-                                            1.0
-                                          ],
-                                          "Name": "Response",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.ThreeHourAirTemperature, Models",
-                                          "TempRangeFactors": null,
-                                          "Name": "InterpolationMethod",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": -0.14,
                                       "Units": null,
-                                      "Expression": "([Leaf].SpecificArea.SLAMin+([Leaf].SpecificArea.SLAMax-[Leaf].SpecificArea.SLAMin)*EXP([Leaf].SpecificArea.SLAPAR*([Weather].Radn / 2.02)))/[Leaf].SpecificArea.SLAMax",
-                                      "Name": "PARSLA",
+                                      "Name": "SLAPAR",
                                       "ResourceName": null,
                                       "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.ExpressionFunction, Models",
-                                      "Units": null,
-                                      "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[Leaf].SpecificArea.TURSLA))",
-                                      "Name": "WaterStressFunction",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                      "Name": "VPDStressFunction",
-                                      "ResourceName": null,
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.XYPairs, Models",
-                                          "X": [
-                                            0.0,
-                                            13.0,
-                                            30.0,
-                                            40.0,
-                                            50.0
-                                          ],
-                                          "Y": [
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0,
-                                            1.0
-                                          ],
-                                          "Name": "XYPairs",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Weather].VPD",
-                                          "Name": "XValue",
-                                          "ResourceName": null,
-                                          "Children": [],
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
@@ -4725,12 +4557,62 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 10000.0,
-                                  "Units": null,
-                                  "Name": "Constant",
+                                  "$type": "Models.Functions.SubDailyInterpolation, Models",
+                                  "agregationMethod": 0,
+                                  "Name": "TemperatureFunction",
                                   "ResourceName": null,
-                                  "Children": [],
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.XYPairs, Models",
+                                      "X": [
+                                        0.0,
+                                        12.0,
+                                        22.0,
+                                        30.0
+                                      ],
+                                      "Y": [
+                                        0.25,
+                                        0.25,
+                                        1.0,
+                                        1.0
+                                      ],
+                                      "Name": "Response",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.ThreeHourAirTemperature, Models",
+                                      "TempRangeFactors": null,
+                                      "Name": "InterpolationMethod",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.ExpressionFunction, Models",
+                                  "Units": null,
+                                  "Expression": "MAX(0.1, (1-(1-[Leaf].Fw)*[TURSLA]))",
+                                  "Name": "SWFactor",
+                                  "ResourceName": null,
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.8,
+                                      "Units": null,
+                                      "Name": "TURSLA",
+                                      "ResourceName": null,
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -4743,46 +4625,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 80.0,
-                      "Units": null,
-                      "Name": "SLAMin",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 600.0,
-                      "Units": null,
-                      "Name": "SLAMax",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": -0.14,
-                      "Units": null,
-                      "Name": "SLAPAR",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.8,
-                      "Units": null,
-                      "Name": "TURSLA",
-                      "ResourceName": null,
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -4807,9 +4649,9 @@
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Check N dynamics over time in cotton and partitioning and storage",
-                  "Name": "Memo",
+                  "$type": "Models.Documentation, Models",
+                  "Text": "\n**Stem Dry Matter Demands**\n\nDemands for structural, metabolic and storage pools are provided to the organ arbitrator to simulate ongoing stem growth.  The demands for each dry matter pool are calculated as follows:\n\n```\n{[Cotton].Stem.PotentialGrowth}\n\n// The fractional partitioning of this potential growth into structural, storage and metabolic pools is as follows:\n\n{[Cotton].Stem.DMDemands.Structural}\n{[Cotton].Stem.DMDemands.Structural.Fraction}\n\n{[Cotton].Stem.DMDemands.Storage}\n{[Cotton].Stem.DMDemands.Storage.StorageFraction}\n\n{[Cotton].Stem.DMDemands.Metabolic}\n\n\n```\n\nThe fraction of daily growth partitioned to stems is specified as a function of growth stage.\n\n{[Cotton].Stem.PotentialGrowth.PartitionFraction}\n\n**Stem Nitrogen Demand and Allocation**\n\nStem Nitrogen allocation to structural, storage and metabolic biomass pools is calculated by the OrganArbitrator as described above.  The stem model calculates the demands for each of these pools from information on the minimum, critical and maximum stem Nitrogen concentration for each predicted stage of development.\n\nThe minimum stem nitrogen concentration is used to describe the nitrogen content of the structural stem material. The difference between minimum and critical nitrogen concentration is assumed to correspond to metabolic stem material.  Storage nitrogen is equated with the difference between maximum and critical nitrogen concentrations.  The values of each of these is specified as follows.\n\n```\n// minimum and critical are set to be equal to provide a configuration where stem N is held in structural and storage pools only.\n{[Cotton].Stem.MinimumNconc}\n{[Cotton].Stem.CriticalNconc}\n```\nStorage N is parameterised therefore as the difference between minimum/critical N concentration and the following maximum N concentration.\n{[Cotton].Stem.MaximumNconc}\n\n**Senescence and Detachment**\n\nStem senescence can be specified to occur at differing rates before and after cutout.  \n\n```\n{[Cotton].Stem.SenescenceRate}\n\n{[Cotton].Stem.DetachmentRateFunction}\n\n```\n\nwhere\n\nName | Description | Units\n-|-|-\nSenescenceRate | Fraction of live stem that senesces on the current day | /day\nDetachmentRate | Fraction of dead stem that detaches on the current day | /day\n\n**DM and N reuse within the plant**\n\nNon-structural DM and N (ie storage or metabolic pools) can be available for reuse elsewhere within the plant to meet other demands via reallocation of DM or N from senescing biomass or retranslocation from live biomass during some growth phases (e.g. reallocation of N from senescing stem or retranslocation from stem N storage to support daily growth.  The potential fraction of DM or N that is available on any day is specified as follows:\n\n```\n{[Cotton].Stem.DMRetranslocationFactor}\n{[Cotton].Stem.DMReallocationFactor}\n{[Cotton].Stem.NRetranslocationFactor}\n{[Cotton].Stem.NReallocationFactor}\n\n```",
+                  "Name": "Documentation",
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
@@ -5451,53 +5293,11 @@
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Cotton].Partitioning.StemFraction",
                       "Name": "PartitionFraction",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "Cutout",
-                          "Name": "PreCutOut",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": null,
-                              "Name": "StemFraction",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Cutout",
-                          "End": "Maturity",
-                          "Name": "PostCutOut",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": null,
-                              "Name": "StemFraction",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -5587,15 +5387,6 @@
               "Name": "Bur",
               "ResourceName": null,
               "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "**REVISE BUR N CONC!!!!!**",
-                  "Name": "Memo",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Cutout",
@@ -7766,9 +7557,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": null,
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Cotton].Partitioning.BelowGround",
                               "Name": "PartitionFraction",
                               "ResourceName": null,
                               "Children": [],
@@ -8829,26 +8619,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MovingAverageFunction, Models",
-              "NumberOfDays": 7,
-              "StageToStartMovingAverage": "Emergence",
-              "Name": "AvRadn",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Weather].Radn",
-                  "Name": "DailyRate",
-                  "ResourceName": null,
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.LessThanFunction, Models",
               "Name": "RadnDeficit",
               "ResourceName": null,
@@ -8936,6 +8706,265 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Group, Models",
+              "Name": "Partitioning",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Partitioning of daily growth into the various plant parts is calculated using partitioning fractions.  The sum of all partitioning fractions should equal one.  To ensure this, a simple staged approach is used here based on primary, secondary and (where required) tertiary partitioning.\n\n1) partitioning to below and above ground growth is calculated.\n2) Below ground growth is partitioned to the root model\n3) Above ground growth is partitioned into reproductive material.  The remainder is partitioned to Vegetative material.\n4) The above ground vegetative fraction is then partitioned to stem and leaf.  \n5) The above ground reproductive fraction is then partitioned to bur, seed and lint.\n5) The net result of all partitioning calculation should be a value of 1.",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.2,
+                  "Units": "0-1",
+                  "Name": "BelowGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Below ground growth in Cotton is assumed to remain constant over time, from emergence to maturity.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": "0-1",
+                      "Name": "CoarseRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Below ground growth in Pinus is assumed to remain constant over time, from juvenile growth to maturity.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "1.0 - [Pinus].Partitioning.BelowGround.CoarseRootFraction",
+                      "Name": "FineRootFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "1 - [Cotton].Partitioning.BelowGround",
+                  "Name": "AboveGround",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Units": "0-1",
+                      "Expression": "[WoodyFraction].Juvenile + ([WoodyFraction].Mature - [WoodyFraction].Juvenile) * [Pinus].IndividualTreeStemWt / ([Pinus].Partitioning.AboveGround.WoodyFraction.SizeParameter + [Pinus].IndividualTreeStemWt)",
+                      "Name": "WoodyFraction",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                          "Name": "Memo",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Juvenile",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.85,
+                          "Units": null,
+                          "Name": "Mature",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10000.0,
+                          "Units": null,
+                          "Name": "SizeParameter",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.25,
+                          "Units": null,
+                          "Name": "BranchFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.ExpressionFunction, Models",
+                          "Units": null,
+                          "Expression": "1 - [Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction",
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "[Cotton].Partitioning.BelowGround",
+                  "Name": "RootFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "All below ground growth is assumed to go into root growth",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "StemFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "Cutout",
+                      "Name": "PreCutOut",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Cutout",
+                      "End": "Maturity",
+                      "Name": "PostCutOut",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "StemFraction",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ExpressionFunction, Models",
+                  "Units": "0-1",
+                  "Expression": "[Cotton].Partitioning.RootFraction + [Cotton].Partitioning.StemFraction",
+                  "Name": "TotalFraction",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Above ground growth is simply set to the complement of the below ground partitioning.",
+                      "Name": "Memo",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
@@ -8953,7 +8982,7 @@
       "Children": [
         {
           "$type": "Models.Map, Models",
-          "Zoom": 8.1,
+          "Zoom": 6.0,
           "Center": {
             "$type": "Models.Mapping.Coordinate, Models",
             "Latitude": -26.8152,
@@ -8967,7 +8996,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "ExperimentalClimaticConditions",
           "ResourceName": null,
           "Children": [
@@ -9453,7 +9482,7 @@
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": false,
+          "ShowInDocs": true,
           "Name": "CombinedResults",
           "ResourceName": null,
           "Children": [
@@ -71757,85 +71786,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "BollModifier",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "LabelOnOneLine": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Debug",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": 0,
-                  "FactorToVaryColours": "SimulationName",
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "DailyReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Cotton.Phenology.Maturing.ProgressThroughPhase",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Predicted",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.EventNamesOnGraph, Models",
-                      "ColumnName": "Cotton.Phenology.CurrentStageName",
-                      "SimulationName": "ForestHill2023Irrigated",
-                      "Name": "EventNamesOnGraph",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,

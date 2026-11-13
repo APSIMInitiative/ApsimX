@@ -38,6 +38,11 @@ namespace APSIM.Documentation.Models.Types
                     Section S = GetSummaryAndRemarksSection(child);
                     subTags.Add(S);
                 }
+                else
+                {
+                    Section S = GetSummaryAndRemarksSection(child);
+                    subTags.Add(S);                    
+                }
             }
 
             section.Add(new Section("Phenology", subTags, model));

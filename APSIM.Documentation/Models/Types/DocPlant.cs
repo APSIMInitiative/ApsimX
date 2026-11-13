@@ -12,6 +12,7 @@ using Models.PMF.Phen;
 using Constant = Models.Functions.Constant;
 using System;
 
+
 namespace APSIM.Documentation.Models.Types
 {
 
@@ -96,6 +97,12 @@ namespace APSIM.Documentation.Models.Types
             if (arbitrator != null)
                 newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children, model));
 
+            // Document Group Model
+            // -------------------------------------------------------------------------------
+            Group group = (Group)this.model.Children.Find(m => m.GetType() == typeof(Group));
+            if (group != null)
+                newTags.AddRange(AutoDocumentation.Document(group));
+
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
@@ -104,7 +111,7 @@ namespace APSIM.Documentation.Models.Types
             //Write children
             // -------------------------------------------------------------------------------
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null && child as Group ==null)
                 {
                     Section S = GetSummaryAndRemarksSection(child);
                     newTags.Add(S);
