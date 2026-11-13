@@ -1,3 +1,4 @@
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -5,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using APSIM.Documentation.Tag.Extensions;
 
 namespace APSIM.Shared.Containers
 {

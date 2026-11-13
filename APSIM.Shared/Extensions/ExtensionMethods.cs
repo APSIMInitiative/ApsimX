@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace APSIM.Documentation.Tag.Extensions
+namespace APSIM.Shared.Extensions
 {
     /// <summary>
     /// Extension methods for enumerable types.

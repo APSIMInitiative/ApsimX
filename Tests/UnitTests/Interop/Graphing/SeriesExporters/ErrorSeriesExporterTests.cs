@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 using APSIM.Documentation.Tag;
-using APSIM.Documentation.Tag.Extensions;
+using APSIM.Shared.Extensions;
 using System.Drawing;
 using APSIM.Documentation.Graphing;
 using Moq;

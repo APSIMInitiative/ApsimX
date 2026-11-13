@@ -1,4 +1,4 @@
-using APSIM.Documentation.Tag.Extensions;
+using APSIM.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using MigraDoc.DocumentObjectModel;

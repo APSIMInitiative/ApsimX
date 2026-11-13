@@ -15,7 +15,7 @@ using APSIM.Shared.Mapping;
 using SkiaSharp;
 using APSIM.Documentation.Graphing;
 using APSIM.Core;
-using APSIM.Documentation.Tag.Extensions;
+using APSIM.Shared.Extensions;
 using OxyPlot;
 
 namespace APSIM.Documentation

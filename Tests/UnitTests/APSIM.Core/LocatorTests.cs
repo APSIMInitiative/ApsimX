@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
-using APSIM.Documentation.Tag.Extensions;
+using APSIM.Shared.Extensions;
 
 namespace UnitTests.APSIM.Core.Tests
 {

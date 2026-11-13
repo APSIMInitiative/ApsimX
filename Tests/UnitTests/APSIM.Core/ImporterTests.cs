@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Documentation.Tag.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
