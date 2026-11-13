@@ -195,6 +195,9 @@ namespace Models.GrazPlan
 
         public const int prpPOT_INTAKE = 46;
 
+        public const int prpINTAKE_PAST_GREEN = 47;
+        public const int prpINTAKE_PAST_DEAD = 48;
+
 
 #pragma warning restore 1591 //missing xml comment
     }
@@ -595,6 +598,26 @@ namespace Models.GrazPlan
                                     pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Supp;
                                     pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Supp;
                                     pool.AshAlk = animalGroup.AnimalState.SuppIntake.AshAlkalinity * animalGroup.AnimalState.SuppIntake.Biomass;
+                                    break;
+                                case StockProps.prpINTAKE_PAST_GREEN:
+                                    double greenFraction = 0.0;
+                                    if ((animalGroup.Herbage.TotalGreen + animalGroup.Herbage.TotalDead) > 0.0)
+                                        greenFraction = animalGroup.Herbage.TotalGreen / (animalGroup.Herbage.TotalGreen + animalGroup.Herbage.TotalDead);
+                                    pool.DM = animalGroup.AnimalState.DM_Intake.Herbage * greenFraction;
+                                    pool.Nu[n] = (animalGroup.AnimalState.CP_Intake.Herbage * greenFraction) / GrazType.N2Protein;
+                                    pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Herbage * greenFraction;
+                                    pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Herbage * greenFraction;
+                                    pool.AshAlk = animalGroup.AnimalState.PaddockIntake.AshAlkalinity * animalGroup.AnimalState.PaddockIntake.Biomass * greenFraction;
+                                    break;
+                                case StockProps.prpINTAKE_PAST_DEAD:
+                                    double deadFraction = 0.0;
+                                    if ((animalGroup.Herbage.TotalGreen + animalGroup.Herbage.TotalDead) > 0.0)
+                                        deadFraction = animalGroup.Herbage.TotalDead / (animalGroup.Herbage.TotalGreen + animalGroup.Herbage.TotalDead);
+                                    pool.DM = animalGroup.AnimalState.DM_Intake.Herbage * deadFraction;
+                                    pool.Nu[n] = (animalGroup.AnimalState.CP_Intake.Herbage * deadFraction) / GrazType.N2Protein;
+                                    pool.Nu[p] = animalGroup.AnimalState.Phos_Intake.Herbage * deadFraction;
+                                    pool.Nu[s] = animalGroup.AnimalState.Sulf_Intake.Herbage * deadFraction;
+                                    pool.AshAlk = animalGroup.AnimalState.PaddockIntake.AshAlkalinity * animalGroup.AnimalState.PaddockIntake.Biomass * deadFraction;
                                     break;
                                 case StockProps.prpFAECES:
                                     GrazType.AddDMPool(animalGroup.AnimalState.OrgFaeces, pool);

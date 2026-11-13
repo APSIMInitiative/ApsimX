@@ -2064,6 +2064,182 @@ namespace Models.GrazPlan
             }
         }
 
+        // =========== Intake per head of green (live) pasture dry matter and nutrients by each animal group ==================
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients by each animal group
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeGreen
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, false, false, false, ref pools);
+                return pools;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead PastIntakeGreenAll
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, false, true, false, ref pools);
+                return pools[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients by tag
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeGreenTag
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, false, false, true, ref pools);
+                return pools;
+            }
+        }
+
+        // =========== Intake per head of green (live) pasture dry matter and nutrients of unweaned animals by group ==================
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients of unweaned animals by group
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeGreenYng
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, true, false, false, ref pools);
+                return pools;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients of unweaned animals
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead PastIntakeGreenYngAll
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, true, true, false, ref pools);
+                return pools[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of green (live) pasture dry matter and nutrients of unweaned animals by tag
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeGreenYngTag
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_GREEN, true, false, true, ref pools);
+                return pools;
+            }
+        }
+
+        // =========== Intake per head of dead (senescent) pasture dry matter and nutrients by each animal group ==================
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients by each animal group
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeDead
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, false, false, false, ref pools);
+                return pools;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead PastIntakeDeadAll
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, false, true, false, ref pools);
+                return pools[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients by tag
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeDeadTag
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, false, false, true, ref pools);
+                return pools;
+            }
+        }
+
+        // =========== Intake per head of dead (senescent) pasture dry matter and nutrients of unweaned animals by group ==================
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients of unweaned animals by group
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeDeadYng
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.Count()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, true, false, false, ref pools);
+                return pools;
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients of unweaned animals
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead PastIntakeDeadYngAll
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[1];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, true, true, false, ref pools);
+                return pools[0];
+            }
+        }
+
+        /// <summary>
+        /// Gets the intake per head of dead (senescent) pasture dry matter and nutrients of unweaned animals by tag
+        /// </summary>
+        [Units("-")]
+        public DMPoolHead[] PastIntakeDeadYngTag
+        {
+            get
+            {
+                DMPoolHead[] pools = new DMPoolHead[this.StockModel.HighestTag()];
+                StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINTAKE_PAST_DEAD, true, false, true, ref pools);
+                return pools;
+            }
+        }
+
         // =========== Intake per head of metabolizable energy ==================
 
         /// <summary>
