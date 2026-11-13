@@ -162,7 +162,8 @@
             "[Pinus].Population*10000 as stemspha",
             "[Pinus].Stem.WoodDensityOfGrowth*10 as RingWoodDensity",
             "[SurfaceOrganicMatter].Wt/10 as Litter.Wt",
-            "[SurfaceOrganicMatter].N/10 as Litter.N"
+            "[SurfaceOrganicMatter].N/10 as Litter.N",
+            "[TreeThinning].Script.WaterUseDrop as WaterUseDrop"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -373,6 +374,86 @@
                   "ReadOnly": false
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[DroughtMortality].MaximumRate / (1 + exp([DroughtMortality].Steepness * ([DroughtMortality].HalfRateDrop - [TreeThinning].Script.WaterUseDrop))) * min(1, ([Pinus].Stem.SizeClass.StandDensityIndex / ([StemMortality].MaximumSDI * [StemMortality].Onset))^2)",
+              "Units": "/y",
+              "Name": "DroughtMortality",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "DORMANT (MaximumRate = 0): drought-induced mortality, kept ready to switch on but not calibrated. To activate set MaximumRate (literature-based starting value 0.15 /y). Drought is treated as relative: pines grow well on dry sites, but a stand whose canopy, sapwood and roots were built on more water than is now available cannot shed them fast enough (structural overshoot, Jump et al. 2017). The extra water can come from wetter years (McGrath et al. 2001 WA, deaths after two dry winters; BFG F 1985-87 after wet 1983-84) or from a bank of stored soil water that runs out (first-rotation E. globulus grew well for 5-8 years on stored water, then died once it was exhausted, while slower second-rotation stands without the bank did not; White and Mendham). WaterUseDrop (TreeThinning script, reported as [TreeThinning].Script.WaterUseDrop) = max(0, 1 - recent / reference running mean of FineRoot water uptake), recent over RecentPeriod days and reference over ReferencePeriod days (the water use the canopy was built on). Uptake covers rain, irrigation and stored soil water, so it sees both a rainfall drop and an exhausted soil-water bank; rainfall alone misses the bank, and the water stress factor Fw has no memory because the model canopy adjusts to water within months. The index is only as good as the simulated soil water: rooting depth and PAWC must be right (Marano et al.). Annual rate = MaximumRate / (1 + exp(Steepness x (HalfRateDrop - WaterUseDrop))) x min(1, (SDI / (MaximumSDI x Onset))^2): steep logistic (Hammond et al. 2019) amplified by stand density (McGrath basal-area threshold; Stone et al. 2012 NSW, unthinned stands 9-15x more deaths), applied monthly after competition mortality with weak small-tree selectivity (Selectivity, vs 1.83 for self-thinning; McGrath suppressed trees died at about twice the rate of dominants). Typical magnitudes: most events kill 1-5% of trees, about 10% of affected area over 15% (Carnegie et al. 2022). Indicative index values in the validation runs (365 d vs 1825 d): BFG 1985-88 C 0.09, F 0.10, irrigated 0; site maxima 0.13-0.27. HalfRateDrop 0.35 and Steepness 20 are placeholders. Not calibrated: the only drought-mortality case in the validation data is one plot (BFG F, 13.7% of stems 1984-88 vs C 2.7%), and no model water index separates it from C; calibrate against radiata drought-mortality plot data (e.g. McGrath WA 1986-88, with rainfall and soil depth) before use. Prototypes 2026-11-13: duration of low Fw stayed inactive even under a 50% rain cut; a rainfall-only drop index (recent vs 5-yr rain) at MaximumRate 0.15 killed 4-13% at sites with no recorded drought deaths (FSA, FPQ, HQP321R1).",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/y",
+                  "Name": "MaximumRate",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.35,
+                  "Units": "0-1",
+                  "Name": "HalfRateDrop",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 20.0,
+                  "Units": null,
+                  "Name": "Steepness",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 365.0,
+                  "Units": "d",
+                  "Name": "RecentPeriod",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1825.0,
+                  "Units": "d",
+                  "Name": "ReferencePeriod",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.5,
+                  "Units": null,
+                  "Name": "Selectivity",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.Constant, Models",
@@ -6827,9 +6908,35 @@
             "        private IFunction StemMortality;",
             "        [Link(Type = LinkType.Path, Path = \"[Pinus].StemMortality.MaximumSDI\")]",
             "        private IFunction MaximumSDI;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].DroughtMortality\")]",
+            "        private IFunction DroughtMortality;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].DroughtMortality.RecentPeriod\")]",
+            "        private IFunction RecentPeriod;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].DroughtMortality.ReferencePeriod\")]",
+            "        private IFunction ReferencePeriod;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].DroughtMortality.Selectivity\")]",
+            "        private IFunction DroughtSelectivity;",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].FineRoot\")]",
+            "        private Models.PMF.Organs.Root FineRoot;",
+            "",
+            "        private double recentUse, referenceUse;",
+            "        private int useDays;",
+            "",
+            "        /// <summary>Relative drop in water use (0-1): 1 - recent / reference running mean of daily FineRoot water uptake. Drives [Pinus].DroughtMortality.</summary>",
+            "        public double WaterUseDrop { get; private set; }",
+            "",
+            "        [EventSubscribe(\"EndOfDay\")]",
+            "        private void OnEndOfDayWaterUse(object sender, EventArgs e)",
+            "        {",
+            "            double use = Pinus.IsAlive ? Math.Abs(FineRoot.WaterUptake) : 0;",
+            "            useDays++;",
+            "            recentUse += (use - recentUse) / Math.Min(Math.Max(1, RecentPeriod.Value()), useDays);",
+            "            referenceUse += (use - referenceUse) / Math.Min(Math.Max(1, ReferencePeriod.Value()), useDays);",
+            "            WaterUseDrop = useDays > 365 && referenceUse > 0.1 ? Math.Max(0, 1 - recentUse / referenceUse) : 0;",
+            "        }",
             "",
             "        /// <summary>",
-            "        /// Monthly stem mortality: the annual rate from [Pinus].StemMortality, smallest trees first, then any excess over MaximumSDI.",
+            "        /// Monthly stem mortality: the annual rate from [Pinus].StemMortality, smallest trees first, then any excess over MaximumSDI, then drought mortality ([Pinus].DroughtMortality, dormant by default).",
             "        /// Removals below 10% of stems use the mortality branch of DoThin (leaves, branches and fine roots to litter, stems off site as standing dead).",
             "        /// </summary>",
             "        [EventSubscribe(\"StartOfMonth\")]",
@@ -6840,6 +6947,8 @@
             "            if (annual > 0) DoThinBySize(1 - Math.Pow(1 - annual, 1.0 / 12.0), SizeClass.MaximumRemovalSelectivity);",
             "            double sdi = SizeClass.StandDensityIndex, smax = MaximumSDI.Value();",
             "            if (sdi > smax && sdi > 0) DoThinBySize(Math.Min(0.5, 1 - smax / sdi), SizeClass.MaximumRemovalSelectivity);",
+            "            double drought = Math.Min(0.5, Math.Max(0, DroughtMortality.Value()));   // dormant while DroughtMortality.MaximumRate = 0",
+            "            if (drought > 1e-6) DoThinBySize(1 - Math.Pow(1 - drought, 1.0 / 12.0), DroughtSelectivity.Value());",
             "        }",
             "",
             "        /// <summary>Move a fraction of coarse roots into soil FOM, distributed like the live fine roots (CoarseRoot is a GenericOrgan, so its residue would otherwise go to the surface).</summary>",
