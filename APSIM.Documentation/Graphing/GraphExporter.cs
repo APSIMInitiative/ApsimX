@@ -3,6 +3,8 @@ using APSIM.Documentation.Tag;
 using OxyPlot;
 using System.IO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using APSIM.Shared.Graphing;
 
 using Legend = OxyPlot.Legends.Legend;
@@ -98,6 +100,14 @@ namespace APSIM.Documentation.Graphing
                     ExportedSeries series = graphSeries.ToOxyPlotSeries(labels);
                     labels = series.AxisLabels;
                     plot.Series.Add(series.Result);
+
+                    // Error-bar series do not render connecting lines, so add a
+                    // companion scatter series with matching x/y values.
+                    if (series.Result is OxyPlot.Series.ScatterErrorSeries errorBarSeries)
+                        plot.Series.Add(CreateScatterSeriesFromErrorBarSeries(errorBarSeries));
+
+                    
+
                     if (previous == null)
                         previous = series;
                     else
@@ -118,7 +128,6 @@ namespace APSIM.Documentation.Graphing
                     plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
 
                 // Legend
-
                 plot.Legends.Add(new Legend()
                 {
                     LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation(),
@@ -143,6 +152,30 @@ namespace APSIM.Documentation.Graphing
                 throw new Exception($"Error found while exporting graph {graphName}", err);
             }
 
+        }
+
+        /// <summary>
+        /// Create a scatter series from a scatter error series by copying x/y values.
+        /// </summary>
+        /// <param name="errorBarSeries">Source error-bar series.</param>
+        private static OxyPlot.Series.ScatterSeries CreateScatterSeriesFromErrorBarSeries(OxyPlot.Series.ScatterErrorSeries errorBarSeries)
+        {
+            var scatterSeries = new OxyPlot.Series.ScatterSeries
+            {
+                MarkerStroke = errorBarSeries.ErrorBarColor,
+                MarkerFill = errorBarSeries.ErrorBarColor,
+                MarkerType = OxyPlot.MarkerType.Circle,
+                MarkerStrokeThickness = errorBarSeries.ErrorBarStrokeThickness,
+                // Avoid duplicate legend entries. The error-bar series remains the
+                // legend source.
+                RenderInLegend = false,
+            };
+
+            IEnumerable<OxyPlot.Series.ScatterErrorPoint> points = errorBarSeries.ItemsSource as IEnumerable<OxyPlot.Series.ScatterErrorPoint>
+                                                                   ?? Enumerable.Empty<OxyPlot.Series.ScatterErrorPoint>();
+            scatterSeries.ItemsSource = points.Select(p => new OxyPlot.Series.ScatterPoint(p.X, p.Y)).ToList();
+
+            return scatterSeries;
         }
     }
 }

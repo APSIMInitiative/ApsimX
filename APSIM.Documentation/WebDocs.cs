@@ -728,12 +728,7 @@ namespace APSIM.Documentation
         {
             GraphExporter exporter = new GraphExporter();
 
-            var plot = exporter.ToPlotModel(graph);
-            //foreach(Series s in graph.Series)
-            //    s.
-
-            // Temp hack - set marker size to 5. We need to review
-            // appropriate sizing for graphs in autodocs.
+            IPlotModel plot = exporter.ToPlotModel(graph);
             if (plot is OxyPlot.PlotModel model)
             {
                 int count = model.Series.OfType<OxyPlot.Series.LineSeries>().Count();
@@ -743,7 +738,7 @@ namespace APSIM.Documentation
                     series.StrokeThickness = 1;
                     if (count == 1)
                         series.Color = OxyColor.FromArgb(255, 0, 77, 71);
-                } 
+                }
             }
 
             return exporter.Export(plot, width, height, dpi);
