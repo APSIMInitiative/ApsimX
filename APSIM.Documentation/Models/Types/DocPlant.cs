@@ -96,6 +96,12 @@ namespace APSIM.Documentation.Models.Types
             if (arbitrator != null)
                 newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
 
+            // Document Group Model
+            // -------------------------------------------------------------------------------
+            Group group = (Group)this.model.Children.Find(m => m.GetType() == typeof(Group));
+            if (group != null)
+                newTags.AddRange(AutoDocumentation.Document(group));
+
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
