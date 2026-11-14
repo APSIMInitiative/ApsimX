@@ -1987,7 +1987,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "MaintenanceRespirationFunction",
                   "ResourceName": null,

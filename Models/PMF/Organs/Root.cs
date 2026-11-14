@@ -95,7 +95,21 @@ namespace Models.PMF.Organs
     /// Thickness | The depth of the soil layer used within the soil water model | mm
     /// RootProportion | The fraction of the layer occupied for roots (e.g. 0.5 if roots occupy the top half of a layer only) | 0-1
     /// TotalDailyDMAllocationToRootMass | The amount of daily growth provided to the root model by the organ arbitrator | g/m^2^
-    /// 
+    ///
+    /// **Storage (non-structural) dry matter**
+    ///
+    /// Root biomass is held in soil-layer pools; the Live biomass of the organ is the sum of these pools.  Flows that change root
+    /// storage are therefore applied to the layer pools so that they persist:
+    ///
+    /// ```
+    /// ReallocationSupply = sum(StorageWt<sub>layer</sub>) x SenescenceRate x DMReallocationFactor
+    /// RetranslocationSupply = Max(0, sum(StorageWt<sub>layer</sub>) - ReallocationSupply) x DMRetranslocationFactor
+    /// ```
+    ///
+    /// The DM actually taken by the arbitrator through retranslocation is removed from each layer in proportion to its storage.
+    /// Maintenance respiration (MaintenanceRespirationFunction, /d) is removed from the storage and metabolic DM of each layer.
+    /// DMReallocationFactor and DMRetranslocationFactor are optional; when absent the corresponding supply is zero.
+    ///
     ///</summary>
     [Serializable]
 [ViewName("UserInterface.Views.PropertyView")]
@@ -167,6 +181,11 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Units("/d")]
         private IFunction dmReallocationFactor = null;
+
+        /// <summary>The DM retranslocation factor (fraction of available storage DM that can be retranslocated each day)</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("/d")]
+        private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The biomass senescence rate</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -613,7 +632,13 @@ namespace Models.PMF.Organs
         public double GrowthRespiration { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        [Units("g/m^2")]
         public double MaintenanceRespiration { get; set; }
+
+        /// <summary>Storage DM removed from the root today by retranslocation (g/m2)</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double RetranslocationWt { get; private set; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
@@ -808,6 +833,39 @@ namespace Models.PMF.Organs
 
             foreach (ZoneState Z in Zones)
                 Z.PartitionRootMass(TotalRAw, Allocated);
+
+            // Remove the storage DM retranslocated by the arbitrator. This is done after partitioning today's growth
+            // because PartitionRootMass recalculates root activity from layer mass and must see the same mass as TotalRAw.
+            RemoveRetranslocatedStorage(dryMatter.Retranslocation);
+            needToRecalculateLiveDead = true;
+        }
+
+        /// <summary>
+        /// Remove the storage DM taken by the arbitrator through retranslocation from the soil-layer pools,
+        /// in proportion to the storage DM in each layer (the same basis used to compute the supply).
+        /// </summary>
+        /// <param name="retranslocated">Storage DM retranslocated (g/m2)</param>
+        private void RemoveRetranslocatedStorage(double retranslocated)
+        {
+            if (retranslocated < -BiomassToleranceValue)
+                throw new Exception("Negative DM retranslocation allocated to " + Name);
+
+            RetranslocationWt = Math.Max(0.0, retranslocated);
+            if (RetranslocationWt <= 0.0)
+                return;
+
+            double totalStorageWt = 0.0;
+            foreach (ZoneState Z in Zones)
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                    totalStorageWt += Z.LayerLive[i].StorageWt;
+
+            if (RetranslocationWt - totalStorageWt > BiomassToleranceValue)
+                throw new Exception("DM retranslocation exceeds the storage DM in " + Name);
+
+            double fractionRemoved = Math.Min(1.0, MathUtilities.Divide(RetranslocationWt, totalStorageWt, 0.0));
+            foreach (ZoneState Z in Zones)
+                for (int i = 0; i < Z.LayerLive.Length; i++)
+                    Z.LayerLive[i].StorageWt -= Z.LayerLive[i].StorageWt * fractionRemoved;
             needToRecalculateLiveDead = true;
         }
 
@@ -1019,6 +1077,8 @@ namespace Models.PMF.Organs
             Zones.Clear();
             needToRecalculateLiveDead = true;
             GrowthRespiration = 0;
+            dmRetranslocationSupply = 0.0;
+            dmMReallocationSupply = 0.0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -1028,6 +1088,8 @@ namespace Models.PMF.Organs
             Senesced.Clear();
             Detached.Clear();
             Removed.Clear();
+            MaintenanceRespiration = 0.0;
+            RetranslocationWt = 0.0;
         }
 
         /// <summary>Recalculate live and dead biomass if necessary</summary>
@@ -1052,6 +1114,7 @@ namespace Models.PMF.Organs
         private void DoSupplyCalculations()
         {
             dmMReallocationSupply = AvailableDMReallocation();
+            dmRetranslocationSupply = AvailableDMRetranslocation();
             nReallocationSupply = AvailableNReallocation();
         }
 
@@ -1093,6 +1156,26 @@ namespace Models.PMF.Organs
                 return availableDM;
             }
             // By default reallocation is turned off!!!!
+            return 0.0;
+        }
+
+        /// <summary>Computes the amount of DM available for retranslocation.</summary>
+        /// <remarks>Storage DM not already offered for reallocation, multiplied by DMRetranslocationFactor.</remarks>
+        private double AvailableDMRetranslocation()
+        {
+            if (dmRetranslocationFactor != null)
+            {
+                double rootLiveStorageWt = 0.0;
+                foreach (ZoneState Z in Zones)
+                    for (int i = 0; i < Z.LayerLive.Length; i++)
+                        rootLiveStorageWt += Z.LayerLive[i].StorageWt;
+
+                double availableDM = Math.Max(0.0, rootLiveStorageWt - dmMReallocationSupply) * dmRetranslocationFactor.Value();
+                if (availableDM < -BiomassToleranceValue)
+                    throw new Exception("Negative DM retranslocation value computed for " + Name);
+                return Math.Max(0.0, availableDM);
+            }
+            // By default retranslocation is turned off
             return 0.0;
         }
 
@@ -1200,12 +1283,19 @@ namespace Models.PMF.Organs
                 // Do Root Senescence
                 RemoveBiomass(liveToResidue: senescenceRate.Value());
 
-                // Do maintenance respiration
-                if (maintenanceRespirationFunction.Value() > 0)
+                // Do maintenance respiration. Live is recalculated from the layer pools, so respiration
+                // must be removed from the layers for it to persist.
+                double mRrate = Math.Min(1.0, Math.Max(0.0, maintenanceRespirationFunction.Value()));
+                MaintenanceRespiration = 0.0;
+                if (mRrate > 0.0)
                 {
-                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
-                    Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-                    Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+                    foreach (ZoneState Z in Zones)
+                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                        {
+                            MaintenanceRespiration += (Z.LayerLive[i].MetabolicWt + Z.LayerLive[i].StorageWt) * mRrate;
+                            Z.LayerLive[i].MetabolicWt *= (1 - mRrate);
+                            Z.LayerLive[i].StorageWt *= (1 - mRrate);
+                        }
                 }
                 needToRecalculateLiveDead = true;
             }

@@ -6380,7 +6380,7 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.002,
+              "FixedValue": 0.0,
               "Units": null,
               "Name": "DMRetranslocationFactor",
               "ResourceName": null,
@@ -6773,7 +6773,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
+                      "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Qm",
                       "ResourceName": null,
