@@ -75,7 +75,7 @@ namespace Models.CLEM.Resources
         /// <returns>The resource</returns>
         public ResourceBaseWithTransactions FindResource(Type type)
         {
-            if (type is null) throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { });
             MethodInfo generic = method.MakeGenericMethod(type);
