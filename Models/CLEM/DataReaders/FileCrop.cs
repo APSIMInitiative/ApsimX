@@ -303,14 +303,14 @@ namespace Models.CLEM
 
             if (OpenDataFile())
             {
-                List<string> cropProps = new List<string>
-                {
+                List<string> cropProps =
+                [
                     SoilTypeColumnName,
                     CropNameColumnName,
                     YearColumnName,
                     MonthColumnName,
                     AmountColumnName
-                };
+                ];
                 //Npct column is optional
                 //Only try to read it in if it exists in the file.
                 if (dayIndex != -1)
@@ -431,7 +431,7 @@ namespace Models.CLEM
 
             DataRow[] foundRows = forageFileAsTable.Select(filterWriter.ToString());
 
-            List<CropDataType> filtered = new List<CropDataType>();
+            List<CropDataType> filtered = [];
 
             foreach (DataRow dr in foundRows)
             {

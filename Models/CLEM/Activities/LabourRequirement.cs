@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         private double maximumDaysPerGroup = 0;
         private double minimumDaysPerPerson = 0;
         private Labour labourResource;
-        private readonly List<ResourceRequest> resourceList = new();
+        private readonly List<ResourceRequest> resourceList = [];
 
         /// <summary>
         /// An identifier for this Labour requirement based on parent requirements
@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
                             ResourceType = typeof(Labour),
                             ResourceTypeName = "",
                             ActivityModel = this,
-                            FilterDetails = new List<object>() { fg },
+                            FilterDetails = [ fg ],
                             Category = TransactionCategory,
                         }
                         );

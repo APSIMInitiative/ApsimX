@@ -133,7 +133,7 @@ namespace Models.CLEM.Reporting
 
                         // identify any timer or event that did not occur
                         string currentID = "";
-                        List<string> list = new List<string>() { "Ignored", "Folder" };
+                        List<string> list = ["Ignored", "Folder"];
                         foreach (var item in filteredData)
                         {
                             if (item.Field<string>("UniqueID") != currentID)

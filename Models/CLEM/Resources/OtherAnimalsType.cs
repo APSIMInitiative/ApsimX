@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Other animals/OtherAnimalType.htm")]
     public class OtherAnimalsType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IHandlesActivityCompanionModels
     {
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<AnimalPriceGroup> priceGroups = [];
         private int nextCohortIndex = 1;
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Initialise()
         {
-            Cohorts = new List<OtherAnimalsTypeCohort>();
+            Cohorts = [];
             foreach (var child in this.Children)
             {
                 if (child is OtherAnimalsTypeCohort cohort)
@@ -273,8 +273,8 @@ namespace Models.CLEM.Resources
             {
                 case "Relationship":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() { "Age to weight" },
-                        measures: new List<string>()
+                        identifiers: ["Age to weight"],
+                        measures: []
                         );
                 default:
                     return new LabelsForCompanionModels();

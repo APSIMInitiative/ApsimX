@@ -73,7 +73,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            UncollectedStores = new List<ManureStoreUncollected>();
+            UncollectedStores = [];
             Initialise();
         }
 
@@ -223,7 +223,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Pools of manure in this store
         /// </summary>
-        public List<ManurePool> Pools = new List<ManurePool>();
+        public List<ManurePool> Pools = [];
     }
 
     /// <summary>

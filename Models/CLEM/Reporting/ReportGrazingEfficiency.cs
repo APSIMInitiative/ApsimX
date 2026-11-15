@@ -77,10 +77,10 @@ namespace Models.CLEM.Reporting
             var multiHerds = Structure.FindAll<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
-            List<string> variableNames = new()
-            {
+            List<string> variableNames =
+            [
                 "[Clock].Today as Date"
-            };
+            ];
             foreach (var grz in grzes)
             {
                 if (IncludePastureQualityLimiter)

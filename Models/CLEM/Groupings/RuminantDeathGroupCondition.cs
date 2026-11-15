@@ -53,7 +53,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
-            List<Ruminant> died = new List<Ruminant>();
+            List<Ruminant> died = [];
             switch (ConditionMetric)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:

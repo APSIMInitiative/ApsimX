@@ -30,10 +30,10 @@ namespace Models.CLEM.Activities
             {
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

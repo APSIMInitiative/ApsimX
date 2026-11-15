@@ -208,7 +208,7 @@ namespace Models.CLEM.Activities
             int maxFoodAge = Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
             // create list of all food parcels
-            List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> foodParcels = [];
 
             foreach (HumanFoodStoreType foodStore in Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).ToList())
             {
@@ -232,7 +232,7 @@ namespace Models.CLEM.Activities
             // We can check if the parent of the human food store used is a market and charge accordingly.
 
             // for each market
-            List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> marketFoodParcels = [];
             ResourcesHolder resources = Market?.Resources;
             if (resources != null)
             {
@@ -343,7 +343,7 @@ namespace Models.CLEM.Activities
             }
 
             // fill resource requests
-            List<ResourceRequest> requests = new List<ResourceRequest>();
+            List<ResourceRequest> requests = [];
             foreach (var item in foodParcels.GroupBy(a => a.FoodStore))
             {
                 double amount = item.Sum(a => a.Pool.Amount * a.Proportion);

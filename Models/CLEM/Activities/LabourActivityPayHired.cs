@@ -47,16 +47,16 @@ namespace Models.CLEM.Activities
             {
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>()
-                        {
+                        identifiers:
+                        [
                             "labour available",
                             "labour used"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per day",
                             "per total charged"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             task = "available";
-            ResourceRequestList = new List<ResourceRequest>(); 
+            ResourceRequestList = []; 
             ManageActivityResourcesAndTasks("labour available");
         }
 
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             task = "used";
-            ResourceRequestList = new List<ResourceRequest>();
+            ResourceRequestList = [];
             ManageActivityResourcesAndTasks("labour used");
         }
 

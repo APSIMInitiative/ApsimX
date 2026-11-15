@@ -89,23 +89,23 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per head",
                             "Value of individuals",
-                        }
+                        ]
                         );
                 case "RuminantTrucking":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>());
+                        identifiers: [],
+                        measures: []);
                 default:
                     return new LabelsForCompanionModels();
             }
@@ -203,7 +203,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> requestResources = new();
+            List<ResourceRequest> requestResources = [];
             int numberTrucked = 0;
             double herdValue = 0;
 
@@ -446,7 +446,7 @@ namespace Models.CLEM.Activities
         private void ProcessAnimals()
         {
             int head = 0;
-            List<Ruminant> taskIndividuals = new();
+            List<Ruminant> taskIndividuals = [];
 
             if (ActivityStyle == "Arrange sales")
             {

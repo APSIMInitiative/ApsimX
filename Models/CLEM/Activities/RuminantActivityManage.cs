@@ -481,7 +481,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "RemoveOldFemalesFromHerd",
                             "RemoveOldSiresFromHerd",
                             "RemoveSiresFromPurchases",
@@ -499,13 +499,13 @@ namespace Models.CLEM.Activities
                             "SelectMalesForGrowOut",
                             "SelectFemalesForGrowOut",
                             "SelectUnweanedFemalesAsReplacements"
-                        },
-                        measures: new List<string>()
+                        ],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Herd size - before activity",
                             "Adjust - new grow out males",
                             "Adjust - new grow out females",
@@ -517,11 +517,11 @@ namespace Models.CLEM.Activities
                             "Destock - excess sires",
                             "Stock - female breeder purchases",
                             "Stock - sire purchases",
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -575,7 +575,7 @@ namespace Models.CLEM.Activities
                 return;
             }
 
-            List<string> information = new();
+            List<string> information = [];
             string warn = string.Empty;
 
             // calculate the number of breeders, sucklings, weaners and prebreeders
@@ -696,7 +696,7 @@ namespace Models.CLEM.Activities
 
             if (Structure.FindChildren<RuminantActivityGroup>().Any())
             {
-                selectHerdAvailable = new List<Ruminant>();
+                selectHerdAvailable = [];
             }
 
             // get the mortality rate for the herd if available or assume zero
@@ -963,7 +963,7 @@ namespace Models.CLEM.Activities
                     _ => (double?)0,
                 };
             }
-            return new ();
+            return [];
         }
 
         /// <inheritdoc/>
@@ -1208,7 +1208,7 @@ namespace Models.CLEM.Activities
                 // get suitable sires marked for sale if not manage sale
                 foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectSiresFromSales"))
                 {
-                    foreach (var male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsSire)).Take(maleBreedersRequired))
+                    foreach (var male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale]).Where(a => a.IsSire)).Take(maleBreedersRequired))
                     {
                         male.SaleFlag = HerdChangeReason.None;
                         numberMaleSiresInHerd++;
@@ -1224,7 +1224,7 @@ namespace Models.CLEM.Activities
                     foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungMalesFromSales"))
                     {
                         // male, sale flag is AgeWeightSale, not castrated and age will mature in next 12 months
-                        foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsWeaned && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityMale > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
+                        foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale]).Where(a => a.IsWeaned && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityMale > -334) && !a.IsCastrated)).Take(maleBreedersRequired))
                         {
                             if (grazeStoreSires is not null)
                                 male.Location = (grazeStoreSires as Model).Name;
@@ -1413,7 +1413,7 @@ namespace Models.CLEM.Activities
                         // remove females breeders from sale herd to replace breeders (not those sold because too old)
                         foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersFromSales"))
                         {
-                            foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsReadyForSale && a.AgeInDays >= a.Parameters.Details.EstimatedAgeAtMaturityFemale)).Take(femaleBreedersRequired).ToList())
+                            foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale]).Where(a => a.IsReadyForSale && a.AgeInDays >= a.Parameters.Details.EstimatedAgeAtMaturityFemale)).Take(femaleBreedersRequired).ToList())
                             {
                                 female.Attributes.Remove("GrowOut"); // in case grow out
                                 female.SaleFlag = HerdChangeReason.None;
@@ -1565,7 +1565,7 @@ namespace Models.CLEM.Activities
                         {
                             foreach (var selectFilter in GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectYoungFemalesFromSales"))
                             {
-                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsReadyForSale && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityFemale > -334))).Take(femaleBreedersRequired - numberOfReplacements).ToList())
+                                foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale]).Where(a => a.IsReadyForSale && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityFemale > -334))).Take(femaleBreedersRequired - numberOfReplacements).ToList())
                                 {
                                     female.Attributes.Remove("GrowOut"); // in case grow out
                                     female.SaleFlag = HerdChangeReason.None;
@@ -1779,7 +1779,7 @@ namespace Models.CLEM.Activities
             {
                 // any suitable males for sale will be flagged as a prebreeder
                 // male, readyForSale, not maxAgeSale, not castrated
-                foreach (var individual in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => !a.IsCastrated).Take(maleBreedersRequired).ToList())
+                foreach (var individual in GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale]).Where(a => !a.IsCastrated).Take(maleBreedersRequired).ToList())
                 {
                     individual.Attributes.Remove("GrowOut");
                     individual.Attributes.Add("Sire");
@@ -1796,7 +1796,7 @@ namespace Models.CLEM.Activities
             {
                 // any suitable females for sale will be flagged as a prebreeder
                 // female, readyForSale, not maxAgeSale, notDryBreeder
-                foreach (var individual in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale, HerdChangeReason.DryBreederSale }).Take(femaleBreedersRequired).ToList())
+                foreach (var individual in GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale, [HerdChangeReason.MaxAgeSale, HerdChangeReason.DryBreederSale]).Take(femaleBreedersRequired).ToList())
                 {
                     individual.Attributes.Remove("GrowOut");
                     if (!(individual as RuminantFemale).IsBreeder)

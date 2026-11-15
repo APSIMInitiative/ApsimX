@@ -229,7 +229,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null && PastureLink.StartsWith("Not specified"))
             {
                 // no link so need to ensure values are all supplied.
-                List<string> missing = new List<string>();
+                List<string> missing = [];
                 if (NToDMDCoefficient == 0)
                     missing.Add("NToDMDCoefficient");
 

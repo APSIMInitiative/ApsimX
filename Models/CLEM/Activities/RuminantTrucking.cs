@@ -141,48 +141,48 @@ namespace Models.CLEM.Activities
             {
                 case "Relationship":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>()
-                        {
+                        identifiers:
+                        [
                             "Live weight to load unit size"
-                        },
-                        measures: new List<string>()
+                        ],
+                        measures: []
                         );
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per head",
                             "per truck",
                             "per km trucked",
                             "per load (deck/pod)",
                             "per tonne km",
-                        }
+                        ]
                         );
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per truck",
                             "per km trucked",
                             "per load (deck/pod)",
-                        }
+                        ]
                         );
                 case "GreenhouseGasActivityEmission":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per truck",
                             "per km trucked",
                             "per tonne km",
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

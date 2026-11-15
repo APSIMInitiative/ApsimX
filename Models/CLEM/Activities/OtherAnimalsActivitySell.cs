@@ -98,21 +98,21 @@ namespace Models.CLEM.Activities
             {
                 case "OtherAnimalsGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number to sell",
                             "Value of sales"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "total"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

@@ -44,7 +44,7 @@ namespace Models.CLEM
         public WarningLog(int maxEntries)
         {
             maxCount = maxEntries;
-            warningList = new List<string>();
+            warningList = [];
         }
 
         private List<string> warningList { get; set; }

@@ -93,7 +93,7 @@ namespace Models.CLEM
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
 
             // determine any herd filtering
-            herdFilters = new List<RuminantGroup>();
+            herdFilters = [];
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {

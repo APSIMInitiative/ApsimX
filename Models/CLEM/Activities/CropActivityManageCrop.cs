@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                 {
                     if (areaNeeded > 0)
                     {
-                        ResourceRequestList = new List<ResourceRequest> {
+                        ResourceRequestList = [
                             new () {
                                 Resource = LinkedLandItem,
                                 AllowTransmutation = false,
@@ -165,7 +165,7 @@ namespace Models.CLEM.Activities
                                 FilterDetails = null,
                                 RelatesToResource = cropProduct.LinkedResourceItem.Name
                             }
-                        };
+                        ];
 
                         if (!UseAreaAvailable & LinkedLandItem != null)
                         {

@@ -325,8 +325,8 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pastureProps = new List<string>
-                {
+                List<string> pastureProps =
+                [
                     "Region",
                     "Soil",
                     "ForageNo",
@@ -346,20 +346,21 @@ namespace Models.CLEM
                     "TreeBA",
                     "Rainfall",
                     "Runoff"
-                };
+                ];
 
                 DataTable table = this.reader.ToTable(pastureProps);
 
-                DataColumn[] primarykeys = new DataColumn[8];
-                primarykeys[0] = table.Columns["Region"];
-                primarykeys[1] = table.Columns["Soil"];
-                primarykeys[2] = table.Columns["ForageNo"];
-                primarykeys[3] = table.Columns["GrassBA"];
-                primarykeys[4] = table.Columns["LandCon"];
-                primarykeys[5] = table.Columns["StkRate"];
-                primarykeys[6] = table.Columns["Year"];
-                primarykeys[7] = table.Columns["Month"];
-
+                DataColumn[] primarykeys =
+                [
+                    table.Columns["Region"],
+                    table.Columns["Soil"],
+                    table.Columns["ForageNo"],
+                    table.Columns["GrassBA"],
+                    table.Columns["LandCon"],
+                    table.Columns["StkRate"],
+                    table.Columns["Year"],
+                    table.Columns["Month"],
+                ];
                 table.PrimaryKey = primarykeys;
                 CloseDataFile();
                 return table;
@@ -460,7 +461,7 @@ namespace Models.CLEM
 
             DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
-            List<PastureDataType> filtered = new List<PastureDataType>();
+            List<PastureDataType> filtered = [];
 
             foreach (DataRow dr in foundRows)
             {

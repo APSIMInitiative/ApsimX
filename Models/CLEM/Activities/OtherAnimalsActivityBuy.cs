@@ -67,25 +67,25 @@ namespace Models.CLEM.Activities
             {
                 case "ActivityFee":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number to buy",
                             "Purchase value"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "value of individuals"
-                        }
+                        ]
                         );
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number purchased"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

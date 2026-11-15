@@ -49,21 +49,21 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number milked",
                             "Litres milked",
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "per L milked"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

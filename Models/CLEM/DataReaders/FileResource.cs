@@ -235,13 +235,13 @@ namespace Models.CLEM
 
             if (OpenDataFile())
             {
-                List<string> cropProps = new List<string>
-                {
+                List<string> cropProps =
+                [
                     YearColumnName,
                     MonthColumnName,
                     ResourceNameColumnName,
                     AmountColumnName
-                };
+                ];
 
                 DataTable table = reader.ToTable(cropProps);
 

@@ -27,7 +27,7 @@ namespace Models.CLEM.Groupings
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
-        private IEnumerable<PropertyInfo> propertyInfo = new List<PropertyInfo>();
+        private IEnumerable<PropertyInfo> propertyInfo = [];
         private bool validOperator = true;
         
         private IEnumerable<string> GetParameters() => Parent?.GetParameterNames();

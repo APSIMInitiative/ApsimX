@@ -39,7 +39,7 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// A list of error messages generated while creating this item
         /// </summary>
-        public List<string> ErrorMessages { get; set; } = new();
+        public List<string> ErrorMessages { get; set; } = [];
 
         /// <summary>
         /// Offset for year to allow for month range across Dec-Jan

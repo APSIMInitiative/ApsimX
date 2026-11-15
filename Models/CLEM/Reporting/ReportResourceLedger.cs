@@ -234,10 +234,10 @@ namespace Models.CLEM.Reporting
             // check if running from a CLEM.Market
             bool market = (Structure.FindParent<Zone>(recurse: true).GetType() == typeof(Market));
 
-            List<string> variableNames = new()
-            {
+            List<string> variableNames =
+            [
                 "[Clock].Today as Date"
-            };
+            ];
             if (IncludeFinancialYear)
             {
                 Finance financeStore = resources.FindResourceGroup<Finance>();
@@ -245,7 +245,7 @@ namespace Models.CLEM.Reporting
                     variableNames.Add($"[Resources].{financeStore.Name}.FinancialYear as FY");
             }
 
-            List<string> eventNames = new();
+            List<string> eventNames = [];
 
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
@@ -407,7 +407,7 @@ namespace Models.CLEM.Reporting
         /// <returns>A list of names of components</returns>
         public IEnumerable<string> GetResourceGroupsAvailable()
         {
-            List<string> results = new List<string>();
+            List<string> results = [];
             Zone zone = Structure.FindParent<Zone>(recurse: true);
             if (!(zone is null))
             {

@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
             // get all time steps over gestation length that are allowed based on controlled mating timing.
             // randomly assign pregnancies to this list
-            List<DateTime> timeList = new ();
+            List<DateTime> timeList = [];
             DateTime dateTime = events.Clock.Today.AddDays(-herd.FirstOrDefault().Parameters.General.GestationLength.InDays);
             while(dateTime < events.Clock.Today)
             {
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                 {
                     // find any suitable times and randomly pick one
                     var datesAvailable = timeList.Where(a => (female.DateOfBirth - a).TotalDays >= female.Parameters.Details.EstimatedAgeAtMaturityFemale).ToList();
-                    List<RuminantMale> maleBreeders = new();
+                    List<RuminantMale> maleBreeders = [];
                     DateTime conceiveDate = default(DateTime);
                     if (datesAvailable.Count > 0)
                     {
@@ -320,7 +320,7 @@ namespace Models.CLEM.Activities
 
                 int numberPossible = 0; // breeders.Sum(a => a.Count());
                 int numberServiced = 1;
-                List<Ruminant> maleBreeders = new();
+                List<Ruminant> maleBreeders = [];
 
                 // for each location where parts of this herd are located
                 foreach (var location in breeders)

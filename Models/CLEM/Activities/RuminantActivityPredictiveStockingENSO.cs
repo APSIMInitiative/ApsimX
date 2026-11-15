@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         private double destockToSkip = 0;
         private double destockToDo = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private List<(string paddockName, double AE, double AeChange)> paddockChanges;
         private IEnumerable<GrazeFoodStoreType> paddocks;
         private string fullFilename;
@@ -155,28 +155,28 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "Relationship":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "PastureToStockingChangeElNino",
                             "PastureToStockingChangeLaNina"
-                        },
-                        measures: new List<string>()
+                        ],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Destock required",
                             "Restock required"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per AE"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -189,7 +189,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            ForecastSequence = new Dictionary<DateTime, double>();
+            ForecastSequence = [];
 
             Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
                 paddocks = Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             }
 
-            paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
+            paddockChanges = [];
         }
 
         /// <inheritdoc/>

@@ -18,14 +18,14 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
 
         if (FormatForParentControl)
         {
-            generator.AddTableRow(new List<(string, bool)>()
-            {
+            generator.AddTableRow(
+            [
                 (model.Name, false),
                 (generator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
                 (generator.DisplaySummaryValueSnippet(model.InitialAge, warnZero:true), false),
                 (generator.DisplaySummaryValueSnippet(model.Individuals, warnZero:true), false),
                 ("", model.IsHired)
-            }, model.Enabled);
+            ], model.Enabled);
         }
         else
         {

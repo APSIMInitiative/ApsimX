@@ -27,8 +27,8 @@ namespace Models.CLEM.Resources
         [Link]
         private readonly CLEMEvents events = null;
 
-        private readonly List<string> warningsMultipleEntry = new();
-        private readonly List<string> warningsNotFound = new();
+        private readonly List<string> warningsMultipleEntry = [];
+        private readonly List<string> warningsNotFound = [];
         private Relationship adultEquivalentRelationship = null;
         private LabourAvailabilityList availabilityList;
 
@@ -111,8 +111,8 @@ namespace Models.CLEM.Resources
             return type switch
             {
                 "Relationship" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>() { "Adult equivalent" },
-                                        measures: new List<string>()
+                                        identifiers: ["Adult equivalent"],
+                                        measures: []
                                         ),
                 _ => new LabelsForCompanionModels(),
             };
@@ -147,7 +147,7 @@ namespace Models.CLEM.Resources
             // locate AE relationship
             adultEquivalentRelationship = Structure.FindChildren<Relationship>().FirstOrDefault(a => a.Identifier == "Adult equivalent");
 
-            Items = new List<LabourType>();
+            Items = [];
             foreach (LabourType labourChildModel in Structure.FindChildren<LabourType>())
             {
                 //IndividualAttribute att = new() { StoredValue = labourChildModel.Name };
@@ -257,7 +257,7 @@ namespace Models.CLEM.Resources
 
         private void CheckAssignLabourAvailability(LabourType labour)
         {
-            List<LabourType> checkList = new List<LabourType>() { labour };
+            List<LabourType> checkList = [labour];
             if (labour.LabourAvailability != null)
             {
                 // check labour availability still ok

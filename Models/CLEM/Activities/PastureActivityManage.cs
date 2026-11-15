@@ -131,11 +131,11 @@ namespace Models.CLEM.Activities
             {
                 case "Relationship":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Utilisation % to change in Land condition index",
                             "Utilisation % to change in Grass basal area"
-                        },
-                        measures: new List<string>()
+                        ],
+                        measures: []
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -201,8 +201,8 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
 
-            ResourceRequestList = new()
-            {
+            ResourceRequestList =
+            [
                 new()
                 {
                     Resource = land,
@@ -214,7 +214,7 @@ namespace Models.CLEM.Activities
                     Category = UseAreaAvailable? "Assign unallocated": TransactionCategory,
                     FilterDetails = null
                 }
-            };
+            ];
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
             TakeResources(ResourceRequestList, false);

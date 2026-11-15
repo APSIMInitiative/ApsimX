@@ -209,12 +209,10 @@ namespace Models.CLEM
 
             if (this.OpenDataFile())
             {
-                List<string> pricingColumns = new()
-                {
-                    DateColumnName
-                };
-
-                pricingColumns.AddRange(pricingComponentsFound.Select(a => (a as IModel).Name).Distinct());
+                List<string> pricingColumns =
+                [
+                    DateColumnName, .. pricingComponentsFound.Select(a => (a as IModel).Name).Distinct()
+                ];
 
                 // Add all other column names
 

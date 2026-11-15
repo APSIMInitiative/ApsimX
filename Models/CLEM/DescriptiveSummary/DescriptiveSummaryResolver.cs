@@ -82,7 +82,7 @@ public static class DescriptiveSummaryResolver
         // Prefer exact T == modelType, otherwise try base types and interfaces (closest match)
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        List<Type> candidateProviders = new();
+        List<Type> candidateProviders = [];
         lock (scanLock)
         {
             foreach (var asm in assemblies)

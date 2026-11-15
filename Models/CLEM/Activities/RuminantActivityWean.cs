@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         private int numberToDo = 0;
         private int sucklingsToCheck = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
 
         /// <summary>
         /// Style of weaning rule
@@ -83,20 +83,20 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number sucklings checked",
                             "Number weaned"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

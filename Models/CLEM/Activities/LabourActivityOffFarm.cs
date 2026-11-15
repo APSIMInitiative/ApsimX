@@ -40,10 +40,10 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "LabourRequirement" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>(),
-                                        measures: new List<string>() {
+                                        identifiers: [],
+                                        measures: [
                                             "fixed",
-                                        }
+                                        ]
                                         ),
                 _ => new LabelsForCompanionModels(),
             };

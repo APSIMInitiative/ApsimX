@@ -115,7 +115,7 @@ namespace Models.CLEM.Reporting
 
             timers = Structure.FindChildren<IActivityTimer>();
 
-            List<string> variableNames = new();
+            List<string> variableNames = [];
             if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
             {
                 variableNames.Add("[Clock].Today as Date");

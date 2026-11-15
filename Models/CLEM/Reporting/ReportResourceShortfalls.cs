@@ -35,8 +35,8 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            List<string> variableNames = new List<string>
-            {
+            List<string> variableNames =
+            [
                 "[Clock].Today as Date",
                 "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
@@ -44,7 +44,7 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.Available as Available",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
                 "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status"
-            };
+            ];
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
             VariableNames = variableNames.ToArray();

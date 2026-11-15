@@ -45,8 +45,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<ValidationResult> results = new List<ValidationResult>();
-            ValidationContext context = new ValidationContext(this, null, null);
+            List<ValidationResult> results = [];
+            ValidationContext context = new(this, null, null);
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();

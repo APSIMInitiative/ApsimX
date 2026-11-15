@@ -82,11 +82,11 @@ namespace Models.CLEM.Activities
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per amount to process"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new();
+            List<ResourceRequest> resourcesNeeded = [];
             resourceRequest = null;
 
             amountToSkip = 0;

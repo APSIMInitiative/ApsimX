@@ -37,10 +37,10 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        private readonly Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
-        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = new Dictionary<(string type, string identifier, string unit), double?>();
-        private readonly Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
-        private readonly List<string> statusMessageList = new List<string>();
+        private readonly Dictionary<string, object> companionModelsPresent = [];
+        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = [];
+        private readonly Dictionary<string, LabelsForCompanionModels> companionModelLabels = [];
+        private readonly List<string> statusMessageList = [];
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
                     default:
                         break;
                 }
-                return new List<string>();
+                return [];
             }
             else
             {
@@ -289,7 +289,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public static string UpdateTransactionCategory(CLEMActivityBase model, IStructure structure, string relatesToValue = "")
         {
-            List<string> transCatsList = new();
+            List<string> transCatsList = [];
             if (model.parentZone is null)
             {
                 model.parentZone = structure.FindParent<ZoneCLEM>(relativeTo: model, recurse: true);
@@ -428,7 +428,7 @@ namespace Models.CLEM.Activities
                         Node.Create(nodeModel);
                     }
 
-                    return new List<T>() { newObj };
+                    return [newObj];
                 }
             }
             return null;
@@ -441,7 +441,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
         {
-            Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
+            Dictionary<string, IEnumerable<T>> filters = [];
 
             var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers);
             if (ids is null)
@@ -748,7 +748,7 @@ namespace Models.CLEM.Activities
                     return shortfallRequests.ToList();
                 }
             }
-            return new List<ResourceRequest>();
+            return [];
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event.</summary>

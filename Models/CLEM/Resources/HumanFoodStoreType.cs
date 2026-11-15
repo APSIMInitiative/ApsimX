@@ -69,7 +69,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
+        public List<HumanFoodStorePool> Pools = [];
 
         /// <inheritdoc/>
         [JsonIgnore]

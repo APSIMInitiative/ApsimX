@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                     RelatesToResource = relatesTo,
                     ActivityModel = this
                 };
-                return new List<ResourceRequest>() { resourceRequest };
+                return [resourceRequest];
             }
             return null;
         }

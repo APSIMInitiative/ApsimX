@@ -131,7 +131,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            List<string> variableNames = new List<string>();
+            List<string> variableNames = [];
 
             // for each graze food store
 
@@ -139,7 +139,7 @@ namespace Models.CLEM.Reporting
             if (resHolder is null)
                 return;
 
-            List<string> pastureEntries = new();
+            List<string> pastureEntries = [];
             if (ReportTotal) pastureEntries.Add("Amount");
             if (ReportGrowth) pastureEntries.Add("Growth");
             if (ReportConsumed) pastureEntries.Add("Consumed");
@@ -148,7 +148,7 @@ namespace Models.CLEM.Reporting
             if (ReportDMD) pastureEntries.Add("DMD");
             if (ReportAge) pastureEntries.Add("Age");
 
-            List<string> poolEntries = new();
+            List<string> poolEntries = [];
             if (ReportPoolsTotal) poolEntries.Add("Amount");
             if (ReportPoolsConsumed) poolEntries.Add("Consumed");
             if (ReportPoolsDetached) poolEntries.Add("Detached");

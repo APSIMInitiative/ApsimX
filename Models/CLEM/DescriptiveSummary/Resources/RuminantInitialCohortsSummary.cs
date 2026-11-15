@@ -85,7 +85,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             cohortsModel.ConceptionsFound = cohortsModel.Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
             cohortsModel.AttributesFound = cohortsModel.Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
 
-            headerLabels = new() { "Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire" };
+            headerLabels = ["Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire"];
             if (cohortsModel.ConceptionsFound)
                 headerLabels.Add("Pregnant");
             if (cohortsModel.AttributesFound)

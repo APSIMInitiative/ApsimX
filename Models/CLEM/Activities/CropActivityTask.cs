@@ -36,15 +36,15 @@ namespace Models.CLEM.Activities
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per land unit of crop",
                             "per hectare of crop",
                             "per kg harvested",
                             "per land unit harvested",
                             "per hectare harvested",
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

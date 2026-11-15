@@ -49,7 +49,7 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            List<string> notBeingMarked = new List<string>();
+            List<string> notBeingMarked = [];
             var model = ModelTyped;
             if (model is null) return;
 

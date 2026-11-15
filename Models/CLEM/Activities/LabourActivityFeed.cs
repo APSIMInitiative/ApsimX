@@ -71,24 +71,24 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "LabourFeedGroup" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>(),
-                                        measures: new List<string>()
-                                        {
+                        identifiers: [],
+                        measures:
+                        [
                             "SpecifiedDailyAmountPerIndividual",
                             "SpecifiedDailyAmountPerAE"
-                                        }
-                                        ),
+                        ]
+                        ),
                 "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
-                                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number fed",
                             "Feed provided"
-                                        },
-                                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "per kg feed"
-                                        }
-                                        ),
+                        ]
+                ),
                 _ => new LabelsForCompanionModels(),
             };
         }
@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
                 // get unique individuals across all filters
                 if (filters.Count() > 1)
                 {
-                    IEnumerable<T> unique = new List<T>();
+                    IEnumerable<T> unique = [];
                     foreach (var selectFilter in filters)
                     {
                         unique = unique.Union(selectFilter.Filter(population)).DistinctBy(a => a.Name);
@@ -159,7 +159,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+            List<ResourceRequest> resourceRequests = [];
             numberToDo = 0;
             amountToDo = 0;
             uniqueIndividuals = GetUniqueIndividuals(filterGroups.Cast<LabourGroup>(), population);
@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
             IndividualsToBeFed = uniqueIndividuals;
 
             List<LabourType> individuals = uniqueIndividuals.ToList();
-            indFed = new List<(LabourType, double)>();
+            indFed = [];
 
             foreach (LabourFeedGroup child in filterGroups)
             {
@@ -256,10 +256,7 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Category = TransactionCategory
                 };
-                return new List<ResourceRequest>()
-                {
-                    resourceRequest
-                };
+                return [ resourceRequest ];
             }
             return null;
         }

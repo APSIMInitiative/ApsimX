@@ -46,8 +46,8 @@ namespace Models.CLEM.Activities
                 case "RuminantDeathGroupCondition":
                 case "RuminantDeathGroupRate":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() 
+                        identifiers: [],
+                        measures: [] 
                         );
                 default:
                     return new LabelsForCompanionModels();

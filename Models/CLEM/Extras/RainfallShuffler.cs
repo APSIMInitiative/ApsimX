@@ -64,12 +64,12 @@ namespace Models.CLEM
             // shuffle years for proxy stochastic rainfall simulation
 
             // create year month list
-            List<(int year, int month, int rndyear, int mthoffset)> storeYears = new List<(int, int, int, int)>();
+            List<(int year, int month, int rndyear, int mthoffset)> storeYears = [];
             DateTime currentDate = new DateTime(clock.StartDate.Year, clock.StartDate.Month, 1);
             int startYear = (currentDate.Month >= (int)StartSeasonMonth)? clock.StartDate.Year - 1: clock.StartDate.Year;
             int currentYear = 0;
-            List<int> yearOffset = new List<int>() { 0 };
-            List<int> monthOffset = new List<int>();
+            List<int> yearOffset = [0];
+            List<int> monthOffset = [];
             while (currentDate <= clock.EndDate)
             {
                 if (currentDate.Month == (int)StartSeasonMonth)

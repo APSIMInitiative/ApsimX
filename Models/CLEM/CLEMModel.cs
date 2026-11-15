@@ -120,7 +120,7 @@ namespace Models.CLEM
             ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
             if (requiredAttribte is not null)
             {
-                List<string> errors = new();
+                List<string> errors = [];
                 for (int i = 0; i < (requiredAttribte.AssociatedModels?.Length ?? 0); i++)
                 {
                     switch (requiredAttribte.AssociationStyles[i])
@@ -236,7 +236,7 @@ namespace Models.CLEM
         /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
-            List<string> results = new();
+            List<string> results = [];
             Zone zone = Structure.FindParent<Zone>(recurse: true);
             if (zone is not null)
             {
@@ -277,7 +277,7 @@ namespace Models.CLEM
         /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetModelsAvailableByType(object[] typesToFind)
         {
-            List<string> results = new();
+            List<string> results = [];
             foreach (object type in typesToFind)
             {
                 if (type is string)
@@ -306,7 +306,7 @@ namespace Models.CLEM
             }
             else
             {
-                List<Type> types = new();
+                List<Type> types = [];
                 return Structure.FindChildren<IModel>(relativeTo: simulation, recurse: true).Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
         }
@@ -333,7 +333,7 @@ namespace Models.CLEM
             }
             else
             {
-                return new List<string>();
+                return [];
             }
         }
 
@@ -360,7 +360,7 @@ namespace Models.CLEM
             }
             else
             {
-                return new List<string>();
+                return [];
             }
         }
 

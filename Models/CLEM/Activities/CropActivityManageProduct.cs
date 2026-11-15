@@ -176,18 +176,15 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
-                    identifiers: new List<string>()
-                    {
-
-                    },
-                    measures: new List<string>() {
+                    identifiers: [],
+                    measures: [
                         "fixed",
                         "per kg harvested",
                         "per land unit of crop",
                         "per hectare of crop",
                         "per land unit harvested",
                         "per hectare harvested",
-                    }
+                    ]
                     ),
                 _ => new LabelsForCompanionModels(),
             };

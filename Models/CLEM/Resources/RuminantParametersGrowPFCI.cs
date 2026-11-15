@@ -306,7 +306,7 @@ namespace Models.CLEM.Resources
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
-            return new List<ValidationResult>();
+            return [];
         }
     }
 }

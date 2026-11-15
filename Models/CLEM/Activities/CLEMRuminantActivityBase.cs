@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         private void GetHerdFilters()
         {
-            HerdFilters = new List<RuminantActivityGroup>();
+            HerdFilters = [];
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                 // get unique individuals across all filters
                 if (filters.Count() > 1)
                 {
-                    IEnumerable<T> unique = new List<T>();
+                    IEnumerable<T> unique = [];
                     foreach (var selectFilter in filters)
                     {
                         unique = unique.Union(selectFilter.Filter(herd)).DistinctBy(a => a.ID);

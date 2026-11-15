@@ -300,8 +300,8 @@ namespace Models.CLEM
                 }
 
                 // check all columns present
-                List<string> expectedColumns = new()
-                {
+                List<string> expectedColumns =
+                [
                     RegionColumnName,
                     LandIdColumnName,
                     GrassBAColumnName,
@@ -310,7 +310,7 @@ namespace Models.CLEM
                     YearColumnName,
                     MonthColumnName,
                     GrowthColumnName
-                };
+                ];
 
                 // add extra data columns if specified
                 if (ErosionColumnName != null || ErosionColumnName != "")
@@ -341,7 +341,7 @@ namespace Models.CLEM
                 try
                 {
                     DataTable res = SQLiteReader.ExecuteQuery($"PRAGMA table_info({ TableName})");
-                    List<string> dBcolumns = new();
+                    List<string> dBcolumns = [];
                     foreach (DataRow row in res.Rows)
                     {
                         dBcolumns.Add(row[1].ToString());
@@ -463,7 +463,7 @@ namespace Models.CLEM
         {
             //if the SQLite Database can't be opened throw an exception.
             var validationContext = new ValidationContext(this, null, null);
-            validationResults = new List<ValidationResult>();
+            validationResults = [];
             Validator.TryValidateObject(this, validationContext, validationResults, true);
 
             if (OpenSQLiteDB() == false)
@@ -583,7 +583,7 @@ namespace Models.CLEM
         public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
                                          DateTime ecolCalculationDate, int ecolCalculationInterval)
         {
-            List<PastureDataType> pastureDetails = new List<PastureDataType>();
+            List<PastureDataType> pastureDetails = [];
 
             if (validationResults.Count > 0) // | ecolCalculationDate > clock.EndDate)
             {
@@ -642,7 +642,7 @@ namespace Models.CLEM
             sqlQuery.Write($" AND {LandConColumnName} = {landConditionCategory}");
             sqlQuery.Write($" AND {StkRateColumnName} = {stkRateCategory}");
 
-            Dictionary<int, int> orderOfYears = new();
+            Dictionary<int, int> orderOfYears = [];
             if (shuffler != null && (rndClem?.Iteration??-9999) != shuffler.DoNotShuffleIteration)
             {
                 // need to check for all random year month matches in database

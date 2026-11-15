@@ -111,11 +111,11 @@ namespace Models.CLEM.Activities
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per ha to burn",
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

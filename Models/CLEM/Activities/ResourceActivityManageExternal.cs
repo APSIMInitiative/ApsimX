@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         [NonSerialized]
         private List<(IResourceType resource, double amount)> resourcesForMonth;
         IEnumerable<string> resourceTypesToInclude = null;
-        readonly Dictionary<string, (IResourceType, double)> allResources = new Dictionary<string, (IResourceType, double)>();
+        readonly Dictionary<string, (IResourceType, double)> allResources = [];
 
         /// <summary>
         /// Name of the model for the resource input file
@@ -75,8 +75,8 @@ namespace Models.CLEM.Activities
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per packet incoming",
                             "per packet outgoing",
@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
                             "per amount outgoing",
                             "per dollar value incoming",
                             "per dollar value outgoing",
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                 fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
             }
 
-            resourcesForMonth = new List<(IResourceType resource, double amount)>();
+            resourcesForMonth = [];
 
             if ((ResourceColumnsToUse ?? "") != "")
             {
@@ -264,7 +264,7 @@ namespace Models.CLEM.Activities
 
             // incoming or outgoing shortfalls
             int skipped = 0;
-            List<string> inOut = new List<string>() { "outgoing", "incoming" };
+            List<string> inOut = [];
             for (int i = 0; i < inOut.Count; i++)
             {
                 var sel_shortfalls = shortfalls.Where(a => a.CompanionModelDetails.unit.Contains("incoming"));

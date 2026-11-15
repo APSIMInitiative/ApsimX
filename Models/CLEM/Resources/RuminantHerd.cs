@@ -84,8 +84,8 @@ namespace Models.CLEM.Resources
         {
             // performed on CLEMInitialise before InitialiseResources as we need this setup ready for other early initialisation and the creation of individuals in the herd.
             id = 1;
-            Herd = new List<Ruminant>();
-            PurchaseIndividuals = new List<Ruminant>();
+            Herd = [];
+            PurchaseIndividuals = [];
             RuminantGrowActivity = Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
 
             foreach (RuminantType rType in Structure.FindChildren<RuminantType>())
@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
         /// <returns>Dicitonary of ResourceTypes and categories for each</returns>
         public IEnumerable<string> GetReportingGroups(RuminantType ruminantType)
         {
-            List<string> catNames = new();
+            List<string> catNames = [];
             switch (TransactionStyle)
             {
                 case RuminantTransactionsGroupingStyle.Combined:

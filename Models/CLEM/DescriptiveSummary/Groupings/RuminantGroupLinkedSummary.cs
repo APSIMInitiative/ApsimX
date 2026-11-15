@@ -34,13 +34,13 @@ public class RuminantGroupLinkedSummary : GroupSummaryBase<RuminantGroupLinked>
         {
             Id = "linked",
             Missing = $"Linked RuminantGroup {generator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",
-            SelectedModels = new List<IModel>(),
+            SelectedModels = [],
             Introduction = "Linked to:"
         };
         
         if (foundGroup is not null)
         {
-            childC.SelectedModels = new List<IModel>() { foundGroup };
+            childC.SelectedModels = [foundGroup];
         }
         return [childC];
     }

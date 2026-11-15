@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         private double amountToSkip = 0;
         private double amountToDo = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private List<(string paddockName, double number, double AE, double AeShortfall)> paddockShortfalls;
         private IEnumerable<GrazeFoodStoreType> paddocks;
 
@@ -101,19 +101,18 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
+                        identifiers: [],
+                        measures: []
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
+                        identifiers: [],
+                        measures: [
                             "fixed",
                             "per head",
                             "per AE"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();
@@ -136,7 +135,7 @@ namespace Models.CLEM.Activities
                 paddocks =Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             }
 
-            paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
+            paddockShortfalls = [];
         }
 
         /// <inheritdoc/>

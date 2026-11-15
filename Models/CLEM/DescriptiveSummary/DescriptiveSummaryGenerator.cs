@@ -440,7 +440,7 @@ public class DescriptiveSummaryGenerator
                     case Memo memo:
                         if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.InPlace)
                         {
-                            AddMemos(new List<Memo> { memo });
+                            AddMemos([memo]);
                         }
                         break;
                     case IModel _:

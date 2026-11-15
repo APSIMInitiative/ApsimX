@@ -81,21 +81,21 @@ namespace Models.CLEM.Activities
             {
                 case "OtherAnimalsFeedGroup":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() { "Feed provided" }
+                        identifiers: [],
+                        measures: ["Feed provided"]
                         );
                 case "ActivityFee":
                 case "LabourRequirement":
                     return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
+                        identifiers: [
                             "Number fed",
                             "Feed provided"
-                        },
-                        measures: new List<string>() {
+                        ],
+                        measures: [
                             "fixed",
                             "per head",
                             "per kg feed"
-                        }
+                        ]
                         );
                 default:
                     return new LabelsForCompanionModels();

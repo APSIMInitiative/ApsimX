@@ -61,7 +61,7 @@ namespace Models.CLEM.Groupings
         {
             // convert mortality from annual to time-step.
             double mortalityRate = Rate * events.Interval;
-            List<Ruminant> deaths = new List<Ruminant>();
+            List<Ruminant> deaths = [];
 
             foreach (var ind in individuals)
             {

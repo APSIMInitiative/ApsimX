@@ -34,7 +34,7 @@ namespace Models.CLEM.Timers
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private CLEMRuminantActivityBase parentRuminantBase = null;
         [NonSerialized]
         private PropertyInfo propertyInfo = null;

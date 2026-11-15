@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                attributes ??= new Dictionary<string, IIndividualAttribute>();
+                attributes ??= [];
                 return attributes;
             }
         }
@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <param name="value">Value to set or change</param>
         public void Add(string tag, IIndividualAttribute value = null)
         {
-            attributes ??= new Dictionary<string, IIndividualAttribute>();
+            attributes ??= [];
 
             if (!attributes.ContainsKey(tag))
             {

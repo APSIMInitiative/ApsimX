@@ -244,7 +244,7 @@ namespace Models.CLEM
             if (sQLiteReader.IsOpen)
                 sQLiteReader.CloseDatabase();
 
-            List<CropDataType> cropDetails = new();
+            List<CropDataType> cropDetails = [];
             if (results.Rows.Count > 0)
             {
                 results.DefaultView.Sort = DateColumnName;

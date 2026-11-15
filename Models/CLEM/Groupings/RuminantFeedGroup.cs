@@ -164,7 +164,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
-            return new List<ResourceRequest> { currentFeedRequest };
+            return [currentFeedRequest];
         }
 
         /// <summary>

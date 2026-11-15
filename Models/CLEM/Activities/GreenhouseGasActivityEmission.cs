@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
-            return new List<ResourceRequest>();
+            return [];
         }
 
         /// <inheritdoc/>

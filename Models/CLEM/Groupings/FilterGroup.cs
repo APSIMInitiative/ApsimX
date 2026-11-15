@@ -81,7 +81,7 @@ namespace Models.CLEM
             }
             else
             {
-                return new List<PropertyInfo>();
+                return [];
             }
         }
 
@@ -175,7 +175,7 @@ namespace Models.CLEM
         /// </summary>
         public void InitialiseFilters(bool includeBuildRules = true)
         {
-            var pp = GetNestedPropertiesYield(typeof(TFilter), new List<PropertyInfo>());
+            var pp = GetNestedPropertiesYield(typeof(TFilter), []);
             properties = pp.ToDictionary(pair => pair.Key, pair => pair.Value);
 
             var types = Assembly.GetExecutingAssembly()
@@ -186,7 +186,7 @@ namespace Models.CLEM
             // get parameters specific for each type of ruminant (male and female)
             foreach (var subtype in types)
             {
-                foreach (var sub in GetNestedPropertiesYield(subtype, new List<PropertyInfo>()))
+                foreach (var sub in GetNestedPropertiesYield(subtype, []))
                 {
                     properties.Add($"{subtype.Name[8..]}.{sub.Key}", sub.Value);
                 }
@@ -223,7 +223,7 @@ namespace Models.CLEM
 
             foreach (var prop in props)
             {
-                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat((new List<PropertyInfo>() { prop })).ToList()))
+                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat(([prop])).ToList()))
                 {
                     yield return new KeyValuePair<string, List<PropertyInfo>>(sub.Key, sub.Value);
                 }

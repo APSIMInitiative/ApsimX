@@ -64,7 +64,7 @@ namespace Models.CLEM
             otherAnimals = resources.FindResourceGroup<OtherAnimals>();
 
             // determine any herd filtering
-            cohortFilters = new List<OtherAnimalsGroup>();
+            cohortFilters = [];
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
