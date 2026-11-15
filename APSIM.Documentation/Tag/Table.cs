@@ -1,23 +1,24 @@
 using System;
 using System.Data;
 using System.Collections.Generic;
+using Models.Core;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>Describes an auto-doc table command.</summary>
     public class Table : ITag
     {
+        /// <summary>Model that this header was created from</summary>
+        public IModel Reference { get; private set; }
+        
         /// <summary>The data to show in the table.</summary>
-        public DataView data { get; private set; }
-
-        /// <summary>The data to show in the table.</summary>
-        public DataTable Data { get {return data.ToTable();} }
+        public DataView Data { get; private set; }
 
         /// <summary>The indent level.</summary>
-        public int indent;
+        private int _indent;
 
         /// <summary>Max width of each column (in terms of number of characters).</summary>
-        public int ColumnWidth { get; private set; }
+        private int _columnWidth;
 
         /// <summary>Max width of each column (in terms of number of characters).</summary>
         public string Style { get; private set; } = "Table";
@@ -26,14 +27,16 @@ namespace APSIM.Shared.Documentation
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="data">The column / row data.</param>
+        /// <param name="reference">Model that this table is made from</param>
         /// <param name="indent">The indentation.</param>
         /// <param name="width">Max width of each column (in terms of number of characters).</param>
         /// <param name="style">The style to use for the table.</param>
-        public Table(DataTable data, int indent = 0, int width = 50, string style = "Table")
+        public Table(DataTable data, IModel reference, int indent = 0, int width = 50, string style = "Table")
         {
-            this.data = new DataView(data);
-            this.indent = indent;
-            this.ColumnWidth = width;
+            Data = new DataView(data);
+            Reference = reference;
+            _indent = indent;
+            _columnWidth = width;
             Style = style;
         }
 
@@ -41,14 +44,16 @@ namespace APSIM.Shared.Documentation
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="data">The column / row data.</param>
+        /// <param name="reference">Model that this table is made from</param>
         /// <param name="indent">The indentation.</param>
         /// <param name="width">Max width of each column (in terms of number of characters).</param>
         /// <param name="style">The style to use for the table.</param>
-        public Table(DataView data, int indent = 0, int width = 50, string style = "Table")
+        public Table(DataView data, IModel reference, int indent = 0, int width = 50, string style = "Table")
         {
-            this.data = data;
-            this.indent = indent;
-            this.ColumnWidth = width;
+            Data = data;
+            Reference = reference;
+            _indent = indent;
+            _columnWidth = width;
             Style = style;
         }
 

@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 
-namespace APSIM.Shared.Documentation.Mapping
+namespace APSIM.Documentation.Tag.Mapping
 {
     /// <summary>
     /// Class for representing a latitude and longitude.

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using M = Models;
 using Models.Core;
 using Models;
@@ -25,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             List<ITag> tags = new List<ITag>();
-            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}"));
+            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}", model));
 
             foreach (IModel child in model.Node.FindChildren<M.Documentation>())
                 tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());

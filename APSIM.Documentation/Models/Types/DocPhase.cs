@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models.PMF.Phen;
@@ -29,7 +29,7 @@ namespace APSIM.Documentation.Models.Types
             // Removes the summary tag in each is phase is different.
             List<ITag> sectionChildren = section.Children.ToList();
             sectionChildren.RemoveAt(0);
-            Section newSection = new(section.Title, sectionChildren);
+            Section newSection = new(section.Title, sectionChildren, model);
             section.Children.RemoveAt(0);
             section.Add(newSection);
 
@@ -37,7 +37,7 @@ namespace APSIM.Documentation.Models.Types
 
             string text = GetPhaseText(model as IPhase);
             if (text.Length > 0)
-                section.Add(new Paragraph(text));
+                section.Add(new Paragraph(text, model));
 
             return new List<ITag>() {section};
         }

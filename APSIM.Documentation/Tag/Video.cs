@@ -1,5 +1,5 @@
 
-namespace APSIM.Shared.Documentation;
+namespace APSIM.Documentation.Tag;
 
 /// <summary>
 /// Tag for handling embedded videos.

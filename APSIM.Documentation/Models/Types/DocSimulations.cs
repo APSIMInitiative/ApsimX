@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using APSIM.Core;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -65,13 +65,13 @@ namespace APSIM.Documentation.Models.Types
 
             List<ITag> tags = new List<ITag>();
 
-            List<Memo> memos = sims.Node.FindChildren<Memo>().ToList();
+            List<IText> memos = sims.Node.FindChildren<IText>().ToList();
             List<ITag> memoTags = new List<ITag>();
             foreach (IModel child in memos)
                 memoTags.AddRange(AutoDocumentation.DocumentModel(child));
 
             //Sort out heading
-            tags.Add(new Section(title, memoTags));
+            tags.Add(new Section(title, memoTags, model));
 
             //Then just document the folders that aren't replacements
             foreach (IModel child in sims.Node.FindChildren<IModel>())
@@ -125,7 +125,7 @@ namespace APSIM.Documentation.Models.Types
             }
 
             //Sort out heading
-            Section firstSection = new Section(title, memoTags);
+            Section firstSection = new Section(title, memoTags, model);
             foreach(ITag tag in modelTags)
             {
                 if (tag.GetType() == typeof(Section))
@@ -151,13 +151,13 @@ namespace APSIM.Documentation.Models.Types
             //Add Interface section
             if(modelToDocument != null)
             {
-                tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument)));
+                tags.Add(new Section("Interface", InterfaceDocumentation.Document(modelToDocument), model));
             }
             else
             {
                 foreach(IModel agPastureModel in modelsToDocument)
                 {
-                    tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel)));
+                    tags.Add(new Section($"{agPastureModel.Name} Interface", InterfaceDocumentation.Document(agPastureModel), model));
                 }
             }
             // Add any (if available for a validation file) science documentation,
@@ -174,7 +174,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 string title = GetSimulationsName(m as Simulations);
                 //Sort out heading
-                var firstSection = new Section(title, new List<ITag>() { new Paragraph("----") });
+                var firstSection = new Section(title, new List<ITag>() { new Paragraph("----", model) }, model);
                 tags.Add(firstSection);
             }
 
@@ -182,7 +182,7 @@ namespace APSIM.Documentation.Models.Types
             {
                 if (child is Simulation)
                 {
-                    tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation)));
+                    tags.Add(new Section(child.Name, DocumentTutorial(child as Simulation), model));
                 }
                 else if(child is Memo || child is Graph || (child is Folder && !Folder.IsModelReplacementsFolder(child)))
                 {
@@ -237,13 +237,13 @@ namespace APSIM.Documentation.Models.Types
                 DocAdditions additions = validationAdditions[name];
                 if(additions.ScienceDocLink != null)
                 {
-                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>"));
+                    Section scienceSection = new("Science Documentation", new Paragraph($"<a href=\"{additions.ScienceDocLink}\" target=\"_blank\">View science documentation here</a>", model), model);
                     additionsTags.Add(scienceSection);
                 }
 
                 if(additions.VideoLink != null)
                 {
-                    Section videoSection = new("Media", new Video(additions.VideoLink));
+                    Section videoSection = new("Media", new Video(additions.VideoLink), model);
                     additionsTags.Add(videoSection);
                 }
 
@@ -258,7 +258,7 @@ namespace APSIM.Documentation.Models.Types
                         extraLink = additions.ExtraLink.Substring(4).Replace("//", "/");
                     }
                     Simulations speciesSims = FileFormat.ReadFromFile<Simulations>(extraLink).Model as Simulations;
-                    Section extraSection = new($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims));
+                    Section extraSection = new Section($"{additions.ExtraLinkName}", AutoDocumentation.Document(speciesSims), model);
                     additionsTags.Add(extraSection);
                     
                 }
