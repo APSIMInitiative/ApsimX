@@ -228,7 +228,7 @@ namespace Models.CLEM
         {
             if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
             {
-                if (!TransmuteResourceTypeName.Contains("."))
+                if (!TransmuteResourceTypeName.Contains('.'))
                 {
                     string[] memberNames = ["ResourceTypeName"];
                     yield return new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames);

@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            if (GrazeFoodStoreName.Contains("."))
+            if (GrazeFoodStoreName.Contains('.'))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)

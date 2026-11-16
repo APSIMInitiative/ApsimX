@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
                     if (!resourceTypesToInclude.Any() || resourceTypesToInclude.Contains(resourceName))
                     {
                         IResourceType resource;
-                        if (resourceName.Contains("."))
+                        if (resourceName.Contains('.'))
                         {
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                         }
