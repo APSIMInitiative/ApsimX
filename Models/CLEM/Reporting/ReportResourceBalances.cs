@@ -129,7 +129,7 @@ namespace Models.CLEM.Reporting
                     bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.ResourceGroupsToReport[i].Trim()) != -1;
                     if (!isDuplicate && this.ResourceGroupsToReport[i] != string.Empty)
                     {
-                        if (this.ResourceGroupsToReport[i].StartsWith("["))
+                        if (this.ResourceGroupsToReport[i].StartsWith('['))
                         {
                             variableNames.Add(this.ResourceGroupsToReport[i]);
                         }

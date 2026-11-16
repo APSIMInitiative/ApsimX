@@ -305,7 +305,7 @@ namespace Models.CLEM
                 filter = $"{filter} AND (";
                 foreach (var resourceName in resourceNames)
                 {
-                    if (!filter.EndsWith("("))
+                    if (!filter.EndsWith('('))
                     {
                         filter = $"{filter} OR ";
                     }

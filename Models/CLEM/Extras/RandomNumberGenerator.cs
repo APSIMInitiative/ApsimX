@@ -20,7 +20,7 @@ namespace Models.CLEM
     public class RandomNumberGenerator: Model
     {
         [ThreadStatic]
-        private static Random generator = null;
+        private static Random generator;
 
         /// <summary>
         /// Seed for random number generator (0 uses GuId rather than clock)
