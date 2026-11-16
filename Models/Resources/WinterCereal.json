@@ -1674,26 +1674,53 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MinimumFunction, Models",
+              "$type": "Models.Functions.HoldFunction, Models",
+              "WhenToHold": "Anthesis",
               "Name": "NumberFunction",
               "ResourceName": null,
               "Children": [
                 {
-                  "$type": "Models.Functions.HoldFunction, Models",
-                  "WhenToHold": "Anthesis",
-                  "Name": "TotalStemPlusSpikeCalc",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "GrainNumber",
                   "ResourceName": null,
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "GrainNumber",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 25.0,
+                      "Units": "grains",
+                      "Name": "GrainsPerGramOfStem",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[StemPlusSpike].Wt",
+                      "Name": "StemMass",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "CriticalPeriodRueResponse",
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 25.0,
-                          "Units": "grains",
-                          "Name": "GrainsPerGramOfStem",
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.6,
+                            1.6
+                          ],
+                          "Y": [
+                            0.1,
+                            0.6,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -1701,46 +1728,10 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StemPlusSpike].Wt",
-                          "Name": "StemMass",
+                          "VariableName": "[CricitalPeriodRueAct]",
+                          "Name": "XValue",
                           "ResourceName": null,
                           "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "CriticalPeriodRueResponse",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.6,
-                                1.6
-                              ],
-                              "Y": [
-                                0.1,
-                                0.6,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[CricitalPeriodRueAct]",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -5537,7 +5528,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
+                          "Name": "Fraction",
                           "ResourceName": null,
                           "Children": [
                             {
@@ -7156,164 +7147,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowthPF",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "PartitionFraction",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "FlagLeafAppearance",
-                      "End": "MaximumGrainLength",
-                      "Name": "SpikeGrowthPhase",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.BoundFunction, Models",
-                          "Name": "Fraction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Upper",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Lower",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "Fraction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "GrainFraction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grain].DMDemand.Total",
-                                      "Name": "GrainDemand",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
-                                      "Name": "TotalSupply",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "StemFraction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Stem].DMDemand.Total",
-                                      "Name": "StemDemand",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
-                                      "Name": "TotalSupply",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "RootFraction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].DMDemand.Total",
-                                      "Name": "RootDemand",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
-                                      "Name": "TotalSupply",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "MaximumSpikeletPrimordia",
               "End": "MaximumGrainLength",
@@ -8399,210 +8232,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-              "Name": "PotentialGrowthPF",
-              "ResourceName": null,
-              "Children": [
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "PartitionFraction",
-                  "ResourceName": null,
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "memo",
-                      "ResourceName": null,
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "MaximumSpikeletPrimordia",
-                      "Name": "PreStemElongation",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "StemFraction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                5.0,
-                                6.0,
-                                10.0
-                              ],
-                              "Y": [
-                                0.08,
-                                0.08,
-                                0.25,
-                                0.25
-                              ],
-                              "Name": "XYPairs",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].HaunStage",
-                              "Name": "XValue",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "MaximumSpikeletPrimordia",
-                      "End": "FlagLeafAppearance",
-                      "Name": "StemElongating",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.7,
-                          "Units": "0",
-                          "Name": "StemFraction",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "FlagLeafAppearance",
-                      "End": "MaximumGrainLength",
-                      "Name": "EarEmergence",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
-                          "Name": "StemFraction",
-                          "ResourceName": null,
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "MaximumGrainLength",
-                      "End": "EndGrainFill",
-                      "Name": "GrainFilling",
-                      "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.BoundFunction, Models",
-                          "Name": "StemFraction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "Upper",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Lower",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "Fraction",
-                              "ResourceName": null,
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "One",
-                                  "ResourceName": null,
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.DivideFunction, Models",
-                                  "Name": "GrainFraction",
-                                  "ResourceName": null,
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grain].DMDemand.Total",
-                                      "Name": "GrainDemand",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Arbitrator].TotalDMFixationSupply",
-                                      "Name": "TotalSupply",
-                                      "ResourceName": null,
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.ProtectedDivideFunction, Models",
               "NumeratorErrVal": 0.0,
               "DenominatorErrVal": 0.0,
@@ -8640,12 +8269,12 @@
               "Children": [
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "MultiplyFunction",
+                  "Name": "EmergenceToRapidGrainFill",
                   "ResourceName": null,
                   "Children": [
                     {
                       "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "EmergenceToRapidGrainFill",
+                      "Name": "Bounded",
                       "ResourceName": null,
                       "Children": [
                         {
