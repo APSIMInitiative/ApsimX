@@ -767,7 +767,7 @@ namespace UserInterface.Presenters
 
                 try
                 {
-                    var runner = new Runner(model);
+                    var runner = new Runner([model]);
                     await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, 1, path, p => MainPresenter.ShowProgress(p, false), true));
                     MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                     return true;

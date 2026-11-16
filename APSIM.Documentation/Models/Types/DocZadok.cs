@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Data;
@@ -58,8 +58,8 @@ namespace APSIM.Documentation.Models.Types
             row[0] = "Reproductive";
             row[1] = "ZadokStage is interpolated from values of stage number using the following table";
             table.Rows.Add(row);
-            Table growthPhaseTable = new(table);
-            section.Add(new Section("List of growth phases", growthPhaseTable));
+            Table growthPhaseTable = new Table(table, model);
+            section.Add(new Section("List of growth phases", growthPhaseTable, model));
 
             // Write a table containing growth stages
             table = new DataTable();
@@ -77,8 +77,8 @@ namespace APSIM.Documentation.Models.Types
                 row[2] = xyPairs.Y[i]; // ZADOK_STAGE_NUMBERS
                 table.Rows.Add(row);
             }
-            Table growthStageTable = new(table);
-            section.Add(new Section("List of growth stages", growthStageTable));
+            Table growthStageTable = new Table(table, model);
+            section.Add(new Section("List of growth stages", growthStageTable, model));
             return new List<ITag>() {section};
         }
 

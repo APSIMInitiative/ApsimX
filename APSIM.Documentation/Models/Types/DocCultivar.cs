@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF;
 
@@ -34,11 +34,11 @@ public class DocCultivar : DocGeneric
             foreach (string paramOverride in (model as Cultivar).Command)
                 overridesTable.Rows.Add(paramOverride);
         }
-        Table paramOverridesDisplayTable = new(overridesTable);
+        Table paramOverridesDisplayTable = new Table(overridesTable, model);
 
         ITag aliasTag = cultivarModel.GetNames().Any() ? 
-            new Section("Aliases", new Paragraph(string.Join(',', cultivarModel.GetNames()))) : 
-            new Paragraph("");
+            new Section("Aliases", new Paragraph(string.Join(',', cultivarModel.GetNames()), model), model) : 
+            new Paragraph("", model);
 
         section.Add(aliasTag);
         section.Add(paramOverridesDisplayTable);

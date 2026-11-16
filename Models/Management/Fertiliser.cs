@@ -12,14 +12,15 @@ namespace Models;
 /// <summary>This model is responsible for applying fertiliser.</summary>
 [Serializable]
 [ValidParent(ParentType = typeof(Zone))]
-public class Fertiliser : Model, IStructureDependency
+public class Fertiliser : Model
 {
-    /// <summary>Structure instance supplied by APSIM.core.</summary>
-    [field: NonSerialized]
-    public IStructure Structure { private get; set; }
-
-
     private double[] cumThickness;
+
+    /// <summary>
+    /// Store an array of double for how much has been applied to each 
+    /// solute each day. Is reset at start of day.
+    /// </summary>
+    private double[] dailyAppliedToSolutes = null;
 
     /// <summary>The soil</summary>
     [Link] private readonly IPhysical physical = null;
@@ -43,6 +44,16 @@ public class Fertiliser : Model, IStructureDependency
     [Units("kg/ha")]
     public double NitrogenApplied { get; private set; } = 0;
 
+    /// <summary>The NO3N applied.</summary>
+    [Units("kgN/ha")]
+    public double NO3NApplied { get {return GetDailyApplied("NO3");} }
+
+    /// <summary>
+    /// The NH4N applied.
+    /// </summary>
+    [Units("kgN/ha")]
+    public double NH4NApplied { get {return GetDailyApplied("NH4");} }
+
     /// <summary>Apply fertiliser.</summary>
     /// <param name="amount">The amount.</param>
     /// <param name="type">The type.</param>
@@ -64,7 +75,7 @@ public class Fertiliser : Model, IStructureDependency
             AddFertiliserSoluteSpecToArray(fertiliserType.Solute6Name, fertiliserType.Solute6Fraction, solutesToApply);
 
             // find fertiliser release function (child of FertiliserType)
-            var releaseRate = Structure.FindChild<IFunction>("Release", relativeTo: fertiliserType);
+            var releaseRate = Node.FindChild<IFunction>("Release", relativeTo: fertiliserType);
             if (releaseRate == null)
                 throw new Exception($"Cannot find a release rate function for fertiliser type: {fertiliserType.Name}");
 
@@ -78,6 +89,8 @@ public class Fertiliser : Model, IStructureDependency
                                      fertiliser: this,
                                      fertiliserTypeName: type);
                 NitrogenApplied += amount;
+                IncrementDailyApplied("NH4", amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NH4").fraction);
+                IncrementDailyApplied("NO3", amount * solutesToApply.FirstOrDefault(t => t.solute.Name == "NO3").fraction);
             }
             else
             {
@@ -97,17 +110,13 @@ public class Fertiliser : Model, IStructureDependency
         }
     }
 
-    /// <summary>
-    /// Add a fertiliser solute specification to an array that will be passed to a pool.
-    /// </summary>
-    /// <param name="name">Name of the solute</param>
-    /// <param name="fraction">Fration of solute in fertiliser type</param>
-    /// <param name="solutesTuple">The array to add to.</param>
-    private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
+    /// <summary>Invoked by clock at start of simulation.</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("StartOfSimulation")]
+    private void OnStartOfSimulation(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(name))
-            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
-                              fraction));
+        DailyReset();
     }
 
     /// <summary>Invoked by clock at start of each daily timestep.</summary>
@@ -116,7 +125,7 @@ public class Fertiliser : Model, IStructureDependency
     [EventSubscribe("DoDailyInitialisation")]
     private void OnDoDailyInitialisation(object sender, EventArgs e)
     {
-        NitrogenApplied = 0;
+        DailyReset();
     }
 
     /// <summary>Invoked by clock at start of each daily timestep to do all fertiliser applications for the day.</summary>
@@ -128,7 +137,10 @@ public class Fertiliser : Model, IStructureDependency
         foreach (FertiliserPool pool in Children.Where(child => child is FertiliserPool)
                                                 .ToArray())
         {
-            NitrogenApplied += pool.PerformRelease();
+            var amt = pool.PerformRelease();
+            NitrogenApplied += amt;
+            IncrementDailyApplied("NH4", amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NH4").fraction);
+            IncrementDailyApplied("NO3", amt * pool.SoluteInfo.FirstOrDefault(t => t.name == "NO3").fraction);
 
             // Remove pools that are empty.
             if (pool.Amount == 0)
@@ -143,5 +155,72 @@ public class Fertiliser : Model, IStructureDependency
     internal void InvokeNotification(FertiliserApplicationType fertiliserApplicationType)
     {
         Fertilised?.Invoke(this, fertiliserApplicationType);
+    }
+
+    /// <summary>
+    /// Resets daily variables
+    /// </summary>
+    private void DailyReset()
+    {
+        NitrogenApplied = 0;
+        dailyAppliedToSolutes = new double[solutes.Length];
+    }
+
+    /// <summary>
+    /// Add a fertiliser solute specification to an array that will be passed to a pool.
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <param name="fraction">Fration of solute in fertiliser type</param>
+    /// <param name="solutesTuple">The array to add to.</param>
+    private void AddFertiliserSoluteSpecToArray(string name, double fraction, List<(ISolute solute, double fraction)> solutesTuple)
+    {
+        if (!string.IsNullOrEmpty(name))
+            solutesTuple.Add((solutes.FirstOrDefault(sol => sol.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)) ?? throw new Exception($"Cannot find solute: {name}"),
+                              fraction));
+    }
+
+    /// <summary>
+    /// Increment the daily applied value for a solute
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <param name="value">Amount to increment it by</param>
+    /// <exception cref="Exception"></exception>
+    private void IncrementDailyApplied(string name, double value)
+    {
+        //Leave early if no amount is actually being applied
+        if (value <= 0)
+            return;
+
+        //if fertiliser is applied before initialisation, initialise array
+        if (dailyAppliedToSolutes == null)
+            DailyReset();
+
+        for(int i = 0; i < solutes.Length; i++)
+        {
+            if (solutes[i].Name.ToLower() == name.ToLower())
+            {
+                dailyAppliedToSolutes[i] += value;
+                return;
+            }
+        }
+        throw new Exception($"Cannot find {name} solute applied value");
+    }
+
+    /// <summary>
+    /// Get the daily applied value for a solute
+    /// </summary>
+    /// <param name="name">Name of the solute</param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    private double GetDailyApplied(string name)
+    {
+        //if fertiliser is asked before initialisation
+        if (dailyAppliedToSolutes == null)
+            throw new Exception($"Cannot return fertiliser applied before simulation is initalised");
+
+        for(int i = 0; i < solutes.Length; i++)
+            if (solutes[i].Name.ToLower() == name.ToLower())
+                return dailyAppliedToSolutes[i];
+        throw new Exception($"Cannot find {name} solute applied value");
     }
 }

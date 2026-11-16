@@ -1,0 +1,17 @@
+SimulationName,[Grain].MaximumPotentialGrainSize.FixedValue,[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue,[Phenology].PhyllochronPpSensitivity.FixedValue,[Phenology].CAMP.FLNparams.MinLN,[Phenology].CAMP.FLNparams.PpLN,[Phenology].CAMP.FLNparams.VrnLN,[Phenology].CAMP.FLNparams.VxPLN,[Phenology].HeadEmergenceLongDayBase.FixedValue,[Phenology].HeadEmergencePpSensitivity.FixedValue,[Phenology].CAMP.EnvData.VrnTreatTemp,[Phenology].CAMP.EnvData.VrnTreatDuration
+WaggaWagga2025CvGregorySow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvIllaboSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvJanzSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvKittyhawkSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvMaceSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvMeeringSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvMowhawkSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvOspreySow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvRosellaSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvScepterSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvSunmasterSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvWedgetailSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvWhistlerSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvWyalkatchemSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvWylahSow17-Apr,0.041,22,0.247,7,4,2,0,50,5,6,60
+WaggaWagga2025CvYitpiSow13-May,0.041,22,0.247,7,4,2,0,50,5,6,60

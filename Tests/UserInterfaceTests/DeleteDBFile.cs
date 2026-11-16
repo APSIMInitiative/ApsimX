@@ -74,7 +74,7 @@ public class Script
 		IClock clock = presenter.ApsimXFile.FindInScope<IClock>();
 		clock.EndDate = clock.StartDate.AddDays(10);
 
-		Runner runner = new Runner(presenter.ApsimXFile, runType: Runner.RunTypeEnum.MultiThreaded);
+		Runner runner = new Runner([presenter.ApsimXFile], runType: Runner.RunTypeEnum.MultiThreaded);
 		RunCommand command = new RunCommand("Simulations", runner, presenter);
 		command.Do();
 	}
