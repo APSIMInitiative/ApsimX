@@ -865,17 +865,11 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Small disposable used to close a div when the using scope ends.
     /// </summary>
-    private sealed class BlockScope : IDisposable
+    private sealed class BlockScope(DescriptiveSummaryGenerator parent, bool ignore = false) : IDisposable
     {
-        private readonly DescriptiveSummaryGenerator parent;
-        private readonly bool ignore;
+        private readonly DescriptiveSummaryGenerator parent = parent ?? throw new ArgumentNullException(nameof(parent));
+        private readonly bool ignore = ignore;
         private bool disposed;
-
-        public BlockScope(DescriptiveSummaryGenerator parent, bool ignore = false)
-        {
-            this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            this.ignore = ignore;
-        }
 
         public void Dispose()
         {

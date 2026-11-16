@@ -9,21 +9,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="dateToCompareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DateGreaterThanAttribute : ValidationAttribute
+    public class DateGreaterThanAttribute(string dateToCompareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="dateToCompareToFieldName"></param>
-        public DateGreaterThanAttribute(string dateToCompareToFieldName)
-        {
-            this.dateToCompareToFieldName = dateToCompareToFieldName;
-        }
-
-        private string dateToCompareToFieldName { get; set; }
+        private string dateToCompareToFieldName { get; set; } = dateToCompareToFieldName;
 
         /// <summary>
         ///
@@ -195,21 +190,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if double/int greater than specified value
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanValueAttribute : ValidationAttribute
+    public class GreaterThanValueAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="value"></param>
-        public GreaterThanValueAttribute(object value)
-        {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-        }
-
-        private double compareValue { get; set; }
+        private double compareValue { get; set; } = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -246,21 +236,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if double/int greater than specified value
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanEqualValueAttribute : ValidationAttribute
+    public class GreaterThanEqualValueAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="value"></param>
-        public GreaterThanEqualValueAttribute(object value)
-        {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-        }
-
-        private double compareValue { get; set; }
+        private double compareValue { get; set; } = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -302,21 +287,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if herd change reason is of a specified style (purchase or sale)
     /// </summary>
+    /// <remarks>
+    /// Constructor
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class HerdSaleReasonAttribute : ValidationAttribute
+    public class HerdSaleReasonAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="value"></param>
-        public HerdSaleReasonAttribute(object value)
-        {
-            compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
-        }
-
-        private string compareStyle { get; set; }
+        private string compareStyle { get; set; } = Convert.ToString(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Perform validation method
@@ -373,21 +353,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="compareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanAttribute : ValidationAttribute
+    public class GreaterThanAttribute(string compareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="compareToFieldName"></param>
-        public GreaterThanAttribute(string compareToFieldName)
-        {
-            this.compareToFieldName = compareToFieldName;
-        }
-
-        private string compareToFieldName { get; set; }
+        private string compareToFieldName { get; set; } = compareToFieldName;
 
         /// <summary>
         ///
@@ -423,21 +398,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="compareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanEqualAttribute : ValidationAttribute
+    public class GreaterThanEqualAttribute(string compareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="compareToFieldName"></param>
-        public GreaterThanEqualAttribute(string compareToFieldName)
-        {
-            this.compareToFieldName = compareToFieldName;
-        }
-
-        private string compareToFieldName { get; set; }
+        private string compareToFieldName { get; set; } = compareToFieldName;
 
         /// <summary>
         ///
