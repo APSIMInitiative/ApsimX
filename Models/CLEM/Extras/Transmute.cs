@@ -112,7 +112,7 @@ namespace Models.CLEM
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
 
                     // get pricing of transmute resource
-                    if (!(TransmuteResourceType is FinanceType))
+                    if (TransmuteResourceType is not FinanceType)
                     {
                         transmutePricing = TransmuteResourceType.Price(PurchaseOrSalePricingStyleType.Sale);
                         if (FinanceTypeForTransactionsName != "No transactions")
@@ -181,7 +181,7 @@ namespace Models.CLEM
             }
             else
             {
-                if (TransmuteStyle == TransmuteStyle.UsePricing && !(TransmuteResourceType is FinanceType))
+                if (TransmuteStyle == TransmuteStyle.UsePricing && TransmuteResourceType is not FinanceType)
                 {
                     // add finance transaction to sell transmute
                     financeType.AddToResource(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
@@ -262,7 +262,7 @@ namespace Models.CLEM
                     yield return new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames);
                 }
 
-                if (!(TransmuteResourceType is FinanceType))
+                if (TransmuteResourceType is not FinanceType)
                 {
                     if (transmutePricing is null)
                     {

@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         /// Determines if a market has been located
         /// </summary>
         /// <returns>Whether a market has been found</returns>
-        public bool MarketPresent { get { return !(FoundMarket is null); } }
+        public bool MarketPresent { get { return FoundMarket is not null; } }
 
 
         /// <summary>
@@ -240,12 +240,12 @@ namespace Models.CLEM.Resources
         /// <returns>Whether the search was successful</returns>
         public IResourceWithTransactionType LinkToMarketResourceType(CLEMResourceTypeBase resourceType)
         {
-            if (!(this.Parent is Market))
+            if (Parent is not Market)
                 throw new ApsimXException(this, $"Logic error in code. Trying to link a resource type [r={resourceType.Name}] from the market with the same market./nThis is a coding issue. Please contact the developers");
 
             // find parent group type
             ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
-            if (!(FindResource(parent.GetType()) is ResourceBaseWithTransactions resourceGroupInMarket))
+            if (FindResource(parent.GetType()) is not ResourceBaseWithTransactions resourceGroupInMarket)
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = Structure.FindParent<Zone>(recurse: true).Name;
@@ -283,13 +283,13 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if (!(this.Parent is Market))
+            if (Parent is not Market)
             {
                 IModel parentSim = Structure.FindParent<Simulation>(recurse: true);
                 FoundMarket = Structure.FindChildren<Market>().FirstOrDefault();
             }
             else
-                FoundMarket = this.Parent as Market;
+                FoundMarket = Parent as Market;
 
             // link to price change in all descendents
             foreach (IReportPricingChange childModel in Structure.FindChildren<IReportPricingChange>(recurse: true))
@@ -324,7 +324,7 @@ namespace Models.CLEM.Resources
                     if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                     {
                         // get resource type if not already provided from request
-                        if (!(request.Resource is IResourceType resourceTypeInShortfall))
+                        if (request.Resource is not IResourceType resourceTypeInShortfall)
                         {
                             if (request.ResourceTypeName.Contains('.'))
                             {

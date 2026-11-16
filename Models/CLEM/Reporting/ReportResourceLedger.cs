@@ -409,10 +409,10 @@ namespace Models.CLEM.Reporting
         {
             List<string> results = [];
             Zone zone = Structure.FindParent<Zone>(recurse: true);
-            if (!(zone is null))
+            if (zone is not null)
             {
                 ResourcesHolder resources = Structure.FindChild<ResourcesHolder>(relativeTo: zone);
-                if (!(resources is null))
+                if (resources is not null)
                 {
                     foreach (var model in Structure.FindChildren<ResourceBaseWithTransactions>(relativeTo: resources))
                     {

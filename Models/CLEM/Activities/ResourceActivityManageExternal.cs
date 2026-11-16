@@ -294,7 +294,7 @@ namespace Models.CLEM.Activities
                     bool isSale = (amount < 0);
                     amount = Math.Abs(amount);
                     ResourcePricing price = null;
-                    if (bankAccount != null && !(resourceItem.resource is FinanceType))
+                    if (bankAccount != null && resourceItem.resource is not FinanceType)
                     {
                         price = resourceItem.resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
                     }

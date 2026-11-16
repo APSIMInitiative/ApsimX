@@ -187,7 +187,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
             {
                 valueStr = s;
             }
-            else if (valueObj is System.Collections.IEnumerable enumerable && !(valueObj is System.Collections.IDictionary))
+            else if (valueObj is System.Collections.IEnumerable enumerable && valueObj is not System.Collections.IDictionary)
             {
                 var parts = new List<string>();
                 foreach (var item in enumerable)
