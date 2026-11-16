@@ -559,7 +559,7 @@ namespace Models.CLEM
                 }
 
                 var baseName = cohort.Name;
-                if (!nameCounts.ContainsKey(baseName))
+                if (!nameCounts.TryGetValue(baseName, out int value))
                 {
                     nameCounts[baseName] = 1;
                     if (cohort.Name == "FileCohort")
@@ -569,8 +569,8 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    nameCounts[baseName]++;
-                    cohort.Name = $"{baseName}_{nameCounts[baseName]}";
+                    nameCounts[baseName] = ++value;
+                    cohort.Name = $"{baseName}_{value}";
                 }
             }
         }

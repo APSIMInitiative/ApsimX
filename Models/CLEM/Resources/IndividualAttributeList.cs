@@ -69,13 +69,13 @@ namespace Models.CLEM.Resources
         /// <returns>Value of attribute if found</returns>
         public IIndividualAttribute GetValue(string tag)
         {
-            if (attributes is null || !attributes.ContainsKey(tag))
+            if (attributes is null || !attributes.TryGetValue(tag, out IIndividualAttribute value))
             {
                 return null;
             }
             else
             {
-                return attributes[tag];
+                return value;
             }
         }
 
