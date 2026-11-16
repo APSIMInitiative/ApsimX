@@ -49,7 +49,7 @@ public class RuminantConceptionAdvancedSummary : DescriptiveSummaryProviderBase<
                     2 => model.ConceptionRateIntercept[i],
                     _ => 0
                 };
-                sb.Append($"<td>{generator.DisplaySummaryValueSnippet(value, warnZero: true)}</td>");
+                sb.Append($"<td>{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(value, warnZero: true)}</td>");
             }
             sb.AppendLine("</tr>");
         }

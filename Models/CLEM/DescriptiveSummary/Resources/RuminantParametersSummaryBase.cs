@@ -199,7 +199,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
                 valueStr = valueObj.ToString();
             }
 
-            summary.Add((ModelTyped.GetType().Name.Replace("RuminantParameters", ""), prop.Name, catAtt.Subcategory, desc, generator.DisplaySummaryValueSnippet(valueStr, warnZero: true, errorNotSet: true)));
+            summary.Add((ModelTyped.GetType().Name.Replace("RuminantParameters", ""), prop.Name, catAtt.Subcategory, desc, DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(valueStr, warnZero: true, errorNotSet: true)));
         }
         return summary;
     }

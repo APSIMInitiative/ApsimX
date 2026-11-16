@@ -16,7 +16,7 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        string output = $"The {generator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} relationship provides {generator.DisplaySummaryValueSnippet(ModelTyped.NameOfYVariable)} (y) for a given value of {generator.DisplaySummaryValueSnippet(ModelTyped.NameOfXVariable)} (x)";
+        string output = $"The {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} relationship provides {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.NameOfYVariable)} (y) for a given value of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.NameOfXVariable)} (x)";
         switch (ModelTyped.CalculationMethod)
         {
             case RelationshipCalculationMethod.UseSpecifiedValues:
@@ -45,7 +45,7 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
             {
                 using (generator.OpenBlock("childgroupborder"))
                 {
-                    generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} is defined by the following (x,y) points:", "childgrouplabel");
+                    generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} is defined by the following (x,y) points:", "childgrouplabel");
 
                     using StringWriter htmlWriter = new();
                     // Start without any leading spaces so the first tag (canvas/script) begins at column 0.

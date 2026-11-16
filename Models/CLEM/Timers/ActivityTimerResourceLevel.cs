@@ -58,7 +58,7 @@ namespace Models.CLEM.Timers
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
         
-        private object[] GetOperators() =>
+        private static object[] GetOperators() =>
         [
             ExpressionType.Equal,
             ExpressionType.NotEqual,

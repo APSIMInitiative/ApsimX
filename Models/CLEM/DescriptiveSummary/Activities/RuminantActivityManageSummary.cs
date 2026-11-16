@@ -54,7 +54,7 @@ namespace Models.CLEM.DescriptiveSummary
             if (model is null) return;
 
             // Safety stop information
-            generator.AddBlockWithText($"The simulation will stop if breeders exceed {generator.DisplaySummaryValueSnippet(model.MaxBreedersMultiplierToStop, warnZero: true)} × maximum breeders (max breeders = {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept, warnZero: true)}) equating to {generator.DisplaySummaryValueSnippet(model.MaximumBreedersKept * model.MaxBreedersMultiplierToStop, warnZero: true)} breeders.");
+            generator.AddBlockWithText($"The simulation will stop if breeders exceed {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MaxBreedersMultiplierToStop, warnZero: true)} × maximum breeders (max breeders = {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MaximumBreedersKept, warnZero: true)}) equating to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MaximumBreedersKept * model.MaxBreedersMultiplierToStop, warnZero: true)} breeders.");
 
             // Initial herd adjustment
             if (model.AdjustBreedingFemalesAtStartup || model.AdjustBreedingMalesAtStartup)
@@ -79,16 +79,16 @@ namespace Models.CLEM.DescriptiveSummary
                     int maxBreed = Math.Max(ModelTyped.MinimumBreedersKept, ModelTyped.MaximumBreedersKept);
                     output = "The herd will be maintained";
                     if (!ModelTyped.PerformFemaleStocking | (minimumBreedersKept == 0))
-                        output += $" using only natural recruitment up to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumBreedersKept)} breeders";
+                        output += $" using only natural recruitment up to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumBreedersKept)} breeders";
                     else
                     {
                         if (minimumBreedersKept == maxBreed)
                         {
-                            output += $" with breeder purchases and natural recruitment up to {generator.DisplaySummaryValueSnippet(minimumBreedersKept)} breeders";
+                            output += $" with breeder purchases and natural recruitment up to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(minimumBreedersKept)} breeders";
                         }
                         else
                         {
-                            output += $" with breeder purchases up to {generator.DisplaySummaryValueSnippet(minimumBreedersKept)} and only natural recruitment to {generator.DisplaySummaryValueSnippet(maxBreed)} breeders";
+                            output += $" with breeder purchases up to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(minimumBreedersKept)} and only natural recruitment to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(maxBreed)} breeders";
                         }
                     }
                     if (!ModelTyped.PerformFemaleDestocking)
@@ -102,7 +102,7 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         if (ModelTyped.MarkOldBreedersForSale)
                         {
-                            output += $"Individuals will be sold when over {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumBreederAge.InDays)} days old";
+                            output += $"Individuals will be sold when over {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumBreederAge.InDays)} days old";
                             if (ModelTyped.ReturnPregnantMaxAgeToHerd)
                             {
                                 output += " unless pregnant and the herd is below the required level";
@@ -121,20 +121,20 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         if (ModelTyped.MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
                         {
-                            generator.AddBlockWithText($"A maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase)} of the Minimum Breeders Kept equal to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase * minimumBreedersKept)} can be purchased in a single transaction");
+                            generator.AddBlockWithText($"A maximum of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase)} of the Minimum Breeders Kept equal to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumProportionBreedersPerPurchase * minimumBreedersKept)} can be purchased in a single transaction");
                         }
 
-                        output = $"Purchased breeders will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)} ";
+                        output = $"Purchased breeders will be placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)} ";
                         if (ModelTyped.MinimumPastureBeforeRestock > 0)
                         {
-                            output += $" with no restocking while pasture is below {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
+                            output += $" with no restocking while pasture is below {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
                         }
                         generator.AddBlockWithText(output);
 
 
                         if (!cmate && ModelTyped.GrazeFoodStoreNameBreeders != "" && ModelTyped.GrazeFoodStoreNameBreeders == ModelTyped.GrazeFoodStoreNameSires)
                         {
-                            generator.AddBlockWithText($"Uncontrolled mating will occur as soon as Breeders and Sires are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)}.", "infoBanner warning");
+                            generator.AddBlockWithText($"Uncontrolled mating will occur as soon as Breeders and Sires are placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameBreeders, nullGeneralYards: true)}.", "infoBanner warning");
                         }
                     }
                     else
@@ -160,11 +160,11 @@ namespace Models.CLEM.DescriptiveSummary
                     }
                     else if (ModelTyped.MaximumSiresKept < 1)
                     {
-                        output = $"The number of breeding males will be determined as {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)} of the maximum female breeder herd. Currently {generator.DisplaySummaryValueSnippet(Convert.ToInt32(Math.Ceiling(ModelTyped.MaximumBreedersKept * ModelTyped.MaximumSiresKept), CultureInfo.InvariantCulture))} individuals";
+                        output = $"The number of breeding males will be determined as {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)} of the maximum female breeder herd. Currently {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Convert.ToInt32(Math.Ceiling(ModelTyped.MaximumBreedersKept * ModelTyped.MaximumSiresKept), CultureInfo.InvariantCulture))} individuals";
                     }
                     else
                     {
-                        output = $"A maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)} will be maintained";
+                        output = $"A maximum of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)} will be maintained";
                     }
                     generator.AddBlockWithText( output);
                     output = "";
@@ -172,11 +172,11 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         if (ModelTyped.MarkOldSiresForSale)
                         {
-                            output = $"Individuals will be sold when over {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSireAge.InDays)} days old";
+                            output = $"Individuals will be sold when over {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumSireAge.InDays)} days old";
                         }
                         else
                         {
-                            output = $"Old sires will {generator.DisplayBold("NOT")} be marked for sale{generator.DisplaySuperScript("*")}{((ModelTyped.MaximumSiresKept == 0) ? $" as maximum sires kept is {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)}" : "")}";
+                            output = $"Old sires will {generator.DisplayBold("NOT")} be marked for sale{generator.DisplaySuperScript("*")}{((ModelTyped.MaximumSiresKept == 0) ? $" as maximum sires kept is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumSiresKept)}" : "")}";
                             notBeingMarked.Add("Sell old male breeders");
                         }
                         generator.AddBlockWithText( output);
@@ -190,10 +190,10 @@ namespace Models.CLEM.DescriptiveSummary
 
                     if (ModelTyped.PerformMaleDestocking)
                     {
-                        output = $"Purchased sires will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameSires, nullGeneralYards: true)} ";
+                        output = $"Purchased sires will be placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameSires, nullGeneralYards: true)} ";
                         if (ModelTyped.MinimumPastureBeforeRestock > 0)
                         {
-                            output += $" with no restocking while pasture is below {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
+                            output += $" with no restocking while pasture is below {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumPastureBeforeRestock)} kg/ha";
                         }
                         generator.AddBlockWithText(output);
                     }
@@ -227,7 +227,7 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         if (ModelTyped.MaleSellingAge.InDays + ((int)ModelTyped.MaleSellingWeight) > 0)
                         {
-                            generator.AddBlockWithText($"Grow out males will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingWeight)} kg");
+                            generator.AddBlockWithText($"Grow out males will be sold when {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingAge.InDays)} days old or {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaleSellingWeight)} kg");
                         }
                         else
                         {
@@ -236,7 +236,7 @@ namespace Models.CLEM.DescriptiveSummary
                         }
                     }
 
-                    generator.AddBlockWithText($"Grow-out males will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutMales, nullGeneralYards: true)}");
+                    generator.AddBlockWithText($"Grow-out males will be placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutMales, nullGeneralYards: true)}");
 
                 }
                 else
@@ -257,7 +257,7 @@ namespace Models.CLEM.DescriptiveSummary
                     {
                         if (ModelTyped.FemaleSellingAge.InDays + ModelTyped.FemaleSellingWeight > 0)
                         {
-                            generator.AddBlockWithText($"Grow out females will be sold when {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingAge.InDays)} days old or {generator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingWeight)} kg");
+                            generator.AddBlockWithText($"Grow out females will be sold when {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingAge.InDays)} days old or {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FemaleSellingWeight)} kg");
                         }
                         else
                         {
@@ -266,11 +266,11 @@ namespace Models.CLEM.DescriptiveSummary
                         }
                     }
 
-                    generator.AddBlockWithText($"Grow-out females will be placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)}");
+                    generator.AddBlockWithText($"Grow-out females will be placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)}");
 
                     if (!cmate && ModelTyped.GrazeFoodStoreNameGrowOutFemales != "" & !ModelTyped.CastrateMales && ModelTyped.GrazeFoodStoreNameGrowOutFemales == ModelTyped.GrazeFoodStoreNameGrowOutMales)
                     {
-                        generator.AddBlockWithText($"Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)} if using natural mating.", "infoBanner warning");
+                        generator.AddBlockWithText($"Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GrazeFoodStoreNameGrowOutFemales, nullGeneralYards: true)} if using natural mating.", "infoBanner warning");
                     }
                 }
                 else
@@ -303,7 +303,7 @@ namespace Models.CLEM.DescriptiveSummary
                 output = "";
                 foreach (var item in notBeingMarked)
                 {
-                    output += generator.DisplaySummaryValueSnippet(item, spanClass: "entryValue floatLeft warningValue" ); // "highlightdiv");
+                    output += DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(item, spanClass: "entryValue floatLeft warningValue" ); // "highlightdiv");
                 }
                 generator.AddBlockWithText($"* This activity is not performing all mark for sale tasks. The following tasks can be enabled or handled elsewhere: {output}", "clearfix infoBanner warning");
             }

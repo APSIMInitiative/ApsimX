@@ -33,7 +33,7 @@ public class PastureActivityManageSummary : DescriptiveSummaryProviderBase<Pastu
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
+        htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
         htmlWriter.Write(" occupies ");
         Land parentLand = null;
         if (ModelTyped.LandTypeNameToUse != null && ModelTyped.LandTypeNameToUse != "")
@@ -47,8 +47,8 @@ public class PastureActivityManageSummary : DescriptiveSummaryProviderBase<Pastu
         }
         else
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorNotSet: true)} {generator.DisplaySummaryValueSnippet((parentLand?.UnitsOfArea), errorString: "Unknown parent units", errorNotSet: true)} of ");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorNotSet: true)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet((parentLand?.UnitsOfArea), errorString: "Unknown parent units", errorNotSet: true)} of ");
         }
-        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
+        htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
     }
 }

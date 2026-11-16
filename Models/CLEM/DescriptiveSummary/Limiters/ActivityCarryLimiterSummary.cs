@@ -19,11 +19,11 @@ public class ActivityCarryLimiterSummary : TimerSummaryBase<ActivityCarryLimiter
         string limit = $"Limit cut and carry activities to ";
         if (ModelTyped.WeightLimitPerDay is not null && ModelTyped.WeightLimitPerDay.Length >= 1)
         {
-            limit += generator.DisplaySummaryValueSnippet(ModelTyped.WeightLimitPerDay);
+            limit += DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.WeightLimitPerDay);
         }
         else
         {
-            limit += generator.DisplayErrorSnippet("Not Set");
+            limit += DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Set");
         }
         generator.OpenBlock("entryValue filterItem", limit+ " dry kg/day");
     }

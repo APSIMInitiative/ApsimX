@@ -26,22 +26,22 @@ namespace Models.CLEM.DescriptiveSummary
 
             if (m.FileName == null || m.FileName == "")
             {
-                generator.AddBlockWithText($"Using {generator.DisplayErrorSnippet("Filename not set")}", "entryHolder");
+                generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplayErrorSnippet("Filename not set")}", "entryHolder");
                 return;
             }
             if (!m.FileExists)
             {
-                generator.AddBlockWithText($"File reader {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}", "entryHolder");
+                generator.AddBlockWithText($"File reader {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Found")}", "entryHolder");
                 return;
             }
 
-            generator.AddBlockWithText($"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}", "entryHolder");
+            generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}", "entryHolder");
 
             using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columns"))
             {
                 if (m.FileName != null && m.FileName.Contains(".xls"))
                 {
-                    generator.AddBlockWithText($"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}", "entryHolder");
+                    generator.AddBlockWithText($"Using worksheet {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}", "entryHolder");
                 }
 
                 using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columnlinks"))

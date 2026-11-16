@@ -60,7 +60,7 @@ namespace Models.CLEM.Timers
         [Required]
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
-        private object[] GetOperators() =>
+        private static object[] GetOperators() =>
         [
             ExpressionType.Equal,
             ExpressionType.NotEqual,
@@ -81,7 +81,7 @@ namespace Models.CLEM.Timers
         /// </summary>
         public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals;
 
-        private IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
+        private static IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
 
         /// <summary>
         /// Notify CLEM that this activity was performed.

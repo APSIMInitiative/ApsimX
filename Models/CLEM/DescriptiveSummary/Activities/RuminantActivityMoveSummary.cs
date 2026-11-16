@@ -16,7 +16,7 @@ namespace Models.CLEM.DescriptiveSummary
 
             string sucklings = (model.MoveSucklings)?"":", moving sucklings with mothers";
 
-            generator.AddBlockWithText($"Move individuals to {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, "Not specified - general yards", HTMLSummaryStyle.Resource)}{sucklings}.");
+            generator.AddBlockWithText($"Move individuals to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ManagedPastureName, "Not specified - general yards", HTMLSummaryStyle.Resource)}{sucklings}.");
 
             string timing = "";
             switch (ModelTyped.TimeStepTiming)

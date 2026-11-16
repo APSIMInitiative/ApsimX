@@ -16,7 +16,7 @@ namespace Models.CLEM.DescriptiveSummary
 
             generator.AddBlockWithText($"Ruminant growth approach: Original CLEM growth as used in IAT and NABSA models");
 
-            generator.AddBlockWithText($"A gross energy content of {generator.DisplaySummaryValueSnippet(model.EnergyGross, errorNotSet: true)} MJ/kg dry matter is used for all feed.");
+            generator.AddBlockWithText($"A gross energy content of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.EnergyGross, errorNotSet: true)} MJ/kg dry matter is used for all feed.");
         }
     }
 }

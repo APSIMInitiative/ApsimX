@@ -107,7 +107,7 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        private string PastureHerdIdenifier(string modelName, bool multiPasture, bool multiHerd, string propertyName)
+        private static string PastureHerdIdenifier(string modelName, bool multiPasture, bool multiHerd, string propertyName)
         {
             var nameParts = modelName.Split('_').Select(a => a.Replace(" ", "")).Skip(1).ToList();
             if (!multiPasture)

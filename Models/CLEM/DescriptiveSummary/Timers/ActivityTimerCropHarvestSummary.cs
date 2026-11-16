@@ -44,9 +44,9 @@ public class ActivityTimerCropHarvestSummary : TimerSummaryBase<ActivityTimerCro
     {
         if (startorstop.Equals("start", StringComparison.OrdinalIgnoreCase))
         {
-            return $"{generator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStart))} {generator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStart), "month")}";
+            return $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStart))} {DescriptiveSummaryGenerator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStart), "month")}";
         }
-        return $"{generator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStop))} {generator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStop), "month")}";
+        return $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Math.Abs(ModelTyped.OffsetMonthHarvestStop))} {DescriptiveSummaryGenerator.DisplayPlural(Math.Abs(ModelTyped.OffsetMonthHarvestStop), "month")}";
     }
 
 }

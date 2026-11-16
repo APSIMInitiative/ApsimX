@@ -11,7 +11,7 @@ namespace Models.CLEM.DescriptiveSummary
         public override void BuildSummary()
         {
             // Minimal safe summary using key properties
-            Generator.AddBlockWithText($"Links to existing timer {generator.DisplaySummaryValueSnippet(ModelTyped.ExistingTimerName, errorString: "No timer selected", errorNotSet: true)}", "entryValue filterItem");
+            Generator.AddBlockWithText($"Links to existing timer {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ExistingTimerName, errorString: "No timer selected", errorNotSet: true)}", "entryValue filterItem");
         }
     }
 }

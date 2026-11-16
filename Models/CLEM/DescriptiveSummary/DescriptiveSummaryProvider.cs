@@ -88,7 +88,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
     public virtual void BuildSummary()
     {
         if (Model is ResourceBaseWithTransactions)
-            generator.AddBlockWithText($"No details for {generator.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
+            generator.AddBlockWithText($"No details for {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(Model.GetType().Name)}.");
         else
             generator.AddBlockWithText($"No details for {Model.GetType().Name}.");
     }
@@ -126,7 +126,7 @@ public abstract class DescriptiveSummaryProvider : IDescriptiveSummaryProvider
             string units = (cm as IResourceType).Units;
             if (units != "NA")
             {
-                generator.AddBlockWithText($"This resource is measured in {generator.DisplaySummaryValueSnippet(units, errorNotSet: true)}", "entryHolder");
+                generator.AddBlockWithText($"This resource is measured in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(units, errorNotSet: true)}", "entryHolder");
             }
 
         }

@@ -13,8 +13,8 @@ public class SortByPropertySummary : FilterSummaryBase<SortByProperty>
     {
         using StringWriter sortWriter = new StringWriter();
         sortWriter.Write($"Sort: ");
-        sortWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
-        sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.SortDirection.ToString().ToLower())}");
+        sortWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter)}");
+        sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.SortDirection.ToString().ToLower())}");
         return sortWriter.ToString();
     }
 }

@@ -56,14 +56,14 @@ public class LabourAvailabilityGroupMonthlySummary : GroupSummaryBase<LabourAvai
         string[] monthNames = [.. DateTimeFormatInfo.CurrentInfo.MonthNames.Select(a => a[..3])];
         for (int month = 0; month < 12; month++)
         {
-            values += $"{monthNames[month]}:{generator.DisplaySummaryValueSnippet(ModelTyped.MonthlyValues[month], warnZero: true)}";
+            values += $"{monthNames[month]}:{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MonthlyValues[month], warnZero: true)}";
             if (month < 11)
                 values += ", ";
         }
 
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(values), tag: "td", classString: "");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(values), tag: "td", classString: "");
             generator.CloseMostRecentBlock("labourAvailabilityItem_row");
         }
     }

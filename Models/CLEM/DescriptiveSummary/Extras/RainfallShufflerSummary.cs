@@ -26,11 +26,11 @@ public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallSh
         string start;
         if (ModelTyped.StartSeasonMonth == MonthsOfYear.NotSet)
         {
-            start = generator.DisplayErrorSnippet("Not Set");
+            start = DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Set");
         }
         else
         {
-            start = $"{generator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
+            start = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
         }
         generator.AddBlockWithText($"The rainfall year starts in {start}");
         if (ModelTyped.DoNotShuffleIteration != -1)

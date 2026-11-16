@@ -25,11 +25,11 @@ public class SpecifyPreviousConceptionSummary : DescriptiveSummaryProviderBase<S
 
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText($"These individuals will be {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant", "resourcebanneralone");
+            generator.AddBlockWithText($"These individuals will be {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant", "resourcebanneralone");
         }
         else
         {
-            generator.AddBlockWithText($"Set last conception age to make these females {generator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
+            generator.AddBlockWithText($"Set last conception age to make these females {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet<int>(model.NumberDaysPregnant, warnZero: true)} days pregnant");
         }
     }
 }

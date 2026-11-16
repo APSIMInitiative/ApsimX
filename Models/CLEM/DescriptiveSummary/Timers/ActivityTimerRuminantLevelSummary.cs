@@ -38,7 +38,7 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
         htmlWriter.Write("Perform when ");
         if (ModelTyped.TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
         }
         else
         {
@@ -58,10 +58,10 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
                     stl = "maximum";
                     break;
             }
-            htmlWriter.Write($"the {generator.DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {generator.DisplaySummaryValueSnippet(ModelTyped.RuminantProperty,"Not set", HTMLSummaryStyle.Default)}");
+            htmlWriter.Write($"the {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.RuminantProperty,"Not set", HTMLSummaryStyle.Default)}");
         }
-        htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
-        htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Not set", HTMLSummaryStyle.Default)}");
+        htmlWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
+        htmlWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Not set", HTMLSummaryStyle.Default)}");
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 

@@ -28,11 +28,11 @@ public class TakeFromFilteredSummary : FilterSummaryBase<TakeFromFiltered>
         bool isInvalid = (ModelTyped.Value < 0 || (isIndividuals & ModelTyped.Value > 1));
         if (isInvalid)
         {   
-            output += generator.DisplayErrorSnippet("Invalid");
+            output += DescriptiveSummaryGenerator.DisplayErrorSnippet("Invalid");
         }
         else
         {
-            output = generator.DisplaySummaryValueSnippet(!isIndividuals ? ModelTyped.Value.ToString("P0") : $"{Convert.ToInt32(ModelTyped.Value)}");
+            output = DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(!isIndividuals ? ModelTyped.Value.ToString("P0") : $"{Convert.ToInt32(ModelTyped.Value)}");
         }
         return output;
 

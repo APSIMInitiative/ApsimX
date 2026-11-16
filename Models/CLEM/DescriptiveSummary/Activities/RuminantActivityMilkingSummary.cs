@@ -14,7 +14,7 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Milk will be placed in {generator.DisplaySummaryValueSnippet(model.ResourceTypeName, "Store not set", HTMLSummaryStyle.Resource)}.");
+            generator.AddBlockWithText($"Milk will be placed in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ResourceTypeName, "Store not set", HTMLSummaryStyle.Resource)}.");
         }
     }
 }

@@ -178,7 +178,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         /// <param name="dt">Data as DataTable</param>
         /// <returns>Transposed DataTable</returns>
-        private DataTable Transpose(DataTable dt)
+        private static DataTable Transpose(DataTable dt)
         {
             DataTable dtNew = new DataTable();
 

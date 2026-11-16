@@ -13,7 +13,7 @@ namespace Models.CLEM.DescriptiveSummary
         ///<inheritdoc/>
         public override List<ChildComponentGroup> GetChildrenInSummary()
         {
-            string intro = $"{generator.DisplaySummaryValueSnippet(ModelTyped.ApplicationStyle)} the tag {((ModelTyped.ApplicationStyle == TagApplicationStyle.Add) ? "to" : "from")} all individuals in the following groups";
+            string intro = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ApplicationStyle)} the tag {((ModelTyped.ApplicationStyle == TagApplicationStyle.Add) ? "to" : "from")} all individuals in the following groups";
 
             return
             [
@@ -31,11 +31,11 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            string tag = $"The tag {generator.DisplaySummaryValueSnippet(ModelTyped.TagLabel, "Tag not set")}";
+            string tag = $"The tag {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TagLabel, "Tag not set")}";
 
             if (ModelTyped.ApplicationStyle == TagApplicationStyle.Add && ModelTyped.TagCategory != RuminantAttributeCategoryTypes.None)
             {
-                tag += $", is of category {generator.DisplaySummaryValueSnippet(ModelTyped.TagCategory)}";
+                tag += $", is of category {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TagCategory)}";
             }
             generator.AddBlockWithText($"{tag}");
         }

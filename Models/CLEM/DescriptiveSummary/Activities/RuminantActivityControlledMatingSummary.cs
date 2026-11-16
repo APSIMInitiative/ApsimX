@@ -14,9 +14,9 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Maximum female age for mating is {generator.DisplaySummaryValueSnippet(model.MaximumAgeMating.InDays, errorNotSet: true)} days");
+            generator.AddBlockWithText($"Maximum female age for mating is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.MaximumAgeMating.InDays, errorNotSet: true)} days");
 
-            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(model.JoiningsPerMale, warnZero: true)} joinings per individual male per day (genetics) are allowed");
+            generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.JoiningsPerMale, warnZero: true)} joinings per individual male per day (genetics) are allowed");
         }
     }
 }

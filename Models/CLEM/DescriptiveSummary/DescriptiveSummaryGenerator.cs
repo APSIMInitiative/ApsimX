@@ -495,7 +495,7 @@ public class DescriptiveSummaryGenerator
         }
     }
 
-    private string MakeSafeFileName(string name)
+    private static string MakeSafeFileName(string name)
     {
         if (string.IsNullOrEmpty(name)) return "Unnamed";
         var invalids = Path.GetInvalidFileNameChars();
@@ -550,7 +550,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="singularSuffix">Specify the singular suffix (default is empty string)</param>
     /// <param name="pluralSuffix">Specify the plural suffix (default is 's")</param>
     /// <returns>Returns the singular or plural word based on the specified count</returns>
-    public string DisplayPlural(int count, string word = "", string singularSuffix = "", string pluralSuffix = "s")
+    public static string DisplayPlural(int count, string word = "", string singularSuffix = "", string pluralSuffix = "s")
     {
         return $"{word}{((count == 1) ? singularSuffix : pluralSuffix)}";
     }
@@ -888,7 +888,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="errorString"></param>
     /// <param name="htmlTags"></param>
     /// <returns></returns>
-    public string DisplayErrorSnippet(string errorString = "Error", bool htmlTags = true)
+    public static string DisplayErrorSnippet(string errorString = "Error", bool htmlTags = true)
     {
         string htmlStart = String.Empty;
         string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
@@ -910,7 +910,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="errorNotSet">Format as error if value not set or default</param>
     /// <param name="spanClass">Override the default 'setvalue' class to use.</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "")
+    public static string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "")
     {
         string errorClass = "errorValue";
         switch (entryStyle)
@@ -1068,7 +1068,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="htmlTags">Include html tags</param>
     /// <param name="warnZero">Display warning if value is zero</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
+    public static string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
     {
         string result = string.Empty;
         if (value.Any())
@@ -1094,7 +1094,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="htmlTags">Include html tags</param>
     /// <param name="nullGeneralYards">replace empty with general yards</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
+    public static string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
     {
         string spanClass = "resourceValue";
         string errorClass = "errorValue";

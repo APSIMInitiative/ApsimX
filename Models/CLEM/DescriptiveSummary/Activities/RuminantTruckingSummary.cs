@@ -70,19 +70,19 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText($"It is {generator.DisplaySummaryValueSnippet(ModelTyped.DistanceToMarket)} km to market");
+            generator.AddBlockWithText($"It is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.DistanceToMarket)} km to market");
 
-            generator.AddBlockWithText($"Each load unit (pod/deck) holds {generator.DisplaySummaryValueSnippet(ModelTyped.NumberPerLoadUnit, warnZero: true)} head (of specified individuals)");
+            generator.AddBlockWithText($"Each load unit (pod/deck) holds {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.NumberPerLoadUnit, warnZero: true)} head (of specified individuals)");
 
             string output = "Each truck ";
             if (ModelTyped.MinimumLoadUnitsPerTruck > 0)
             {
-                output = $" requires a minimum of {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsPerTruck, warnZero: true)} load units and ";
+                output = $" requires a minimum of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsPerTruck, warnZero: true)} load units and ";
             }
-            output += $"has a maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted";
+            output += $"has a maximum of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsPerTruck, warnZero: true)} load units permitted";
             if (ModelTyped.MinimumLoadUnitsBeforeTransporting > 0)
             {
-                output += $" and requires at least {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.";
+                output += $" and requires at least {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeTransporting, warnZero: true)} load units before transporting.";
             }
             generator.AddBlockWithText(output);
 
@@ -95,18 +95,18 @@ namespace Models.CLEM.DescriptiveSummary
                 output = $"The trailer holds ";
             }
 
-            output += $"{generator.DisplaySummaryValueSnippet<double>(ModelTyped.LoadUnitsPerTrailer, warnZero: true)} load units";
+            output += $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet<double>(ModelTyped.LoadUnitsPerTrailer, warnZero: true)} load units";
 
             if (ModelTyped.MinimumLoadUnitsBeforeAddTrailer.Max() > 0)
             {
-                output += $" and requires {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer";
+                output += $" and requires {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumLoadUnitsBeforeAddTrailer, warnZero: true)} load units before adding each trailer";
             }
             generator.AddBlockWithText(output);
 
             output = "";
 
-            output += $"Each truck has a Tare Mass (with average fuel) of {generator.DisplaySummaryValueSnippet(ModelTyped.TruckTareMass.ToString("0.##"), warnZero: true)} kg ";
-            output += $"with an Aggregate Trailer Mass {generator.DisplaySummaryValueSnippet<double>(ModelTyped.AggregateTrailerMass, warnZero: true)} (kg)";
+            output += $"Each truck has a Tare Mass (with average fuel) of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TruckTareMass.ToString("0.##"), warnZero: true)} kg ";
+            output += $"with an Aggregate Trailer Mass {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet<double>(ModelTyped.AggregateTrailerMass, warnZero: true)} (kg)";
             if (ModelTyped.AggregateTrailerMass.Length > 1)
             {
                 output += $" from first to last trailer";

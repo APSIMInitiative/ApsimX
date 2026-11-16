@@ -46,7 +46,7 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText($"Each individual is paid {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
+            generator.AddBlockWithText($"Each individual is paid {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} per day");
         }
     }
 
@@ -61,7 +61,7 @@ public class LabourPriceGroupSummary : DescriptiveSummaryProviderBase<LabourPric
         generator.CloseMostRecentBlock("labourPriceGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td", classString: "");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td", classString: "");
             generator.CloseMostRecentBlock("labourPriceGroup_row");
         }
     }

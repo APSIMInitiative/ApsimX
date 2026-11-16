@@ -50,7 +50,7 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText($"{PricingStyleToFullString(model.PurchaseOrSale)} {generator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {generator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
+            generator.AddBlockWithText($"{PricingStyleToFullString(model.PurchaseOrSale)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero:true)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PricingStyle)} ");
         }
     }
 
@@ -59,7 +59,7 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
     /// </summary>
     /// <param name="pricingStyle">pricing style to use</param>
     /// <returns>Description of style</returns>
-    private string PricingStyleToFullString(PurchaseOrSalePricingStyleType pricingStyle)
+    private static string PricingStyleToFullString(PurchaseOrSalePricingStyleType pricingStyle)
     {
         return pricingStyle switch
         {
@@ -81,9 +81,9 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
         generator.CloseMostRecentBlock("animalPriceGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(PricingStyleToFullString(model.PurchaseOrSale)), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero: true), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.PricingStyle), tag: "td");
             generator.CloseMostRecentBlock("animalPriceGroup_row");
         }
     }

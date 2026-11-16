@@ -15,10 +15,10 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Shear selected herd and place wool clip in {generator.DisplaySummaryValueSnippet(model.WoolProductStoreName, "Store Type not set", HTMLSummaryStyle.Resource)}");
+            generator.AddBlockWithText($"Shear selected herd and place wool clip in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.WoolProductStoreName, "Store Type not set", HTMLSummaryStyle.Resource)}");
 
             if (model.ProportionFleeceRemoved < 1.0)
-                generator.AddBlockWithText($"Only {generator.DisplaySummaryValueSnippet(model.ProportionFleeceRemoved)} proportion of the fleece is removed.");
+                generator.AddBlockWithText($"Only {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ProportionFleeceRemoved)} proportion of the fleece is removed.");
         }
     }
 }

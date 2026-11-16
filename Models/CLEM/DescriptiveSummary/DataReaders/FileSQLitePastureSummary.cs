@@ -26,21 +26,21 @@ namespace Models.CLEM.DescriptiveSummary
 
             if (m.FileName == null || m.FileName == "")
             {
-                generator.AddBlockWithText($"Using {generator.DisplayErrorSnippet("Filename not set")}");
+                generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplayErrorSnippet("Filename not set")}");
                 return;
             }
             if (!m.FileExists)
             {
-                generator.AddBlockWithText($"File reader {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
+                generator.AddBlockWithText($"File reader {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Found")}");
                 return;
             }
 
-            generator.AddBlockWithText($"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
+            generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
 
 
             using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columns"))
             {
-                generator.AddBlockWithText($"Using table {generator.DisplaySummaryValueSnippet(m.TableName, "TABLE NOT SET", HTMLSummaryStyle.FileReader)}");
+                generator.AddBlockWithText($"Using table {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.TableName, "TABLE NOT SET", HTMLSummaryStyle.FileReader)}");
 
                 using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columnlinks"))
                 {
@@ -76,10 +76,10 @@ namespace Models.CLEM.DescriptiveSummary
         {
             if (allowNotNeeded == false && string.IsNullOrWhiteSpace(linkvalue))
             {
-                generator.AddBlockWithText($"No {generator.DisplaySummaryValueSnippet(columnName, entryStyle: HTMLSummaryStyle.FileReader)} data will be collected form the database");
+                generator.AddBlockWithText($"No {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(columnName, entryStyle: HTMLSummaryStyle.FileReader)} data will be collected form the database");
                 return;
             }
-            generator.AddBlockWithText( $"Column name for {generator.DisplaySummaryValueSnippet(columnName, entryStyle: HTMLSummaryStyle.FileReader)} is {generator.DisplaySummaryValueSnippet(linkvalue ?? (allowNotNeeded ? "NOT NEEDED" : "NOT SET"))}");
+            generator.AddBlockWithText( $"Column name for {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(columnName, entryStyle: HTMLSummaryStyle.FileReader)} is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(linkvalue ?? (allowNotNeeded ? "NOT NEEDED" : "NOT SET"))}");
         }
     }
 }

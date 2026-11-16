@@ -25,9 +25,9 @@ public class ResourceActivityExternalMultiplierSummary : FilterSummaryBase<Resou
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+        htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
         htmlWriter.Write($" x ");
-        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.Multiplier, "Not set", HTMLSummaryStyle.Default, errorNotSet: true, warnZero: true));
+        htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Multiplier, "Not set", HTMLSummaryStyle.Default, errorNotSet: true, warnZero: true));
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem floatLeft");
     }
 }

@@ -31,6 +31,6 @@ public class OtherAnimalsActivityFeedSummary : DescriptiveSummaryProviderBase<Ot
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Feed {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
+        generator.AddBlockWithText($"Feed {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
     }
 }

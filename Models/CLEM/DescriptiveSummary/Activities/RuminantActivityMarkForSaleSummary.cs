@@ -14,7 +14,7 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Flag individuals for sale as {generator.DisplaySummaryValueSnippet(model.SaleFlagToUse.ToString(), "SaleFlag not set")}");
+            generator.AddBlockWithText($"Flag individuals for sale as {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.SaleFlagToUse.ToString(), "SaleFlag not set")}");
 
             if (model.OverwriteFlag)
             {

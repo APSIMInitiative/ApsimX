@@ -32,7 +32,7 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Pasture will be assessed in months defined by a Timer and assessed until {generator.DisplaySummaryValueSnippet(model.LastAssessmentMonth, warnZero: true)} to maintain {generator.DisplaySummaryValueSnippet(model.FeedLowLimit, warnZero: true)} kg/ha at the end of the period.");
+            generator.AddBlockWithText($"Pasture will be assessed in months defined by a Timer and assessed until {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.LastAssessmentMonth, warnZero: true)} to maintain {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.FeedLowLimit, warnZero: true)} kg/ha at the end of the period.");
             generator.AddBlockWithText($"This activity evaluates paddock biomass and marks individuals for destocking if required. Companion models may be used to specify sell order and costs.");
         }
     }

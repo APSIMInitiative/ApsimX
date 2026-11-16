@@ -20,7 +20,7 @@ internal class RandomNumberGeneratorSummary : DescriptiveSummaryProviderBase<Ran
         }
         else
         {
-            output += $"each run identical by using the seed {generator.DisplaySummaryValueSnippet(ModelTyped.Seed)}";
+            output += $"each run identical by using the seed {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Seed)}";
         }
         generator.AddBlockWithText(output);
     }

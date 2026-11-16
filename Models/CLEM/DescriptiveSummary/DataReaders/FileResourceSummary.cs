@@ -26,22 +26,22 @@ namespace Models.CLEM.DescriptiveSummary
 
             if (m.FileName == null || m.FileName == "")
             {
-                generator.AddBlockWithText($"Using {generator.DisplayErrorSnippet("Filename not set")}");
+                generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplayErrorSnippet("Filename not set")}");
                 return;
             }
             if (!m.FileExists)
             {
-                generator.AddBlockWithText($"File {generator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {generator.DisplayErrorSnippet("Not Found")}");
+                generator.AddBlockWithText($"File {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FullFileName, entryStyle: HTMLSummaryStyle.FileReader)} {DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Found")}");
                 return;
             }
 
-            generator.AddBlockWithText($"Using {generator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
+            generator.AddBlockWithText($"Using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.FileName, "Filename not set", HTMLSummaryStyle.FileReader)}");
 
             using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columns"))
             {
                 if (m.FileName != null && m.FileName.Contains(".xls"))
                 {
-                    generator.AddBlockWithText($"Using worksheet {generator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
+                    generator.AddBlockWithText($"Using worksheet {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(m.ExcelWorkSheetName, "Not Set", errorNotSet: true, entryStyle: HTMLSummaryStyle.FileReader)}");
                 }
 
                 using (generator.OpenBlock("entryHolder indent", id: $"{ModelTyped.Name}_columnlinks"))

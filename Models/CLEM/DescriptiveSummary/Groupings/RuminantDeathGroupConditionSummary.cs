@@ -43,9 +43,9 @@ public class RuminantDeathGroupConditionSummary : GroupSummaryBase<RuminantDeath
             default:
                 break;
         }
-        htmlWriter.Write($"Specified individuals with a {generator.DisplaySummaryValueSnippet(style, errorNotSet: true)}");
-        htmlWriter.Write($" less than {generator.DisplaySummaryValueSnippet(ModelTyped.CutOff, warnZero: true)}");
-        htmlWriter.Write($" have a probability of death of {generator.DisplaySummaryValueSnippet(ModelTyped.ProbabilityOfDying, warnZero: true)} for the time step.");
+        htmlWriter.Write($"Specified individuals with a {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(style, errorNotSet: true)}");
+        htmlWriter.Write($" less than {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.CutOff, warnZero: true)}");
+        htmlWriter.Write($" have a probability of death of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ProbabilityOfDying, warnZero: true)} for the time step.");
         generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

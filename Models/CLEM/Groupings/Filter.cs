@@ -45,7 +45,7 @@ namespace Models.CLEM.Groupings
         /// Method to return available operators
         /// </summary>
         /// <returns></returns>
-        protected object[] GetOperators() =>
+        protected static object[] GetOperators() =>
         [
             ExpressionType.Equal,
             ExpressionType.NotEqual,

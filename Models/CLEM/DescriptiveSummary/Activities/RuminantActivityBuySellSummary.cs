@@ -21,9 +21,9 @@ namespace Models.CLEM.DescriptiveSummary
                 if (string.IsNullOrWhiteSpace(styleLower))
                     generator.AddBlockWithText("This activity has no style set.", "infoBanner warning");
                 else if (styleLower.Contains("sale"))
-                    generator.AddBlockWithText($"Arrange all {generator.DisplaySummaryValueSnippet("Sales")}{generator.DisplayLineBreak()}This activity performs sales of individuals flagged for sale.");
+                    generator.AddBlockWithText($"Arrange all {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Sales")}{generator.DisplayLineBreak()}This activity performs sales of individuals flagged for sale.");
                 else if (styleLower.Contains("purchase"))
-                    generator.AddBlockWithText($"Arrange all {generator.DisplaySummaryValueSnippet("Purchases")}{generator.DisplayLineBreak()}This activity purchases individuals requested by all activities.");
+                    generator.AddBlockWithText($"Arrange all {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Purchases")}{generator.DisplayLineBreak()}This activity purchases individuals requested by all activities.");
             }
         }
     }

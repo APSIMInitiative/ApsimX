@@ -83,7 +83,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Populates the time filter
         /// </summary>
-        public string[] GetTimes() => ["Day", "Month", "Year"];
+        public static string[] GetTimes() => ["Day", "Month", "Year"];
 
         /// <summary>
         /// Tracks the active selection in the time box
@@ -101,7 +101,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Populates the aggregate filter
         /// </summary>
-        public string[] GetAggregators() => ["SUM", "AVG", "MAX", "MIN", "COUNT"];
+        public static string[] GetAggregators() => ["SUM", "AVG", "MAX", "MIN", "COUNT"];
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -138,7 +138,7 @@ namespace Models.CLEM.Reporting
         /// <see langword="true"/> if the column contains data values,
         /// <see langword="false"/> otherwise
         /// </returns>
-        private bool HasDataValues(DataColumn col)
+        private static bool HasDataValues(DataColumn col)
         {
             // Assume no value types are represented in string form
             if (col.DataType.Name == "String")

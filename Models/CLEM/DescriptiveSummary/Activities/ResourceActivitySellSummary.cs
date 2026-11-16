@@ -46,10 +46,10 @@ public class ResourceActivitySellSummary : DescriptiveSummaryProviderBase<Resour
         string account = "";
         if (ModelTyped.AccountName != "No finance required")
         {
-            account = $" with sales placed in {generator.DisplaySummaryValueSnippet(ModelTyped.AccountName, "Account not set", HTMLSummaryStyle.Resource)}";
+            account = $" with sales placed in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AccountName, "Account not set", HTMLSummaryStyle.Resource)}";
         }
 
-        generator.AddBlockWithText($"Sell {saleAmount}{salestyle} {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)}{account}");
+        generator.AddBlockWithText($"Sell {saleAmount}{salestyle} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)}{account}");
     }
 
 }

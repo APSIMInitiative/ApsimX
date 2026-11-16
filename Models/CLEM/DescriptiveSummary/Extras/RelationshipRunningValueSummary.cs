@@ -18,15 +18,15 @@ public class RelationshipRunningValueSummary : DescriptiveSummaryProviderBase<Re
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write($"A running value starting at {generator.DisplaySummaryValueSnippet(ModelTyped.StartingValue)}");
-        htmlWriter.Write($" and ranging between {generator.DisplaySummaryValueSnippet(ModelTyped.Minimum)} and ");
+        htmlWriter.Write($"A running value starting at {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartingValue)}");
+        htmlWriter.Write($" and ranging between {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Minimum)} and ");
         if (MathUtilities.IsLessThanOrEqual(ModelTyped.Maximum, ModelTyped.Minimum))
         {
-            htmlWriter.Write(generator.DisplayErrorSnippet("Invalid"));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplayErrorSnippet("Invalid"));
         }
         else
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Maximum)}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Maximum)}");
         }
         generator.AddBlockWithText(htmlWriter.ToString());
     }

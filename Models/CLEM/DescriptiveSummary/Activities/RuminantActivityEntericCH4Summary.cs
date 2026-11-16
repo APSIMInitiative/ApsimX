@@ -19,8 +19,8 @@ namespace Models.CLEM.DescriptiveSummary
         /// <inheritdoc/>
         public override void BuildSummary()
         {
-            generator.AddBlockWithText($"Produces enteric methane emissions using {generator.DisplaySummaryValueSnippet(ModelTyped.EquationToUse, errorNotSet: true, errorString: "Equation not specified")}");
-            generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {generator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
+            generator.AddBlockWithText($"Produces enteric methane emissions using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.EquationToUse, errorNotSet: true, errorString: "Equation not specified")}");
+            generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
         }
     }
 }

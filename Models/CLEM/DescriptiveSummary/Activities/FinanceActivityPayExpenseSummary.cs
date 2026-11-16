@@ -13,6 +13,6 @@ public class FinanceActivityPayExpenseSummary : DescriptiveSummaryProviderBase<F
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Pay {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} from {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}");
+        generator.AddBlockWithText($"Pay {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} from {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}");
     }
 }

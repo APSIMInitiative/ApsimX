@@ -51,7 +51,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             string readers = "";
             foreach (var reader in fileReaders)
             {
-                readers += $" {generator.DisplaySummaryValueSnippet(reader.Name, entryStyle: HTMLSummaryStyle.FileReader)}";
+                readers += $" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(reader.Name, entryStyle: HTMLSummaryStyle.FileReader)}";
             }
 
             string text = $"Ruminant cohort file readers ({readers.Trim()}) will be used to provide initial cohorts";
@@ -65,7 +65,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             bool overridePasture = model.Structure.FindChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
 
             string prefix = overridePasture ? "New " : "All new ";
-            string pastureText = $"{prefix}individuals will be placed on the pasture {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, entryStyle: HTMLSummaryStyle.Resource)}";
+            string pastureText = $"{prefix}individuals will be placed on the pasture {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ManagedPastureName, entryStyle: HTMLSummaryStyle.Resource)}";
             if (overridePasture)
                 pastureText += " unless overridden by the cohort pasture setting";
             Generator.AddBlockWithText(pastureText + ".");

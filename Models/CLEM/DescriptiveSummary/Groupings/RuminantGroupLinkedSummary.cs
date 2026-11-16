@@ -33,7 +33,7 @@ public class RuminantGroupLinkedSummary : GroupSummaryBase<RuminantGroupLinked>
         ChildComponentGroup childC = new ChildComponentGroup()
         {
             Id = "linked",
-            Missing = $"Linked RuminantGroup {generator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",
+            Missing = $"Linked RuminantGroup {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",
             SelectedModels = [],
             Introduction = "Linked to:"
         };

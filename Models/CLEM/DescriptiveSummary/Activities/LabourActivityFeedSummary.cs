@@ -29,6 +29,6 @@ public class LabourActivityFeedSummary : DescriptiveSummaryProviderBase<LabourAc
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Feed people {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.FeedTypeName, "Not set")}");
+        generator.AddBlockWithText($"Feed people {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.FeedTypeName, "Not set")}");
     }
 }

@@ -15,9 +15,9 @@ public class GreenhouseGasesTypeSummary : DescriptiveSummaryProviderBase<Greenho
 
         if (model.AutoCollectType != GreenhouseGasTypes.None)
         {
-            Generator.AddBlockWithText($"This store will automatically receive {generator.DisplaySummaryValueSnippet(model.AutoCollectType)} from activities");
+            Generator.AddBlockWithText($"This store will automatically receive {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AutoCollectType)} from activities");
         }
 
-        Generator.AddBlockWithText($"There is a starting amount of {generator.DisplaySummaryValueSnippet(model.StartingAmount)}");
+        Generator.AddBlockWithText($"There is a starting amount of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StartingAmount)}");
     }
 }

@@ -49,17 +49,17 @@ public class TransmuteRuminantSummary : DescriptiveSummaryProviderBase<Transmute
                 default:
                     break;
             }
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket, errorNotSet: true)} {directexchangeStyleText} ");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket, errorNotSet: true)} {directexchangeStyleText} ");
         }
 
         RuminantHerd ruminants = ModelTyped.Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
         if (ruminants is null)
         {
-            htmlWriter.Write($"{generator.DisplayErrorSnippet("Herd not found")}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplayErrorSnippet("Herd not found")}");
         }
         else
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ruminants.Name, entryStyle: HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ruminants.Name, entryStyle: HTMLSummaryStyle.Resource)}");
         }
 
         htmlWriter.Write($" (B) are taken from the following groups to supply shortfall resource (A) ");
@@ -69,7 +69,7 @@ public class TransmuteRuminantSummary : DescriptiveSummaryProviderBase<Transmute
             htmlWriter.Write($" using the herd pricing details");
             if (ModelTyped.FinanceTypeForTransactionsName != null && ModelTyped.FinanceTypeForTransactionsName != "")
             {
-                htmlWriter.Write($" with all financial Transactions of sales and purchases using {generator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
+                htmlWriter.Write($" with all financial Transactions of sales and purchases using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
             }
         }
         generator.AddBlockWithText(htmlWriter.ToString());

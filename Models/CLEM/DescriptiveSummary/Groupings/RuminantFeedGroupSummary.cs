@@ -56,7 +56,7 @@ public class RuminantFeedGroupSummary : GroupSummaryBase<RuminantFeedGroup>
         {
             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)} kg");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)} kg");
                 break;
             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
             case RuminantFeedActivityTypes.ProportionOfWeight:
@@ -64,7 +64,7 @@ public class RuminantFeedGroupSummary : GroupSummaryBase<RuminantFeedGroup>
             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                 if (ModelTyped.Value < 1)
                 {
-                    htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
+                    htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
                     starter = " of ";
                 }
                 else
@@ -105,7 +105,7 @@ public class RuminantFeedGroupSummary : GroupSummaryBase<RuminantFeedGroup>
             default:
                 break;
         }
-        htmlWriter.Write($"{starter} {generator.DisplaySummaryValueSnippet(feedstyle)} ");
+        htmlWriter.Write($"{starter} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(feedstyle)} ");
 
         string forceFedString = "fed";
         if (feedActivity.ForceFeed && feedActivity.ForceIntakeAllowed())

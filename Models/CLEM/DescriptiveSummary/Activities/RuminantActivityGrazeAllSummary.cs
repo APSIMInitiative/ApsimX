@@ -14,7 +14,7 @@ namespace Models.CLEM.DescriptiveSummary
             var model = ModelTyped;
             if (model is null) return;
 
-            generator.AddBlockWithText($"Grazes all herds and pastures for {generator.DisplaySummaryValueSnippet(model.HoursGrazed, warnZero: true)} hours of the maximum 8 hours per day.");
+            generator.AddBlockWithText($"Grazes all herds and pastures for {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.HoursGrazed, warnZero: true)} hours of the maximum 8 hours per day.");
 
             generator.AddBlockWithText("This activity creates grazing sub-activities for each pasture/breed combination present in the simulation.", "componentBanner other");
         }

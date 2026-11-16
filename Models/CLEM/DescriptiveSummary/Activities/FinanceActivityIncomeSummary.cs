@@ -13,6 +13,6 @@ public class FinanceActivityIncomeSummary : DescriptiveSummaryProviderBase<Finan
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Earn {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} paid into {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}");
+        generator.AddBlockWithText($"Earn {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} paid into {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.AccountName)}");
     }
 }

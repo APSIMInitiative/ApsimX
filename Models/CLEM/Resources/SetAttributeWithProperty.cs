@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
         [NonSerialized]
         private readonly PropertyInfo propertyInfo;
 
-        private IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
+        private static IEnumerable<string> GetParameters() => (new RuminantGroup()).GetParameterNames().OrderBy(k => k);
 
         /// <summary>
         /// Store of last instance of the individual attribute defined

@@ -13,9 +13,9 @@ public class SortByAttributeSummary : FilterSummaryBase<SortByAttribute>
     {
         using StringWriter sortWriter = new StringWriter();
         sortWriter.Write($"Sort: Attribute-");
-        sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.AttributeTag, "Not set", HTMLSummaryStyle.Filter)}");
-        sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.FilterStyle.ToString().ToLower())}");
-        sortWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.SortDirection.ToString().ToLower())}");
+        sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AttributeTag, "Not set", HTMLSummaryStyle.Filter)}");
+        sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FilterStyle.ToString().ToLower())}");
+        sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.SortDirection.ToString().ToLower())}");
         return sortWriter.ToString();
     }
 }

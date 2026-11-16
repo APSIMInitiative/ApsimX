@@ -33,7 +33,7 @@ public class LabourGroupLinkedSummary : GroupSummaryBase<LabourGroupLinked>
         ChildComponentGroup childC = new()
         {
             Id = "linked",
-            Missing = $"Linked LabourGroup {generator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",
+            Missing = $"Linked LabourGroup {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",
             SelectedModels = [],
             Introduction = "Linked to:"
         };
