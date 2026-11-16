@@ -244,10 +244,7 @@ namespace Models.CLEM.Activities
                         }
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-
-                        //conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind);
-                        //DateTime weanerConceptionDate = ind.DateOfBirth.AddDays(-1 * Convert.ToInt32(ind.Mother?.Parameters.General.GestationLength.InDays, System.Globalization.CultureInfo.InvariantCulture));
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind, false, events);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind, events);
 
                         ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
