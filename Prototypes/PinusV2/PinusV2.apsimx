@@ -4210,13 +4210,13 @@
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Units": null,
-                      "Expression": "[DBHEquation].Coefficient * ([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^[DBHEquation].VolumeExponent * max(1.4, [Pinus].Stem.Ht)^[DBHEquation].HeightExponent",
+                      "Expression": "[DBHEquation].Coefficient * ([Pinus].Stem.Vol/(([Pinus].Population+0.0001)*10000))^[DBHEquation].VolumeExponent * max(1.4, [Pinus].Stem.Ht)^[DBHEquation].HeightExponent * ((max(1.4, [Pinus].Stem.Ht)-1.3)/max(1.4, [Pinus].Stem.Ht))^[DBHEquation].TaperExponent",
                       "Name": "DBHEquation",
                       "ResourceName": null,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "DBH from per-tree stem volume v (m3) and height H (m), no Age: DBH = Coefficient x v^VolumeExponent x max(1.4, H)^HeightExponent. Radiata 103.39 v^0.459 H^-0.310 fitted to 15,152 SwYG PSP measurements (2170 plots; quadratic mean DBH, residual SD 4.6%); taeda 49.52 v^0.444 H^-0.057 and slash 74.26 v^0.436 H^-0.216 fitted to validation DBH; caribaea and hybrids 200 x sqrt(v/H) (constant form factor ~0.31; a steeper fitted form inflated FPQ DBH, pushed stands over MaximumSDI and cut volume).",
+                          "Text": "DBH from per-tree stem volume v (m3) and height H (m), no Age: DBH = Coefficient x v^VolumeExponent x max(1.4, H)^HeightExponent x ((max(1.4, H) - 1.3)/max(1.4, H))^TaperExponent. Radiata 104.89 v^0.459 H^-0.31 ((H-1.3)/H)^0.292 fitted to 12,561 SwYG PSP measurements excluding OFO (quadratic mean DBH, residual SD 2.6%) (2026-11-16). The taper term makes DBH fall towards zero as trees approach breast height, as a cone-like stem requires; without it the equation over-predicted DBH of trees under 7 m tall by 7-14% in the PSP data and by 30-45% at Tarpeena and SETRES at age 4-7. OFO plots are excluded because their volumes are basal area x height / 3 scaled by a plot constant (a constant form factor of 0.32), not tree volumes; the earlier fit (103.39 v^0.459 H^-0.310) included them. Taeda 49.52 v^0.444 H^-0.057 and slash 74.26 v^0.436 H^-0.216 fitted to validation DBH; caribaea and hybrids 200 x sqrt(v/H) (constant form factor ~0.31; a steeper fitted form inflated FPQ DBH, pushed stands over MaximumSDI and cut volume); these set TaperExponent = 0.",
                           "Name": "Memo",
                           "ResourceName": null,
                           "Children": [],
@@ -4225,7 +4225,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 103.39,
+                          "FixedValue": 104.89,
                           "Units": null,
                           "Name": "Coefficient",
                           "ResourceName": null,
@@ -4248,6 +4248,16 @@
                           "FixedValue": -0.31,
                           "Units": null,
                           "Name": "HeightExponent",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.292,
+                          "Units": null,
+                          "Name": "TaperExponent",
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
@@ -6321,7 +6331,8 @@
                     "[Pinus].Stem.HeightGrowth.CoverExponent.FixedValue = 0.6517",
                     "[Pinus].Stem.DBH.DBHEquation.Coefficient.FixedValue = 200",
                     "[Pinus].Stem.DBH.DBHEquation.VolumeExponent.FixedValue = 0.5",
-                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.5"
+                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.5",
+                    "[Pinus].Stem.DBH.DBHEquation.TaperExponent.FixedValue = 0"
                   ],
                   "Name": "caribaea",
                   "ResourceName": null,
@@ -6380,7 +6391,8 @@
                     "[Pinus].Stem.HeightGrowth.CoverExponent.FixedValue = 0.6517",
                     "[Pinus].Stem.DBH.DBHEquation.Coefficient.FixedValue = 74.26",
                     "[Pinus].Stem.DBH.DBHEquation.VolumeExponent.FixedValue = 0.436",
-                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.216"
+                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.216",
+                    "[Pinus].Stem.DBH.DBHEquation.TaperExponent.FixedValue = 0"
                   ],
                   "Name": "elliottii",
                   "ResourceName": null,
@@ -6456,7 +6468,8 @@
                     "[Pinus].Stem.HeightGrowth.CoverExponent.FixedValue = 0.6517",
                     "[Pinus].Stem.DBH.DBHEquation.Coefficient.FixedValue = 200",
                     "[Pinus].Stem.DBH.DBHEquation.VolumeExponent.FixedValue = 0.5",
-                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.5"
+                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.5",
+                    "[Pinus].Stem.DBH.DBHEquation.TaperExponent.FixedValue = 0"
                   ],
                   "Name": "hybrid",
                   "ResourceName": null,
@@ -7139,7 +7152,8 @@
                     "[Pinus].Stem.HeightGrowth.CoverExponent.FixedValue = 0.0",
                     "[Pinus].Stem.DBH.DBHEquation.Coefficient.FixedValue = 49.52",
                     "[Pinus].Stem.DBH.DBHEquation.VolumeExponent.FixedValue = 0.444",
-                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.057"
+                    "[Pinus].Stem.DBH.DBHEquation.HeightExponent.FixedValue = -0.057",
+                    "[Pinus].Stem.DBH.DBHEquation.TaperExponent.FixedValue = 0"
                   ],
                   "Name": "taeda",
                   "ResourceName": null,
@@ -7253,12 +7267,16 @@
             "        private IFunction SlendernessLimit;",
             "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.DBH\")]",
             "        private IFunction StemDBH;",
-            "        /// <summary>Height/DBH ratio (m/m) of the mean tree.</summary>",
+            "        [Link(Type = LinkType.Path, Path = \"[Pinus].Stem.DBH.DBHEquation.TaperExponent\")]",
+            "        private IFunction TaperExponent;",
+            "        /// <summary>Height/diameter ratio (m/m) of the mean tree, using DBH without the breast-height taper term, so that",
+            "        /// it measures stem form rather than how close the tree is to 1.3 m tall.</summary>",
             "        public double Slenderness { get; private set; }",
             "        /// <summary>Height growth multiplier: 1 below SlendernessOnset, falling linearly to 0 at SlendernessLimit (H/D, m/m).</summary>",
             "        private double SlendernessFactor()",
             "        {",
-            "            double dbh = StemDBH.Value();",
+            "            double h = Math.Max(1.4, Height);",
+            "            double dbh = StemDBH.Value() / Math.Pow((h - 1.3) / h, TaperExponent.Value());",
             "            Slenderness = dbh > 0 ? Height * 100 / dbh : 0;",
             "            double on = SlendernessOnset.Value(), lim = SlendernessLimit.Value();",
             "            if (Slenderness <= on || lim <= on) return 1;",
