@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Core
 {
     /// <summary>
     /// Contains utility functions for reading xml documentation comments

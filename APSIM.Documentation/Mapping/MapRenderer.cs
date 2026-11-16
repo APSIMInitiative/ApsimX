@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationMap = APSIM.Documentation.Tag.Map;
 
 namespace APSIM.Shared.Mapping
 {
@@ -172,7 +172,7 @@ namespace APSIM.Shared.Mapping
             // It should normally be invisible, as it will be covered by the BruTile tile layer.
 
             string countriesJson;
-            string resourceName = "APSIM.Shared.Resources.countries.json"; // Fully qualified name
+            string resourceName = "APSIM.Documentation.Resources.countries.json"; // Fully qualified name
             var assembly = Assembly.GetExecutingAssembly();
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
