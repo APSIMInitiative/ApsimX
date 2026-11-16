@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Limiters;
+using Models.CLEM.DescriptiveSummary.Timers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Limiters;
 
 /// <summary>
 /// Descriptive summary provider for the Activity Carry Limiter

@@ -1,5 +1,6 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;

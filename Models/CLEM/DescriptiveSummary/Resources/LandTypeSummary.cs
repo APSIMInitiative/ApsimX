@@ -3,7 +3,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for LandType (sub-resource)

@@ -7,6 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using APSIM.Core;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Extras
 {

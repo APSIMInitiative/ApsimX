@@ -1,7 +1,7 @@
 using Models.CLEM.Groupings;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for SortByAttribute

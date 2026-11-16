@@ -4,7 +4,7 @@ using Models.Core;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Core;
 
 /// <summary>
 /// Descriptive summary for CLEM Events component

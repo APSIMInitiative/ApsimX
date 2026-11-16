@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

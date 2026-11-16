@@ -18,7 +18,7 @@ using System.IO;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantTypeCohort

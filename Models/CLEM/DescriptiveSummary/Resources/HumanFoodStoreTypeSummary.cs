@@ -2,7 +2,7 @@ using Models.CLEM.Resources;
 using System;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for HumanFoodStoreType (sub-resource)

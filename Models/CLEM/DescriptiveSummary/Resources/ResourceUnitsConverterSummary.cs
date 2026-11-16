@@ -3,7 +3,7 @@ using Models.CLEM.Resources;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for Resource Units Converter (sub-resource)

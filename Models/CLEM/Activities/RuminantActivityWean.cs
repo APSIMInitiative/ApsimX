@@ -10,6 +10,7 @@ using Models.CLEM.Reporting;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Core;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

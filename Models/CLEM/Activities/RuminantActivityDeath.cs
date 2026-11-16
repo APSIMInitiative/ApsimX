@@ -6,6 +6,7 @@ using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

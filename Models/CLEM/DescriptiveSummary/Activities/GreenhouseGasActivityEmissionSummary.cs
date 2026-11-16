@@ -3,7 +3,7 @@ using Models.CLEM.Activities;
 using System;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Greenhouse Gas Emission Activity

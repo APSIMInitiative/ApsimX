@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using APSIM.Numerics;
 using Models.CLEM.Extras;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {

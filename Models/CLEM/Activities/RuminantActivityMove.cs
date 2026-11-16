@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

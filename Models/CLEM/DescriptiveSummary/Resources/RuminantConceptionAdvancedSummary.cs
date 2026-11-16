@@ -1,7 +1,7 @@
 using Models.CLEM.Resources;
 using System.Text;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantConceptionAdvanced
