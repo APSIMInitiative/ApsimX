@@ -128,7 +128,7 @@ namespace Models.CLEM.Timers
                     if (seqIndex >= seq.Sequence.Length)
                     {
                         // recalculate index
-                        seqIndex = seqIndex - Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
+                        seqIndex -= Convert.ToInt32(Math.Floor(seqIndex / (double)seq.Sequence.Length) * seq.Sequence.Length);
                     }
                     if (sequence.Substring(seqIndex, 1) == "0")
                     {
