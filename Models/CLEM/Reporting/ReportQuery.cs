@@ -42,7 +42,7 @@ namespace Models.CLEM.Reporting
         public string SelectedTab { get; set; }
 
         /// <inheritdoc/>
-        public void Run() => SaveView(dataStore);
+        public void Run() => SaveView();
 
         /// <summary>
         /// Runs the query
@@ -59,7 +59,7 @@ namespace Models.CLEM.Reporting
             return new DataTable();
         }
 
-        private void SaveView(IDataStore store)
+        private void SaveView()
         {
             if (Name.Any(c => c == ' '))
             {

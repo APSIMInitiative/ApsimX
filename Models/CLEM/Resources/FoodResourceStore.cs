@@ -149,6 +149,7 @@ namespace Models.CLEM.Resources
             // Called by graze
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;
+            Name = name;
             double totalInPools = pools.Sum(p => p.AmountAvailable);
             PoolProportions = [.. pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0)];
             foreach (var pool in pools)

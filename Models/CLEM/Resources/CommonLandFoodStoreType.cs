@@ -293,7 +293,7 @@ namespace Models.CLEM.Resources
             // grazing does not access pools by breed but gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket(request.Required)
+            FoodResourcePacket additionalDetails = new(request.Required)
             {
                 NitrogenPercent = this.Nitrogen,
                 DryMatterDigestibility = this.dryMatterDigestibility,
@@ -319,7 +319,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void ApplyDailyIntakeReduction(double fractionReduced)
+        public void ApplyDailyIntakeReduction(double _)
         {
         }
 
