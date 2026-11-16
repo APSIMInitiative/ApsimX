@@ -389,15 +389,15 @@ namespace Models.CLEM.Resources
                     // check that pricing item meets the specified criteria.
                     var items = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
                         .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual).First() == property)
-                        .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
+                        .Where(f => f.Value.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase));
 
                     var suitableFilters = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
                         .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual).First() == property) &
                         (
-                            (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
-                            (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
-                            (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
-                            (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                            (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase)) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && !a.Value.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase)) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase)) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.Equals("FALSE", StringComparison.CurrentCultureIgnoreCase))
                         )
                         ).Any();
 
@@ -413,7 +413,7 @@ namespace Models.CLEM.Resources
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value:#,##0.##}].", MessageType.Warning);
+                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(!value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase) ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value:#,##0.##}].", MessageType.Warning);
                             }
                         }
                     }
@@ -422,7 +422,7 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = $"No [Pay] rate entry was found meeting the required criteria [{property.Name}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}";
+                    string warningString = $"No [Pay] rate entry was found meeting the required criteria [{property.Name}]{(!value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase) ? " = [" + value + "]." : ".")}";
 
                     if (matchIndividual != null)
                     {

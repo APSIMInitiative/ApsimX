@@ -94,7 +94,7 @@ namespace Models.CLEM.Resources
         /// <param name="amount">Amount (dry weight) of manure to add</param>
         public void AddUncollectedManure(string storeName, double amount)
         {
-            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.Equals(storeName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (store == null)
             {
                 store = new ManureStoreUncollected() { Name = storeName };
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
         /// <param name="activity">Name of activity performing collection</param>
         public void Collect(string storeName, double resourceLimiter, CLEMModel activity)
         {
-            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.ToLower() == storeName.ToLower()).FirstOrDefault();
+            ManureStoreUncollected store = UncollectedStores.Where(a => a.Name.Equals(storeName, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
             if (store != null)
             {
                 double limiter = Math.Max(Math.Min(resourceLimiter, 1.0), 0);
