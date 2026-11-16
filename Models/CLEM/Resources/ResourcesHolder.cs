@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
 
             bool searchForAllIresourceType = false;
             bool resGroupNameMatch = true;
-            T resType = default(T);
+            T resType = default;
             ResourceBaseWithTransactions resGroup = null;
             if (!typeof(R).IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
                     default:
                         break;
                 }
-                return default(T);
+                return default;
             }
             else
             {
