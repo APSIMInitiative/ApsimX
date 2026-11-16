@@ -80,7 +80,7 @@ namespace Models.CLEM.Resources
 
             PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
             // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
-            priceGroups = Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
+            priceGroups = [.. Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>()];
 
             Initialise();
         }

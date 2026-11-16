@@ -374,7 +374,7 @@ namespace Models.CLEM.Resources
 
             return devStyle switch
             {
-                "ByDMD" => pools
+                "ByDMD" => [.. pools
                                     .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
                                     .Select(groups => new FoodResourceStore(
                                         [.. groups],
@@ -382,8 +382,8 @@ namespace Models.CLEM.Resources
                                         numberOfTimesteps,
                                         groups.Key.ToString()
                                         )
-                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
-                "BySpecies" => pools
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
+                "BySpecies" => [.. pools
                                     .GroupBy(s => s.Name.Split('.').First())
                                     .Select(groups => new FoodResourceStore(
                                         [.. groups],
@@ -391,8 +391,8 @@ namespace Models.CLEM.Resources
                                         numberOfTimesteps,
                                         groups.Key.ToString()
                                         )
-                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// pools ordered by species and grouped into FoodResourceStore for feeding to animals            
-                "ByForageVSurfaceOM" => pools
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// pools ordered by species and grouped into FoodResourceStore for feeding to animals            
+                "ByForageVSurfaceOM" => [.. pools
                                     .GroupBy(s => s.Name.Contains("Surface") == false)
                                     .Select(groups => new FoodResourceStore(
                                         [.. groups],
@@ -400,7 +400,7 @@ namespace Models.CLEM.Resources
                                         numberOfTimesteps,
                                         (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
                                         )
-                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// all pools combined and excluding surface organic matter
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// all pools combined and excluding surface organic matter
                 _ => [],
             };
 

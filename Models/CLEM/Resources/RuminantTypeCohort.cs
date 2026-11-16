@@ -203,7 +203,7 @@ namespace Models.CLEM.Resources
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange([.. Structure.FindChildren<ISetAttribute>()]);
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, date, ruminantType);
         }

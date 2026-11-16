@@ -97,7 +97,7 @@ namespace Models.CLEM.Reporting
                     variableNames.Add($"[{grz.Name}].PotentialIntakeProportionGreenLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PropDietGreen")}");
             }
 
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
 
             if (EventNames == null || EventNames.Count() == 0)
             {

@@ -200,9 +200,9 @@ namespace Models.CLEM.Reporting
                 }
             }
 
-            variableNames = variableNames.OrderBy(a => a).ToList();
+            variableNames = [.. variableNames.OrderBy(a => a)];
             variableNames.Insert(0, "[Clock].Today as Date");
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
 
             if (EventNames == null || EventNames.Count() == 0)
             {

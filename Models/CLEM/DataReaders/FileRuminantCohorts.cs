@@ -509,7 +509,7 @@ namespace Models.CLEM
                 temp.Insert(0, 0);
             }
 
-            result = temp.ToArray();
+            result = [.. temp];
             return true;
         }
 
@@ -535,7 +535,7 @@ namespace Models.CLEM
                     return false;
                 }
             }
-            result = temp.ToArray();
+            result = [.. temp];
             return true;
         }
 

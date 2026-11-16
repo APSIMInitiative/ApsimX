@@ -190,7 +190,7 @@ namespace Models.CLEM.Activities
                     if (number > 0)
                     {
                         RuminantTypeCohort purchasetype = Structure.FindChild<RuminantTypeCohort>(relativeTo: purchaseSpecific);
-                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype).ToList(), events.TimeStepStart, rumTypeToUse, false);
+                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, [.. Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype)], events.TimeStepStart, rumTypeToUse, false);
 
                         foreach (var ind in purchaseIndividuals)
                         {

@@ -82,10 +82,10 @@ namespace Models.CLEM
             }
 
             // shuffle years
-            yearOffset = yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble()).ToList();
+            yearOffset = [.. yearOffset.OrderBy(a => RandomNumberGenerator.Generator.NextDouble())];
             // create shuffled month/date
-            ShuffledYears = storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset } ).ToList();
-            ShuffledYearsArray = ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1)).ToArray<DateTime>();
+            ShuffledYears = [.. storeYears.Select(a => new ShuffleYear() { Year = a.year, Month = a.month, RandomYear = startYear + yearOffset[a.rndyear] + a.mthoffset })];
+            ShuffledYearsArray = [.. ShuffledYears.Select(a => new DateTime(a.RandomYear, a.Month, 1))];
         }
 
         #region validation

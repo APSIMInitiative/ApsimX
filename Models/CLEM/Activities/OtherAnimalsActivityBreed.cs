@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            IEnumerable<OtherAnimalsTypeCohort> cohorts = SelectedOtherAnimalsType.GetCohorts(null, false).ToList();
+            IEnumerable<OtherAnimalsTypeCohort> cohorts = [.. SelectedOtherAnimalsType.GetCohorts(null, false)];
             maleBreeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
             breeders = 0;
             if (!UseLocalMales | maleBreeders > 0)

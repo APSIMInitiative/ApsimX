@@ -70,7 +70,7 @@ namespace Models.CLEM.Timers
         private List<string> GetAllTimerNames()
         {
             GetAllTimersAvailable();
-            return timersAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
+            return [.. timersAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}")];
         }
 
         /// <inheritdoc/>

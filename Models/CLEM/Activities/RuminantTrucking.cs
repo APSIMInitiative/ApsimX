@@ -213,7 +213,7 @@ namespace Models.CLEM.Activities
             // number provided by the parent for trucking
             parentNumberToDo = parentBuySellActivity.IndividualsToBeTrucked?.Count() ?? 0;
 
-            individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked, Structure).ToList();
+            individualsToBeTrucked = [.. GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked, Structure)];
             numberToDo = individualsToBeTrucked?.Count() ?? 0;
 
             // work out how many can be trucked and return to parent of not trucked for next trucking settings if available.
@@ -387,7 +387,7 @@ namespace Models.CLEM.Activities
 
             if (numberToDo > indCnt)
             {
-                individualsToBeTrucked = individualsToBeTrucked.Take(indCnt).ToList();
+                individualsToBeTrucked = [.. individualsToBeTrucked.Take(indCnt)];
 
                 if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {

@@ -46,7 +46,7 @@ namespace Models.CLEM.Groupings
         private List<string> GetAllLabourGroupNames()
         {
             GetAllLabourGroupsAvailable();
-            return groupsAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
+            return [.. groupsAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}")];
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

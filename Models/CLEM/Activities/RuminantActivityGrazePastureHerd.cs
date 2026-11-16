@@ -291,7 +291,7 @@ namespace Models.CLEM.Activities
         /// <param name="greenAge"></param>
         public double CalculateDailyFeedRequirement(int greenAge)
         {
-            herdToFeed = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).ToList();
+            herdToFeed = [.. GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm)];
             currentHerdSize = herdToFeed.Count;
             if (herdToFeed.Count == 0)
             {

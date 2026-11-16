@@ -70,8 +70,8 @@ namespace Models.CLEM.Activities
             if (!TimingOK) return;
             Status = ActivityStatus.NotNeeded;
 
-            CurrentIndividuals = CurrentHerd().ToList();
-            List<Ruminant> died  = CurrentIndividuals.Where(a => a.Died).ToList();
+            CurrentIndividuals = [.. CurrentHerd()];
+            List<Ruminant> died  = [.. CurrentIndividuals.Where(a => a.Died)];
             CurrentIndividuals.RemoveAll(a => a.Died);
 
             foreach (var group in filterGroups)

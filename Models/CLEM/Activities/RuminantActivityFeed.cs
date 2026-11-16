@@ -280,7 +280,7 @@ namespace Models.CLEM.Activities
                     // calculate feed not needed for removed individuals
                     double previouslyRequired = iChild.CurrentResourceRequest.Required;
 
-                    iChild.CurrentIndividualsToFeed = iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove).ToList();
+                    iChild.CurrentIndividualsToFeed = [.. iChild.CurrentIndividualsToFeed.SkipLast(numberToRemove)];
                     iChild.UpdateCurrentFeedDemand(this);
 
                     // remove from amountToSkip 

@@ -700,7 +700,7 @@ namespace Models.CLEM.Activities
             mortalityRate = breedParameters.FindBaseMortalityRate;
 
             // get list of replacement individuals
-            purchaseDetails = Structure.FindChildren<SpecifyRuminant>().Select((a, index) => new SpecifiedRuminantListItem() { Index = index, ExampleRuminant = a.ExampleIndividual, SpecifyRuminantComponent = a }).Cast<SpecifiedRuminantListItem>().ToList();
+            purchaseDetails = [.. Structure.FindChildren<SpecifyRuminant>().Select((a, index) => new SpecifiedRuminantListItem() { Index = index, ExampleRuminant = a.ExampleIndividual, SpecifyRuminantComponent = a }).Cast<SpecifiedRuminantListItem>()];
 
             var ah = Structure.Find<ActivitiesHolder>();
             // check for managed paddocks and warn if breeders placed in yards.
@@ -781,7 +781,7 @@ namespace Models.CLEM.Activities
             // if this activity has determined there is a RuminantFilterGroup apply the rules to define individuals available this time-step
             // this allows a filter to determine what individuals are available to manage e.g. incomplete muster.
 
-            List<Ruminant> nonGrowOutHerd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, includeCheckHerdMeetsCriteria: true).Where(a => !a.Attributes.Exists("GrowOut")).ToList();
+            List<Ruminant> nonGrowOutHerd = [.. GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, includeCheckHerdMeetsCriteria: true).Where(a => !a.Attributes.Exists("GrowOut"))];
 
             if (ManageMaleBreederNumbers) // MALES
             {
@@ -814,7 +814,7 @@ namespace Models.CLEM.Activities
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                List<RuminantFemale> preBreeders = nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityFemale > -334) & !a.Attributes.Exists("GrowOut")).ToList();
+                List<RuminantFemale> preBreeders = [.. nonGrowOutHerd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.AgeInDays - a.Parameters.Details.EstimatedAgeAtMaturityFemale > -334) & !a.Attributes.Exists("GrowOut"))];
                 numberFemalePreBreedersInHerd = preBreeders.Count;
                 int numberFemalePreBreedersInPurchases = HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == PredictedHerdBreed && a.IsPreBreeder).Count();
 

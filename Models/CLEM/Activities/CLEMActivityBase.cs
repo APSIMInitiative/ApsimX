@@ -746,7 +746,7 @@ namespace Models.CLEM.Activities
                     }
 
                     // recalculate shortfalls in case any reduction in required removed request from shortfalls
-                    return shortfallRequests.ToList();
+                    return [.. shortfallRequests];
                 }
             }
             return [];

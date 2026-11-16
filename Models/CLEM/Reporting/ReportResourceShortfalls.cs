@@ -47,7 +47,7 @@ namespace Models.CLEM.Reporting
             ];
 
             EventNames = ["[Activities].ResourceShortfallOccurred"];
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
 
             SubscribeToEvents();
         }

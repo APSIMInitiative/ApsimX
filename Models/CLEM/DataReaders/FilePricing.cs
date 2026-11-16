@@ -124,7 +124,7 @@ namespace Models.CLEM
             var resources = Structure.FindParents<Zone>().FirstOrDefault();
             if (resources != null)
             {
-                pricingComponentsFound = Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true).ToList();
+                pricingComponentsFound = [.. Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true)];
             }
 
             DataView dataView = new DataView(GetAllData())

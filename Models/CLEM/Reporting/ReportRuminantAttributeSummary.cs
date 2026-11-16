@@ -103,7 +103,7 @@ namespace Models.CLEM.Reporting
             report.EventNames = [$"[{Name}].OnReportItemGenerated"];
             if (!ReportMateValues)
             {
-                report.VariableNames = report.VariableNames.Take(6).ToArray();
+                report.VariableNames = [.. report.VariableNames.Take(6)];
             }
         }
 

@@ -197,7 +197,7 @@ namespace Models.CLEM
 
             foreach (var prop in props)
             {
-                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat(([prop])).ToList()))
+                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, [.. nestedPropertyList.Concat(([prop]))]))
                 {
                     yield return new KeyValuePair<string, List<PropertyInfo>>(sub.Key, sub.Value);
                 }

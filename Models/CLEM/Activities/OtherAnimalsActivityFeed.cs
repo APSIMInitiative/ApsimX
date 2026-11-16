@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
         public override void PrepareForTimestep()
         {
             feedEstimated = 0;
-            CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
+            CohortsToBeFed  = [.. otherAnimals.GetCohorts(filterGroups, false)];
             foreach (var cohort in CohortsToBeFed)
             {
                 cohort.Considered = false;

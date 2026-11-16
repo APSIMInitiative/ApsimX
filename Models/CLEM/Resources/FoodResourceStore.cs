@@ -150,7 +150,7 @@ namespace Models.CLEM.Resources
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;
             double totalInPools = pools.Sum(p => p.AmountAvailable);
-            PoolProportions = pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0).ToArray();
+            PoolProportions = [.. pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0)];
             foreach (var pool in pools)
             {
                 if (pool.AmountAvailable > 0)

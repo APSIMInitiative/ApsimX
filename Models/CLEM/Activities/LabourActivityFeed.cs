@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
             numberToDo = uniqueIndividuals?.Count() ?? 0;
             IndividualsToBeFed = uniqueIndividuals;
 
-            List<LabourType> individuals = uniqueIndividuals.ToList();
+            List<LabourType> individuals = [.. uniqueIndividuals];
             indFed = [];
 
             foreach (LabourFeedGroup child in filterGroups)

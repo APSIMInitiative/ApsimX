@@ -73,7 +73,7 @@ namespace Models.CLEM
             ResourceGroup = resources.FindResourceGroup<Labour>();
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
-            groupings = Structure.FindChildren<RuminantGroup>().ToList<object>();
+            groupings = [.. Structure.FindChildren<RuminantGroup>()];
         }
 
         ///<inheritdoc/>

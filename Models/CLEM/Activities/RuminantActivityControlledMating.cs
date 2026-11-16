@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
-            attributeList = Structure.FindChildren<ISetAttribute>(recurse: true).ToList();
+            attributeList = [.. Structure.FindChildren<ISetAttribute>(recurse: true)];
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -241,7 +241,7 @@ namespace Models.CLEM.Activities
         {
             int mated = 0;
             int conceived = amountToDo - amountToSkip;
-            List<RuminantFemale> selectedBreeders = uniqueIndividuals.SkipLast(numberToSkip).ToList();
+            List<RuminantFemale> selectedBreeders = [.. uniqueIndividuals.SkipLast(numberToSkip)];
             foreach (RuminantFemale ruminant in selectedBreeders)
             {
                 mated++;

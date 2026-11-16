@@ -220,8 +220,8 @@ namespace Models.CLEM.Activities
 
             // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
-            HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+            HarvestData = [.. fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
+                                                               events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month)];
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
                 Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate.ToShortDateString()}] and [{events.Clock.EndDate.ToShortDateString()}]", MessageType.Warning);

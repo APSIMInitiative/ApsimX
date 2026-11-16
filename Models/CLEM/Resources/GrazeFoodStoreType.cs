@@ -1089,7 +1089,7 @@ namespace Models.CLEM.Resources
                     )
                 ).OrderByDescending(a => a.Details.DryMatterDigestibility);
 
-            return nestedGroups.ToList();
+            return [.. nestedGroups];
         }
 
         /// <summary>

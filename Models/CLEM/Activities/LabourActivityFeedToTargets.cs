@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.IsHired == false).ToList();
+            List<LabourType> peopleList = [.. people.Items.Where(a => IncludeHiredLabour || a.IsHired == false)];
             peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
             double otherIntake = this.DailyIntakeOtherSources * aE * daysInMonth;
             otherIntake += peopleList.Sum(a => a.GetAmountConsumed());
 
-            List<LabourActivityFeedTarget> labourActivityFeedTargets = Structure.FindChildren<LabourActivityFeedTarget>().ToList();
+            List<LabourActivityFeedTarget> labourActivityFeedTargets = [.. Structure.FindChildren<LabourActivityFeedTarget>()];
 
             // determine targets
             foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            foodParcels = foodParcels.OrderBy(a => a.Expires).ToList();
+            foodParcels = [.. foodParcels.OrderBy(a => a.Expires)];
 
             // if a market exists add the available market produce to the list below that ordered above.
             // order market food by price ascending

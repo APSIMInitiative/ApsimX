@@ -120,7 +120,7 @@ namespace Models.CLEM.Resources
                 PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
                 // Components are not permanently modified during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
 
-                priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>().ToList();
+                priceGroups = [.. Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>()];
             }
 
             // get conception parameters and rate calculation method
@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = [.. parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays)];
 
                 int sucklingCount = 0;
                 int numberThisPregnancy = breedFemales.First()?.CalulateNumberOfOffspringThisPregnancy() ?? 1;

@@ -150,7 +150,7 @@ namespace Models.CLEM.Groupings
         public override void PrepareForTimestep()
         {
             // remember individuals and request details for later adjustment based on shortfalls
-            individualsToBeFed = Filter(feedActivityParent.IndividualsToBeFed).ToList();
+            individualsToBeFed = [.. Filter(feedActivityParent.IndividualsToBeFed)];
 
             // get copy of food store details in case they are dynamically changing.
             currentFeedRequest.AdditionalDetails = new FoodResourcePacket(feedActivityParent.FeedDetails);

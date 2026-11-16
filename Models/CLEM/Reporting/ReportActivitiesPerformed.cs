@@ -230,14 +230,14 @@ namespace Models.CLEM.Reporting
                     // get unique rows
                     List<string> activities = HandleTimers switch
                     {
-                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart => data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>(),
-                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd => data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>(),
-                        _ => data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList()
+                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart => [.. data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
+                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd => [.. data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
+                        _ => [.. data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct()]
                     };
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
-                    List<DateTime> dates = data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct().ToList<DateTime>();
+                    List<DateTime> dates = [.. data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct()];
 
                     DateTime first = dates.First();
 

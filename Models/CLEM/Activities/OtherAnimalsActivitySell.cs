@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            CohortsToBeSold = otherAnimals.GetCohorts(filterGroups, true).ToList();
+            CohortsToBeSold = [.. otherAnimals.GetCohorts(filterGroups, true)];
             // number to sell
             numberToDo = CohortsToBeSold.Sum(a => a.AdjustedNumber);
             numberSold = 0;

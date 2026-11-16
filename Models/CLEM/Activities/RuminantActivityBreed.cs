@@ -158,7 +158,7 @@ namespace Models.CLEM.Activities
                     if (datesAvailable.Count > 0)
                     {
                         conceiveDate = datesAvailable[RandomNumberGenerator.Generator.Next(datesAvailable.Count) - 1];
-                        maleBreeders = location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.Details.EstimatedAgeAtMaturityMale).ToList();
+                        maleBreeders = [.. location.OfType<RuminantMale>().Where(a => a.IsAbleToBreed && (conceiveDate - a.DateOfBirth).TotalDays >= a.Parameters.Details.EstimatedAgeAtMaturityMale)];
                     }
 
                     // ToDo: check if this is needed
@@ -324,7 +324,7 @@ namespace Models.CLEM.Activities
                             // get a list of males to provide attributes when in controlled mating.
                             if (maleCount > 0 && location.FirstOrDefault().Parameters.Details.IncludedAttributeInheritanceWhenMating)
                             {
-                                maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
+                                maleBreeders = [.. location.Where(a => a.Sex == Sex.Male)];
                             }
 
                             int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();

@@ -377,7 +377,7 @@ namespace Models.CLEM.Reporting
                             for (int i = 1; i <= TransactionCategoryLevels; i++)
                             {
                                 string colname = $"Category{i}";
-                                string[] parts = TransactionCategoryLevelColumnNames.Split(',').Distinct().ToArray();
+                                string[] parts = [.. TransactionCategoryLevelColumnNames.Split(',').Distinct()];
                                 if (parts.Length >= i && parts[i - 1].Trim() != "")
                                 {
                                     colname = parts[i - 1].Replace(" ", "");
@@ -396,8 +396,8 @@ namespace Models.CLEM.Reporting
                 variableNames.AddRange(CustomVariableNames);
             }
 
-            VariableNames = variableNames.ToArray();
-            EventNames = eventNames.ToArray();
+            VariableNames = [.. variableNames];
+            EventNames = [.. eventNames];
             SubscribeToEvents();
         }
 
