@@ -70,7 +70,7 @@ namespace Models.CLEM.DescriptiveSummary
             var zone = ModelTyped.Structure.FindParent<Zone>(recurse: true);
             bool cmate = ModelTyped.Structure.FindChild<RuminantActivityControlledMating>(relativeTo: zone, recurse: true) != null;
 
-            string output = "";
+            string output;
             using (generator.OpenBlock("activitycontentlight", id: $"{ModelTyped.Name}_fembreeders"))
             {
                 if (ModelTyped.ManageFemaleBreederNumbers && (ModelTyped.PerformFemaleStocking | ModelTyped.PerformFemaleDestocking))
@@ -150,7 +150,6 @@ namespace Models.CLEM.DescriptiveSummary
 
             generator.AddBlockWithText($"Breeding males (sires/rams etc)");
 
-            output = "";
             using (generator.OpenBlock("activitycontentlight", id: $"{ModelTyped.Name}_malbreeders"))
             {
                 if (ModelTyped.ManageMaleBreederNumbers && (ModelTyped.PerformMaleStocking | ModelTyped.PerformMaleDestocking))
@@ -213,7 +212,6 @@ namespace Models.CLEM.DescriptiveSummary
 
             generator.AddBlockWithText($"General herd");
 
-            output = "";
             using (generator.OpenBlock("activitycontentlight", id: $"{ModelTyped.Name}_generalherd"))
             {
                 if (ModelTyped.GrowOutYoungMales)

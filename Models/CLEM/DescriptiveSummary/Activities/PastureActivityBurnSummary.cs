@@ -28,7 +28,7 @@ public class PastureActivityBurnSummary : DescriptiveSummaryProviderBase<Pasture
 
     private void reportEmission(string gasName, string storeName)
     {
-        string store = "";
+        string store;
         if (storeName is null || storeName == $"Use store named {gasName} if present")
         {
             store = $"{generator.DisplaySummaryResourceTypeSnippet($"[GreenhouseGases].{gasName}")} if present";

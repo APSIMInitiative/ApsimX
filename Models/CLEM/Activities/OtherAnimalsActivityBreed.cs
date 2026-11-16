@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
                 if (breeders > 0)
                 {
                     double newBySex = breeders * this.OffspringPerBreeder / 2.0;
-                    int singleSex = 0;
+                    int singleSex;
 
                     // apply stochasticity to determine proportional numbers to integers
                     if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.Next())

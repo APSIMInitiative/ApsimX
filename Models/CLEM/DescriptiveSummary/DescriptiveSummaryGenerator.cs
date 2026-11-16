@@ -669,7 +669,7 @@ public class DescriptiveSummaryGenerator
         if (OutputFormat == DescriptiveSummaryFormat.Markdown)
         {
             sb.Append(GetIndentTabs+openTag);
-            foreach (var label in columnHeadingLabels)
+            foreach (string _ in columnHeadingLabels)
             {
                 sb.Append($"------{cellWrapEnd}");
             }
@@ -1010,7 +1010,7 @@ public class DescriptiveSummaryGenerator
         if (!zeroFound && !isMissingOrEmpty && !isNaN && value.ToString() != "NaN")
         {
             // Format numerics using current culture with appropriate grouping and decimal separators.
-            string formatted = null;
+            string formatted;
             try
             {
                 TypeCode tc = Type.GetTypeCode(value.GetType());

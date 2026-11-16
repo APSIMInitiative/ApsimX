@@ -23,7 +23,7 @@ public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallSh
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        string start = "";
+        string start;
         if (ModelTyped.StartSeasonMonth == MonthsOfYear.NotSet)
         {
             start = generator.DisplayErrorSnippet("Not Set");

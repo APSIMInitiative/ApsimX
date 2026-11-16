@@ -25,7 +25,7 @@ public class GrazeFoodStoreFertilityLimiterSummary : DescriptiveSummaryProviderB
 
         generator.AddBlockWithText($"The nitrogen content of new pasture will be reduced by {generator.DisplaySummaryValueSnippet(model.NitrogenReduction, warnZero:true, errorString:"Not Set")} if:");
 
-        string monthSet = "";
+        string monthSet;
         if (model.AnnualYieldStartMonth == MonthsOfYear.NotSet)
             monthSet = generator.DisplayErrorSnippet("Month not set");
         else

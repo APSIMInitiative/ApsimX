@@ -86,7 +86,6 @@ namespace Models.CLEM.DescriptiveSummary
             }
             generator.AddBlockWithText(output);
 
-            output = "";
             if (ModelTyped.LoadUnitsPerTrailer.Length > 1)
             {
                 output = $"Trailers from first to last hold ";

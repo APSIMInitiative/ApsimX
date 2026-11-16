@@ -293,7 +293,7 @@ namespace Models.CLEM
             switch (StyleOfDateEntry)
             {
                 case DateStyle.DateStamp:
-                    filter = $"{filter}({DateColumnName} >= {startDate} AND {DateColumnName} <= {endDate})";
+                    //filter = $"{filter}({DateColumnName} >= {startDate} AND {DateColumnName} <= {endDate})";
                     throw new NotImplementedException();
                 case DateStyle.YearAndMonth:
                     filter = $"{filter}({YearColumnName} >= {startDate.Year} AND {MonthColumnName} >= {startDate.Month})";

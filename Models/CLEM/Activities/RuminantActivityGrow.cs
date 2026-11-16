@@ -453,13 +453,12 @@ namespace Models.CLEM.Activities
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
-                double kgl = 1;
                 if (MathUtilities.IsPositive(ind.MetabolicIntake + ind.Energy.MilkDaily.Received))
                 {
                     // average energy efficiency for maintenance
                     kml = ((milkIntakeDaily * 0.7) + (intakeDaily * km)) / (milkIntakeDaily + intakeDaily);
                     // average energy efficiency for growth
-                    kgl = ((milkIntakeDaily * 0.7) + (intakeDaily * kg)) / (milkIntakeDaily + intakeDaily);
+                    //double kgl = ((milkIntakeDaily * 0.7) + (intakeDaily * kg)) / (milkIntakeDaily + intakeDaily);
                 }
                 double energyMilkConsumed = milkIntakeDaily * 3.2;
                 // limit suckling intake of milk per day

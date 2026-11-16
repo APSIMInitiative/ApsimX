@@ -34,7 +34,7 @@ public class GrazeFoodStoreTypeSummary : DescriptiveSummaryProviderBase<GrazeFoo
         if (model.IsDMDProvided())
             Generator.AddBlockWithText($"DMD (%) will decay at a rate of {generator.DisplaySummaryValueSnippet(model.DecayDMD, warnZero: true)} per month to a minimum of {generator.DisplaySummaryValueSnippet(model.MinimumDMD)}");
 
-        string detachText = $"Pasture is lost through detachment at a rate of {generator.DisplaySummaryValueSnippet(model.DetachRate, warnZero: true)} per month and  and {generator.DisplaySummaryValueSnippet(model.CarryoverDetachRate, warnZero: true)} per month after 12 months";
+        Generator.AddBlockWithText($"Pasture is lost through detachment at a rate of {generator.DisplaySummaryValueSnippet(model.DetachRate, warnZero: true)} per month and {generator.DisplaySummaryValueSnippet(model.CarryoverDetachRate, warnZero: true)} per month after 12 months");
 
         if (model.StartingAmount > 0)
         {

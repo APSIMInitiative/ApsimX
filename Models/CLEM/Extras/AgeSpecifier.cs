@@ -151,7 +151,7 @@ namespace Models.CLEM
             set
             {
                 parts = value;
-                if (Parts is not null && Parts.Length != 0)
+                if (Parts is not null && Parts.Any())
                     age = CalculateAgeInDays(Parts);
             }
         }
@@ -221,8 +221,7 @@ namespace Models.CLEM
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            AgeSpecifier cloned = new();
-            cloned = Parts;
+            AgeSpecifier cloned = Parts;
             return cloned;
         }
     }
