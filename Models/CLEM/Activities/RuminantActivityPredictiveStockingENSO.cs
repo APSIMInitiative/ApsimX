@@ -200,21 +200,19 @@ namespace Models.CLEM.Activities
             if (File.Exists(fullFilename))
             {
                 // load ENSO file into memory
-                using (StreamReader ensoStream = new(MonthlySOIFile))
+                using StreamReader ensoStream = new(MonthlySOIFile);
+                string line = "";
+                while ((line = ensoStream.ReadLine()) != null)
                 {
-                    string line = "";
-                    while ((line = ensoStream.ReadLine()) != null)
+                    if (!line.StartsWith("Year"))
                     {
-                        if (!line.StartsWith("Year"))
+                        string[] items = line.Split(' ');
+                        for (int i = 1; i < items.Count(); i++)
                         {
-                            string[] items = line.Split(' ');
-                            for (int i = 1; i < items.Count(); i++)
-                            {
-                                ForecastSequence.Add(
-                                    new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
-                                    Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
-                                    );
-                            }
+                            ForecastSequence.Add(
+                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
+                                Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
+                                );
                         }
                     }
                 }

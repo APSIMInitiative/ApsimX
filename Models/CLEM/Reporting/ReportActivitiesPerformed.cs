@@ -222,79 +222,77 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable CreateDataTable(IDataStore dataStore, string directoryPath, bool darkTheme)
         {
-            using (DataTable data = GetData(dataStore))
+            using DataTable data = GetData(dataStore);
+            DataTable tbl = null;
+            if (data != null && data.Rows.Count > 0)
             {
-                DataTable tbl = null;
-                if (data != null && data.Rows.Count > 0)
+                // get unique rows
+                List<string> activities = HandleTimers switch
                 {
-                    // get unique rows
-                    List<string> activities = HandleTimers switch
+                    ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart => [.. data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
+                    ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd => [.. data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
+                    _ => [.. data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct()]
+                };
+                string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
+
+                // get unique columns
+                List<DateTime> dates = [.. data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct()];
+
+                DateTime first = dates.First();
+
+                // create table
+                tbl = new DataTable();
+                tbl.Columns.Add("Activity");
+                foreach (var item in dates)
+                {
+                    if (item == first)
                     {
-                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart => [.. data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
-                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd => [.. data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct()],
-                        _ => [.. data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct()]
-                    };
-                    string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
-
-                    // get unique columns
-                    List<DateTime> dates = [.. data.AsEnumerable().Select(a => a.Field<DateTime>("Date")).Distinct()];
-
-                    DateTime first = dates.First();
-
-                    // create table
-                    tbl = new DataTable();
-                    tbl.Columns.Add("Activity");
-                    foreach (var item in dates)
-                    {
-                        if (item == first)
-                        {
-                            tbl.Columns.Add("00\r\n" + item.ToString("yy"));
-                        }
-                        else
-                        {
-                            tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
-                        }
+                        tbl.Columns.Add("00\r\n" + item.ToString("yy"));
                     }
-                    // add blank column for resize row height of pixelbuf with font size change
-                    tbl.Columns.Add(" ");
-
-                    foreach (var item in activities)
+                    else
                     {
-                        if (item != timeStepUID)
-                        {
-                            DataRow dr = tbl.NewRow();
-                            string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
-                            dr["Activity"] = name;
+                        tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
+                    }
+                }
+                // add blank column for resize row height of pixelbuf with font size change
+                tbl.Columns.Add(" ");
 
-                            foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item))
+                foreach (var item in activities)
+                {
+                    if (item != timeStepUID)
+                    {
+                        DataRow dr = tbl.NewRow();
+                        string name = data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item).FirstOrDefault()["Name"].ToString();
+                        dr["Activity"] = name;
+
+                        foreach (var activityTick in data.AsEnumerable().Where(a => a.Field<string>("UniqueID") == item))
+                        {
+                            DateTime dte = (DateTime)activityTick["Date"];
+                            string status = activityTick["Status"].ToString();
+                            string tooltip = activityTick["Message"].ToString();
+
+                            string monthID = "00";
+                            if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
                             {
-                                DateTime dte = (DateTime)activityTick["Date"];
-                                string status = activityTick["Status"].ToString();
-                                string tooltip = activityTick["Message"].ToString();
-
-                                string monthID = "00";
-                                if (dte.Day == DateTime.DaysInMonth(dte.Year, dte.Month))
-                                {
-                                    monthID = dte.Month.ToString("00");
-                                }
-
-                                if (!(monthID == "00" && status == "Timer"))
-                                {
-                                    dr[monthID + "\r\n" + dte.ToString("yy")] = $"{status}:{tooltip}";
-                                }
+                                monthID = dte.Month.ToString("00");
                             }
-                            dr[" "] = " ";
-                            tbl.Rows.Add(dr);
+
+                            if (!(monthID == "00" && status == "Timer"))
+                            {
+                                dr[monthID + "\r\n" + dte.ToString("yy")] = $"{status}:{tooltip}";
+                            }
                         }
+                        dr[" "] = " ";
+                        tbl.Rows.Add(dr);
                     }
                 }
-                if (CreateHTML)
-                {
-                    CreateHTMLVersion(tbl, directoryPath, darkTheme);
-                }
-
-                return tbl;
             }
+            if (CreateHTML)
+            {
+                CreateHTMLVersion(tbl, directoryPath, darkTheme);
+            }
+
+            return tbl;
         }
 
         /// <summary>
@@ -397,90 +395,88 @@ namespace Models.CLEM.Reporting
                 html = html.Replace("[ContDefaultBanner]", "#686868");
             }
 
-            using (StringWriter htmlString = new StringWriter())
+            using StringWriter htmlString = new StringWriter();
+            htmlString.WriteLine(html);
+            htmlString.WriteLine("\r\n<div class=\"wrapper\">");
+            htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");
+
+            htmlString.Write("\r\n<div class=\"r2\"><div class=\"clearfix defaultbanner\">");
+            htmlString.Write($"<div class=\"namediv\">Report activities performed</div><br />");
+            htmlString.Write($"<div class=\"typediv\">Details</div>");
+            htmlString.Write("</div>");
+            htmlString.Write("\r\n<div class=\"defaultcontent\">");
+            htmlString.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now:d} at {DateTime.Now:t}<br />");
+            htmlString.WriteLine("\r\n</div>");
+            htmlString.WriteLine("\r\n</div>");
+            htmlString.WriteLine("\r\n</div>");
+
+            if (data != null)
             {
-                htmlString.WriteLine(html);
-                htmlString.WriteLine("\r\n<div class=\"wrapper\">");
-                htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");
-
-                htmlString.Write("\r\n<div class=\"r2\"><div class=\"clearfix defaultbanner\">");
-                htmlString.Write($"<div class=\"namediv\">Report activities performed</div><br />");
-                htmlString.Write($"<div class=\"typediv\">Details</div>");
-                htmlString.Write("</div>");
-                htmlString.Write("\r\n<div class=\"defaultcontent\">");
-                htmlString.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now:d} at {DateTime.Now:t}<br />");
-                htmlString.WriteLine("\r\n</div>");
-                htmlString.WriteLine("\r\n</div>");
-                htmlString.WriteLine("\r\n</div>");
-
-                if (data != null)
+                if (RotateReport)
                 {
-                    if (RotateReport)
+                    data = Transpose(data);
+                }
+                htmlString.WriteLine($"<div class=\"r3 scrollcontainer\"><table><tr>");
+                bool first = true;
+                foreach (DataColumn col in data.Columns)
+                {
+                    if (col.ColumnName != " ")
                     {
-                        data = Transpose(data);
+                        string splitter = (RotateReport) ? "\\" : "<br />";
+                        htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\r\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
+                        first = false;
                     }
-                    htmlString.WriteLine($"<div class=\"r3 scrollcontainer\"><table><tr>");
-                    bool first = true;
-                    foreach (DataColumn col in data.Columns)
+                }
+                htmlString.WriteLine($"</tr>");
+
+                foreach (DataRow row in data.Rows)
+                {
+                    string rowClass = "";
+                    if (row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
                     {
-                        if (col.ColumnName != " ")
+                        rowClass = "class=\"folder\"";
+                    }
+
+                    if (row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
+                    {
+                        rowClass = "class=\"controller\"";
+                    }
+
+                    htmlString.WriteLine($"<tr {rowClass}>");
+                    foreach (var item in row.ItemArray)
+                    {
+                        if (item.ToString() != " ")
                         {
-                            string splitter = (RotateReport) ? "\\" : "<br />";
-                            htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\r\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
-                            first = false;
+                            string splitter = "\\";
+                            var statusParts = item.ToString().Replace(" ", "&nbsp;").Split(':');
+
+                            string image = "";
+                            image = statusParts[0] switch
+                            {
+                                "Success" or "NoTask" or "NotNeeded" or "Calculation" or "Critical" or "Partial" or "Timer" or "Ignore" or "Skipped" => $"ActivitiesReport{statusParts[0]}Web",
+                                "Warning" => $"ActivitiesReportIgnoreWeb",
+                                "Ignored" or "Folder" or "Controller" => "ActivitiesReportBlankWeb",
+                                _ => "",
+                            };
+                            if (image == "")
+                            {
+                                htmlString.Write($"<td>{statusParts[0].Replace("\r\n", splitter)}</td>");
+                            }
+                            else
+                            {
+                                htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Length != 0 ? "note" : "")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
+                            }
+
                         }
                     }
                     htmlString.WriteLine($"</tr>");
-
-                    foreach (DataRow row in data.Rows)
-                    {
-                        string rowClass = "";
-                        if (row.ItemArray.Where(a => a.ToString().StartsWith("Folder")).Any())
-                        {
-                            rowClass = "class=\"folder\"";
-                        }
-
-                        if (row.ItemArray.Where(a => a.ToString().StartsWith("Controller")).Any())
-                        {
-                            rowClass = "class=\"controller\"";
-                        }
-
-                        htmlString.WriteLine($"<tr {rowClass}>");
-                        foreach (var item in row.ItemArray)
-                        {
-                            if (item.ToString() != " ")
-                            {
-                                string splitter = "\\";
-                                var statusParts = item.ToString().Replace(" ", "&nbsp;").Split(':');
-
-                                string image = "";
-                                image = statusParts[0] switch
-                                {
-                                    "Success" or "NoTask" or "NotNeeded" or "Calculation" or "Critical" or "Partial" or "Timer" or "Ignore" or "Skipped" => $"ActivitiesReport{statusParts[0]}Web",
-                                    "Warning" => $"ActivitiesReportIgnoreWeb",
-                                    "Ignored" or "Folder" or "Controller" => "ActivitiesReportBlankWeb",
-                                    _ => "",
-                                };
-                                if (image == "")
-                                {
-                                    htmlString.Write($"<td>{statusParts[0].Replace("\r\n", splitter)}</td>");
-                                }
-                                else
-                                {
-                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Length != 0 ? "note" : "")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
-                                }
-
-                            }
-                        }
-                        htmlString.WriteLine($"</tr>");
-                    }
-                    htmlString.WriteLine($"</table></div></div>");
                 }
+                htmlString.WriteLine($"</table></div></div>");
+            }
 
-                if (CreateHTML | AutoCreateHTML)
-                {
-                    File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
-                }
+            if (CreateHTML | AutoCreateHTML)
+            {
+                File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
             }
         }
     }
