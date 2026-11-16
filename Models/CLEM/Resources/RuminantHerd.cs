@@ -332,10 +332,10 @@ namespace Models.CLEM.Resources
                         catNames.AddRange(Structure.FindChildren<AnimalPriceGroup>(relativeTo: animalPricing).Select(a => a.Name));
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
-                    catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
+                    catNames.AddRange(Enum.GetNames<RuminantClass>());
                     break;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
-                    var classes = Enum.GetNames(typeof(RuminantClass));
+                    var classes = Enum.GetNames<RuminantClass>();
                     foreach (var item in classes)
                     {
                         catNames.Add($"Female_{item}");
