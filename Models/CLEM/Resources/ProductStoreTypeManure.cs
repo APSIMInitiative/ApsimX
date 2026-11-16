@@ -163,8 +163,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public new double AmountTotal { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        public new double AmountTotal { get { return AmountRounded; } }
+        private double AmountRounded { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Initialise()
         {
-            this.amount = 0;
+            this.AmountRounded = 0;
         }
 
         #region transactions
@@ -192,7 +192,7 @@ namespace Models.CLEM.Resources
             double amountAdded = (double)resourceAmount;
             if (amountAdded > 0)
             {
-                amount += amountAdded;
+                AmountRounded += amountAdded;
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
@@ -204,7 +204,7 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
-            amount = newAmount;
+            AmountRounded = newAmount;
         }
 
         #endregion

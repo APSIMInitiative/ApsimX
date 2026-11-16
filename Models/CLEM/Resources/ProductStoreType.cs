@@ -36,8 +36,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public double Amount { get { return amount; } }
-        double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        public double Amount { get { return AmountRounded; } }
+        double AmountRounded { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         [NonSerialized]
         private double roundedAmount;
 
@@ -47,7 +47,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
+            this.AmountRounded = 0;
             if (StartingAmount > 0)
                 AddToResource(StartingAmount, null, null, "Starting value");
         }
@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
             };
             if (amountAdded > 0)
             {
-                amount += amountAdded;
+                AmountRounded += amountAdded;
 
                 ReportTransaction(TransactionType.Gain, amountAdded, activity, relatesToResource, category, this);
             }
@@ -93,7 +93,7 @@ namespace Models.CLEM.Resources
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
-            this.amount -= amountRemoved;
+            this.AmountRounded -= amountRemoved;
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
-            amount = newAmount;
+            AmountRounded = newAmount;
         }
 
         #endregion
