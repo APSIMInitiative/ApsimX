@@ -135,19 +135,12 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            HumanFoodStorePool pool;
-            switch (resourceAmount)
+            HumanFoodStorePool pool = resourceAmount switch
             {
-                case HumanFoodStorePool _:
-                    pool = resourceAmount as HumanFoodStorePool;
-                    break;
-                case double _:
-                    pool = new HumanFoodStorePool((double)resourceAmount, 0);
-                    break;
-                default:
-                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
-            }
-
+                HumanFoodStorePool _ => resourceAmount as HumanFoodStorePool,
+                double _ => new HumanFoodStorePool((double)resourceAmount, 0),
+                _ => throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]"),
+            };
             if (pool.Amount > 0)
             {
                 HumanFoodStorePool poolOfAge = Pools.Where(a => a.Age == pool.Age).FirstOrDefault();

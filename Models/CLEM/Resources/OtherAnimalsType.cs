@@ -269,16 +269,14 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: ["Age to weight"],
-                        measures: []
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: ["Age to weight"],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>

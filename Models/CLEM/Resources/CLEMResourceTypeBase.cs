@@ -194,20 +194,12 @@ namespace Models.CLEM.Resources
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
-                PurchaseOrSalePricingStyleType style;
-                switch (converterName)
+                var style = converterName switch
                 {
-                    case "$gain":
-                        style = PurchaseOrSalePricingStyleType.Purchase;
-                        break;
-                    case "$loss":
-                        style = PurchaseOrSalePricingStyleType.Sale;
-                        break;
-                    default:
-                        style = PurchaseOrSalePricingStyleType.Both;
-                        break;
-                }
-
+                    "$gain" => PurchaseOrSalePricingStyleType.Purchase,
+                    "$loss" => PurchaseOrSalePricingStyleType.Sale,
+                    _ => PurchaseOrSalePricingStyleType.Both,
+                };
                 if (PricingExists(style))
                 {
                     price = Price(style);

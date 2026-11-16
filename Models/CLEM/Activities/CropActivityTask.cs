@@ -31,24 +31,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
                             "per land unit of crop",
                             "per hectare of crop",
                             "per kg harvested",
                             "per land unit harvested",
                             "per hectare harvested",
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

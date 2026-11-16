@@ -86,21 +86,18 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourRequirement":
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per packet",
-                            "purchase value"
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "LabourRequirement" or "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per packet",
+                                            "purchase value"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
@@ -155,20 +152,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "purchase value":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
-                        break;
-                    case "per packet":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "purchase value" => unitsToDo * price.PacketSize,
+                    "per packet" => unitsToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             return requests;

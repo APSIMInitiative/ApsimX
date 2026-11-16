@@ -70,25 +70,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per packet incoming",
-                            "per packet outgoing",
-                            "per amount incoming",
-                            "per amount outgoing",
-                            "per dollar value incoming",
-                            "per dollar value outgoing",
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per packet incoming",
+                                            "per packet outgoing",
+                                            "per amount incoming",
+                                            "per amount outgoing",
+                                            "per dollar value incoming",
+                                            "per dollar value outgoing",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -226,32 +223,17 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per amount incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[1, 0];
-                        break;
-                    case "per packet incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = packetsToDo[1, 0];
-                        break;
-                    case "per dollar value incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[1, 0];
-                        break;
-                    case "per amount outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[0, 0];
-                        break;
-                    case "per packet outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = packetsToDo[0, 0];
-                        break;
-                    case "per dollar value outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[0, 0];
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per amount incoming" => amountToDo[1, 0],
+                    "per packet incoming" => packetsToDo[1, 0],
+                    "per dollar value incoming" => valueToDo[1, 0],
+                    "per amount outgoing" => amountToDo[0, 0],
+                    "per packet outgoing" => packetsToDo[0, 0],
+                    "per dollar value outgoing" => valueToDo[0, 0],
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             return null;
@@ -278,15 +260,11 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        switch (unitShort.CompanionModelDetails.identifier.Split(" ").First())
+                        amountToDo[i, 1] = unitShort.CompanionModelDetails.identifier.Split(" ").First() switch
                         {
-                            case "amount":
-                                amountToDo[i, 1] = Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required));
-                                break;
-                            default:
-                                throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]");
-                        }
-
+                            "amount" => Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required)),
+                            _ => throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]"),
+                        };
                         if (unitShort.Available == 0)
                         {
                             Status = ActivityStatus.Warning;

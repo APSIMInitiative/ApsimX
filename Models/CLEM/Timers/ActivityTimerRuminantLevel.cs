@@ -142,24 +142,14 @@ namespace Models.CLEM.Timers
                     else
                     {
                         var individualProperty = uniqueIndividuals.Select(a => Convert.ToDouble(propertyInfo.GetValue(a)));
-                        switch (TimerStyle)
+                        amountAtFirstCheck = TimerStyle switch
                         {
-                            case ActivityTimerRuminantLevelStyle.SumOfProperty:
-                                amountAtFirstCheck = individualProperty.Sum();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MeanOfProperty:
-                                amountAtFirstCheck = individualProperty.Mean();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MinimumOfProperty:
-                                amountAtFirstCheck = individualProperty.Min();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MaximumOfProperty:
-                                amountAtFirstCheck = individualProperty.Max();
-                                break;
-                            default:
-                                amountAtFirstCheck = 0;
-                                break;
-                        }
+                            ActivityTimerRuminantLevelStyle.SumOfProperty => individualProperty.Sum(),
+                            ActivityTimerRuminantLevelStyle.MeanOfProperty => individualProperty.Mean(),
+                            ActivityTimerRuminantLevelStyle.MinimumOfProperty => individualProperty.Min(),
+                            ActivityTimerRuminantLevelStyle.MaximumOfProperty => individualProperty.Max(),
+                            _ => 0,
+                        };
                     }
                     checkDate = clock.Today;
                 }

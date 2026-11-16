@@ -785,38 +785,34 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                switch (SaleFlag)
+                return SaleFlag switch
                 {
-                    case HerdChangeReason.None:
-                        return 0;
-                    case HerdChangeReason.DiedUnderweight:
-                    case HerdChangeReason.DiedMortality:
-                    case HerdChangeReason.TradeSale:
-                    case HerdChangeReason.DryBreederSale:
-                    case HerdChangeReason.ExcessBreederSale:
-                    case HerdChangeReason.ExcessSireSale:
-                    case HerdChangeReason.MaxAgeSale:
-                    case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessPreBreederSale:
-                    case HerdChangeReason.Consumed:
-                    case HerdChangeReason.DestockSale:
-                    case HerdChangeReason.ReduceInitialHerd:
-                    case HerdChangeReason.MarkedSale:
-                    case HerdChangeReason.WeanerSale:
-                    case HerdChangeReason.DiedDystocia:
-                    case HerdChangeReason.DiedToxaemia:
-                        return -1;
-                    case HerdChangeReason.Born:
-                    case HerdChangeReason.TradePurchase:
-                    case HerdChangeReason.BreederPurchase:
-                    case HerdChangeReason.SirePurchase:
-                    case HerdChangeReason.RestockPurchase:
-                    case HerdChangeReason.InitialHerd:
-                    case HerdChangeReason.FillInitialHerd:
-                        return 1;
-                    default:
-                        return 0;
-                }
+                    HerdChangeReason.None => 0,
+                    HerdChangeReason.DiedUnderweight or
+                    HerdChangeReason.DiedMortality or
+                    HerdChangeReason.TradeSale or
+                    HerdChangeReason.DryBreederSale or
+                    HerdChangeReason.ExcessBreederSale or
+                    HerdChangeReason.ExcessSireSale or
+                    HerdChangeReason.MaxAgeSale or
+                    HerdChangeReason.AgeWeightSale or
+                    HerdChangeReason.ExcessPreBreederSale or
+                    HerdChangeReason.Consumed or
+                    HerdChangeReason.DestockSale or
+                    HerdChangeReason.ReduceInitialHerd or
+                    HerdChangeReason.MarkedSale or
+                    HerdChangeReason.WeanerSale or
+                    HerdChangeReason.DiedDystocia or
+                    HerdChangeReason.DiedToxaemia => -1,
+                    HerdChangeReason.Born or
+                    HerdChangeReason.TradePurchase or
+                    HerdChangeReason.BreederPurchase or
+                    HerdChangeReason.SirePurchase or
+                    HerdChangeReason.RestockPurchase or
+                    HerdChangeReason.InitialHerd or
+                    HerdChangeReason.FillInitialHerd => 1,
+                    _ => 0,
+                };
             }
         }
 

@@ -63,19 +63,12 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            double amountAdded;
-            switch (resourceAmount)
+            var amountAdded = resourceAmount switch
             {
-                case FoodResourcePacket _:
-                    amountAdded = (resourceAmount as FoodResourcePacket).Amount;
-                    break;
-                case double _:
-                    amountAdded = (double)resourceAmount;
-                    break;
-                default:
-                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
-            }
-
+                FoodResourcePacket _ => (resourceAmount as FoodResourcePacket).Amount,
+                double _ => (double)resourceAmount,
+                _ => throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]"),
+            };
             if (amountAdded > 0)
             {
                 amount += amountAdded;

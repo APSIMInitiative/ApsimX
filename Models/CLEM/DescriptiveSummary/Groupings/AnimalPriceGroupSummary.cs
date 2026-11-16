@@ -61,17 +61,13 @@ public class AnimalPriceGroupSummary : DescriptiveSummaryProviderBase<AnimalPric
     /// <returns>Description of style</returns>
     private string PricingStyleToFullString(PurchaseOrSalePricingStyleType pricingStyle)
     {
-        switch (pricingStyle)
+        return pricingStyle switch
         {
-            case PurchaseOrSalePricingStyleType.Both:
-                return "Buy and sell for ";
-            case PurchaseOrSalePricingStyleType.Purchase:
-                return "Buy for ";
-            case PurchaseOrSalePricingStyleType.Sale:
-                return "Sell for ";
-            default:
-                return "Unknown pricing style";
-        }
+            PurchaseOrSalePricingStyleType.Both => "Buy and sell for ",
+            PurchaseOrSalePricingStyleType.Purchase => "Buy for ",
+            PurchaseOrSalePricingStyleType.Sale => "Sell for ",
+            _ => "Unknown pricing style",
+        };
     }
 
     /// <inheritdoc/>

@@ -151,36 +151,31 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: []
-                        );
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: [
-                            "PastureToStockingChangeElNino",
-                            "PastureToStockingChangeLaNina"
-                        ],
-                        measures: []
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [
-                            "Destock required",
-                            "Restock required"
-                        ],
-                        measures: [
-                            "fixed",
-                            "per AE"
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "PastureToStockingChangeElNino",
+                                            "PastureToStockingChangeLaNina"
+                                        ],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Destock required",
+                                            "Restock required"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per AE"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -335,37 +330,22 @@ namespace Models.CLEM.Activities
             // provide updated units of measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.identifier)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.identifier switch
                 {
-                    case "Destock required":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per AE":
-                                valuesForCompanionModels[valueToSupply.Key] = AeToDestock;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    case "Restock required":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per AE":
-                                valuesForCompanionModels[valueToSupply.Key] = AeToRestock;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                    "Destock required" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per AE" => AeToDestock,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    "Restock required" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per AE" => (double?)AeToRestock,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

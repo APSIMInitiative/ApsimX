@@ -71,23 +71,16 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
     /// <returns>Operator as symbol</returns>
     protected string OperatorToSymbol()
     {
-        switch (ModelTyped.Operator)
+        return ModelTyped.Operator switch
         {
-            case ExpressionType.Equal:
-                return "=";
-            case ExpressionType.GreaterThan:
-                return ">";
-            case ExpressionType.GreaterThanOrEqual:
-                return ">=";
-            case ExpressionType.LessThan:
-                return "<";
-            case ExpressionType.LessThanOrEqual:
-                return "<=";
-            case ExpressionType.NotEqual:
-                return "!=";
-            default:
-                return ModelTyped.Operator.ToString();
-        }
+            ExpressionType.Equal => "=",
+            ExpressionType.GreaterThan => ">",
+            ExpressionType.GreaterThanOrEqual => ">=",
+            ExpressionType.LessThan => "<",
+            ExpressionType.LessThanOrEqual => "<=",
+            ExpressionType.NotEqual => "!=",
+            _ => ModelTyped.Operator.ToString(),
+        };
     }
 
 }

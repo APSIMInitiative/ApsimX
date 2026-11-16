@@ -372,44 +372,37 @@ namespace Models.CLEM.Resources
                 })
                 .Select(provider => new GrazeAPSIMForagePool(this, provider, forages, paddock.Area));
 
-            switch (devStyle)
+            return devStyle switch
             {
-                case "ByDMD":
-                    // pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
-                    return pools
-                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        groups.Key.ToString()
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                case "BySpecies":
-                    // pools ordered by species and grouped into FoodResourceStore for feeding to animals            
-                    return pools
-                    .GroupBy(s => s.Name.Split('.').First())
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        groups.Key.ToString()
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                case "ByForageVSurfaceOM":
-                    // all pools combined and excluding surface organic matter
-                    return pools
-                    .GroupBy(s => s.Name.Contains("Surface") == false)
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                default:
-                    return [];
-            }
+                "ByDMD" => pools
+                                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        groups.Key.ToString()
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
+                "BySpecies" => pools
+                                    .GroupBy(s => s.Name.Split('.').First())
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        groups.Key.ToString()
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// pools ordered by species and grouped into FoodResourceStore for feeding to animals            
+                "ByForageVSurfaceOM" => pools
+                                    .GroupBy(s => s.Name.Contains("Surface") == false)
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList(),// all pools combined and excluding surface organic matter
+                _ => [],
+            };
 
             // think about different approaches
             // 1. whole avearge pasture pool (DMD step = 100)

@@ -65,13 +65,11 @@ namespace Models.CLEM.Groupings
                         return indAttList.GetValue(AttributeTag).StoredValue;
                     }
                     else
-                        switch (indAttList.GetValue(AttributeTag))
+                        return indAttList.GetValue(AttributeTag) switch
                         {
-                            case IndividualAttribute _:
-                                return float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture);
-                            default:
-                                return null;
-                        }
+                            IndividualAttribute _ => float.Parse(MissingAttributeValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture),
+                            _ => null,
+                        };
                 }
             }
             return 0;

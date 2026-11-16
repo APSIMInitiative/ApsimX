@@ -137,56 +137,50 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers:
-                        [
-                            "Live weight to load unit size"
-                        ],
-                        measures: []
-                        );
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: []
-                        );
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per head",
-                            "per truck",
-                            "per km trucked",
-                            "per load (deck/pod)",
-                            "per tonne km",
-                        ]
-                        );
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per truck",
-                            "per km trucked",
-                            "per load (deck/pod)",
-                        ]
-                        );
-                case "GreenhouseGasActivityEmission":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per truck",
-                            "per km trucked",
-                            "per tonne km",
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers:
+                                        [
+                                            "Live weight to load unit size"
+                                        ],
+                                        measures: []
+                                        ),
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "per truck",
+                                            "per km trucked",
+                                            "per load (deck/pod)",
+                                            "per tonne km",
+                                        ]
+                                        ),
+                "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per truck",
+                                            "per km trucked",
+                                            "per load (deck/pod)",
+                                        ]
+                                        ),
+                "GreenhouseGasActivityEmission" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per truck",
+                                            "per km trucked",
+                                            "per tonne km",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -237,80 +231,38 @@ namespace Models.CLEM.Activities
             {
                 int number = numberToDo;
 
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "RuminantFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = 0;
-                        break;
-                    case "LabourRequirement":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per truck":
-                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
-                                break;
-                            case "per km trucked":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
-                                break;
-                            case "per load (deck/pod)":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per head":
-                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.individualsTransported;
-                                break;
-                            case "per truck":
-                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
-                                break;
-                            case "per km":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket;
-                                break;
-                            case "per km trucked":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
-                                break;
-                            case "per load (deck/pod)":
-                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.loadUnits;
-                                break;
-                            case "per tonne km":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    case "GreenhouseGasActivityEmission":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per truck":
-                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
-                                break;
-                            case "per km trucked":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
-                                break;
-                            case "per tonne km":
-                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                    "RuminantFeedGroup" => 0,
+                    "LabourRequirement" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per truck" => truckDetails.trucks,
+                        "per km trucked" => DistanceToMarket * truckDetails.trucks,
+                        "per load (deck/pod)" => DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass),
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    "ActivityFee" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per head" => truckDetails.individualsTransported,
+                        "per truck" => truckDetails.trucks,
+                        "per km" => DistanceToMarket,
+                        "per km trucked" => DistanceToMarket * truckDetails.trucks,
+                        "per load (deck/pod)" => truckDetails.loadUnits,
+                        "per tonne km" => DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass),
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    "GreenhouseGasActivityEmission" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per truck" => truckDetails.trucks,
+                        "per km trucked" => DistanceToMarket * truckDetails.trucks,
+                        "per tonne km" => (double?)(DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass)),
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return ResourceRequestList;
         }

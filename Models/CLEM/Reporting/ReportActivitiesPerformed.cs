@@ -228,19 +228,12 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities;
-                    switch (HandleTimers)
+                    List<string> activities = HandleTimers switch
                     {
-                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart:
-                            activities = data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
-                            break;
-                        case ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd:
-                            activities = data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
-                            break;
-                        default:
-                            activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList(); //.OrderBy(a => a).ToList<string>();
-                            break;
-                    }
+                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtStart => data.AsEnumerable().OrderByDescending(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>(),
+                        ReportActivitiesPerformedTimerHandleStyle.PlaceAtEnd => data.AsEnumerable().OrderBy(a => a.Field<int>("Type") == (int)ActivityPerformedType.Timer).ThenBy(a => a.Field<string>("UniqueID")).Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>(),
+                        _ => data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList()
+                    };
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
@@ -461,32 +454,13 @@ namespace Models.CLEM.Reporting
                                 var statusParts = item.ToString().Replace(" ", "&nbsp;").Split(':');
 
                                 string image = "";
-                                switch (statusParts[0])
+                                image = statusParts[0] switch
                                 {
-                                    case "Success":
-                                    case "NoTask":
-                                    case "NotNeeded":
-                                    case "Calculation":
-                                    case "Critical":
-                                    case "Partial":
-                                    case "Timer":
-                                    case "Ignore":
-                                    case "Skipped":
-                                        image = $"ActivitiesReport{statusParts[0]}Web";
-                                        break;
-                                    case "Warning":
-                                        image = $"ActivitiesReportIgnoreWeb";
-                                        break;
-                                    case "Ignored":
-                                    case "Folder":
-                                    case "Controller":
-                                        image = "ActivitiesReportBlankWeb";
-                                        break;
-                                    default:
-                                        image = "";
-                                        break;
-                                }
-
+                                    "Success" or "NoTask" or "NotNeeded" or "Calculation" or "Critical" or "Partial" or "Timer" or "Ignore" or "Skipped" => $"ActivitiesReport{statusParts[0]}Web",
+                                    "Warning" => $"ActivitiesReportIgnoreWeb",
+                                    "Ignored" or "Folder" or "Controller" => "ActivitiesReportBlankWeb",
+                                    _ => "",
+                                };
                                 if (image == "")
                                 {
                                     htmlString.Write($"<td>{statusParts[0].Replace("\r\n", splitter)}</td>");

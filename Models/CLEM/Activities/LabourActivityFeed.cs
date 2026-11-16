@@ -198,48 +198,27 @@ namespace Models.CLEM.Activities
             {
                 int number = numberToDo;
 
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "LabourFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = 0;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "LabourFeedGroup" => 0,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number fed" => valueToSupply.Key.unit switch
                         {
-                            case "Number fed":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = number;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            case "Feed provided":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per kg fed":
-                                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => number,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        "Feed provided" => valueToSupply.Key.unit switch
+                        {
+                            "fixed" => 1,
+                            "per kg fed" => (double?)amountToDo,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
 
             if (amountToDo > 0)

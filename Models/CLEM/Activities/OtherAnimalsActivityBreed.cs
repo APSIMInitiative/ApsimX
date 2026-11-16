@@ -89,22 +89,19 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourRequirement":
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: [
-                            "Number to breed"
-                        ],
-                        measures: [ 
-                            "fixed",
-                            "per head"
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "LabourRequirement" or "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number to breed"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
 
@@ -126,35 +123,21 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = breeders;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsGroup" => breeders,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number to buy" => valueToSupply.Key.unit switch
                         {
-                            case "Number to buy":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = breeders;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => (double?)breeders,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

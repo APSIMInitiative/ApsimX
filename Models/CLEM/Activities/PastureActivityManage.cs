@@ -127,19 +127,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: [
-                            "Utilisation % to change in Land condition index",
-                            "Utilisation % to change in Grass basal area"
-                        ],
-                        measures: []
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Utilisation % to change in Land condition index",
+                                            "Utilisation % to change in Grass basal area"
+                                        ],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to initialise this activity just once at start of simulation</summary>

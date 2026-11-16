@@ -1135,17 +1135,13 @@ public class DescriptiveSummaryGenerator
     /// <returns>file extension with full stop</returns>
     public static string FileExtensionToUse(DescriptiveSummaryFormat format)
     {
-        switch (format)
+        return format switch
         {
-            case DescriptiveSummaryFormat.HTML:
-                return ".html";
-            case DescriptiveSummaryFormat.Markdown:
-                return ".md";
-            case DescriptiveSummaryFormat.Text:
-                return ".txt";
-            default:
-                return ".txt";
-        }
+            DescriptiveSummaryFormat.HTML => ".html",
+            DescriptiveSummaryFormat.Markdown => ".md",
+            DescriptiveSummaryFormat.Text => ".txt",
+            _ => ".txt",
+        };
     }
 
 }

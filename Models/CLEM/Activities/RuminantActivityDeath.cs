@@ -40,18 +40,14 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantDeathGroup":
-                case "RuminantDeathGroupCondition":
-                case "RuminantDeathGroupRate":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [] 
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantDeathGroup" or "RuminantDeathGroupCondition" or "RuminantDeathGroupRate" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

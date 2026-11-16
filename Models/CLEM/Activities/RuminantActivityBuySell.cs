@@ -85,30 +85,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: []
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: [
-                            "fixed",
-                            "per head",
-                            "Value of individuals",
-                        ]
-                        );
-                case "RuminantTrucking":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: []);
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "Value of individuals",
+                                        ]
+                                        ),
+                "RuminantTrucking" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -247,20 +242,13 @@ namespace Models.CLEM.Activities
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = numberTrucked;
-                        break;
-                    case "Value of individuals":
-                        valuesForCompanionModels[valueToSupply.Key] = herdValue;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => numberTrucked,
+                    "Value of individuals" => herdValue,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             if (numberTrucked < numberToDo)

@@ -43,24 +43,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers:
-                        [
-                            "labour available",
-                            "labour used"
-                        ],
-                        measures: [
-                            "fixed",
-                            "per day",
-                            "per total charged"
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers:
+                                        [
+                                            "labour available",
+                                            "labour used"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per day",
+                                            "per total charged"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -122,20 +120,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per day":
-                        valuesForCompanionModels[valueToSupply.Key] = totalDays;
-                        break;
-                    case "per total charged":
-                        valuesForCompanionModels[valueToSupply.Key] = totalFees;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per day" => totalDays,
+                    "per total charged" => totalFees,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

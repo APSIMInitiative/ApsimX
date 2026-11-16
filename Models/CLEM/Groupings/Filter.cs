@@ -63,27 +63,18 @@ namespace Models.CLEM.Groupings
         /// <returns>Operator as symbol</returns>
         public string OperatorToSymbol()
         {
-            switch (Operator)
+            return Operator switch
             {
-                case ExpressionType.Equal:
-                    return "=";
-                case ExpressionType.GreaterThan:
-                    return ">";
-                case ExpressionType.GreaterThanOrEqual:
-                    return ">=";
-                case ExpressionType.LessThan:
-                    return "<";
-                case ExpressionType.LessThanOrEqual:
-                    return "<=";
-                case ExpressionType.NotEqual:
-                    return "!=";
-                case ExpressionType.IsTrue:
-                    return "is";
-                case ExpressionType.IsFalse:
-                    return "not";
-                default:
-                    return Operator.ToString();
-            }
+                ExpressionType.Equal => "=",
+                ExpressionType.GreaterThan => ">",
+                ExpressionType.GreaterThanOrEqual => ">=",
+                ExpressionType.LessThan => "<",
+                ExpressionType.LessThanOrEqual => "<=",
+                ExpressionType.NotEqual => "!=",
+                ExpressionType.IsTrue => "is",
+                ExpressionType.IsFalse => "not",
+                _ => Operator.ToString(),
+            };
         }
 
         /// <summary>
@@ -92,17 +83,12 @@ namespace Models.CLEM.Groupings
         /// <returns>Operator as symbol</returns>
         public bool IsOperatorTrueFalseTest()
         {
-            switch (Operator)
+            return Operator switch
             {
-                case ExpressionType.Equal:
-                case ExpressionType.NotEqual:
-                    return (Value?.ToString().ToLower() == "true" | Value?.ToString().ToLower() == "false");
-                case ExpressionType.IsTrue:
-                case ExpressionType.IsFalse:
-                    return true;
-                default:
-                    return false;
-            }
+                ExpressionType.Equal or ExpressionType.NotEqual => (Value?.ToString().ToLower() == "true" | Value?.ToString().ToLower() == "false"),
+                ExpressionType.IsTrue or ExpressionType.IsFalse => true,
+                _ => false,
+            };
         }
 
         /// <summary>

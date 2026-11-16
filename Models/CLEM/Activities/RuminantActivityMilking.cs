@@ -45,29 +45,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: [],
-                        measures: []
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: [
-                            "Number milked",
-                            "Litres milked",
-                        ],
-                        measures: [
-                            "fixed",
-                            "per head",
-                            "per L milked"
-                        ]
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number milked",
+                                            "Litres milked",
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "per L milked"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>
@@ -126,37 +122,22 @@ namespace Models.CLEM.Activities
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
-                switch (valueToSupply.Key.identifier)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.identifier switch
                 {
-                    case "Number milked":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per head":
-                                valuesForCompanionModels[valueToSupply.Key] = number;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    case "Litres milked":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per L milked":
-                                valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                    "Number milked" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per head" => number,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    "Litres milked" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per L milked" => (double?)amountToDo,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
