@@ -278,7 +278,7 @@ namespace UnitTests.Weather
 
                 // Run simulations.
                 var simulations = Node.Create(sims);
-                Runner runner = new Runner(simulations.Model as Simulations);
+                Runner runner = new Runner([simulations.Model as Simulations]);
                 List<Exception> errors = runner.Run();
                 Assert.That(errors, Is.Not.Null);
                 if (errors.Count != 0)

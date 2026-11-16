@@ -112,7 +112,7 @@ namespace UnitTests.Core
 
                 if (expectedSimulations[i].Length > 0)
                 {
-                    Runner runner = new Runner(playlist);
+                    Runner runner = new Runner([playlist]);
                     List<Exception> errors = runner.Run();
                     // Check that no errors were thrown
                     Assert.That(errors.Count, Is.EqualTo(0));
@@ -132,7 +132,7 @@ namespace UnitTests.Core
                 }
                 else
                 {
-                    Assert.Throws<Exception>(() => new Runner(playlist));
+                    Assert.Throws<Exception>(() => new Runner([playlist]));
                 }
 
             }
