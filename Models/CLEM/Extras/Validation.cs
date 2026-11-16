@@ -18,7 +18,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private string dateToCompareToFieldName { get; set; } = dateToCompareToFieldName;
+        private readonly string dateToCompareToFieldName = dateToCompareToFieldName;
 
         /// <summary>
         ///
@@ -65,8 +65,6 @@ namespace Models.CLEM
         {
         }
 
-        private double compareValue { get; set; }
-
         /// <summary>
         ///
         /// </summary>
@@ -103,8 +101,6 @@ namespace Models.CLEM
         public ProportionAttribute()
         {
         }
-
-        private double compareValue { get; set; }
 
         /// <summary>
         ///
@@ -153,10 +149,8 @@ namespace Models.CLEM
         {
         }
 
-        private double compareValue { get; set; }
-
         /// <summary>
-        ///
+        /// Method to determine if the MonthAttribute is valid for the value provided
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -199,7 +193,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private double compareValue { get; set; } = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+        private readonly double compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -245,7 +239,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private double compareValue { get; set; } = Convert.ToDouble(value, CultureInfo.InvariantCulture);
+        private readonly double compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -296,7 +290,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private string compareStyle { get; set; } = Convert.ToString(value, CultureInfo.InvariantCulture);
+        private readonly string compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Perform validation method
@@ -362,7 +356,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private string compareToFieldName { get; set; } = compareToFieldName;
+        private readonly string compareToFieldName = compareToFieldName;
 
         /// <summary>
         ///
@@ -407,7 +401,7 @@ namespace Models.CLEM
     {
         private string DefaultErrorMessage;
 
-        private string compareToFieldName { get; set; } = compareToFieldName;
+        private readonly string compareToFieldName = compareToFieldName;
 
         /// <summary>
         ///
@@ -470,8 +464,8 @@ namespace Models.CLEM
             maxNumberOfArrayItems = maxArrayItems;
         }
 
-        private int minNumberOfArrayItems { get; set; }
-        private int maxNumberOfArrayItems { get; set; }
+        private readonly int minNumberOfArrayItems;
+        private readonly int maxNumberOfArrayItems;
 
         /// <summary>
         ///

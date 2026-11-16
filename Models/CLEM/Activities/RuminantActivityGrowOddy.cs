@@ -178,15 +178,15 @@ namespace Models.CLEM.Activities
         {
             // eulerStep function in R code.
 
-            double alphaM = ind.Weight.StandardReferenceWeight * ind.Parameters.GrowOddy.shrink * ind.Parameters.GrowOddy.leanM * ind.Parameters.GrowOddy.pPrpM * ind.Parameters.GrowOddy.pMusc * ind.Parameters.General.MJEnergyPerKgProtein;
-            double alphaV = ind.Parameters.GrowOddy.cs1 * ind.Intake.ME + ind.Parameters.GrowOddy.cs2 * Math.Pow(ind.Energy.Protein.Amount, 0.41) - ind.Parameters.GrowOddy.cs3 * ind.Intake.MDSolid;
+            double alphaM = ind.Weight.StandardReferenceWeight * ind.Parameters.GrowOddy.Shrink * ind.Parameters.GrowOddy.LeanM * ind.Parameters.GrowOddy.PPrpM * ind.Parameters.GrowOddy.PMusc * ind.Parameters.General.MJEnergyPerKgProtein;
+            double alphaV = ind.Parameters.GrowOddy.Cs1 * ind.Intake.ME + ind.Parameters.GrowOddy.Cs2 * Math.Pow(ind.Energy.Protein.Amount, 0.41) - ind.Parameters.GrowOddy.Cs3 * ind.Intake.MDSolid;
             double NEG = CalculateNEG(ind);
 
             // Pool energy change by time-step
             double dcdt = 0;
             double dldt = 0;
-            double dmdt = (NEG * ind.Parameters.GrowOddy.pm + ind.Parameters.GrowOddy.e0) * (1 - ind.Energy.Protein.Amount / alphaM);
-            double dvdt = ind.Parameters.GrowOddy.pv * (alphaV - ind.Energy.ProteinViscera.Amount);
+            double dmdt = (NEG * ind.Parameters.GrowOddy.Pm + ind.Parameters.GrowOddy.E0) * (1 - ind.Energy.Protein.Amount / alphaM);
+            double dvdt = ind.Parameters.GrowOddy.Pv * (alphaV - ind.Energy.ProteinViscera.Amount);
             double dfdt = NEG - dmdt - dvdt - dcdt - dldt - dwdt;
 
             if (performSetupOnly)
@@ -231,9 +231,9 @@ namespace Models.CLEM.Activities
         private double CalculateNEG(Ruminant ind)
         {
             // for conceptus when added
-            double bc = 1 / ind.Parameters.GrowOddy.kc - 1;
+            double bc = 1 / ind.Parameters.GrowOddy.Kc - 1;
             // for lactation when added
-            double bl = 1 / ind.Parameters.GrowOddy.kl - 1;
+            double bl = 1 / ind.Parameters.GrowOddy.Kl - 1;
 
             dwdt = 0;
             if (ind.Parameters.General.IncludeWool)
@@ -249,18 +249,18 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            double bf = 1 / ind.Parameters.GrowOddy.kf - 1;
-            double bpm = 1 / ind.Parameters.GrowOddy.kp - 1;
+            double bf = 1 / ind.Parameters.GrowOddy.Kf - 1;
+            double bpm = 1 / ind.Parameters.GrowOddy.Kp - 1;
             double bpv = bpm;
             double bpw = bpm;
 
-            if (ind.Energy.Fat.Change < 0) bf = ind.Parameters.GrowOddy.lf;  // lf = 0
-            if (ind.Energy.Protein.Change < 0) bpm = ind.Parameters.GrowOddy.lp; // lp = 0
-            if (ind.Energy.ProteinViscera.Change < 0) bpv = ind.Parameters.GrowOddy.lp; // lp = 0
+            if (ind.Energy.Fat.Change < 0) bf = ind.Parameters.GrowOddy.Lf;  // lf = 0
+            if (ind.Energy.Protein.Change < 0) bpm = ind.Parameters.GrowOddy.Lp; // lp = 0
+            if (ind.Energy.ProteinViscera.Change < 0) bpv = ind.Parameters.GrowOddy.Lp; // lp = 0
 
             // change in energy is from previous timestep and will be updated in parent function
-            ind.Energy.ForBasalMetabolism = ind.Parameters.GrowOddy.bm * ind.Energy.Protein.Amount + ind.Parameters.GrowOddy.bv * ind.Energy.ProteinViscera.Amount;
-            ind.Energy.ForHPViscera = (1 - ind.Parameters.GrowOddy.km) * ind.Intake.ME;
+            ind.Energy.ForBasalMetabolism = ind.Parameters.GrowOddy.Bm * ind.Energy.Protein.Amount + ind.Parameters.GrowOddy.Bv * ind.Energy.ProteinViscera.Amount;
+            ind.Energy.ForHPViscera = (1 - ind.Parameters.GrowOddy.Km) * ind.Intake.ME;
             ind.Energy.ForProductFormation = (bpm * (ind.Energy.Protein.Change / events.Interval)) + (bpv * (ind.Energy.ProteinViscera.Change / events.Interval)) + (bf * (ind.Energy.Fat.Change / events.Interval)) + (bpw * dwdt) + (bc * 0) + (bl * 0);
             ind.Energy.UpdateProductFormationAverage();
             ind.Intake.UpdateMEAverage();

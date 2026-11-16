@@ -67,7 +67,7 @@ namespace Models.CLEM
         /// List of filters that define the herd
         /// </summary>
         [JsonIgnore]
-        private List<RuminantGroup> herdFilters { get; set; }
+        private List<RuminantGroup> herdFilters = null;
 
         /// <summary>
         /// Report item generated and ready for reporting 

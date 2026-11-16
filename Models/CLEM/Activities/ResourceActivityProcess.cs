@@ -30,9 +30,9 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
         private ResourceRequest resourceRequest;
         [JsonIgnore]
-        private IResourceType resourceTypeProcessModel { get; set; }
+        private IResourceType resourceTypeProcessModel;
         [JsonIgnore]
-        private IResourceType resourceTypeCreatedModel { get; set; }
+        private IResourceType resourceTypeCreatedModel;
 
         /// <summary>
         /// Resource type to process

@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     {
         private int numberToDo = 0;
         private IEnumerable<OtherAnimalsGroup> filterGroups;
-        private OtherAnimals otherAnimals { get; set; }
+        private OtherAnimals otherAnimals;
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)

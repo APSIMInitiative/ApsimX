@@ -39,9 +39,9 @@ namespace Models.CLEM
             return instance;
         }
 
-        private int maxCount { get; set; } = maxEntries;
+        private int maxCount = maxEntries;
 
-        private List<string> warningList { get; set; } = [];
+        private readonly List<string> warningList = [];
 
         /// <summary>
         /// Add new warning to the List if it hasn't been reported

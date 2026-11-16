@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the number of units available for sale
         /// </summary>
-        private double unitsAvailableForSale
+        private double UnitsAvailableForSale
         {
             get
             {
@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             unitsToSkip = 0;
-            unitsToDo = unitsAvailableForSale;
+            unitsToDo = UnitsAvailableForSale;
             if (price.UseWholePackets)
             {
                 unitsToDo = Math.Truncate(unitsToDo);

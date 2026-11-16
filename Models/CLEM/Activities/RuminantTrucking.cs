@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
         // relationship to calculate proportion of load per individual
         // loading unit load limit (individuals, weight, floor area)
         [JsonIgnore]
-        private Relationship weightToNumberPerLoadUnit { get; set; }
+        private Relationship weightToNumberPerLoadUnit;
 
         /// <summary>
         /// The list of individuals remaining to be trucked in the current timestep and task (buy or sell)

@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of individual attributes
         /// </summary>
-        private Dictionary<string, IIndividualAttribute> attributes { get; set; }
+        private Dictionary<string, IIndividualAttribute> attributes = null;
 
         /// <summary>
         /// The list of available attributes for the individual in a list

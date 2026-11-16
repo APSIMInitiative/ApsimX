@@ -44,7 +44,7 @@ namespace Models.CLEM
         /// List of filters that define the herd
         /// </summary>
         [JsonIgnore]
-        private List<OtherAnimalsGroup> cohortFilters { get; set; }
+        private List<OtherAnimalsGroup> cohortFilters;
 
         /// <summary>
         /// Report item generated and ready for reporting 

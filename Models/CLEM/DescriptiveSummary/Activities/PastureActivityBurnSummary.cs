@@ -22,11 +22,11 @@ public class PastureActivityBurnSummary : DescriptiveSummaryProviderBase<Pasture
         htmlWriter.Write($" and a carbon content of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.CarbonPercent, warnZero: true)}%");
         generator.AddBlockWithText(htmlWriter.ToString());
 
-        reportEmission("Methane", ModelTyped.MethaneStoreName);
-        reportEmission("NitrousOxide", ModelTyped.NitrousOxideStoreName);
+        ReportEmission("Methane", ModelTyped.MethaneStoreName);
+        ReportEmission("NitrousOxide", ModelTyped.NitrousOxideStoreName);
     }
 
-    private void reportEmission(string gasName, string storeName)
+    private void ReportEmission(string gasName, string storeName)
     {
         string store;
         if (storeName is null || storeName == $"Use store named {gasName} if present")

@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Store of last instance of the individual attribute defined
         /// </summary>
-        private IndividualAttribute lastInstance { get; set; } = null;
+        private IndividualAttribute lastInstance = null;
 
         /// <summary>
         /// Name of attribute

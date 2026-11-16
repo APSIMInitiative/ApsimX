@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         private int numberSold = 0;
         private double totalValue = 0;
         private FinanceType bankAccount = null;
-        private OtherAnimals otherAnimals { get; set; }
+        private OtherAnimals otherAnimals;
 
         /// <summary>
         /// Bank account to use

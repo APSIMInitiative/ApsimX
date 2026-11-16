@@ -32,8 +32,8 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private readonly IClock clock = null;
-        private Relationship pastureToStockingChangeElNino { get; set; }
-        private Relationship pastureToStockingChangeLaNina { get; set; }
+        private Relationship pastureToStockingChangeElNino;
+        private Relationship pastureToStockingChangeLaNina;
 
         private double restockToSkip = 0;
         private double restockToDo = 0;

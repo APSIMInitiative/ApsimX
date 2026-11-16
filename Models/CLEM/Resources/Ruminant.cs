@@ -628,7 +628,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The index of the time-step where the class last changed
         /// </summary>
-        private int ruminantClassLastChanged { get; set; } = 0;
+        private int ruminantClassLastChanged = 0;
 
         /// <summary>
         /// Class details
