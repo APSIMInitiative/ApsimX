@@ -289,8 +289,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Calculate total herd daily pasture required and initialise intake tracking arrays.
         /// </summary>
-        /// <param name="greenAge"></param>
-        public double CalculateDailyFeedRequirement(int greenAge)
+        public double CalculateDailyFeedRequirement()
         {
             herdToFeed = [.. GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm)];
             currentHerdSize = herdToFeed.Count;
@@ -408,7 +407,7 @@ namespace Models.CLEM.Activities
             ResourceRequestList.Clear();
 
             int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
-            double totalNeededDaily = CalculateDailyFeedRequirement(greenAge);
+            double totalNeededDaily = CalculateDailyFeedRequirement();
 
             if (DigestiblePasturePoolGroups is null)
             {

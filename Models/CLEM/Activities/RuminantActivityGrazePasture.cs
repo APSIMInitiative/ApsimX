@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
             {
                 grazeHerd.DigestiblePasturePoolGroups = intakeGroups;
                 grazeHerd.ResourceRequestList.Clear();
-                totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement(greenAge);
+                totalNeededDaily[cnt] = grazeHerd.CalculateDailyFeedRequirement();
                 cnt++;
             }
 
