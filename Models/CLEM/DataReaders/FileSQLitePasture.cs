@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml.Bibliography;

@@ -6,6 +6,7 @@ using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities

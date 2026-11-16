@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using APSIM.Shared.Extensions.Collections;
 using Models.AgPasture;
 using Models.CLEM.Activities;

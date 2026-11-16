@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using Display = Models.Core.DisplayAttribute;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {

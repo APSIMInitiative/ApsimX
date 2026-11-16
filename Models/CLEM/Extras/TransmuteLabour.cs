@@ -11,7 +11,7 @@ using System.Linq;
 using System.IO;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Resource transmutation labour cost item

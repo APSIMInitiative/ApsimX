@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.Statistics;
+﻿using Models.CLEM.Extras;
+using MathNet.Numerics.Statistics;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;

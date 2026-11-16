@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;

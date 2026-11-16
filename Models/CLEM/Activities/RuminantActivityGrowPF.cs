@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using MathNet.Numerics.Distributions;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;

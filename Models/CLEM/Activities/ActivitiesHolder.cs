@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;

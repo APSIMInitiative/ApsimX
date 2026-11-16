@@ -1,3 +1,4 @@
+using Models.CLEM.Reporting;
 using Docker.DotNet.Models;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {

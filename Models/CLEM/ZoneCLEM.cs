@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using APSIM.Core;
 using APSIM.Shared.Extensions;
 using DocumentFormat.OpenXml.EMMA;

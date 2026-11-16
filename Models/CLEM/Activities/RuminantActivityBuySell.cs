@@ -2,6 +2,7 @@ using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

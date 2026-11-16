@@ -10,7 +10,7 @@ using Models.CLEM.Interfaces;
 using System.IO;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// A resource transmute component used as a child of a Transmutation component

@@ -1,5 +1,6 @@
 using Models.CLEM.Activities;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System.IO;
 using System.Linq;
 

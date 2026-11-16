@@ -1,4 +1,5 @@
-﻿using Docker.DotNet.Models;
+﻿using Models.CLEM.Extras;
+using Docker.DotNet.Models;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;

@@ -1,4 +1,5 @@
 ﻿using APSIM.Core;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;

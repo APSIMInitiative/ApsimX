@@ -1,5 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;

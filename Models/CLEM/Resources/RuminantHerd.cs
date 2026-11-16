@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Docker.DotNet.Models;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;

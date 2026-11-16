@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using System;
 using System.Collections.Generic;

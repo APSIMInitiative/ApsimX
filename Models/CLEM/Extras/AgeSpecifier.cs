@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// A  class to allow the user to easily define the age of individuals in a convenient y,m,d format

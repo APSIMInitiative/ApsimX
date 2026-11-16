@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// Tests if date greater than specified property name

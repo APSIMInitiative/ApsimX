@@ -1,4 +1,5 @@
-﻿using APSIM.Numerics;
+﻿using Models.CLEM.Extras;
+using APSIM.Numerics;
 using DocumentFormat.OpenXml;
 using System;
 using System.Collections.Generic;

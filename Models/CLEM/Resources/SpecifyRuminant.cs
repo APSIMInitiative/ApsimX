@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;

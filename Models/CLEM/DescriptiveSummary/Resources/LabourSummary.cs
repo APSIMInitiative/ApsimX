@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using Mapsui.Providers;

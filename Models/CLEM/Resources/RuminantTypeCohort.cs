@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;

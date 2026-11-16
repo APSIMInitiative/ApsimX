@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Resource transmutation

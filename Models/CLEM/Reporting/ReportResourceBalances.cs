@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;

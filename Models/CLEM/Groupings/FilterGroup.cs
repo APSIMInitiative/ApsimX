@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace Models.CLEM
+namespace Models.CLEM.Groupings
 {
     /// <summary>
     /// Implements IFilterGroup for a specific set of filter parameters

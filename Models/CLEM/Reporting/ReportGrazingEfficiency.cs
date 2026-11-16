@@ -1,4 +1,5 @@
-﻿using APSIM.Core;
+﻿using Models.CLEM.Extras;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Resources;

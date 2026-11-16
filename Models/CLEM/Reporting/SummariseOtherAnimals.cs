@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
-    /// <summary>Ruminant summary</summary>
+    /// <summary>Other animals summary</summary>
     /// <summary>This activity provides the other animal cohorts for reporting</summary>
     /// <summary>Remove if you do not need monthly herd summaries</summary>
     [Serializable]

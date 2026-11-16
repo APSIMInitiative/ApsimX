@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 using Models.CLEM.Resources;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// This determines a relationship

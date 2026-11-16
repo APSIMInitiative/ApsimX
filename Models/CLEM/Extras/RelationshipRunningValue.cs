@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using System.IO;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// This provides the ability to track a value based on an associated relationship of change in value provided by Y for a given X

@@ -2,6 +2,7 @@
 using Models.Core;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

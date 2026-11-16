@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.IO;
 using APSIM.Core;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Randomises the years of grown provided in pasture reader.

@@ -12,6 +12,7 @@ using Models.CLEM.Reporting;
 using Models.CLEM.Groupings;
 using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {

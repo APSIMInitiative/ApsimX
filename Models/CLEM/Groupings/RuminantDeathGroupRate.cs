@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using System.IO;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Groupings
 {

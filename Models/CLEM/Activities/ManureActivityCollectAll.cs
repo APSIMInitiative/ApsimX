@@ -5,6 +5,7 @@ using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CLEM.Extras;
 using Models.Core.Attributes;
 using APSIM.Numerics;
 

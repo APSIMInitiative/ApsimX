@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
@@ -7,10 +8,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
     /// <summary>Ruminant summary</summary>
     /// <summary>This activity summarizes ruminant herds for reporting</summary>

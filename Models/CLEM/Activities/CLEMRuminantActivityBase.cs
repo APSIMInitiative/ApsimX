@@ -7,6 +7,8 @@ using Models.CLEM.Groupings;
 using Newtonsoft.Json;
 using Models.CLEM.Interfaces;
 using APSIM.Core;
+using Models.CLEM.Extras;
+
 
 namespace Models.CLEM.Activities
 {

@@ -1,4 +1,5 @@
-﻿using BruTile.Wms;
+﻿using Models.CLEM.Extras;
+using BruTile.Wms;
 using Models.CLEM.Groupings;
 using Models.Core;
 using Models.Core.Attributes;

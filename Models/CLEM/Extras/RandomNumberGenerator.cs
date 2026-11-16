@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>Random numbers generator</summary>
     /// <summary>This component provides the random number sequence to be used for all stochastic processes in CLEM</summary>

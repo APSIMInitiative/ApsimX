@@ -1,5 +1,6 @@
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
+using Models.CLEM.Extras;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

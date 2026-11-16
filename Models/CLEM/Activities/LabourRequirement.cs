@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Interfaces;
 using Newtonsoft.Json;
+using Models.CLEM.Extras;
 using APSIM.Numerics;
 
 namespace Models.CLEM.Activities

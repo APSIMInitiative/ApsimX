@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
