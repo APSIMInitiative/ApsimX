@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class GrazeFoodStorePool : IGrazeIntakePool
     {
-        private readonly IGrazeFoodStoreType grazeStore;
+        private readonly GrazeFoodStoreType grazeStore;
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;

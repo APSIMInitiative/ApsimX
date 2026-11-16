@@ -52,7 +52,7 @@ public class TransmuteRuminantSummary : DescriptiveSummaryProviderBase<Transmute
             htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket, errorNotSet: true)} {directexchangeStyleText} ");
         }
 
-        IModel ruminants = ModelTyped.Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
+        RuminantHerd ruminants = ModelTyped.Structure.FindParent<ResourcesHolder>(recurse: true).FindResourceGroup<RuminantHerd>();
         if (ruminants is null)
         {
             htmlWriter.Write($"{generator.DisplayErrorSnippet("Herd not found")}");

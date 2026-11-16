@@ -289,7 +289,7 @@ namespace Models.CLEM.Resources
         {
             if (Structure.Find<RuminantActivityGrowPF>() is not null || Structure.Find<RuminantActivityGrowSCA07>() is not null)
             {
-                ISummary summary = null;
+                Summary summary = null;
                 RuminantType ruminantType = null;
                 // condition-based intake reduction turned off
                 if (RelativeConditionEffect_CI20 == 1.0)

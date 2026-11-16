@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     public class GrazeAPSIMForagePool : IGrazeIntakePool
     {
         private readonly ModelWithDigestibleBiomass biomassModel;
-        private readonly IFeed feedDetails;
+        private readonly FoodResourcePacket feedDetails;
         private double amount = 0;
         private readonly double nitrogen = 0;
         private const double gm2Tokgha = 10.0;

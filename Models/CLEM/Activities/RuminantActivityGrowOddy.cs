@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             // warn about a couple settings that may have been missed and have an influence of outcomes. These are designed for expert use such as feedlot validation.
-            ISummary summary = null;
+            Summary summary = null;
             foreach (var indgrp in CurrentHerd(false).GroupBy(a => a.HerdName))
             {
                 // condition-based intake reduction
