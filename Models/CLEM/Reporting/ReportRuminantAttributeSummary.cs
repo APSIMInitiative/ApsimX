@@ -248,7 +248,7 @@ namespace Models.CLEM.Reporting
                 listStatistics.StandardDeviationMate = sd;
                 listStatistics.TotalMate = valuesPresent.Count();
             }
-            listStatistics.Count = values.Count();
+            listStatistics.Count = values.Count;
 
             return listStatistics;
         }

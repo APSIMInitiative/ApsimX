@@ -99,7 +99,7 @@ namespace Models.CLEM.Reporting
 
             VariableNames = [.. variableNames];
 
-            if (EventNames == null || EventNames.Count() == 0)
+            if (EventNames == null || EventNames.Length == 0)
             {
                 EventNames = ["[Clock].CLEMEvents.CLEMEndOfTimeStep"];
             }

@@ -214,7 +214,7 @@ namespace Models.CLEM.Activities
             parentNumberToDo = parentBuySellActivity.IndividualsToBeTrucked?.Count() ?? 0;
 
             individualsToBeTrucked = [.. GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked, Structure)];
-            numberToDo = individualsToBeTrucked?.Count() ?? 0;
+            numberToDo = individualsToBeTrucked?.Count ?? 0;
 
             // work out how many can be trucked and return to parent of not trucked for next trucking settings if available.
 

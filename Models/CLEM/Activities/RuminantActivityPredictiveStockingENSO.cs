@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
                     if (!line.StartsWith("Year"))
                     {
                         string[] items = line.Split(' ');
-                        for (int i = 1; i < items.Count(); i++)
+                        for (int i = 1; i < items.Length; i++)
                         {
                             ForecastSequence.Add(
                                 new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),

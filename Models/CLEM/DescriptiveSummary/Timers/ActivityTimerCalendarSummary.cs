@@ -54,7 +54,7 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
             htmlWriter.Write($"Perform {invertString} between ");
         }
 
-        if (range.Start.ErrorMessages.Count() > 0)
+        if (range.Start.ErrorMessages.Count > 0)
         {
             htmlWriter.Write(generator.DisplayErrorSnippet(range.Start.ErrorMessages.First()));
         }
@@ -66,7 +66,7 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
         if (range.Start.ymd.month != range.End.ymd.month | (range.Start.IsMonthOnly == false & range.Start.ymd.day != range.End.ymd.day))
         {
             htmlWriter.Write($" and ");
-            if (range.End.ErrorMessages.Count() > 0)
+            if (range.End.ErrorMessages.Count > 0)
             {
                 htmlWriter.Write(generator.DisplayErrorSnippet(range.End.ErrorMessages.First()));
             }

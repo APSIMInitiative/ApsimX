@@ -204,7 +204,7 @@ namespace Models.CLEM.Reporting
             variableNames.Insert(0, "[Clock].Today as Date");
             VariableNames = [.. variableNames];
 
-            if (EventNames == null || EventNames.Count() == 0)
+            if (EventNames == null || EventNames.Length == 0)
             {
                 EventNames = ["[Clock].CLEMEvents.CLEMAnimalSell"];
             }
