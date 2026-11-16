@@ -688,7 +688,7 @@ namespace Models.CLEM.Activities
                 // take resources
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
+                if (TakeResources(ResourceRequestList) || (ResourceRequestList.Count == 0))
                 {
                     PerformTasksForTimestep(); //based on method supplied by activity
 
@@ -1023,9 +1023,8 @@ namespace Models.CLEM.Activities
         /// Try to take the Resources based on Resource Request List provided.
         /// </summary>
         /// <param name="resourceRequestList">A list of resources required</param>
-        /// <param name="triggerActivityPerformed"></param>
         /// <returns>Flag indicating if able to take the resources needed.</returns>
-        public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
+        public bool TakeResources(List<ResourceRequest> resourceRequestList)
         {
             // no resources required or this is an Activity folder.
             if ((resourceRequestList == null) || (resourceRequestList.Count == 0))

@@ -215,7 +215,7 @@ namespace Models.CLEM.Activities
             ];
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList);
 
             //Now the Land has been allocated we have an Area
             if (ResourceRequestList.FirstOrDefault().Provided > 0)
