@@ -82,7 +82,11 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToSkip = 0;
-            amountToDo = manureStore?.UncollectedStores.Sum(a => a.Pools.Sum(b => b.WetWeight))??0;
+            amountToDo = manureStore?.UncollectedStores.Sum(a =>
+            {
+                Func<ManurePool, double> getPoolWeight = b => b.WetWeight;
+                return a.Pools.Sum(getPoolWeight);
+            }) ?? 0;
 
             // reduce amount by limiter if present.
             if (limiter != null)

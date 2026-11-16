@@ -88,7 +88,11 @@ namespace Models.CLEM.Activities
         {
             amountToSkip = 0;
 
-            amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a => a.Pools.Sum(b => b.WetWeight)) ?? 0;
+            amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a =>
+            {
+                Func<ManurePool, double> getPoolWeight = b => b.WetWeight;
+                return a.Pools.Sum(getPoolWeight);
+            }) ?? 0;
 
             // reduce amount by limiter if present.
             if (limiter != null)
