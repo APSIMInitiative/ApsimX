@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         [NonSerialized]
         private object pasture = new();
 
-        private double dryMatterDigestibility { get; set; }
+        private double dryMatterDigestibility;
 
         /// <summary>
         /// Unit type
@@ -239,7 +239,7 @@ namespace Models.CLEM.Resources
                     missing.Add("NToDMDIntercept");
                 }
 
-                if (missing.Count() > 0)
+                if (missing.Count > 0)
                 {
                     foreach (var item in missing)
                     {
