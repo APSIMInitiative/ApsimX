@@ -3369,7 +3369,7 @@
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 10",
                     "[Phenology].GrainFilling.Target.FixedValue = 290",
-                    "[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
+                    "//[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
                     "[Photosynthesis].RUE.FixedValue = 2.8",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.65",
                     "//[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
