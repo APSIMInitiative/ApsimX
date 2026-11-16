@@ -307,7 +307,8 @@
                     "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.X = 1,2,3.99,4,5,6,7,8,9",
                     "//[Structure].BranchingRate.PotentialBranchingRate.Vegetative.PotentialBranchingRate.XYPairs.Y = 0,0,0,1,2,4,7,12,20",
                     "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1",
-                    "[Grain].MaximumPotentialGrainSize.Expression = 0.05",
+                    "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.05, 0.05, 0.05",
+                    "//[Grain].MaximumPotentialGrainSize.Expression = 0.05",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 40"
                   ],
                   "Name": "Drummond",
@@ -345,7 +346,8 @@
                     "//[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
                     "//[Leaf].CohortParameters.SenescenceDuration.Multiplier.FixedValue = 3",
                     "//[Leaf].CohortParameters.GrowthDuration.AgeFactor.XYPairs.Y = 1,1,0.1",
-                    "[Grain].MaximumPotentialGrainSize.Expression = 0.05",
+                    "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.05, 0.05, 0.05",
+                    "//[Grain].MaximumPotentialGrainSize.Expression = 0.05",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 50",
                     "//[Leaf].ExtinctionCoeff.FixedValue = 0.6"
                   ],
