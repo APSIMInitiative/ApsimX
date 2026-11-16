@@ -144,7 +144,7 @@ namespace Models.CLEM.Resources
         public string Units { get; private set; } = "kg";
 
         /// <inheritdoc/>
-        public static ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
+        public static ResourcePricing Price(PurchaseOrSalePricingStyleType _)
         {
             return null;
         }

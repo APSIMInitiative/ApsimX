@@ -354,7 +354,7 @@ namespace Models.CLEM.Resources
                     cohortexists.Number += cohortDetails.Number;
                 }
                 (Parent as OtherAnimals).LastCohortChanged = cohortexists ?? cohortToAdd;
-                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, cohortexists ?? cohortToAdd);
+                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this);
             }
         }
 
@@ -379,7 +379,7 @@ namespace Models.CLEM.Resources
                 cohortexists.Number = Math.Max(0, cohortexists.Number - cohortDetails.AdjustedNumber);
 
                 (Parent as OtherAnimals).LastCohortChanged = cohortexists;
-                ReportTransaction(TransactionType.Loss, cohortDetails.AdjustedNumber, activity, "", reason, this, cohortexists);
+                ReportTransaction(TransactionType.Loss, cohortDetails.AdjustedNumber, activity, "", reason, this);
             }
         }
 

@@ -363,8 +363,7 @@ namespace Models.CLEM.Resources
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
         /// <param name="resource"></param>
-        /// <param name="extraInformation"></param>
-        public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource, object extraInformation = null)
+        public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource)
         {
             if (parent != null)
             {
