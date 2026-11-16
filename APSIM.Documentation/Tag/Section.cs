@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Models.Core;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>
     /// This class describes a section in a document - it has a title and contains
@@ -9,6 +10,9 @@ namespace APSIM.Shared.Documentation
     /// </summary>
     public class Section : ITag
     {
+        /// <summary>Model that this section was created from</summary>
+        public IModel Reference { get; private set; }
+
         /// <summary>Child tags.</summary>
         public List<ITag> Children { get; set; }
 
@@ -20,39 +24,36 @@ namespace APSIM.Shared.Documentation
         /// </summary>
         /// <param name="title">The section title. Can be null.</param>
         /// <param name="children">The child tags.</param>
-        public Section(string title, IEnumerable<ITag> children)
+        /// <param name="reference">Model that this section is made from</param>
+        public Section(string title, IEnumerable<ITag> children, IModel reference)
         {
             Title = title;
-            this.Children = children.ToList();
+            Children = children.ToList();
+            Reference = reference;
         }
 
         /// <summary>
         /// Initializes a new <see cref="Section"/> with no title.
         /// </summary>
         /// <param name="children">The child tags.</param>
-        public Section(IEnumerable<ITag> children)
+        /// <param name="reference">Model that this section is made from</param>
+        public Section(IEnumerable<ITag> children, IModel reference)
         {
             Title = null;
-            this.Children = children.ToList();
+            Children = children.ToList();
+            Reference = reference;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
         /// <param name="title">The section title. Can be null.</param>
-        public Section(string title)
+        /// <param name="reference">Model that this section is made from</param>
+        public Section(string title, IModel reference)
         {
             Title = title;
-            this.Children = new List<ITag>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Section"/> class.
-        /// </summary>
-        public Section()
-        {
-            Title = null;
-            this.Children = new List<ITag>();
+            Children = new List<ITag>();
+            Reference = reference;
         }
 
         /// <summary>
@@ -60,10 +61,12 @@ namespace APSIM.Shared.Documentation
         /// </summary>
         /// <param name="title">The section title. Can be null.</param>
         /// <param name="child">The child tag.</param>
-        public Section(string title, ITag child)
+        /// <param name="reference">Model that this section is made from</param>
+        public Section(string title, ITag child, IModel reference)
         {
             Title = title;
             Children = new List<ITag>() {child};
+            Reference = reference;
         }
 
         /// <summary>

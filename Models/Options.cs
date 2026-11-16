@@ -155,6 +155,12 @@ namespace Models
         public bool FileVersionNumber { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        [Option('s', "scope", HelpText = "Run the file from the provided scoping path")]
+        public string Scope { get; set; }
+
+        /// <summary>
         /// Type of runner used to run the simulations.
         /// </summary>
         public Models.Core.Run.Runner.RunTypeEnum RunType

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using APSIM.Shared.Utilities;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.CLEM;
 using Models.Core;
 using Models.Core.Run;

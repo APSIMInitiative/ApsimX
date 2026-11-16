@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using Models.Core;
 using Models.Factorial;
 using Models.Storage;

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// The phase goes from the a start stage to and end stage. The class requires a target and a progression function.
+    /// 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

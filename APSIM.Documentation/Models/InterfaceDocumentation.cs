@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Documentation;
+﻿using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF;
 using System;
@@ -47,31 +47,32 @@ namespace APSIM.Documentation.Models
             List<ITag> subtags = new List<ITag>();
             //Add Parameters
             subtags.AddRange(GetParameters(model, parameterNames));
-            subtags.AddRange(GetOutputs(type, parameterNames));
-            subtags.AddRange(DocumentLinksEventsMethods(type));
+            subtags.AddRange(GetOutputs(type, model, parameterNames));
+            subtags.AddRange(DocumentLinksEventsMethods(type, model));
 
-            tags.Add(new Section(model.Name, subtags));
+            tags.Add(new Section(model.Name, subtags, model));
 
             // Document any other referenced types.
             foreach (Type typeDoc in GetTypes(model))
-                tags.AddRange(DocumentType(typeDoc));
+                tags.AddRange(DocumentType(typeDoc,model));
 
             return tags;
         }
 
         /// <summary>Document the specified model.</summary>
         /// <param name="type"></param>
+        /// <param name="model"></param>
         /// <returns>An ITag section with the summary, remarks, outputs, links, events and methods for that type</returns>
-        private static List<ITag> DocumentType(Type type)
+        private static List<ITag> DocumentType(Type type, IModel model)
         {
             List<ITag> tags = new List<ITag>();
-            tags.Add(new Paragraph(CodeDocumentation.GetSummary(type)));
-            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(type)));
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(type),model));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(type),model));
 
-            tags.AddRange(GetOutputs(type));
-            tags.AddRange(DocumentLinksEventsMethods(type));
+            tags.AddRange(GetOutputs(type, model));
+            tags.AddRange(DocumentLinksEventsMethods(type, model));
 
-            return new List<ITag>() { new Section(type.GetFriendlyName(), tags) };
+            return new List<ITag>() { new Section(type.GetFriendlyName(), tags, model) };
         }
 
         /// <summary>Get all the types that should be documented for this model. This includes Properties and Fields within the same namespace.</summary>
@@ -149,7 +150,7 @@ namespace APSIM.Documentation.Models
             if (parameterTable != null)
             {
                 parameterTable.TableName = "Parameters (Inputs)";
-                tags.AddRange(ConvertToITags(parameterTable));
+                tags.AddRange(ConvertToITags(parameterTable, model));
             }
             return tags;
         }
@@ -158,8 +159,9 @@ namespace APSIM.Documentation.Models
         /// Create and return a new Output object for member
         /// </summary>
         /// <param name="type"></param>
+        /// <param name="model"></param>
         /// <param name="parameterNames"></param>
-        private static List<ITag> GetOutputs(Type type, string[] parameterNames = null)
+        private static List<ITag> GetOutputs(Type type, IModel model, string[] parameterNames = null)
         {
             List<PropertyInfo> outputs = new();
             PropertyInfo[] properties = type.GetProperties(FLAGS);
@@ -181,7 +183,7 @@ namespace APSIM.Documentation.Models
             if (table != null)
             {
                 table.TableName = "Properties (Outputs)";
-                return ConvertToITags(table);
+                return ConvertToITags(table, model);
             }
             else
                 return new List<ITag>();
@@ -189,8 +191,9 @@ namespace APSIM.Documentation.Models
 
         /// <summary>Gets documentation tags for Links, Events and Methods for a type.</summary>
         /// <param name="type"></param>
+        /// <param name="model"></param>
         /// <returns>An array of ITag section for each of the Links, Events and Methods to be documented</returns>
-        private static List<ITag> DocumentLinksEventsMethods(Type type)
+        private static List<ITag> DocumentLinksEventsMethods(Type type, IModel model)
         {
             List<ITag> tags = new List<ITag>();
 
@@ -198,21 +201,21 @@ namespace APSIM.Documentation.Models
             if (links != null)
             {
                 links.TableName = "Links (Dependencies)";
-                tags.AddRange(ConvertToITags(links));
+                tags.AddRange(ConvertToITags(links, model));
             }
 
             DataTable events = GetEvents(type);
             if (events != null)
             {
                 events.TableName = "Events published";
-                tags.AddRange(ConvertToITags(events));
+                tags.AddRange(ConvertToITags(events, model));
             }
 
             DataTable methods = GetMethods(type);
             if (methods != null)
             {
                 methods.TableName = "Methods (callable from manager)";
-                tags.AddRange(ConvertToITags(methods));
+                tags.AddRange(ConvertToITags(methods, model));
             }
 
             return tags;
@@ -446,16 +449,17 @@ namespace APSIM.Documentation.Models
 
         /// <summary>Convert a DataTable into an ITag table</summary>
         /// <param name="table"></param>
+        /// <param name="model"></param>
         /// <returns>An ITag list with the table name in a paragraph and table as a sibling.</returns>
-        private static List<ITag> ConvertToITags(DataTable table)
+        private static List<ITag> ConvertToITags(DataTable table, IModel model)
         {
             List<ITag> tags = new List<ITag>();
 
             if (table == null || table.Rows.Count == 0)
                 return tags;
 
-            tags.Add(new Paragraph("**" + table.TableName + "**"));
-            tags.Add(new Table(new DataView(table) { Sort = "Name asc" }));
+            tags.Add(new Paragraph("**" + table.TableName + "**", model));
+            tags.Add(new Table(new DataView(table) { Sort = "Name asc" }, model));
             return tags;
         }
 
