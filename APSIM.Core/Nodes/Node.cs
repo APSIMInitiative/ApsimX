@@ -572,6 +572,7 @@ public class Node : IStructure
     {
         try
         {
+            Root().exception = null;
             List<IGenerateNodes> generateNodes = new List<IGenerateNodes>();
             foreach (var node in Walk())
             {

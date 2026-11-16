@@ -204,7 +204,7 @@ namespace Models
                             if (model == null)
                                 throw new ArgumentException($"A model with path {options.Scope} could not be found in {sims.FileName}.");
                             else
-                                relativeTos.AddRange(model);
+                                relativeTos.Add(model);
                         }
                         else
                         {

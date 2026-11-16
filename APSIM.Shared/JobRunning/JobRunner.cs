@@ -146,8 +146,6 @@ namespace APSIM.Shared.JobRunning
                 }
                 catch (Exception err)
                 {
-                    if (ExceptionThrownByRunner == null)
-                        throw new Exception("Error in Simulation", err);
                     ExceptionThrownByRunner = err;
                 }
 
