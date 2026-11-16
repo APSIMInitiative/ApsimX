@@ -69,7 +69,7 @@ namespace APSIM.Cli
                 Simulations sims = FileFormat.ReadFromFile<Simulations>(file,
                                         e => throw new Exception($"Error while trying to run {file}", e)).Model as Simulations;
 
-                Runner runner = new Runner(sims);
+                Runner runner = new Runner([sims]);
                 List<Exception> errors = runner.Run();
 
                 if (errors != null && errors.Count > 0)

@@ -42,7 +42,7 @@ namespace UnitTests.Functions
 
                 simulations.Node = Node.Create(simulations);
 
-                Runner runner = new Runner(simulations);
+                Runner runner = new Runner([simulations]);
                 List<Exception> errors = runner.Run();
                 if (errors != null && errors.Count > 0)
                     throw errors[0];

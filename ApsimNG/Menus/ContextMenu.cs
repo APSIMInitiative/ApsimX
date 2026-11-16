@@ -91,7 +91,7 @@ namespace UserInterface.Presenters
                 if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
                 {
                     IModel model = MainMenu.FindRunnable(explorerPresenter);
-                    var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                    var runner = new Runner([model], runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
                 }
@@ -163,7 +163,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
+                Runner runner = new Runner([explorerPresenter.ApsimXFile], runSimulations: false, wait: false);
                 RunCommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
                 runner.AllSimulationsCompleted += RefreshRightHandPanel;
                 command.Do();
