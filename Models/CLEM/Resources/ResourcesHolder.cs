@@ -207,8 +207,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool ResourceItemsExist<T>()
         {
-            var resourceGroup = Structure.FindChildren<T>().FirstOrDefault() as IModel;
-            if (resourceGroup != null)
+            if (Structure.FindChildren<T>().FirstOrDefault() is IModel resourceGroup)
                 return resourceGroup.Children.Where(a => a.GetType() != typeof(Memo)).Any();
             return false;
         }

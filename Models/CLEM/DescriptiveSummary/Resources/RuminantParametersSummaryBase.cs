@@ -154,8 +154,7 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
 
         foreach (var prop in properties)
         {
-            DescriptionAttribute desAtt = prop.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() as DescriptionAttribute;
-            if (desAtt is null)
+            if (prop.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault() is not DescriptionAttribute desAtt)
                 continue;
 
             string desc = desAtt.ToString();

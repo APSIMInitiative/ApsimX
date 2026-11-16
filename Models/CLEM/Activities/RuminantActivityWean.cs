@@ -268,8 +268,7 @@ namespace Models.CLEM.Activities
         {
             if (GrazeFoodStoreName.Contains('.'))
             {
-                var grazeStore = Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
-                if (grazeStore is null)
+                if (Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) is not IGrazeFoodStoreType grazeStore)
                 {
                     yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
