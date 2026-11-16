@@ -53,7 +53,7 @@ public class LabourAvailabilityGroupMonthlySummary : GroupSummaryBase<LabourAvai
 
         generator.CloseMostRecentBlock("labourAvailabilityItem_filters");
         string values = "";
-        string[] monthNames = [.. DateTimeFormatInfo.CurrentInfo.MonthNames.Select(a => a.Substring(0, 3))];
+        string[] monthNames = [.. DateTimeFormatInfo.CurrentInfo.MonthNames.Select(a => a[..3])];
         for (int month = 0; month < 12; month++)
         {
             values += $"{monthNames[month]}:{generator.DisplaySummaryValueSnippet(ModelTyped.MonthlyValues[month], warnZero: true)}";
