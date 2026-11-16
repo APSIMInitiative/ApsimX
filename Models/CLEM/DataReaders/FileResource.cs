@@ -269,7 +269,7 @@ namespace Models.CLEM
         /// <returns>A list of column names</returns>
         public IEnumerable<string> GetUniqueResourceTypes()
         {
-            DataView dataView = new DataView(resourceFileAsTable);
+            DataView dataView = new(resourceFileAsTable);
             return dataView.Table.AsEnumerable().Select(a => a.Field<string>(ResourceNameColumnName)).Distinct();
         }
 
@@ -296,7 +296,7 @@ namespace Models.CLEM
                     filter = $"{filter}({YearColumnName} >= {startDate.Year} AND {MonthColumnName} >= {startDate.Month})";
                     break;
             }
-            DataView dataView = new DataView(resourceFileAsTable);
+            DataView dataView = new(resourceFileAsTable);
             if(resourceNames.Any())
             {
                 filter = $"{filter} AND (";

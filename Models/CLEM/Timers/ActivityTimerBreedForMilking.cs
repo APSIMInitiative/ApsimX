@@ -151,7 +151,7 @@ namespace Models.CLEM.Timers
                 IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
 
                 // report activity performed details.
-                ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                ActivityPerformedEventArgs activitye = new()
                 {
                     Name = Name,
                     Status = ActivityStatus.Timer,

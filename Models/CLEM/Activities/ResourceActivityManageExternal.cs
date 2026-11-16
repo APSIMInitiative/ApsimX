@@ -323,7 +323,7 @@ namespace Models.CLEM.Activities
                                 }
                                 bankAccount.AddToResource(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
                             }
-                            ResourceRequest sellRequest = new ResourceRequest
+                            ResourceRequest sellRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = amount,
@@ -358,7 +358,7 @@ namespace Models.CLEM.Activities
                                 }
 
                                 amount = packets * price.PacketSize;
-                                ResourceRequest sellRequestDollars = new ResourceRequest
+                                ResourceRequest sellRequestDollars = new()
                                 {
                                     ActivityModel = this,
                                     Required = packets * price.PacketSize,

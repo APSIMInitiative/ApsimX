@@ -247,7 +247,7 @@ namespace Models.CLEM
             foreach (DataRow row in table.Rows)
             {
                 rowCount++;
-                RuminantTypeCohort cohort = new RuminantTypeCohort();
+                RuminantTypeCohort cohort = new();
                 APSIM.Core.Node.Create(cohort);
                 Sex sex = Sex.Male;
 

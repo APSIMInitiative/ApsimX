@@ -421,7 +421,7 @@ namespace Models.CLEM.Activities
 
                     totalNeeded += amountNeeded;
 
-                    FoodResourceStore foodStore = new FoodResourceStore(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
+                    FoodResourceStore foodStore = new(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
 
                     // try to feed. excess will be returned.
                     overfed += ind.Intake.AddFeed(foodStore, bypassPotIntakeLimits: ForceFeed);

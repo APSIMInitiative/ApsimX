@@ -145,7 +145,7 @@ namespace Models.CLEM
                     financeType.AddToResource(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // finance transaction from purchase of shortfall
-                    ResourceRequest financeRequest = new ResourceRequest()
+                    ResourceRequest financeRequest = new()
                     {
                         Resource = financeType,
                         Required = shortfall / shortfallPacketSize * shortfallPricing.CurrentPrice,

@@ -168,7 +168,7 @@ namespace Models.CLEM
                 var allZoneCLEM = Structure.FindAll<ZoneCLEM>();
                 if (allZoneCLEM.Any() && allZoneCLEM.FirstOrDefault() != this) return;
 
-                DescriptiveSummaryGenerator summaryGenerator = new DescriptiveSummaryGenerator(DescriptiveSummaryFormatStyle, false);
+                DescriptiveSummaryGenerator summaryGenerator = new(DescriptiveSummaryFormatStyle, false);
                 summaryGenerator.GenerateSummaryForComponentAndChildren(Structure.FindParent<Simulation>(recurse: true), wholeSimulationSummaryFile);
             }
         }
@@ -248,13 +248,13 @@ namespace Models.CLEM
             if (messages.Any())
             {
                 // create combined inner exception
-                StringBuilder innerExceptionString = new StringBuilder();
+                StringBuilder innerExceptionString = new();
                 foreach (var error in messages)
                 {
                     innerExceptionString.Append($"{error.Text}{Environment.NewLine}");
                 }
 
-                Exception innerException = new Exception(innerExceptionString.ToString());
+                Exception innerException = new(innerExceptionString.ToString());
                 throw new ApsimXException(model, $"{messages.Count()} error{(messages.Count() == 1 ? "" : "s")} occurred during start up.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }

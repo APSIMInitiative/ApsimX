@@ -180,7 +180,7 @@ namespace Models.CLEM.Reporting
         /// <returns>Transposed DataTable</returns>
         private static DataTable Transpose(DataTable dt)
         {
-            DataTable dtNew = new DataTable();
+            DataTable dtNew = new();
 
             //adding columns
             for (int i = 0; i <= dt.Rows.Count; i++)
@@ -395,7 +395,7 @@ namespace Models.CLEM.Reporting
                 html = html.Replace("[ContDefaultBanner]", "#686868");
             }
 
-            using StringWriter htmlString = new StringWriter();
+            using StringWriter htmlString = new();
             htmlString.WriteLine(html);
             htmlString.WriteLine("\r\n<div class=\"wrapper\">");
             htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");

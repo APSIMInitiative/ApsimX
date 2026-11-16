@@ -197,7 +197,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public ListStatistics SummariseAttribute(string tag, bool ignoreNotFound, RuminantGroup herdGroup = null)
         {
-            ListStatistics listStatistics = new ListStatistics();
+            ListStatistics listStatistics = new();
             if (ruminantHerd is null)
             {
                 return listStatistics;

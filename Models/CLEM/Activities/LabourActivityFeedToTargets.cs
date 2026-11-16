@@ -361,7 +361,7 @@ namespace Models.CLEM.Activities
                     if (bankAccount != null && marketIsSource && price.PricePerPacket > 0)
                     {
                         // finance transaction to buy food from market
-                        ResourceRequest marketRequest = new ResourceRequest
+                        ResourceRequest marketRequest = new()
                         {
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
@@ -439,7 +439,7 @@ namespace Models.CLEM.Activities
                                 {
                                     if (price.PricePerPacket > 0)
                                     {
-                                        ResourceRequest marketRequest = new ResourceRequest
+                                        ResourceRequest marketRequest = new()
                                         {
                                             ActivityModel = this,
                                             Required = amountPurchased / price.PacketSize * price.PricePerPacket,
@@ -595,7 +595,7 @@ namespace Models.CLEM.Activities
                         double amountSold = amountAvailable - amountStored;
                         if (amountSold > 0)
                         {
-                            ResourcePricing priceToUse = new ResourcePricing()
+                            ResourcePricing priceToUse = new()
                             {
                                 PacketSize = 1
                             };
@@ -607,7 +607,7 @@ namespace Models.CLEM.Activities
                                 units = Math.Truncate(units);
 
                             // remove resource
-                            ResourceRequest purchaseRequest = new ResourceRequest
+                            ResourceRequest purchaseRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
@@ -621,7 +621,7 @@ namespace Models.CLEM.Activities
                             // transfer money earned
                             if (bankAccount != null)
                             {
-                                ResourceRequest purchaseFinance = new ResourceRequest
+                                ResourceRequest purchaseFinance = new()
                                 {
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,

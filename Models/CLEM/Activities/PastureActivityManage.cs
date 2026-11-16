@@ -325,7 +325,7 @@ namespace Models.CLEM.Activities
             }
 
             // report activity performed.
-            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            ActivityPerformedEventArgs activitye = new()
             {
                 Name = Name,
                 Status = events.IsEcologicalIndicatorsCalculationDue() ? ActivityStatus.Calculation : ActivityStatus.Success,

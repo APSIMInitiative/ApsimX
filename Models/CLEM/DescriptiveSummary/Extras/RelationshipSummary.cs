@@ -154,7 +154,7 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
 
                     // Add 8 tabs to the start of each line before adding to generator, but keep the first non-empty line unindented
                     string html = htmlWriter.ToString();
-                    string indent = new string('\t', 8);
+                    string indent = new('\t', 8);
                     string[] lines = html.Split([ "\r\n", "\n" ], StringSplitOptions.None);
                     var indentedBuilder = new System.Text.StringBuilder();
                     bool firstNonEmptyLine = true;

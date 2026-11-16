@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
                     double newWeight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
                     if (singleSex > 1)
                     {
-                        OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                        OtherAnimalsTypeCohort newmales = new()
                         {
                             AgeDetails = new(0),
                             Weight = newWeight,
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
 
                     if (singleSex > 1)
                     {
-                        OtherAnimalsTypeCohort newFemales = new OtherAnimalsTypeCohort()
+                        OtherAnimalsTypeCohort newFemales = new()
                         {
                             AgeDetails = new(0),
                             Weight = newWeight,

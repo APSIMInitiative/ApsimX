@@ -371,7 +371,7 @@ namespace Models.CLEM
         private double[] GetStkRateCategories()
         {
 
-            DataView dataview = new DataView(this.pastureFileAsTable);
+            DataView dataview = new(pastureFileAsTable);
             DataTable distinctStkRates = dataview.ToTable(true, "StkRate");
 
             double[] results = new double[distinctStkRates.Rows.Count];
@@ -554,7 +554,7 @@ namespace Models.CLEM
 
         private static PastureDataType DataRow2PastureDataType(DataRow dr)
         {
-            PastureDataType pastureData = new PastureDataType
+            PastureDataType pastureData = new()
             {
                 Region = int.Parse(dr["Region"].ToString(), CultureInfo.InvariantCulture),
                 Soil = int.Parse(dr["Soil"].ToString(), CultureInfo.InvariantCulture),

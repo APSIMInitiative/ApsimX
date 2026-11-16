@@ -82,7 +82,7 @@ namespace Models.CLEM.Resources
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)
             {
-                ResourceRequest resourceRequest = new ResourceRequest()
+                ResourceRequest resourceRequest = new()
                 {
                     ActivityModel = this,
                     AllowTransmutation = false,

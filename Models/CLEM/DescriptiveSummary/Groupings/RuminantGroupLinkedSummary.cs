@@ -30,7 +30,7 @@ public class RuminantGroupLinkedSummary : GroupSummaryBase<RuminantGroupLinked>
         var zone = ModelTyped.Structure.FindParent<Zone>(recurse: true);
         var foundGroup = ModelTyped.Structure.FindChildren<RuminantGroup>(relativeTo: zone, recurse: true).Where(a => a.Enabled).Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ModelTyped.ExistingGroupName).FirstOrDefault() as RuminantGroup;
        
-        ChildComponentGroup childC = new ChildComponentGroup()
+        ChildComponentGroup childC = new()
         {
             Id = "linked",
             Missing = $"Linked RuminantGroup {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ExistingGroupName, errorNotSet: true, errorString: "Not specified")} not found",

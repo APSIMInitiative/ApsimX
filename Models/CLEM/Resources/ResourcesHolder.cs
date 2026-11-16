@@ -363,7 +363,7 @@ namespace Models.CLEM.Resources
                                     if (transmute.TransmuteResourceType != null)
                                     {
                                         // create new request for this transmutation cost
-                                        ResourceRequest transRequest = new ResourceRequest
+                                        ResourceRequest transRequest = new()
                                         {
                                             Resource = transmute.TransmuteResourceType,
                                             Required = packetsNeeded, // provide the amount of shortfall resource needed

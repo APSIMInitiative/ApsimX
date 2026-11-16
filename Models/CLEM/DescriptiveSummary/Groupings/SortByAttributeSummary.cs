@@ -11,7 +11,7 @@ public class SortByAttributeSummary : FilterSummaryBase<SortByAttribute>
     /// <inheritdoc/>
     public override string FilterString()
     {
-        using StringWriter sortWriter = new StringWriter();
+        using StringWriter sortWriter = new();
         sortWriter.Write($"Sort: Attribute-");
         sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AttributeTag, "Not set", HTMLSummaryStyle.Filter)}");
         sortWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FilterStyle.ToString().ToLower())}");

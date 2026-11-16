@@ -151,7 +151,7 @@ namespace Models.CLEM
                     throw new ApsimXException(this, errorMsg);
                 }
 
-                Dictionary<string, string> columnLinks = new Dictionary<string, string>()
+                Dictionary<string, string> columnLinks = new()
                 {
                     { "date", DateColumnName },
                     { "soil", SoilTypeColumnName },
@@ -208,7 +208,7 @@ namespace Models.CLEM
                                         DateTime startDate, DateTime endDate)
         {
             // check SQL file
-            SQLite sQLiteReader = new SQLite();
+            SQLite sQLiteReader = new();
             try
             {
                 sQLiteReader.OpenDatabase(FullFileName, true);
@@ -261,7 +261,7 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropData = new CropDataType
+            CropDataType cropData = new()
             {
                 SoilNum = dr[SoilTypeColumnName].ToString(),
                 CropName = dr[CropNameColumnName].ToString(),

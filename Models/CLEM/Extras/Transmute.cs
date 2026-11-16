@@ -187,7 +187,7 @@ namespace Models.CLEM
                     financeType.AddToResource(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // add finance transaction to buy shortfall
-                    ResourceRequest financeRequest = new ResourceRequest()
+                    ResourceRequest financeRequest = new()
                     {
                         Resource = financeType,
                         Required = shortfallPackets * shortfallPricing.CurrentPrice,

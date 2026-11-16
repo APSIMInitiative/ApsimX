@@ -793,7 +793,7 @@ namespace Models.CLEM
 
         private PastureDataType DataRow2PastureDataType(DataRowView dr)
         {
-            PastureDataType pasturedata = new PastureDataType
+            PastureDataType pasturedata = new()
             {
                 Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
                 Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),

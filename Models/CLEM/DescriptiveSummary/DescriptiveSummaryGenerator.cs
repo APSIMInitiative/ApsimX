@@ -345,7 +345,7 @@ public class DescriptiveSummaryGenerator
         if (textToWrite.Contains("<canvas"))
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
+            StreamReader textStreamReader = new(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
             textToWrite = textToWrite.Replace("<!-- graphscript -->", $"<script>{textStreamReader.ReadToEnd()}</script>");
             textToWrite = UpdateCSSColours(textToWrite, graphColours);
         }

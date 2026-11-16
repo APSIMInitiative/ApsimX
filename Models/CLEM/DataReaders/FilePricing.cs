@@ -127,7 +127,7 @@ namespace Models.CLEM
                 pricingComponentsFound = [.. Structure.FindChildren<IResourcePricing>(relativeTo: resources, recurse: true)];
             }
 
-            DataView dataView = new DataView(GetAllData())
+            DataView dataView = new(GetAllData())
             {
                 Sort = $"{DateColumnName} ASC"
             };

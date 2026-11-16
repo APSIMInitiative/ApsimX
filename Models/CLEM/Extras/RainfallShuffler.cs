@@ -65,7 +65,7 @@ namespace Models.CLEM
 
             // create year month list
             List<(int year, int month, int rndyear, int mthoffset)> storeYears = [];
-            DateTime currentDate = new DateTime(clock.StartDate.Year, clock.StartDate.Month, 1);
+            DateTime currentDate = new(clock.StartDate.Year, clock.StartDate.Month, 1);
             int startYear = (currentDate.Month >= (int)StartSeasonMonth)? clock.StartDate.Year - 1: clock.StartDate.Year;
             int currentYear = 0;
             List<int> yearOffset = [0];
