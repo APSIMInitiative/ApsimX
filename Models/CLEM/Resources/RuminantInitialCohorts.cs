@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Resources
 {

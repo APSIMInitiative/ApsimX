@@ -1,5 +1,6 @@
 using DocumentFormat.OpenXml.Math;
 using Models.CLEM;
+using Models.CLEM.DataReaders;
 using Models.CLEM.DescriptiveSummary;
 using Models.Core;
 

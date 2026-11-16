@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Extras;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
