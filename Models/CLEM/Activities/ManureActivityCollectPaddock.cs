@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
 
             amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a =>
             {
-                Func<ManurePool, double> getPoolWeight = b => b.WetWeight;
+                static double getPoolWeight(ManurePool b) => b.WetWeight;
                 return a.Pools.Sum(getPoolWeight);
             }) ?? 0;
 

@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
             amountToSkip = 0;
             amountToDo = manureStore?.UncollectedStores.Sum(a =>
             {
-                Func<ManurePool, double> getPoolWeight = b => b.WetWeight;
+                static double getPoolWeight(ManurePool b) => b.WetWeight;
                 return a.Pools.Sum(getPoolWeight);
             }) ?? 0;
 

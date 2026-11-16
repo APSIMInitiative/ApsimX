@@ -433,7 +433,7 @@ namespace Models.CLEM.Resources
                     {
                         valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p =>
                         {
-                            Func<PMF.Interfaces.DamageableBiomass, double> getKgInPaddockWt = b => b.Total.Wt * convertToKgInPaddock;
+                            double getKgInPaddockWt(PMF.Interfaces.DamageableBiomass b) => b.Total.Wt * convertToKgInPaddock;
                             return p.BiomassModel.Material.Sum(getKgInPaddockWt);
                         }) / convert;
                     }
@@ -447,7 +447,7 @@ namespace Models.CLEM.Resources
                     {
                         valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p =>
                         {
-                            Func<PMF.Interfaces.DamageableBiomass, double> getKgConsumedInPaddock = b => b.Consumable.Wt * convertToKgInPaddock;
+                            double getKgConsumedInPaddock(PMF.Interfaces.DamageableBiomass b) => b.Consumable.Wt * convertToKgInPaddock;
                             return p.BiomassModel.Material.Sum(getKgConsumedInPaddock);
                         }) / convert;
                     }
