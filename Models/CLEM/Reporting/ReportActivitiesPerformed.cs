@@ -467,7 +467,7 @@ namespace Models.CLEM.Reporting
                                 }
                                 else
                                 {
-                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Any() ? "note" : "")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
+                                    htmlString.Write($"<td title=\"{statusParts[1]}\" class=\"{(statusParts[1].Length != 0 ? "note" : "")}\"><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\" alt=\"{statusParts[0]}\"/></td>");
                                 }
 
                             }

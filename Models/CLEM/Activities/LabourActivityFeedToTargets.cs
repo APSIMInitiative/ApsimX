@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
             // set the food store linked in any TargetPurchase if target proportion set > 0
             // check that all purchase resources have transmutation or recalculate the proportion
             var targetPurchases = Structure.FindChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
-            if (targetPurchases.Any())
+            if (targetPurchases.Count != 0)
             {
                 double checkPropAvailable = 0;
                 double totPropAvailable = 0;

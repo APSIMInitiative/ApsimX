@@ -110,7 +110,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any())
+            if (ResourceGroupsToReport is null || ResourceGroupsToReport.Length == 0)
                 return;
 
             timers = Structure.FindChildren<IActivityTimer>();

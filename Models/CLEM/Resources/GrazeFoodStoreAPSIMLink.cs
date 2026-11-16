@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public string GetStoreName(int index)
         {
-            if (index < 0 || !intakeStoreRequests.Any() || index > intakeStoreRequests.Count - 1)
+            if (index < 0 || intakeStoreRequests.Count == 0 || index > intakeStoreRequests.Count - 1)
                 return "Invalid";
             return intakeStoreRequests.ElementAt(index).Name;
         }
@@ -362,7 +362,7 @@ namespace Models.CLEM.Resources
             //string devStyle = "BySpecies";
             string devStyle = "ByForageVSurfaceOM";
 
-            if (forageModels == null || !forageModels.Any())
+            if (forageModels == null || forageModels.Count == 0)
                 return [];
 
             var pools = forageModels

@@ -300,7 +300,7 @@ namespace Models.CLEM.DescriptiveSummary
 
             }
 
-            if (notBeingMarked.Any())
+            if (notBeingMarked.Count != 0)
             {
                 output = "";
                 foreach (var item in notBeingMarked)

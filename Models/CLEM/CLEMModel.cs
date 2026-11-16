@@ -170,7 +170,7 @@ namespace Models.CLEM
                     }
                 }
 
-                if (errors.Any())
+                if (errors.Count != 0)
                 {
                     var sim = structure.FindParent<Simulation>(relativeTo: model, recurse: true);
                     Summary summary = structure.FindChild<Summary>(relativeTo: sim, recurse: true);
@@ -345,7 +345,7 @@ namespace Models.CLEM
         public bool ParentSuppliedIdentifiersPresent()
         {
             var psi = ParentSuppliedIdentifiers();
-            return (psi != null && psi.Any());
+            return (psi != null && psi.Count != 0);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace Models.CLEM
         public bool ParentSuppliedMeasuresPresent()
         {
             var psm = ParentSuppliedMeasures();
-            return (psm != null && psm.Any());
+            return (psm != null && psm.Count != 0);
         }
 
         /// <summary>

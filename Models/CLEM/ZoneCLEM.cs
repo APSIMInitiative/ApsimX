@@ -313,7 +313,7 @@ namespace Models.CLEM
                 }
             }
 
-            if (validationResults.Any())
+            if (validationResults.Count != 0)
             {
                 valid = false;
                 // report all errors

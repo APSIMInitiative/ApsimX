@@ -61,7 +61,7 @@ namespace Models.CLEM
         {
             if (!Exists(checkMessage) & summary != null)
             {
-                summary.WriteMessage(sender, (fullMessage.Any())?fullMessage:checkMessage, messageType);
+                summary.WriteMessage(sender, (fullMessage.Length != 0) ?fullMessage:checkMessage, messageType);
                 Add(checkMessage);
             }
         }
