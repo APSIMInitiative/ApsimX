@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
         {
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
             var specifyRuminants = Structure.FindChildren<SpecifyRuminant>();
-            if (specifyRuminants.Count() == 0)
+            if (!specifyRuminants.Any())
             {
                 string[] memberNames = ["PurchaseDetails"];
                 yield return new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames);

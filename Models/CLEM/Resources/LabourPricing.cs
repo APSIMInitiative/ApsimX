@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
             {
                 yield return new ValidationResult($"No [LabourPriceGroups] have been provided for [r={Name}].\r\nAdd [LabourPriceGroups] to include labour pricing.", ["Labour pricing"]);
             }
-            else if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Count(a => a.Value == 0) > 0)
+            else if (Structure.FindChildren<LabourPriceGroup>(relativeTo: this).Any(a => a.Value == 0))
             {
                 yield return new ValidationResult($"No price [Value] has been set for some of the [LabourPriceGroup] in [r={Name}]\r\nThese will not result in price calculations and can be deleted.", ["Labour pricing"]);
             }

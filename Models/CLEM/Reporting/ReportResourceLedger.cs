@@ -260,7 +260,7 @@ namespace Models.CLEM.Reporting
                     bool pricingIncluded = false;
                     if (model.GetType() == typeof(RuminantHerd))
                     {
-                        pricingIncluded = Structure.FindChildren<AnimalPricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<AnimalPricing>(relativeTo: model, recurse: true).Any(a => a.Enabled);
 
                         if (IncludeRuminantID)
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastIndividualChanged.ID as uID");
@@ -311,7 +311,7 @@ namespace Models.CLEM.Reporting
                             variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastCohortChanged.AgeInDays as Age");
                         }
 
-                        pricingIncluded = Structure.FindChildren<ResourcePricing>(relativeTo: model, recurse: true).Where(a => a.Enabled).Count() > 0;
+                        pricingIncluded = Structure.FindChildren<ResourcePricing>(relativeTo: model, recurse: true).Any(a => a.Enabled);
 
                         if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                         {

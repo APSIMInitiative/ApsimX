@@ -235,7 +235,7 @@ namespace Models.CLEM.Activities
             limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             // check if harvest type tags have been provided
-            HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
+            HarvestTagsUsed = HarvestData.Any(a => a.HarvestType != "");
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>

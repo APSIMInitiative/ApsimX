@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
             {
                 foodParcels[parcelIndex].Proportion = 0;
                 var isHousehold = foodParcels[parcelIndex].FoodStore.CLEMParentName == this.CLEMParentName;
-                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold)? !a.TargetMaximumAchieved: !a.TargetAchieved)).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
+                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold) ? !a.TargetMaximumAchieved : !a.TargetAchieved)).Any() | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
                     // reduce by amount that can be eaten
@@ -661,7 +661,7 @@ namespace Models.CLEM.Activities
             }
 
             // check that at least one target has been provided.
-            if (Structure.FindChildren<LabourActivityFeedTarget>().Count() == 0)
+            if (!Structure.FindChildren<LabourActivityFeedTarget>().Any())
             {
                 string[] memberNames = ["LabourActivityFeedToTargets"];
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));

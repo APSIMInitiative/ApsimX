@@ -17,7 +17,7 @@ public class CropActivityManageProductSummary : DescriptiveSummaryProviderBase<C
     ///<inheritdoc/>
     public override List<ChildComponentGroup> GetChildrenInSummary()
     {
-        string intro = (ModelTyped.Structure.FindChildren<CropActivityManageProduct>().Count() >= 1) ? "Mixed crop" : "";
+        string intro = ModelTyped.Structure.FindChildren<CropActivityManageProduct>().Any() ? "Mixed crop" : "";
         return
         [
             new ChildComponentGroup(

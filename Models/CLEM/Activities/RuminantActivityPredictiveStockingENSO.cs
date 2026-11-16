@@ -443,7 +443,7 @@ namespace Models.CLEM.Activities
                     if (pasture != null && MathUtilities.IsGreaterThanOrEqual(pasture.TonnesPerHectare * 1000, MinimumFeedBeforeRestock))
                     {
                         var specifyComponents = Structure.FindChildren<SpecifyRuminant>();
-                        if (specifyComponents.Count() == 0)
+                        if (!specifyComponents.Any())
                         {
                             string warn = $"No [f=SpecifyRuminant]s were provided in [a={Name}]\r\nNo restocking will be performed.";
                             Status = ActivityStatus.Warning;
