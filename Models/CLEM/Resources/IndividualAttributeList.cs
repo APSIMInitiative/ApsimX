@@ -56,11 +56,7 @@ namespace Models.CLEM.Resources
         {
             attributes ??= [];
 
-            if (!attributes.ContainsKey(tag))
-            {
-                attributes.Add(tag, value);
-            }
-            else
+            if (!attributes.TryAdd(tag, value))
             {
                 attributes[tag] = value;
             }
