@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Organs;
@@ -28,7 +28,8 @@ namespace APSIM.Documentation.Models.Types
             {
                 new Paragraph(
                         "The most important DM supply from leaf is the photosynthetic fixation supply.\n\n" +
-                        "Radiation interception is calculated from LAI using an extinction coefficient of:\n\n")
+                        "Radiation interception is calculated from LAI using an extinction coefficient of:\n\n",
+                        model)
             };
 
             IModel extinctionCoeff = (model as Leaf).Node.FindChild<IModel>("ExtinctionCoeff");
@@ -40,7 +41,7 @@ namespace APSIM.Documentation.Models.Types
                 dmfTags.AddRange(AutoDocumentation.DocumentModel(extinctionCoeff));
             dmfTags.AddRange(AutoDocumentation.DocumentModel((model as Leaf).Node.FindChild<IModel>("Photosynthesis")));
 
-            var dmfSection = new Section("Dry Matter Fixation", dmfTags);
+            var dmfSection = new Section("Dry Matter Fixation", dmfTags, model);
             section.Add(dmfSection);
 
             return new List<ITag>() {section};

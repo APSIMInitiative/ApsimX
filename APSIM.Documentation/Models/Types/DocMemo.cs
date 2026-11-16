@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models;
 
@@ -20,6 +20,6 @@ public class DocMemo : DocGeneric
     /// </summary>
     public override List<ITag> Document(int none = 0)
     {
-        return new List<ITag>() {new Paragraph((model as IText).Text)};
+        return new List<ITag>() {new Paragraph((model as IText).Text, model)};
     }
 }

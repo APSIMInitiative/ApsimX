@@ -71,7 +71,7 @@ namespace APSIM.Documentation.Graphing
                     // We have error data for both x and y series.
                     List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
                     for (int i = 0; i < xValues.Count; i++)
-                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]) && !double.IsNaN(yErrorValues[i]))
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], yErrorValues[i], 0));
                     return (points, labels);
                 }
@@ -82,7 +82,7 @@ namespace APSIM.Documentation.Graphing
                     // We have error data for x series.
                     List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
                     for (int i = 0; i < xValues.Count; i++)
-                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]))
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], 0, 0));
                     return (points, labels);
                 }
@@ -93,7 +93,7 @@ namespace APSIM.Documentation.Graphing
                     // We have error data for y series.
                     List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
                     for (int i = 0; i < xValues.Count; i++)
-                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(yErrorValues[i]))
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, yErrorValues[i], 0));
                     return (points, labels);
                 }

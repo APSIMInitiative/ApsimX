@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 using Models.Functions;
@@ -30,13 +30,13 @@ namespace APSIM.Documentation.Models.Types
             var constantTags = new List<ITag>();
             foreach (var constant in model.Node.FindChildren<Constant>())
                 constantTags.AddRange(AutoDocumentation.DocumentModel(constant));
-            section.Add(new Section("Constants", constantTags));
+            section.Add(new Section("Constants", constantTags, model));
 
             // Document everything else.
             List<ITag> childrenTags = new();
             foreach (var child in model.Children.Where(child => !(child is Constant) && !(child is Memo)))
                 childrenTags.AddRange(AutoDocumentation.DocumentModel(child));
-            section.Add(new Section("Children", childrenTags));
+            section.Add(new Section("Children", childrenTags, model));
 
             return new List<ITag>() {section};
         }
