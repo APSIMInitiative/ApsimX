@@ -49,16 +49,16 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t)
         {
-            if (t is IAttributable)
+            if (t is IAttributable attributable)
             {
                 if (FilterStyle == AttributeFilterStyle.Exists)
                 {
-                    bool exists = ((IAttributable)t).Attributes.Exists(AttributeTag);
+                    bool exists = attributable.Attributes.Exists(AttributeTag);
                     return Convert.ToInt32(exists);
                 }
                 else
                 {
-                    IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
+                    IndividualAttributeList indAttList = attributable.Attributes;
                     bool exists = indAttList.AttributesPresent && indAttList.Exists(AttributeTag);
                     if (exists)
                     {
