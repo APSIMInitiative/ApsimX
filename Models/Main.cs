@@ -190,13 +190,12 @@ namespace Models
 
                         if (!string.IsNullOrWhiteSpace(options.Playlist))
                         {
-                            Playlist playlistModel = sims.Node.FindChild<Playlist>();
-                            if (playlistModel.Enabled == false)
-                                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
-                            IEnumerable<Playlist> playlists = new List<Playlist> { sims.Node.FindChild<Playlist>(options.Playlist) };
-                            if (playlists.Any() && playlists.First() == null)
+                            Playlist playlistModel = sims.Node.FindChild<Playlist>(options.Playlist);
+                            if (playlistModel == null)
                                 throw new ArgumentException($"A playlist named {options.Playlist} could not be found in the {sims.FileName}.");
-                            relativeTos.AddRange(playlists);
+                            if (!playlistModel.Enabled)
+                                throw new ArgumentException("The specified playlist is disabled and cannot be run.");
+                            relativeTos.Add(playlistModel);
                         }
                         else if (!string.IsNullOrWhiteSpace(options.Scope))
                         {
