@@ -52,8 +52,10 @@ namespace Models.CLEM.Activities
             foreach (IGrazeFoodStoreType pastureType in Structure.FindChildren<IGrazeFoodStoreType>(relativeTo: grazeFoodStore).Where(a => a is not CommonLandFoodStoreType))  //grazeFoodStore.Children.Where(a => a.GetType().isin == typeof(IGrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
             {
                 newPastureAdded = true;
-                var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, "", nextUID);
-                newGrazePasture.OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction;
+                var newGrazePasture = new RuminantActivityGrazePasture(this, pastureType, "", nextUID)
+                {
+                    OnPartialResourcesAvailableAction = OnPartialResourcesAvailableAction
+                };
                 Structure.AddChild(newGrazePasture);
                 Links links = new();
                 links.Resolve(newGrazePasture as IModel, true, recurse: false);

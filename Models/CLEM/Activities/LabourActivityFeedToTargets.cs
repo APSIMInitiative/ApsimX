@@ -196,9 +196,11 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var person in peopleList)
                     {
-                        LabourDietComponent outsideEat = new LabourDietComponent();
-                        // TODO: might need to add consumed here
-                        outsideEat.AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth;
+                        LabourDietComponent outsideEat = new()
+                        {
+                            // TODO: might need to add consumed here
+                            AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth
+                        };
                         outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
                         // track this consumption by people here.
                         person.AddIntake(outsideEat);

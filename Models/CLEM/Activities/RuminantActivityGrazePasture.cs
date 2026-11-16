@@ -110,8 +110,10 @@ namespace Models.CLEM.Activities
             {
                 if (grazeHerdChildren.Where(a => a.RuminantTypeModel != herdType).Any() == false)
                 {
-                    var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID);
-                    newGrazePastureHerd.OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction;
+                    var newGrazePastureHerd = new RuminantActivityGrazePastureHerd(this, herdType, TransactionCategory, nextUID)
+                    {
+                        OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
+                    };
                     Structure.AddChild(newGrazePastureHerd);
                     Links links = new();
                     links.Resolve(newGrazePastureHerd as IModel, true, recurse: false);

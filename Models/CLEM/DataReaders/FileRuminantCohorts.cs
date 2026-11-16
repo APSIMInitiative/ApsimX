@@ -439,9 +439,11 @@ namespace Models.CLEM
                     {
                         if (castratedStatus)
                         {
-                            SetAttributeWithValue castrate = new();
-                            castrate.AttributeName = "Castrated";
-                            castrate.Category = RuminantAttributeCategoryTypes.Sterilise_Castrate;
+                            SetAttributeWithValue castrate = new()
+                            {
+                                AttributeName = "Castrated",
+                                Category = RuminantAttributeCategoryTypes.Sterilise_Castrate
+                            };
                             APSIM.Core.Node.Create(castrate);
                             cohort.Node.AddChild(castrate);
                         }
@@ -459,8 +461,10 @@ namespace Models.CLEM
                     {
                         if (daysPregnant > 0)
                         {
-                            SetPreviousConception prevconcep = new();
-                            prevconcep.NumberDaysPregnant = daysPregnant;
+                            SetPreviousConception prevconcep = new()
+                            {
+                                NumberDaysPregnant = daysPregnant
+                            };
                             APSIM.Core.Node.Create(prevconcep);
                             cohort.Node.AddChild(prevconcep);
                             //Core.ApsimFile.Structure.Add(prevconcep, cohort);
