@@ -124,7 +124,7 @@ namespace Models.CLEM.Resources
 
             if (includeTakeFilters && filteredCohorts.Any())
             {
-                ApplyTakeFilters(filteredCohorts.Where(a => (applyPreviouslyConsidered ? (a.Considered == false) : true)), filter, Structure);
+                ApplyTakeFilters(filteredCohorts.Where(a => (!applyPreviouslyConsidered || (a.Considered == false))), filter, Structure);
             }
 
             foreach (var cohort in filteredCohorts)

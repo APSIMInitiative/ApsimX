@@ -214,7 +214,7 @@ namespace Models.CLEM
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
-            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
+            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is not null && rule(item))) : source;
 
             if (sortList?.Any() ?? false)
             {
@@ -278,7 +278,7 @@ namespace Models.CLEM
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
-            return filterRules.All(rule => rule is null ? false : rule(item));
+            return filterRules.All(rule => rule is not null && rule(item));
         }
 
         /// <inheritdoc/>

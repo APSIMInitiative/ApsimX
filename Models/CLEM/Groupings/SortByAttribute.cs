@@ -59,7 +59,7 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     IndividualAttributeList indAttList = ((IAttributable)t).Attributes;
-                    bool exists = (indAttList.AttributesPresent) ? indAttList.Exists(AttributeTag) : false;
+                    bool exists = indAttList.AttributesPresent && indAttList.Exists(AttributeTag);
                     if (exists)
                     {
                         return indAttList.GetValue(AttributeTag).StoredValue;

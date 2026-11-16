@@ -622,7 +622,7 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
                     if (companionChild is CLEMActivityBase cChild)
                     {
@@ -645,7 +645,7 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
                     if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                     {
@@ -696,7 +696,7 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                         {
                             if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {

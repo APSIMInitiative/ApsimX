@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool Exists(string tag)
         {
-            return (attributes is null) ? false : attributes.ContainsKey(tag);
+            return attributes is not null && attributes.ContainsKey(tag);
         }
 
         /// <summary>

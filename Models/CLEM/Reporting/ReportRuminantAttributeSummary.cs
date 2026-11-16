@@ -215,7 +215,7 @@ namespace Models.CLEM.Reporting
 
             // do not report mate if greater than max months since conception
             // if not valid report NAN that is filtered out in calculations below
-            var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
+            var values = herd.Where(a => !ignoreNotFound | a.Attributes.GetValue(tag) != null).Select(a => new Tuple<float, float>(
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
                 (a.Sex == Sex.Female && a.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
