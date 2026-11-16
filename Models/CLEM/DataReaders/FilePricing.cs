@@ -142,11 +142,8 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
-            {
-                this.reader.Close();
-                this.reader = null;
-            }
+            this.reader?.Close();
+            this.reader = null;
         }
 
         /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
@@ -284,11 +281,8 @@ namespace Models.CLEM
         /// <summary>Close the datafile.</summary>
         public void CloseDataFile()
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
 
         #region validation

@@ -187,10 +187,7 @@ namespace Models.CLEM.Resources
                 int days = Math.Min((AgeInDays + Parameters.Details.CurrentTimeStep.Interval - 1) - AgeToWeanNaturally, Parameters.Details.CurrentTimeStep.Interval);
                 days = Math.Min(days, (Mother?.DaysLactatingInTimeStep ?? 0));
                 daysInTimeStepSuckling = days;
-                if (mother is not null)
-                {
-                    mother.DaysLactatingInTimeStep = days;
-                }
+                mother?.DaysLactatingInTimeStep = days;
             }
             else
             {

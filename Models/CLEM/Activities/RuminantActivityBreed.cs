@@ -500,17 +500,11 @@ namespace Models.CLEM.Activities
                     throw new ApsimXException(this, $"The inheritance style for attribute [{femaleAttribute.Key}] differs between the breeder [{femaleAttribute.Value.InheritanceStyle}] and breeding male [{maleAttribute.InheritanceStyle}] {errorMsg}");
                 }
 
-                if (femaleAttribute.Value != null)
-                {
-                    femaleAttribute.Value.StoredMateValue = maleAttribute.StoredValue;
-                }
+                femaleAttribute.Value?.StoredMateValue = maleAttribute.StoredValue;
             }
             else
             {
-                if (femaleAttribute.Value != null)
-                {
-                    femaleAttribute.Value.StoredMateValue = null;
-                }
+                femaleAttribute.Value?.StoredMateValue = null;
 
                 if (female.Parameters.Details.IsMandatoryAttribute(femaleAttribute.Key))
                 {

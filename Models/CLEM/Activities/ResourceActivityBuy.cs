@@ -179,10 +179,7 @@ namespace Models.CLEM.Activities
                     AddStatusMessage("Resource shortfall prevented any action");
                 }
 
-                if (marketRequest != null)
-                {
-                    marketRequest.Required *= (1 - unitShort.Available / unitShort.Required);
-                }
+                marketRequest?.Required *= (1 - unitShort.Available / unitShort.Required);
             }
         }
 

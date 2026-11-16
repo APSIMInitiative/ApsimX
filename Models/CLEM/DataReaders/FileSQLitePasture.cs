@@ -495,11 +495,8 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if(SQLiteReader != null)
-            {
-                SQLiteReader.CloseDatabase();
-                SQLiteReader = null;
-            }
+            SQLiteReader?.CloseDatabase();
+            SQLiteReader = null;
         }
 
         /// <summary>

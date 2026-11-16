@@ -262,18 +262,11 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (this.reader != null)
-            {
-                this.reader.Close();
-                this.reader = null;
-            }
+            this.reader?.Close();
+            this.reader = null;
 
-            if (this.pastureFileAsTable != null)
-            {
-                this.pastureFileAsTable.Dispose();
-                this.pastureFileAsTable = null;
-            }
-
+            this.pastureFileAsTable?.Dispose();
+            this.pastureFileAsTable = null;
         }
 
         /// <summary>
@@ -720,11 +713,8 @@ namespace Models.CLEM
         /// <summary>Close the datafile.</summary>
         public void CloseDataFile()
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
     }
 }

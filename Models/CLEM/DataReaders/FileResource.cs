@@ -183,11 +183,8 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
 
         /// <summary>
@@ -409,11 +406,8 @@ namespace Models.CLEM
         /// <summary>Close the datafile.</summary>
         public void CloseDataFile()
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
 
         #region validation
