@@ -352,8 +352,8 @@ namespace Models.CLEM.Resources
                 {
                     cohortexists.Number += cohortDetails.Number;
                 }
-                (Parent as OtherAnimals).LastCohortChanged = (cohortexists != null)?cohortexists:cohortToAdd;
-                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, ((cohortexists != null) ? cohortexists : cohortToAdd));
+                (Parent as OtherAnimals).LastCohortChanged = cohortexists ?? cohortToAdd;
+                ReportTransaction(TransactionType.Gain, cohortToAdd.Number, activity, relatesToResource, category, this, cohortexists ?? cohortToAdd);
             }
         }
 
