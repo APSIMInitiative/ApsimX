@@ -151,7 +151,7 @@ namespace Models.CLEM
             set
             {
                 parts = value;
-                if (Parts is not null && Parts.Any())
+                if (Parts is not null && Parts.Length != 0)
                     age = CalculateAgeInDays(Parts);
             }
         }
