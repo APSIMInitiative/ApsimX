@@ -279,7 +279,7 @@
                 "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                 "[Phenology].HeadEmergenceLongDayBase.FixedValue = 110",
                 "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
-                "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                 "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
               ],
               "Name": "Gregory",
@@ -802,7 +802,7 @@
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                            "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                           ],
                           "Name": "Gregory",
@@ -1781,6 +1781,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
@@ -3976,6 +3977,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
@@ -5299,7 +5301,7 @@
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                            "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                           ],
                           "Name": "Gregory",
@@ -6331,6 +6333,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
@@ -7698,7 +7701,7 @@
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                            "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                           ],
                           "Name": "Gregory",
@@ -8799,6 +8802,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
@@ -10111,7 +10115,7 @@
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                            "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                           ],
                           "Name": "Gregory",
@@ -11254,6 +11258,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
@@ -12655,7 +12660,7 @@
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
+                            "[Grain].MaximumPotentialGrainSize.Expression = 0.041",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22"
                           ],
                           "Name": "Gregory",
@@ -13861,6 +13866,7 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
+                  "PlantType": null,
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
                   "Children": [
