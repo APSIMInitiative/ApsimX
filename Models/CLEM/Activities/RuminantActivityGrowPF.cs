@@ -497,7 +497,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Protein.ForGain = proteinNeededForGrowthAllowableByEnergy;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGainFromIntake;
 
-            AdjustLactationForProteinDeficit(ind, ind.Weight.Protein.Normal, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
+            AdjustLactationForProteinDeficit(ind, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
 
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.
@@ -606,7 +606,7 @@ namespace Models.CLEM.Activities
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100.0 - ind.Intake.DMD) / 100.0 * daysInTimeStep;
         }
 
-        private void AdjustLactationForProteinDeficit(Ruminant ind, double proteinNormal, ref double proteinAvailableForGainFromIntake, double energyEmptyBodyGain, double proteinContentOfGain, ref double energyAvailableForGain, ref double proteinNeededForGrowthAllowableByEnergy)
+        private void AdjustLactationForProteinDeficit(Ruminant ind, ref double proteinAvailableForGainFromIntake, double energyEmptyBodyGain, double proteinContentOfGain, ref double energyAvailableForGain, ref double proteinNeededForGrowthAllowableByEnergy)
         {
             // ignore if protein from intake 0 or positive
             // ignore if Protein.ForLactation is zero (non-lactating females and any males

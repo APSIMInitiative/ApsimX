@@ -95,9 +95,9 @@ namespace Models.CLEM.Activities
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Count > 0))
             {
                 // report conception status changed from those identified suckling at startup
-                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateOfLastConception, calculateFromAge:false);
+                conceptionArgs.Update(ConceptionStatus.Conceived, female, female.DateOfLastConception);
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-                conceptionArgs.Update(ConceptionStatus.Birth, female, female.DateOfLastBirth, calculateFromAge: false);
+                conceptionArgs.Update(ConceptionStatus.Birth, female, female.DateOfLastBirth);
                 female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
             }
 
@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
                             conceptionArgs.Status = ConceptionStatus.Conceived;
                             conceptionArgs.Female = female;
 
-                            conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null, false);
+                            conceptionArgs.Update(ConceptionStatus.Conceived, female, conceiveDate, null);
                             female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                             conceptionSet = true;
@@ -420,7 +420,7 @@ namespace Models.CLEM.Activities
                         // do not report for -1 (controlled mating outside timing)
                         if (numberPossible >= 0 && status != ConceptionStatus.Conceived && status != ConceptionStatus.NotMated)
                         {
-                            conceptionArgs.Update(status, female, events.TimeStepStart, null, false); // timeStepDate
+                            conceptionArgs.Update(status, female, events.TimeStepStart, null); 
                             female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
                         }
                         cnt++;

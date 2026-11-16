@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
             packetsToDo = new double[,] { { 0, 0 }, { 0, 0 } };
 
             // get data from reader for month
-            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, events.TimeStepEnd, resourceTypesToInclude, false);
+            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, resourceTypesToInclude, false);
 
             resourcesForMonth.Clear();
 

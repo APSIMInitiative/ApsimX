@@ -278,13 +278,12 @@ public class FileResource : CLEMModel, IValidatableObject
     /// <returns></returns>
     /// </summary>
     /// <param name="startDate">Start of range to consider</param>
-    /// <param name="endDate">End of range to consider</param>
     /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
     /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
     /// <returns>
     /// A DataView with all data for the month.
     /// </returns>
-    public DataView GetCurrentResourceData(DateTime startDate, DateTime endDate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
+    public DataView GetCurrentResourceData(DateTime startDate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
     {
         string filter = "(";
         switch (StyleOfDateEntry)

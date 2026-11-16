@@ -732,7 +732,7 @@ public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
             pastureDetails.Add(DataRow2PastureDataType(row));
         }
 
-        CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate, endDate,
+        CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate,
             region, soil, grassBasalAreaCategory, landConditionCategory, stkRateCategory);
 
         return pastureDetails;
@@ -743,13 +743,12 @@ public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     /// </summary>
     /// <param name="filtered"></param>
     /// <param name="startDate"></param>
-    /// <param name="endDate"></param>
     /// <param name="region"></param>
     /// <param name="soil"></param>
     /// <param name="grassBasalArea"></param>
     /// <param name="landCondition"></param>
     /// <param name="stockingRate"></param>
-    private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
+    private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate,
         int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
     {
         if (clock.EndDate == clock.Today)
