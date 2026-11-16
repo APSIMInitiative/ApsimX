@@ -408,7 +408,7 @@ namespace Models.CLEM.Reporting
                 htmlString.Write($"<div class=\"typediv\">Details</div>");
                 htmlString.Write("</div>");
                 htmlString.Write("\r\n<div class=\"defaultcontent\">");
-                htmlString.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}<br />");
+                htmlString.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now:d} at {DateTime.Now:t}<br />");
                 htmlString.WriteLine("\r\n</div>");
                 htmlString.WriteLine("\r\n</div>");
                 htmlString.WriteLine("\r\n</div>");

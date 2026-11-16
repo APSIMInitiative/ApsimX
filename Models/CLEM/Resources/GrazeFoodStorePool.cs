@@ -190,7 +190,7 @@ namespace Models.CLEM.Resources
         public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store, DateTime growthDate, DateTime currentDate)
         {
             if (growthDate > currentDate)
-                throw new ArgumentException($"Growth date {growthDate.ToShortDateString()} cannot be after current date {currentDate.ToShortDateString()} during initialisation pools in [{store.NameWithParent}]");
+                throw new ArgumentException($"Growth date {growthDate:d} cannot be after current date {currentDate:d} during initialisation pools in [{store.NameWithParent}]");
 
             amount = startingAmount;
             grazeStore = store;

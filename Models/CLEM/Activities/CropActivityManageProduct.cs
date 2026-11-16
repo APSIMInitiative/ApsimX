@@ -224,7 +224,7 @@ namespace Models.CLEM.Activities
                                                                events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month)];
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
-                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate.ToShortDateString()}] and [{events.Clock.EndDate.ToShortDateString()}]", MessageType.Warning);
+                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate:d}] and [{events.Clock.EndDate:d}]", MessageType.Warning);
             }
 
             IsTreeCrop = TreesPerHa != 0;  //using this boolean just makes things more readable.

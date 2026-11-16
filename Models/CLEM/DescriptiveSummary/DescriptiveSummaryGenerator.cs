@@ -765,7 +765,7 @@ public class DescriptiveSummaryGenerator
 
         using (OpenBlock("componentContent"))
         {
-            AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}");
+            AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now:d} at {DateTime.Now:t}");
         }
     }
 

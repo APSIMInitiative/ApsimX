@@ -413,7 +413,7 @@ namespace Models.CLEM.Resources
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].", MessageType.Warning);
+                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value:#,##0.##}].", MessageType.Warning);
                             }
                         }
                     }
