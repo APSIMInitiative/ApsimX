@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Documentation;
+﻿using APSIM.Core;
 using Gtk.Sheet;
 using Models.Core;
 using Models.PreSimulationTools;
@@ -73,7 +73,7 @@ namespace UserInterface.Presenters
             gridPresenter.Attach(new DataTableProvider(new DataTable()), viewContainer, explorerPresenter);
             gridPresenter.AddContextMenuOptions(new string[] { "Cut", "Copy", "Paste", "Delete", "Select All" });
 
-            IDataProvider provider = DataProviderFactory.CreateUsingDataTableName(model, property, (properties) => {});
+            Gtk.Sheet.IDataProvider provider = DataProviderFactory.CreateUsingDataTableName(model, property, (properties) => {});
             gridPresenter.PopulateWithDataProvider(provider);
         }
     }

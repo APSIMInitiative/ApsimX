@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="./Resources/*.png" />
+    <EmbeddedResource Include="./Resources/*.json" />
   </ItemGroup>
 
 </Project>

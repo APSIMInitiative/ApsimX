@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.PMF.Organs;
 
@@ -22,7 +22,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            section.Add(new Section("Area", new Paragraph($"Area = {(model as LeafCohort).Area}")));
+            section.Add(new Section("Area", new Paragraph($"Area = {(model as LeafCohort).Area}", model), model));
             return new List<ITag>() {section};
         }
     }

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 using System;
 using System.Data;
+using APSIM.Core;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -24,7 +25,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            section.Add(new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true)));
+            section.Add(new Section(model.Name, GetModelEventsInvoked(typeof(Clock), "OnDoCommence(object _, CommenceArgs e)", "CLEM", true), model));
             return new List<ITag>() {section};
         }
 
@@ -48,7 +49,7 @@ namespace APSIM.Documentation.Models.Types
                         eventNamesFiltered.Add(name); 
                     }           
             }
-            tags.Add(new Paragraph($"Function {functionName} of Model {model.Name} contains the following Events in the given order.\n"));
+            tags.Add(new Paragraph($"Function {functionName} of Model {model.Name} contains the following Events in the given order.\n", model));
 
             DataTable data = new DataTable();
             data.Columns.Add("Event Handle", typeof(string));
@@ -63,7 +64,7 @@ namespace APSIM.Documentation.Models.Types
                 row["Event Handle"] = parts[0];
                 row["Summary"] = parts[1];
             }
-            tags.Add(new Table(data));
+            tags.Add(new Table(data, model));
             return tags;
         }
     }

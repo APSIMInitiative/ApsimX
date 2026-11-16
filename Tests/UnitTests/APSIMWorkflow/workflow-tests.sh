@@ -7,7 +7,7 @@ mkdir -p "$test_dir/Tests/A folder"
 cd "$test_dir"
 
 cleanup() {
-  rm -f -- "Tests/A folder/Example.db" metadata.txt local.stdout.txt collector-called
+  rm -f -- "Tests/A folder/Example.db" metadata.txt local.stdout.txt collector-called notify-called
   rmdir "Tests/A folder" Tests
   rmdir "$test_dir"
 }
@@ -18,6 +18,10 @@ sudo() {
     *postats2-collector*)
       touch collector-called
       return "${COLLECTOR_EXIT:-0}"
+      ;;
+    *APSIM.Workflow.dll*)
+      echo "$*" > notify-called
+      return "${NOTIFY_EXIT:-0}"
       ;;
     *)
       if [[ "$SIMULATION_MODE" != missing && "$SIMULATION_MODE" != stale ]]; then
@@ -42,6 +46,8 @@ run_workflow() {
   fi
   test -f collector-called
   rm -f -- collector-called
+  grep -q -- "job-complete --pr-number 123 --full-commit-hash abc --job-path $Path --job-time" notify-called
+  rm -f -- notify-called
 }
 
 export SIMULATION_MODE=success

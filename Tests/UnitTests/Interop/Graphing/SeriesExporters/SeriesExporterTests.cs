@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using System.Drawing;
 using APSIM.Interop.Graphing;
 using Moq;

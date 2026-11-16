@@ -6121,6 +6121,122 @@
               ],
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ProtectedDivideFunction, Models",
+              "NumeratorErrVal": 0.0,
+              "DenominatorErrVal": 0.0,
+              "Name": "Size",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 0.0,
+                  "DenominatorErrVal": 0.0,
+                  "Name": "DeltaLeafSizePerStem",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Area.Calculation.AccumulatedChange.AreaGrowth.DeltaArea",
+                      "Name": "DeltaLAI",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].StemPopulation",
+                      "Name": "Stems",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].HaunStage.Delta",
+                  "Name": "DeltaHaunStage",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.MultiplyFunction, Models",
+              "Name": "MaximumSize",
+              "ResourceName": null,
+              "Children": [
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].AreaLargestLeaf",
+                  "Name": "AreaOfLargest",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The maximum size of the current appearing leaf",
+                  "Name": "Memo",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "RelativeArea",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        3.0,
+                        3.1,
+                        4.5,
+                        5.0,
+                        6.0
+                      ],
+                      "Y": [
+                        0.1,
+                        0.2,
+                        0.6,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
+                      "Name": "XValue",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "Enabled": true,
