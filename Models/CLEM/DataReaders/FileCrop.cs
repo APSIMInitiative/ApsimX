@@ -259,11 +259,8 @@ namespace Models.CLEM
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
 
         /// <summary>
@@ -344,12 +341,6 @@ namespace Models.CLEM
                 }
 
                 DataTable table = reader.ToTable(cropProps);
-
-                int numColumns = 5;
-                if (dayIndex != -1)
-                {
-                    numColumns++;
-                }
 
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[0] = table.Columns[SoilTypeColumnName];
@@ -444,7 +435,7 @@ namespace Models.CLEM
 
         private CropDataType DataRow2CropData(DataRow dr)
         {
-            CropDataType cropdata = new CropDataType
+            CropDataType cropdata = new()
             {
                 SoilNum = dr[SoilTypeColumnName].ToString(),
                 CropName = dr[CropNameColumnName].ToString(),
@@ -629,11 +620,8 @@ namespace Models.CLEM
         /// <summary>Close the datafile.</summary>
         public void CloseDataFile()
         {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
+            reader?.Close();
+            reader = null;
         }
     }
 }

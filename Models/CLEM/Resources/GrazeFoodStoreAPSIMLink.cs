@@ -310,6 +310,9 @@ namespace Models.CLEM.Resources
 
             // do not include surface organic matter in feed pools
             forageModels = [.. forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == paddock && !m.Name.Contains("SurfaceOrganic"))];
+
+            // initialise basture biomass properties ready for any pasture timers at start of simulation.
+            OnCLEMPastureReady(this, new());
         }
 
         /// <summary>
@@ -431,7 +434,7 @@ namespace Models.CLEM.Resources
                 case "Amount":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = AmountTotal / convert; // intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {
@@ -441,7 +444,7 @@ namespace Models.CLEM.Resources
                 case "AmountConsumable":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = AmountAvailable / convert; // intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {

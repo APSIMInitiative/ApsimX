@@ -4,7 +4,7 @@ using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using MessagePack;
+using System.Text.Json;
 using APSIM.Numerics;
 
 namespace APSIM.Core;
@@ -278,7 +278,8 @@ public class ScriptCompiler
            MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Private.Xml.dll")),
            MetadataReference.CreateFromFile(Path.Join(apsimRuntimePath, "Models.dll")),
            MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
-           MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
+           MetadataReference.CreateFromFile(typeof(APSIM.Shared.Utilities.StringUtilities).Assembly.Location),
+           MetadataReference.CreateFromFile(typeof(APSIM.Core.CodeDocumentation).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(Node).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
@@ -289,7 +290,7 @@ public class ScriptCompiler
            MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
            MetadataReference.CreateFromFile(typeof(NetMQ.Sockets.ResponseSocket).Assembly.Location),
-           MetadataReference.CreateFromFile(typeof(MessagePackSerializer).Assembly.Location),
+           MetadataReference.CreateFromFile(typeof(JsonSerializer).Assembly.Location),
            MetadataReference.CreateFromFile(Path.Join(dotnetRuntimePath, "System.Memory.dll"))
 
         };

@@ -13,12 +13,8 @@ namespace Models.Functions
     [Description("Raises the value of the child to the power of the exponent specified")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class PowerFunction : Model, IFunction, IStructureDependency
+    public class PowerFunction : Model, IFunction
     {
-        /// <summary>Structure instance supplied by APSIM.core.</summary>
-        [field: NonSerialized]
-        public IStructure Structure { private get; set; }
-
         /// <summary>constructor</summary>
         public PowerFunction()
         {
@@ -30,13 +26,20 @@ namespace Models.Functions
 
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            FunctionUtilities.ValidateFunctionChildren(Node);
+        }
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Power function must have only one argument</exception>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Structure.FindChildren<IFunction>().ToList();
+                ChildFunctions = Node.FindChildren<IFunction>().ToList();
 
             if (ChildFunctions.Count() == 1)
             {

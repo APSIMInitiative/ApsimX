@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 using APSIM.Shared.Graphing;
 using OxyPlot.Series;
 using Series = OxyPlot.Series.Series;
@@ -36,7 +37,7 @@ namespace APSIM.Documentation.Graphing
             result.OutlierSize = series.MarkerConfig.Size.ToOxyPlotMarkerSize() * series.MarkerConfig.SizeModifier;
 
             // Colour
-            result.Stroke = OxyColors.Transparent;
+            result.Stroke = series.Colour.ToOxyColour();
             result.Fill = series.Colour.ToOxyColour();
 
             // todo: need to account for the possibility of string datatypes here.
@@ -45,9 +46,10 @@ namespace APSIM.Documentation.Graphing
 
         private (IList<BoxPlotItem>, AxisLabelCollection) GetBoxPlotItems(BoxWhiskerSeries series, AxisLabelCollection labels)
         {
+            List<string> xLabels = labels.XLabels.ToList();
             List<string> yLabels = labels.YLabels.ToList();
             IEnumerable<double> y = series.Y.Select(yi => GetDataPointValue(yi, yLabels));
-            labels = new AxisLabelCollection(labels.XLabels, yLabels);
+            labels = new AxisLabelCollection(xLabels, yLabels);
 
             double[] fiveNumberSummary = y.FiveNumberSummary();
             double min = fiveNumberSummary[0];
@@ -56,8 +58,11 @@ namespace APSIM.Documentation.Graphing
             double upperQuartile = fiveNumberSummary[3];
             double max = fiveNumberSummary[4];
 
-            // fixme - this won't work with multiple box plot series on the same graph.
-            double x = 0;
+            object firstX = series.X.FirstOrDefault();
+            if (firstX == null)
+                throw new InvalidOperationException("Box and whisker series has no x data.");
+
+            double x = GetDataPointValue(firstX, xLabels);
 
             IList<BoxPlotItem> items = new List<BoxPlotItem>()
             {

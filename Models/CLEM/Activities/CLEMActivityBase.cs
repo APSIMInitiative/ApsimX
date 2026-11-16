@@ -422,7 +422,7 @@ namespace Models.CLEM.Activities
                     // but doesn't seem to add them to any parent model. The problem with this is that the 'Node' property in
                     // 'Model' will be null, which in turn means any Find... method calls will through an 'object not set...' error.
                     // For now, I have called Node.Create which it shouldn't do.
-                    T newObj = new T();
+                    T newObj = new();
                     if (newObj is INodeModel nodeModel)
                     {
                         Node.Create(nodeModel);
@@ -461,7 +461,7 @@ namespace Models.CLEM.Activities
                 {
                     filters.Add(id, iChildren);
                     // if this type provides units for use by children add them
-                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Measure).Any();
+                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Measure).Count != 0;
                     if (unitsProvided)
                     {
                         foreach (var item in iChildren)
@@ -534,7 +534,7 @@ namespace Models.CLEM.Activities
             // report all timers in setup step to provide all components in 
             // report all timers that were due this time step
             // report timer status and messages when not from setup
-            foreach (IActivityTimer timer in Structure.FindChildren<IActivityTimer>())
+            foreach (IActivityTimer timer in ActivityTimers)
             {
                 // report activity performed.
                 if (fromSetup | timer.ActivityDue)
@@ -611,6 +611,7 @@ namespace Models.CLEM.Activities
 
             if (!TimingOK)
             {
+                Status = ActivityStatus.NoTask;
                 return;
             }
 
@@ -646,7 +647,7 @@ namespace Models.CLEM.Activities
                 // get all companion models except filter groups
                 foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                 {
-                    if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                    if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                     {
                         var unitsProvided = ValueForCompanionModel(companionChild);
                         if (MathUtilities.IsPositive(unitsProvided))
@@ -697,7 +698,7 @@ namespace Models.CLEM.Activities
                         // get all companion models except filter groups
                         foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                         {
-                            if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                            if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should be reported as an error.
@@ -992,7 +993,7 @@ namespace Models.CLEM.Activities
                     componentError = true;
                 }
 
-                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+                ResourceRequestEventArgs rrEventArgs = new() { Request = item };
 
                 if (item.Resource != null && Structure.FindParent<Market>(relativeTo: item.Resource as Model, recurse: true) != null)
                 {
@@ -1129,7 +1130,7 @@ namespace Models.CLEM.Activities
             }
 
             request.ResourceTypeName = "Labour";
-            ResourceRequest removeRequest = new ResourceRequest()
+            ResourceRequest removeRequest = new()
             {
                 ActivityID = request.ActivityID,
                 ActivityModel = request.ActivityModel,

@@ -378,6 +378,7 @@ namespace Models.CLEM.Activities
         {
             double overfed = 0;
             int numberFed = 0;
+            double totalNeeded = 0;
             foreach (var iChild in filterGroups.OfType<RuminantFeedGroup>().Where(a => a.CurrentResourceRequest != null && a.CurrentResourceRequest.Required > 0))
             {
                 numberFed += iChild.CurrentIndividualsToFeed.Count;
@@ -428,13 +429,15 @@ namespace Models.CLEM.Activities
                     if (amountNeeded < 0.001)
                         amountNeeded = 0;
 
+                    totalNeeded += amountNeeded;
+
                     FoodResourceStore foodStore = new FoodResourceStore(details, amount: amountNeeded, request: iChild.CurrentResourceRequest, daysInTimeStep: events.Interval);
 
                     // try to feed. excess will be returned.
                     overfed += ind.Intake.AddFeed(foodStore, bypassPotIntakeLimits: ForceFeed);
                 }
             }
-            if (numberToDo > 0)
+            if (numberToDo > 0 && totalNeeded > 0)
             {
                 SetStatusSuccessOrPartial(numberFed != numberToDo);
             }

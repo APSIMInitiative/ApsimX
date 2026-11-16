@@ -222,6 +222,42 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double N { get { return SumSurfOMStandingLying(SurfOM, x => x.N); } }
 
+        /// <summary>Total carbohydrate carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Carbohydrate carbon content")]
+        [Units("kg/ha")]
+        public double CarbohydrateC { get { return SumSurfOMPool(0, x => x.C); } }
+
+        /// <summary>Total carbohydrate nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Carbohydrate nitrogen content")]
+        [Units("kg/ha")]
+        public double CarbohydrateN { get { return SumSurfOMPool(0, x => x.N); } }
+
+        /// <summary>Total cellulose carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Cellulose carbon content")]
+        [Units("kg/ha")]
+        public double CelluloseC { get { return SumSurfOMPool(1, x => x.C); } }
+
+        /// <summary>Total cellulose nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Cellulose nitrogen content")]
+        [Units("kg/ha")]
+        public double CelluloseN { get { return SumSurfOMPool(1, x => x.N); } }
+
+        /// <summary>Total lignin carbon in surface organic matter</summary>
+        [Summary]
+        [Description("Lignin carbon content")]
+        [Units("kg/ha")]
+        public double LigninC { get { return SumSurfOMPool(2, x => x.C); } }
+
+        /// <summary>Total lignin nitrogen in surface organic matter</summary>
+        [Summary]
+        [Description("Lignin nitrogen content")]
+        [Units("kg/ha")]
+        public double LigninN { get { return SumSurfOMPool(2, x => x.N); } }
+
         /// <summary>Total mass of all surface organic phosphor</summary>
         [Summary]
         [Description("Phosphorus content")]
@@ -281,8 +317,8 @@ namespace Models.Surface
         [Units("kg/ha")]
         public double RemovedP { get; private set; }
 
-        /// <summary>A list of material (biomass) that can be damaged.</summary>
-        public IEnumerable<DamageableBiomass> Material
+         /// <summary>A list of material (biomass) that can be damaged.</summary>
+       public IEnumerable<DamageableBiomass> Material
         {
             get
             {
@@ -302,6 +338,33 @@ namespace Models.Surface
                 }, isLive: false);
             }
         }
+
+        /// <summary>
+        /// A list of material (biomass) that are suitable for grazing by Stock Model.
+        /// </summary>
+         public IEnumerable<DamageableBiomass> GrazeableMaterial
+        {
+            get
+            {   
+                //Filter SOM for manure. OrganicMatterType manure is specific for Stock model. 
+                var grazeablePools = SurfOM.Where(som => !string.Equals(som.OrganicMatterType, "manure",StringComparison.OrdinalIgnoreCase));
+               
+                // Return an empty live material. Stock won't find the dead material unless there
+                // is matching live material.
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass(), isLive: true);
+                yield return new DamageableBiomass("SurfaceOrganicMatter.Residue", new Biomass()
+                {
+                    StructuralWt = (grazeablePools.Sum(som => som.Standing.Sum(om => om.amount)) + grazeablePools.Sum(som => som.Lying.Sum(om => om.amount))) / 10,
+                    StructuralN = (grazeablePools.Sum(som => som.Standing.Sum(om => om.N)) + grazeablePools.Sum(som => som.Lying.Sum(om => om.N)))/10,
+                    MetabolicWt = 0.0,
+                    MetabolicN = 0.0,
+                    StorageWt = 0.0,
+                    StorageN = 0.0,
+                }, isLive: false);
+            }
+        }
+
+
 
         /// <summary>The amount of material incorporated into the soil.</summary>
         public FOMPoolType Incorporated { get; private set; }
@@ -336,6 +399,41 @@ namespace Models.Surface
             RemovedP += totalRemoved.P;
 
             return totalRemoved.amount;
+        }
+
+        /// <summary>
+        /// Remove Biomass excluding the pools containing manure.
+        /// </summary>
+        /// <param name="liveToRemove"></param>
+        /// <param name="deadToRemove"></param>
+        /// <param name="liveToResidue"></param>
+        /// <param name="deadToResidue"></param>
+        /// <param name="fractionStanding"></param>
+        /// <returns></returns>
+        public double RemoveGrazeableBiomass(double liveToRemove = 0, double deadToRemove = 0, double liveToResidue = 0, double deadToResidue = 0, double fractionStanding = 0)
+        {
+            OMFractionType totalRemoved = new();
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                 if (SurfOM[i].name != "manure")
+                {
+                   var removed = SurfOM[i].Remove(deadToRemove);
+                    totalRemoved.Add(removed);
+                    SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * removed.amount;
+                    SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * removed.amount; 
+                }
+
+            }
+                    // Update 'Removed' variables
+                    RemovedC += totalRemoved.C;
+                    RemovedN += totalRemoved.N;
+                    RemovedP += totalRemoved.P;
+
+                    return totalRemoved.amount;
+             
+
+           
         }
 
         /// <summary>Called when [reset].</summary>
@@ -472,6 +570,12 @@ namespace Models.Surface
         private double SumSurfOMStandingLying(SurfOrganicMatterType var, Func<OMFractionType, double> func)
         {
             return var.Lying.Sum<OMFractionType>(func) + var.Standing.Sum<OMFractionType>(func);
+        }
+
+        /// <summary>Sums a carbon or nitrogen component for one surface organic matter fraction.</summary>
+        private double SumSurfOMPool(int pool, Func<OMFractionType, double> func)
+        {
+            return SurfOM.Sum(om => func(om.Standing[pool]) + func(om.Lying[pool]));
         }
 
         /// <summary>Sums the surf om.</summary>

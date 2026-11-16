@@ -290,22 +290,27 @@ namespace Models.CLEM.Activities
                 FoodResourcePacket trackQuality = new();
 
                 // get all entries in the current time step
-                foreach (PastureDataType dataEntry in pastureDataList.Where(a => events.IsDateInTimeStep(a.CutDate)))
+                // entries are combined to occur at the start of the time step
+                IEnumerable<PastureDataType> dataEntries = pastureDataList.Where(a => events.IsDateInTimeStep(a.CutDate));
+
+                if (dataEntries.Any())
                 {
-                    growth = dataEntry.Growth;
+                    growth = dataEntries.Sum(a => a.Growth);
                     growth *= unitsOfArea2Ha;
 
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += dataEntry.Rainfall;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += dataEntry.SoilLoss;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += dataEntry.Runoff;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += dataEntry.Cover;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += dataEntry.TreeBA;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += dataEntries.Sum(a => a.Rainfall);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += dataEntries.Sum(a => a.SoilLoss);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += dataEntries.Sum(a => a.Runoff);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Cover = dataEntries?.Last().Cover ?? LinkedNativeFoodType.CurrentEcologicalIndicators.Cover;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea = dataEntries?.Last().TreeBA ?? LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea;
 
                     if (growth > 0)
                     {
                         Status = ActivityStatus.Success;
-                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool(growth * Area, LinkedNativeFoodType);
-                        newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
+                        GrazeFoodStorePool newPasture = new(growth * Area, LinkedNativeFoodType, events.TimeStepStart, events.TimeStepStart)
+                        {
+                            NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent
+                        };
                         if (LinkedNativeFoodType.DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
                         {
                             newPasture.DryMatterDigestibility = LinkedNativeFoodType.GreenDMD;
@@ -315,9 +320,8 @@ namespace Models.CLEM.Activities
                             newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                         }
                         newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
-                        newPasture.GrowthDate = dataEntry.CutDate;
                         newPasture.RumenDegradableProteinPercent = LinkedNativeFoodType.RumenDegradableProteinPercent;
-                        LinkedNativeFoodType.AddToResource(newPasture, this, null, "Growth");
+                        LinkedNativeFoodType.AddToResource(newPasture, this, LinkedNativeFoodType.Name, "Growth");
                     }
                 }
             }
@@ -347,7 +351,7 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
-            if (events.IsEcologicalIndicatorsCalculationDue())
+            if (LinkedNativeFoodType is not null && events.IsEcologicalIndicatorsCalculationDue())
             {
                 CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
 

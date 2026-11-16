@@ -74,7 +74,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Rate at which multiple births occur (twins,triplets,...")]
         [Proportion]
-        public double[] MultipleBirthRate { get; set; } = new double[] { 0.0 }; // default no multiple births
+        public double[] MultipleBirthRate { get; set; } = [0.0]; // default no multiple births
 
         #endregion
 
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
         [Units("Proportion of female SRW")]
         [Description("Proportional birth mass (singlet,twins,triplets..)")]
         [Required, GreaterThanValue(0), Proportion, MinLength(1)]
-        public double[] BirthScalar { get; set; } = new[] { 0.07, 0.055 };
+        public double[] BirthScalar { get; set; } = [0.07, 0.055];
 
         /// <summary>
         /// Effect of relative size on birth weight
@@ -150,7 +150,7 @@ namespace Models.CLEM.Resources
         [Category("Farm:Summary", "Growth")]
         [Description("Body Condition Score range (min, mid, max)")]
         [Required, ArrayItemCount(3)]
-        public double[] BCScoreRange { get; set; } = new[] { 0.0, 3.0, 5.0 };
+        public double[] BCScoreRange { get; set; } = [0.0, 3.0, 5.0];
 
         /// <summary>
         /// Starting fat as a proportion of Empty Body Weight assuming Relative Condition of 1. (Mid)
@@ -328,8 +328,8 @@ namespace Models.CLEM.Resources
                 AgeGrowthRateCoefficient_CN1 = 0;
                 if (CN1EstimatedWeaningWeight > 0 && CN1EstimatedWeaningAge.InDays > 0)
                 {
-                    // this is what GitHub CoPilot suggested before I got the calculation from the JD
-                    AgeGrowthRateCoefficient_CN1 = Math.Log(SRWFemale / CN1EstimatedWeaningWeight) / CN1EstimatedWeaningAge.InDays;
+                    // solved equation for CN1 (JD)
+                    AgeGrowthRateCoefficient_CN1 = Math.Pow(SRWFemale, SRWGrowthScalar_CN2) * Math.Log(((CN1EstimatedWeaningWeight - SRWFemale) / ((1 - BirthScalar[0]) * SRWFemale))) * -1 * (1 / CN1EstimatedWeaningAge.InDays);
                 }
             }
         }
@@ -342,17 +342,17 @@ namespace Models.CLEM.Resources
 
             if (MultipleBirthRate is null || MultipleBirthRate.Length == 0)
             {
-                yield return new ValidationResult($"At least one multiple birth rate [MultipleBirthRate] value is required. Specify [0] for no multiple births or a comma separated list of values for the probability of twins, triplets, quadrulpets etc.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
+                yield return new ValidationResult($"At least one multiple birth rate [MultipleBirthRate] value is required. Specify [0] for no multiple births or a comma separated list of values for the probability of twins, triplets, quadrulpets etc.", ["RuminantParametersGeneral.MultipleBirthRate"]);
             }
             if (BirthScalar is null || BirthScalar.Length == 0)
             {
-                yield return new ValidationResult($"At least one birth scalar [BirthScalar] value is required.", new string[] { "RuminantParametersGeneral.MultipleBirthRate" });
+                yield return new ValidationResult($"At least one birth scalar [BirthScalar] value is required.", ["RuminantParametersGeneral.MultipleBirthRate"]);
             }
             if (((MultipleBirthRate?.Length ?? 0) > 0) & ((BirthScalar?.Length ?? 0) > 0))
             {
                 if (BirthScalar.Length <= MultipleBirthRate.Length & !(MultipleBirthRate.Length == 1 & MultipleBirthRate[0] == 0 & BirthScalar.Length == 1))
                 {
-                    yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", new string[] { "RuminantParametersGeneral.BirthScalar" });
+                    yield return new ValidationResult($"The number of [BirthScalar] values [{BirthScalar.Length}] must must be one more than the number of [MultipleBirthRate] values [{MultipleBirthRate.Length}].{Environment.NewLine}Birth rate scalars represent the size at birth relative to female SRW with one value (default) required for singlets and an additional value for each rate provided in [MultipleBirthRate] representing twins, triplets, quadrulpets etc where required.", ["RuminantParametersGeneral.BirthScalar"]);
                 }
             }
 
@@ -362,11 +362,11 @@ namespace Models.CLEM.Resources
             {
                 if (CN1EstimatedWeaningWeight <= 0)
                 {
-                    yield return new ValidationResult($"The [CN1EstimatedWeaningWeight] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningWeight" });
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningWeight] must be greater than 0", ["RuminantParametersGeneral.CN1EstimatedWeaningWeight"]);
                 }
                 if (CN1EstimatedWeaningAge.InDays == 0)
                 {
-                    yield return new ValidationResult($"The [CN1EstimatedWeaningAge] must be greater than 0", new string[] { "RuminantParametersGeneral.CN1EstimatedWeaningAge" });
+                    yield return new ValidationResult($"The [CN1EstimatedWeaningAge] must be greater than 0", ["RuminantParametersGeneral.CN1EstimatedWeaningAge"]);
                 }
                 warnExtra = $"Check the calculation of AgeGrowthRateCoefficient based on weaning weight [{CN1EstimatedWeaningWeight}] and age [{CN1EstimatedWeaningAge.InDays}] in documentation";
                 CalculateAgeGrowthRateCoefficientFromWeaningDetails();
@@ -374,13 +374,12 @@ namespace Models.CLEM.Resources
             // ToDo: check the limits for cattle sheep etc
             if (AgeGrowthRateCoefficient_CN1 > 0.02)
             {
-                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be less than 0.02{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be less than 0.02{Environment.NewLine}{warnExtra}", ["RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1"]);
             }
             if (AgeGrowthRateCoefficient_CN1 < 0.01)
             {
-                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be greater than 0.01{Environment.NewLine}{warnExtra}", new string[] { "RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1" });
+                yield return new ValidationResult($"The [AgeGrowthRateCoefficient_CN1] should be greater than 0.01{Environment.NewLine}{warnExtra}", ["RuminantParametersGeneral.AgeGrowthRateCoefficient_CN1"]);
             }
-
         }
 
         #endregion

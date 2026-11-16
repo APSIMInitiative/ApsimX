@@ -13,7 +13,32 @@ using APSIM.Core;
 namespace Models.Sensor
 {
     /// <summary>
-    /// This model takes infromation from residues, soil and crop to give an estimate of NDVI
+    /// Spectral Model
+    /// The APSIM Spectral model calculates basic spectral indices commonly used in remote or proximal sensing.  The current version provides a very simple estimate of the Normalised Difference Vegetation Index (NDVI) based on a simple empirical relationship devised from published datasets.
+    /// 
+    /// Calculations are as follows:
+    /// 
+    /// ```
+    /// SoilNDVI = DrySoilNDVI + (WetSoilNDVI - DrySoilNDVI) * SurfaceRWC;
+    ///
+    /// if (coverTotal > 0)
+    ///    CropNDVI = (coverGreen / coverTotal) * GreenCropNDVI + (1.0 - coverGreen / coverTotal) * DeadCropNDVI;
+    ///    NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(coverTotal, (1.0 - SoilNDVI));
+    /// ```
+    /// 
+    /// where
+    ///  Name | Description | Units
+    /// -|-|-
+    /// SoilNDVI | NDVI of the underlying soil surface | 0-1
+    /// WetSoilNDVI | NDVI of soil when it is wet (ie at DUL or above) | 0-1
+    /// DrySoilNDVI | NDVI of soil when it is dry (ie at LL15 or below) | 0-1
+    /// SurfaceRWC | relative water content of the soil surface | 0-1
+    /// CropNDVI | NDVI of the crop canopy, including green and dead material | 0-1
+    /// GreenCropNDVI | NDVI of green plant material | 0-1
+    /// DeadCropNDVI | NDVI of dead plant material | 0-1
+    /// coverGreen | The fractional surface cover provided by green plant material | 0-1
+    /// covertotal | The fractional surface cover provided by all (ie green + dead) plant material | 0-1
+    /// 
     /// </summary>
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -68,14 +93,13 @@ namespace Models.Sensor
         private void DoDailyCalculations(object sender, EventArgs e)
         {
             double SoilNDVI = DrySoilNDVI + (WetSoilNDVI - DrySoilNDVI) * SurfaceRWC;
+            double coverGreen = microClimate.CanopyCoverGreen;
+            double coverTotal = microClimate.CanopyCover;
 
-            if (canopyModels.Count > 1)
-                throw new Exception("NDVI not currently programmed to work with more than one canopy");
-            ICanopy canopy = canopyModels[0];
             double CropNDVI = 0;
-            if (canopy.CoverTotal > 0)
-                CropNDVI = (canopy.CoverGreen / canopy.CoverTotal) * GreenCropNDVI + (1.0 - canopy.CoverGreen / canopy.CoverTotal) * DeadCropNDVI;
-            NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(canopy.CoverTotal, (1.0 - SoilNDVI));
+            if (coverTotal > 0)
+                CropNDVI = (coverGreen / coverTotal) * GreenCropNDVI + (1.0 - coverGreen / coverTotal) * DeadCropNDVI;
+            NDVI = SoilNDVI + (CropNDVI - SoilNDVI) * Math.Pow(coverTotal, (1.0 - SoilNDVI));
         }
 
         [Units("mm")]
@@ -90,6 +114,9 @@ namespace Models.Sensor
 
         [Link]
         ISoilWater waterBalance = null;
+
+        [Link]
+        MicroClimate microClimate = null;
 
         [NonSerialized]
         private List<IrrigationApplicationType> irrigations;

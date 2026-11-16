@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection.Metadata;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Functions;
 using Models.Core;
@@ -11,6 +11,7 @@ using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Constant = Models.Functions.Constant;
 using System;
+
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -35,7 +36,7 @@ namespace APSIM.Documentation.Models.Types
             Section mainSection = GetSummaryAndRemarksSection(model);
 
 
-            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections."));
+            mainSection.Add(new Paragraph($"The model is constructed from the following list of software components. Links provided will direct the user to the code for each model.  Details of the implementation and model parameterisation are provided in the following sections.", model));
 
             // Write Plant Model Components Table
             // ------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ namespace APSIM.Documentation.Models.Types
                     tableData.Rows.Add(row);
                 }
             }
-            mainSection.Add(new Table(tableData));
+            mainSection.Add(new Table(tableData, model));
 
             // Write Composite Biomass Table
             // -------------------------------------------------------------------------------
@@ -79,7 +80,7 @@ namespace APSIM.Documentation.Models.Types
             }
             if (tableDataBiomass.Rows.Count > 0)
             {
-                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass)));
+                mainSection.Add(new Section("Composite Biomass Components", new Table(tableDataBiomass, model), model));
             }
 
             newTags.Add(mainSection);
@@ -88,28 +89,29 @@ namespace APSIM.Documentation.Models.Types
             // -------------------------------------------------------------------------------
             Phenology phenology = (Phenology)this.model.Children.Find(m => m.GetType() == typeof(Phenology));
             if (phenology != null)
-            {
-                DataTable dataTable = DocumentationUtilities.GetPhaseTable(phenology);
-                Section PhenologySection = new Section("Phenology", new Table(dataTable));
-                PhenologySection.Add(GetSummaryAndRemarksSection(phenology).Children);
-                newTags.Add(PhenologySection);
-            }
+                newTags.AddRange(AutoDocumentation.Document(phenology));
 
             // Document Arbitrator Model
             // -------------------------------------------------------------------------------
             OrganArbitrator arbitrator = (OrganArbitrator)this.model.Children.Find(m => m.GetType() == typeof(OrganArbitrator));
             if (arbitrator != null)
-                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children));
+                newTags.Add(new Section("Organ Arbitrator", GetSummaryAndRemarksSection(arbitrator).Children, model));
+
+            // Document Group Model
+            // -------------------------------------------------------------------------------
+            Group group = (Group)this.model.Children.Find(m => m.GetType() == typeof(Group));
+            if (group != null)
+                newTags.AddRange(AutoDocumentation.Document(group));
 
             // Document SimpleLeaf Model
             SimpleLeaf simpleLeaf = (SimpleLeaf)this.model.Children.Find(m => m.GetType() == typeof(SimpleLeaf));
             if (simpleLeaf != null)
-                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf)));
+                newTags.Add(new Section("Leaf", AutoDocumentation.Document(simpleLeaf), model));
 
             //Write children
             // -------------------------------------------------------------------------------
             foreach (IModel child in this.model.Children)
-                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null)
+                if (child as IText == null && child as CompositeBiomass == null && child as Folder == null && child as Cultivar == null && child as Phenology == null && child as OrganArbitrator == null && child as SimpleLeaf == null && child as Constant == null && child as ModelOverrides == null && child as Group ==null)
                 {
                     Section S = GetSummaryAndRemarksSection(child);
                     newTags.Add(S);
@@ -154,7 +156,7 @@ namespace APSIM.Documentation.Models.Types
                     }
                     cultivarNameTable.Rows.Add(new string[] { $"<p>{cultivarChild.Name}</p>{altNames}", commands });
                 }
-                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable)));
+                newTags.Add(new Section("Appendix 1: Cultivar specifications", new Table(cultivarNameTable, model), model));
             }
 
             return newTags;

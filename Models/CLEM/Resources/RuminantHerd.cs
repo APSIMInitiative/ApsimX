@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantHerd : ResourceBaseWithTransactions
     {
         private int id = 1;
@@ -259,11 +259,6 @@ namespace Models.CLEM.Resources
             // update age in days counter for individuals
             foreach (Ruminant ind in Herd)
             {
-                if (ind.ID == 2500)
-                {
-                    ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
-                }
-
                 ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
             }
 

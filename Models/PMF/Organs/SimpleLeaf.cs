@@ -78,7 +78,7 @@ namespace Models.PMF.Organs
     /// 
     /// **Photosynthesis**
     /// 
-    /// {[Photosynthesis]}
+    /// {[SimpleLeaf].Photosynthesis}
     /// </summary>
     
     /// <remarks>
