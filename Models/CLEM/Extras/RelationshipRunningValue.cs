@@ -86,7 +86,7 @@ namespace Models.CLEM
         {
             if (MathUtilities.IsLessThan(Maximum, Minimum))
             {
-                yield return new ValidationResult("The maximum running value must be greater than the Minimum value", new string[] { "Maximum" });
+                yield return new ValidationResult("The maximum running value must be greater than the Minimum value", ["Maximum"]);
             }
         }
 

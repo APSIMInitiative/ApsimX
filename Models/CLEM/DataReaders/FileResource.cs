@@ -423,19 +423,19 @@ namespace Models.CLEM
         {
             if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
-                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
+                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", ["WorksheetName"]);
             }
             if (StyleOfDateEntry == DateStyle.DateStamp && (DateColumnName is null || DateColumnName == ""))
             {
-                yield return new ValidationResult("You must specify a column for date data when using DateStamp style date entry", new string[] { "DateColumnName" });
+                yield return new ValidationResult("You must specify a column for date data when using DateStamp style date entry", ["DateColumnName"]);
             }
             if (StyleOfDateEntry == DateStyle.YearAndMonth && (YearColumnName is null || YearColumnName == ""))
             {
-                yield return new ValidationResult("You must specify a column for year data when using YearAndMonth style date entry", new string[] { "YearColumnName" });
+                yield return new ValidationResult("You must specify a column for year data when using YearAndMonth style date entry", ["YearColumnName"]);
             }
             if (StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
             {
-                yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", new string[] { "MonthColumnName" });
+                yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", ["MonthColumnName"]);
             }
         } 
         #endregion

@@ -101,13 +101,13 @@ namespace Models.CLEM.Activities
             // get check labour required
             if (labour == null)
             {
-                yield return new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", new string[] { "Labour requirement" });
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", ["Labour requirement"]);
             }
 
             // check pricing
             if (!Resources.FindResourceGroup<Labour>().PricingAvailable)
             {
-                yield return new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", new string[] { "Labour pricing" });
+                yield return new ValidationResult($"[a={Name}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", ["Labour pricing"]);
             }
         }
         #endregion

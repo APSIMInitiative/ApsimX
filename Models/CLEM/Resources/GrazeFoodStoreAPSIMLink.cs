@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a link to an APSIM paddock with forages")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreAPSIMLink.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrazing)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class GrazeFoodStoreAPSIMLink : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IGrazeFoodStoreType, IValidatableObject
     {
         private const double gm2TokgHa = 10.0;

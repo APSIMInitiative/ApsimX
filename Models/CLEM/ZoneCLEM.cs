@@ -33,7 +33,7 @@ namespace Models.CLEM
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
     [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1, 0, 1, "")]
-    [ModelAssociations( associatedModels: new Type[] { typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder) }, AssociationStyles = new ModelAssociationStyle[] { ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent })]
+    [ModelAssociations(associatedModels: [typeof(CLEMEvents), typeof(ResourcesHolder), typeof(ActivitiesHolder)], AssociationStyles = [ModelAssociationStyle.InScope, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent])]
     public class ZoneCLEM : Zone, ICLEMUI, IScopedModel, IStructureDependency
     {
         /// <summary>Structure instance supplied by APSIM.core.</summary>
@@ -299,7 +299,7 @@ namespace Models.CLEM
             Validator.TryValidateObject(model, validationContext, validationResults, true);
             if (model.Name.EndsWith(" "))
             {
-                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", ["Name"]));
             }
 
             if (model is CLEMModel clemModel)
@@ -309,7 +309,7 @@ namespace Models.CLEM
                 // check that simulation time step is supported by this component
                 if(!clemModel.TimeStepOK(events))
                 {
-                    validationResults.Add(new ValidationResult($"The [{events.TimeStep}] time-step of [CLEMEvents] is not supported by [{clemModel.GetType().Name}] component.", new string[] { "Invalid time-step" }));
+                    validationResults.Add(new ValidationResult($"The [{events.TimeStep}] time-step of [CLEMEvents] is not supported by [{clemModel.GetType().Name}] component.", ["Invalid time-step"]));
                 }
             }
 

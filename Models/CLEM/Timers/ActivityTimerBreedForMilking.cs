@@ -193,7 +193,7 @@ namespace Models.CLEM.Timers
         {
             if (RestMonths > 0 & ShortenLactationMonths > 0)
             {
-                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", new string[] { "Ruminant Milking Timer" });
+                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", ["Ruminant Milking Timer"]);
             }
 
             // this should be handled automatically until the allowed time step of this component is set.

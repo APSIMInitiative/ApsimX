@@ -228,7 +228,7 @@ namespace Models.CLEM.Activities
             var specifyRuminants = Structure.FindChildren<SpecifyRuminant>();
             if (specifyRuminants.Count() == 0)
             {
-                string[] memberNames = new string[] { "PurchaseDetails" };
+                string[] memberNames = ["PurchaseDetails"];
                 yield return new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames);
             }
             else
@@ -239,12 +239,12 @@ namespace Models.CLEM.Activities
                     var items = Structure.FindChildren<RuminantTypeCohort>(relativeTo: specRumItem);
                     if (items.Count() > 1)
                     {
-                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
+                        string[] memberNames = ["SpecifyRuminant cohort"];
                         yield return new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames);
                     }
                     if (items.First().Suckling)
                     {
-                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
+                        string[] memberNames = ["PurchaseDetails[Suckling]"];
                         yield return new ValidationResult("Suckling individuals are not permitted as ruminant purchases.", memberNames);
                     }
                 }
@@ -254,7 +254,7 @@ namespace Models.CLEM.Activities
                 double cumulativeProp = specifyRuminants.Select(a => a.Proportion).Sum();
                 if(MathUtilities.FloatsAreEqual(cumulativeProp, 1.0) == false)
                 {
-                    string[] memberNames = new string[] { "SpecifyRuminant proportions" };
+                    string[] memberNames = ["SpecifyRuminant proportions"];
                     yield return new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames);
                 }
             }
@@ -264,7 +264,7 @@ namespace Models.CLEM.Activities
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
-                    string[] memberNames = new string[] { "Location is not valid" };
+                    string[] memberNames = ["Location is not valid"];
                     yield return new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                 }
             }

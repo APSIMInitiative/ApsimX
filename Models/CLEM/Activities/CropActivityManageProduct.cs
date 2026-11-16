@@ -637,13 +637,13 @@ namespace Models.CLEM.Activities
         {
             if (Parent.GetType() != typeof(CropActivityManageCrop) && Parent.GetType() != typeof(CropActivityManageProduct))
             {
-                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", new string[] { "Parent model" });
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", ["Parent model"]);
             }
 
             // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
             if (!((Parent.GetType() == typeof(CropActivityManageCrop) || (Parent.GetType() == typeof(CropActivityManageProduct) && Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
             {
-                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", new string[] { "Invalid nesting" });
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", ["Invalid nesting"]);
             }
 
             // ensure we don't try and change the crop area planeted when using unallocated land
@@ -652,11 +652,11 @@ namespace Models.CLEM.Activities
                 var parentManageCrop = Structure.FindParent<CropActivityManageCrop>(recurse: true);
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
-                    yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", new string[] { "Invalid crop area" });
+                    yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", ["Invalid crop area"]);
                 }
                 if(Parent is CropActivityManageProduct)
                 {
-                    yield return new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", new string[] { "Invalid crop area" });
+                    yield return new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", ["Invalid crop area"]);
                 }
             }
         }

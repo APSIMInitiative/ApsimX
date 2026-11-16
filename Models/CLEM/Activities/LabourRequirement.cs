@@ -248,7 +248,7 @@ namespace Models.CLEM.Activities
             // check filter groups present
             if (!Structure.FindChildren<LabourGroup>().Any())
             {
-                yield return new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", new string[] { "Labour filter group" });
+                yield return new ValidationResult($"No [f=LabourFilterGroup] is provided with the [LabourRequirement] for [a={NameWithParent}].{Environment.NewLine}Add a [LabourFilterGroup] to specify individuals for this activity.", ["Labour filter group"]);
             }
 
             // check for individual nesting.
@@ -259,7 +259,7 @@ namespace Models.CLEM.Activities
                 {
                     if (Structure.FindChildren<LabourGroup>(relativeTo: currentFilterGroup).Count() > 1)
                     {
-                        yield return new ValidationResult($"Invalid nested labour filter groups in [f={currentFilterGroup.Name}] for [a={Name}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", new string[] { "Labour filter group" });
+                        yield return new ValidationResult($"Invalid nested labour filter groups in [f={currentFilterGroup.Name}] for [a={Name}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", ["Labour filter group"]);
                     }
                     currentFilterGroup = Structure.FindChildren<LabourGroup>(relativeTo: currentFilterGroup).FirstOrDefault();
                 }

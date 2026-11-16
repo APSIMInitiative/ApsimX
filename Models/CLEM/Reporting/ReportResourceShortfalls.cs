@@ -46,7 +46,7 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastShortfallResourceRequest.ShortfallStatus as Status"
             ];
 
-            EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
+            EventNames = ["[Activities].ResourceShortfallOccurred"];
             VariableNames = variableNames.ToArray();
 
             SubscribeToEvents();

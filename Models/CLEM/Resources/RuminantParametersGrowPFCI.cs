@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
         [Category("Farm:Summary", "Lactation-Intake")]
         [Description("Peak lactation intake level [CI19]")]
         [Required, GreaterThanValue(0)]
-        public double[] PeakLactationIntakeLevel_CI19 { get; set; } = new double[] { 0.416, 0.416 };
+        public double[] PeakLactationIntakeLevel_CI19 { get; set; } = [0.416, 0.416];
 
         /// <summary>
         /// Relative condition effect (SCA CI20)

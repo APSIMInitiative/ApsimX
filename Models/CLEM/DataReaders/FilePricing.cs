@@ -298,7 +298,7 @@ namespace Models.CLEM
         {
             if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
-                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
+                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", ["WorksheetName"]);
             }
         }
         #endregion

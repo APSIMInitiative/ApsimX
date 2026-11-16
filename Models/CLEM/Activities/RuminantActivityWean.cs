@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
@@ -280,7 +280,7 @@ namespace Models.CLEM.Activities
                 var grazeStore = Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
                 if (grazeStore is null)
                 {
-                    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
 
                 //ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();

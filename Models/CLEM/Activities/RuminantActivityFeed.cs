@@ -460,7 +460,7 @@ namespace Models.CLEM.Activities
                 double propOfFeed = Structure.FindChildren<RuminantFeedGroup>().Sum(a => a.Value);
                 if(MathUtilities.IsGreaterThan(propOfFeed, 1.0))
                 {
-                    yield return new ValidationResult($"The sum of Proportions of total feed available exceeds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", new string[] { "Total proportion exceeds 1" });
+                    yield return new ValidationResult($"The sum of Proportions of total feed available exceeds 1 across all [RuminantFeedGroups] in [a={Name}].{Environment.NewLine}Choose a different feeding style or ensure the sum of proportions specified do not exceed 1 when using ProportionOfFeedAvailable feeding style", ["Total proportion exceeds 1"]);
                 }
             }
         }

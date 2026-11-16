@@ -45,8 +45,8 @@ namespace Models.CLEM.Groupings
         /// Method to return available operators
         /// </summary>
         /// <returns></returns>
-        protected object[] GetOperators() => new object[]
-        {
+        protected object[] GetOperators() =>
+        [
             ExpressionType.Equal,
             ExpressionType.NotEqual,
             ExpressionType.LessThan,
@@ -55,7 +55,7 @@ namespace Models.CLEM.Groupings
             ExpressionType.GreaterThanOrEqual,
             ExpressionType.IsTrue,
             ExpressionType.IsFalse
-        };
+        ];
 
         /// <summary>
         /// Convert the operator to a symbol

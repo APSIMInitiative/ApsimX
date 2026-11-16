@@ -29,8 +29,8 @@ namespace Models.CLEM.Activities
     [Description("Performs growth and aging of all ruminants based on Oddy et al (2024) ruminant energetics model.")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGrowOddy.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType },
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL)],
+        associationStyles: [ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType],
         SingleInstance = true)]
     public class RuminantActivityGrowOddy : CLEMRuminantActivityBase, IValidatableObject, IRuminantActivityGrow
     {
@@ -314,7 +314,7 @@ namespace Models.CLEM.Activities
             // check parameters are available for all ruminants.
             foreach (var item in Structure.FindAll<RuminantType>().Where(a => a.Parameters.GrowPF is null))
             {
-                yield return new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", new string[] { "RuminantParametersGrowSCA" });
+                yield return new ValidationResult($"No [RuminantParametersGrowSCA] parameters are provided for [{item.NameWithParent}]", ["RuminantParametersGrowSCA"]);
             }
         }
 

@@ -486,7 +486,7 @@ namespace Models.CLEM
                 return false;
             }
 
-            var parts = input.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = input.Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries);
             if (isAgeSpecifier && parts.Length == 0 || parts.Length > 3)
             {
                 return false;
@@ -522,7 +522,7 @@ namespace Models.CLEM
                 return false;
             }
 
-            var parts = input.Split(new[] { ',', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = input.Split([',', ';', ' '], StringSplitOptions.RemoveEmptyEntries);
             var temp = new List<double>();
             foreach (var part in parts)
             {
@@ -582,7 +582,7 @@ namespace Models.CLEM
         {
             if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
-                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
+                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", ["WorksheetName"]);
             }
         } 
 

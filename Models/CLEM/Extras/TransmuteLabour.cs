@@ -111,7 +111,7 @@ namespace Models.CLEM
             if (ResourceGroup is null)
             {
                 parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                yield return new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", new string[] { "Labour resource" });
+                yield return new ValidationResult($"No [r=Labour] resource was found for a labour-based transmutation [{this.Name}] of [{parentResource.Name}]", ["Labour resource"]);
             }
 
             if (TransmuteStyle == TransmuteStyle.UsePricing)
@@ -121,7 +121,7 @@ namespace Models.CLEM
                     parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
                 }
 
-                yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", new string[] { "Transmte pricing" });
+                yield return new ValidationResult($"The UsePricing Transmute style is not supported in the [{this.Name}] of [{parentResource.Name}]", ["Transmte pricing"]);
             }
         }
         #endregion

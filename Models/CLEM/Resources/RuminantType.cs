@@ -553,13 +553,13 @@ namespace Models.CLEM.Resources
             int conceptionModelCount = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
             if (conceptionModelCount > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                string[] memberNames = ["RuminantType.IConceptionModel"];
                 yield return new ValidationResult($"Only one Conception component is permitted below the Ruminant Type [r={Name}]", memberNames);
             }
 
             if (Structure.FindChildren<AnimalPricing>().Count() > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                string[] memberNames = ["RuminantType.Pricing"];
                 yield return new ValidationResult($"Only one Animal pricing schedule is permitted within a Ruminant Type [{Name}]", memberNames);
             }
             else if (Structure.FindChildren<AnimalPricing>().Count() == 1)
@@ -568,7 +568,7 @@ namespace Models.CLEM.Resources
 
                 if (!Structure.FindChildren<AnimalPriceGroup>(relativeTo: price).Any())
                 {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    string[] memberNames = ["RuminantType.Pricing.RuminantPriceGroup"];
                     yield return new ValidationResult($"At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{Name}]", memberNames);
                 }
             }

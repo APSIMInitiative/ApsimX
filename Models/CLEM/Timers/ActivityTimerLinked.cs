@@ -115,7 +115,7 @@ namespace Models.CLEM.Timers
                     errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
                 }
 
-                yield return new ValidationResult(errorMsg, new string[] { "Linked timer" });
+                yield return new ValidationResult(errorMsg, ["Linked timer"]);
             }
         }
         #endregion

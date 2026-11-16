@@ -27,13 +27,13 @@ public class RuminantConceptionAdvancedSummary : DescriptiveSummaryProviderBase<
         Generator.AddBlockWithText($"Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf using the following values.");
 
         StringBuilder sb = new StringBuilder();
-        string[] names = new string[]
-        {
+        string[] names =
+        [
             "First calf < 12 months",
             "First calf 12-24 months",
             "Second calf",
             "Third or later calf"
-        };
+        ];
 
         sb.AppendLine($"{generator.GetIndentTabs}<table><tr><th>Status</th><th>Asymptote</th><th>Coefficient</th><th>Intercept</th></tr>");
 

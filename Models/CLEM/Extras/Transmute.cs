@@ -230,7 +230,7 @@ namespace Models.CLEM
             {
                 if (!TransmuteResourceTypeName.Contains("."))
                 {
-                    string[] memberNames = new string[] { "ResourceTypeName" };
+                    string[] memberNames = ["ResourceTypeName"];
                     yield return new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames);
                 }
                 else
@@ -245,7 +245,7 @@ namespace Models.CLEM
                         object resultType = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         if (resultType is null)
                         {
-                            string[] memberNames = new string[] { "ResourceType" };
+                            string[] memberNames = ["ResourceType"];
                             yield return new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] for [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames);
                         }
                     }
@@ -258,7 +258,7 @@ namespace Models.CLEM
             {
                 if (shortfallPricing is null)
                 {
-                    string[] memberNames = new string[] { "Shortfall resource pricing" };
+                    string[] memberNames = ["Shortfall resource pricing"];
                     yield return new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames);
                 }
 
@@ -266,7 +266,7 @@ namespace Models.CLEM
                 {
                     if (transmutePricing is null)
                     {
-                        string[] memberNames = new string[] { "Transmute resource pricing" };
+                        string[] memberNames = ["Transmute resource pricing"];
                         yield return new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames);
                     }
                 }

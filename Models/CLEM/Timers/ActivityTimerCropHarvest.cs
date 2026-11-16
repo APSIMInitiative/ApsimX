@@ -135,7 +135,7 @@ namespace Models.CLEM.Timers
 
             if (ManageProductActivity == null)
             {
-                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", new string[] { "CropActivityManageProduct parent" });
+                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", ["CropActivityManageProduct parent"]);
             }
         }
         #endregion

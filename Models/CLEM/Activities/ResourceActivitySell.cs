@@ -253,7 +253,7 @@ namespace Models.CLEM.Activities
                 case ResourceSellStyle.ReserveProportion:
                     if (Value > 1)
                     {
-                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", new string[] { "Selling style" });
+                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", ["Selling style"]);
                     }
                     break;
                 default:

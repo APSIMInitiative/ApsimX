@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
 
             if (selectedResourceType is null)
             {
-                string[] memberNames = new string[] { "Selected resource" };
+                string[] memberNames = ["Selected resource"];
                 results.Add(new ValidationResult($"Unable to find the resource selected [r={ResourceTypeName}]", memberNames));
             }
             return results;

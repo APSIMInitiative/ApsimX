@@ -94,7 +94,7 @@ namespace Models.CLEM
         {
             if (Structure.Find<RandomNumberGenerator>() is null)
             {
-                yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", new string[] { "Missing random number generator" });
+                yield return new ValidationResult($"The [RainfallShuffler] component [{NameWithParent}] requires access to a [RandomNumberGenerator] component in the simulation tree", ["Missing random number generator"]);
             }
         }
         #endregion

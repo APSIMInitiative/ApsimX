@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
                 links.Resolve(newGrazePasture as IModel, true, recurse: false);
                 var apsimEvents = new Events(newGrazePasture);
                 apsimEvents.ConnectEvents();
-                apsimEvents.PublishToModelAndChildren("Commencing", new object[] { newGrazePasture, new EventArgs() });
+                apsimEvents.PublishToModelAndChildren("Commencing", [newGrazePasture, new EventArgs()]);
                 nextUID = ActivitiesHolder.AddToGuID(nextUID, 1);
             }
 
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
             // single grazeall
             if(Structure.FindChildren<RuminantActivityGrazeAll>(relativeTo: ActivitiesHolder, recurse: true).Count() > 1)
             {
-                yield return new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", new string[] { "Ruminant graze all activity" });
+                yield return new ValidationResult($"Only one [a=RuminantActivityGrazeAll] is permitted per [CLEM] component{Environment.NewLine}The GrazeAll activity will manage all possible grazing on the farm", ["Ruminant graze all activity"]);
             }
         }
         #endregion

@@ -54,7 +54,7 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
         if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            generator.CreateTable(new string[] { "Name", "Sex", "Age (yrs)", "Number", "Hired" });
+            generator.CreateTable(["Name", "Sex", "Age (yrs)", "Number", "Hired"]);
         }
     }
 

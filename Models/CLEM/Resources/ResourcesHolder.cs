@@ -77,7 +77,7 @@ namespace Models.CLEM.Resources
         {
             ArgumentNullException.ThrowIfNull(type);
 
-            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { });
+            MethodInfo method = this.GetType().GetMethod("FindResource", []);
             MethodInfo generic = method.MakeGenericMethod(type);
             return generic.Invoke(this, null) as ResourceBaseWithTransactions;
         }
@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
             if (resourceName is null)
                 missingResourceTypeAction = OnMissingResourceActionTypes.Ignore;
 
-            string[] nameParts = new string[] { "", resourceName ?? "" };
+            string[] nameParts = ["", resourceName ?? ""];
             if (nameParts.Last().Contains('.'))
             {
                 nameParts = nameParts.Last().Split('.');
@@ -455,14 +455,14 @@ namespace Models.CLEM.Resources
             // check that only one instance of each resource group is present
             foreach (var item in Structure.FindChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
-                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), new string[] { item.Key.FullName });
+                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), [item.Key.FullName]);
             }
 
             // check that only one resource type with a given name is present
             foreach (var item in Structure.FindChildren<IResourceType>(recurse: true).GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
             {
                 var bits = item.Key.Split(':');
-                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", new string[] { "Multiple resource type with same name" });
+                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", ["Multiple resource type with same name"]);
             }
         }
 

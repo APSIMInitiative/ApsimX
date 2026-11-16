@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <returns>An IEnumerable of strings</returns>
         public static IEnumerable<string> ActivityStyleList()
         {
-            return new string[] { "Arrange sales", "Arrange purchases" };
+            return ["Arrange sales", "Arrange purchases"];
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace Models.CLEM.Activities
             var truckingComponents = Structure.FindChildren<RuminantTrucking>().Where(a => a.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseAvailableWithImplications).ToList();
             if (truckingComponents.Count != 0 && (truckingComponents.Count != Structure.FindChildren<RuminantTrucking>().Count()))
             {
-                yield return new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", new string[] { "RuminantTrucking" });
+                yield return new ValidationResult($"All [r=RuminantTrucking] components for [{ActivityStyle}] must be set to [UseAvailableWithImplications] if any are defined for this partial resources available action", ["RuminantTrucking"]);
             }
         }
         #endregion

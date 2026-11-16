@@ -83,7 +83,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Populates the time filter
         /// </summary>
-        public string[] GetTimes() => new string[] { "Day", "Month", "Year" };
+        public string[] GetTimes() => ["Day", "Month", "Year"];
 
         /// <summary>
         /// Tracks the active selection in the time box
@@ -101,7 +101,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Populates the aggregate filter
         /// </summary>
-        public string[] GetAggregators() => new string[] { "SUM", "AVG", "MAX", "MIN", "COUNT" };
+        public string[] GetAggregators() => ["SUM", "AVG", "MAX", "MIN", "COUNT"];
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -118,7 +118,7 @@ namespace Models.CLEM.Reporting
 
             if (report is null)
             {
-                return new string[] { "No available data" };
+                return ["No available data"];
             }
 
             // Find the columns that meet our criteria
@@ -225,7 +225,7 @@ namespace Models.CLEM.Reporting
             // check if the query already exists in the datastore
 
             string viewSQL = storage.GetViewSQL(Name);
-            if (!viewSQL.EndsWith(builder.ToString().TrimEnd(new char[] { '\r', '\n' })))
+            if (!viewSQL.EndsWith(builder.ToString().TrimEnd(['\r', '\n'])))
             {
                 // Execute the query
                 SQL = builder.ToString();
@@ -240,7 +240,7 @@ namespace Models.CLEM.Reporting
         {
             if (Structure.FindAll<ReportPivot>().Where(a => a.Name == Name).Skip(1).Any())
             {
-                yield return new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", new string[] { "Duplicate report name" });
+                yield return new ValidationResult("This report cannot have the same name as another [PivotReport] as the component name is used as the View name in the database", ["Duplicate report name"]);
             }
         }
 

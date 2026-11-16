@@ -31,7 +31,7 @@ namespace Models.CLEM.Resources
 
             if (Structure.FindChildren<AnimalPriceGroup>().Count() == 0)
             {
-                yield return new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", new string[] { "Animal pricing" });
+                yield return new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", ["Animal pricing"]);
             }
             else if (Structure.FindChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {

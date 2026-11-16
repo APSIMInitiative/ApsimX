@@ -41,7 +41,7 @@ namespace Models.CLEM
 
             DateTime laterDate = (DateTime)value;
             DateTime earlierDate = (DateTime)validationContext.ObjectType.GetProperty(dateToCompareToFieldName).GetValue(validationContext.ObjectInstance, null);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (laterDate > earlierDate)
             {
@@ -81,7 +81,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if ((MathUtilities.IsGreaterThanOrEqual(maxValue, 0)) && MathUtilities.IsLessThanOrEqual(maxValue, 100))
             {
@@ -119,7 +119,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             double[] listValues;
             if (value != null && value.GetType().IsArray)
@@ -128,7 +128,7 @@ namespace Models.CLEM
             }
             else
             {
-                listValues = new double[] { Convert.ToDouble(value, CultureInfo.InvariantCulture) };
+                listValues = [Convert.ToDouble(value, CultureInfo.InvariantCulture)];
             }
 
             foreach (double item in listValues)
@@ -179,7 +179,7 @@ namespace Models.CLEM
                 monthValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if ((monthValue >= 1) && (monthValue <= 12))
             {
@@ -229,7 +229,7 @@ namespace Models.CLEM
                 maxValue = Convert.ToDouble(value);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (MathUtilities.IsGreaterThan(maxValue, compareValue))
             {
@@ -285,7 +285,7 @@ namespace Models.CLEM
                 maxValue = Convert.ToDouble(value);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (MathUtilities.IsGreaterThanOrEqual(maxValue, compareValue))
             {
@@ -356,7 +356,7 @@ namespace Models.CLEM
                     break;
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (result == compareStyle)
             {
@@ -398,7 +398,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             // check valid property name
             if (validationContext.ObjectType.GetProperty(compareToFieldName) == null)
@@ -448,7 +448,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             // check valid property name
             if (validationContext.ObjectType.GetProperty(compareToFieldName) == null)
@@ -524,7 +524,7 @@ namespace Models.CLEM
             {
                 DefaultErrorMessage += $" (expecting between {minNumberOfArrayItems} and {maxNumberOfArrayItems} values)";
             }
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (value.GetType().IsArray)
             {

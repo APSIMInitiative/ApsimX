@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
             var filterGroups = Structure.FindChildren<IRuminantDeathGroup>();
             if(!filterGroups.Any())
             {
-                yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", new string[] { "Missing FilterGroup" });
+                yield return new ValidationResult($"At least one [RuminantDeathGroup] is required as a child of the [a=RuminantActivityDeath] component [{NameWithParent}]", ["Missing FilterGroup"]);
             }
         }
         #endregion

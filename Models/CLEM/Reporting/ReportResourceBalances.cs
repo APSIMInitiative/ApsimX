@@ -250,7 +250,7 @@ namespace Models.CLEM.Reporting
             // Subscribe to events.
             if (EventNames == null || !EventNames.Where(a => a.Trim() != "").Any())
             {
-                EventNames = new string[] { "[CLEMEvents].CLEMFinalizeTimeStep" };
+                EventNames = ["[CLEMEvents].CLEMFinalizeTimeStep"];
             }
 
             SubscribeToEvents();

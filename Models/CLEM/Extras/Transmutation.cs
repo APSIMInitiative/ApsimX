@@ -70,7 +70,7 @@ namespace Models.CLEM
         {
             if (!Structure.FindChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any())
             {
-                yield return new ValidationResult("No transmute components provided under this transmutation", new string[] { "Transmutes" });
+                yield return new ValidationResult("No transmute components provided under this transmutation", ["Transmutes"]);
             }
         }
         #endregion

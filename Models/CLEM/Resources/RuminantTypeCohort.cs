@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantTypeCohort : CLEMModel, IValidatableObject
     {
         private SetPreviousConception setPreviousConception = null;
@@ -286,7 +286,7 @@ namespace Models.CLEM.Resources
             if (Age == 0)
                 yield return new ValidationResult($"New born individuals [Age = 0] are not permitted in initial herd for [r={NameWithParent}]", ["AgeDetails"]);
 
-            string[] valueLabels = new string[] { "Fat", "Muscle protein", "Visceral protein" };
+            string[] valueLabels = ["Fat", "Muscle protein", "Visceral protein"];
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
 

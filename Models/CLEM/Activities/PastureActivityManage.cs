@@ -470,33 +470,33 @@ namespace Models.CLEM.Activities
         {
             if (relationshipLC == null)
             {
-                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                string[] memberNames = ["Relationship for LandConditionIndex"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames);
             }
             else
             {
                 if (LandConditionIndex == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    string[] memberNames = ["RelationshipRunningValue for LandConditionIndex"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames);
                 }
             }
             if (relationshipGBA == null)
             {
-                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                string[] memberNames = ["Relationship for Grass Basal Area"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames);
             }
             else
             {
                 if (GrassBasalArea == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    string[] memberNames = ["RelationshipRunningValue for GrassBasalArea"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames);
                 }
             }
             if (filePasture == null)
             {
-                string[] memberNames = new string[] { "FilePastureReader" };
+                string[] memberNames = ["FilePastureReader"];
                 yield return new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames);
             }
         }

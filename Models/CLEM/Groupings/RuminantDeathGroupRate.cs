@@ -100,7 +100,7 @@ namespace Models.CLEM.Groupings
                 {
                     if(rumtype.Parameters.GrowPF is null && rumtype.Parameters.Grow is null)
                     {
-                        string[] memberNames = new string[] { "Cannot find mortality parameters" };
+                        string[] memberNames = ["Cannot find mortality parameters"];
                         results.Add(new ValidationResult($"The [GetFromParameters] setting requires a [Parameters.GrowPF] or [Parameters.Grow] provided in [r={rumtype.Name}] for [a={Name}].{Environment.NewLine}Provide required breed parameters or use the [Specify] style", memberNames));
                     }
                 }

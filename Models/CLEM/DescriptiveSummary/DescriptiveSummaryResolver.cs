@@ -51,7 +51,7 @@ public static class DescriptiveSummaryResolver
             {
                 try
                 {
-                    created = matchedCtor.Invoke(new object[] { modelObj });
+                    created = matchedCtor.Invoke([modelObj]);
                 }
                 catch (TargetInvocationException tie)
                 {

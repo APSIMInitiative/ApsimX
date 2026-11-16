@@ -35,7 +35,7 @@ namespace Models.CLEM.Groupings
         {
             if (Structure.FindChildren<CLEMModel>(relativeTo: Parent as INodeModel).Last() != this)
             {
-                yield return new ValidationResult($"The sort item [f={Name}] must be the last component in its group", new string[] { "RandomSort" });
+                yield return new ValidationResult($"The sort item [f={Name}] must be the last component in its group", ["RandomSort"]);
             }
         }
         #endregion

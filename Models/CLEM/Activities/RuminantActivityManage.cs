@@ -1830,12 +1830,12 @@ namespace Models.CLEM.Activities
             {
                 if ((ManageMaleBreederNumbers & PerformMaleStocking) && MaximumSiresPerPurchase > 0)
                 {
-                    string[] memberNames = new string[] { "Specify purchased individuals' details" };
+                    string[] memberNames = ["Specify purchased individuals' details"];
                     yield return new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new Sires or disable purchases [PerformMaleStocking] = False or set [MaximumSiresPerPurchase] to [0]", memberNames);
                 }
                 if ((ManageFemaleBreederNumbers & PerformFemaleStocking) && MaximumProportionBreedersPerPurchase > 0)
                 {
-                    string[] memberNames = new string[] { "Specify purchased individuals' details" };
+                    string[] memberNames = ["Specify purchased individuals' details"];
                     yield return new ValidationResult($"No purchase individual details have been specified by [r=SpecifyRuminant] components below [a={Name}]{Environment.NewLine}Add [SpecifyRuminant] components for new female Breeders or disable purchases [PerformFemaleStocking] = False or set [MaximumProportionBreedersPerPurchase] to [0]", memberNames);
                 }
             }
@@ -1853,7 +1853,7 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameSires) is null)
                         {
-                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
+                            string[] memberNames = ["GrazeStoreType (paddock) to place purchased sires in"];
                             yield return new ValidationResult($"The location where purchased ruminant sires are to be placed [r={GrazeFoodStoreNameSires}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                         }
                     }
@@ -1871,7 +1871,7 @@ namespace Models.CLEM.Activities
                         ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                         if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameBreeders) is null)
                         {
-                            string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased breeders in" };
+                            string[] memberNames = ["GrazeStoreType (paddock) to place purchased breeders in"];
                             yield return new ValidationResult($"The location where purchased ruminant breeders are to be placed [r={GrazeFoodStoreNameBreeders}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                         }
                     }
@@ -1884,7 +1884,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var item in unknownPurchases)
                     {
-                        string[] memberNames = new string[] { "Invalid purchase details provided" };
+                        string[] memberNames = ["Invalid purchase details provided"];
                         double matureWeight = item.ExampleRuminant.Parameters.General.MinimumSizeForMaturityFemale * item.ExampleRuminant.Parameters.General.SRWFemale; 
                         if (item.ExampleRuminant is RuminantMale male)
                         {
@@ -1903,7 +1903,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameGrowOutMales) is null)
                     {
-                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place grow out males in" };
+                        string[] memberNames = ["GrazeStoreType (paddock) to place grow out males in"];
                         yield return new ValidationResult($"The location where grow out male ruminants are to be moved [r={GrazeFoodStoreNameGrowOutMales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                     }
                 }
@@ -1915,7 +1915,7 @@ namespace Models.CLEM.Activities
                     ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                     if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreNameGrowOutFemales) is null)
                     {
-                        string[] memberNames = new string[] { "GrazeStoreType (paddock) to place purchased sires in" };
+                        string[] memberNames = ["GrazeStoreType (paddock) to place grow out females in"];
                         yield return new ValidationResult($"The location where grow out female ruminants are to be moved [r={GrazeFoodStoreNameGrowOutFemales}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                     }
                 }

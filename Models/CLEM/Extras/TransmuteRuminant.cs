@@ -204,7 +204,7 @@ namespace Models.CLEM
             if (ResourceGroup is null)
             {
                 IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", new string[] { "Ruminant herd resource" });
+                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", ["Ruminant herd resource"]);
             }
         }
         #endregion

@@ -283,7 +283,7 @@ namespace Models.CLEM
             // check for file
             if (!this.FileExists)
             {
-                string[] memberNames = new string[] { "FileName" };
+                string[] memberNames = ["FileName"];
                 results.Add(new ValidationResult($"The SQLite database [x={FullFileName} could not be found for [{Name}]", memberNames));
             }
             else
@@ -351,7 +351,7 @@ namespace Models.CLEM
                     {
                         if (!dBcolumns.Contains(col))
                         {
-                            string[] memberNames = new string[] { "Missing SQLite database column" };
+                            string[] memberNames = ["Missing SQLite database column"];
                             results.Add(new ValidationResult($"Unable to find column [o={ col}] in pasture database [x={ FullFileName }] for [{Name}]", memberNames));
                         }
                     }

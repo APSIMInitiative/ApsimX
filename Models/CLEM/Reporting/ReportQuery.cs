@@ -71,7 +71,7 @@ namespace Models.CLEM.Reporting
                 var storage = Structure.Find<IDataStore>() ?? dataStore;
 
                 string viewSQL = storage.GetViewSQL(Name);
-                if (!viewSQL.EndsWith(SQL.TrimEnd(new char[] { '\r', '\n' })))
+                if (!viewSQL.EndsWith(SQL.TrimEnd(['\r', '\n'])))
                 {
                     // We assume any sql errors are thrown when data is retreived
                     storage.AddView($"{Name}", SQL);

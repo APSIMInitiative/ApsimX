@@ -99,7 +99,7 @@ namespace Models.CLEM.Groupings
                     errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same ZoneCLEM";
                 }
 
-                yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
+                yield return new ValidationResult(errorMsg, ["Linked filter group"]);
             }
         }
         #endregion

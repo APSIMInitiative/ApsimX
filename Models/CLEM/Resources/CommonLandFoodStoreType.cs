@@ -208,7 +208,7 @@ namespace Models.CLEM.Resources
         {
             if (Structure.FindChildren<Transmutation>().Count() > 0)
             {
-                string[] memberNames = new string[] { "Transmutations" };
+                string[] memberNames = ["Transmutations"];
                 yield return new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames);
             }
 
@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
                 pasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (pasture == null)
                 {
-                    string[] memberNames = new string[] { "Pasture link" };
+                    string[] memberNames = ["Pasture link"];
                     yield return new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames);
                 }
             }
@@ -242,7 +242,7 @@ namespace Models.CLEM.Resources
                 {
                     foreach (var item in missing)
                     {
-                        string[] memberNames = new string[] { item };
+                        string[] memberNames = [item];
                         yield return new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames);
                     }
                 }

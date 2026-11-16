@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
 
             if (labour is null)
             {
-                string[] memberNames = new string[] { "Labour" };
+                string[] memberNames = ["Labour"];
                 results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
             }
             else
@@ -187,13 +187,13 @@ namespace Models.CLEM.Activities
                 // make sure labour hired present
                 if (labour.Items.Where(a => a.IsHired).Count() == 0)
                 {
-                    string[] memberNames = new string[] { "Hired labour" };
+                    string[] memberNames = ["Hired labour"];
                     results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
                 }
                 // make sure pay rates present
                 if (!labour.PricingAvailable)
                 {
-                    string[] memberNames = new string[] { "Labour pay rate" };
+                    string[] memberNames = ["Labour pay rate"];
                     results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
                 }
             }

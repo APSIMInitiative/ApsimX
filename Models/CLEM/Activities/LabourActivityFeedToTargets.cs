@@ -649,21 +649,21 @@ namespace Models.CLEM.Activities
             {
                 if (bankAccount is null)
                 {
-                    string[] memberNames = new string[] { "AccountName" };
+                    string[] memberNames = ["AccountName"];
                     results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
                 }
             }
 
             if (Resources.FoundMarket != null & bankAccount is null)
             {
-                string[] memberNames = new string[] { "AccountName" };
+                string[] memberNames = ["AccountName"];
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
             }
 
             // check that at least one target has been provided.
             if (Structure.FindChildren<LabourActivityFeedTarget>().Count() == 0)
             {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
+                string[] memberNames = ["LabourActivityFeedToTargets"];
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
             }
 

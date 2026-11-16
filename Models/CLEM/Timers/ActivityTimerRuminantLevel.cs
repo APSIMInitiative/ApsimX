@@ -60,15 +60,15 @@ namespace Models.CLEM.Timers
         [Required]
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
-        private object[] GetOperators() => new object[]
-        {
+        private object[] GetOperators() =>
+        [
             ExpressionType.Equal,
             ExpressionType.NotEqual,
             ExpressionType.LessThan,
             ExpressionType.LessThanOrEqual,
             ExpressionType.GreaterThan,
             ExpressionType.GreaterThanOrEqual
-        };
+        ];
 
         /// <summary>
         /// Amount

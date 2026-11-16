@@ -51,7 +51,7 @@ public class LabourAvailabilityListSummary : DescriptiveSummaryProviderBase<Labo
         if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            Generator.CreateTable(new string[] { "Name", "Filter", "Days per month" });
+            Generator.CreateTable(["Name", "Filter", "Days per month"]);
         }
     }
 

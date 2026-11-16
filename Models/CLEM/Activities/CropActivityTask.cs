@@ -159,7 +159,7 @@ namespace Models.CLEM.Activities
 
                 if (follow is not ActivityFolder)
                 {
-                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", new string[] { "Parent model" });
+                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", ["Parent model"]);
                 }
                 follow = follow.Parent;
             }

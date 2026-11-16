@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
 
                     var events = new Events(newGrazePastureHerd);
                     events.ConnectEvents();
-                    events.PublishToModelAndChildren("Commencing", new object[] { newGrazePastureHerd, new EventArgs() });
+                    events.PublishToModelAndChildren("Commencing", [newGrazePastureHerd, new EventArgs()]);
 
                     nextUID = ActivitiesHolder.AddToGuID(nextUID, 2);
                 }
@@ -214,7 +214,7 @@ namespace Models.CLEM.Activities
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, IGrazeFoodStoreType>(this, GrazeFoodStoreTypeName) is null)
                 {
-                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                    yield return new ValidationResult($"The location defined for grazing [r={GrazeFoodStoreTypeName}] in [a={Name}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
             }
         }

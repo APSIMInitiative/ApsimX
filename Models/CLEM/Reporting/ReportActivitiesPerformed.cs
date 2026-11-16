@@ -81,17 +81,16 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            base.VariableNames = new string[]
-            {
+            base.VariableNames = [
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
                 "[Activities].LastActivityPerformed.Status as Status",
                 "[Activities].LastActivityPerformed.Id as UniqueID",
                 "[Activities].LastActivityPerformed.StatusMessage as Message",
                 "[Activities].LastActivityPerformed.ModelType as Type",
-            };
+            ];
 
-            EventNames = new string[] { "[Activities].ActivityPerformed" };
+            EventNames = ["[Activities].ActivityPerformed"];
             SubscribeToEvents();
         }
 

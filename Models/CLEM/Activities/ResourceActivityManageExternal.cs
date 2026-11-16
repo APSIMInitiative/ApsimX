@@ -308,7 +308,7 @@ namespace Models.CLEM.Activities
         {
             if (resourcesForMonth.Count != 0)
             {
-                double[] amountPerformed = new double[2] { 0, 0 };
+                double[] amountPerformed = [0, 0];
                 // loop through all resources to exchange and make transactions
                 foreach (var resourceItem in resourcesForMonth)
                 {
@@ -415,7 +415,7 @@ namespace Models.CLEM.Activities
         {
             if (fileResource == null)
             {
-                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", new string[] { "FileResourceReader" });
+                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", ["FileResourceReader"]);
             }
         }
         #endregion

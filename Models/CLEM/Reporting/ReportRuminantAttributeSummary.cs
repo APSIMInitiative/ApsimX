@@ -89,7 +89,7 @@ namespace Models.CLEM.Reporting
                 Structure.AddChild(report);
             }
             report.Name = Name;
-            report.VariableNames = new string[] {
+            report.VariableNames = [
                 "[Clock].Today as Date",
                 $"[{Name}].LastStatistics.GroupName as Group",
                 $"[{Name}].LastStatistics.Statistics.Count as CountAttr",
@@ -99,10 +99,8 @@ namespace Models.CLEM.Reporting
                 $"[{Name}].LastStatistics.Statistics.TotalMate as MatedIndividuals",
                 $"[{Name}].LastStatistics.Statistics.AverageMate as MateAverage",
                 $"[{Name}].LastStatistics.Statistics.StandardDeviationMate as MateSD"
-            };
-            report.EventNames = new string[] {
-                $"[{Name}].OnReportItemGenerated"
-            };
+            ];
+            report.EventNames = [$"[{Name}].OnReportItemGenerated"];
             if (!ReportMateValues)
             {
                 report.VariableNames = report.VariableNames.Take(6).ToArray();
@@ -141,17 +139,17 @@ namespace Models.CLEM.Reporting
             // check that this activity has a parent of type CropActivityManageProduct
             if (ruminantHerd is null)
             {
-                string[] memberNames = new string[] { "Missing resource" };
+                string[] memberNames = ["Missing resource"];
                 yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantAttributeSummary] [{this.Name}]", memberNames);
             }
             if (!Structure.FindChildren<RuminantGroup>().Any())
             {
-                string[] memberNames = new string[] { "Missing ruminant filter group" };
+                string[] memberNames = ["Missing ruminant filter group"];
                 yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames);
             }
             if (!Structure.FindChildren<Report>().Where(a => a.Name == this.Name).Any())
             {
-                string[] memberNames = new string[] { "Missing report" };
+                string[] memberNames = ["Missing report"];
                 yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames);
             }
         }

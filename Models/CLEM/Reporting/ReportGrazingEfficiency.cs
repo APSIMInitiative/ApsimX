@@ -101,7 +101,7 @@ namespace Models.CLEM.Reporting
 
             if (EventNames == null || EventNames.Count() == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" };
+                EventNames = ["[Clock].CLEMEvents.CLEMEndOfTimeStep"];
             }
 
             SubscribeToEvents();

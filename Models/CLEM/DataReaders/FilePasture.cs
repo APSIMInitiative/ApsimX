@@ -535,16 +535,7 @@ namespace Models.CLEM
         public PastureDataType GetMonthsPastureData(int region, int soil, int forageNo, int grassBasalArea, int landCondition, int stockingRate,
                                          int year, int month)
         {
-            object[] keyVals = new Object[8];
-            keyVals[0] = region;
-            keyVals[1] = soil;
-            keyVals[2] = forageNo;
-            keyVals[3] = grassBasalArea;
-            keyVals[4] = landCondition;
-            keyVals[5] = stockingRate;
-            keyVals[6] = year;
-            keyVals[7] = month;
-
+            object[] keyVals = [region, soil, forageNo, grassBasalArea, landCondition, stockingRate, year, month];
             DataRow dr = this.pastureFileAsTable.Rows.Find(keyVals);
 
             if (dr != null)

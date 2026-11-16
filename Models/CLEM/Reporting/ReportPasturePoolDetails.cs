@@ -206,7 +206,7 @@ namespace Models.CLEM.Reporting
 
             if (EventNames == null || EventNames.Count() == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMAnimalSell" }; 
+                EventNames = ["[Clock].CLEMEvents.CLEMAnimalSell"];
             }
 
             SubscribeToEvents();

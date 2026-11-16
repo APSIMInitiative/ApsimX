@@ -55,7 +55,7 @@ namespace Models.CLEM.Timers
             seq = seq.Replace("t", "1");
             seq = seq.Replace("f", "0");
 
-            var seqArray = seq.Split(new char[] { ' ', ';', ',', ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            var seqArray = seq.Split([' ', ';', ',', ':', '-'], StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < seqArray.Length; i++)
             {
                 if (seqArray[i].Contains('x'))
@@ -99,7 +99,7 @@ namespace Models.CLEM.Timers
             // check validity of sequence
             if (FormatSequence(sequence).Replace("0", "").Replace("1", "").Trim() != "")
             {
-                yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", new string[] { "ActivityTimerSequence" });
+                yield return new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", ["ActivityTimerSequence"]);
             }
         }
         #endregion
