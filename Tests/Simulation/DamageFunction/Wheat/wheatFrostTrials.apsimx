@@ -3496,7 +3496,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 160 // 170",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Scepter",
@@ -3533,7 +3534,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 130",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Cutlass",
@@ -3570,7 +3572,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 55 // 50",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Kittyhawk",
@@ -3607,7 +3610,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 370",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Forrest",
@@ -3644,7 +3648,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 183.0",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.7962741039794823",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Emu_Rock",
@@ -3681,7 +3686,8 @@
                             "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
                             "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4",
                             "",
-                            "[Grain].MaximumPotentialGrainSize.Expression=0.08",
+                            "[Grain].MaximumPotentialGrainSize.StemPlusSpikeResponse.XYPairs.Y = 0.08, 0.08, 0.08",
+                            "//[Grain].MaximumPotentialGrainSize.Expression=0.08",
                             "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue=40"
                           ],
                           "Name": "Trojan",
