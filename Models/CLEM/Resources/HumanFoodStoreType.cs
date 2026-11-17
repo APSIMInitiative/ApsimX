@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
                 amountRequired -= amountToRemove;
 
                 // remove resource from pool
-                pool.Remove(amountToRemove, request.ActivityModel, "Consumed");
+                pool.Remove(amountToRemove);
 
                 // send to market if needed
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)

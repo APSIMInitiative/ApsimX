@@ -290,7 +290,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
+        public void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
             // grazing does not access pools by breed but gets all it needs of this quality common pasture

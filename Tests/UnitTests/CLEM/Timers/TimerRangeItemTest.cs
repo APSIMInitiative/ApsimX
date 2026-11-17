@@ -52,7 +52,7 @@ public class TimerRangeItemTest
         CultureInfo provider = CultureInfo.InvariantCulture;
 
         var date = DateTime.ParseExact(dateString, format, provider);
-        TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, startOfRange, true);
+        TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, startOfRange);
 
         Assert.That(timerRangeItem.Date, Is.EqualTo(date));
         Assert.That(timerRangeItem.ErrorMessages.Count, Is.EqualTo(0));
@@ -72,7 +72,7 @@ public class TimerRangeItemTest
         {
             Parts = [year, month, day]
         };
-        TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, true, true);
+        TimerRangeItem timerRangeItem = new(clemEvents, ageSpecifier, true);
 
         Assert.That(timerRangeItem.ErrorMessages.Contains(errorString), Is.EqualTo(true));
         Assert.That(timerRangeItem.ErrorMessages.Count, Is.GreaterThan(0));

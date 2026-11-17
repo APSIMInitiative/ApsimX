@@ -56,12 +56,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        /// Remove from Resource method applied to an amount from a HumanFoodStorePool.
         /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public double Remove(double removeAmount, CLEMModel activity, string reason)
+        /// <param name="removeAmount">Amount to remove from this pool</param>
+        public double Remove(double removeAmount)
         {
             removeAmount = Math.Min(amount, removeAmount);
             amount -= removeAmount;
