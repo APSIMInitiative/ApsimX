@@ -368,7 +368,7 @@ internal static class JsonUtilities
     }
 
     /// <summary>
-    /// Replaces the type a child property if it exists.
+    /// Replaces the type of a child property if it exists.
     /// </summary>
     /// <param name="root">Parent node.</param>
     /// <param name="currentType">Type of property model to replace, including full namespace</param>
@@ -385,16 +385,23 @@ internal static class JsonUtilities
             valueObj["$type"] = typeText.Replace(currentType, newType);
         }
     }
+
+    /// <summary>
+    /// Find all properties of a given type in the structure below a node
+    /// </summary>
+    /// <param name="root">Parent node</param>
+    /// <param name="modelType">The model type to find, including full namespace</param>
+    /// <returns></returns>
     public static IEnumerable<JProperty> FindPropertiesWhoseValueIsType(
         JObject root,
-        string currentType)
+        string modelType)
     {
         return root
             .DescendantsAndSelf()
             .OfType<JProperty>()
             .Where(p =>
                 p.Value is JObject valueObj &&
-                valueObj["$type"]?.ToString().StartsWith(currentType, StringComparison.Ordinal) == true);
+                valueObj["$type"]?.ToString().StartsWith(modelType, StringComparison.Ordinal) == true);
     }
 
     /// <summary>
