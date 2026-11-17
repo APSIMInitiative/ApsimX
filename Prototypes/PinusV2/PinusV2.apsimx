@@ -7119,7 +7119,7 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=4, 24, 33, 38",
+                    "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.X=0, 20, 33, 40",
                     "[Leaf].Photosynthesis.FT.FTDaytime.XYPairs.Y=0, 1, 1, 0",
                     "",
                     "[Pinus].Partitioning.AboveGround.WoodyFraction.Juvenile.FixedValue = .55",
