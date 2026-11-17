@@ -70,11 +70,9 @@ namespace Models.CLEM.Timers
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get details from parent breeding activity
-            controlledMatingParent = this.Parent as RuminantActivityControlledMating;
-            if (controlledMatingParent is null)
-            {
+            controlledMatingParent = this.Parent as RuminantActivityControlledMating ?? 
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
-            }
+
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
             parameters = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop).Parameters;
 

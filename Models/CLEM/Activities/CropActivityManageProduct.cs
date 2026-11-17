@@ -203,11 +203,8 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
-            if (fileCrop == null)
-            {
+            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop ?? 
                 throw new ApsimXException(this, $"Unable to locate crop data reader [x={ModelNameFileCrop ?? "Unknown"}] requested by [a={NameWithParent}]");
-            }
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if ((LinkedResourceItem as Model).Parent is GrazeFoodStore)

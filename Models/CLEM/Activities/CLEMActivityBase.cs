@@ -441,12 +441,9 @@ namespace Models.CLEM.Activities
         {
             Dictionary<string, IEnumerable<T>> filters = [];
 
-            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers);
-            if (ids is null)
-            {
+            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers) ?? 
                 throw new Exception($"Identifiers have not been correctly configured for companion models of type [{typeof(T).Name}] of [{GetType().Name}]{Environment.NewLine}Invalid setup of [{GetType().Name}].LocateCompanionModels<T>(). Contact developers for assistance");
-            }
-
+            
             if (ids.Count != 0 == false)
             {
                 ids.Add("");
@@ -588,12 +585,10 @@ namespace Models.CLEM.Activities
             }
 
             var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")];
-            if (unitsProvided is null)
-            {
-                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
-            }
-
-            return unitsProvided.Value;
+            
+            return unitsProvided is null
+                ? throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers")
+                : unitsProvided.Value;
         }
 
         /// <summary>

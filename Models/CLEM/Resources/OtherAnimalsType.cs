@@ -368,13 +368,9 @@ namespace Models.CLEM.Resources
         {
             if (removeIndividuals is OtherAnimalsTypeCohort cohortDetails && cohortDetails.Number > 0)
             {
-                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault();
-
-                if (cohortexists == null)
-                {
-                    // tried to remove individuals that do not exist
+                // tried to remove individuals that do not exist
+                OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.AgeDetails.InDays == cohortDetails.AgeDetails.InDays && a.Sex == cohortDetails.Sex).FirstOrDefault() ?? 
                     throw new Exception($"Tried to remove individuals from [r={this.Name}] that do not exist [Sex: {cohortDetails.Sex}, Age: {cohortDetails.AgeDetails.InDays} days]");
-                }
 
                 cohortexists.Number = Math.Max(0, cohortexists.Number - cohortDetails.AdjustedNumber);
 
