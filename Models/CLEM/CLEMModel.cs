@@ -209,10 +209,7 @@ namespace Models.CLEM
         {
             get
             {
-                if (activityTimers is null)
-                {
-                    activityTimers = Structure.FindChildren<IActivityTimer>();
-                }
+                activityTimers ??= Structure.FindChildren<IActivityTimer>();
 
                 return activityTimers;
             }

@@ -409,10 +409,7 @@ namespace Models.CLEM.Activities
             int greenAge = (events.Clock.Today.Month <= 3) ? 2 : 1;
             double totalNeededDaily = CalculateDailyFeedRequirement();
 
-            if (DigestiblePasturePoolGroups is null)
-            {
-                DigestiblePasturePoolGroups = GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
-            }
+            DigestiblePasturePoolGroups ??= GrazeFoodStoreModel.GenerateIntakeGroups(events.Interval, greenAge);
 
             // fill all animals by calculating relative fill for each pool group 
             for (int i = 0; i < DigestiblePasturePoolGroups.Count; i++)
@@ -523,16 +520,13 @@ namespace Models.CLEM.Activities
             if (qualityShortfall + resourceShortfall > 0)
             {
                 ResourceRequest shortfallRequest = pastureRequest;
-                if (shortfallRequest is null)
-                {
-                    shortfallRequest = new ResourceRequest()
+                shortfallRequest ??= new ResourceRequest()
                     {
                         Available = amountPriorToPending, // display all that was given
                         Required = desiredTotal,
                         ResourceType = typeof(GrazeFoodStore),
                         ResourceTypeName = GrazeFoodStoreModel.Name
                     };
-                }
 
                 if (resourceShortfall >= qualityShortfall)
                 {

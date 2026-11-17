@@ -78,10 +78,7 @@ namespace Models.CLEM.Activities
             }
 
             // no market price found... look in local resources and allow 0 price if not found
-            if (price is null)
-            {
-                price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
-            }
+            price ??= resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
         }
 
         /// <inheritdoc/>

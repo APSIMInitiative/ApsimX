@@ -32,8 +32,7 @@ namespace Models.CLEM.Resources
 
         private void InitialiseResourceGroupList()
         {
-            if (ResourceGroupList == null)
-                ResourceGroupList = Structure.FindChildren<IModel>().Where(a => a.Enabled);
+            ResourceGroupList ??= Structure.FindChildren<IModel>().Where(a => a.Enabled);
         }
 
         /// <summary>

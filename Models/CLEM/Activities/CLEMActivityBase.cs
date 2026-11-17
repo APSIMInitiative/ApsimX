@@ -112,10 +112,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (parentZone is null)
-                {
-                    parentZone = Structure.FindParent<ZoneCLEM>(recurse: true);
-                }
+                parentZone ??= Structure.FindParent<ZoneCLEM>(recurse: true);
 
                 if (parentZone is null)
                 {
@@ -660,10 +657,7 @@ namespace Models.CLEM.Activities
 
                             foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                             {
-                                if (request.ActivityModel is null)
-                                {
-                                    request.ActivityModel = this;
-                                }
+                                request.ActivityModel ??= this;
 
                                 request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
                                 ResourceRequestList.Add(request);
@@ -1123,11 +1117,8 @@ namespace Models.CLEM.Activities
             request.Required = amountNeeded;
             // may need to reduce request here or shortfalls will be triggered
 
-            if (current == null)
-            {
-                // no filter group provided so assume any labour
-                current = new LabourGroup();
-            }
+            // no filter group provided so assume any labour
+            current ??= new LabourGroup();
 
             request.ResourceTypeName = "Labour";
             ResourceRequest removeRequest = new()

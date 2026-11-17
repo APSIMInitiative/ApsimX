@@ -141,10 +141,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override void BuildRule()
         {
-            if (Rule is null)
-            {
-                Rule = Compile<IFilterable>();
-            }
+            Rule ??= Compile<IFilterable>();
         }
 
         #region validation

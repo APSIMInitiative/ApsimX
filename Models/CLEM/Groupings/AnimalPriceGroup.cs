@@ -108,10 +108,7 @@ namespace Models.CLEM.Groupings
             PreviousPrice = CurrentPrice;
             Value = amount;
 
-            if (LastPriceChange is null)
-            {
-                LastPriceChange = new ResourcePriceChangeDetails();
-            }
+            LastPriceChange ??= new ResourcePriceChangeDetails();
             LastPriceChange.ChangedBy = model;
             LastPriceChange.PriceChanged = this;
 

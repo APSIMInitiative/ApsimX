@@ -103,10 +103,7 @@ namespace Models.CLEM.Extras
                         }
                     }
 
-                    if (shortfallPricing is null)
-                    {
-                        shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
-                    }
+                    shortfallPricing ??= shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
 
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
