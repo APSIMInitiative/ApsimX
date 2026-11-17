@@ -28,7 +28,7 @@ public class SetAttributeWithPropertySummary : DescriptiveSummaryProviderBase<Se
 
         if (FormatForParentControl)
         {
-            bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
+            bool isGroupAttribute = (CurrentAncestorList?.Count >= 2 && CurrentAncestorList[^2] == typeof(RuminantInitialCohorts).Name);
             if (model.StandardDeviation == 0)
                 generator.AddBlockWithText($"Attribute {attrName} is linked to {prop} and provided {(isGroupAttribute ? "to all cohorts " : "")}with a value of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value)}", "resourcebanneralone clearfix");
             else

@@ -98,9 +98,9 @@ namespace Models.CLEM.Extras
                 return YValues[0];
             }
 
-            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[XValues.Length - 1]))
+            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[^1]))
             {
-                return YValues[YValues.Length - 1];
+                return YValues[^1];
             }
 
             int k = 0;
