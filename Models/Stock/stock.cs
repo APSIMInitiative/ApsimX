@@ -4066,9 +4066,9 @@ namespace Models.GrazPlan
 
             this.StockModel.Dynamics();
 
-            ForageProvider forageProvider;
+           ForageProvider forageProvider;
 
-            // Return the amounts of forage removed
+            //Return the amounts of forage removed
             for (int i = 0; i <= this.StockModel.ForagesAll.Count() - 1; i++)
             {
                 forageProvider = this.StockModel.ForagesAll.ForageProvider(i);

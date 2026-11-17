@@ -1138,17 +1138,51 @@ private GrazType.GrazingInputs Crop2GrazingInputs(ModelWithDigestibleBiomass for
         deadNConc = 0.0;
     }
            
-    for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
-    {
-        result.Herbage[idx].Biomass = greenDMDPropns[idx] * greenTotalDM + deadDMDPropns[idx] * deadTotalDM;              
-        result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
-        result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
-        result.Herbage[idx].Degradability =  Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
-        result.Herbage[idx].HeightRatio = 1.0;
-        result.Herbage[idx].PhosContent = 0.0;
-        result.Herbage[idx].SulfContent = 0.0;
-        result.Herbage[idx].AshAlkalinity = 0.70;
-    }
+    // for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+    // {
+    //     result.Herbage[idx].Biomass = greenDMDPropns[idx] * greenTotalDM + deadDMDPropns[idx] * deadTotalDM;              
+    //     result.Herbage[idx].CrudeProtein = nConc * GrazType.N2Protein;
+    //     result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
+    //     result.Herbage[idx].Degradability =  Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
+    //     result.Herbage[idx].HeightRatio = 1.0;
+    //     result.Herbage[idx].PhosContent = 0.0;
+    //     result.Herbage[idx].SulfContent = 0.0;
+    //     result.Herbage[idx].AshAlkalinity = 0.70;
+    // }
+
+            for (int idx = 1; idx <= GrazType.DigClassNo; idx++)
+        {
+            double greenBiomassInClass = greenDMDPropns[idx] * greenTotalDM;
+            double deadBiomassInClass = deadDMDPropns[idx] * deadTotalDM;
+
+            double biomassInClass = greenBiomassInClass + deadBiomassInClass;
+
+            double greenNInClass = greenDMDPropns[idx] * greenN;
+            double deadNInClass = deadDMDPropns[idx] * deadN;
+
+            double nitrogenInClass = greenNInClass + deadNInClass;
+
+            result.Herbage[idx].Biomass = biomassInClass;
+
+            if (biomassInClass > 0.0)
+            {
+                result.Herbage[idx].CrudeProtein =
+                    (nitrogenInClass / biomassInClass) * GrazType.N2Protein;
+            }
+            else
+            {
+                result.Herbage[idx].CrudeProtein = 0.0;
+            }
+
+           
+
+            result.Herbage[idx].Digestibility = GrazType.ClassDig[idx];
+            result.Herbage[idx].Degradability = Math.Min(0.90, result.Herbage[idx].Digestibility + 0.10);
+            result.Herbage[idx].HeightRatio = 1.0;
+            result.Herbage[idx].PhosContent = 0.0;
+            result.Herbage[idx].SulfContent = 0.0;
+            result.Herbage[idx].AshAlkalinity = 0.70;
+        }
 
     if (forageObj is IPlant plant)
     {
