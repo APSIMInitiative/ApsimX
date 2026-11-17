@@ -7488,10 +7488,11 @@
             "    ///    the soil); then from nitrate-free regional water. LegacyVolume = -1 (default) takes the saturated water (SAT) between D0",
             "    ///    and AccessDepth, so water below the access depth never counts; 0 restores unlimited supply at the rotation NO3-N.",
             "    /// Driver file (CSV, header row): PGP,Date,DTW_mm,DTW_unc_mm,NO3N_mgL,NO3N_unc_mgL.",
-            "    /// Drawdown with LateralInflow = 150 mm/yr and AccessDepth 6.5 m (2026-11-17). With an unlimited refill the 15 OFO plots",
-            "    /// with water tables within 6 m (Ning's depths) over-grew by 41%; observed growth there is no higher than on deeper plots.",
-            "    /// 100-200 mm/yr fits them (bias +2 to +8%; OFO BA NSE 0.13 -> 0.41, volume NSE 0.33 -> 0.54), as expected in plantation",
-            "    /// interiors with little lateral flow. The Benyon et al. (2006) groundwater-use sites 10-12 measured about 600 mm/yr of net",
+            "    /// Drawdown with LateralInflow = 40 mm/yr and AccessDepth 6.5 m (2026-11-17). With an unlimited refill the 15 OFO plots with",
+            "    /// water tables within 6.5 m (Ning's depths) over-grew by ~40%; observed growth there is no higher than on deeper plots",
+            "    /// (BA at age 10-20 34.1 vs 33.1 m2/ha). After deep drainage and floor retention 0.4, lateral inflow 150/100/75/50/25/0 mm/yr gave",
+            "    /// those plots BA bias +10/+6/+4/+1/-2/-5% and BA NSE -0.07/0.08/0.12/0.14/0.15/0.15; 40 mm/yr (plantation interiors, little",
+            "    /// lateral flow) sits at about zero bias. The Benyon et al. (2006) groundwater-use sites 10-12 measured about 600 mm/yr of net",
             "    /// groundwater use and are given LateralInflow = 800 by Operation, as higher-flow positions.",
             "    /// </summary>",
             "    [Serializable]",
@@ -7527,7 +7528,7 @@
             "        [Description(\"Days a layer is saturated before its roots die (anoxia)\")]",
             "        public double AnoxiaDays { get; set; } = 10;",
             "        [Description(\"Lateral groundwater inflow (mm/yr); -1 = refill at MaxSupply per day instead\")]",
-            "        public double LateralInflow { get; set; } = 150;",
+            "        public double LateralInflow { get; set; } = 40;",
             "        [Description(\"Years of rainfall that drive lateral inflow (inflow scales with their mean annual rain / the long-term mean)\")]",
             "        public double RainWindow { get; set; } = 3;",
             "        /// <summary>Lateral inflow today (mm/day).</summary>",
@@ -7873,7 +7874,7 @@
             },
             {
               "Key": "LateralInflow",
-              "Value": "150"
+              "Value": "40"
             },
             {
               "Key": "RainWindow",
