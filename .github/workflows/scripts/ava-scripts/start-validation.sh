@@ -9,7 +9,7 @@ test -z "${COMMIT:-}" && echo "COMMIT is empty" && exit 1
 # Use APSIM.Workflow to obtain the total simulation count and the list of validation
 # paths. The count verifies the workflow is able to discover validation jobs.
 workflow=./bin/Release/net10.0/APSIM.Workflow.dll
-jobcount=$(dotnet "$workflow" --sim-count)
+jobcount=$(dotnet "$workflow" sim-count)
 echo "jobcount: ${jobcount}"
 if [[ ! "$jobcount" =~ ^[0-9]+$ ]] || [[ "$jobcount" -eq 0 ]]; then
   echo "::error::The simulation count is empty or invalid"
@@ -18,7 +18,7 @@ fi
 
 # Encode each discovered validation path as a JSON array, and reject an empty list
 # rather than asking the API to start a validation with no work.
-paths=$(dotnet "$workflow" --locations | jq -Rsc 'split("\n") | map(select(length > 0))')
+paths=$(dotnet "$workflow" locations | jq -Rsc 'split("\n") | map(select(length > 0))')
 if [[ "$paths" == "[]" ]]; then
   echo "::error::No validation paths found"
   exit 1
