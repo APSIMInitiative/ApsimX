@@ -276,9 +276,11 @@ namespace Models.CLEM.Resources
             else
             {
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
-                pool = new(packet.Amount, null);
-                pool.NitrogenPercent = packet.NitrogenPercent;
-                pool.DryMatterDigestibility = packet.DryMatterDigestibility;
+                pool = new(packet.Amount, null)
+                {
+                    NitrogenPercent = packet.NitrogenPercent,
+                    DryMatterDigestibility = packet.DryMatterDigestibility
+                };
             }
 
             if (pool.Amount > 0)

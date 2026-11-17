@@ -389,11 +389,11 @@ namespace Models.CLEM.Activities
             double destockDone = 0;
             if (MathUtilities.IsPositive(destockDone))
             {
-                foreach (var paddock in paddockChanges.Where(a => MathUtilities.IsNegative(a.AeChange)))
+                foreach (var (paddockName, AE, AeChange) in paddockChanges.Where(a => MathUtilities.IsNegative(a.AeChange)))
                 {
-                    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddock.paddockName);
+                    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-                    foreach (Ruminant ruminant in uniqueIndividuals.Where(a => a.Location == paddock.paddockName).ToList())
+                    foreach (Ruminant ruminant in uniqueIndividuals.Where(a => a.Location == paddockName).ToList())
                     {
                         if (MathUtilities.IsLessThanOrEqual(destockDone, destockToDo - destockToSkip))
                         {
@@ -415,10 +415,10 @@ namespace Models.CLEM.Activities
             double restockDone = 0;
             if (MathUtilities.IsPositive(restockDone))
             {
-                foreach (var paddock in paddockChanges.Where(a => MathUtilities.IsPositive(a.AeChange)))
+                foreach (var (paddockName, AE, AeChange) in paddockChanges.Where(a => MathUtilities.IsPositive(a.AeChange)))
                 {
                     // ensure min pasture for restocking
-                    GrazeFoodStoreType pasture = paddocks.Where(a => a.Name == paddock.paddockName).FirstOrDefault();
+                    GrazeFoodStoreType pasture = paddocks.Where(a => a.Name == paddockName).FirstOrDefault();
                     if (pasture != null && MathUtilities.IsGreaterThanOrEqual(pasture.TonnesPerHectare * 1000, MinimumFeedBeforeRestock))
                     {
                         var specifyComponents = Structure.FindChildren<SpecifyRuminant>();
@@ -433,7 +433,7 @@ namespace Models.CLEM.Activities
                         foreach (SpecifyRuminant item in specifyComponents)
                         {
                             double sumAE = 0;
-                            double aEToBuy = paddock.AeChange;
+                            double aEToBuy = AeChange;
                             double limitAE = aEToBuy * item.Proportion;
 
                             while (MathUtilities.IsLessThanOrEqual(restockDone, restockToDo - restockToSkip) && MathUtilities.IsLessThan(sumAE, limitAE) && MathUtilities.IsPositive(aEToBuy))

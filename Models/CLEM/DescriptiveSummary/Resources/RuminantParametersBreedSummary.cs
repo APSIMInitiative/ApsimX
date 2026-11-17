@@ -46,9 +46,9 @@ internal class RuminantParametersBreedSummary : RuminantParametersSummaryBase<Ru
         if (!FormatForParentControl)
             return;
 
-        foreach (var param in GetSummaryParameters().OrderBy(a => a.category))
+        foreach (var (componentName, propertyName, category, description, value) in GetSummaryParameters().OrderBy(a => a.category))
         {
-            generator.AddSummaryParameterSnippet(param.category, $"{param.description} {param.value}");
+            generator.AddSummaryParameterSnippet(category, $"{description} {value}");
         }
     }
 }

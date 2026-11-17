@@ -105,9 +105,9 @@ public abstract class RuminantParametersSummaryBase<TModel> : DescriptiveSummary
             return;
         }
 
-        foreach (var param in GetSummaryParameters().OrderBy(a => a.category))
+        foreach (var (componentName, propertyName, category, description, value) in GetSummaryParameters().OrderBy(a => a.category))
         {
-            generator.AddSummaryParameterSnippet(param.category, param.value);
+            generator.AddSummaryParameterSnippet(category, value);
         }
     }
 
