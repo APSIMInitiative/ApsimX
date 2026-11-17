@@ -3371,7 +3371,7 @@
                     "[Phenology].GrainFilling.Target.FixedValue = 290",
                     "//[Leaf].CohortParameters.SenescenceDuration.Constant.FixedValue = 6",
                     "[Photosynthesis].RUE.FixedValue = 2.8",
-                    "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.65",
+                    "[Leaf].ExtinctionCoefficient.VegetativePhase.FixedValue = 0.65",
                     "//[Grain].NumberFunction.TotalStemPlusSpikeCalc.GrainNumber.GrainsPerGramOfStem.FixedValue = 30",
                     "//[Grain].MaximumPotentialGrainSize.FixedValue = 0.040"
                   ],
