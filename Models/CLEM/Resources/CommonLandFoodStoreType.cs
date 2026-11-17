@@ -102,8 +102,9 @@ namespace Models.CLEM.Resources
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
-        public double Amount
+        public static double Amount
         {
+            // ToDo: this needs to be brought up to speed with the new Amounts from IResourceType and allow pending removals from grazing.
             get
             {
                 // this is a virtual pool of forage outside the farm
@@ -319,7 +320,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void ApplyDailyIntakeReduction(double _)
+        public static void ApplyDailyIntakeReduction(double _)
         {
         }
 

@@ -599,7 +599,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weight.FleeceWeightAsProportionOfSFW(Parameters, AgeInDays);
+                return Weight.FleeceWeightAsProportionOfSFW(Parameters);
             }
         }
 
