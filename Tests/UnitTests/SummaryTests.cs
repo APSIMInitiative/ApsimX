@@ -24,7 +24,7 @@ namespace UnitTests
             Summary summary = sims.Node.Find<Summary>();
             summary.Verbosity = MessageType.Error;
 
-            var runner = new Runner(sims);
+            var runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Disabling summary output causes simulation to fail.");
@@ -52,7 +52,7 @@ namespace UnitTests
 
             sim.Node.AddChild(writer);
 
-            Runner runner = new Runner(sims);
+            Runner runner = new Runner([sims]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];

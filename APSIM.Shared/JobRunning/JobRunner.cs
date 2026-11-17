@@ -100,6 +100,9 @@ namespace APSIM.Shared.JobRunning
 
                 if (wait)
                     SpinWait.SpinUntil(() => completed);
+
+                if (backgroundTask.Exception != null)
+                    throw backgroundTask.Exception;
             }
         }
 

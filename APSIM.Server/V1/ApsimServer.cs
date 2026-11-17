@@ -41,7 +41,7 @@ namespace APSIM.Server
             this.options = options;
             sims = FileFormat.ReadFromFile<Simulations>(options.File).Model as Simulations;
             sims.Node.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
-            runner = new Runner(sims);
+            runner = new Runner([sims]);
             jobRunner = new ServerJobRunner();
             runner.Use(jobRunner);
         }
