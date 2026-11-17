@@ -141,8 +141,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor for new born male ruminant
         /// </summary>
-        public RuminantMale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
-            : base(date, id, mother, growActivity)
+        public RuminantMale(int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(id, mother, growActivity)
         {
             // needed for male specific actions
         }

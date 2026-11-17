@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
             // give birth if needed.
             foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBirthDue).ToList())
             {
-                if (female.GiveBirth(HerdResource, events, conceptionArgs, this))
+                if (female.GiveBirth(HerdResource, conceptionArgs, this))
                 {
                     birthOccurred = true;
                 }
@@ -261,15 +261,6 @@ namespace Models.CLEM.Activities
                 AddStatusMessage("Births occurred");
                 Status = ActivityStatus.Success;
             }
-
-            // TODO: this conflicts with tracking the breeding status and causes some outcomes where pregnancy is skipped in a year
-            // It is needed for full accounting in the breed status report as it sets the initial status for breeders but approach needs to be reconsidered given the implications identified.
-            //identify "not ready" for reporting and tracking
-            //foreach (RuminantFemale female in CurrentHerd(true).OfType<RuminantFemale>().Where(a => !a.IsAbleToBreed & !a.IsPregnant & a.LastConceptionStatus != ConceptionStatus.NotReady))
-            //{
-            //    conceptionArgs.Update(ConceptionStatus.NotReady, female, events.Clock.Today);
-            //    female.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
-            //}
 
             var filters = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "SelectBreedersAvailable");
 

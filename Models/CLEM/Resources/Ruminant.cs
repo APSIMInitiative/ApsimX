@@ -996,11 +996,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor based on details from mother for newborn
         /// </summary>
-        /// <param name="date">The date of creation</param>
         /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
         /// <param name="mother">The mother of newborn</param>
         /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if needed</param>
-        public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+        public Ruminant(int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
             // GrowPF Activity will have the weight.fetus.amount set before births
             // Grow will not have any fetus or conceptus weight set so needs to use expected weight
@@ -1096,12 +1095,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factory for creating a new born Ruminant based on details obtained from mother
         /// </summary>
-        public static Ruminant Create(Sex sex, DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growthActivity)
+        public static Ruminant Create(Sex sex, int id, RuminantFemale mother, IRuminantActivityGrow growthActivity)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(date, id, mother, growthActivity);
+                return new RuminantMale(id, mother, growthActivity);
             else
-                return new RuminantFemale(date, id, mother, growthActivity);
+                return new RuminantFemale(id, mother, growthActivity);
         }
 
 
