@@ -43,8 +43,8 @@ namespace Models.CLEM.Timers
             if (events is null)
                 throw new Exception("CLEMEvents link not provided to timer range");
 
-            Start = new(events, startDetails, true, wholeTimeStepInRange);
-            End = new(events, endDetails, false, wholeTimeStepInRange);
+            Start = new(events, startDetails, true);
+            End = new(events, endDetails, false);
             this.sequenceTimerList = sequences;
             this.events = events;
             this.WholeTimeStepInRange = wholeTimeStepInRange;

@@ -150,7 +150,7 @@ namespace Models.CLEM.Timers
 
         private bool IsInRange(DateTime date)
         {
-            bool inRange = Range?.IsInRange()??false;
+            bool inRange = Range?.IsInRange(date)??false;
             return (Invert) ? !inRange : inRange;
         }
 
