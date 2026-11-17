@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM;
+using Models.CLEM.Extras;
 using Models.CLEM.Timers;
 using NUnit.Framework;
 using System;

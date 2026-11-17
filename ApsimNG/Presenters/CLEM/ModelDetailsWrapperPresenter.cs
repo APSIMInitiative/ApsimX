@@ -13,6 +13,7 @@
     using Interfaces;
     using Models;
     using Models.CLEM;
+    using Models.CLEM.Extras;
     using Models.CLEM.Reporting;
     using Models.Core;
     using Models.Core.Attributes;
