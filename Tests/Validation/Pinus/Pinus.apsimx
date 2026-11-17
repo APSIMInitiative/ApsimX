@@ -131,7 +131,9 @@
             "//([Soil].NH4.kgha[3]*1000000/14)/([Soil].Water.Volumetric[3]*1000000) as NH4mMD3",
             "[Irrigation].IrrigationApplied",
             "[Weather].Rain",
-            "[Pinus].Leaf.HeightFunction"
+            "[Pinus].Leaf.HeightFunction",
+            "([SurfaceOrganicMatter].Wt / 10) as Litter.Wt",
+            "([SurfaceOrganicMatter].N / 10) as Litter.N"
           ],
           "EventNames": [
             "[Clock].DoReport"
