@@ -318,11 +318,9 @@
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
               "Units": "/y",
-              "Name": "StemMortality",
               "Expression": "[StemMortality].Background + [StemMortality].RateAtMaximum * max(0, ([Pinus].Stem.SizeClass.StandDensityIndex / [StemMortality].MaximumSDI - [StemMortality].Onset) / (1 - [StemMortality].Onset))",
+              "Name": "StemMortality",
               "ResourceName": null,
-              "Enabled": true,
-              "ReadOnly": false,
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -373,12 +371,14 @@
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ]
+              ],
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.ExpressionFunction, Models",
-              "Expression": "[DroughtMortality].MaximumRate / (1 + exp([DroughtMortality].Steepness * ([DroughtMortality].HalfRateDrop - [TreeThinning].Script.WaterUseDrop))) * min(1, ([Pinus].Stem.SizeClass.StandDensityIndex / ([StemMortality].MaximumSDI * [StemMortality].Onset))^2)",
               "Units": "/y",
+              "Expression": "[DroughtMortality].MaximumRate / (1 + exp([DroughtMortality].Steepness * ([DroughtMortality].HalfRateDrop - [TreeThinning].Script.WaterUseDrop))) * min(1, ([Pinus].Stem.SizeClass.StandDensityIndex / ([StemMortality].MaximumSDI * [StemMortality].Onset))^2)",
               "Name": "DroughtMortality",
               "ResourceName": null,
               "Children": [
@@ -3157,12 +3157,10 @@
                     },
                     {
                       "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "max(0.3, 1 - [Pinus].Leaf.LeafResidenceTime.DroughtEffect.Sensitivity * (1 - [TreeThinning].Script.SeasonalFw))",
                       "Units": null,
+                      "Expression": "max(0.3, 1 - [Pinus].Leaf.LeafResidenceTime.DroughtEffect.Sensitivity * (1 - [TreeThinning].Script.SeasonalFw))",
                       "Name": "DroughtEffect",
                       "ResourceName": null,
-                      "Enabled": true,
-                      "ReadOnly": false,
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
@@ -3193,7 +3191,9 @@
                           "Enabled": true,
                           "ReadOnly": false
                         }
-                      ]
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -5126,11 +5126,8 @@
                 {
                   "$type": "Models.Core.Folder, Models",
                   "ShowInDocs": false,
-                  "GraphsPerPage": 6,
                   "Name": "HeightGrowth",
                   "ResourceName": null,
-                  "Enabled": true,
-                  "ReadOnly": false,
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -5213,7 +5210,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 110,
+                      "FixedValue": 110.0,
                       "Units": "m/m",
                       "Name": "SlendernessOnset",
                       "ResourceName": null,
@@ -5223,7 +5220,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 150,
+                      "FixedValue": 150.0,
                       "Units": "m/m",
                       "Name": "SlendernessLimit",
                       "ResourceName": null,
@@ -5231,7 +5228,9 @@
                       "Enabled": true,
                       "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -7450,28 +7449,31 @@
             "    /// \"[Groundwater].Script.WaterTable = 3500\" (the replacement resets this script's parameters to the defaults below).",
             "    /// 1. At the start of each rotation the water table depth (D0) and groundwater NO3-N are fixed for the rotation (no seasonal",
             "    ///    or year-to-year change): either the WaterTable and Nitrate values, or the driver-file means over the 12 months from sowing.",
-            "    /// 2. Groundwater is available only if D0 is no deeper than AccessDepth (6 m; Benyon et al. 2006: \"6 m or less\").",
-            "    /// 3. Each day the aquifer refills the saturated zone back towards D0, from the bottom up, but the net supply (refill less",
-            "    ///    drainage out of the profile base) is at most MaxSupply (2 mm/day). Nitrate arrives with the refill (see 6).",
-            "    /// 4. When the trees draw water from the saturated zone faster than MaxSupply, the local water table falls; the supply",
-            "    ///    (at most MaxSupply) continues, so the table settles where upward flow to the roots matches it. Rain recharge that",
+            "    /// 2. Groundwater is available only if D0 is no deeper than AccessDepth (6.5 m; Benyon et al. 2006: \"6 m or less\", plus a margin).",
+            "    /// 3. Each day lateral inflow refills the saturated zone back towards D0, from the bottom up. Inflow is LateralInflow (mm/yr)",
+            "    ///    scaled by recent rain: x (mean annual rain over the previous RainWindow years / the met file's long-term mean). Nitrate",
+            "    ///    arrives with the refill (see 6). LateralInflow = -1 restores the old refill (MaxSupply plus base drainage per day).",
+            "    /// 4. When the trees use the saturated zone faster than lateral inflow, the local water table falls (drawdown); inflow",
+            "    ///    continues, and the table recovers when the trees use less. Rain recharge that",
             "    ///    raises the saturated zone above D0 drains away laterally (with its nitrate), so the table does not rise above D0.",
             "    /// 5. Roots can reach the bottom of the layer holding the local water table (the capillary fringe), not the saturated layers",
-            "    ///    below; live roots in layers wholly saturated for more than AnoxiaDays die and go to soil FOM.",
+            "    ///    below, nor below AccessDepth; live roots in layers wholly saturated for more than AnoxiaDays die and go to soil FOM.",
             "    /// 6. Nitrate in the refill comes first from legacy groundwater, at the rotation NO3-N, until LegacyVolume mm have been taken;",
             "    ///    then from recharge water (profile drainage and lateral discharge, carrying only the nitrate leached or discharged from",
             "    ///    the soil); then from nitrate-free regional water. LegacyVolume = -1 (default) takes the saturated water (SAT) between D0",
             "    ///    and AccessDepth, so water below the access depth never counts; 0 restores unlimited supply at the rotation NO3-N.",
             "    /// Driver file (CSV, header row): PGP,Date,DTW_mm,DTW_unc_mm,NO3N_mgL,NO3N_unc_mgL.",
-            "    /// MaxSupply = 2 mm/day and the legacy nitrate store (2026-11-17). At the Benyon et al. (2006) sites (site soils from SLGA),",
-            "    /// 1 mm/day under-predicted net groundwater use (sites 10 and 11: 365 and 293 vs 671 and 561 mm/yr); 2 mm/day gives 641 and 443.",
-            "    /// With unlimited nitrate, 2 mm/day over-fed the OFO groundwater plots (volume NSE 0.34 -> 0.12); with the legacy store the",
-            "    /// OFO fit is 0.35 and Benyon site 10 age-5 volume 67 m3/ha (observed 64).",
+            "    /// Drawdown with LateralInflow = 150 mm/yr and AccessDepth 6.5 m (2026-11-17). With an unlimited refill the 15 OFO plots",
+            "    /// with water tables within 6 m (Ning's depths) over-grew by 41%; observed growth there is no higher than on deeper plots.",
+            "    /// 100-200 mm/yr fits them (bias +2 to +8%; OFO BA NSE 0.13 -> 0.41, volume NSE 0.33 -> 0.54), as expected in plantation",
+            "    /// interiors with little lateral flow. The Benyon et al. (2006) groundwater-use sites 10-12 measured about 600 mm/yr of net",
+            "    /// groundwater use and are given LateralInflow = 800 by Operation, as higher-flow positions.",
             "    /// </summary>",
             "    [Serializable]",
             "    public class Script : Model, IStructureDependency",
             "    {",
             "        [Link] private Clock Clock;",
+            "        [Link] private Models.Climate.Weather Weather;",
             "        [Link] private Plant Pinus;",
             "        [Link] private Simulation Simulation;",
             "        [Link] private IPhysical Physical;",
@@ -7494,11 +7496,52 @@
             "        [Description(\"Deliver nitrate with the groundwater?\")]",
             "        public bool SupplyNitrate { get; set; } = true;",
             "        [Description(\"Deepest water table the trees can use (mm)\")]",
-            "        public double AccessDepth { get; set; } = 6000;",
+            "        public double AccessDepth { get; set; } = 6500;",
             "        [Description(\"Maximum net groundwater supply (mm/day)\")]",
             "        public double MaxSupply { get; set; } = 2;",
             "        [Description(\"Days a layer is saturated before its roots die (anoxia)\")]",
             "        public double AnoxiaDays { get; set; } = 10;",
+            "        [Description(\"Lateral groundwater inflow (mm/yr); -1 = refill at MaxSupply per day instead\")]",
+            "        public double LateralInflow { get; set; } = 150;",
+            "        [Description(\"Years of rainfall that drive lateral inflow (inflow scales with their mean annual rain / the long-term mean)\")]",
+            "        public double RainWindow { get; set; } = 3;",
+            "        /// <summary>Lateral inflow today (mm/day).</summary>",
+            "        public double LateralToday { get; private set; }",
+            "        private SortedList<DateTime, double> cumRain;",
+            "        private double meanAnnualRain;",
+            "        /// <summary>Daily rain and its long-term annual mean from the met file (read once).</summary>",
+            "        private void LoadRain()",
+            "        {",
+            "            cumRain = new SortedList<DateTime, double>();",
+            "            string path = PathUtilities.GetAbsolutePath(Weather.FileName, Path.GetDirectoryName(Simulation.FileName));",
+            "            int iy = -1, id = -1, ir = -1; double total = 0; bool units = false;",
+            "            foreach (string raw in File.ReadLines(path))",
+            "            {",
+            "                string line = raw.Split('!')[0].Trim();",
+            "                if (line.Length == 0 || line.StartsWith(\"[\") || line.Contains(\"=\")) continue;",
+            "                var f = line.Split(new[] { ' ', '\\t', ',' }, StringSplitOptions.RemoveEmptyEntries);",
+            "                if (iy < 0) { var h = f.Select(x => x.ToLower()).ToList(); if (h.Contains(\"year\") && h.Contains(\"rain\")) { iy = h.IndexOf(\"year\"); id = h.IndexOf(\"day\"); ir = h.IndexOf(\"rain\"); units = true; } continue; }",
+            "                if (units) { units = false; if (f[0].StartsWith(\"(\")) continue; }",
+            "                if (!int.TryParse(f[iy], out int y) || !int.TryParse(f[id], out int doy)) continue;",
+            "                total += double.Parse(f[ir], CultureInfo.InvariantCulture);",
+            "                cumRain[new DateTime(y, 1, 1).AddDays(doy - 1)] = total;",
+            "            }",
+            "            double days = (cumRain.Keys[cumRain.Count - 1] - cumRain.Keys[0]).TotalDays + 1;",
+            "            meanAnnualRain = total / days * 365.25;",
+            "        }",
+            "        /// <summary>Lateral inflow for today (mm/day), scaled by recent rainfall.</summary>",
+            "        private double Lateral()",
+            "        {",
+            "            if (cumRain == null) LoadRain();",
+            "            DateTime end = Clock.Today.Date.AddDays(-1), start = end.AddDays(-Math.Round(365.25 * RainWindow));",
+            "            DateTime first = cumRain.Keys[0], last = cumRain.Keys[cumRain.Count - 1];",
+            "            if (start < first) start = first; if (end > last) end = last;",
+            "            double years = (end - start).TotalDays / 365.25;",
+            "            if (years < 0.5 || meanAnnualRain <= 0) return LateralInflow / 365.25;",
+            "            double CumAt(DateTime t) { int i = cumRain.IndexOfKey(t); return i >= 0 ? cumRain.Values[i] : 0; }",
+            "            double recent = (CumAt(end) - CumAt(start)) / years;",
+            "            return LateralInflow / 365.25 * recent / meanAnnualRain;",
+            "        }",
             "        [Description(\"Legacy groundwater carrying the starting nitrate (mm; 0 = unlimited; -1 = saturated water between the rotation water table and AccessDepth)\")]",
             "        public double LegacyVolume { get; set; } = -1;",
             "        /// <summary>Legacy groundwater not yet taken up (mm).</summary>",
@@ -7674,7 +7717,8 @@
             "            // Refill towards the rotation water table, bottom up, at most MaxSupply (net of base drainage) per day.",
             "            if (active)",
             "            {",
-            "                double budget = MaxSupply + lastDrainage;",
+            "                LateralToday = LateralInflow >= 0 ? Lateral() : 0;",
+            "                double budget = LateralInflow >= 0 ? LateralToday : MaxSupply + lastDrainage;",
             "                double[] add = new double[th.Length];",
             "                double bottom = profile;",
             "                for (int i = th.Length - 1; i >= 0 && budget > 0; i--)",
@@ -7704,6 +7748,8 @@
             "                local = LocalWaterTable(sw, sat, dul, th);",
             "            }",
             "            NetInflow = Inflow - lastDrainage - Discharge;",
+            "            if (LateralInflow >= 0 && Pinus.IsAlive && FineRoot.PlantZone != null && FineRoot.PlantZone.Depth > AccessDepth)",
+            "                FineRoot.PlantZone.Depth = AccessDepth;   // roots at groundwater sites stay above AccessDepth",
             "            if (local >= profile) { Array.Clear(satDays, 0, satDays.Length); return; }",
             "            WaterTableDepth = local;",
             "",
@@ -7786,7 +7832,7 @@
             },
             {
               "Key": "AccessDepth",
-              "Value": "6000"
+              "Value": "6500"
             },
             {
               "Key": "MaxSupply",
@@ -7799,6 +7845,14 @@
             {
               "Key": "LegacyVolume",
               "Value": "-1"
+            },
+            {
+              "Key": "LateralInflow",
+              "Value": "150"
+            },
+            {
+              "Key": "RainWindow",
+              "Value": "3"
             }
           ],
           "Name": "Groundwater",

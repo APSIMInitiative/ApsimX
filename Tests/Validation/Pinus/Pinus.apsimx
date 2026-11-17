@@ -60148,6 +60148,13 @@
                               "Date": "1995-06-01",
                               "Action": "[Groundwater].Script.Nitrate = 4.4",
                               "Line": "1995-06-01 [Groundwater].Script.Nitrate = 4.4"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-06-01",
+                              "Action": "[Groundwater].Script.LateralInflow = 800",
+                              "Line": "1995-06-01 [Groundwater].Script.LateralInflow = 800"
                             }
                           ],
                           "Name": "Management",
@@ -62126,6 +62133,13 @@
                               "Date": "1995-06-01",
                               "Action": "[Groundwater].Script.Nitrate = 4.4",
                               "Line": "1995-06-01 [Groundwater].Script.Nitrate = 4.4"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1995-06-01",
+                              "Action": "[Groundwater].Script.LateralInflow = 800",
+                              "Line": "1995-06-01 [Groundwater].Script.LateralInflow = 800"
                             }
                           ],
                           "Name": "Management",
@@ -64104,6 +64118,13 @@
                               "Date": "1970-01-01",
                               "Action": "[Groundwater].Script.Nitrate = 4.4",
                               "Line": "1970-01-01 [Groundwater].Script.Nitrate = 4.4"
+                            },
+                            {
+                              "$type": "Models.Operation, Models",
+                              "Enabled": true,
+                              "Date": "1970-01-01",
+                              "Action": "[Groundwater].Script.LateralInflow = 800",
+                              "Line": "1970-01-01 [Groundwater].Script.LateralInflow = 800"
                             },
                             {
                               "$type": "Models.Operation, Models",
@@ -70272,6 +70293,547 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Predicted Evapotranspiration (mm/yr)",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Observed Evapotranspiration (mm/yr)",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "OvsP ET",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 1,
+                      "TableName": "PredictedObservedWaterBalance",
+                      "XFieldName": "Predicted.WB.ET",
+                      "YFieldName": "Observed.WB.ET",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Predicted Transpiration (mm/yr)",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Observed Transpiration (mm/yr)",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "OvsP T",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 1,
+                      "TableName": "PredictedObservedWaterBalance",
+                      "XFieldName": "Predicted.WB.T",
+                      "YFieldName": "Observed.WB.T",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Predicted Net balance: drainage - net groundwater inflow (mm/yr)",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Observed Net balance: drainage - net groundwater inflow (mm/yr)",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "OvsP NetBalance",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 1,
+                      "Line": 4,
+                      "LineThickness": 1,
+                      "TableName": "PredictedObservedWaterBalance",
+                      "XFieldName": "Predicted.WB.NetBalance",
+                      "YFieldName": "Observed.WB.NetBalance",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "ResourceName": null,
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "ResourceName": null,
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Date",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Cumulative net groundwater inflow (mm)",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Cumulative net groundwater use",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": "SimulationName",
+                      "FactorToVaryLines": null,
+                      "Marker": -1,
+                      "MarkerSize": 1,
+                      "Line": 0,
+                      "LineThickness": 1,
+                      "TableName": "BenyonDaily",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "GWNet",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": true,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "GWNet",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Date",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Depth (mm)",
+                      "Position": 0,
+                      "Inverted": true,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Water table and root depth",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": -1,
+                      "MarkerSize": 1,
+                      "Line": 0,
+                      "LineThickness": 1,
+                      "TableName": "BenyonDaily",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "WTD",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "WTD > 0",
+                      "Name": "Water table",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": -1,
+                      "MarkerSize": 1,
+                      "Line": 1,
+                      "LineThickness": 1,
+                      "TableName": "BenyonDaily",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "RootDepth",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Root depth",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Date",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "LAI",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Leaf area index",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": -1,
+                      "MarkerSize": 1,
+                      "Line": 0,
+                      "LineThickness": 1,
+                      "TableName": "BenyonDaily",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "LAI",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "LAI",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Date",
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "ET to date in window (mm)",
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "LabelOnOneLine": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 5,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Monthly evapotranspiration over the window",
+                  "ResourceName": null,
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": -1,
+                      "MarkerSize": 1,
+                      "Line": 0,
+                      "LineThickness": 1,
+                      "TableName": "WaterBalance",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "WB.ET",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "ET",
+                      "ResourceName": null,
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
