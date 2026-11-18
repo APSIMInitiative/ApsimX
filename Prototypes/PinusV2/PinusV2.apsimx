@@ -1148,12 +1148,45 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.25,
-                          "Units": null,
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
                           "Name": "BranchFraction",
                           "ResourceName": null,
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "Share of woody (stem + branch) growth allocated to branches. Base value 0.25 at all sizes (flat XYPairs); the radiata cultivars override it to 0.45 for trees up to 2 m mean height, falling linearly to 0.25 at 10 m. Young open-grown radiata carry much more branch relative to stem than closed stands; with a constant 0.25 the model under-predicted branch mass at BFG and Puruki (0.72 and 0.68 of observed) and over-predicted young-stand diameter on the OFO plots (BA 1.33x observed at ages 0-5, predominant height about right). Tested 2026-11-18 together with radiata RUE x1.05 (base 1.2 -> 1.26; cultivar-specific values scaled likewise): validation mean NSE 0.846 -> 0.839, treatment response error 0.181 -> 0.180, branch mass NSE 0.40 -> 0.44 (BFG 0.80, Puruki 0.80 of observed); OFO 23-plot subset BA NSE 0.465 -> 0.492, BA 0-5 y 1.33 -> 1.12, 5-8 y 1.29 -> 1.17. Branch share only (no RUE change) fitted OFO better (BA NSE 0.528, 0-5 y 1.07) but lowered validation radiata stem BA/volume by about 5-10% (mean NSE 0.832). Applying the size rule to all species over-predicted southern-pine branch mass (IMPAC 1.38 -> 1.47).",
+                              "Name": "Memo",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                2.0,
+                                10.0
+                              ],
+                              "Y": [
+                                0.25,
+                                0.25
+                              ],
+                              "Name": "XYPairs",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Pinus].Stem.Ht",
+                              "Name": "XValue",
+                              "ResourceName": null,
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -6592,7 +6625,11 @@
                     "",
                     "",
                     "",
-                    "//[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
+                    "//[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.26"
                   ],
                   "Name": "BFG",
                   "ResourceName": null,
@@ -6652,7 +6689,11 @@
                     "//[Stem].BarkThickness.BarkThickness.XYPairs.X=0, 8,  12,     16,     20, 24, 28, 40, 80",
                     "//[Stem].BarkThickness.BarkThickness.XYPairs.Y=0.4,\t.9,\t0.93,\t0.95,\t0.97,\t1.3,\t1.4,\t1.5,\t1.5",
                     "//",
-                    "//[Stem].Volub.Expression=[Pinus].Stem.Vol-[Pinus].Stem.VolBark*0.3"
+                    "//[Stem].Volub.Expression=[Pinus].Stem.Vol-[Pinus].Stem.VolBark*0.3",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.26"
                   ],
                   "Name": "GF7",
                   "ResourceName": null,
@@ -6705,7 +6746,11 @@
                     "",
                     "",
                     "",
-                    "//[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.298)"
+                    "//[Stem].DBH.DBHEquation.Expression = -1.5+(0.76*[Pinus].IndividualTreeStemWt^0.298)",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.26"
                   ],
                   "Name": "TowerHill",
                   "ResourceName": null,
@@ -6847,7 +6892,11 @@
                     "",
                     "//[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0067-[Pinus].Leaf.Wt*0.0000002",
                     "",
-                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
+                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.3335"
                   ],
                   "Name": "BFGCorrImpSC",
                   "ResourceName": null,
@@ -6987,7 +7036,11 @@
                     "",
                     "//[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0067-[Pinus].Leaf.Wt*0.0000002",
                     "",
-                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
+                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.26"
                   ],
                   "Name": "BFGCorrImpSCsla",
                   "ResourceName": null,
@@ -7132,7 +7185,11 @@
                     "",
                     "//[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0067-[Pinus].Leaf.Wt*0.0000002",
                     "",
-                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
+                    "//[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)",
+                    "",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.X = 2, 10",
+                    "[Pinus].Partitioning.AboveGround.WoodyFraction.BranchFraction.XYPairs.Y = 0.45, 0.25",
+                    "[Leaf].Photosynthesis.RUE.FixedValue = 1.05"
                   ],
                   "Name": "BFGCorrImpSCPurukisla",
                   "ResourceName": null,
