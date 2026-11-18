@@ -1289,6 +1289,15 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Documentation, Models",
+              "Text": "# Germination Lab\n\nThe germination experiment was conducted by Dr Tao Luo (CSIRO) in 2025 as part of the GRDC long coleoptile wheat project, which was led by Dr Greg Rebetzke (CSIRO). \n\nTwo wheat cultivars were evaluated, Mace (commercial cultivar) and Mace18 (a long-coleoptile cultivar). \n\nSeeds from a uniform size class (3.15–3.55 mm) were selected, and 25 seeds were placed in each Petri dish for germination under controlled environmental conditions. \n\nThere were eight constant temperatures from 5 to 40 °C, in 5 °C steps. At each temperature, seeds were exposed to six water potentials (0, −0.5, −1.0, −1.25, −1.5 and −1.75 MPa) set using PEG 6000 solutions. \n\nGerminated seeds were counted daily over 14-day period. ",
+              "Name": "Documentation",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": false,
               "Name": "EnvironmentCheck",
@@ -1823,9 +1832,9 @@
       "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.Memo, Models",
+          "$type": "Models.Documentation, Models",
           "Text": "Sensibility test of the hydrothermal germination model: SowingDate x Site x Soil x GerminationModel, 1988-2017.\n\nGerminationModel compares the new GerminatingPhaseHydroThermal (HydroThermal) with the original GerminatingPhase (Original).\n\nBox_SeedTemperature, Box_SeedWaterPotential and Box_WaterFactor show everaged seed-layer conditions on germination-phase (sowing day to germination day),over 30 years, to explain the Box_GerminationDAS results. WaterFactor exists only for the HydroThermal model.\n\n",
-          "Name": "Memo",
+          "Name": "Documentation",
           "ResourceName": null,
           "Children": [],
           "Enabled": true,
