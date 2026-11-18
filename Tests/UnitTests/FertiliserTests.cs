@@ -209,6 +209,8 @@ namespace UnitTests
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
             Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5));
+            Assert.That(fertiliser.NO3NApplied, Is.EqualTo(3).Within(0.00001));
+            Assert.That(fertiliser.NH4NApplied, Is.EqualTo(2).Within(0.00001));
             Assert.That(no3.kgha[0], Is.EqualTo(3).Within(0.1));    // 3 kg/ha added here.
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
@@ -222,6 +224,8 @@ namespace UnitTests
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
             Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(5));
+            Assert.That(fertiliser.NO3NApplied, Is.EqualTo(3).Within(0.00001));
+            Assert.That(fertiliser.NH4NApplied, Is.EqualTo(2).Within(0.00001));
             Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));  // 3 kg/ha added here
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
@@ -236,6 +240,8 @@ namespace UnitTests
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
             Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(fertiliser.NO3NApplied, Is.EqualTo(0));
+            Assert.That(fertiliser.NH4NApplied, Is.EqualTo(0));
             Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));    // 0 kg/ha added here
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));
@@ -249,6 +255,8 @@ namespace UnitTests
             Utilities.CallMethod(fertiliser, "OnDoDailyInitialisation");
             Utilities.CallMethod(fertiliser, "OnDoFertiliserApplications");
             Assert.That(fertiliser.NitrogenApplied, Is.EqualTo(0));
+            Assert.That(fertiliser.NO3NApplied, Is.EqualTo(0));
+            Assert.That(fertiliser.NH4NApplied, Is.EqualTo(0));
             Assert.That(no3.kgha[0], Is.EqualTo(6).Within(0.1));
             Assert.That(no3.kgha[1], Is.EqualTo(0).Within(0.1));
             Assert.That(no3.kgha[2], Is.EqualTo(0).Within(0.1));

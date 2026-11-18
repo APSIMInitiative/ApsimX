@@ -12,8 +12,8 @@ using System.IO;
 using System.Linq;
 using UserInterface.Interfaces;
 using APSIMNG.Utility;
-using DocumentationCoordinate = APSIM.Shared.Documentation.Mapping.Coordinate;
-using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationCoordinate = APSIM.Documentation.Tag.Mapping.Coordinate;
+using DocumentationMap = APSIM.Documentation.Tag.Map;
 
 namespace UserInterface.Views
 {

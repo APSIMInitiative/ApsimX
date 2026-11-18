@@ -36,7 +36,7 @@ namespace UnitTests.SurfaceOrganicMatterTests
             weather.Parent = sim;
 
             // Run the file.
-            var Runner = new Runner(file);
+            var Runner = new Runner([file]);
             Runner.Run();
 
             // Check that the report reported on the correct dates.
