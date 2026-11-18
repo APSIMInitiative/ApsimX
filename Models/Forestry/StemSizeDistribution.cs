@@ -437,7 +437,16 @@ namespace Models.Forestry
                     return new RemovalResult(1.0, CVFromShape(Shape), 1.0);
                 double keptMean = keptD / keptN;
                 double keptVariance = Math.Max(0.0, keptD2 / keptN - keptMean * keptMean);
-                return new RemovalResult(biomassFraction, Math.Sqrt(keptVariance) / keptMean, keptMean / mean);
+                double keptCV = Math.Sqrt(keptVariance) / keptMean;
+                // The quadrature slightly under-represents the tails, so its CV is ~0.1-0.2% below the true CV. Apply only
+                // the change in CV caused by the removal; otherwise every removal (even a random one) would ratchet the CV
+                // down, and frequent small mortality removals would narrow the distribution steadily.
+                double allVariance = 0;
+                foreach (double dj in d)
+                    allVariance += (dj - mean) * (dj - mean);
+                double quadratureCV = Math.Sqrt(allVariance / points) / mean;
+                double retainedCV = quadratureCV > 0 ? CVFromShape(Shape) * keptCV / quadratureCV : keptCV;
+                return new RemovalResult(biomassFraction, retainedCV, keptMean / mean);
             }
 
             /// <summary>Find the selectivity whose removal gives the requested biomass fraction.</summary>

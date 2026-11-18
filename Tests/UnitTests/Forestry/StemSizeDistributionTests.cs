@@ -55,8 +55,21 @@ namespace UnitTests.Forestry
             Weibull2P w = Weibull2P.FromMeanAndCV(25.0, 0.17);
             var r = w.Remove(0.4, 0.0, 2.5, 400);
             Assert.That(r.BiomassFraction, Is.EqualTo(0.4).Within(1e-9));
-            Assert.That(r.RetainedCV, Is.EqualTo(0.17).Within(0.002));
+            Assert.That(r.RetainedCV, Is.EqualTo(0.17).Within(1e-9));
             Assert.That(r.RetainedMeanRatio, Is.EqualTo(1.0).Within(1e-6));
+        }
+
+        /// <summary>
+        /// Many small random removals (monthly background mortality) must not drift the CV: the quadrature's own CV is
+        /// slightly below the true CV, and applying it on every removal narrowed BFG stands by 30-45% over 25 years.
+        /// </summary>
+        [Test]
+        public void RepeatedRandomRemovalsDoNotDriftCV()
+        {
+            double cv = 0.17;
+            for (int i = 0; i < 300; i++)
+                cv = Weibull2P.FromMeanAndCV(25.0, cv).Remove(0.0004, 0.0, 2.5, 400).RetainedCV;
+            Assert.That(cv, Is.EqualTo(0.17).Within(1e-6));
         }
 
         /// <summary>
