@@ -3,12 +3,10 @@ using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models;
-using Models.Storage;
 using Models.Factorial;
 using System.Data;
 using System;
 using ModelsGraph = Models.Graph;
-using ModelsGraphPage = Models.GraphPage;
 using ModelsMap = Models.Map;
 using Markdig;
 
@@ -31,6 +29,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
+            Type memoType = DocumentationUtilities.TypeToDocument(model);
 
             if (section.Children.Count >= 2)
             {
@@ -69,8 +68,9 @@ namespace APSIM.Documentation.Models.Types
             // Document graphs under a experiment
             foreach (Experiment exp in model.Node.FindChildren<Experiment>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in exp.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in exp.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
                     section.Add(GetChildGraphs(exp, true));
@@ -79,8 +79,9 @@ namespace APSIM.Documentation.Models.Types
             // Document graphs under a simulation
             foreach (Simulation sim in model.Node.FindChildren<Simulation>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in sim.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in sim.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
                     section.Add(GetChildGraphs(sim, true));
