@@ -163,7 +163,7 @@ public class Azure
             {
                 UserIdentity = new UserIdentity("admin"),
                 ResourceFiles = resourceFiles,
-                OutputFiles = [CreateDatabaseOutputFile(outputContainerUri, cloudTaskName, apsimFilePath)],
+                OutputFiles = [CreateDatabaseOutputFile(outputContainerUri, cloudTaskName, apsimFilePath), CreateStdOutOutputFile(outputContainerUri, cloudTaskName)],
                 EnvironmentSettings = envVars.Select(e => new EnvironmentSetting(e.Key, e.Value))
                     .Append(new EnvironmentSetting("Path", azureApsimFilePath)) // Path has to be added here so it's unique for each task.
                     .ToList(),
@@ -259,6 +259,17 @@ public class Azure
             new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion));
     }
 
+    /// <summary>Creates the Batch upload specification for a task's std out file.</summary>
+    /// <param name="containerUri">Container URI with permission to write output files.</param>
+    /// <param name="taskName">Unique Batch task name.</param>
+    public static OutputFile CreateStdOutOutputFile(Uri containerUri, string taskName)
+    {
+        string blobPath = $"databases/{taskName}/local.stdout.txt";
+        return new OutputFile(
+            "local.stdout.txt",
+            new OutputFileDestination(new OutputFileBlobContainerDestination(containerUri.ToString(), blobPath)),
+            new OutputFileUploadOptions(OutputFileUploadCondition.TaskCompletion));
+    }
 
     /// <summary>
     /// Creates an Azure container using the given login information and name
