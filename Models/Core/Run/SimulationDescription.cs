@@ -220,6 +220,7 @@ namespace Models.Core.Run
                         {
                             ModelReference reference = new ModelReference(child);
                             ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
+                            replacementsToApply.Insert(0, command);
                             replacementsToApply.Insert(startIndex, command);
                         }
                     }                        
