@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using APSIM.Documentation.Models.Types;
 using APSIM.Documentation.Tag;
+using M = Models;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Phen;
 using DocumentationGraphPage = APSIM.Documentation.Tag.GraphPage;
+using Models;
 
 namespace APSIM.Documentation;
 
@@ -219,5 +220,42 @@ public static class DocumentationUtilities
             n++;
         }
         return phaseTable;
+    }
+
+    /// <summary>
+    /// Return if the structure with this model in it has Documentation nodes or 
+    /// just memos. Goes to the top of the tree to search, not just this model's 
+    /// children.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static bool FileHasDocumentationModels(IModel model)
+    {
+        Simulations sims = null;
+        if (model is Simulations)
+            sims = model as Simulations;
+        else
+            sims = model.Node.FindParent<Simulations>(recurse:true);
+        
+        if (sims.Node.FindChild<M.Documentation>(recurse:true) != null)
+            return true;
+        else
+            return false;
+    }
+
+    /// <summary>
+    /// Returns either Memo or Documentation depending which should be documented 
+    /// based on the given model;
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static Type TypeToDocument(IModel model)
+    {
+        bool hasDocumentation = FileHasDocumentationModels(model);
+                
+        if (!hasDocumentation)
+            return typeof(Memo);
+        else
+            return typeof(M.Documentation);
     }
 }
