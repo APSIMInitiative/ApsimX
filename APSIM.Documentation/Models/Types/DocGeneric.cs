@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Documentation.Tag;
-using M = Models;
 using Models.Core;
 using Models;
 using APSIM.Core;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -60,27 +60,10 @@ namespace APSIM.Documentation.Models.Types
 
             if (model.Node != null)
             {
-                bool hasDocumentation = false;
-
-                Simulations sims = null;
-                if (model is Simulations)
-                    sims = model as Simulations;
-                else
-                    sims = model.Node.FindParent<Simulations>(recurse:true);
-                
-                if (sims.Node.FindChild<M.Documentation>(recurse:true) != null)
-                    hasDocumentation = true;
-
-                if (!hasDocumentation)
-                {
-                    foreach (IModel child in model.Node.FindChildren<Memo>())
+                Type memoType = DocumentationUtilities.TypeToDocument(model);
+                foreach (IModel child in model.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
                         tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
-                }
-                else
-                {
-                    foreach (IModel child in model.Node.FindChildren<M.Documentation>())
-                        tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
-                }
             }
 
             return new Section(model.Name, tags, model);
