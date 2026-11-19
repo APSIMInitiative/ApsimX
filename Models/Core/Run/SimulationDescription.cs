@@ -208,6 +208,7 @@ namespace Models.Core.Run
         /// <summary>Add any replacements to all simulation descriptions.</summary>
         private void AddReplacements()
         {
+            int startIndex = replacementsToApply.Count();
             if (topLevelModel != null)
             {
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
@@ -219,7 +220,7 @@ namespace Models.Core.Run
                         {
                             ModelReference reference = new ModelReference(child);
                             ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
-                            replacementsToApply.Insert(0, command);
+                            replacementsToApply.Insert(startIndex, command);
                         }
                     }                        
                 }
