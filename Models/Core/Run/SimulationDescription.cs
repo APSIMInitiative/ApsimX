@@ -221,7 +221,7 @@ namespace Models.Core.Run
                         {
                             ModelReference reference = new ModelReference(child);
                             ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
-                            replacements.Add(command);
+                            replacements.Insert(0, command);
                         }
                     }                        
                 }
