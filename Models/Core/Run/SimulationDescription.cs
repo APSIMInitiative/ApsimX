@@ -213,7 +213,7 @@ namespace Models.Core.Run
             if (topLevelModel != null)
             {
                 IModel replacementsFolder = Folder.FindReplacementsFolder(topLevelModel);
-                if (replacements != null && replacementsFolder.Enabled)
+                if (replacementsFolder != null && replacementsFolder.Enabled)
                 {
                     foreach (INodeModel child in replacementsFolder.Children)
                     {
