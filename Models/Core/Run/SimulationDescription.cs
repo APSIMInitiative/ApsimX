@@ -208,23 +208,25 @@ namespace Models.Core.Run
         /// <summary>Add any replacements to all simulation descriptions.</summary>
         private void AddReplacements()
         {
-            int startIndex = replacementsToApply.Count();
+            List<IModelCommand> replacements = new List<IModelCommand>();
+            
             if (topLevelModel != null)
             {
-                IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
-                if (replacements != null && replacements.Enabled)
+                IModel replacementsFolder = Folder.FindReplacementsFolder(topLevelModel);
+                if (replacements != null && replacementsFolder.Enabled)
                 {
-                    foreach (INodeModel child in replacements.Children)
+                    foreach (INodeModel child in replacementsFolder.Children)
                     {
                         if (child.Enabled && !(child is IText))
                         {
                             ModelReference reference = new ModelReference(child);
                             ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
-                            replacementsToApply.Insert(0, command);
-                            replacementsToApply.Insert(startIndex, command);
+                            replacements.Add(command);
                         }
                     }                        
                 }
+                replacementsToApply.InsertRange(0, replacements); //Add at start
+                replacementsToApply.AddRange(replacements); //add again after all other replacements
             }
         }
 
