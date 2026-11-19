@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using APSIM.Documentation.Models.Types;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
+using M = Models;
 using Models.Core;
 using Models.PMF;
 using Models.PMF.Phen;
-using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
+using DocumentationGraphPage = APSIM.Documentation.Tag.GraphPage;
+using Models;
 
 namespace APSIM.Documentation;
 
@@ -44,19 +45,19 @@ public static class DocumentationUtilities
         List<ITag> newTags = new();
         foreach(ITag tag in tags)
         {
-            if (tag is Section)
+            if (tag is Section section)
             {
                 string title = (tag as Section).Title;
                 List<ITag> children = (tag as Section).Children;
                 if (children.Count > 0)
                 {
                     children = CreateListWithoutEmptyTags(children);
-                    newTags.Add(new Section(title, children));
+                    newTags.Add(new Section(title, children, section.Reference));
                 }
             }
             else if (tag is Paragraph paragraph)
             {
-                if (!string.IsNullOrWhiteSpace(paragraph.text))
+                if (!string.IsNullOrWhiteSpace(paragraph.Text))
                     newTags.Add(tag);
             }
             else if (tag is DocumentationGraphPage graphPage)
@@ -98,7 +99,7 @@ public static class DocumentationUtilities
             }
             else if (tag is Paragraph paragraph)
             {
-                if (string.IsNullOrWhiteSpace(paragraph.text))
+                if (string.IsNullOrWhiteSpace(paragraph.Text))
                     blankFound = true;
             }
             else if (tag is DocumentationGraphPage graphPage)
@@ -126,9 +127,9 @@ public static class DocumentationUtilities
         
         ITag first = tags.First();
         
-        if (tags.First().GetType() == typeof(Paragraph))
+        if (tags.First() is Paragraph paragraph)
         {
-            newTags.Add(new Section(title, first));
+            newTags.Add(new Section(title, first, paragraph.Reference));
             tags.Remove(first);
             newTags.AddRange(tags);
             return newTags;
@@ -219,5 +220,42 @@ public static class DocumentationUtilities
             n++;
         }
         return phaseTable;
+    }
+
+    /// <summary>
+    /// Return if the structure with this model in it has Documentation nodes or 
+    /// just memos. Goes to the top of the tree to search, not just this model's 
+    /// children.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static bool FileHasDocumentationModels(IModel model)
+    {
+        Simulations sims = null;
+        if (model is Simulations)
+            sims = model as Simulations;
+        else
+            sims = model.Node.FindParent<Simulations>(recurse:true);
+        
+        if (sims.Node.FindChild<M.Documentation>(recurse:true) != null)
+            return true;
+        else
+            return false;
+    }
+
+    /// <summary>
+    /// Returns either Memo or Documentation depending which should be documented 
+    /// based on the given model;
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    public static Type TypeToDocument(IModel model)
+    {
+        bool hasDocumentation = FileHasDocumentationModels(model);
+                
+        if (!hasDocumentation)
+            return typeof(Memo);
+        else
+            return typeof(M.Documentation);
     }
 }

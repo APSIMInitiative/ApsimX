@@ -4,6 +4,7 @@ test -z "$CORNSOY_PASSWORD" && echo "CORNSOY_PASSWORD is empty" && exit 1
 test -z "$SWIM_PASSWORD" && echo "SWIM_PASSWORD is empty" && exit 1
 test -z "$RICE_PASSWORD" && echo "RICE_PASSWORD is empty" && exit 1
 test -z "$THINZAR_RYEGRASS_PASSWORD" && echo "THINZAR_RYEGRASS_PASSWORD is empty" && exit 1
+test -z "$UOM_WINTER_SPRING_PASSWORD" && echo "UOM_WINTER_SPRING_PASSWORD is empty" && exit 1
 
 soybean=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Soybean
 cornsoy=/home/runner/work/ApsimX/ApsimX/Tests/Validation/System/FACTS_CornSoy
@@ -11,6 +12,7 @@ swim=/home/runner/work/ApsimX/ApsimX/Tests/Validation/SWIM
 maize=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Maize
 rice=/home/runner/work/ApsimX/ApsimX/Prototypes/Rice/Rice2026
 thinzar_ryegrass=/home/runner/work/ApsimX/ApsimX/Prototypes/ThinzarExperiment
+uom_winter_spring=/home/runner/work/ApsimX/ApsimX/Tests/Validation/Wheat/UoM_WinterVsSpring
 
 7z -p"$SOYBEAN_PASSWORD" x $soybean/ObservedFACTS.7z -o$soybean
 7z -p"$CORNSOY_PASSWORD" x $cornsoy/FACTS_CornSoy.7z -o$cornsoy
@@ -20,4 +22,4 @@ thinzar_ryegrass=/home/runner/work/ApsimX/ApsimX/Prototypes/ThinzarExperiment
 7z -p"$MAIZE_PASSWORD" x $maize/RM/obs.7z -o$maize/RM
 7z -p"$RICE_PASSWORD" x $rice/ObservedRice.7z -o$rice
 7z -p"$THINZAR_RYEGRASS_PASSWORD" x $thinzar_ryegrass/ThinzarObserved.7z -o$thinzar_ryegrass
-
+7z -p"$UOM_WINTER_SPRING_PASSWORD" x $uom_winter_spring/Observed.zip -o$uom_winter_spring

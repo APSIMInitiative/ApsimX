@@ -1,15 +1,14 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models;
-using Models.Storage;
 using Models.Factorial;
 using System.Data;
 using System;
 using ModelsGraph = Models.Graph;
-using ModelsGraphPage = Models.GraphPage;
 using ModelsMap = Models.Map;
+using Markdig;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -30,14 +29,16 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
-            // Remove summary, summary is superfluous.
+            Type memoType = DocumentationUtilities.TypeToDocument(model);
+
             if (section.Children.Count >= 2)
-                section.Children.RemoveAt(0);
+            {
+                section.Children.RemoveAt(1); //remove Folder Summary from C#
+                section.Children.RemoveAt(0); //remove Folder link
+            }
 
             foreach(ModelsMap map in model.Node.FindChildren<ModelsMap>().Where(map => map.Enabled))
-            {
                 section.Add(AutoDocumentation.DocumentModel(map));
-            }
 
             // Write experiment descriptions. We don't call experiment.Document() here,
             // because we want to just show the experiment design (a string) and put it
@@ -57,56 +58,33 @@ namespace APSIM.Documentation.Models.Types
                     row[1] = experiment.GetDesign();
                     table.Rows.Add(row);
                 }
-                experimentsTag.Add(new Table(table));
+                experimentsTag.Add(new Table(table, model));
                 section.Add(experimentsTag);
             }
 
-            List<ModelsGraph> childGraphs = model.Node.FindChildren<ModelsGraph>().Where(f => f.Enabled).ToList();
             if (DocumentationSettings.GenerateGraphs)
-            {
-                // Write page of graphs.
-                foreach(ModelsGraph graph in childGraphs)
-                {
-                    bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
-                    if (!hide)
-                        section.Add(AutoDocumentation.Document(graph));
-                }
-            }
+                section.Add(GetChildGraphs(model, false));
 
             // Document graphs under a experiment
             foreach (Experiment exp in model.Node.FindChildren<Experiment>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in exp.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in exp.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
-                {
-                    childGraphs = exp.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
-                    foreach(ModelsGraph graph in childGraphs)
-                    {
-                        bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
-                        if (!hide)
-                            section.Add(AutoDocumentation.Document(graph));
-                    }
-                }
+                    section.Add(GetChildGraphs(exp, true));
             }
 
             // Document graphs under a simulation
             foreach (Simulation sim in model.Node.FindChildren<Simulation>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in sim.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in sim.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
-                {
-                    childGraphs = sim.Node.FindChildren<ModelsGraph>(recurse: true).Where(f => f.Enabled).ToList();
-                    foreach(ModelsGraph graph in childGraphs)
-                    {
-                        bool hide = graph.Node.FindParents<Folder>().Where(a => !a.ShowInDocs).Any();
-                        if (!hide)
-                            section.Add(AutoDocumentation.Document(graph));
-                    }
-                }
+                    section.Add(GetChildGraphs(sim, true));
             }
 
             // Document child folders.
@@ -120,27 +98,64 @@ namespace APSIM.Documentation.Models.Types
         /// Gets child graphs from a folder model.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs()
+        public List<ITag> GetChildGraphs(IModel model, bool recurse)
         {
-            var graphs = new List<APSIM.Shared.Documentation.Graph>();
-            var page = new ModelsGraphPage();
-            page.Graphs.AddRange(model.Node.FindChildren<ModelsGraph>().Where(g => g.Enabled));
-            var storage = model.Node.Find<IDataStore>();
-            List<ModelsGraphPage.GraphDefinitionMap> definitionMaps = new();
-            if (storage != null)
-                definitionMaps.AddRange(page.GetAllSeriesDefinitions(model, storage.Reader));
-            foreach (var map in definitionMaps)
+            List<ModelsGraph> childGraphs = model.Node.FindChildren<ModelsGraph>(recurse: recurse).Where(f => f.Enabled).ToList();
+
+            List<string> parents = new List<string>();
+            foreach(ModelsGraph graph in childGraphs)
             {
-                try
+                string path = graph.Node.Parent.FullNameAndPath;
+                if (!parents.Contains(path))
+                    parents.Add(path);
+            }
+
+            List<ITag> output = new List<ITag>();
+            foreach(string parent in parents)
+            {
+                List<ITag> graphSections = new List<ITag>();
+
+                foreach(ModelsGraph graph in childGraphs)
                 {
-                    graphs.Add(map.Graph.ToGraph(map.SeriesDefinitions));
+                    if (graph.Node.Parent.FullNameAndPath == parent)
+                    {
+                        bool hide = graph.Node.FindParents<Folder>().Any(a => !a.ShowInDocs);
+                        if (!hide)
+                            graphSections.AddRange(AutoDocumentation.Document(graph));
+                    }
                 }
-                catch (Exception err)
+
+                List<ITag> graphs = new List<ITag>();
+                if (graphSections.Count() > 0)
                 {
-                    Console.Error.WriteLine(err);
+                    List<ITag> justTheGraphs = new List<ITag>();
+                    foreach(ITag graphSection in graphSections)
+                        if (graphSection is Section gs)
+                            foreach(ITag child in gs.Children)
+                                if (child is APSIM.Documentation.Tag.Graph graph)
+                                    justTheGraphs.Add(graph);
+
+                    string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model, model);
+
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+                    string html = Markdown.ToHtml(markdown, pipeline);
+                    html = html.Replace("<p>", "");
+                    html = html.Replace("</p>", "");
+
+                    html = WebDocs.AddCSSClasses(html);
+                    html = html.Replace("<img ", "<img style=\"width:40%;float:left;padding:0px;padding-left:6%;padding-right:4%\" ");
+
+                    html = $"<div class=\"docs-table-container\">\n{html}</div>\n";
+
+                    graphs.Add(new Paragraph(html, model));
+                }
+                if (graphs.Count() > 0)
+                {
+                    string title = parent.Substring(parent.LastIndexOf('.')+1);
+                    output.Add(new Section(title, graphs, model));
                 }
             }
-            return graphs;
+            return output;
         }
 
     }

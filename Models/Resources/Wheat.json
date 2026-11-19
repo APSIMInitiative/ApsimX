@@ -784,7 +784,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
@@ -798,7 +798,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
@@ -812,7 +812,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -821,7 +821,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -846,7 +846,7 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -855,19 +855,19 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -888,7 +888,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
@@ -898,7 +898,7 @@
                   "ResourceName": null,
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": true
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -1025,8 +1025,12 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat",
                   "Name": "VegetativePhaseFunction",
-                  "VariableName": "[Phenology].Zadok.VegetativePhaseCalculationWheat"
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -1035,8 +1039,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.XYPairs, Models",
-                      "Name": "XYPairs",
-                      "ResourceName": null,
                       "X": [
                         5.0,
                         5.99,
@@ -1056,14 +1058,25 @@
                         71.0,
                         87.0,
                         90.0
-                      ]
+                      ],
+                      "Name": "XYPairs",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
-                      "VariableName": "[Phenology].Stage"
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
-                  ]
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -1417,7 +1430,7 @@
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
-                      "ReadOnly": true
+                      "ReadOnly": false
                     },
                     {
                       "$type": "Models.Memo, Models",
@@ -3695,6 +3708,11 @@
           "TipsAtEmergence": 0,
           "CohortsAtInitialisation": 0,
           "FractionDied": 0.0,
+          "MostRecentLeafMaxSize": 0.0,
+          "MostRecentLeafSize": 0.0,
+          "MostRecentlyExpandedPosition": 0,
+          "MostRecentlyExpandedSize": 0.0,
+          "MostRecentlyExpandedPotentialSize": 0.0,
           "Name": "Leaf",
           "ResourceName": null,
           "Children": [
@@ -5439,6 +5457,24 @@
               "Units": "/plant",
               "Expression": "[Structure].BranchNumber + 1",
               "Name": "StemNumberPerPlant",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].MostRecentlyExpandedSize",
+              "Name": "Size",
+              "ResourceName": null,
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].MostRecentlyExpandedPotentialSize",
+              "Name": "MaximumSize",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,

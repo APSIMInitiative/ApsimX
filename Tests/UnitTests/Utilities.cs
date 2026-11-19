@@ -176,7 +176,7 @@ namespace UnitTests
                 StringWriter output = new StringWriter();
                 Console.SetOut(output);
                 Console.SetError(output);
-                int exitCode = Models.Program.Main(arguments);
+                int exitCode = Program.Main(arguments);
                 if (exitCode != 0)
                     throw new Exception($"Models invocation failed. Output:\n{output.ToString()}");
                 return output.ToString();

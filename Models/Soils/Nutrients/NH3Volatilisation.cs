@@ -27,8 +27,9 @@ namespace Models.Soils.Nutrients
         [Link]
         private readonly ISummary summary = null;
 
+        // If SoilWater is not present, then the model will not be able to calculate NH3 volatilisation.  This is because the model needs to know the water content of the soil to calculate the amount of NH3 in solution and in gaseous form.
         [Link]
-        private readonly ISoilWater waterBalance = null;
+        private readonly Swim3 waterBalance = null;
 
         [Link]
         private readonly Irrigation irrigation = null;

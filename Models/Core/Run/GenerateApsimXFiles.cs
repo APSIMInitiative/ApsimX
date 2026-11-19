@@ -25,23 +25,6 @@ namespace Models.Core.Run
         public delegate void OnProgress(double progress);
 
         /// <summary>
-        /// Split an .apsimx file into smaller files, with each generated file
-        /// containing the specified number of simulations.
-        /// </summary>
-        /// <param name="file">A runner containing a set of simulations.</param>
-        /// <param name="simsPerFile">Number of simulations in each generated file.</param>
-        /// <param name="path">Path to which the files will be saved.</param>
-        /// <param name="progressCallBack">Invoked when the method needs to indicate progress.</param>
-        /// <param name="collectExternalFiles">Collect all external files and store on path?</param>
-        /// <returns>null for success or a list of exceptions.</returns>
-        public static IEnumerable<string> SplitFile(string file, uint simsPerFile, string path, OnProgress progressCallBack, bool collectExternalFiles = false)
-        {
-            IModel model = FileFormat.ReadFromFile<Simulations>(file).Model as IModel;
-            Runner runner = new Runner(file);
-            return Generate(runner, simsPerFile, path, progressCallBack, collectExternalFiles);
-        }
-
-        /// <summary>
         /// Generates .apsimx files for each simulation in a runner.
         /// Returns the names of the generated files.
         /// </summary>

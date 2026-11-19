@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 using Models.Functions;
@@ -43,7 +43,7 @@ namespace APSIM.Documentation.Models
                 {typeof(PastureSpecies), typeof(DocPlant)},
                 {typeof(Sugarcane), typeof(DocPlant)},
                 {typeof(Clock), typeof(DocClock)},
-                {typeof(Simulation), typeof(DocGenericWithChildren)},
+                {typeof(Simulation), typeof(DocFolder)},
                 {typeof(CalculateCarbonFractionFromNConc), typeof(DocBiomassArbitrationFunction)},
                 {typeof(DeficitDemandFunction), typeof(DocBiomassArbitrationFunction)},
                 {typeof(MobilisationSupplyFunction), typeof(DocBiomassArbitrationFunction)},
@@ -85,7 +85,7 @@ namespace APSIM.Documentation.Models
                 {typeof(Nodule), typeof(DocNodule)},
                 {typeof(Leaf), typeof(DocLeaf)},
                 {typeof(Manager), typeof(DocManager)},
-                {typeof(Experiment), typeof(DocExperiment)},
+                {typeof(Experiment), typeof(DocFolder)},
                 {typeof(FrostSenescenceFunction), typeof(DocFrostSenescenceFunction)},
                 {typeof(RUEModel), typeof(DocGeneric)},
                 {typeof(LeafCohortParameters), typeof(DocLeafCohortParameters)},
@@ -164,7 +164,7 @@ namespace APSIM.Documentation.Models
             string rootPath = PathUtilities.GetAbsolutePath("%root%", null);
             string filePath = PathUtilities.GetAbsolutePath(sims.FileName, null);
 
-            Section all = new Section(Path.GetFileNameWithoutExtension(sims.FileName));
+            Section all = new Section(Path.GetFileNameWithoutExtension(sims.FileName),model);
             foreach (IModel child in model.Node.FindChildren<Memo>())
                 all.Children.AddRange(AutoDocumentation.DocumentModel(child).ToList());
 

@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using System.Drawing;
 using APSIM.Documentation.Graphing;
 using Moq;
@@ -43,7 +43,7 @@ namespace UnitTests.Graphing.SeriesExporters
             Assert.That(boxPlot.OutlierSize, Is.EqualTo(7));
 
             // Colours
-            Assert.That(boxPlot.Stroke, Is.EqualTo(OxyColors.Transparent));
+            Assert.That(boxPlot.Stroke, Is.EqualTo(OxyColors.Red));
             Assert.That(boxPlot.Fill, Is.EqualTo(OxyColors.Red));
 
             // Title
