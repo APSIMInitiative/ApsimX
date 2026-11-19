@@ -1,341 +1,493 @@
 using System;
-using Models.Core;
-using Models.PMF.Interfaces;
-using Models.PMF;
-using APSIM.Core;
 using System.Collections.Generic;
+using APSIM.Core;
 using MathNet.Numerics;
+using Models.Core;
+using Models.Functions;
+using Models.PMF;
+using Models.PMF.Interfaces;
 
 namespace Models.Forestry
 {
     /// <summary>
-    /// Calculates the stem size distribution for a forestry model
+    /// Stem diameter (DBH) distribution of an even-aged stand, represented as a two-parameter Weibull.
+    ///
+    /// The distribution is a state, not a daily re-fit. Its relative spread (coefficient of variation, CV) is
+    /// carried from day to day, and the Weibull scale is always derived from the stand's mean DBH so the mean is
+    /// preserved exactly: scale = MeanDBH / Gamma(1 + 1/shape). The shape follows from the CV.
+    ///
+    /// The CV changes in three ways:
+    /// 1. Establishment: set from EstablishmentShape the first time the stand has a mean DBH.
+    /// 2. Growth: if diameter increment scales with D^alpha across trees, ln(CV) changes by (alpha - 1) x ln(mean DBH ratio).
+    ///    GrowthAsymmetry supplies (alpha - 1). Positive values (size-asymmetric competition in crowded stands) widen the
+    ///    distribution; zero keeps the relative spread constant; negative values let small trees catch up.
+    /// 3. Removal (thinning or mortality): stems are removed with probability proportional to (D / mean)^-selectivity,
+    ///    where selectivity &gt; 0 removes small trees first (thinning from below), 0 is random and &lt; 0 removes large trees
+    ///    first. The retained trees give the new CV. The share of stem biomass removed uses mass proportional to
+    ///    D^SizeMassExponent.
     /// </summary>
     [Serializable]
-    
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(IOrgan))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-
     public class StemSizeDistribution : Model
     {
-        /// <summary>Stem Population (/ha)</summary>
-        [Link(Type = LinkType.Child, ByName = true)][Units("/ha")] IFunction StemPopulation = null; 
-        /// <summary>Basal Area (m2/ha)</summary>
-        [Link(Type = LinkType.Child, ByName = true)][Units("m^2/ha")] IFunction BasalArea = null;
-        /// <summary>Mean Stem Diameter at Breast Height (cm)</summary>
-        [Link(Type = LinkType.Child, ByName = true)][Units("cm")] IFunction MeanDBH = null;
-        /// <summary>Wiebull Location Parameter (cm)</summary>
-        [Link(Type = LinkType.Child, ByName = true)][Units("cm")] IFunction Location = null;  //I think this is the DBH of the smallest stem
+        /// <summary>Stem population (/ha).</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("/ha")]
+        private IFunction StemPopulation = null;
 
-        private WeibullModel _weibull = null;
+        /// <summary>Arithmetic mean stem diameter at breast height (cm).</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("cm")]
+        private IFunction MeanDBH = null;
 
-        internal class WeibullModel
-        {
-            public double Shape = 0.0;
-            public double Scale = 0.0;
-            public double Location = 0.0;
-            public int Convergence = 0;
-            public double Objective = 0.0;
+        /// <summary>Weibull shape when the stand is first given a mean DBH.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("-")]
+        private IFunction EstablishmentShape = null;
 
+        /// <summary>Growth asymmetry (alpha - 1): exponent of the diameter-increment-to-size relationship, minus 1.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("-")]
+        private IFunction GrowthAsymmetry = null;
 
-            public WeibullModel(double stemPopulation, double basalArea, double meanDBH, double location)
-            {
-               Estimate(stemPopulation, basalArea, meanDBH, location);
-            }
+        /// <summary>Exponent relating tree stem mass to DBH, used to convert stem removals to biomass removals.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("-")]
+        private IFunction SizeMassExponent = null;
 
-            /// <summary>
-            /// Evaluates the cumulative distribution function for a three-parameter Weibull diameter distribution.
-            /// </summary>
-            /// <param name="d">The diameter value at which to evaluate the CDF.</param>
-            /// <returns>The cumulative probability up to the supplied diameter.</returns>
-            public double CDF(double d)
-            {
-                if (d <= Location) return 0;
-                var z = (d - Location) / Scale;
-                return 1.0 - Math.Exp(-Math.Pow(z, Shape));
-            }
+        /// <summary>Lowest coefficient of variation allowed (Weibull shape about 40).</summary>
+        private const double MinimumCV = 0.03;
 
-            /// <summary>
-            /// Estimates the Weibull shape and scale that best reproduce the supplied stand density, basal area, and mean diameter.
-            /// </summary>
-            /// <param name="stemPopulation">Trees per hectare for the stand.</param>
-            /// <param name="basalArea">Basal area in square meters per hectare.</param>
-            /// <param name="meanDBH">Mean diameter at breast height in centimeters.</param>
-            /// <param name="location">Weibull location parameter representing the minimum diameter offset.</param>
-            /// <returns>The fitted Weibull parameters and convergence diagnostics for the stand.</returns>
-            /// <summary>Estimates Weibull parameters.</summary>
-            /// <returns>The estimated Weibull parameters.</returns>
-            public void Estimate(double stemPopulation, double basalArea, double meanDBH, double location)
-            {
-                var lower = new[] { 0.05, 0.01 };
-                var upper = new[] { 20.0, 300.0 };
-                var x = new[] { 2.0, Math.Max(meanDBH - location, 0.1) };
+        /// <summary>Highest coefficient of variation allowed (Weibull shape about 1.6).</summary>
+        private const double MaximumCV = 0.65;
 
-                x[0] = Math.Clamp(x[0], lower[0], upper[0]);
-                x[1] = Math.Clamp(x[1], lower[1], upper[1]);
+        /// <summary>Number of quantile points used to integrate over the distribution.</summary>
+        private const int QuadraturePoints = 400;
 
-                var best = FitError(x[0], x[1], stemPopulation, basalArea, meanDBH, location);
-                var step = new[] { 0.8, Math.Max(1.0, x[1] * 0.2) };
+        private double cv;
+        private double previousMeanDBH;
+        private bool initialised;
+        private bool resynchronise;
+        private List<TreeSizeClass> sizeClasses = new List<TreeSizeClass>();
 
-                var maxIters = 40;//00;
-                var converged = false;
+        /// <summary>One DBH class and the trees per hectare in it.</summary>
+        internal sealed record TreeSizeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa);
 
-                for (var iter = 0; iter < maxIters; iter++)
-                {
-                    var improved = false;
-
-                    for (var dim = 0; dim < 2; dim++)
-                        foreach (var direction in new[] { -1.0, 1.0 })
-                        {
-                            var candidate = new[] { x[0], x[1] };
-                            candidate[dim] = Math.Clamp(candidate[dim] + direction * step[dim], lower[dim], upper[dim]);
-
-                            var value = FitError(candidate[0], candidate[1], stemPopulation, basalArea, meanDBH, location);
-                            if (value < best)
-                            {
-                                x = candidate;
-                                best = value;
-                                improved = true;
-                            }
-                        }
-
-                    if (!improved)
-                    {
-                        step[0] *= 0.6;
-                        step[1] *= 0.6;
-                    }
-
-                    if (step[0] < 1e-6 && step[1] < 1e-6)
-                    {
-                        converged = true;
-                        break;
-                    }
-                }
-
-
-                Shape = 2.5;// x[0];
-                Scale = meanDBH - location;// x[1];
-                Location = location;
-                Convergence=converged?0:1;
-                Objective = best;
-
-
-            }
-            /// <summary>
-            /// Computes the quantile of a two-parameter Weibull distribution used for the upper DBH cutoff.
-            /// </summary>
-            /// <param name="p">The cumulative probability to invert.</param>
-            /// <returns>The diameter corresponding to the requested cumulative probability.</returns>
-            public double Quantile(double p)
-            {
-                if (p < 0) throw new ArgumentException("Probability in Weibull Quantile method is less than zero");
-                else if (p == 0) return 0;
-                else if (p >= 1) throw new ArgumentException("Probability in Weibull Quantile method is equal to or greater than 1.");
-                else return Location+Scale * Math.Pow(-Math.Log(1 - p), 1 / Shape);
-            }
-
-
-            /// <summary>
-            /// Computes the normalized fitting error for a candidate Weibull parameter set against the target stand metrics.
-            /// </summary>
-            /// <param name="shape">Candidate Weibull shape parameter.</param>
-            /// <param name="scale">Candidate Weibull scale parameter.</param>
-            /// <param name="stemPopulation">Observed trees per hectare for the stand being fitted.</param>
-            /// <param name="basalArea">Observed basal area for the stand being fitted.</param>
-            /// <param name="meanDBH">Observed mean diameter for the stand being fitted.</param>
-            /// <param name="location">Observed Weibull location parameter for the stand being fitted.</param>
-            /// <returns>Initially called Objective from the original implementation.</returns>
-            private static double FitError(double shape, double scale, double stemPopulation, double basalArea, double meanDBH, double location)
-            {
-
-                if (!double.IsFinite(shape))
-                    throw new ArgumentException("Value of shape parameter is infinite in method FitError");
-                if (!double.IsFinite(scale))
-                    throw new ArgumentException("Value of scale parameter is infinite in method FitError");
-                if (shape <= 0)
-                    throw new ArgumentException("Value of shape parameter is zero or less than zero in method FitError");
-                if (scale <= 0)
-                    throw new ArgumentException("Value of scale parameter is zero or less than zero in method FitError");
-
-
-                double dPred = location + scale * SpecialFunctions.Gamma(1 + 1 / shape);
-                double d2Pred = location * location
-                                + 2 * location * scale * SpecialFunctions.Gamma(1 + 1 / shape)
-                                + scale * scale * SpecialFunctions.Gamma(1 + 2 / shape);
-
-                double gPred = stemPopulation * (Math.PI / 40000.0) * d2Pred;
-
-                double err = Math.Pow((dPred - meanDBH) / Math.Max(meanDBH, 1), 2)
-                        + Math.Pow((gPred - basalArea) / Math.Max(basalArea, 1), 2);
-
-                return err;
-            }
-        }
-
-        /// <summary>
-        /// Represents one DBH class interval and the estimated number of trees per hectare assigned to it.
-        /// </summary>
-        internal sealed record TreeSizeClass(double DBHLower, double DBHUpper, double DBHMid, double TreesPerHa);  
-        private List<TreeSizeClass> TreeSizeClassList = new List<TreeSizeClass>();  
-
-       /// <summary>
-       /// Number of DBH size classes used in reporting.
-       /// </summary>
-       [Units("")]
-        [Description("Number of DBH size classes used in reporting")]
+        /// <summary>Number of DBH size classes reported. The last class is open-ended.</summary>
+        [Units("")]
+        [Description("Number of DBH size classes reported (the last class is open-ended)")]
         public int SizeClassNumber { get; set; }
 
-        /// <summary>
-        /// Size Class Interval.
-        /// </summary>
+        /// <summary>Width of each DBH size class.</summary>
         [Units("cm")]
         [Description("The size class interval for DBH")]
         public double SizeClassInterval { get; set; }
 
         /// <summary>
-        /// Weibull Shape parameter
+        /// Largest size selectivity (either direction) applied to a removal. Selectivities inferred from stand-level stem
+        /// and biomass fractions can be implausibly strong when those fractions come from different measurements; at BFG
+        /// the 1988 thinning had tree-measured selectivities of 1.6-2.0 (one common value, 1.83, fits all seven plots
+        /// thinned from below, with no random component), while plot-level volume fractions implied 3-7.
         /// </summary>
-        [Units("")]
-        [Description("The value of the Weibull Shape Parameter for current stem size distribution")]
-        public double WeibullShape { get { return _weibull.Shape; }}
+        [Units("-")]
+        [Description("Largest size selectivity applied to a removal (BFG 1988 thinning from below: 1.83)")]
+        public double MaximumRemovalSelectivity { get; set; } = 1.83;
 
-        /// <summary>
-        /// Weibull Scale parameter
-        /// </summary>
-        [Units("")]
-        [Description("The value of the Weibull Scale Parameter for current stem size distribution")]
-        public double WeibullScale { get { return _weibull.Scale; } }
+        /// <summary>Coefficient of variation of DBH.</summary>
+        [Units("-")]
+        public double CoefficientOfVariation => HasDistribution ? cv : 0.0;
 
-        /// <summary>
-        /// Population in each of the DBH size classes.
-        /// </summary>
-        [Units("")]
-        [Description("Population in each of the DBH size classes")]
-        public double[] Population 
-        { 
-            get 
-            {
-                CalculateDistributions();
-                List<double> _DBH = new List<double>();
-                foreach (TreeSizeClass sizeClass in TreeSizeClassList) { _DBH.Add(sizeClass.TreesPerHa); }
-                return _DBH.ToArray(); 
-            } 
-        }
+        /// <summary>Weibull shape parameter.</summary>
+        [Units("-")]
+        public double WeibullShape => HasDistribution ? Weibull2P.ShapeFromCV(cv) : 0.0;
 
-        /// <summary>
-        /// DBH at 50th Percentile
-        /// </summary>
-        [Units("")]
-        [Description("DBH at 50th Percentile")]
-        public double DBH50thPercentile
-        {
-            get
-            {                
-                CalculateDistributions();
-                return _weibull.Quantile(0.5);
-            }
-        }
+        /// <summary>Weibull scale parameter.</summary>
+        [Units("cm")]
+        public double WeibullScale => HasDistribution ? CurrentDistribution().Scale : 0.0;
 
-        /// <summary>
-        /// DBH at 10th Percentile
-        /// </summary>
-        [Units("")]
-        [Description("DBH at 10th Percentile")]
-        public double DBH10thPercentile
-        {
-            get
-            {
-                CalculateDistributions();
-                return _weibull.Quantile(0.1);
-            }
-        }
+        /// <summary>Quadratic mean DBH implied by the distribution.</summary>
+        [Units("cm")]
+        public double QuadraticMeanDBH => HasDistribution ? MeanDBH.Value() * Math.Sqrt(1.0 + cv * cv) : 0.0;
 
-        /// <summary>
-        /// DBH at 90th Percentile
-        /// </summary>
-        [Units("")]
-        [Description("DBH at 90th Percentile")]
-        public double DBH90thPercentile
+        /// <summary>Basal area implied by the distribution (uses the quadratic mean DBH).</summary>
+        [Units("m^2/ha")]
+        public double BasalArea => HasDistribution ? Math.PI / 40000.0 * Math.Pow(QuadraticMeanDBH, 2) * StemPopulation.Value() : 0.0;
+
+        /// <summary>Reineke stand density index, N x (Dq / 25.4 cm)^1.605, in stems/ha.</summary>
+        [Units("/ha")]
+        public double StandDensityIndex => HasDistribution ? StemPopulation.Value() * Math.Pow(QuadraticMeanDBH / 25.4, 1.605) : 0.0;
+
+        /// <summary>DBH at the 10th percentile.</summary>
+        [Units("cm")]
+        public double DBH10thPercentile => HasDistribution ? CurrentDistribution().Quantile(0.1) : 0.0;
+
+        /// <summary>DBH at the 50th percentile.</summary>
+        [Units("cm")]
+        public double DBH50thPercentile => HasDistribution ? CurrentDistribution().Quantile(0.5) : 0.0;
+
+        /// <summary>DBH at the 90th percentile.</summary>
+        [Units("cm")]
+        public double DBH90thPercentile => HasDistribution ? CurrentDistribution().Quantile(0.9) : 0.0;
+
+        /// <summary>Trees per hectare in each DBH size class.</summary>
+        [Units("/ha")]
+        public double[] Population
         {
             get
             {
-                CalculateDistributions();
-                return _weibull.Quantile(0.9);
+                List<double> values = new List<double>();
+                foreach (TreeSizeClass sizeClass in SizeClasses())
+                    values.Add(sizeClass.TreesPerHa);
+                return values.ToArray();
             }
         }
 
-        /// <summary>
-        /// Midpoint of each of the DBH size class.
-        /// </summary>
-        [Units("")]
-        [Description("Midpoint of each of the DBH size class")]
+        /// <summary>Midpoint of each DBH size class.</summary>
+        [Units("cm")]
         public double[] DBHmid
         {
             get
             {
-                CalculateDistributions();
-                List<double> _DBHmid = new List<double>();
-                foreach (TreeSizeClass treeClass in TreeSizeClassList) { _DBHmid.Add(treeClass.DBHMid); }
-                return _DBHmid.ToArray();
+                List<double> values = new List<double>();
+                foreach (TreeSizeClass sizeClass in SizeClasses())
+                    values.Add(sizeClass.DBHMid);
+                return values.ToArray();
             }
         }
 
-        /// <summary>Things the model does when the simulation starts</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <summary>Selectivity of the most recent removal (positive = from below).</summary>
+        [Units("-")]
+        public double LastRemovalSelectivity { get; private set; }
+
+        /// <summary>Stem biomass fraction of the most recent removal.</summary>
+        [Units("0-1")]
+        public double LastRemovalBiomassFraction { get; private set; }
+
+        /// <summary>Retained-to-original mean DBH ratio of the most recent removal.</summary>
+        [Units("-")]
+        public double LastRemovalMeanDBHRatio { get; private set; }
+
+        /// <summary>True when the stand has stems and a positive mean DBH.</summary>
+        private bool HasDistribution => initialised && MeanDBH.Value() > 0 && StemPopulation.Value() > 0;
+
+        /// <summary>
+        /// Remove a fraction of stems with a given size selectivity, update the distribution to the retained trees and
+        /// return the fraction of stem biomass removed. Call this before the plant's population and biomass are reduced.
+        /// </summary>
+        /// <param name="stemFraction">Fraction of stems removed (0-1).</param>
+        /// <param name="selectivity">Size selectivity: &gt; 0 from below, 0 random, &lt; 0 from above.</param>
+        /// <returns>Fraction of stem biomass removed (0-1).</returns>
+        public double RemoveBySize(double stemFraction, double selectivity)
+        {
+            EnsureInitialised();
+            if (!HasDistribution || stemFraction <= 0)
+                return Math.Max(0, stemFraction);
+            if (stemFraction >= 1)
+                return 1.0;
+
+            selectivity = Math.Clamp(selectivity, -MaximumRemovalSelectivity, MaximumRemovalSelectivity);
+            Weibull2P distribution = CurrentDistribution();
+            RemovalResult result = distribution.Remove(stemFraction, selectivity, SizeMassExponent.Value(), QuadraturePoints);
+            ApplyRemovalResult(result, selectivity);
+            return result.BiomassFraction;
+        }
+
+        /// <summary>
+        /// Update the distribution after a removal whose stem and biomass fractions are both known. The size selectivity
+        /// that reproduces the biomass fraction is inferred and the retained-tree CV is applied. Call this before the
+        /// plant's population and biomass are reduced.
+        /// </summary>
+        /// <param name="stemFraction">Fraction of stems removed (0-1).</param>
+        /// <param name="biomassFraction">Fraction of stem biomass removed (0-1).</param>
+        public void ApplyRemoval(double stemFraction, double biomassFraction)
+        {
+            EnsureInitialised();
+            resynchronise = true;
+            if (!HasDistribution || stemFraction <= 0 || stemFraction >= 1)
+                return;
+
+            Weibull2P distribution = CurrentDistribution();
+            double massExponent = SizeMassExponent.Value();
+            double selectivity = distribution.SelectivityForBiomassFraction(stemFraction, biomassFraction, massExponent,
+                                                                            -MaximumRemovalSelectivity, MaximumRemovalSelectivity, QuadraturePoints);
+            RemovalResult result = distribution.Remove(stemFraction, selectivity, massExponent, QuadraturePoints);
+            ApplyRemovalResult(result, selectivity);
+        }
+
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            cv = 0;
+            previousMeanDBH = 0;
+            initialised = false;
+            resynchronise = false;
+            sizeClasses.Clear();
+            LastRemovalSelectivity = 0;
+            LastRemovalBiomassFraction = 0;
+            LastRemovalMeanDBHRatio = 1;
+        }
+
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            TreeSizeClassList.Clear();
+            sizeClasses.Clear();
         }
 
-        private void CalculateDistributions()  
+        [EventSubscribe("EndOfDay")]
+        private void OnEndOfDay(object sender, EventArgs e)
         {
-            //Only recalculate tree list if it hasn't already been done for today (it is numerically expensive)
-            if (TreeSizeClassList.Count == 0)
+            sizeClasses.Clear();
+            double mean = MeanDBH.Value();
+            if (mean <= 0 || StemPopulation.Value() <= 0)
             {
-                _weibull = new WeibullModel(StemPopulation.Value(), BasalArea.Value(), MeanDBH.Value(), Location.Value());
-                TreeSizeClassList = GenerateSizeClassList(StemPopulation.Value(), _weibull);
-            }
-        }
-
-        private void ValidateStandData()  //NH move to calcdistn and handle small stands
-        {
-                if (!double.IsFinite(StemPopulation.Value()) || StemPopulation.Value() <= 0) throw new ArgumentException("All StemPopulation values must be finite and > 0.");
-                if (!double.IsFinite(BasalArea.Value()) || BasalArea.Value() <= 0) throw new ArgumentException("All BasalArea values must be finite and > 0.");
-                if (!double.IsFinite(MeanDBH.Value()) || MeanDBH.Value() <= 0) throw new ArgumentException("All MeanDBH values must be finite and > 0.");
-                if (!double.IsFinite(Location.Value()) || Location.Value() < 0) throw new ArgumentException("All a values must be finite and >= 0.");
-                if (MeanDBH.Value() <= Location.Value()) throw new ArgumentException("Each MeanDBH must be greater than a.");
-        }
-
-
-        /// <summary>
-        /// Converts fitted Weibull parameters into DBH classes with expected trees per hectare in each class.
-        /// </summary>
-        /// <param name="stemPopulation">Trees per hectare to distribute across DBH classes.</param>
-        /// <param name="wiebull">The fitted Weibull parameters used to build the class distribution.</param>
-        /// <returns>A tree list containing DBH class bounds, class midpoints, and estimated trees per hectare.</returns>
-        private List<TreeSizeClass> GenerateSizeClassList(double stemPopulation, WeibullModel wiebull)
-        {   
-            List<TreeSizeClass> output = new List<TreeSizeClass>(SizeClassNumber);
-
-            double lower = 0;
-            for (var i = 0; i < SizeClassNumber; i++)
-            {
-                double upper = lower + SizeClassInterval;
-                double mid = (lower + upper) / 2.0;
-                double prob = wiebull.CDF(upper) - wiebull.CDF(lower);
-
-                if (!double.IsFinite(prob) || prob < 0)
-                    prob = 0;
-
-                output.Add(new TreeSizeClass(lower, upper, mid, stemPopulation * prob));
-                lower += SizeClassInterval;
+                initialised = false;
+                previousMeanDBH = 0;
+                return;
             }
 
-            return output;
+            if (!initialised)
+            {
+                EnsureInitialised();
+                return;
+            }
+
+            if (resynchronise || previousMeanDBH <= 0)
+            {
+                // Mean DBH jumped because of a removal, not growth: start growth tracking again from today.
+                resynchronise = false;
+                previousMeanDBH = mean;
+                return;
+            }
+
+            if (mean > previousMeanDBH)
+            {
+                double asymmetry = GrowthAsymmetry.Value();
+                cv = Math.Clamp(cv * Math.Pow(mean / previousMeanDBH, asymmetry), MinimumCV, MaximumCV);
+            }
+            previousMeanDBH = mean;
+        }
+
+        private void EnsureInitialised()
+        {
+            if (initialised)
+                return;
+            double mean = MeanDBH.Value();
+            if (mean <= 0 || StemPopulation.Value() <= 0)
+                return;
+            double shape = EstablishmentShape.Value();
+            if (!double.IsFinite(shape) || shape <= 0)
+                throw new Exception($"{Name}: EstablishmentShape must be a positive number but is {shape}.");
+            cv = Math.Clamp(Weibull2P.CVFromShape(shape), MinimumCV, MaximumCV);
+            previousMeanDBH = mean;
+            initialised = true;
+        }
+
+        private void ApplyRemovalResult(RemovalResult result, double selectivity)
+        {
+            cv = Math.Clamp(result.RetainedCV, MinimumCV, MaximumCV);
+            LastRemovalSelectivity = selectivity;
+            LastRemovalBiomassFraction = result.BiomassFraction;
+            LastRemovalMeanDBHRatio = result.RetainedMeanRatio;
+            resynchronise = true;
+            sizeClasses.Clear();
+        }
+
+        private Weibull2P CurrentDistribution()
+        {
+            return Weibull2P.FromMeanAndCV(MeanDBH.Value(), cv);
+        }
+
+        private List<TreeSizeClass> SizeClasses()
+        {
+            if (sizeClasses.Count == 0 && HasDistribution && SizeClassNumber > 0 && SizeClassInterval > 0)
+            {
+                Weibull2P distribution = CurrentDistribution();
+                double stems = StemPopulation.Value();
+                double lower = 0;
+                for (int i = 0; i < SizeClassNumber; i++)
+                {
+                    bool last = i == SizeClassNumber - 1;
+                    double upper = lower + SizeClassInterval;
+                    double probability = (last ? 1.0 : distribution.CDF(upper)) - distribution.CDF(lower);
+                    if (!double.IsFinite(probability) || probability < 0)
+                        probability = 0;
+                    sizeClasses.Add(new TreeSizeClass(lower, upper, (lower + upper) / 2.0, stems * probability));
+                    lower = upper;
+                }
+            }
+            return sizeClasses;
+        }
+
+        /// <summary>Outcome of removing stems from a distribution.</summary>
+        internal readonly record struct RemovalResult(double BiomassFraction, double RetainedCV, double RetainedMeanRatio);
+
+        /// <summary>Two-parameter Weibull distribution of DBH, with the moment and removal maths used by the model.</summary>
+        internal readonly struct Weibull2P
+        {
+            /// <summary>Shape parameter.</summary>
+            public double Shape { get; }
+
+            /// <summary>Scale parameter (cm).</summary>
+            public double Scale { get; }
+
+            /// <summary>Create from shape and scale.</summary>
+            public Weibull2P(double shape, double scale)
+            {
+                if (!double.IsFinite(shape) || shape <= 0)
+                    throw new ArgumentException($"Weibull shape must be positive and finite but is {shape}.");
+                if (!double.IsFinite(scale) || scale < 0)
+                    throw new ArgumentException($"Weibull scale must be non-negative and finite but is {scale}.");
+                Shape = shape;
+                Scale = scale;
+            }
+
+            /// <summary>Create the distribution with a given arithmetic mean and coefficient of variation.</summary>
+            public static Weibull2P FromMeanAndCV(double mean, double cv)
+            {
+                double shape = ShapeFromCV(cv);
+                return new Weibull2P(shape, mean / SpecialFunctions.Gamma(1.0 + 1.0 / shape));
+            }
+
+            /// <summary>Mean of the distribution.</summary>
+            public double Mean => Scale * SpecialFunctions.Gamma(1.0 + 1.0 / Shape);
+
+            /// <summary>Coefficient of variation implied by a shape.</summary>
+            public static double CVFromShape(double shape)
+            {
+                double g1 = SpecialFunctions.Gamma(1.0 + 1.0 / shape);
+                double g2 = SpecialFunctions.Gamma(1.0 + 2.0 / shape);
+                return Math.Sqrt(Math.Max(0.0, g2 / (g1 * g1) - 1.0));
+            }
+
+            /// <summary>Shape implied by a coefficient of variation (CV decreases monotonically with shape).</summary>
+            public static double ShapeFromCV(double cv)
+            {
+                if (!double.IsFinite(cv) || cv <= 0)
+                    throw new ArgumentException($"Coefficient of variation must be positive and finite but is {cv}.");
+                double low = 0.2, high = 200.0;
+                if (cv >= CVFromShape(low)) return low;
+                if (cv <= CVFromShape(high)) return high;
+                for (int i = 0; i < 100; i++)
+                {
+                    double mid = 0.5 * (low + high);
+                    if (CVFromShape(mid) > cv) low = mid; else high = mid;
+                    if (high - low < 1e-9) break;
+                }
+                return 0.5 * (low + high);
+            }
+
+            /// <summary>Cumulative distribution function.</summary>
+            public double CDF(double d)
+            {
+                if (d <= 0 || Scale <= 0) return 0.0;
+                return 1.0 - Math.Exp(-Math.Pow(d / Scale, Shape));
+            }
+
+            /// <summary>Quantile function.</summary>
+            public double Quantile(double p)
+            {
+                if (p < 0 || p >= 1) throw new ArgumentException($"Probability must be in [0, 1) but is {p}.");
+                if (p == 0) return 0.0;
+                return Scale * Math.Pow(-Math.Log(1.0 - p), 1.0 / Shape);
+            }
+
+            /// <summary>Diameters at equally spaced probability midpoints, used to integrate over the distribution.</summary>
+            public double[] QuadratureDiameters(int points)
+            {
+                double[] d = new double[points];
+                for (int j = 0; j < points; j++)
+                    d[j] = Quantile((j + 0.5) / points);
+                return d;
+            }
+
+            /// <summary>
+            /// Remove a fraction of stems with removal probability min(1, c x (D/mean)^-selectivity), with c set so the
+            /// expected fraction removed equals stemFraction.
+            /// </summary>
+            public RemovalResult Remove(double stemFraction, double selectivity, double massExponent, int points)
+            {
+                double[] d = QuadratureDiameters(points);
+                // Use the quadrature's own mean so a random removal leaves the mean ratio at exactly 1.
+                double mean = 0;
+                foreach (double dj in d)
+                    mean += dj;
+                mean /= points;
+                double[] weight = new double[points];
+                for (int j = 0; j < points; j++)
+                    weight[j] = Math.Pow(d[j] / mean, -selectivity);
+                double c = SolveRemovalConstant(weight, stemFraction);
+
+                double massTotal = 0, massRemoved = 0, keptN = 0, keptD = 0, keptD2 = 0;
+                for (int j = 0; j < points; j++)
+                {
+                    double p = Math.Min(1.0, c * weight[j]);
+                    double mass = Math.Pow(d[j], massExponent);
+                    massTotal += mass;
+                    massRemoved += p * mass;
+                    double kept = 1.0 - p;
+                    keptN += kept;
+                    keptD += kept * d[j];
+                    keptD2 += kept * d[j] * d[j];
+                }
+                double biomassFraction = massTotal > 0 ? massRemoved / massTotal : stemFraction;
+                if (keptN <= 1e-12)
+                    return new RemovalResult(1.0, CVFromShape(Shape), 1.0);
+                double keptMean = keptD / keptN;
+                double keptVariance = Math.Max(0.0, keptD2 / keptN - keptMean * keptMean);
+                double keptCV = Math.Sqrt(keptVariance) / keptMean;
+                // The quadrature slightly under-represents the tails, so its CV is ~0.1-0.2% below the true CV. Apply only
+                // the change in CV caused by the removal; otherwise every removal (even a random one) would ratchet the CV
+                // down, and frequent small mortality removals would narrow the distribution steadily.
+                double allVariance = 0;
+                foreach (double dj in d)
+                    allVariance += (dj - mean) * (dj - mean);
+                double quadratureCV = Math.Sqrt(allVariance / points) / mean;
+                double retainedCV = quadratureCV > 0 ? CVFromShape(Shape) * keptCV / quadratureCV : keptCV;
+                return new RemovalResult(biomassFraction, retainedCV, keptMean / mean);
+            }
+
+            /// <summary>Find the selectivity whose removal gives the requested biomass fraction.</summary>
+            public double SelectivityForBiomassFraction(double stemFraction, double biomassFraction, double massExponent,
+                                                        double minSelectivity, double maxSelectivity, int points)
+            {
+                // Biomass fraction removed falls as selectivity rises (more small trees taken first).
+                double atMin = Remove(stemFraction, minSelectivity, massExponent, points).BiomassFraction;
+                double atMax = Remove(stemFraction, maxSelectivity, massExponent, points).BiomassFraction;
+                if (biomassFraction >= atMin) return minSelectivity;
+                if (biomassFraction <= atMax) return maxSelectivity;
+                double low = minSelectivity, high = maxSelectivity;
+                for (int i = 0; i < 80; i++)
+                {
+                    double mid = 0.5 * (low + high);
+                    if (Remove(stemFraction, mid, massExponent, points).BiomassFraction > biomassFraction) low = mid; else high = mid;
+                    if (high - low < 1e-6) break;
+                }
+                return 0.5 * (low + high);
+            }
+
+            private static double SolveRemovalConstant(double[] weight, double stemFraction)
+            {
+                double ExpectedFraction(double c)
+                {
+                    double sum = 0;
+                    foreach (double w in weight)
+                        sum += Math.Min(1.0, c * w);
+                    return sum / weight.Length;
+                }
+                double low = 0.0, high = 1.0;
+                while (ExpectedFraction(high) < stemFraction && high < 1e300)
+                    high *= 2.0;
+                for (int i = 0; i < 200; i++)
+                {
+                    double mid = 0.5 * (low + high);
+                    if (ExpectedFraction(mid) < stemFraction) low = mid; else high = mid;
+                    if (high - low <= 1e-14 * Math.Max(1.0, high)) break;
+                }
+                return 0.5 * (low + high);
+            }
         }
     }
 }
