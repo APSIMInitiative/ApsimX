@@ -253,7 +253,7 @@ namespace Models.Soils
                     else if (MathUtilities.LessThan(physical.BD[layer], min_bd, 3))
                     {
                         //If rocks percentage is above 75%, skip lower bulk density threshold check
-                        if (MathUtilities.LessThan(physical.Rocks[layer], 0.75, 3))
+                        if (MathUtilities.LessThan(physical.Rocks[layer], 75.0, 3))
                             message.AppendLine($"BD value of {physical.BD[layer].ToString("f3")} in layer {layerNumber} is below acceptable value of {min_bd.ToString("f3")} and Rocks are less than 75%");
                     }
 
