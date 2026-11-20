@@ -411,12 +411,16 @@ public static class SoilSanitise
             double bd = i < physical.BD.Length ? physical.BD[i] : physical.BD.Last();
             double sat = i < physical.SAT.Length ? physical.SAT[i] : physical.SAT.Last();
             double particleDensity = 2.65;
-            double totalPorosity = (1 - bd / particleDensity) * 0.93;
-            double rocksFraction = 1 - sat / totalPorosity;
-            if (rocksFraction > 0.1)
-                return rocksFraction;
+            double entrappedAir = 0.07;
+            double rocksFraction = 1.0 - sat / (1.0 - entrappedAir) - bd / particleDensity;
+            if (rocksFraction > 0.01)
+            {
+                return rocksFraction * 100.0;
+            }
             else
-                return 0;
+            {
+                return 0.0;
+            }
         });
         physical.Rocks = values;
         physical.RocksMetadata = metadata;
