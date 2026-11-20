@@ -947,7 +947,7 @@
                   "Children": [
                     {
                       "$type": "Models.Documentation, Models",
-                      "Text": "\n**Target ({[Vegetative].Target.GetType().Name})**\n\n{[Vegetative].Target}\n\n{[Vegetative].Target.SquaringTT}\n\n\n**Progression ({[Vegetative].Progression.GetType().Name})**\n\n{[Vegetative].Progression}\n",
+                      "Text": "\n**Target ({[Vegetative].Target.GetType().Name})**\n\nThe Target thermal time is calculated as the difference between a set thermal time to squaring and the TT to emergence.\n\n{[Vegetative].Target.SquaringTT}\n\n{[Vegetative].Target.Emerging}\n\n\n**Progression ({[Vegetative].Progression.GetType().Name})**\n\n{[Vegetative].Progression}\n",
                       "Name": "Documentation",
                       "ResourceName": null,
                       "Children": [],
