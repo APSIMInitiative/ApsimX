@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Labour Activity Feed Target Purchase
@@ -22,7 +22,7 @@ public class LabourActivityFeedTargetPurchaseSummary : DescriptiveSummaryProvide
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.FoodStoreName, "Store not set", entryStyle: HTMLSummaryStyle.Resource, errorNotSet: true)}" +
-            $"will be purchased to provide {generator.DisplaySummaryValueSnippet(ModelTyped.TargetProportion, errorNotSet: true)} of remaining intake needed to meet current targets");
+        generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FoodStoreName, "Store not set", entryStyle: HTMLSummaryStyle.Resource, errorNotSet: true)}" +
+            $"will be purchased to provide {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TargetProportion, errorNotSet: true)} of remaining intake needed to meet current targets");
     }
 }

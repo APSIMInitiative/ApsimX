@@ -65,7 +65,7 @@ namespace Models.CLEM.Resources
         /// <returns>A ruminant attribute to supply the offspring</returns>
         public object GetInheritedAttribute()
         {
-            IndividualAttribute newAttribute = new IndividualAttribute()
+            IndividualAttribute newAttribute = new()
             {
                 InheritanceStyle = this.InheritanceStyle,
                 SetAttributeSettings = this.SetAttributeSettings

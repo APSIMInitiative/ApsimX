@@ -1,4 +1,5 @@
 using APSIM.Numerics;
+using Models.CLEM.DataReaders;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -42,7 +43,7 @@ namespace Models.CLEM.Activities
         [NonSerialized]
         private List<(IResourceType resource, double amount)> resourcesForMonth;
         IEnumerable<string> resourceTypesToInclude = null;
-        Dictionary<string, (IResourceType, double)> allResources = new Dictionary<string, (IResourceType, double)>();
+        readonly Dictionary<string, (IResourceType, double)> allResources = [];
 
         /// <summary>
         /// Name of the model for the resource input file
@@ -70,25 +71,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per packet incoming",
-                            "per packet outgoing",
-                            "per amount incoming",
-                            "per amount outgoing",
-                            "per dollar value incoming",
-                            "per dollar value outgoing",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per packet incoming",
+                                            "per packet outgoing",
+                                            "per amount incoming",
+                                            "per amount outgoing",
+                                            "per dollar value incoming",
+                                            "per dollar value outgoing",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -108,7 +106,7 @@ namespace Models.CLEM.Activities
                 fileResource = Structure.FindChild<FileResource>(ResourceDataReader, recurse: true);
             }
 
-            resourcesForMonth = new List<(IResourceType resource, double amount)>();
+            resourcesForMonth = [];
 
             if ((ResourceColumnsToUse ?? "") != "")
             {
@@ -125,7 +123,7 @@ namespace Models.CLEM.Activities
                     if (!resourceTypesToInclude.Any() || resourceTypesToInclude.Contains(resourceName))
                     {
                         IResourceType resource;
-                        if (resourceName.Contains("."))
+                        if (resourceName.Contains('.'))
                         {
                             resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resourceName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                         }
@@ -181,7 +179,7 @@ namespace Models.CLEM.Activities
             packetsToDo = new double[,] { { 0, 0 }, { 0, 0 } };
 
             // get data from reader for month
-            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, events.TimeStepEnd, resourceTypesToInclude, false);
+            currentEntries = fileResource.GetCurrentResourceData(events.TimeStepStart, resourceTypesToInclude, false);
 
             resourcesForMonth.Clear();
 
@@ -226,32 +224,17 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per amount incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[1, 0];
-                        break;
-                    case "per packet incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = packetsToDo[1, 0];
-                        break;
-                    case "per dollar value incoming":
-                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[1, 0];
-                        break;
-                    case "per amount outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo[0, 0];
-                        break;
-                    case "per packet outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = packetsToDo[0, 0];
-                        break;
-                    case "per dollar value outgoing":
-                        valuesForCompanionModels[valueToSupply.Key] = valueToDo[0, 0];
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per amount incoming" => amountToDo[1, 0],
+                    "per packet incoming" => packetsToDo[1, 0],
+                    "per dollar value incoming" => valueToDo[1, 0],
+                    "per amount outgoing" => amountToDo[0, 0],
+                    "per packet outgoing" => packetsToDo[0, 0],
+                    "per dollar value outgoing" => valueToDo[0, 0],
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             return null;
@@ -264,7 +247,7 @@ namespace Models.CLEM.Activities
 
             // incoming or outgoing shortfalls
             int skipped = 0;
-            List<string> inOut = new List<string>() { "outgoing", "incoming" };
+            List<string> inOut = [];
             for (int i = 0; i < inOut.Count; i++)
             {
                 var sel_shortfalls = shortfalls.Where(a => a.CompanionModelDetails.unit.Contains("incoming"));
@@ -278,15 +261,11 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        switch (unitShort.CompanionModelDetails.identifier.Split(" ").First())
+                        amountToDo[i, 1] = unitShort.CompanionModelDetails.identifier.Split(" ").First() switch
                         {
-                            case "amount":
-                                amountToDo[i, 1] = Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required));
-                                break;
-                            default:
-                                throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]");
-                        }
-
+                            "amount" => Convert.ToInt32(amountToDo[i, 0] * (1 - unitShort.Available / unitShort.Required)),
+                            _ => throw new NotImplementedException($"Cannot use {unitShort.CompanionModelDetails.identifier} unit to influence ResourceActivitymanageExternal when shortfalls occur in [a={NameWithParent}]"),
+                        };
                         if (unitShort.Available == 0)
                         {
                             Status = ActivityStatus.Warning;
@@ -308,7 +287,7 @@ namespace Models.CLEM.Activities
         {
             if (resourcesForMonth.Count != 0)
             {
-                double[] amountPerformed = new double[2] { 0, 0 };
+                double[] amountPerformed = [0, 0];
                 // loop through all resources to exchange and make transactions
                 foreach (var resourceItem in resourcesForMonth)
                 {
@@ -316,7 +295,7 @@ namespace Models.CLEM.Activities
                     bool isSale = (amount < 0);
                     amount = Math.Abs(amount);
                     ResourcePricing price = null;
-                    if (bankAccount != null && !(resourceItem.resource is FinanceType))
+                    if (bankAccount != null && resourceItem.resource is not FinanceType)
                     {
                         price = resourceItem.resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
                     }
@@ -345,7 +324,7 @@ namespace Models.CLEM.Activities
                                 }
                                 bankAccount.AddToResource(packets * price.PricePerPacket, this, (resourceItem.resource as CLEMModel).NameWithParent, "External output");
                             }
-                            ResourceRequest sellRequest = new ResourceRequest
+                            ResourceRequest sellRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = amount,
@@ -380,7 +359,7 @@ namespace Models.CLEM.Activities
                                 }
 
                                 amount = packets * price.PacketSize;
-                                ResourceRequest sellRequestDollars = new ResourceRequest
+                                ResourceRequest sellRequestDollars = new()
                                 {
                                     ActivityModel = this,
                                     Required = packets * price.PacketSize,
@@ -415,7 +394,7 @@ namespace Models.CLEM.Activities
         {
             if (fileResource == null)
             {
-                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", new string[] { "FileResourceReader" });
+                yield return new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", ["FileResourceReader"]);
             }
         }
         #endregion

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
@@ -180,7 +181,7 @@ namespace Models.CLEM.Resources
         [Category("Farm:Summary", "Lactation-Intake")]
         [Description("Peak lactation intake level [CI19]")]
         [Required, GreaterThanValue(0)]
-        public double[] PeakLactationIntakeLevel_CI19 { get; set; } = new double[] { 0.416, 0.416 };
+        public double[] PeakLactationIntakeLevel_CI19 { get; set; } = [0.416, 0.416];
 
         /// <summary>
         /// Relative condition effect (SCA CI20)
@@ -289,7 +290,7 @@ namespace Models.CLEM.Resources
         {
             if (Structure.Find<RuminantActivityGrowPF>() is not null || Structure.Find<RuminantActivityGrowSCA07>() is not null)
             {
-                ISummary summary = null;
+                Summary summary = null;
                 RuminantType ruminantType = null;
                 // condition-based intake reduction turned off
                 if (RelativeConditionEffect_CI20 == 1.0)
@@ -306,7 +307,7 @@ namespace Models.CLEM.Resources
                     summary.WriteMessage(this, $"Ruminant intake reduction based on intake quality is disabled for [{ruminantType?.Name ?? "Unknown"}].{Environment.NewLine}To allow this functionality set [Parameters].[GrowPF].[GrowPF CI].IgnoreFeedQualityIntakeAdustment to [False]", MessageType.Warning);
                 }
             }
-            return new List<ValidationResult>();
+            return [];
         }
     }
 }

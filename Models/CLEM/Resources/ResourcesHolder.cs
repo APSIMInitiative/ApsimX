@@ -1,4 +1,5 @@
-﻿using APSIM.Core;
+﻿using Models.CLEM.Extras;
+using APSIM.Core;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -31,8 +32,7 @@ namespace Models.CLEM.Resources
 
         private void InitialiseResourceGroupList()
         {
-            if (ResourceGroupList == null)
-                ResourceGroupList = Structure.FindChildren<IModel>().Where(a => a.Enabled);
+            ResourceGroupList ??= Structure.FindChildren<IModel>().Where(a => a.Enabled);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Models.CLEM.Resources
         /// Determines if a market has been located
         /// </summary>
         /// <returns>Whether a market has been found</returns>
-        public bool MarketPresent { get { return !(FoundMarket is null); } }
+        public bool MarketPresent { get { return FoundMarket is not null; } }
 
 
         /// <summary>
@@ -75,9 +75,9 @@ namespace Models.CLEM.Resources
         /// <returns>The resource</returns>
         public ResourceBaseWithTransactions FindResource(Type type)
         {
-            if (type is null) throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { });
+            MethodInfo method = this.GetType().GetMethod("FindResource", []);
             MethodInfo generic = method.MakeGenericMethod(type);
             return generic.Invoke(this, null) as ResourceBaseWithTransactions;
         }
@@ -98,7 +98,7 @@ namespace Models.CLEM.Resources
             if (resourceName is null)
                 missingResourceTypeAction = OnMissingResourceActionTypes.Ignore;
 
-            string[] nameParts = new string[] { "", resourceName ?? "" };
+            string[] nameParts = ["", resourceName ?? ""];
             if (nameParts.Last().Contains('.'))
             {
                 nameParts = nameParts.Last().Split('.');
@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
 
             bool searchForAllIresourceType = false;
             bool resGroupNameMatch = true;
-            T resType = default(T);
+            T resType = default;
             ResourceBaseWithTransactions resGroup = null;
             if (!typeof(R).IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
                     default:
                         break;
                 }
-                return default(T);
+                return default;
             }
             else
             {
@@ -207,8 +207,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool ResourceItemsExist<T>()
         {
-            var resourceGroup = Structure.FindChildren<T>().FirstOrDefault() as IModel;
-            if (resourceGroup != null)
+            if (Structure.FindChildren<T>().FirstOrDefault() is IModel resourceGroup)
                 return resourceGroup.Children.Where(a => a.GetType() != typeof(Memo)).Any();
             return false;
         }
@@ -240,12 +239,12 @@ namespace Models.CLEM.Resources
         /// <returns>Whether the search was successful</returns>
         public IResourceWithTransactionType LinkToMarketResourceType(CLEMResourceTypeBase resourceType)
         {
-            if (!(this.Parent is Market))
+            if (Parent is not Market)
                 throw new ApsimXException(this, $"Logic error in code. Trying to link a resource type [r={resourceType.Name}] from the market with the same market./nThis is a coding issue. Please contact the developers");
 
             // find parent group type
             ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
-            if (!(FindResource(parent.GetType()) is ResourceBaseWithTransactions resourceGroupInMarket))
+            if (FindResource(parent.GetType()) is not ResourceBaseWithTransactions resourceGroupInMarket)
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = Structure.FindParent<Zone>(recurse: true).Name;
@@ -283,13 +282,13 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // if this isn't a marketplace try find a shared market
-            if (!(this.Parent is Market))
+            if (Parent is not Market)
             {
                 IModel parentSim = Structure.FindParent<Simulation>(recurse: true);
                 FoundMarket = Structure.FindChildren<Market>().FirstOrDefault();
             }
             else
-                FoundMarket = this.Parent as Market;
+                FoundMarket = Parent as Market;
 
             // link to price change in all descendents
             foreach (IReportPricingChange childModel in Structure.FindChildren<IReportPricingChange>(recurse: true))
@@ -324,7 +323,7 @@ namespace Models.CLEM.Resources
                     if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                     {
                         // get resource type if not already provided from request
-                        if (!(request.Resource is IResourceType resourceTypeInShortfall))
+                        if (request.Resource is not IResourceType resourceTypeInShortfall)
                         {
                             if (request.ResourceTypeName.Contains('.'))
                             {
@@ -364,7 +363,7 @@ namespace Models.CLEM.Resources
                                     if (transmute.TransmuteResourceType != null)
                                     {
                                         // create new request for this transmutation cost
-                                        ResourceRequest transRequest = new ResourceRequest
+                                        ResourceRequest transRequest = new()
                                         {
                                             Resource = transmute.TransmuteResourceType,
                                             Required = packetsNeeded, // provide the amount of shortfall resource needed
@@ -455,14 +454,14 @@ namespace Models.CLEM.Resources
             // check that only one instance of each resource group is present
             foreach (var item in Structure.FindChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
-                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), new string[] { item.Key.FullName });
+                yield return new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), [item.Key.FullName]);
             }
 
             // check that only one resource type with a given name is present
             foreach (var item in Structure.FindChildren<IResourceType>(recurse: true).GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
             {
                 var bits = item.Key.Split(':');
-                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", new string[] { "Multiple resource type with same name" });
+                yield return new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", ["Multiple resource type with same name"]);
             }
         }
 

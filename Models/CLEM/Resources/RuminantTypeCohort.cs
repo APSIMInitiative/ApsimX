@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -30,7 +31,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantTypeCohort : CLEMModel, IValidatableObject
     {
         private SetPreviousConception setPreviousConception = null;
@@ -198,12 +199,12 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null)
         {
-            List<ISetAttribute> localAttributes = new ();
+            List<ISetAttribute> localAttributes = [];
             // add any whole herd attributes
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange([.. Structure.FindChildren<ISetAttribute>()]);
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, date, ruminantType);
         }
@@ -220,10 +221,10 @@ namespace Models.CLEM.Resources
         public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             if (number <= 0) 
-                return new();
+                return [];
 
-            List<Ruminant> individuals = new();
-            initialAttributes ??= new();
+            List<Ruminant> individuals = [];
+            initialAttributes ??= [];
             setPreviousConception = Structure.FindChild<SetPreviousConception>();
 
             RuminantType parent = ruminantType;
@@ -286,7 +287,7 @@ namespace Models.CLEM.Resources
             if (Age == 0)
                 yield return new ValidationResult($"New born individuals [Age = 0] are not permitted in initial herd for [r={NameWithParent}]", ["AgeDetails"]);
 
-            string[] valueLabels = new string[] { "Fat", "Muscle protein", "Visceral protein" };
+            string[] valueLabels = ["Fat", "Muscle protein", "Visceral protein"];
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
 

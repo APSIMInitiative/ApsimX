@@ -1,7 +1,7 @@
 ﻿using Models.CLEM.Resources;
 using System;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
     /// <summary>
     /// Class for tracking Resource transactions

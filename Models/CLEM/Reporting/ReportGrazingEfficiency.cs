@@ -1,4 +1,5 @@
-﻿using APSIM.Core;
+﻿using Models.CLEM.Extras;
+using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
 using Models.CLEM.Resources;
@@ -77,10 +78,10 @@ namespace Models.CLEM.Reporting
             var multiHerds = Structure.FindAll<RuminantType>().Count() > 1;
             var multiPaddock = grzes.Count() > 1;
 
-            List<string> variableNames = new()
-            {
+            List<string> variableNames =
+            [
                 "[Clock].Today as Date"
-            };
+            ];
             foreach (var grz in grzes)
             {
                 if (IncludePastureQualityLimiter)
@@ -97,17 +98,17 @@ namespace Models.CLEM.Reporting
                     variableNames.Add($"[{grz.Name}].PotentialIntakeProportionGreenLimit as {PastureHerdIdenifier(grz.Name, multiPaddock, multiHerds, "PropDietGreen")}");
             }
 
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
 
-            if (EventNames == null || EventNames.Count() == 0)
+            if (EventNames == null || EventNames.Length == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMEndOfTimeStep" };
+                EventNames = ["[Clock].CLEMEvents.CLEMEndOfTimeStep"];
             }
 
             SubscribeToEvents();
         }
 
-        private string PastureHerdIdenifier(string modelName, bool multiPasture, bool multiHerd, string propertyName)
+        private static string PastureHerdIdenifier(string modelName, bool multiPasture, bool multiHerd, string propertyName)
         {
             var nameParts = modelName.Split('_').Select(a => a.Replace(" ", "")).Skip(1).ToList();
             if (!multiPasture)

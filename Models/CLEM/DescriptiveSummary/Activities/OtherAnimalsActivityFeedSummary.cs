@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
-/// Descriptive summary provider for Other Animals Activity Cost
+/// Descriptive summary provider for Other Animals Activity Feed
 /// </summary>
 public class OtherAnimalsActivityFeedSummary : DescriptiveSummaryProviderBase<OtherAnimalsActivityFeed>
 {
@@ -31,6 +31,6 @@ public class OtherAnimalsActivityFeedSummary : DescriptiveSummaryProviderBase<Ot
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Feed {generator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
+        generator.AddBlockWithText($"Feed {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FeedTypeName, "Not set", HTMLSummaryStyle.Resource)}");
     }
 }

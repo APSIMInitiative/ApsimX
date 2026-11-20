@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 using Models.CLEM.Resources;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// This determines a relationship
@@ -98,9 +98,9 @@ namespace Models.CLEM
                 return YValues[0];
             }
 
-            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[XValues.Length - 1]))
+            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[^1]))
             {
-                return YValues[YValues.Length - 1];
+                return YValues[^1];
             }
 
             int k = 0;
@@ -147,27 +147,27 @@ namespace Models.CLEM
         {
             if (XValues == null)
             {
-                string[] memberNames = new string[] { "XValues" };
+                string[] memberNames = ["XValues"];
                 yield return new ValidationResult("X values are required for relationship", memberNames);
             }
             if (YValues == null)
             {
-                string[] memberNames = new string[] { "YValues" };
+                string[] memberNames = ["YValues"];
                 yield return new ValidationResult("Y values are required for relationship", memberNames);
             }
             if (XValues.Length != YValues.Length)
             {
-                string[] memberNames = new string[] { "XValues and YValues" };
+                string[] memberNames = ["XValues and YValues"];
                 yield return new ValidationResult("The same number of X and Y values are required for relationship", memberNames);
             }
             if (XValues.Length == 0)
             {
-                string[] memberNames = new string[] { "XValues" };
+                string[] memberNames = ["XValues"];
                 yield return new ValidationResult("No data points were provided for relationship", memberNames);
             }
             if (XValues.Length < 2)
             {
-                string[] memberNames = new string[] { "XValues" };
+                string[] memberNames = ["XValues"];
                 yield return new ValidationResult("At least two data points are required for relationship", memberNames);
             }
         }

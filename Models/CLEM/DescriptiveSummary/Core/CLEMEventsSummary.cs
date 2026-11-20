@@ -4,7 +4,7 @@ using Models.Core;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Core;
 
 /// <summary>
 /// Descriptive summary for CLEM Events component
@@ -25,18 +25,18 @@ public class CLEMEventsSummary : DescriptiveSummaryProviderBase<CLEMEvents>
         }
 
         if (!FormatForParentControl)
-            generator.AddBlockWithText($"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
+            generator.AddBlockWithText($"The simulation is performed from {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Clock.StartDate.ToShortDateString())} to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Clock.EndDate.ToShortDateString())}");
 
-        string output = $"CLEM is running using a {generator.DisplaySummaryValueSnippet(ModelTyped.TimeStep)} time step";
+        string output = $"CLEM is running using a {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TimeStep)} time step";
         if (ModelTyped.TimeStep == TimeStepTypes.Custom)
         {
-            output += $" of {generator.DisplaySummaryValueSnippet(ModelTyped.CustomTimeStep)} days";
+            output += $" of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.CustomTimeStep)} days";
         }
         generator.AddBlockWithText(output);
 
         if (ModelTyped.Structure.FindAll<RuminantActivityGrazeAll>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePasture>().Any() || ModelTyped.Structure.FindAll<RuminantActivityGrazePastureHerd>().Any())
         {
-            generator.AddBlockWithText($"Ecological indicators will be calculated every {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationInterval)} months starting at the end of {generator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationMonth)}");
+            generator.AddBlockWithText($"Ecological indicators will be calculated every {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationInterval)} months starting at the end of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.EcologicalIndicatorsCalculationMonth)}");
         }
     }
 }

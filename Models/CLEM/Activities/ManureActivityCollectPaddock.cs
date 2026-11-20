@@ -2,6 +2,7 @@
 using Models.CLEM.Limiters;
 using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,20 +62,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per kg collected",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per kg collected",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to collect manure</summary>
@@ -91,7 +89,11 @@ namespace Models.CLEM.Activities
         {
             amountToSkip = 0;
 
-            amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a => a.Pools.Sum(b => b.WetWeight)) ?? 0;
+            amountToDo = manureStore?.UncollectedStores.Where(a => a.Name == manureStore.Name).Sum(a =>
+            {
+                static double getPoolWeight(ManurePool b) => b.WetWeight;
+                return a.Pools.Sum(getPoolWeight);
+            }) ?? 0;
 
             // reduce amount by limiter if present.
             if (limiter != null)
@@ -105,17 +107,12 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per kg collected":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per kg collected" => amountToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

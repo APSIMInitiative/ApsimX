@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for AnimalPriceGroup
@@ -40,13 +40,13 @@ public class FilterByAttributeSummary : FilterSummaryBase<FilterByAttribute>
                 filterWriter.Write(" has");
             }
 
-            filterWriter.Write($" attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" attribute {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
         }
         else
         {
-            filterWriter.Write($" Attribute {generator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", entryStyle: HTMLSummaryStyle.Filter)}");
-            filterWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" Attribute {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AttributeTag, "No tag", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.OperatorToSymbol(), "Unknown operator", entryStyle: HTMLSummaryStyle.Filter)}");
+            filterWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value?.ToString(), "No value", entryStyle: HTMLSummaryStyle.Filter)}");
         }
         return filterWriter.ToString();
     }

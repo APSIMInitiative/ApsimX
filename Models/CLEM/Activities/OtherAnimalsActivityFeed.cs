@@ -77,36 +77,32 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "OtherAnimalsFeedGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() { "Feed provided" }
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number fed",
-                            "Feed provided"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "per kg feed"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "OtherAnimalsFeedGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: ["Feed provided"]
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number fed",
+                                            "Feed provided"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "per kg feed"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
             feedEstimated = 0;
-            CohortsToBeFed  = otherAnimals.GetCohorts(filterGroups, false).ToList();
+            CohortsToBeFed  = [.. otherAnimals.GetCohorts(filterGroups, false)];
             foreach (var cohort in CohortsToBeFed)
             {
                 cohort.Considered = false;
@@ -123,49 +119,27 @@ namespace Models.CLEM.Activities
             {
                 int number = numberToDo;
 
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsFeedGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsFeedGroup" => feedEstimated,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number fed" => valueToSupply.Key.unit switch
                         {
-                            case "Number fed":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = number;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            case "Feed provided":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per kg fed":
-                                        //amountToDo = feedEstimated;
-                                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => number,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        "Feed provided" => valueToSupply.Key.unit switch
+                        {
+                            "fixed" => 1,
+                            "per kg fed" => (double?)feedEstimated,//amountToDo = feedEstimated;
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

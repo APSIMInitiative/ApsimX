@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Crop Activity Manage Crop
@@ -63,18 +63,18 @@ public class CropActivityManageCropSummary : DescriptiveSummaryProviderBase<Crop
         }
         else
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorString: "Not Set")}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AreaRequested, errorString: "Not Set")}");
 
             if (parentLand == null)
             {
-                htmlWriter.Write($"{generator.DisplayErrorSnippet("UNITS NOT SET")}");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplayErrorSnippet("UNITS NOT SET")}");
             }
             else
             {
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)}");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(parentLand.UnitsOfArea)}");
             }
         }
-        htmlWriter.Write($"of {generator.DisplaySummaryValueSnippet(ModelTyped.LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
+        htmlWriter.Write($"of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.LandItemNameToUse, "Resource not set", HTMLSummaryStyle.Resource)}");
         generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

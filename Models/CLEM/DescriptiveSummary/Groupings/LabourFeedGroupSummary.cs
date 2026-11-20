@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Labour Feed Group filter
@@ -51,7 +51,7 @@ public class LabourFeedGroupSummary : GroupSummaryBase<LabourFeedGroup>
         {
             case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
             case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
                 break;
             default:
                 break;
@@ -78,7 +78,7 @@ public class LabourFeedGroupSummary : GroupSummaryBase<LabourFeedGroup>
                 break;
         }
         style += "is fed to each individual that matches the following conditions:";
-        generator.DisplaySummaryValueSnippet(style);
+        htmlWriter.Write(style);
         generator.AddBlockWithText(htmlWriter.ToString());
     }
 }

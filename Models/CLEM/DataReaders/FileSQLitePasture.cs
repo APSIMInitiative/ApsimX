@@ -9,807 +9,803 @@ using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System.Globalization;
 using System.Linq;
 using DocumentFormat.OpenXml.Bibliography;
 using APSIM.Core;
 
-namespace Models.CLEM
+namespace Models.CLEM.DataReaders;
+
+///<summary>
+/// SQLite database reader for access to Pasture database for other models.
+///</summary>
+[Serializable]
+[ViewName("UserInterface.Views.GridView")]
+[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+[ValidParent(ParentType = typeof(ZoneCLEM))]
+[ValidParent(ParentType = typeof(ActivityFolder))]
+[ValidParent(ParentType = typeof(PastureActivityManage))]
+[Description("Access to an SQLite database with native pasture production (data cube)")]
+[Version(1, 0, 1, "")]
+[Version(1, 0, 2, "Added ability to define table and columns to use")]
+[Version(1, 0, 3, "Includes access to ecological indicators from database")]
+[Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
+[HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
+public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
 {
-    ///<summary>
-    /// SQLite database reader for access to Pasture database for other models.
-    ///</summary>
-    [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("Access to an SQLite database with native pasture production (data cube)")]
-    [Version(1, 0, 1, "")]
-    [Version(1, 0, 2, "Added ability to define table and columns to use")]
-    [Version(1, 0, 3, "Includes access to ecological indicators from database")]
-    [Version(1, 0, 4, "Allow more categories of land condition and grass basal area in datacube lookup")]
-    [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
-    public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
+    [Link]
+    private readonly IClock clock = null;
+
+    private List<ValidationResult> validationResults;
+    private RainfallShuffler shuffler = null;
+    private RandomNumberGenerator rndClem = null;
+
+    /// <summary>
+    /// All the distinct Stocking Rates that were found in the database
+    /// </summary>
+    [JsonIgnore]
+    private double[] distinctStkRates;
+    [JsonIgnore]
+    private double[] distinctGBAs;
+    [JsonIgnore]
+    private double[] distinctLandConditions;
+
+    /// <summary>
+    /// Gets or sets the file name. Should be relative filename where possible.
+    /// </summary>
+    [Summary]
+    [Description("Pasture database file name")]
+    [Core.Display(Type = DisplayType.FileName)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture database file name must be supplied")]
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// Defines the name of the table in the database holding the pasture data.
+    /// </summary>
+    [Summary]
+    [Description("Database table name")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
+    public string TableName { get; set; } = "Native_Inputs";
+
+    /// <summary>
+    /// Name of column holding region id data
+    /// </summary>
+    [Summary]
+    [Description("Column name for region id")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Region id column name must be supplied")]
+    public string RegionColumnName { get; set; } = "Region";
+
+    /// <summary>
+    /// Name of column holding land id data
+    /// </summary>
+    [Summary]
+    [Description("Column name for land id")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
+    public string LandIdColumnName { get; set; } = "LandId";
+
+    /// <summary>
+    /// Name of column holding grass basal area data
+    /// </summary>
+    [Summary]
+    [Description("Column name for grass basal area")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Grass basal area column name must be supplied")]
+    public string GrassBAColumnName { get; set; } = "GrassBA";
+
+    /// <summary>
+    /// Name of column holding land condition data
+    /// </summary>
+    [Summary]
+    [Description("Column name for land condition")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Land condition column name must be supplied")]
+    public string LandConColumnName { get; set; } = "LandCon";
+
+    /// <summary>
+    /// Name of column holding stocking rate data
+    /// </summary>
+    [Summary]
+    [Description("Column name for stocking rate")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Stocking rate column name must be supplied")]
+    public string StkRateColumnName { get; set; } = "StkRate";
+
+    /// <summary>
+    /// Name of column holding year data
+    /// </summary>
+    [Summary]
+    [Description("Column name for year")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
+    public string YearColumnName { get; set; } = "Year";
+
+    /// <summary>
+    /// Name of column holding month data
+    /// </summary>
+    [Summary]
+    [Description("Column name for month")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
+    public string MonthColumnName { get; set; } = "Month";
+
+    /// <summary>
+    /// Name of column holding growth data
+    /// </summary>
+    [Summary]
+    [Description("Column name for growth")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Growth column name must be supplied")]
+    public string GrowthColumnName { get; set; } = "Growth";
+
+    /// <summary>
+    /// Name of column holding erosion soilloss data
+    /// </summary>
+    [Summary]
+    [Description("Column name for erosion")]
+    public string ErosionColumnName { get; set; } = "soilloss";
+
+    /// <summary>
+    /// Name of column holding runoff data
+    /// </summary>
+    [Summary]
+    [Description("Column name for runoff")]
+    public string RunoffColumnName { get; set; } = "runoff";
+
+    /// <summary>
+    /// Name of column holding rainfall data
+    /// </summary>
+    [Summary]
+    [Description("Column name for rainfall")]
+    public string RainfallColumnName { get; set; } = "rainfall";
+
+    /// <summary>
+    /// Name of column holding cover data
+    /// </summary>
+    [Summary]
+    [Description("Column name for cover")]
+    public string CoverColumnName { get; set; } = "cover";
+
+    /// <summary>
+    /// Name of column holding tree basal area data
+    /// </summary>
+    [Summary]
+    [Description("Column name for tree basal area")]
+    public string TBAColumnName { get; set; } = "treeba";
+
+    /// <summary>
+    /// Action to take on missing data
+    /// </summary>
+    [Summary]
+    [System.ComponentModel.DefaultValueAttribute("ReportWarning")]
+    [Description("Missing data action")]
+    public OnMissingResourceActionTypes MissingDataAction { get; set; }
+
+    /// <summary>
+    /// APSIMx SQLite class
+    /// </summary>
+    [NonSerialized]
+    SQLite SQLiteReader = null;
+
+    /// <summary>
+    /// Provides an error message to display if something is wrong.
+    /// The message is displayed in the warning label of the View.
+    /// </summary>
+    [JsonIgnore]
+    public string ErrorMessage = string.Empty;
+
+    /// <summary>
+    /// Does file exist
+    /// </summary>
+    public bool FileExists
     {
-        [Link]
-        private readonly IClock clock = null;
+        get { return File.Exists(FullFileName); }
+    }
 
-        private List<ValidationResult> validationResults;
-        private RainfallShuffler shuffler = null;
-        private RandomNumberGenerator rndClem = null;
-
-        /// <summary>
-        /// All the distinct Stocking Rates that were found in the database
-        /// </summary>
-        [JsonIgnore]
-        private double[] distinctStkRates;
-        [JsonIgnore]
-        private double[] distinctGBAs;
-        [JsonIgnore]
-        private double[] distinctLandConditions;
-
-        /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
-        /// </summary>
-        [Summary]
-        [Description("Pasture database file name")]
-        [Core.Display(Type = DisplayType.FileName)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture database file name must be supplied")]
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Defines the name of the table in the database holding the pasture data.
-        /// </summary>
-        [Summary]
-        [Description("Database table name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Database table name must be supplied")]
-        public string TableName { get; set; } = "Native_Inputs";
-
-        /// <summary>
-        /// Name of column holding region id data
-        /// </summary>
-        [Summary]
-        [Description("Column name for region id")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Region id column name must be supplied")]
-        public string RegionColumnName { get; set; } = "Region";
-
-        /// <summary>
-        /// Name of column holding land id data
-        /// </summary>
-        [Summary]
-        [Description("Column name for land id")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Land id column name must be supplied")]
-        public string LandIdColumnName { get; set; } = "LandId";
-
-        /// <summary>
-        /// Name of column holding grass basal area data
-        /// </summary>
-        [Summary]
-        [Description("Column name for grass basal area")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Grass basal area column name must be supplied")]
-        public string GrassBAColumnName { get; set; } = "GrassBA";
-
-        /// <summary>
-        /// Name of column holding land condition data
-        /// </summary>
-        [Summary]
-        [Description("Column name for land condition")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Land condition column name must be supplied")]
-        public string LandConColumnName { get; set; } = "LandCon";
-
-        /// <summary>
-        /// Name of column holding stocking rate data
-        /// </summary>
-        [Summary]
-        [Description("Column name for stocking rate")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Stocking rate column name must be supplied")]
-        public string StkRateColumnName { get; set; } = "StkRate";
-
-        /// <summary>
-        /// Name of column holding year data
-        /// </summary>
-        [Summary]
-        [Description("Column name for year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
-        public string YearColumnName { get; set; } = "Year";
-
-        /// <summary>
-        /// Name of column holding month data
-        /// </summary>
-        [Summary]
-        [Description("Column name for month")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
-        public string MonthColumnName { get; set; } = "Month";
-
-        /// <summary>
-        /// Name of column holding growth data
-        /// </summary>
-        [Summary]
-        [Description("Column name for growth")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Growth column name must be supplied")]
-        public string GrowthColumnName { get; set; } = "Growth";
-
-        /// <summary>
-        /// Name of column holding erosion soilloss data
-        /// </summary>
-        [Summary]
-        [Description("Column name for erosion")]
-        public string ErosionColumnName { get; set; } = "soilloss";
-
-        /// <summary>
-        /// Name of column holding runoff data
-        /// </summary>
-        [Summary]
-        [Description("Column name for runoff")]
-        public string RunoffColumnName { get; set; } = "runoff";
-
-        /// <summary>
-        /// Name of column holding rainfall data
-        /// </summary>
-        [Summary]
-        [Description("Column name for rainfall")]
-        public string RainfallColumnName { get; set; } = "rainfall";
-
-        /// <summary>
-        /// Name of column holding cover data
-        /// </summary>
-        [Summary]
-        [Description("Column name for cover")]
-        public string CoverColumnName { get; set; } = "cover";
-
-        /// <summary>
-        /// Name of column holding tree basal area data
-        /// </summary>
-        [Summary]
-        [Description("Column name for tree basal area")]
-        public string TBAColumnName { get; set; } = "treeba";
-
-        /// <summary>
-        /// Action to take on missing data
-        /// </summary>
-        [Summary]
-        [System.ComponentModel.DefaultValueAttribute("ReportWarning")]
-        [Description("Missing data action")]
-        public OnMissingResourceActionTypes MissingDataAction { get; set; }
-
-        /// <summary>
-        /// APSIMx SQLite class
-        /// </summary>
-        [NonSerialized]
-        SQLite SQLiteReader = null;
-
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// The message is displayed in the warning label of the View.
-        /// </summary>
-        [JsonIgnore]
-        public string ErrorMessage = string.Empty;
-
-        /// <summary>
-        /// Does file exist
-        /// </summary>
-        public bool FileExists
+    /// <summary>An event handler to allow us to initialise ourselves.</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("CLEMInitialiseResource")]
+    private void OnCLEMInitialiseResource(object sender, EventArgs e)
+    {
+        // look for a shuffler
+        shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
+        if (shuffler != null)
         {
-            get { return File.Exists(FullFileName); }
+            rndClem = Structure.Find<RandomNumberGenerator>();
         }
+    }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResource")]
-        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+    /// <summary>
+    /// Opens the SQLite database if necessary
+    /// </summary>
+    /// <returns>true if open succeeded, false if the opening failed </returns>
+    private bool OpenSQLiteDB()
+    {
+        if (SQLiteReader == null)
         {
-            // look for a shuffler
-            shuffler = Structure.FindChildren<RainfallShuffler>().FirstOrDefault();
-            if (shuffler != null)
+            if (FullFileName == null || FullFileName == "")
             {
-                rndClem = Structure.Find<RandomNumberGenerator>();
+                ErrorMessage = "File name for the SQLite database is missing";
+                return false;
             }
-        }
 
-        /// <summary>
-        /// Opens the SQLite database if necessary
-        /// </summary>
-        /// <returns>true if open succeeded, false if the opening failed </returns>
-        private bool OpenSQLiteDB()
-        {
-            if (SQLiteReader == null)
-            {
-                if (FullFileName == null || FullFileName == "")
-                {
-                    ErrorMessage = "File name for the SQLite database is missing";
-                    return false;
-                }
-
-                if (File.Exists(FullFileName))
-                {
-                    // check SQL file
-                    SQLiteReader = new SQLite();
-                    try
-                    {
-                        SQLiteReader.OpenDatabase(FullFileName, false);
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorMessage = $"There was a problem opening the SQLite database [o={ FullFileName} for [x={Name}]\r\n{ ex.Message}";
-                        return false;
-                    }
-                }
-                else
-                {
-                    ErrorMessage = $"The SQLite database [o={ FullFileName}] could not be found for [x={Name}]";
-                    return false;
-                }
-            }
-            else
-            {
-                //it's already open
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Searches the DataTable created from the Pasture database for all the distinct values for the specified ColumnName.
-        /// </summary>
-        /// <returns>Sorted array of unique values for the column</returns>
-        private double[] GetCategories(string columnName)
-        {
-            //if the SQLite Database can't be opened throw an exception.
-            if (OpenSQLiteDB() == false)
-            {
-                throw new Exception(ErrorMessage);
-            }
-            else
-            {
-                // check if sorted table exists
-                if(!SQLiteReader.TableExists($"{columnName}_distinct"))
-                {
-                    SQLiteReader.ExecuteNonQuery($"CREATE TABLE {columnName}_distinct AS SELECT DISTINCT {columnName} FROM {TableName} ORDER BY {columnName} ASC;");
-                }
-
-                DataTable res = SQLiteReader.ExecuteQuery($"SELECT {columnName} FROM {columnName}_distinct;");
-                return [.. res.AsEnumerable().Select(s => Convert.ToDouble(s[0], CultureInfo.InvariantCulture))];
-            }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // check for file
-            if (!this.FileExists)
-            {
-                string[] memberNames = new string[] { "FileName" };
-                results.Add(new ValidationResult($"The SQLite database [x={FullFileName} could not be found for [{Name}]", memberNames));
-            }
-            else
+            if (File.Exists(FullFileName))
             {
                 // check SQL file
                 SQLiteReader = new SQLite();
                 try
                 {
                     SQLiteReader.OpenDatabase(FullFileName, false);
-                }
-                catch(Exception ex)
-                {
-                    throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message)}");
-                }
-
-                // check all columns present
-                List<string> expectedColumns = new()
-                {
-                    RegionColumnName,
-                    LandIdColumnName,
-                    GrassBAColumnName,
-                    LandConColumnName,
-                    StkRateColumnName,
-                    YearColumnName,
-                    MonthColumnName,
-                    GrowthColumnName
-                };
-
-                // add extra data columns if specified
-                if (ErosionColumnName != null || ErosionColumnName != "")
-                {
-                    expectedColumns.Add(ErosionColumnName);
-                }
-
-                if (RunoffColumnName != null || RunoffColumnName != "")
-                {
-                    expectedColumns.Add(RunoffColumnName);
-                }
-
-                if (RainfallColumnName != null || RainfallColumnName != "")
-                {
-                    expectedColumns.Add(RainfallColumnName);
-                }
-
-                if (CoverColumnName != null || CoverColumnName != "")
-                {
-                    expectedColumns.Add(CoverColumnName);
-                }
-
-                if (TBAColumnName != null || TBAColumnName != "")
-                {
-                    expectedColumns.Add(TBAColumnName);
-                }
-
-                try
-                {
-                    DataTable res = SQLiteReader.ExecuteQuery($"PRAGMA table_info({ TableName})");
-                    List<string> dBcolumns = new();
-                    foreach (DataRow row in res.Rows)
-                    {
-                        dBcolumns.Add(row[1].ToString());
-                    }
-
-                    foreach (string col in expectedColumns)
-                    {
-                        if (!dBcolumns.Contains(col))
-                        {
-                            string[] memberNames = new string[] { "Missing SQLite database column" };
-                            results.Add(new ValidationResult($"Unable to find column [o={ col}] in pasture database [x={ FullFileName }] for [{Name}]", memberNames));
-                        }
-                    }
+                    return true;
                 }
                 catch (Exception ex)
                 {
-                    throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={ FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message)}");
+                    ErrorMessage = $"There was a problem opening the SQLite database [o={ FullFileName} for [x={Name}]\r\n{ ex.Message}";
+                    return false;
                 }
             }
-            return results;
-        }
-
-        /// <summary>
-        /// Gets or sets the full file name (with path). The user interface uses this.
-        /// Must be a property so that the Presenter can use a  Commands.ChangeProperty() on it.
-        /// ChangeProperty does not work on fields.
-        /// </summary>
-        [JsonIgnore]
-        public string FullFileName
-        {
-            get
+            else
             {
-                Simulation sim = Structure.FindParent<Simulation>(recurse: true);
-                if (sim?.FileName != null)
-                {
-                    return PathUtilities.GetAbsolutePath(FileName, sim.FileName);
-                }
-                else
-                {
-                    return FileName;
-                }
+                ErrorMessage = $"The SQLite database [o={ FullFileName}] could not be found for [x={Name}]";
+                return false;
             }
         }
-
-        /// <summary>
-        /// Gets the first year in the SQLite File
-        /// </summary>
-        /// <returns></returns>
-        public double[] GetYearsInFile()
+        else
         {
-            return GetCategories(YearColumnName);
+            //it's already open
+            return true;
         }
+    }
 
-        /// <summary>
-        /// Gets a years worth of data from database into table
-        /// </summary>
-        /// <returns>A data table with pasture growth data</returns>
-        public DataTable GetTable(int startYear, int endYear)
+    /// <summary>
+    /// Searches the DataTable created from the Pasture database for all the distinct values for the specified ColumnName.
+    /// </summary>
+    /// <returns>Sorted array of unique values for the column</returns>
+    private double[] GetCategories(string columnName)
+    {
+        //if the SQLite Database can't be opened throw an exception.
+        if (OpenSQLiteDB() == false)
         {
-            if (OpenSQLiteDB() == false)
+            throw new Exception(ErrorMessage);
+        }
+        else
+        {
+            // check if sorted table exists
+            if(!SQLiteReader.TableExists($"{columnName}_distinct"))
             {
-                return null;
+                SQLiteReader.ExecuteNonQuery($"CREATE TABLE {columnName}_distinct AS SELECT DISTINCT {columnName} FROM {TableName} ORDER BY {columnName} ASC;");
             }
 
-            using StringWriter sqlQuery = new();
-            sqlQuery.Write("SELECT ");
-            sqlQuery.Write($"{RegionColumnName}, ");
-            sqlQuery.Write($"{LandIdColumnName}, ");
-            sqlQuery.Write($"{GrassBAColumnName}, ");
-            sqlQuery.Write($"{LandConColumnName}, ");
-            sqlQuery.Write($"{StkRateColumnName}, ");
-            sqlQuery.Write($"{YearColumnName}, ");
-            sqlQuery.Write($"{MonthColumnName}, ");
-            sqlQuery.Write($"{GrowthColumnName}");
+            DataTable res = SQLiteReader.ExecuteQuery($"SELECT {columnName} FROM {columnName}_distinct;");
+            return [.. res.AsEnumerable().Select(s => Convert.ToDouble(s[0], CultureInfo.InvariantCulture))];
+        }
+    }
 
-            if (ErosionColumnName != null && ErosionColumnName != "")
+    /// <inheritdoc/>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var results = new List<ValidationResult>();
+
+        // check for file
+        if (!this.FileExists)
+        {
+            string[] memberNames = ["FileName"];
+            results.Add(new ValidationResult($"The SQLite database [x={FullFileName} could not be found for [{Name}]", memberNames));
+        }
+        else
+        {
+            // check SQL file
+            SQLiteReader = new SQLite();
+            try
             {
-                sqlQuery.Write($", {ErosionColumnName}");
+                SQLiteReader.OpenDatabase(FullFileName, false);
             }
+            catch(Exception ex)
+            {
+                throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database")?"The file is not a supported SQLite database":ex.Message)}");
+            }
+
+            // check all columns present
+            List<string> expectedColumns =
+            [
+                RegionColumnName,
+                LandIdColumnName,
+                GrassBAColumnName,
+                LandConColumnName,
+                StkRateColumnName,
+                YearColumnName,
+                MonthColumnName,
+                GrowthColumnName
+            ];
+
+            // add extra data columns if specified
+            if (ErosionColumnName != null || ErosionColumnName != "")
+            {
+                expectedColumns.Add(ErosionColumnName);
+            }
+
             if (RunoffColumnName != null || RunoffColumnName != "")
             {
-                sqlQuery.Write($", {RunoffColumnName}");
-            }
-            if (RainfallColumnName != null || RainfallColumnName != "")
-            {
-                sqlQuery.Write($", {RainfallColumnName}");
-            }
-            if (CoverColumnName != null || CoverColumnName != "")
-            {
-                sqlQuery.Write($", {CoverColumnName}");
-            }
-            if (TBAColumnName != null || TBAColumnName != "")
-            {
-                sqlQuery.Write($", {TBAColumnName}");
+                expectedColumns.Add(RunoffColumnName);
             }
 
-            sqlQuery.Write($" FROM {TableName}");
-            sqlQuery.Write($" WHERE {YearColumnName} BETWEEN { startYear} AND { endYear}");
+            if (RainfallColumnName != null || RainfallColumnName != "")
+            {
+                expectedColumns.Add(RainfallColumnName);
+            }
+
+            if (CoverColumnName != null || CoverColumnName != "")
+            {
+                expectedColumns.Add(CoverColumnName);
+            }
+
+            if (TBAColumnName != null || TBAColumnName != "")
+            {
+                expectedColumns.Add(TBAColumnName);
+            }
 
             try
             {
-                DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
-                results.DefaultView.Sort = YearColumnName+", "+MonthColumnName;
-                return results;
+                DataTable res = SQLiteReader.ExecuteQuery($"PRAGMA table_info({ TableName})");
+                List<string> dBcolumns = [];
+                foreach (DataRow row in res.Rows)
+                {
+                    dBcolumns.Add(row[1].ToString());
+                }
+
+                foreach (string col in expectedColumns)
+                {
+                    if (!dBcolumns.Contains(col))
+                    {
+                        string[] memberNames = ["Missing SQLite database column"];
+                        results.Add(new ValidationResult($"Unable to find column [o={ col}] in pasture database [x={ FullFileName }] for [{Name}]", memberNames));
+                    }
+                }
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
-                SQLiteReader.CloseDatabase();
-                ErrorMessage = err.Message;
-                return null;
+                throw new ApsimXException(this, $"There was a problem opening the SQLite database [x={ FullFileName}] for [{Name}]\r\n{((ex.Message == "file is not a database") ? "The file is not a supported SQLite database" : ex.Message)}");
             }
         }
+        return results;
+    }
 
-        /// <summary>An event handler to allow us to initialise</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialise")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
+    /// <summary>
+    /// Gets or sets the full file name (with path). The user interface uses this.
+    /// Must be a property so that the Presenter can use a  Commands.ChangeProperty() on it.
+    /// ChangeProperty does not work on fields.
+    /// </summary>
+    [JsonIgnore]
+    public string FullFileName
+    {
+        get
         {
-            //if the SQLite Database can't be opened throw an exception.
-            var validationContext = new ValidationContext(this, null, null);
-            validationResults = new List<ValidationResult>();
-            Validator.TryValidateObject(this, validationContext, validationResults, true);
-
-            if (OpenSQLiteDB() == false)
+            Simulation sim = Structure.FindParent<Simulation>(recurse: true);
+            if (sim?.FileName != null)
             {
-                throw new Exception(ErrorMessage);
+                return PathUtilities.GetAbsolutePath(FileName, sim.FileName);
             }
             else
             {
-                // create warning if database is not optimised for CLEM
-                var result = SQLiteReader.ExecuteQuery("SELECT count(*) FROM sqlite_master WHERE type='index' and name='CLEM_next_growth';");
-                if (result.Rows.Count >= 0 && Convert.ToInt32(result.Rows[0][0]) != 1)
-                {
-                    // add warning
-                    string warn = $"The database [x={FileName.Replace("_", "\\_")}] specified in [x={Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\r\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\r\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
-                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                }
-            }
-
-            // get list of distinct stocking rates available in database
-            // database has already been opened and checked in Validate()
-            distinctStkRates = GetCategories(StkRateColumnName);
-            distinctGBAs = GetCategories(GrassBAColumnName);
-            distinctLandConditions = GetCategories(LandConColumnName);
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            if(SQLiteReader != null)
-            {
-                SQLiteReader.CloseDatabase();
-                SQLiteReader = null;
+                return FileName;
             }
         }
+    }
 
-        /// <summary>
-        /// Finds the closest Value of categorised lookup values form the database
-        /// This applies to Stocking rates, Grass Basal Area (or use GBA) and Land Condition
-        /// The Pasture database does not have every stocking rate, grass basal area or land condition.
-        /// It will find the category with the next largest value to the actual value supplied.
-        /// So if the value is 0 the category with the next largest value will normally be the first entry
-        /// </summary>
-        /// <param name="category">The name of the district categories to use</param>
-        /// <param name="value">The value to search for</param>
-        /// <returns></returns>
-        private double FindClosestCategory(string category, double value)
+    /// <summary>
+    /// Gets the first year in the SQLite File
+    /// </summary>
+    /// <returns></returns>
+    public double[] GetYearsInFile()
+    {
+        return GetCategories(YearColumnName);
+    }
+
+    /// <summary>
+    /// Gets a years worth of data from database into table
+    /// </summary>
+    /// <returns>A data table with pasture growth data</returns>
+    public DataTable GetTable(int startYear, int endYear)
+    {
+        if (OpenSQLiteDB() == false)
         {
-            double[] valuesToUse;
-            switch (category)
-            {
-                case "StockingRate":
-                    valuesToUse = distinctStkRates;
-                    if(valuesToUse.Max() > 100 | valuesToUse.Min() < 0)
-                    {
-                        // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 100";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                    }
-                    break;
-                case "GrassBasalArea":
-                case "GBA":
-                    valuesToUse = distinctGBAs;
-                    if (valuesToUse.Max() > 10 | valuesToUse.Min() < 0)
-                    {
-                        // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 0 and 10";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                    }
-                    break;
-                case "LandCondition":
-                    valuesToUse = distinctLandConditions;
-                    if (valuesToUse.Max() > 11 | valuesToUse.Min() < 0)
-                    {
-                        // add warning
-                        string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
-                        string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 11";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                    }
-                    break;
-                default:
-                    throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={Name}]");
-            }
+            return null;
+        }
 
-            if (valuesToUse.Length == 0)
-            {
-                throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={Name}]");
-            }
+        using StringWriter sqlQuery = new();
+        sqlQuery.Write("SELECT ");
+        sqlQuery.Write($"{RegionColumnName}, ");
+        sqlQuery.Write($"{LandIdColumnName}, ");
+        sqlQuery.Write($"{GrassBAColumnName}, ");
+        sqlQuery.Write($"{LandConColumnName}, ");
+        sqlQuery.Write($"{StkRateColumnName}, ");
+        sqlQuery.Write($"{YearColumnName}, ");
+        sqlQuery.Write($"{MonthColumnName}, ");
+        sqlQuery.Write($"{GrowthColumnName}");
 
-            int index = Array.BinarySearch(valuesToUse, value);
-            if(~index >= valuesToUse.Length)
+        if (ErosionColumnName != null && ErosionColumnName != "")
+        {
+            sqlQuery.Write($", {ErosionColumnName}");
+        }
+        if (RunoffColumnName != null || RunoffColumnName != "")
+        {
+            sqlQuery.Write($", {RunoffColumnName}");
+        }
+        if (RainfallColumnName != null || RainfallColumnName != "")
+        {
+            sqlQuery.Write($", {RainfallColumnName}");
+        }
+        if (CoverColumnName != null || CoverColumnName != "")
+        {
+            sqlQuery.Write($", {CoverColumnName}");
+        }
+        if (TBAColumnName != null || TBAColumnName != "")
+        {
+            sqlQuery.Write($", {TBAColumnName}");
+        }
+
+        sqlQuery.Write($" FROM {TableName}");
+        sqlQuery.Write($" WHERE {YearColumnName} BETWEEN { startYear} AND { endYear}");
+
+        try
+        {
+            DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
+            results.DefaultView.Sort = YearColumnName+", "+MonthColumnName;
+            return results;
+        }
+        catch (Exception err)
+        {
+            SQLiteReader.CloseDatabase();
+            ErrorMessage = err.Message;
+            return null;
+        }
+    }
+
+    /// <summary>An event handler to allow us to initialise</summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    [EventSubscribe("CLEMInitialise")]
+    private void OnStartOfSimulation(object sender, EventArgs e)
+    {
+        //if the SQLite Database can't be opened throw an exception.
+        var validationContext = new ValidationContext(this, null, null);
+        validationResults = [];
+        Validator.TryValidateObject(this, validationContext, validationResults, true);
+
+        if (OpenSQLiteDB() == false)
+        {
+            throw new Exception(ErrorMessage);
+        }
+        else
+        {
+            // create warning if database is not optimised for CLEM
+            var result = SQLiteReader.ExecuteQuery("SELECT count(*) FROM sqlite_master WHERE type='index' and name='CLEM_next_growth';");
+            if (result.Rows.Count >= 0 && Convert.ToInt32(result.Rows[0][0]) != 1)
             {
                 // add warning
-                string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={Name}]";
-                string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={Name}]\r\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nUsed: [{valuesToUse.Last()}]\r\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
-                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
-                index = valuesToUse.Length - 1;
+                string warn = $"The database [x={FileName.Replace("_", "\\_")}] specified in [x={Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\r\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\r\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
-            return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
         }
 
-        /// <summary>
-        /// Queries the the Pasture SQLite database using the specified parameters.
-        /// </summary>
-        /// <param name="region"></param>
-        /// <param name="soil"></param>
-        /// <param name="grassBasalArea"></param>
-        /// <param name="landCondition"></param>
-        /// <param name="stockingRate"></param>
-        /// <param name="ecolCalculationDate"></param>
-        /// <param name="ecolCalculationInterval"></param>
-        /// <returns></returns>
-        public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
-                                         DateTime ecolCalculationDate, int ecolCalculationInterval)
+        // get list of distinct stocking rates available in database
+        // database has already been opened and checked in Validate()
+        distinctStkRates = GetCategories(StkRateColumnName);
+        distinctGBAs = GetCategories(GrassBAColumnName);
+        distinctLandConditions = GetCategories(LandConColumnName);
+    }
+
+    /// <summary>
+    /// Overrides the base class method to allow for clean up
+    /// </summary>
+    [EventSubscribe("Completed")]
+    private void OnSimulationCompleted(object sender, EventArgs e)
+    {
+        SQLiteReader?.CloseDatabase();
+        SQLiteReader = null;
+    }
+
+    /// <summary>
+    /// Finds the closest Value of categorised lookup values form the database
+    /// This applies to Stocking rates, Grass Basal Area (or use GBA) and Land Condition
+    /// The Pasture database does not have every stocking rate, grass basal area or land condition.
+    /// It will find the category with the next largest value to the actual value supplied.
+    /// So if the value is 0 the category with the next largest value will normally be the first entry
+    /// </summary>
+    /// <param name="category">The name of the district categories to use</param>
+    /// <param name="value">The value to search for</param>
+    /// <returns></returns>
+    private double FindClosestCategory(string category, double value)
+    {
+        double[] valuesToUse;
+        switch (category)
         {
-            List<PastureDataType> pastureDetails = new List<PastureDataType>();
-
-            if (validationResults.Count > 0) // | ecolCalculationDate > clock.EndDate)
-            {
-                return pastureDetails;
-            }
-
-            int startYear = ecolCalculationDate.Year;
-            int startMonth = ecolCalculationDate.Month;
-            DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
-            if(endDate > clock.EndDate)
-            {
-                endDate = clock.EndDate;
-            }
-            int endYear = endDate.Year;
-            int endMonth = endDate.Month;
-
-            double stkRateCategory = FindClosestCategory("StockingRate", stockingRate);
-            double grassBasalAreaCategory = FindClosestCategory("GBA", grassBasalArea);
-            double landConditionCategory = FindClosestCategory("LandCondition", landCondition);
-
-            using StringWriter sqlQuery = new();
-            sqlQuery.Write("SELECT ");
-            sqlQuery.Write($"{YearColumnName}, ");
-            sqlQuery.Write($"{MonthColumnName}, ");
-            sqlQuery.Write($"{GrowthColumnName}");
-
-            if (ErosionColumnName != null && ErosionColumnName != "")
-            {
-                sqlQuery.Write($", {ErosionColumnName}");
-            }
-
-            if (RunoffColumnName != null || RunoffColumnName != "")
-            {
-                sqlQuery.Write($", {RunoffColumnName}");
-            }
-
-            if (RainfallColumnName != null || RainfallColumnName != "")
-            {
-                sqlQuery.Write($", {RainfallColumnName}");
-            }
-
-            if (CoverColumnName != null || CoverColumnName != "")
-            {
-                sqlQuery.Write($", {CoverColumnName}");
-            }
-
-            if (TBAColumnName != null || TBAColumnName != "")
-            {
-                sqlQuery.Write($", {TBAColumnName}");
-            }
-
-            sqlQuery.Write($" FROM { TableName}");
-            sqlQuery.Write($" WHERE {RegionColumnName} = {region}");
-            sqlQuery.Write($" AND {LandIdColumnName} = {soil}");
-            sqlQuery.Write($" AND {GrassBAColumnName} = {grassBasalAreaCategory}");
-            sqlQuery.Write($" AND {LandConColumnName} = {landConditionCategory}");
-            sqlQuery.Write($" AND {StkRateColumnName} = {stkRateCategory}");
-
-            Dictionary<int, int> orderOfYears = new();
-            if (shuffler != null && (rndClem?.Iteration??-9999) != shuffler.DoNotShuffleIteration)
-            {
-                // need to check for all random year month matches in database
-                // this takes into account keeping seasonal rainfall together while shuffling the years
-
-                DateTime currentDate = ecolCalculationDate;
-                sqlQuery.Write(" AND (");
-                bool firstEntry = true;
-                int index = 0;
-                while (currentDate <= endDate)
+            case "StockingRate":
+                valuesToUse = distinctStkRates;
+                if(valuesToUse.Max() > 100 | valuesToUse.Min() < 0)
                 {
-                    index++;
-                    if (!firstEntry)
-                    {
-                        sqlQuery.Write(" OR ");
-                    }
-
-                    firstEntry = false;
-                    var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
-                    if (foundEntry != null)
-                    {
-                        sqlQuery.Write($"( {YearColumnName} = { foundEntry.RandomYear} AND { MonthColumnName} = { currentDate.Month}");
-                        orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, index);
-                    }
-
-                    currentDate = currentDate.AddMonths(1);
+                    // add warning
+                    string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                    string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 100";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
-                sqlQuery.Write(":)" );
-            }
-            else
-            {
-                if (startYear == endYear)
+                break;
+            case "GrassBasalArea":
+            case "GBA":
+                valuesToUse = distinctGBAs;
+                if (valuesToUse.Max() > 10 | valuesToUse.Min() < 0)
                 {
-                    sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth} AND {MonthColumnName} < {endMonth}) )");
+                    // add warning
+                    string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                    string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 0 and 10";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
-                else
+                break;
+            case "LandCondition":
+                valuesToUse = distinctLandConditions;
+                if (valuesToUse.Max() > 11 | valuesToUse.Min() < 0)
                 {
-                    sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth})");
-                    sqlQuery.Write($" OR  ( {YearColumnName} > {startYear} AND {YearColumnName} < {endYear})");
-                    sqlQuery.Write($" OR  ( {YearColumnName} = {endYear} AND {MonthColumnName} < {endMonth}) )");
+                    // add warning
+                    string warn = $"Suspicious values for [{category}] found in pasture database [x={Name}]";
+                    string warnfull = $"Suspicious values for [{category}] found in pasture database [x={Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 11";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
-            }
+                break;
+            default:
+                throw new ApsimXException(this, $"Unknown pasture data category [{category}] used in code behind [x={Name}]");
+        }
 
-            DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
+        if (valuesToUse.Length == 0)
+        {
+            throw new ApsimXException(this, $"Unable to find any values for [{category}] in [x={Name}]");
+        }
 
-            if(results.Rows.Count == 0 && (startMonth != endMonth))
-            {
-                switch (MissingDataAction)
-                {
-                    case OnMissingResourceActionTypes.ReportWarning:
-                        // this is no longer an error to allow situations where there is no pasture production reported in a given period
-                        string warn = $"No pasture production was found for [x={NameWithParent}] between [{startMonth}/{startYear}] and [{endMonth}/{endYear}]";
-                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
-                        break;
-                    default:
-                        break;
-                }
-                return null;
-            }
+        int index = Array.BinarySearch(valuesToUse, value);
+        if(~index >= valuesToUse.Length)
+        {
+            // add warning
+            string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={Name}]";
+            string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={Name}]\r\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nUsed: [{valuesToUse.Last()}]\r\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
+            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
+            index = valuesToUse.Length - 1;
+        }
+        return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
+    }
 
-            // restore shuffled order
-            if (shuffler != null)
-            {
-                results.Columns.Add("Order", typeof(Int32));
-                foreach (DataRow row in results.Rows)
-                {
-                    row["Order"] = orderOfYears.GetValueOrDefault(Convert.ToInt32(row["Year"]) * 100 + Convert.ToInt32(row["Month"]));
-                }
-                results.DefaultView.Sort = "Order";
-                results = results.DefaultView.ToTable();
-            }
+    /// <summary>
+    /// Queries the the Pasture SQLite database using the specified parameters.
+    /// </summary>
+    /// <param name="region"></param>
+    /// <param name="soil"></param>
+    /// <param name="grassBasalArea"></param>
+    /// <param name="landCondition"></param>
+    /// <param name="stockingRate"></param>
+    /// <param name="ecolCalculationDate"></param>
+    /// <param name="ecolCalculationInterval"></param>
+    /// <returns></returns>
+    public List<PastureDataType> GetIntervalsPastureData(int region, string soil, double grassBasalArea, double landCondition, double stockingRate,
+                                     DateTime ecolCalculationDate, int ecolCalculationInterval)
+    {
+        List<PastureDataType> pastureDetails = [];
 
-            // re-label shuffled years
-            if (shuffler != null)
-            {
-                foreach (DataRow row in results.Rows)
-                {
-                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture) & a.Month == Convert.ToInt32(row["Month"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
-                }
-            }
-
-            if (results.Columns.Contains(YearColumnName))
-            {
-                results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
-            }
-
-            foreach (DataRowView row in results.DefaultView)
-            {
-                pastureDetails.Add(DataRow2PastureDataType(row));
-            }
-
-            CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate, endDate,
-                region, soil, grassBasalAreaCategory, landConditionCategory, stkRateCategory);
-
+        if (validationResults.Count > 0) // | ecolCalculationDate > clock.EndDate)
+        {
             return pastureDetails;
         }
 
-        /// <summary>
-        /// Do simple error checking to make sure the data retrieved is usable
-        /// </summary>
-        /// <param name="filtered"></param>
-        /// <param name="startDate"></param>
-        /// <param name="endDate"></param>
-        /// <param name="region"></param>
-        /// <param name="soil"></param>
-        /// <param name="grassBasalArea"></param>
-        /// <param name="landCondition"></param>
-        /// <param name="stockingRate"></param>
-        private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate, DateTime endDate,
-            int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
+        int startYear = ecolCalculationDate.Year;
+        int startMonth = ecolCalculationDate.Month;
+        DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
+        if(endDate > clock.EndDate)
         {
-            if (clock.EndDate == clock.Today)
-                return;
+            endDate = clock.EndDate;
+        }
+        int endYear = endDate.Year;
+        int endMonth = endDate.Month;
 
-            //Check no gaps in the months
-            DateTime tempdate = startDate;
-            if (filtered.Count > 0 && MissingDataAction != OnMissingResourceActionTypes.Ignore)
-                foreach (PastureDataType month in filtered)
-                {
-                    if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
-                    {
-                        // missing month entry
-                        string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={Name}]";
-                        string warnfull = warn + $"\r\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\r\nAssume [0] for pasture production and all associated values such as rainfall";
-                        if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
-                        {
-                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
-                        }
-                        else if (MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
-                        {
-                            throw new ApsimXException(this, warnfull);
-                        }
-                    }
-                    tempdate = tempdate.AddMonths(1);
-                }
+        double stkRateCategory = FindClosestCategory("StockingRate", stockingRate);
+        double grassBasalAreaCategory = FindClosestCategory("GBA", grassBasalArea);
+        double landConditionCategory = FindClosestCategory("LandCondition", landCondition);
+
+        using StringWriter sqlQuery = new();
+        sqlQuery.Write("SELECT ");
+        sqlQuery.Write($"{YearColumnName}, ");
+        sqlQuery.Write($"{MonthColumnName}, ");
+        sqlQuery.Write($"{GrowthColumnName}");
+
+        if (ErosionColumnName != null && ErosionColumnName != "")
+        {
+            sqlQuery.Write($", {ErosionColumnName}");
         }
 
-        /// <summary>
-        /// Returned number of records for given column and value
-        /// </summary>
-        /// <param name="table"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public int RecordsFound(string table, object value)
+        if (RunoffColumnName != null || RunoffColumnName != "")
         {
-            //string sql = $"SELECT Year FROM {TableName} WHERE {table} = '{value}'";
-            string sql = $"SELECT EXISTS(SELECT 1 FROM {TableName} WHERE {table}='{value}' LIMIT 1);";
-            var res = SQLiteReader.ExecuteQuery(sql);
-            return res.Rows.Count;
+            sqlQuery.Write($", {RunoffColumnName}");
         }
 
-        private PastureDataType DataRow2PastureDataType(DataRowView dr)
+        if (RainfallColumnName != null || RainfallColumnName != "")
         {
-            PastureDataType pasturedata = new PastureDataType
+            sqlQuery.Write($", {RainfallColumnName}");
+        }
+
+        if (CoverColumnName != null || CoverColumnName != "")
+        {
+            sqlQuery.Write($", {CoverColumnName}");
+        }
+
+        if (TBAColumnName != null || TBAColumnName != "")
+        {
+            sqlQuery.Write($", {TBAColumnName}");
+        }
+
+        sqlQuery.Write($" FROM { TableName}");
+        sqlQuery.Write($" WHERE {RegionColumnName} = {region}");
+        sqlQuery.Write($" AND {LandIdColumnName} = {soil}");
+        sqlQuery.Write($" AND {GrassBAColumnName} = {grassBasalAreaCategory}");
+        sqlQuery.Write($" AND {LandConColumnName} = {landConditionCategory}");
+        sqlQuery.Write($" AND {StkRateColumnName} = {stkRateCategory}");
+
+        Dictionary<int, int> orderOfYears = [];
+        if (shuffler != null && (rndClem?.Iteration??-9999) != shuffler.DoNotShuffleIteration)
+        {
+            // need to check for all random year month matches in database
+            // this takes into account keeping seasonal rainfall together while shuffling the years
+
+            DateTime currentDate = ecolCalculationDate;
+            sqlQuery.Write(" AND (");
+            bool firstEntry = true;
+            int index = 0;
+            while (currentDate <= endDate)
             {
-                Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
-                Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
-                Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
-                SoilLoss = ((ErosionColumnName != "" & dr.DataView.Table.Columns.Contains(ErosionColumnName)) ? double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
-                Runoff = ((RunoffColumnName != "" & dr.DataView.Table.Columns.Contains(RunoffColumnName)) ? double.Parse(dr[RunoffColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
-                Rainfall = ((RainfallColumnName != "" & dr.DataView.Table.Columns.Contains(RainfallColumnName)) ? double.Parse(dr[RainfallColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
-                Cover = ((CoverColumnName != "" & dr.DataView.Table.Columns.Contains(CoverColumnName)) ? double.Parse(dr[CoverColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
-                TreeBA = ((TBAColumnName != "" & dr.DataView.Table.Columns.Contains(TBAColumnName)) ? double.Parse(dr[TBAColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
-            };
-            pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
+                index++;
+                if (!firstEntry)
+                {
+                    sqlQuery.Write(" OR ");
+                }
 
-            return pasturedata;
+                firstEntry = false;
+                var foundEntry = shuffler.ShuffledYears.Where(a => a.Year == currentDate.Year && a.Month == currentDate.Month).FirstOrDefault();
+                if (foundEntry != null)
+                {
+                    sqlQuery.Write($"( {YearColumnName} = { foundEntry.RandomYear} AND { MonthColumnName} = { currentDate.Month}");
+                    orderOfYears.Add(foundEntry.RandomYear * 100 + currentDate.Month, index);
+                }
+
+                currentDate = currentDate.AddMonths(1);
+            }
+            sqlQuery.Write(":)" );
         }
+        else
+        {
+            if (startYear == endYear)
+            {
+                sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth} AND {MonthColumnName} < {endMonth}) )");
+            }
+            else
+            {
+                sqlQuery.Write($" AND (( {YearColumnName} = {startYear} AND {MonthColumnName} >= {startMonth})");
+                sqlQuery.Write($" OR  ( {YearColumnName} > {startYear} AND {YearColumnName} < {endYear})");
+                sqlQuery.Write($" OR  ( {YearColumnName} = {endYear} AND {MonthColumnName} < {endMonth}) )");
+            }
+        }
+
+        DataTable results = SQLiteReader.ExecuteQuery(sqlQuery.ToString());
+
+        if(results.Rows.Count == 0 && (startMonth != endMonth))
+        {
+            switch (MissingDataAction)
+            {
+                case OnMissingResourceActionTypes.ReportWarning:
+                    // this is no longer an error to allow situations where there is no pasture production reported in a given period
+                    string warn = $"No pasture production was found for [x={NameWithParent}] between [{startMonth}/{startYear}] and [{endMonth}/{endYear}]";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    break;
+                default:
+                    break;
+            }
+            return null;
+        }
+
+        // restore shuffled order
+        if (shuffler != null)
+        {
+            results.Columns.Add("Order", typeof(Int32));
+            foreach (DataRow row in results.Rows)
+            {
+                row["Order"] = orderOfYears.GetValueOrDefault(Convert.ToInt32(row["Year"]) * 100 + Convert.ToInt32(row["Month"]));
+            }
+            results.DefaultView.Sort = "Order";
+            results = results.DefaultView.ToTable();
+        }
+
+        // re-label shuffled years
+        if (shuffler != null)
+        {
+            foreach (DataRow row in results.Rows)
+            {
+                row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture) & a.Month == Convert.ToInt32(row["Month"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
+            }
+        }
+
+        if (results.Columns.Contains(YearColumnName))
+        {
+            results.DefaultView.Sort = YearColumnName + ", " + MonthColumnName;
+        }
+
+        foreach (DataRowView row in results.DefaultView)
+        {
+            pastureDetails.Add(DataRow2PastureDataType(row));
+        }
+
+        CheckAllMonthsWereRetrieved(pastureDetails, ecolCalculationDate,
+            region, soil, grassBasalAreaCategory, landConditionCategory, stkRateCategory);
+
+        return pastureDetails;
+    }
+
+    /// <summary>
+    /// Do simple error checking to make sure the data retrieved is usable
+    /// </summary>
+    /// <param name="filtered"></param>
+    /// <param name="startDate"></param>
+    /// <param name="region"></param>
+    /// <param name="soil"></param>
+    /// <param name="grassBasalArea"></param>
+    /// <param name="landCondition"></param>
+    /// <param name="stockingRate"></param>
+    private void CheckAllMonthsWereRetrieved(List<PastureDataType> filtered, DateTime startDate,
+        int region, string soil, double grassBasalArea, double landCondition, double stockingRate)
+    {
+        if (clock.EndDate == clock.Today)
+            return;
+
+        //Check no gaps in the months
+        DateTime tempdate = startDate;
+        if (filtered.Count > 0 && MissingDataAction != OnMissingResourceActionTypes.Ignore)
+            foreach (PastureDataType month in filtered)
+            {
+                if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
+                {
+                    // missing month entry
+                    string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={Name}]";
+                    string warnfull = warn + $"\r\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\r\nAssume [0] for pasture production and all associated values such as rainfall";
+                    if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
+                    {
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
+                    }
+                    else if (MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
+                    {
+                        throw new ApsimXException(this, warnfull);
+                    }
+                }
+                tempdate = tempdate.AddMonths(1);
+            }
+    }
+
+    /// <summary>
+    /// Returned number of records for given column and value
+    /// </summary>
+    /// <param name="table"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public int RecordsFound(string table, object value)
+    {
+        //string sql = $"SELECT Year FROM {TableName} WHERE {table} = '{value}'";
+        string sql = $"SELECT EXISTS(SELECT 1 FROM {TableName} WHERE {table}='{value}' LIMIT 1);";
+        var res = SQLiteReader.ExecuteQuery(sql);
+        return res.Rows.Count;
+    }
+
+    private PastureDataType DataRow2PastureDataType(DataRowView dr)
+    {
+        PastureDataType pasturedata = new()
+        {
+            Year = int.Parse(dr["Year"].ToString(), CultureInfo.InvariantCulture),
+            Month = int.Parse(dr["Month"].ToString(), CultureInfo.InvariantCulture),
+            Growth = double.Parse(dr["Growth"].ToString(), CultureInfo.InvariantCulture),
+            SoilLoss = ((ErosionColumnName != "" & dr.DataView.Table.Columns.Contains(ErosionColumnName)) ? double.Parse(dr[ErosionColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+            Runoff = ((RunoffColumnName != "" & dr.DataView.Table.Columns.Contains(RunoffColumnName)) ? double.Parse(dr[RunoffColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+            Rainfall = ((RainfallColumnName != "" & dr.DataView.Table.Columns.Contains(RainfallColumnName)) ? double.Parse(dr[RainfallColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+            Cover = ((CoverColumnName != "" & dr.DataView.Table.Columns.Contains(CoverColumnName)) ? double.Parse(dr[CoverColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+            TreeBA = ((TBAColumnName != "" & dr.DataView.Table.Columns.Contains(TBAColumnName)) ? double.Parse(dr[TBAColumnName].ToString(), CultureInfo.InvariantCulture) : 0),
+        };
+        pasturedata.CutDate = new DateTime(pasturedata.Year, pasturedata.Month, 1);
+
+        return pasturedata;
     }
 }

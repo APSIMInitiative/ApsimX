@@ -33,9 +33,9 @@ namespace Models.CLEM
         public new IStructure Structure { get; set; }
 
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
         [Link]
-        private Simulation simulation = null;
+        private readonly Simulation simulation = null;
         [Link]
         private readonly DataStore dataStore = null;
 
@@ -137,25 +137,25 @@ namespace Models.CLEM
             int holderCount = Structure.FindChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
-                string[] memberNames = new string[] { "CLEM.Resources" };
+                string[] memberNames = ["CLEM.Resources"];
                 yield return new ValidationResult("A market place must contain a Resources Holder to manage resources", memberNames);
             }
             if (holderCount > 1)
             {
-                string[] memberNames = new string[] { "CLEM.Resources" };
+                string[] memberNames = ["CLEM.Resources"];
                 yield return new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames);
             }
             holderCount = Structure.FindChildren<ActivitiesHolder>().Count();
             if (holderCount > 1)
             {
-                string[] memberNames = new string[] { "CLEM.Activities" };
+                string[] memberNames = ["CLEM.Activities"];
                 yield return new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames);
             }
             // only one market
             holderCount = Structure.FindChildren<Market>(relativeTo: Structure.FindParent<Simulation>(recurse: true)).Count();
             if (holderCount > 1)
             {
-                string[] memberNames = new string[] { "CLEM.Markets" };
+                string[] memberNames = ["CLEM.Markets"];
                 yield return new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames);
             }
         }

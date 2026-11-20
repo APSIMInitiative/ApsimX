@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Ruminant Feed Group filter
@@ -63,13 +63,13 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
         {
             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet("Monthly amount")} specified");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Monthly amount")} specified");
                 break;
             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
             case RuminantFeedActivityTypes.ProportionOfWeight:
             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet("Monthly proportion")} specified ");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Monthly proportion")} specified ");
                 break;
             default:
                 break;
@@ -104,7 +104,7 @@ public class RuminantFeedGroupMonthlySummary : GroupSummaryBase<RuminantFeedGrou
             default:
                 break;
         }
-        htmlWriter.Write($"{starter} {generator.DisplaySummaryValueSnippet(feedstyle)} ");
+        htmlWriter.Write($"{starter} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(feedstyle)} ");
 
         string forceFedString = "fed";
         if (feedActivity.ForceFeed && feedActivity.ForceIntakeAllowed())

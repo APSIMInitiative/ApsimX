@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// A  class to allow the user to easily define the age of individuals in a convenient y,m,d format
@@ -18,7 +18,7 @@ namespace Models.CLEM
         private const decimal daysPerMonth = 30.4M;
 
         int age = -1;
-        int[] parts = new int[] { 0 };
+        int[] parts = [0];
 
         /// <summary>
         /// The number of days per year
@@ -47,7 +47,7 @@ namespace Models.CLEM
         public void AddDays(int days)
         {
             age += days;
-            Parts = new int[] { 0, 0, age };
+            Parts = [0, 0, age];
         }
 
         /// <summary>
@@ -92,14 +92,13 @@ namespace Models.CLEM
                 decimal years = Math.Floor(months / 12);
                 decimal remainingMonths = months - (years * 12);
                 decimal partMonths = months - decimal.Floor(months);
-                Parts = new int[] { Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partMonths*30.4M) };
+                Parts = [ Convert.ToInt32(years), Convert.ToInt32(remainingMonths), Convert.ToInt32(partMonths*30.4M) ];
             }
             else
             {
                 decimal partMonths = months - decimal.Floor(months);
-                Parts = new int[] { 0, Convert.ToInt32(months), Convert.ToInt32(partMonths * 30.4M) };
+                Parts = [ 0, Convert.ToInt32(months), Convert.ToInt32(partMonths * 30.4M) ];
             }
-            //Parts = new int[] { Convert.ToInt32(months), Convert.ToInt32(30.4m * (months - Convert.ToDecimal(Math.Floor(months)))) };
         }
 
         /// <summary>
@@ -152,7 +151,7 @@ namespace Models.CLEM
             set
             {
                 parts = value;
-                if (Parts is not null && Parts.Any())
+                if (Parts is not null && Parts.Length != 0)
                     age = CalculateAgeInDays(Parts);
             }
         }
@@ -188,7 +187,7 @@ namespace Models.CLEM
                 }
                 index++;
             }
-            return sw.ToString().TrimEnd(new char[] { ',', ' '});
+            return sw.ToString().TrimEnd([',', ' ']);
         }
 
         /// <summary>
@@ -222,8 +221,7 @@ namespace Models.CLEM
         /// <exception cref="NotImplementedException"></exception>
         public object Clone()
         {
-            AgeSpecifier cloned = new();
-            cloned = Parts;
+            AgeSpecifier cloned = Parts;
             return cloned;
         }
     }

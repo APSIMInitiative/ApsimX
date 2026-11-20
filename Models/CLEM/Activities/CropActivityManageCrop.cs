@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -167,7 +168,7 @@ namespace Models.CLEM.Activities
                         if (!UseAreaAvailable & LinkedLandItem != null)
                         {
                             CheckResources(ResourceRequestList, Guid.NewGuid());
-                            TakeResources(ResourceRequestList, false);
+                            TakeResources(ResourceRequestList);
                             //Now the Land has been allocated we have an Area
                             //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                             Area += ResourceRequestList.FirstOrDefault().Provided;

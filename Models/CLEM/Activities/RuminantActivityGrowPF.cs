@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using MathNet.Numerics.Distributions;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -446,7 +447,7 @@ namespace Models.CLEM.Activities
             double DPLSMilk = milkStore?.CrudeProtein??0 * 0.92;
 
             // Equation 103   ================================================== efficiency of using DPLS
-            ind.Intake.kDPLS = (ind.IsWeaned)? ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSMilk / ind.Intake.DPLS) ); //EQn 103
+            ind.Intake.KDPLS = (ind.IsWeaned)? ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2: ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2 / (1 + ((ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromFeed_CG2 / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseFromMilk_CG3) -1)*(DPLSMilk / ind.Intake.DPLS) ); //EQn 103
 
             // Wool production
             CalculateWool(ind, daysInTimeStep);
@@ -474,7 +475,7 @@ namespace Models.CLEM.Activities
             // Equation 102, 104 & 105   =======================================
             // Equation 102 - PG1 and PG2 protein available from diet after accounting for maintenance and conceptus and milk
             // rewritten 102 to be algebraically simple. UsableDPSL = (kdpls * dpls) and wool adjusted.  
-            double proteinAvailableForGainFromIntake = ind.Intake.UsableDPLS - ind.Weight.Protein.BeforeGrowth - (ind.Intake.kDPLS * ind.Weight.Protein.ForWool / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseForWool_CG1);
+            double proteinAvailableForGainFromIntake = ind.Intake.UsableDPLS - ind.Weight.Protein.BeforeGrowth - (ind.Intake.KDPLS * ind.Weight.Protein.ForWool / ind.Parameters.GrowPF_CG.EfficiencyOfDPLSUseForWool_CG1);
             // Equation 104  units = mj/kg gain
             double energyEmptyBodyGain = (ind.Parameters.GrowPF_CG.GrowthEnergyIntercept1_CG8b + adjustedFeedingLevel) + sizeFactor1ForGain * (ind.Parameters.GrowPF_CG.GrowthEnergyIntercept2_CG9 - adjustedFeedingLevel) + sizeFactor2ForGain * (13.8 * (ind.Weight.RelativeCondition - 1));
             
@@ -496,7 +497,7 @@ namespace Models.CLEM.Activities
             ind.Weight.Protein.ForGain = proteinNeededForGrowthAllowableByEnergy;
             ind.Weight.Protein.AvailableForGain = proteinAvailableForGainFromIntake;
 
-            AdjustLactationForProteinDeficit(ind, ind.Weight.Protein.Normal, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
+            AdjustLactationForProteinDeficit(ind, ref proteinAvailableForGainFromIntake, energyEmptyBodyGain, proteinContentOfGain, ref energyAvailableForGain, ref proteinNeededForGrowthAllowableByEnergy);
 
             // Fat and Protein change - Dougherty et al 2024 ========================================
             // Departure from Freer 2012 to allow for fat and protein change to be calculated separately to derive ebm change.
@@ -605,7 +606,7 @@ namespace Models.CLEM.Activities
             ind.Output.Manure = ind.Intake.SolidsDaily.Actual * (100.0 - ind.Intake.DMD) / 100.0 * daysInTimeStep;
         }
 
-        private void AdjustLactationForProteinDeficit(Ruminant ind, double proteinNormal, ref double proteinAvailableForGainFromIntake, double energyEmptyBodyGain, double proteinContentOfGain, ref double energyAvailableForGain, ref double proteinNeededForGrowthAllowableByEnergy)
+        private void AdjustLactationForProteinDeficit(Ruminant ind, ref double proteinAvailableForGainFromIntake, double energyEmptyBodyGain, double proteinContentOfGain, ref double energyAvailableForGain, ref double proteinNeededForGrowthAllowableByEnergy)
         {
             // ignore if protein from intake 0 or positive
             // ignore if Protein.ForLactation is zero (non-lactating females and any males
@@ -1121,7 +1122,7 @@ namespace Models.CLEM.Activities
                     else
                     {
                         // need to convert this visceral protein to non-visceral such that the wet weight conversion is correct and EBM is ok from protein alone
-                        pProtein += cohort.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.pPrpM / individual.Parameters.GrowOddy.pPrpV);
+                        pProtein += cohort.InitialFatProteinValues[2] * (individual.Parameters.GrowOddy.PPrpM / individual.Parameters.GrowOddy.PPrpV);
                     }
                 }
             }

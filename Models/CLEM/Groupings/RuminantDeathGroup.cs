@@ -1,5 +1,6 @@
 ﻿using APSIM.Numerics;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -22,7 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityDeath))]
     [Description("Manages the death of specified ruminants based on their condition.")]
     [HelpUri(@"Content/Features/Filters/Groups/Ruminant/RuminantDeathGroup.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrow), typeof(RuminantParametersGrowMortality)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantDeathGroup : RuminantGroup, IRuminantDeathGroup, IValidatableObject
     {
         [Link(IsOptional = true)]
@@ -84,7 +85,7 @@ namespace Models.CLEM.Groupings
 
             if (Structure.Find<RuminantParametersGrow>() is null)
             {
-                string[] memberNames = new string[] { "Missing Ruminant.Grow parameters" };
+                string[] memberNames = ["Missing Ruminant.Grow parameters"];
                 results.Add(new ValidationResult($"[a=RuminantActivityDeath] requires parameters defined in [r=Ruminant.Parameters.RuminantParametersGrow].{Environment.NewLine}Ensure [r=Ruminant.Parameters.RuminantParametersGrow] is present and has the parameters for your breed provided..", memberNames));
             }
             return results;

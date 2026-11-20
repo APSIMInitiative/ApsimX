@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Models.CLEM.Extras;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 /// <summary>
 /// Descriptive summary provider for transmutation
@@ -32,7 +33,7 @@ public class TransmuteLabourSummary : DescriptiveSummaryProviderBase<TransmuteLa
         using StringWriter htmlWriter = new();
         if (ModelTyped.TransmuteStyle == TransmuteStyle.Direct)
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket, warnZero: true)} days labour");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket, warnZero: true)} days labour");
         }
 
         htmlWriter.Write(" (B) are taken from the following groups to supply shortfall resource (A) ");
@@ -42,7 +43,7 @@ public class TransmuteLabourSummary : DescriptiveSummaryProviderBase<TransmuteLa
             htmlWriter.Write($" using the labour pricing details");
             if (ModelTyped.FinanceTypeForTransactionsName != null && ModelTyped.FinanceTypeForTransactionsName != "")
             {
-                htmlWriter.Write($" with all financial Transactions of sales and purchases using {generator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
+                htmlWriter.Write($" with all financial Transactions of sales and purchases using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
             }
         }
         generator.AddBlockWithText(htmlWriter.ToString());

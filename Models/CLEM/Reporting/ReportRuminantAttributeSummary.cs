@@ -25,7 +25,7 @@ namespace Models.CLEM.Reporting
     public class ReportRuminantAttributeSummary : CLEMModel, ICLEMUI, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Models.CLEM.Reporting
                 Structure.AddChild(report);
             }
             report.Name = Name;
-            report.VariableNames = new string[] {
+            report.VariableNames = [
                 "[Clock].Today as Date",
                 $"[{Name}].LastStatistics.GroupName as Group",
                 $"[{Name}].LastStatistics.Statistics.Count as CountAttr",
@@ -99,13 +99,11 @@ namespace Models.CLEM.Reporting
                 $"[{Name}].LastStatistics.Statistics.TotalMate as MatedIndividuals",
                 $"[{Name}].LastStatistics.Statistics.AverageMate as MateAverage",
                 $"[{Name}].LastStatistics.Statistics.StandardDeviationMate as MateSD"
-            };
-            report.EventNames = new string[] {
-                $"[{Name}].OnReportItemGenerated"
-            };
+            ];
+            report.EventNames = [$"[{Name}].OnReportItemGenerated"];
             if (!ReportMateValues)
             {
-                report.VariableNames = report.VariableNames.Take(6).ToArray();
+                report.VariableNames = [.. report.VariableNames.Take(6)];
             }
         }
 
@@ -141,17 +139,17 @@ namespace Models.CLEM.Reporting
             // check that this activity has a parent of type CropActivityManageProduct
             if (ruminantHerd is null)
             {
-                string[] memberNames = new string[] { "Missing resource" };
+                string[] memberNames = ["Missing resource"];
                 yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantAttributeSummary] [{this.Name}]", memberNames);
             }
             if (!Structure.FindChildren<RuminantGroup>().Any())
             {
-                string[] memberNames = new string[] { "Missing ruminant filter group" };
+                string[] memberNames = ["Missing ruminant filter group"];
                 yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires at least one filter group to identify individuals to report", memberNames);
             }
             if (!Structure.FindChildren<Report>().Where(a => a.Name == this.Name).Any())
             {
-                string[] memberNames = new string[] { "Missing report" };
+                string[] memberNames = ["Missing report"];
                 yield return new ValidationResult($"The [ReportRuminantAttributeSummary] [{Name}] requires an [APSIM.Report] as a child named [{Name}] to process output. Add a new report below this activity.", memberNames);
             }
         }
@@ -199,7 +197,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public ListStatistics SummariseAttribute(string tag, bool ignoreNotFound, RuminantGroup herdGroup = null)
         {
-            ListStatistics listStatistics = new ListStatistics();
+            ListStatistics listStatistics = new();
             if (ruminantHerd is null)
             {
                 return listStatistics;
@@ -217,7 +215,7 @@ namespace Models.CLEM.Reporting
 
             // do not report mate if greater than max months since conception
             // if not valid report NAN that is filtered out in calculations below
-            var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
+            var values = herd.Where(a => !ignoreNotFound | a.Attributes.GetValue(tag) != null).Select(a => new Tuple<float, float>(
                 (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
                 (a.Sex == Sex.Female && a.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0) <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
                 ).ToList();
@@ -250,7 +248,7 @@ namespace Models.CLEM.Reporting
                 listStatistics.StandardDeviationMate = sd;
                 listStatistics.TotalMate = valuesPresent.Count();
             }
-            listStatistics.Count = values.Count();
+            listStatistics.Count = values.Count;
 
             return listStatistics;
         }

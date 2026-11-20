@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using APSIM.Numerics;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -30,9 +31,9 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
         private ResourceRequest resourceRequest;
         [JsonIgnore]
-        private IResourceType resourceTypeProcessModel { get; set; }
+        private IResourceType resourceTypeProcessModel;
         [JsonIgnore]
-        private IResourceType resourceTypeCreatedModel { get; set; }
+        private IResourceType resourceTypeCreatedModel;
 
         /// <summary>
         /// Resource type to process
@@ -77,26 +78,23 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per amount to process"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per amount to process"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new();
+            List<ResourceRequest> resourcesNeeded = [];
             resourceRequest = null;
 
             amountToSkip = 0;
@@ -109,17 +107,12 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per amount to process":
-                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per amount to process" => amountToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             if (MathUtilities.IsPositive(amountToDo))

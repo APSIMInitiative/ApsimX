@@ -6,32 +6,26 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// A food pool of given age
     /// </summary>
+    /// <remarks>
+    /// Constructor
+    /// </remarks>
+    /// <param name="amount">Amount of food</param>
+    /// <param name="age">Age of food</param>
     [Serializable]
-    public class HumanFoodStorePool
+    public class HumanFoodStorePool(double amount, int age)
     {
         /// <summary>
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
         public double Amount { get { return amount; } }
-        private double amount = 0;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="amount">Amount of food</param>
-        /// <param name="age">Age of food</param>
-        public HumanFoodStorePool(double amount, int age)
-        {
-            this.amount = amount;
-            Age = age;
-        }
+        private double amount = amount;
 
         /// <summary>
         /// Age of pool in months
         /// </summary>
         [JsonIgnore]
-        public int Age { get; set; }
+        public int Age { get; set; } = age;
 
         #region transactions
 
@@ -62,12 +56,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// 
+        /// Remove from Resource method applied to an amount from a HumanFoodStorePool.
         /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public double Remove(double removeAmount, CLEMModel activity, string reason)
+        /// <param name="removeAmount">Amount to remove from this pool</param>
+        public double Remove(double removeAmount)
         {
             removeAmount = Math.Min(amount, removeAmount);
             amount -= removeAmount;

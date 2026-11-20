@@ -3,7 +3,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantHerd
@@ -34,30 +34,16 @@ public class RuminantHerdSummary : DescriptiveSummaryProviderBase<RuminantHerd>
         if (model is null) return;
 
         string text = "Activities reporting on herds will group individuals";
-        switch (model.TransactionStyle)
+        text += model.TransactionStyle switch
         {
-            case RuminantTransactionsGroupingStyle.Combined:
-                text += " into a single transaction per RuminantType.";
-                break;
-            case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                text += " by the pricing groups provided for the RuminantType.";
-                break;
-            case RuminantTransactionsGroupingStyle.ByClass:
-                text += " by the class of individuals.";
-                break;
-            case RuminantTransactionsGroupingStyle.BySexAndClass:
-                text += " by the sex and class of individuals.";
-                break;
-            case RuminantTransactionsGroupingStyle.ByFullClass:
-                text += " by the full class of individuals.";
-                break;
-            case RuminantTransactionsGroupingStyle.BySexAndFullClass:
-                text += " by the sex and full class of individuals.";
-                break;
-            default:
-                text += " by [Unknown grouping style]";
-                break;
-        }
+            RuminantTransactionsGroupingStyle.Combined => " into a single transaction per RuminantType.",
+            RuminantTransactionsGroupingStyle.ByPriceGroup => " by the pricing groups provided for the RuminantType.",
+            RuminantTransactionsGroupingStyle.ByClass => " by the class of individuals.",
+            RuminantTransactionsGroupingStyle.BySexAndClass => " by the sex and class of individuals.",
+            RuminantTransactionsGroupingStyle.ByFullClass => " by the full class of individuals.",
+            RuminantTransactionsGroupingStyle.BySexAndFullClass => " by the sex and full class of individuals.",
+            _ => " by [Unknown grouping style]",
+        };
         Generator.AddBlockWithText(text);
     }
 }

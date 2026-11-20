@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -112,7 +113,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Fetal growth in poor condition [CP14]")]
         [Required, MinLength(1)]
-        public double[] FetalGrowthPoorCondition_CP14 { get; set; } = new[] { 1.0, 1.15 };  // sheep 1.5, 1.75, 2.0
+        public double[] FetalGrowthPoorCondition_CP14 { get; set; } = [1.0, 1.15];  // sheep 1.5, 1.75, 2.0
 
         // CP15 relative size birth weight (see Parameters.General.BirthScalar) 
 
@@ -122,7 +123,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Breeding")]
         [Description("Probability of toxaemia during late pregnancy coefficients")]
         [Required]
-        public double[] ToxaemiaCoefficients { get; set; } = new[] { 0.0, 0.0 }; // 
+        public double[] ToxaemiaCoefficients { get; set; } = [0.0, 0.0];  
 
         /// <summary>
         /// Create copy of this class

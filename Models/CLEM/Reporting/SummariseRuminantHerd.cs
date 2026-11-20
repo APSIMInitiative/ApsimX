@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
@@ -7,10 +8,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
     /// <summary>Ruminant summary</summary>
     /// <summary>This activity summarizes ruminant herds for reporting</summary>
@@ -28,9 +28,9 @@ namespace Models.CLEM
     public class SummariseRuminantHerd : CLEMModel
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         [Link(IsOptional = true)]
-        private CLEMEvents events = null;
+        private readonly CLEMEvents events = null;
         private int timestep = 0;
         private RuminantHerd ruminantHerd;
 
@@ -67,7 +67,7 @@ namespace Models.CLEM
         /// List of filters that define the herd
         /// </summary>
         [JsonIgnore]
-        private List<RuminantGroup> herdFilters { get; set; }
+        private List<RuminantGroup> herdFilters = null;
 
         /// <summary>
         /// Report item generated and ready for reporting 
@@ -93,7 +93,7 @@ namespace Models.CLEM
             ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
 
             // determine any herd filtering
-            herdFilters = new List<RuminantGroup>();
+            herdFilters = [];
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {

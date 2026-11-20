@@ -63,33 +63,30 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number to buy",
-                            "Purchase value"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                            "value of individuals"
-                        }
-                        );
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number purchased"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number to buy",
+                                            "Purchase value"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                            "value of individuals"
+                                        ]
+                                        ),
+                "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number purchased"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>
@@ -118,53 +115,28 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = numberToBuy;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsGroup" => numberToBuy,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number to buy" => valueToSupply.Key.unit switch
                         {
-                            case "Number to buy":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = numberToBuy;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            case "Purchase value":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = purchaseValue;
-                                        break;
-                                    case "per head":
-                                        // calculate value
-                                        valuesForCompanionModels[valueToSupply.Key] = purchaseValue/numberToBuy;
-                                        break;
-                                    case "value of individuals":
-                                        // calculate value
-                                        valuesForCompanionModels[valueToSupply.Key] = purchaseValue;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => numberToBuy,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        "Purchase value" => valueToSupply.Key.unit switch
+                        {
+                            "fixed" => purchaseValue,
+                            "per head" => purchaseValue / numberToBuy,// calculate value
+                            "value of individuals" => (double?)purchaseValue,// calculate value
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
