@@ -39,7 +39,7 @@ public partial class SetPropertyCommand : IModelCommand
     }
 
     /// <summary>Property value.</summary>
-    internal object Value => _value;
+    public object Value => _value;
 
     /// <summary>
     /// Run the command.
