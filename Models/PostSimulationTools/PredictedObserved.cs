@@ -372,7 +372,8 @@ namespace Models.PostSimulationTools
             {
                 Virtual import = Node.FindParent<Virtual>(recurse:true);
                 if (import != null)
-                    fileReference = Path.GetFileNameWithoutExtension(import.FileName);
+                    fileReference = Path.GetRelativePath(Path.GetDirectoryName(import.Node.FileName),
+                                                         import.FilePath.AbsoluteFilePath);
             }
             
             //Save metadata about predictedObserved
