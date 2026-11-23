@@ -640,7 +640,7 @@ namespace Models.PMF.Organs
         [Units("g/m^2")]
         public double RetranslocationWt { get; private set; }
 
-        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        /// <summary>Gets the biomass allocated (represented actual growth). StorageWt is net of the storage DM retranslocated today.</summary>
         [JsonIgnore]
         public Biomass Allocated { get; set; }
 
@@ -837,6 +837,10 @@ namespace Models.PMF.Organs
             // Remove the storage DM retranslocated by the arbitrator. This is done after partitioning today's growth
             // because PartitionRootMass recalculates root activity from layer mass and must see the same mass as TotalRAw.
             RemoveRetranslocatedStorage(dryMatter.Retranslocation);
+
+            // Report net storage growth (can be negative), as GenericOrgan does (RetranslocateNonStructural.AllocateBiomass).
+            // Growth respiration above is charged on the gross allocation only.
+            Allocated.StorageWt -= RetranslocationWt;
             needToRecalculateLiveDead = true;
         }
 
