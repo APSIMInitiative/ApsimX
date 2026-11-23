@@ -3,7 +3,7 @@ using Models.CLEM.Resources;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for Resource Units Converter (sub-resource)
@@ -40,8 +40,8 @@ public class ResourceUnitsConverterSummary : DescriptiveSummaryProviderBase<Reso
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet((ModelTyped.Parent as IResourceType).Units, errorString:"Parent Units Not Set")} " +
-            $"{generator.DisplaySummaryResourceTypeSnippet(ModelTyped.Parent.Name)} = {generator.DisplaySummaryValueSnippet(ModelTyped.Factor, warnZero: true, errorString:"Factor Not Set")} " +
-            $"{generator.DisplaySummaryValueSnippet(ModelTyped.Units, errorString:"New Units Not Set")}");
+        generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet((ModelTyped.Parent as IResourceType).Units, errorString:"Parent Units Not Set")} " +
+            $"{DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.Parent.Name)} = {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Factor, warnZero: true, errorString:"Factor Not Set")} " +
+            $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Units, errorString:"New Units Not Set")}");
     }
 }

@@ -1,10 +1,11 @@
+using Models.CLEM.DataReaders;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantInitialCohorts
@@ -51,7 +52,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             string readers = "";
             foreach (var reader in fileReaders)
             {
-                readers += $" {generator.DisplaySummaryValueSnippet(reader.Name, entryStyle: HTMLSummaryStyle.FileReader)}";
+                readers += $" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(reader.Name, entryStyle: HTMLSummaryStyle.FileReader)}";
             }
 
             string text = $"Ruminant cohort file readers ({readers.Trim()}) will be used to provide initial cohorts";
@@ -65,7 +66,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             bool overridePasture = model.Structure.FindChildren<RuminantTypeCohort>().Where(a => a.ManagedPastureName != "Not specified").Any();
 
             string prefix = overridePasture ? "New " : "All new ";
-            string pastureText = $"{prefix}individuals will be placed on the pasture {generator.DisplaySummaryValueSnippet(model.ManagedPastureName, entryStyle: HTMLSummaryStyle.Resource)}";
+            string pastureText = $"{prefix}individuals will be placed on the pasture {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ManagedPastureName, entryStyle: HTMLSummaryStyle.Resource)}";
             if (overridePasture)
                 pastureText += " unless overridden by the cohort pasture setting";
             Generator.AddBlockWithText(pastureText + ".");
@@ -85,7 +86,7 @@ public class RuminantInitialCohortsSummary : DescriptiveSummaryProviderBase<Rumi
             cohortsModel.ConceptionsFound = cohortsModel.Structure.FindChildren<SetPreviousConception>(recurse: true).Any();
             cohortsModel.AttributesFound = cohortsModel.Structure.FindChildren<SetAttributeWithValue>(recurse: true).Any();
 
-            headerLabels = new() { "Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire" };
+            headerLabels = ["Name", "Sex", "Age", "Weight", "Norm Wt.", "Number", "IsSuckling", "IsSire"];
             if (cohortsModel.ConceptionsFound)
                 headerLabels.Add("Pregnant");
             if (cohortsModel.AttributesFound)

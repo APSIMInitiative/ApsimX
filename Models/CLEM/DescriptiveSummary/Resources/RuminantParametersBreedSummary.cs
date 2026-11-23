@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 internal class RuminantParametersBreedSummary : RuminantParametersSummaryBase<RuminantParametersBreeding>
 {
@@ -15,15 +15,15 @@ internal class RuminantParametersBreedSummary : RuminantParametersSummaryBase<Ru
     {
         var summary = new List<(string, string, string, string, string)>
         {
-            (ModelTyped.Name, "OestrusCycleLength", "Breeding", $"Oestrus cycle is {generator.DisplaySummaryValueSnippet(ModelTyped.OestrusCycleLength, warnZero: true)} days with {generator.DisplaySummaryValueSnippet(ModelTyped.DaysInHeat, warnZero: true)} days in heat", ""),
+            (ModelTyped.Name, "OestrusCycleLength", "Breeding", $"Oestrus cycle is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.OestrusCycleLength, warnZero: true)} days with {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.DaysInHeat, warnZero: true)} days in heat", ""),
         };
 
         if (ModelTyped.ProportionOffspringMale == 0.5)
-            summary.Add((ModelTyped.Name, "ProportionOffspringMale", "Breeding", $"Proportion of offspring male of {generator.DisplaySummaryValueSnippet(ModelTyped.ProportionOffspringMale, warnZero: true)} is not 0.5", ""));
+            summary.Add((ModelTyped.Name, "ProportionOffspringMale", "Breeding", $"Proportion of offspring male of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ProportionOffspringMale, warnZero: true)} is not 0.5", ""));
         if (ModelTyped.AllowFreemartins)
             summary.Add((ModelTyped.Name, "AllowFreemartins", "Breeding", $"Freemartins are produced", ""));
         if (ModelTyped.ConceptionDuringLactationProbability < 1.0)
-            summary.Add((ModelTyped.Name, "ConceptionDuringLactationProbability", "Breeding", $"Conception rate is multiplied by {generator.DisplaySummaryValueSnippet(ModelTyped.ConceptionDuringLactationProbability)} during lactation", ""));
+            summary.Add((ModelTyped.Name, "ConceptionDuringLactationProbability", "Breeding", $"Conception rate is multiplied by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ConceptionDuringLactationProbability)} during lactation", ""));
         if (ModelTyped.DystociaCoefficients.Sum(a => a) > 0)
             summary.Add((ModelTyped.Name, "DystociaCoefficients", "Breeding", $"Mortality from dystocia is included", ""));
         return summary;
@@ -46,9 +46,9 @@ internal class RuminantParametersBreedSummary : RuminantParametersSummaryBase<Ru
         if (!FormatForParentControl)
             return;
 
-        foreach (var param in GetSummaryParameters().OrderBy(a => a.category))
+        foreach (var (componentName, propertyName, category, description, value) in GetSummaryParameters().OrderBy(a => a.category))
         {
-            generator.AddSummaryParameterSnippet(param.category, $"{param.description} {param.value}");
+            generator.AddSummaryParameterSnippet(category, $"{description} {value}");
         }
     }
 }

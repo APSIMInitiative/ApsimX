@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -107,10 +108,7 @@ namespace Models.CLEM.Groupings
             PreviousPrice = CurrentPrice;
             Value = amount;
 
-            if (LastPriceChange is null)
-            {
-                LastPriceChange = new ResourcePriceChangeDetails();
-            }
+            LastPriceChange ??= new ResourcePriceChangeDetails();
             LastPriceChange.ChangedBy = model;
             LastPriceChange.PriceChanged = this;
 

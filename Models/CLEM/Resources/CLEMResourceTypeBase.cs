@@ -1,3 +1,4 @@
+using Models.CLEM.Reporting;
 using Docker.DotNet.Models;
 using Models.CLEM.Interfaces;
 using Models.Core;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {
@@ -194,20 +196,12 @@ namespace Models.CLEM.Resources
             {
                 // calculate price as special case using pricing structure if present.
                 ResourcePricing price;
-                PurchaseOrSalePricingStyleType style;
-                switch (converterName)
+                var style = converterName switch
                 {
-                    case "$gain":
-                        style = PurchaseOrSalePricingStyleType.Purchase;
-                        break;
-                    case "$loss":
-                        style = PurchaseOrSalePricingStyleType.Sale;
-                        break;
-                    default:
-                        style = PurchaseOrSalePricingStyleType.Both;
-                        break;
-                }
-
+                    "$gain" => PurchaseOrSalePricingStyleType.Purchase,
+                    "$loss" => PurchaseOrSalePricingStyleType.Sale,
+                    _ => PurchaseOrSalePricingStyleType.Both,
+                };
                 if (PricingExists(style))
                 {
                     price = Price(style);
@@ -369,8 +363,7 @@ namespace Models.CLEM.Resources
         /// <param name="relatesToResource"></param>
         /// <param name="category"></param>
         /// <param name="resource"></param>
-        /// <param name="extraInformation"></param>
-        public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource, object extraInformation = null)
+        public void ReportTransaction(TransactionType type, double amount, CLEMModel activity, string relatesToResource, string category, CLEMResourceTypeBase resource)
         {
             if (parent != null)
             {

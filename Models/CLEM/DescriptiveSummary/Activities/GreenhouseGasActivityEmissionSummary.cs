@@ -3,7 +3,7 @@ using Models.CLEM.Activities;
 using System;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Greenhouse Gas Emission Activity
@@ -13,6 +13,6 @@ public class GreenhouseGasActivityEmissionSummary : DescriptiveSummaryProviderBa
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Produce {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.GreenhouseGasStoreName)} at a rate of {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} {generator.DisplaySummaryValueSnippet(ModelTyped.Measure, warnZero: true)}");
+        generator.AddBlockWithText($"Produce {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.GreenhouseGasStoreName)} at a rate of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, warnZero: true)} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Measure, warnZero: true)}");
     }
 }

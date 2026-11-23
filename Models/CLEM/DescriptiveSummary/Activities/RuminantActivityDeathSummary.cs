@@ -6,32 +6,31 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary
-{
-    /// <summary>
-    /// Descriptive summary provider for Ruminant Activity Death
-    /// </summary>
-    public class RuminantActivityDeathSummary : RuminantActivitySummaryBase<RuminantActivityDeath>
-    {
-        ///<inheritdoc/>
-        public override List<ChildComponentGroup> GetChildrenInSummary()
-        {
-            return
-            [
-                new ChildComponentGroup(
-                id: "default",
-                model: CLEMModel,
-                childType: typeof(IRuminantDeathGroup),
-                missing: "No death groups provided. Deaths are determined using breed base mortality.",
-                introduction: "Deaths are determined using the following configured death groups and rates/conditions:",
-                borderClass: "childgroupborder filtergroup"
-                )
-            ];
-        }
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-        }
+/// <summary>
+/// Descriptive summary provider for Ruminant Activity Death
+/// </summary>
+public class RuminantActivityDeathSummary : RuminantActivitySummaryBase<RuminantActivityDeath>
+{
+    ///<inheritdoc/>
+    public override List<ChildComponentGroup> GetChildrenInSummary()
+    {
+        return
+        [
+            new ChildComponentGroup(
+            id: "default",
+            model: CLEMModel,
+            childType: typeof(IRuminantDeathGroup),
+            missing: "No death groups provided. Deaths are determined using breed base mortality.",
+            introduction: "Deaths are determined using the following configured death groups and rates/conditions:",
+            borderClass: "childgroupborder filtergroup"
+            )
+        ];
+    }
+
+    /// <inheritdoc/>
+    public override void BuildSummary()
+    {
     }
 }

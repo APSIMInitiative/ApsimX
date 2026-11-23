@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 220,
+  "Version": 223,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -177,7 +177,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "$type": "Models.CLEM.Extras.RandomNumberGenerator, Models",
           "Seed": 0,
           "Name": "RandomNumbers",
           "ResourceName": null,
@@ -293,7 +293,7 @@
                               "$type": "Models.CLEM.Resources.RuminantParametersGeneral, Models",
                               "Breed": "Bos taurus",
                               "NaturalWeaningAge": {
-                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                                 "Parts": [
                                   0
                                 ]
@@ -301,7 +301,7 @@
                               "MinimumSizeForMaturityFemale": 0.6,
                               "MinimumSizeForMaturityMale": 0.6,
                               "GestationLength": {
-                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                                 "Parts": [
                                   0,
                                   9,
@@ -334,7 +334,7 @@
                               "AgeGrowthRateCoefficient_CN1": 0.015,
                               "CN1EstimatedWeaningWeight": 0.0,
                               "CN1EstimatedWeaningAge": {
-                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                                 "Parts": [
                                   0
                                 ]
@@ -382,7 +382,7 @@
                               "EMaintIntercept": 0.09,
                               "EMaintCoefficient": 0.26,
                               "EnergyMaintenanceMaximumAge": {
-                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                                 "Parts": [
                                   6,
                                   0,
@@ -666,7 +666,7 @@
                               "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
                               "Sex": 0,
                               "AgeDetails": {
-                                "$type": "Models.CLEM.AgeSpecifier, Models",
+                                "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                                 "Parts": [
                                   3,
                                   6,
@@ -788,8 +788,6 @@
                       "FatPercent": 1.9,
                       "GutFillHighQuality": 0.08,
                       "GutFillLowQuality": 0.2,
-                      "IntakeTropicalQualityCoefficient": 0.16,
-                      "IntakeQualityCoefficient": 1.7,
                       "StartingAmount": 0.0,
                       "FirstMonthOfGrowSeason": 6,
                       "LastMonthOfGrowSeason": 3,
@@ -835,7 +833,7 @@
                       "ResourceName": null,
                       "Children": [
                         {
-                          "$type": "Models.CLEM.Transmutation, Models",
+                          "$type": "Models.CLEM.Extras.Transmutation, Models",
                           "TransmutationPacketSize": 1000.0,
                           "UseWholePackets": false,
                           "TransactionCategory": "Transmutation",
@@ -845,7 +843,7 @@
                           "ResourceName": null,
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Transmute, Models",
+                              "$type": "Models.CLEM.Extras.Transmute, Models",
                               "TransmuteResourceTypeName": "Finances.General account",
                               "AmountPerPacket": 100.0,
                               "TransmuteStyle": 0,
@@ -968,7 +966,7 @@
                     {
                       "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
                       "MaximumAgeMating": {
-                        "$type": "Models.CLEM.AgeSpecifier, Models",
+                        "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                         "Parts": [
                           10,
                           0,
@@ -986,7 +984,7 @@
                         {
                           "$type": "Models.CLEM.Timers.ActivityTimerCalendar, Models",
                           "StartDetails": {
-                            "$type": "Models.CLEM.AgeSpecifier, Models",
+                            "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                             "Parts": [
                               0,
                               1,
@@ -994,7 +992,7 @@
                             ]
                           },
                           "EndDetails": {
-                            "$type": "Models.CLEM.AgeSpecifier, Models",
+                            "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                             "Parts": [
                               0,
                               5,
@@ -1002,7 +1000,7 @@
                             ]
                           },
                           "RepeatInterval": {
-                            "$type": "Models.CLEM.AgeSpecifier, Models",
+                            "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                             "Parts": [
                               1,
                               0,
@@ -1032,7 +1030,7 @@
                   "$type": "Models.CLEM.Activities.RuminantActivityWean, Models",
                   "Style": 0,
                   "WeaningAge": {
-                    "$type": "Models.CLEM.AgeSpecifier, Models",
+                    "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                     "Parts": [
                       0,
                       4,
@@ -1086,7 +1084,7 @@
                   "MaxBreedersMultiplierToStop": 2.0,
                   "MarkOldBreedersForSale": true,
                   "MaximumBreederAge": {
-                    "$type": "Models.CLEM.AgeSpecifier, Models",
+                    "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                     "Parts": [
                       10,
                       0,
@@ -1100,7 +1098,7 @@
                   "MaximumSiresKept": 1.0,
                   "MarkOldSiresForSale": true,
                   "MaximumSireAge": {
-                    "$type": "Models.CLEM.AgeSpecifier, Models",
+                    "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                     "Parts": [
                       8,
                       0,
@@ -1116,7 +1114,7 @@
                   "MarkAgeWeightMalesForSale": true,
                   "CastrateMales": true,
                   "MaleSellingAge": {
-                    "$type": "Models.CLEM.AgeSpecifier, Models",
+                    "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                     "Parts": [
                       0,
                       4,
@@ -1126,7 +1124,7 @@
                   "MaleSellingWeight": 100.0,
                   "GrowOutYoungFemales": false,
                   "FemaleSellingAge": {
-                    "$type": "Models.CLEM.AgeSpecifier, Models",
+                    "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                     "Parts": [
                       2,
                       0,
@@ -1153,7 +1151,7 @@
                     {
                       "$type": "Models.CLEM.Timers.ActivityTimerCalendar, Models",
                       "StartDetails": {
-                        "$type": "Models.CLEM.AgeSpecifier, Models",
+                        "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                         "Parts": [
                           0,
                           8,
@@ -1161,7 +1159,7 @@
                         ]
                       },
                       "EndDetails": {
-                        "$type": "Models.CLEM.AgeSpecifier, Models",
+                        "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                         "Parts": [
                           0,
                           8,
@@ -1169,7 +1167,7 @@
                         ]
                       },
                       "RepeatInterval": {
-                        "$type": "Models.CLEM.AgeSpecifier, Models",
+                        "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                         "Parts": [
                           1,
                           0,
@@ -1200,7 +1198,7 @@
                           "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
                           "Sex": 0,
                           "AgeDetails": {
-                            "$type": "Models.CLEM.AgeSpecifier, Models",
+                            "$type": "Models.CLEM.Extras.AgeSpecifier, Models",
                             "Parts": [
                               2,
                               0,
@@ -1272,7 +1270,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                  "$type": "Models.CLEM.Reporting.SummariseRuminantHerd, Models",
                   "GroupStyle": 2,
                   "AddGroupByLocation": true,
                   "IncludeTotalColumn": false,
@@ -1836,7 +1834,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.CLEM.CLEMFolder, Models",
+              "$type": "Models.CLEM.Extras.CLEMFolder, Models",
               "ShowInDocs": false,
               "Name": "Reports",
               "ResourceName": null,
@@ -5506,82 +5504,11 @@
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "CanopyType": "PastureSpecies",
-              "LightProfile": null,
+              "InitialisePlantAtStartOfSimulation": true,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
               "InitialRootDepth": 750.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
+              "PotentialRootingDepth": -1.0,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
               "Children": [],
@@ -5590,82 +5517,11 @@
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "CanopyType": "PastureSpecies",
-              "LightProfile": null,
+              "InitialisePlantAtStartOfSimulation": true,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
               "InitialRootDepth": 350.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
+              "PotentialRootingDepth": -1.0,
               "Name": "AGPWhiteClover",
               "ResourceName": "AGPWhiteClover",
               "Children": [],
@@ -6869,82 +6725,11 @@
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "CanopyType": "PastureSpecies",
-              "LightProfile": null,
+              "InitialisePlantAtStartOfSimulation": true,
               "InitialShootDM": 1500.0,
               "InitialRootDM": 450.0,
               "InitialRootDepth": 750.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
+              "PotentialRootingDepth": -1.0,
               "Name": "AGPRyegrass",
               "ResourceName": "AGPRyegrass",
               "Children": [],
@@ -6953,82 +6738,11 @@
             },
             {
               "$type": "Models.AgPasture.PastureSpecies, Models",
-              "doyGermination": 275,
-              "daysEmergenceToAnthesis": 120,
-              "daysAnthesisToMaturity": 85,
-              "degreesDayForAnthesis": 1100.0,
-              "degreesDayForMaturity": 900.0,
-              "daysAnnualsFactor": 45,
-              "FVPDFunction": {
-                "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                "Name": "LinearInterpolationFunction",
-                "ResourceName": null,
-                "Children": [],
-                "Enabled": true,
-                "ReadOnly": false
-              },
-              "CanopyType": "PastureSpecies",
-              "LightProfile": null,
+              "InitialisePlantAtStartOfSimulation": true,
               "InitialShootDM": 500.0,
               "InitialRootDM": 150.0,
               "InitialRootDepth": 350.0,
-              "initialDMFractionsGrasses": [
-                0.15,
-                0.25,
-                0.25,
-                0.05,
-                0.05,
-                0.1,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "initialDMFractionsLegumes": [
-                0.16,
-                0.23,
-                0.22,
-                0.05,
-                0.03,
-                0.05,
-                0.05,
-                0.01,
-                0.04,
-                0.08,
-                0.08
-              ],
-              "initialDMFractionsForbs": [
-                0.2,
-                0.2,
-                0.15,
-                0.05,
-                0.1,
-                0.15,
-                0.1,
-                0.05,
-                0.0,
-                0.0,
-                0.0
-              ],
-              "PhotosyntheticEfficiency": 0.01,
-              "PhotosynthesisCurveFactor": 0.8,
-              "FractionPAR": 0.5,
-              "ReferenceCO2": 380.0,
-              "CO2EffectScaleFactor": 700.0,
-              "CO2EffectOffsetFactor": 600.0,
-              "CO2EffectMinimum": 0.7,
-              "CO2EffectExponent": 2.0,
-              "ReproSeasonDurationCoeff": 2.0,
-              "ReproSeasonShouldersLengthFactor": 1.0,
-              "ReproSeasonOnsetDurationFactor": 0.6,
-              "RelativeTurnoverEmerging": 2.0,
-              "DetachmentDroughtCoefficient": 3.0,
-              "DetachmentDroughtEffectMin": 0.1,
-              "TurnoverStockFactor": 0.01,
-              "TurnoverDefoliationEffectMin": 0.025,
-              "MinimumGreenLeafProp": 0.8,
-              "MinimumGreenRootProp": 0.5,
+              "PotentialRootingDepth": -1.0,
               "Name": "AGPWhiteClover",
               "ResourceName": "AGPWhiteClover",
               "Children": [],

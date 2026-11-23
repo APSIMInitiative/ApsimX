@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
 using Models.CLEM.Timers;

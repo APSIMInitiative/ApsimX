@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Models.CLEM.Extras;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 

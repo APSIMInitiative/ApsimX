@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 internal class RuminantParametersGrowPFCISummary : RuminantParametersSummaryBase<RuminantParametersGrowPFCI>
 {
@@ -28,11 +28,11 @@ internal class RuminantParametersGrowPFCISummary : RuminantParametersSummaryBase
 
         if (ModelTyped.RelativeConditionEffect_CI20 == 1.0)
         {
-            summary.Add((ModelTyped.Name, "RelativeConditionEffect_CI20", "Growth", $"Ruminant intake reduction based on high condition is disabled{generator.AddLineBreak}To allow this functionality set [GrowPF CI].RelativeConditionEffect_CI20 to a value >= {generator.DisplaySummaryValueSnippet(1)} (default 1.5)", ""));
+            summary.Add((ModelTyped.Name, "RelativeConditionEffect_CI20", "Growth", $"Ruminant intake reduction based on high condition is disabled{generator.AddLineBreak}To allow this functionality set [GrowPF CI].RelativeConditionEffect_CI20 to a value >= {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(1)} (default 1.5)", ""));
         }
         if (ModelTyped.IgnoreFeedQualityIntakeAdjustment)
         {
-            summary.Add((ModelTyped.Name, "IgnoreFeedQualityIntakeAdjustment", "Growth", $"Ruminant intake reduction based on high condition is disabled{generator.AddLineBreak}To allow this functionality set [GrowPF CI].IgnoreFeedQualityIntakeAdjustment to {generator.DisplaySummaryValueSnippet("False")}", ""));
+            summary.Add((ModelTyped.Name, "IgnoreFeedQualityIntakeAdjustment", "Growth", $"Ruminant intake reduction based on high condition is disabled{generator.AddLineBreak}To allow this functionality set [GrowPF CI].IgnoreFeedQualityIntakeAdjustment to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("False")}", ""));
         }
         return summary;
     }

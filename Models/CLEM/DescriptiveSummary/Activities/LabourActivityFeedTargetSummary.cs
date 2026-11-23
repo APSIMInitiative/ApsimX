@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Labour Activity Feed
@@ -24,14 +24,14 @@ public class LabourActivityFeedTargetsSummary : DescriptiveSummaryProviderBase<L
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write(generator.DisplaySummaryValueSnippet(ModelTyped.Metric, "Metric not set"));
-        htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.TargetValue)} units per AE per day");
-        htmlWriter.Write($" up to a maximum of {generator.DisplaySummaryValueSnippet(ModelTyped.TargetMaximumValue, errorNotSet: true)}");
+        htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Metric, "Metric not set"));
+        htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TargetValue)} units per AE per day");
+        htmlWriter.Write($" up to a maximum of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TargetMaximumValue, errorNotSet: true)}");
         generator.AddBlockWithText(htmlWriter.ToString());
 
         if (ModelTyped.OtherSourcesValue > 0)
         {
-            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.TargetMaximumValue, errorNotSet: true)} is provided from sources outside the human food store");
+            generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TargetMaximumValue, errorNotSet: true)} is provided from sources outside the human food store");
         }
     }
 }

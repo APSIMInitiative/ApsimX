@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -45,8 +46,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<ValidationResult> results = new List<ValidationResult>();
-            ValidationContext context = new ValidationContext(this, null, null);
+            List<ValidationResult> results = [];
+            ValidationContext context = new(this, null, null);
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
@@ -140,10 +141,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override void BuildRule()
         {
-            if (Rule is null)
-            {
-                Rule = Compile<IFilterable>();
-            }
+            Rule ??= Compile<IFilterable>();
         }
 
         #region validation
@@ -155,7 +153,7 @@ namespace Models.CLEM.Groupings
             {
                 if ((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
                 {
-                    memberNames = new string[] { "Missing filter compare value" };
+                    memberNames = ["Missing filter compare value"];
                     yield return new ValidationResult($"A value to compare with the Attribute tag is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames);
                 }
             }
@@ -169,7 +167,7 @@ namespace Models.CLEM.Groupings
                         {
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
-                                memberNames = new string[] { "Invalid value" };
+                                memberNames = ["Invalid value"];
                                 yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False", memberNames);
                             }
                         }
@@ -181,14 +179,14 @@ namespace Models.CLEM.Groupings
                         {
                             if (!bool.TryParse(Value.ToString(), out _))
                             {
-                                memberNames = new string[] { "Invalid value" };
+                                memberNames = ["Invalid value"];
                                 yield return new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False, or blank entry", memberNames);
                             }
                         }
 
                         break;
                     default:
-                        memberNames = new string[] { "Invalid operator" };
+                        memberNames = ["Invalid operator"];
                         yield return new ValidationResult($"The [{Operator}] operator is not valid for attribute filtering using the [Exists] style for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]{Environment.NewLine}Expecting [IsTrue], [IsFalse], [Equals] or [NotEquals]", memberNames);
                         break;
                 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -32,7 +33,7 @@ namespace Models.CLEM.Activities
         private ResourcesHolder resourcesHolder = null;
 
         [Link]
-        private IClock clock = null;
+        private readonly IClock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -103,7 +104,7 @@ namespace Models.CLEM.Activities
             // set the food store linked in any TargetPurchase if target proportion set > 0
             // check that all purchase resources have transmutation or recalculate the proportion
             var targetPurchases = Structure.FindChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
-            if (targetPurchases.Any())
+            if (targetPurchases.Count != 0)
             {
                 double checkPropAvailable = 0;
                 double totPropAvailable = 0;
@@ -151,8 +152,11 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.IsHired == false).ToList();
-            peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
+            List<LabourType> peopleList = [.. people.Items.Where(a => IncludeHiredLabour || a.IsHired == false)];
+            foreach (LabourType person in peopleList)
+            {
+                person.FeedToTargetIntake = 0;
+            }
 
             // determine AEs to be fed
             double aE = peopleList.Sum(a => a.TotalAdultEquivalents);
@@ -171,7 +175,7 @@ namespace Models.CLEM.Activities
             double otherIntake = this.DailyIntakeOtherSources * aE * daysInMonth;
             otherIntake += peopleList.Sum(a => a.GetAmountConsumed());
 
-            List<LabourActivityFeedTarget> labourActivityFeedTargets = Structure.FindChildren<LabourActivityFeedTarget>().ToList();
+            List<LabourActivityFeedTarget> labourActivityFeedTargets = [.. Structure.FindChildren<LabourActivityFeedTarget>()];
 
             // determine targets
             foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
@@ -193,9 +197,11 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var person in peopleList)
                     {
-                        LabourDietComponent outsideEat = new LabourDietComponent();
-                        // TODO: might need to add consumed here
-                        outsideEat.AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth;
+                        LabourDietComponent outsideEat = new()
+                        {
+                            // TODO: might need to add consumed here
+                            AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth
+                        };
                         outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
                         // track this consumption by people here.
                         person.AddIntake(outsideEat);
@@ -208,7 +214,7 @@ namespace Models.CLEM.Activities
             int maxFoodAge = Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
             // create list of all food parcels
-            List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> foodParcels = [];
 
             foreach (HumanFoodStoreType foodStore in Structure.FindChildren<HumanFoodStoreType>(relativeTo: food).ToList())
             {
@@ -223,7 +229,7 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            foodParcels = foodParcels.OrderBy(a => a.Expires).ToList();
+            foodParcels = [.. foodParcels.OrderBy(a => a.Expires)];
 
             // if a market exists add the available market produce to the list below that ordered above.
             // order market food by price ascending
@@ -232,7 +238,7 @@ namespace Models.CLEM.Activities
             // We can check if the parent of the human food store used is a market and charge accordingly.
 
             // for each market
-            List<HumanFoodParcel> marketFoodParcels = new List<HumanFoodParcel>();
+            List<HumanFoodParcel> marketFoodParcels = [];
             ResourcesHolder resources = Market?.Resources;
             if (resources != null)
             {
@@ -273,7 +279,7 @@ namespace Models.CLEM.Activities
             {
                 foodParcels[parcelIndex].Proportion = 0;
                 var isHousehold = foodParcels[parcelIndex].FoodStore.CLEMParentName == this.CLEMParentName;
-                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold)? !a.TargetMaximumAchieved: !a.TargetAchieved)).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
+                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold) ? !a.TargetMaximumAchieved : !a.TargetAchieved)).Any() | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
                     // reduce by amount that can be eaten
@@ -343,7 +349,7 @@ namespace Models.CLEM.Activities
             }
 
             // fill resource requests
-            List<ResourceRequest> requests = new List<ResourceRequest>();
+            List<ResourceRequest> requests = [];
             foreach (var item in foodParcels.GroupBy(a => a.FoodStore))
             {
                 double amount = item.Sum(a => a.Pool.Amount * a.Proportion);
@@ -356,7 +362,7 @@ namespace Models.CLEM.Activities
                     if (bankAccount != null && marketIsSource && price.PricePerPacket > 0)
                     {
                         // finance transaction to buy food from market
-                        ResourceRequest marketRequest = new ResourceRequest
+                        ResourceRequest marketRequest = new()
                         {
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
@@ -434,7 +440,7 @@ namespace Models.CLEM.Activities
                                 {
                                     if (price.PricePerPacket > 0)
                                     {
-                                        ResourceRequest marketRequest = new ResourceRequest
+                                        ResourceRequest marketRequest = new()
                                         {
                                             ActivityModel = this,
                                             Required = amountPurchased / price.PacketSize * price.PricePerPacket,
@@ -590,7 +596,7 @@ namespace Models.CLEM.Activities
                         double amountSold = amountAvailable - amountStored;
                         if (amountSold > 0)
                         {
-                            ResourcePricing priceToUse = new ResourcePricing()
+                            ResourcePricing priceToUse = new()
                             {
                                 PacketSize = 1
                             };
@@ -602,7 +608,7 @@ namespace Models.CLEM.Activities
                                 units = Math.Truncate(units);
 
                             // remove resource
-                            ResourceRequest purchaseRequest = new ResourceRequest
+                            ResourceRequest purchaseRequest = new()
                             {
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
@@ -616,7 +622,7 @@ namespace Models.CLEM.Activities
                             // transfer money earned
                             if (bankAccount != null)
                             {
-                                ResourceRequest purchaseFinance = new ResourceRequest
+                                ResourceRequest purchaseFinance = new()
                                 {
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,
@@ -649,21 +655,21 @@ namespace Models.CLEM.Activities
             {
                 if (bankAccount is null)
                 {
-                    string[] memberNames = new string[] { "AccountName" };
+                    string[] memberNames = ["AccountName"];
                     results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
                 }
             }
 
             if (Resources.FoundMarket != null & bankAccount is null)
             {
-                string[] memberNames = new string[] { "AccountName" };
+                string[] memberNames = ["AccountName"];
                 results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
             }
 
             // check that at least one target has been provided.
-            if (Structure.FindChildren<LabourActivityFeedTarget>().Count() == 0)
+            if (!Structure.FindChildren<LabourActivityFeedTarget>().Any())
             {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
+                string[] memberNames = ["LabourActivityFeedToTargets"];
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
             }
 

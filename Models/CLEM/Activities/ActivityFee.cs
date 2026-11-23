@@ -1,5 +1,6 @@
 ﻿using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -123,7 +124,7 @@ namespace Models.CLEM.Activities
                     RelatesToResource = relatesTo,
                     ActivityModel = this
                 };
-                return new List<ResourceRequest>() { resourceRequest };
+                return [resourceRequest];
             }
             return null;
         }

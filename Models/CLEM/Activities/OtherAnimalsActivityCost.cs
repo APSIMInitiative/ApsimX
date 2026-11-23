@@ -25,32 +25,28 @@ namespace Models.CLEM.Activities
     {
         private int numberToDo = 0;
         private IEnumerable<OtherAnimalsGroup> filterGroups;
-        private OtherAnimals otherAnimals { get; set; }
+        private OtherAnimals otherAnimals;
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "OtherAnimalsGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "LabourRequirement":
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number to perform"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
+                "OtherAnimalsGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "LabourRequirement" or "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number to perform"
+                                        ],
+                                        measures: [
+                                            "fixed",
                             "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -77,35 +73,21 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsGroup" => numberToDo,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number to buy" => valueToSupply.Key.unit switch
                         {
-                            case "Number to buy":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => (double?)numberToDo,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

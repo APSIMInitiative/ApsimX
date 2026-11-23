@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -77,37 +78,31 @@ namespace Models.CLEM.Activities
             }
 
             // no market price found... look in local resources and allow 0 price if not found
-            if (price is null)
-            {
-                price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
-            }
+            price ??= resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
         }
 
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourRequirement":
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per packet",
-                            "purchase value"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "LabourRequirement" or "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per packet",
+                                            "purchase value"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             unitsToSkip = 0;
-            List<ResourceRequest> requests = new List<ResourceRequest>();
+            List<ResourceRequest> requests = [];
 
             // calculate units
             unitsToDo = Units;
@@ -155,20 +150,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "purchase value":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
-                        break;
-                    case "per packet":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "purchase value" => unitsToDo * price.PacketSize,
+                    "per packet" => unitsToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
 
             return requests;
@@ -189,10 +177,7 @@ namespace Models.CLEM.Activities
                     AddStatusMessage("Resource shortfall prevented any action");
                 }
 
-                if (marketRequest != null)
-                {
-                    marketRequest.Required *= (1 - unitShort.Available / unitShort.Required);
-                }
+                marketRequest?.Required *= (1 - unitShort.Available / unitShort.Required);
             }
         }
 

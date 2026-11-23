@@ -9,6 +9,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using Models.CLEM.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -89,29 +90,26 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "LabourRequirement":
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number to breed"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "LabourRequirement" or "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number to breed"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
 
         /// <inheritdoc/>
         public override void PrepareForTimestep()
         {
-            IEnumerable<OtherAnimalsTypeCohort> cohorts = SelectedOtherAnimalsType.GetCohorts(null, false).ToList();
+            IEnumerable<OtherAnimalsTypeCohort> cohorts = [.. SelectedOtherAnimalsType.GetCohorts(null, false)];
             maleBreeders = cohorts.Where(a => a.AgeDetails.InDays >= this.BreedingAge.InDays && a.Sex == Sex.Male).Sum(b => b.Number);
             breeders = 0;
             if (!UseLocalMales | maleBreeders > 0)
@@ -126,35 +124,21 @@ namespace Models.CLEM.Activities
             Status = ActivityStatus.NotNeeded;
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.type)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.type switch
                 {
-                    case "OtherAnimalsGroup":
-                        valuesForCompanionModels[valueToSupply.Key] = breeders;
-                        break;
-                    case "LabourRequirement":
-                    case "ActivityFee":
-                        switch (valueToSupply.Key.identifier)
+                    "OtherAnimalsGroup" => breeders,
+                    "LabourRequirement" or "ActivityFee" => valueToSupply.Key.identifier switch
+                    {
+                        "Number to buy" => valueToSupply.Key.unit switch
                         {
-                            case "Number to buy":
-                                switch (valueToSupply.Key.unit)
-                                {
-                                    case "fixed":
-                                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                                        break;
-                                    case "per head":
-                                        valuesForCompanionModels[valueToSupply.Key] = breeders;
-                                        break;
-                                    default:
-                                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                                }
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                            "fixed" => 1,
+                            "per head" => (double?)breeders,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        },
+                        _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -184,7 +168,7 @@ namespace Models.CLEM.Activities
                 if (breeders > 0)
                 {
                     double newBySex = breeders * this.OffspringPerBreeder / 2.0;
-                    int singleSex = 0;
+                    int singleSex;
 
                     // apply stochasticity to determine proportional numbers to integers
                     if (newBySex - Math.Truncate(newBySex) > RandomNumberGenerator.Generator.Next())
@@ -199,7 +183,7 @@ namespace Models.CLEM.Activities
                     double newWeight = SelectedOtherAnimalsType.AgeWeightRelationship?.SolveY(0.0) ?? 0.0;
                     if (singleSex > 1)
                     {
-                        OtherAnimalsTypeCohort newmales = new OtherAnimalsTypeCohort()
+                        OtherAnimalsTypeCohort newmales = new()
                         {
                             AgeDetails = new(0),
                             Weight = newWeight,
@@ -226,7 +210,7 @@ namespace Models.CLEM.Activities
 
                     if (singleSex > 1)
                     {
-                        OtherAnimalsTypeCohort newFemales = new OtherAnimalsTypeCohort()
+                        OtherAnimalsTypeCohort newFemales = new()
                         {
                             AgeDetails = new(0),
                             Weight = newWeight,

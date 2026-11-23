@@ -1,4 +1,5 @@
 using APSIM.Numerics;
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -70,28 +71,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number mated",
-                            "Number conceived"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number mated",
+                                            "Number conceived"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -100,7 +97,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialise")]
         private void OnCLEMInitialiseSetAttributes(object sender, EventArgs e)
         {
-            attributeList = Structure.FindChildren<ISetAttribute>(recurse: true).ToList();
+            attributeList = [.. Structure.FindChildren<ISetAttribute>(recurse: true)];
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -174,17 +171,12 @@ namespace Models.CLEM.Activities
                 switch (valueToSupply.Key.identifier)
                 {
                     case "Number mated":
-                        switch (valueToSupply.Key.unit)
+                        valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                         {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per head":
-                                valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
+                            "fixed" => 1,
+                            "per head" => numberToDo,
+                            _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                        };
                         break;
                     case "Number conceived":
                         switch (valueToSupply.Key.unit)
@@ -250,7 +242,7 @@ namespace Models.CLEM.Activities
         {
             int mated = 0;
             int conceived = amountToDo - amountToSkip;
-            List<RuminantFemale> selectedBreeders = uniqueIndividuals.SkipLast(numberToSkip).ToList();
+            List<RuminantFemale> selectedBreeders = [.. uniqueIndividuals.SkipLast(numberToSkip)];
             foreach (RuminantFemale ruminant in selectedBreeders)
             {
                 mated++;

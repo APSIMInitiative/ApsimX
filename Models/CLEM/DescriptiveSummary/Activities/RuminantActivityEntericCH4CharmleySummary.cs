@@ -1,26 +1,25 @@
 using Models.CLEM.Activities;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary
+namespace Models.CLEM.DescriptiveSummary.Activities;
+
+/// <summary>
+/// Descriptive summary provider for Ruminant Activity Enteric CH4 (Charmley)
+/// </summary>
+public class RuminantActivityEntericCH4CharmleySummary : RuminantActivitySummaryBase<RuminantActivityEntericCH4Charmley>
 {
     /// <summary>
-    /// Descriptive summary provider for Ruminant Activity Enteric CH4 (Charmley)
+    /// Constructor
     /// </summary>
-    public class RuminantActivityEntericCH4CharmleySummary : RuminantActivitySummaryBase<RuminantActivityEntericCH4Charmley>
+    public RuminantActivityEntericCH4CharmleySummary()
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityEntericCH4CharmleySummary()
-        {
-            SummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
 
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-            generator.AddBlockWithText("Produces enteric methane emissions using the Charmley et al. method and places emissions into the greenhouse gas store(s) with AutoAllocate on.");
-            generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {generator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
-        }
+    /// <inheritdoc/>
+    public override void BuildSummary()
+    {
+        generator.AddBlockWithText("Produces enteric methane emissions using the Charmley et al. method and places emissions into the greenhouse gas store(s) with AutoAllocate on.");
+        generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
     }
 }

@@ -3,7 +3,7 @@ using Models.CLEM.Resources;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for LabourType (sub-resource)
@@ -18,14 +18,14 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
 
         if (FormatForParentControl)
         {
-            generator.AddTableRow(new List<(string, bool)>()
-            {
+            generator.AddTableRow(
+            [
                 (model.Name, false),
-                (generator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
-                (generator.DisplaySummaryValueSnippet(model.InitialAge, warnZero:true), false),
-                (generator.DisplaySummaryValueSnippet(model.Individuals, warnZero:true), false),
+                (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
+                (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.InitialAge, warnZero:true), false),
+                (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Individuals, warnZero:true), false),
                 ("", model.IsHired)
-            }, model.Enabled);
+            ], model.Enabled);
         }
         else
         {
@@ -35,7 +35,7 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
             }
             else
             {
-                string number = $"{generator.DisplaySummaryValueSnippet(model.Individuals, warnZero: true)} x {generator.DisplaySummaryValueSnippet(model.InitialAge, warnZero: true)} year old {generator.DisplaySummaryValueSnippet(model.Sex)}";
+                string number = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Individuals, warnZero: true)} x {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.InitialAge, warnZero: true)} year old {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Sex)}";
                 if (model.IsHired)
                 {
                     number += " as hired labour";
@@ -45,7 +45,7 @@ public class LabourTypeSummary : DescriptiveSummaryProviderBase<LabourType>
 
             if (model.Individuals > 1)
             {
-                generator.AddBlockWithText($"You will be unable to identify these individuals with {generator.DisplaySummaryValueSnippet("Name")} but need to use the Attribute with tag {generator.DisplaySummaryValueSnippet("Group")} and value {generator.DisplaySummaryValueSnippet(model.Name)}", "infoBanner warning");
+                generator.AddBlockWithText($"You will be unable to identify these individuals with {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Name")} but need to use the Attribute with tag {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Group")} and value {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Name)}", "infoBanner warning");
             }
         }
     }

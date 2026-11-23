@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Reporting
 {
-    /// <summary>Ruminant summary</summary>
+    /// <summary>Other animals summary</summary>
     /// <summary>This activity provides the other animal cohorts for reporting</summary>
     /// <summary>Remove if you do not need monthly herd summaries</summary>
     [Serializable]
@@ -25,7 +25,7 @@ namespace Models.CLEM
     public class SummariseOtherAnimals : CLEMModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private int timestep = 0;
         private OtherAnimals otherAnimals;
 
@@ -44,7 +44,7 @@ namespace Models.CLEM
         /// List of filters that define the herd
         /// </summary>
         [JsonIgnore]
-        private List<OtherAnimalsGroup> cohortFilters { get; set; }
+        private List<OtherAnimalsGroup> cohortFilters;
 
         /// <summary>
         /// Report item generated and ready for reporting 
@@ -64,7 +64,7 @@ namespace Models.CLEM
             otherAnimals = resources.FindResourceGroup<OtherAnimals>();
 
             // determine any herd filtering
-            cohortFilters = new List<OtherAnimalsGroup>();
+            cohortFilters = [];
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {

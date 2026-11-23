@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of individual attributes
         /// </summary>
-        private Dictionary<string, IIndividualAttribute> attributes { get; set; }
+        private Dictionary<string, IIndividualAttribute> attributes = null;
 
         /// <summary>
         /// The list of available attributes for the individual in a list
@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                attributes ??= new Dictionary<string, IIndividualAttribute>();
+                attributes ??= [];
                 return attributes;
             }
         }
@@ -44,7 +44,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public bool Exists(string tag)
         {
-            return (attributes is null) ? false : attributes.ContainsKey(tag);
+            return attributes is not null && attributes.ContainsKey(tag);
         }
 
         /// <summary>
@@ -54,13 +54,9 @@ namespace Models.CLEM.Resources
         /// <param name="value">Value to set or change</param>
         public void Add(string tag, IIndividualAttribute value = null)
         {
-            attributes ??= new Dictionary<string, IIndividualAttribute>();
+            attributes ??= [];
 
-            if (!attributes.ContainsKey(tag))
-            {
-                attributes.Add(tag, value);
-            }
-            else
+            if (!attributes.TryAdd(tag, value))
             {
                 attributes[tag] = value;
             }
@@ -73,13 +69,13 @@ namespace Models.CLEM.Resources
         /// <returns>Value of attribute if found</returns>
         public IIndividualAttribute GetValue(string tag)
         {
-            if (attributes is null || !attributes.ContainsKey(tag))
+            if (attributes is null || !attributes.TryGetValue(tag, out IIndividualAttribute value))
             {
                 return null;
             }
             else
             {
-                return attributes[tag];
+                return value;
             }
         }
 

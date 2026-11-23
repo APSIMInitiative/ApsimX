@@ -31,24 +31,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
                             "per land unit of crop",
                             "per hectare of crop",
                             "per kg harvested",
                             "per land unit harvested",
                             "per hectare harvested",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -159,7 +156,7 @@ namespace Models.CLEM.Activities
 
                 if (follow is not ActivityFolder)
                 {
-                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", new string[] { "Parent model" });
+                    yield return new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", ["Parent model"]);
                 }
                 follow = follow.Parent;
             }

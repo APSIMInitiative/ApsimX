@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
@@ -70,7 +71,7 @@ namespace Models.CLEM.Timers
         private List<string> GetAllTimerNames()
         {
             GetAllTimersAvailable();
-            return timersAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
+            return [.. timersAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}")];
         }
 
         /// <inheritdoc/>
@@ -115,7 +116,7 @@ namespace Models.CLEM.Timers
                     errorMsg = $"The timer {ExistingTimerName} could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled timer in the simulation tree below the same ZoneCLEM";
                 }
 
-                yield return new ValidationResult(errorMsg, new string[] { "Linked timer" });
+                yield return new ValidationResult(errorMsg, ["Linked timer"]);
             }
         }
         #endregion

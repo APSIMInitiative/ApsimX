@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -63,7 +64,7 @@ namespace Models.CLEM.Groupings
             bool isProportion = (TakeStyle == TakeFromFilterStyle.TakeProportion || TakeStyle == TakeFromFilterStyle.SkipProportion);
             if (Value == 0)
             {
-                yield return new ValidationResult($"Provide a {((isProportion) ? "proportion" : "number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", new string[] { "Invalid value to take from filter" });
+                yield return new ValidationResult($"Provide a {((isProportion) ? "proportion" : "number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", ["Invalid value to take from filter"]);
             }
 
             if (isProportion)
@@ -72,7 +73,7 @@ namespace Models.CLEM.Groupings
                 {
                     bool isTake = (TakeStyle.ToString().Contains("Take"));
 
-                    yield return new ValidationResult($"The proportion to {(isTake ? "take" : "skip")} from [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] must be less than or equal to 1", new string[] { $"Invalid proportion to {(isTake ? "take" : "skip")} from filter" });
+                    yield return new ValidationResult($"The proportion to {(isTake ? "take" : "skip")} from [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] must be less than or equal to 1", [$"Invalid proportion to {(isTake ? "take" : "skip")} from filter"]);
                 }
             }
         }
