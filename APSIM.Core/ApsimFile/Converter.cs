@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 223; } }
+    public static int LatestVersion { get { return 224; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8119,7 +8119,6 @@ internal class Converter
         JsonUtilities.RenameVariables(root, changes);
     }
 
-
     /// <summary>
     /// Change a few parameter names in AgPasture.
     /// </summary>
@@ -8182,6 +8181,25 @@ internal class Converter
 
                 JsonUtilities.ReplaceChildModelType(root, oldFlatTypeName, fullTypeName);
                 JsonUtilities.ReplacePropertyValueModelType(root, oldFlatTypeName, fullTypeName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Version 224: Turn ResidueType into a model and make children
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion224(JObject root, string fileName)
+    {
+        foreach (JObject residueTypes in JsonUtilities.ChildrenOfType(root, "ResidueTypes"))
+        {
+            foreach (JObject residue in residueTypes["ResidueType"])
+            {
+                residue["Name"] = residue["fom_type"];
+                residue["Enabled"] = residueTypes["Enabled"];
+                residue["ReadOnly"] = residueTypes["ReadOnly"];
+                JsonUtilities.AddChild(residueTypes, residue);
             }
         }
     }

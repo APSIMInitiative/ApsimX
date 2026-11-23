@@ -15,21 +15,18 @@ namespace Models.Surface
     public class ResidueTypes : Model
     {
         /// <summary>Gets or sets the residues.</summary>
-        public List<ResidueType> ResidueType { get; set; }
+        private List<ResidueType> _residueTypes => Children.OfType<ResidueType>().ToList();
 
         /// <summary>Return a list of fom type names</summary>
-        public List<string> Names { get { return ResidueType.Select(t => t.fom_type).ToList(); } }
+        public List<string> Names { get { return _residueTypes.Select(t => t.fom_type).ToList(); } }
 
         /// <summary>Gets a specific residue type. Throws if not found.</summary>
         /// <param name="name">The name of the residue type to find</param>
         public ResidueType GetResidueType(string name)
         {
-            if (ResidueType != null)
-            {
-                ResidueType residueType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, name));
-                if (residueType != null)
-                    return FillDerived(residueType);
-            }
+            ResidueType residueType = _residueTypes.Find(type => StringUtilities.StringsAreEqual(type.fom_type, name));
+            if (residueType != null)
+                return FillDerived(residueType);
             throw new Exception($"Could not find residue type '{name}'");
         }
 
@@ -38,14 +35,10 @@ namespace Models.Surface
         private ResidueType FillDerived(ResidueType residueType)
         {
             ResidueType baseType = null;
-            if (residueType.derived_from != null)
-            {
-                baseType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, residueType.derived_from));
-                if (baseType != null)
-                    baseType = FillDerived(baseType); // Make sure the base residue type has itself been filled
-            }
+            baseType = _residueTypes.Find(type => StringUtilities.StringsAreEqual(type.fom_type, residueType.derived_from));
             if (baseType != null)
             {
+                baseType = FillDerived(baseType); // Make sure the base residue type has itself been filled
                 residueType = (ResidueType)ReflectionUtilities.Clone(residueType);
                 if (residueType.fraction_C == 0)
                     residueType.fraction_C = baseType.fraction_C;
