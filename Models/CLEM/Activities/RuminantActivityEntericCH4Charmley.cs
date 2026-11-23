@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -18,7 +19,7 @@ namespace Models.CLEM.Activities
     [Description("Produces enteric methane emissions based on Charmley et al equations")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantEntericCH4Charmley.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersMethaneCharmley) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersMethaneCharmley)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantActivityEntericCH4Charmley: CLEMRuminantActivityBase
     {
         [Link(IsOptional = true)]

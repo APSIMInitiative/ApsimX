@@ -1,4 +1,5 @@
-﻿using MathNet.Numerics.Statistics;
+﻿using Models.CLEM.Extras;
+using MathNet.Numerics.Statistics;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
@@ -34,7 +35,7 @@ namespace Models.CLEM.Timers
         double amountAtFirstCheck;
         DateTime checkDate = DateTime.Now;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private CLEMRuminantActivityBase parentRuminantBase = null;
         [NonSerialized]
         private PropertyInfo propertyInfo = null;
@@ -60,15 +61,15 @@ namespace Models.CLEM.Timers
         [Required]
         [Core.Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
-        private object[] GetOperators() => new object[]
-        {
+        private static object[] GetOperators() =>
+        [
             ExpressionType.Equal,
             ExpressionType.NotEqual,
             ExpressionType.LessThan,
             ExpressionType.LessThanOrEqual,
             ExpressionType.GreaterThan,
             ExpressionType.GreaterThanOrEqual
-        };
+        ];
 
         /// <summary>
         /// Amount
@@ -81,7 +82,7 @@ namespace Models.CLEM.Timers
         /// </summary>
         public bool PropertyNameNeeded() => TimerStyle != ActivityTimerRuminantLevelStyle.NumberOfIndividuals;
 
-        private IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
+        private static IEnumerable<string> GetParameters() => typeof(Ruminant).GetProperties().Where(a => a.PropertyType == typeof(double) || a.PropertyType == typeof(int)).Select(a => a.Name).OrderBy(k => k);
 
         /// <summary>
         /// Notify CLEM that this activity was performed.
@@ -142,24 +143,14 @@ namespace Models.CLEM.Timers
                     else
                     {
                         var individualProperty = uniqueIndividuals.Select(a => Convert.ToDouble(propertyInfo.GetValue(a)));
-                        switch (TimerStyle)
+                        amountAtFirstCheck = TimerStyle switch
                         {
-                            case ActivityTimerRuminantLevelStyle.SumOfProperty:
-                                amountAtFirstCheck = individualProperty.Sum();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MeanOfProperty:
-                                amountAtFirstCheck = individualProperty.Mean();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MinimumOfProperty:
-                                amountAtFirstCheck = individualProperty.Min();
-                                break;
-                            case ActivityTimerRuminantLevelStyle.MaximumOfProperty:
-                                amountAtFirstCheck = individualProperty.Max();
-                                break;
-                            default:
-                                amountAtFirstCheck = 0;
-                                break;
-                        }
+                            ActivityTimerRuminantLevelStyle.SumOfProperty => individualProperty.Sum(),
+                            ActivityTimerRuminantLevelStyle.MeanOfProperty => individualProperty.Mean(),
+                            ActivityTimerRuminantLevelStyle.MinimumOfProperty => individualProperty.Min(),
+                            ActivityTimerRuminantLevelStyle.MaximumOfProperty => individualProperty.Max(),
+                            _ => 0,
+                        };
                     }
                     checkDate = clock.Today;
                 }

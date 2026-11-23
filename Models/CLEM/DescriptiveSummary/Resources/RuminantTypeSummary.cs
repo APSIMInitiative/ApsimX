@@ -1,7 +1,7 @@
 using System.Linq;
 using Models.CLEM.Resources;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantType

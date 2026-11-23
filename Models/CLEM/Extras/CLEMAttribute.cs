@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>Specifies the models that this class can sit under in the user interface./// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]

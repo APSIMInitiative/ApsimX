@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -53,20 +54,20 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override List<Ruminant> DetermineDeaths(IEnumerable<Ruminant> individuals)
         {
-            List<Ruminant> died = new List<Ruminant>();
+            List<Ruminant> died = [];
             switch (ConditionMetric)
             {
                 case ConditionBasedCalculationStyle.ProportionOfMaxWeightToSurvive:
-                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.ProportionOfHighWeight, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
+                    died = [.. individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.ProportionOfHighWeight, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying))];
                     break;
                 case ConditionBasedCalculationStyle.RelativeCondition:
-                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.RelativeCondition, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
+                    died = [.. individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.RelativeCondition, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying))];
                     break;
                 case ConditionBasedCalculationStyle.BodyConditionScore:
-                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
+                    died = [.. individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.BodyConditionScore, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying))];
                     break;
                 case ConditionBasedCalculationStyle.EmptyBodyFatProportion:
-                    died = individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.EBF, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying)).ToList();
+                    died = [.. individuals.Where(a => a.Died == false && MathUtilities.IsLessThanOrEqual(a.Weight.EBF, CutOff) && MathUtilities.IsLessThanOrEqual(RandomNumberGenerator.Generator.NextDouble(), ProbabilityOfDying))];
                     break;
                 default:
                     break;

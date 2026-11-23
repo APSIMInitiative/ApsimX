@@ -1,5 +1,7 @@
-﻿using Docker.DotNet.Models;
+﻿using Models.CLEM.Extras;
+using Docker.DotNet.Models;
 using System;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Interfaces
 {

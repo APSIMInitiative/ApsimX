@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Other Animals Activity Breed
@@ -16,8 +16,8 @@ public class OtherAnimalsActivityBreedSummary : DescriptiveSummaryProviderBase<O
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}" +
-            $" individuals must be {generator.DisplaySummaryValueSnippet(ModelTyped.BreedingAge, "Mature age not set", HTMLSummaryStyle.Default)} months of age to breed.");
+        generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AnimalTypeName, "No Other Animal Type", HTMLSummaryStyle.Resource)}" +
+            $" individuals must be {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.BreedingAge, "Mature age not set", HTMLSummaryStyle.Default)} months of age to breed.");
 
         string output = $"Breeding will occur regardless of whether adult males are present in the local population";
         if (ModelTyped.UseLocalMales)
@@ -25,6 +25,6 @@ public class OtherAnimalsActivityBreedSummary : DescriptiveSummaryProviderBase<O
             output = "Breeding will only occur when adult males are present in the local population.";
         }
         generator.AddBlockWithText(output);
-        generator.AddBlockWithText($"Each breeding female will produce {generator.DisplaySummaryValueSnippet(ModelTyped.OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals");
+        generator.AddBlockWithText($"Each breeding female will produce {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.OffspringPerBreeder, "Offspring not set", HTMLSummaryStyle.Default)} offspring with an equal sex ratio and rounded to whole individuals");
     }
 }

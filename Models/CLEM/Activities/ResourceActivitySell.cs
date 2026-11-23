@@ -8,6 +8,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Linq;
 using APSIM.Numerics;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -67,21 +68,18 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per packet",
-                            "sale value"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per packet",
+                                            "sale value"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -118,7 +116,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the number of units available for sale
         /// </summary>
-        private double unitsAvailableForSale
+        private double UnitsAvailableForSale
         {
             get
             {
@@ -158,7 +156,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             unitsToSkip = 0;
-            unitsToDo = unitsAvailableForSale;
+            unitsToDo = UnitsAvailableForSale;
             if (price.UseWholePackets)
             {
                 unitsToDo = Math.Truncate(unitsToDo);
@@ -167,20 +165,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per packet":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo;
-                        break;
-                    case "sale value":
-                        valuesForCompanionModels[valueToSupply.Key] = unitsToDo * price.PacketSize;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per packet" => unitsToDo,
+                    "sale value" => unitsToDo * price.PacketSize,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -253,7 +244,7 @@ namespace Models.CLEM.Activities
                 case ResourceSellStyle.ReserveProportion:
                     if (Value > 1)
                     {
-                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", new string[] { "Selling style" });
+                        yield return new ValidationResult("The specified selling style expects a value between 0 and 1", ["Selling style"]);
                     }
                     break;
                 default:

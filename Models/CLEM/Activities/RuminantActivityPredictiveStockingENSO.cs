@@ -2,6 +2,7 @@ using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.CLEM.Resources;
 using Models.CLEM.Interfaces;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,15 +33,15 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private readonly IClock clock = null;
-        private Relationship pastureToStockingChangeElNino { get; set; }
-        private Relationship pastureToStockingChangeLaNina { get; set; }
+        private Relationship pastureToStockingChangeElNino;
+        private Relationship pastureToStockingChangeLaNina;
 
         private double restockToSkip = 0;
         private double restockToDo = 0;
         private double destockToSkip = 0;
         private double destockToDo = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
         private List<(string paddockName, double AE, double AeChange)> paddockChanges;
         private IEnumerable<GrazeFoodStoreType> paddocks;
         private string fullFilename;
@@ -151,36 +152,31 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "PastureToStockingChangeElNino",
-                            "PastureToStockingChangeLaNina"
-                        },
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Destock required",
-                            "Restock required"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per AE"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "PastureToStockingChangeElNino",
+                                            "PastureToStockingChangeLaNina"
+                                        ],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Destock required",
+                                            "Restock required"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per AE"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -189,7 +185,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            ForecastSequence = new Dictionary<DateTime, double>();
+            ForecastSequence = [];
 
             Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
             if (simulation != null)
@@ -205,21 +201,19 @@ namespace Models.CLEM.Activities
             if (File.Exists(fullFilename))
             {
                 // load ENSO file into memory
-                using (StreamReader ensoStream = new(MonthlySOIFile))
+                using StreamReader ensoStream = new(MonthlySOIFile);
+                string line = "";
+                while ((line = ensoStream.ReadLine()) != null)
                 {
-                    string line = "";
-                    while ((line = ensoStream.ReadLine()) != null)
+                    if (!line.StartsWith("Year"))
                     {
-                        if (!line.StartsWith("Year"))
+                        string[] items = line.Split(' ');
+                        for (int i = 1; i < items.Length; i++)
                         {
-                            string[] items = line.Split(' ');
-                            for (int i = 1; i < items.Count(); i++)
-                            {
-                                ForecastSequence.Add(
-                                    new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
-                                    Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
-                                    );
-                            }
+                            ForecastSequence.Add(
+                                new DateTime(Convert.ToInt16(items[0]), Convert.ToInt16(i, CultureInfo.InvariantCulture), 1),
+                                Convert.ToDouble(items[i], CultureInfo.InvariantCulture)
+                                );
                         }
                     }
                 }
@@ -242,7 +236,7 @@ namespace Models.CLEM.Activities
                 paddocks = Structure.FindChildren<GrazeFoodStoreType>(relativeTo: grazeFoodStore);
             }
 
-            paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
+            paddockChanges = [];
         }
 
         /// <inheritdoc/>
@@ -335,37 +329,22 @@ namespace Models.CLEM.Activities
             // provide updated units of measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.identifier)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.identifier switch
                 {
-                    case "Destock required":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per AE":
-                                valuesForCompanionModels[valueToSupply.Key] = AeToDestock;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    case "Restock required":
-                        switch (valueToSupply.Key.unit)
-                        {
-                            case "fixed":
-                                valuesForCompanionModels[valueToSupply.Key] = 1;
-                                break;
-                            case "per AE":
-                                valuesForCompanionModels[valueToSupply.Key] = AeToRestock;
-                                break;
-                            default:
-                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                        }
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
-                }
+                    "Destock required" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per AE" => AeToDestock,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    "Restock required" => valueToSupply.Key.unit switch
+                    {
+                        "fixed" => 1,
+                        "per AE" => (double?)AeToRestock,
+                        _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                    },
+                    _ => throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -410,11 +389,11 @@ namespace Models.CLEM.Activities
             double destockDone = 0;
             if (MathUtilities.IsPositive(destockDone))
             {
-                foreach (var paddock in paddockChanges.Where(a => MathUtilities.IsNegative(a.AeChange)))
+                foreach (var (paddockName, AE, AeChange) in paddockChanges.Where(a => MathUtilities.IsNegative(a.AeChange)))
                 {
-                    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddock.paddockName);
+                    HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-                    foreach (Ruminant ruminant in uniqueIndividuals.Where(a => a.Location == paddock.paddockName).ToList())
+                    foreach (Ruminant ruminant in uniqueIndividuals.Where(a => a.Location == paddockName).ToList())
                     {
                         if (MathUtilities.IsLessThanOrEqual(destockDone, destockToDo - destockToSkip))
                         {
@@ -436,14 +415,14 @@ namespace Models.CLEM.Activities
             double restockDone = 0;
             if (MathUtilities.IsPositive(restockDone))
             {
-                foreach (var paddock in paddockChanges.Where(a => MathUtilities.IsPositive(a.AeChange)))
+                foreach (var (paddockName, AE, AeChange) in paddockChanges.Where(a => MathUtilities.IsPositive(a.AeChange)))
                 {
                     // ensure min pasture for restocking
-                    GrazeFoodStoreType pasture = paddocks.Where(a => a.Name == paddock.paddockName).FirstOrDefault();
+                    GrazeFoodStoreType pasture = paddocks.Where(a => a.Name == paddockName).FirstOrDefault();
                     if (pasture != null && MathUtilities.IsGreaterThanOrEqual(pasture.TonnesPerHectare * 1000, MinimumFeedBeforeRestock))
                     {
                         var specifyComponents = Structure.FindChildren<SpecifyRuminant>();
-                        if (specifyComponents.Count() == 0)
+                        if (!specifyComponents.Any())
                         {
                             string warn = $"No [f=SpecifyRuminant]s were provided in [a={Name}]\r\nNo restocking will be performed.";
                             Status = ActivityStatus.Warning;
@@ -454,7 +433,7 @@ namespace Models.CLEM.Activities
                         foreach (SpecifyRuminant item in specifyComponents)
                         {
                             double sumAE = 0;
-                            double aEToBuy = paddock.AeChange;
+                            double aEToBuy = AeChange;
                             double limitAE = aEToBuy * item.Proportion;
 
                             while (MathUtilities.IsLessThanOrEqual(restockDone, restockToDo - restockToSkip) && MathUtilities.IsLessThan(sumAE, limitAE) && MathUtilities.IsPositive(aEToBuy))

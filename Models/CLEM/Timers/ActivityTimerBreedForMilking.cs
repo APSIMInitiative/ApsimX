@@ -26,7 +26,7 @@ namespace Models.CLEM.Timers
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         private int shortenLactationMonths;
         private double milkingsPerConceptionsCycle;
@@ -70,11 +70,9 @@ namespace Models.CLEM.Timers
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get details from parent breeding activity
-            controlledMatingParent = this.Parent as RuminantActivityControlledMating;
-            if (controlledMatingParent is null)
-            {
+            controlledMatingParent = this.Parent as RuminantActivityControlledMating ?? 
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
-            }
+
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
             parameters = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop).Parameters;
 
@@ -151,7 +149,7 @@ namespace Models.CLEM.Timers
                 IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
 
                 // report activity performed details.
-                ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                ActivityPerformedEventArgs activitye = new()
                 {
                     Name = Name,
                     Status = ActivityStatus.Timer,
@@ -193,7 +191,7 @@ namespace Models.CLEM.Timers
         {
             if (RestMonths > 0 & ShortenLactationMonths > 0)
             {
-                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", new string[] { "Ruminant Milking Timer" });
+                yield return new ValidationResult($"Breeders cannot be rested after lactation and allow conception during lactation", ["Ruminant Milking Timer"]);
             }
 
             // this should be handled automatically until the allowed time step of this component is set.

@@ -10,7 +10,7 @@ using Models.CLEM.Interfaces;
 using System.IO;
 using APSIM.Numerics;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// A resource transmute component used as a child of a Transmutation component
@@ -28,7 +28,7 @@ namespace Models.CLEM
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;
         private double shortfallPacketSize = 1;
@@ -103,16 +103,13 @@ namespace Models.CLEM
                         }
                     }
 
-                    if (shortfallPricing is null)
-                    {
-                        shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
-                    }
+                    shortfallPricing ??= shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
 
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
 
                     // get pricing of transmute resource
-                    if (!(TransmuteResourceType is FinanceType))
+                    if (TransmuteResourceType is not FinanceType)
                     {
                         transmutePricing = TransmuteResourceType.Price(PurchaseOrSalePricingStyleType.Sale);
                         if (FinanceTypeForTransactionsName != "No transactions")
@@ -181,13 +178,13 @@ namespace Models.CLEM
             }
             else
             {
-                if (TransmuteStyle == TransmuteStyle.UsePricing && !(TransmuteResourceType is FinanceType))
+                if (TransmuteStyle == TransmuteStyle.UsePricing && TransmuteResourceType is not FinanceType)
                 {
                     // add finance transaction to sell transmute
                     financeType.AddToResource(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // add finance transaction to buy shortfall
-                    ResourceRequest financeRequest = new ResourceRequest()
+                    ResourceRequest financeRequest = new()
                     {
                         Resource = financeType,
                         Required = shortfallPackets * shortfallPricing.CurrentPrice,
@@ -228,9 +225,9 @@ namespace Models.CLEM
         {
             if (TransmuteResourceTypeName != null && TransmuteResourceTypeName != "")
             {
-                if (!TransmuteResourceTypeName.Contains("."))
+                if (!TransmuteResourceTypeName.Contains('.'))
                 {
-                    string[] memberNames = new string[] { "ResourceTypeName" };
+                    string[] memberNames = ["ResourceTypeName"];
                     yield return new ValidationResult("Invalid resource type entry. Please select resource type from the drop down list provided or ensure the value is formatted as ResourceGroup.ResourceType", memberNames);
                 }
                 else
@@ -245,7 +242,7 @@ namespace Models.CLEM
                         object resultType = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         if (resultType is null)
                         {
-                            string[] memberNames = new string[] { "ResourceType" };
+                            string[] memberNames = ["ResourceType"];
                             yield return new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] for [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames);
                         }
                     }
@@ -258,15 +255,15 @@ namespace Models.CLEM
             {
                 if (shortfallPricing is null)
                 {
-                    string[] memberNames = new string[] { "Shortfall resource pricing" };
+                    string[] memberNames = ["Shortfall resource pricing"];
                     yield return new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames);
                 }
 
-                if (!(TransmuteResourceType is FinanceType))
+                if (TransmuteResourceType is not FinanceType)
                 {
                     if (transmutePricing is null)
                     {
-                        string[] memberNames = new string[] { "Transmute resource pricing" };
+                        string[] memberNames = ["Transmute resource pricing"];
                         yield return new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames);
                     }
                 }

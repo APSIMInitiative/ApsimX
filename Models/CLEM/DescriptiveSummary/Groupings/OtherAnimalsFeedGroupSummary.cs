@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Ruminant Feed Group filter
@@ -56,12 +56,12 @@ public class OtherAnimalsFeedGroupSummary : GroupSummaryBase<OtherAnimalsFeedGro
         {
             case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
             case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)} kg");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)} kg");
                 break;
             case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
                 if (ModelTyped.Value < 1)
                 {
-                    htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
+                    htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, errorNotSet: true)}");
                     starter = " of ";
                 }
                 else
@@ -88,7 +88,7 @@ public class OtherAnimalsFeedGroupSummary : GroupSummaryBase<OtherAnimalsFeedGro
             default:
                 break;
         }
-        htmlWriter.Write($"{starter} {generator.DisplaySummaryValueSnippet(feedstyle)} ");
+        htmlWriter.Write($"{starter} {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(feedstyle)} ");
 
         switch (ft)
         {

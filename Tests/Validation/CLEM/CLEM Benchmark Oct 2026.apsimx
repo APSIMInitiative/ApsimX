@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 222,
+  "Version": 223,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -2453,7 +2453,7 @@
       "ResourceName": null,
       "Children": [
         {
-          "$type": "Models.CLEM.RandomNumberGenerator, Models",
+          "$type": "Models.CLEM.Extras.RandomNumberGenerator, Models",
           "Seed": 1,
           "Name": "RandomNumbers",
           "ResourceName": null,

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -69,7 +70,7 @@ namespace Models.CLEM.Resources
         /// List of pools available
         /// </summary>
         [JsonIgnore]
-        public List<HumanFoodStorePool> Pools = new List<HumanFoodStorePool>();
+        public List<HumanFoodStorePool> Pools = [];
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -83,7 +84,7 @@ namespace Models.CLEM.Resources
         {
             if (StartingAmount > 0)
             {
-                HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
+                HumanFoodStorePool initialpPool = new(StartingAmount, StartingAge);
                 AddToResource(initialpPool, null, null, "Starting value");
             }
         }
@@ -135,19 +136,12 @@ namespace Models.CLEM.Resources
         /// <param name="category"></param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            HumanFoodStorePool pool;
-            switch (resourceAmount)
+            HumanFoodStorePool pool = resourceAmount switch
             {
-                case HumanFoodStorePool _:
-                    pool = resourceAmount as HumanFoodStorePool;
-                    break;
-                case double _:
-                    pool = new HumanFoodStorePool((double)resourceAmount, 0);
-                    break;
-                default:
-                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
-            }
-
+                HumanFoodStorePool _ => resourceAmount as HumanFoodStorePool,
+                double _ => new HumanFoodStorePool((double)resourceAmount, 0),
+                _ => throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]"),
+            };
             if (pool.Amount > 0)
             {
                 HumanFoodStorePool poolOfAge = Pools.Where(a => a.Age == pool.Age).FirstOrDefault();
@@ -186,7 +180,7 @@ namespace Models.CLEM.Resources
                 amountRequired -= amountToRemove;
 
                 // remove resource from pool
-                pool.Remove(amountToRemove, request.ActivityModel, "Consumed");
+                pool.Remove(amountToRemove);
 
                 // send to market if needed
                 if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)

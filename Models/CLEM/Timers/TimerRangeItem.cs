@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.CLEM.Extras;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -39,7 +40,7 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// A list of error messages generated while creating this item
         /// </summary>
-        public List<string> ErrorMessages { get; set; } = new();
+        public List<string> ErrorMessages { get; set; } = [];
 
         /// <summary>
         /// Offset for year to allow for month range across Dec-Jan
@@ -49,15 +50,14 @@ namespace Models.CLEM.Timers
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="events">Link to the CLEMEvents model</param>
+        /// <param name="events">Access to CLEMEvents model</param>
         /// <param name="details">Details specifying the date and time as an AgeSpecifier</param>
         /// <param name="startOfRange">Determines if this is a date unit at start of range</param>
-        /// <param name="wholeTimeStepInRange"></param>
-        public TimerRangeItem(CLEMEvents events, AgeSpecifier details, bool startOfRange, bool wholeTimeStepInRange)
+        public TimerRangeItem(CLEMEvents events, AgeSpecifier details, bool startOfRange)
         {
             this.IsStartOfRange = startOfRange;
             ymd = GetDateParts(details, events);
-            UpdateDate(events, wholeTimeStepInRange);
+            UpdateDate(events);
         }
 
         /// <inheritdoc/>
@@ -94,7 +94,7 @@ namespace Models.CLEM.Timers
             return dateString;
         }
 
-        private void UpdateDate(CLEMEvents events, bool wholeTimeStepInRange)
+        private void UpdateDate(CLEMEvents events)
         {
             if (ErrorMessages.Count > 0)
             {

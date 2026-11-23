@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Labour Requirement
@@ -47,7 +47,7 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.LabourPerUnit, "Rate not set")} {generator.DisplayPlural(((ModelTyped.LabourPerUnit == 1.0) ? 1 : 2), "day", " is", "s are")} required ");
+        htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.LabourPerUnit, "Rate not set")} {DescriptiveSummaryGenerator.DisplayPlural(((ModelTyped.LabourPerUnit == 1.0) ? 1 : 2), "day", " is", "s are")} required ");
 
         if ((ModelTyped.Measure ?? "").Equals("fixed", StringComparison.CurrentCultureIgnoreCase) == false)
         {
@@ -60,11 +60,11 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
                     htmlWriter.Write($"where units and block size are defined by the parent activity");
                     break;
                 case LabourRequirement _:
-                    htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.Measure, "Measure not set", errorNotSet: true)}");
-                    htmlWriter.Write($" in {((ModelTyped.WholeUnitBlocks) ? $"{generator.DisplaySummaryValueSnippet("whole")} " : "")}blocks");
+                    htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Measure, "Measure not set", errorNotSet: true)}");
+                    htmlWriter.Write($" in {((ModelTyped.WholeUnitBlocks) ? $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("whole")} " : "")}blocks");
                     if (ModelTyped.UnitSize != 1)
                     {
-                        htmlWriter.Write($" of {generator.DisplaySummaryValueSnippet(ModelTyped.UnitSize, "Unit size not set", errorNotSet: true)}");
+                        htmlWriter.Write($" of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.UnitSize, "Unit size not set", errorNotSet: true)}");
                     }
                     if (ModelTyped.ApplyToAll)
                     {
@@ -97,21 +97,21 @@ public class LabourRequirementSummary : DescriptiveSummaryProviderBase<LabourReq
 
         using (generator.OpenBlock("childgroupborder activitygroup", id: $"{ModelTyped.Name}_labreq"))
         {
-            generator.AddBlockWithText($"Labour allocation will be limited using {generator.DisplaySummaryValueSnippet(limitedBy)}", "childgrouplabel");
+            generator.AddBlockWithText($"Labour allocation will be limited using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(limitedBy)}", "childgrouplabel");
 
             if (ModelTyped.MaximumPerGroup > 0)
             {
-                generator.AddBlockWithText($"Each {generator.DisplaySummaryValueSnippet("LabourGroup", entryStyle: HTMLSummaryStyle.Filter)} can supply up to {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerGroup)}{extraLimit}");
+                generator.AddBlockWithText($"Each {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("LabourGroup", entryStyle: HTMLSummaryStyle.Filter)} can supply up to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerGroup)}{extraLimit}");
             }
 
             if (ModelTyped.MinimumPerPerson > 0)
             {
-                generator.AddBlockWithText($"No labour is allocated if less than {generator.DisplaySummaryValueSnippet(ModelTyped.MinimumPerPerson)}{extraLimit}");
+                generator.AddBlockWithText($"No labour is allocated if less than {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MinimumPerPerson)}{extraLimit}");
             }
 
             if (ModelTyped.MaximumPerPerson > 0 && ModelTyped.MaximumPerPerson < 31)
             {
-                generator.AddBlockWithText($"No individual can provide more than {generator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerPerson)}{extraLimit}");
+                generator.AddBlockWithText($"No individual can provide more than {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.MaximumPerPerson)}{extraLimit}");
             }
         }
 

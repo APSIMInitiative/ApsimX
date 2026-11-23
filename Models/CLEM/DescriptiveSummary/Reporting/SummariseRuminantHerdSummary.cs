@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Reporting;
 
 /// <summary>
 /// Descriptive summary provider for Summarise Ruminant Herd report

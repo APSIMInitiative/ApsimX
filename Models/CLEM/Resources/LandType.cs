@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -82,7 +83,7 @@ namespace Models.CLEM.Resources
             // take away buildings (allows building to change over time. 
             if (PortionBuildings > 0)
             {
-                ResourceRequest resourceRequest = new ResourceRequest()
+                ResourceRequest resourceRequest = new()
                 {
                     ActivityModel = this,
                     AllowTransmutation = false,
@@ -181,7 +182,7 @@ namespace Models.CLEM.Resources
 
         private void UpdateLandAllocatedList(CLEMModel activity, double amountChanged, bool added)
         {
-            AllocatedActivitiesList ??= new List<LandActivityAllocation>();
+            AllocatedActivitiesList ??= [];
 
             // find activity in list
             LandActivityAllocation allocation = AllocatedActivitiesList.Where(a => a.Activity.Name == activity.Name).FirstOrDefault();

@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.IdentityModel.Tokens;
 using MigraDoc.DocumentObjectModel;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -17,7 +18,7 @@ using System.IO;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantTypeCohort
@@ -81,24 +82,24 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
             using (StringWriter textWriter = new())
             {
                 if (!specifyRuminantParent)
-                    textWriter.Write($"{generator.DisplaySummaryValueSnippet((int)model.Number, warnZero: true)} x ");
+                    textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet((int)model.Number, warnZero: true)} x ");
                 else
                     textWriter.Write("A");
 
                 if (model.AgeSD == 0)
                 {
                     if (model.AgeDetails.InDays > 0)
-                        textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} old");
+                        textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} old");
                     else
-                        textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.AgeDetails.InDays, warnZero: true)} days old");
+                        textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeDetails.InDays, warnZero: true)} days old");
                 }
-                textWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Sex)}");
+                textWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Sex)}");
                 generator.AddBlockWithText(textWriter.ToString());
             }
 
             if (model.AgeDetails.InDays > 0 & model.AgeSD > 0)
             {
-                generator.AddBlockWithText($"Individuals will be randomly assigned an age based on a mean of {generator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} with a standard deviation of {generator.DisplaySummaryValueSnippet(model.AgeSD)}");
+                generator.AddBlockWithText($"Individuals will be randomly assigned an age based on a mean of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} with a standard deviation of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeSD)}");
             }
 
             string plural = ((model.Number > 1) ? "These individuals are" : "This individual is a");
@@ -127,32 +128,32 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                 {
                     textWriter.Write($"Individuals will be randomly assigned a weight based on a mean ");
                     if (model.Weight == 0)
-                        textWriter.Write($"(using the normalised weight, 8% gut fill) of {generator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg");
+                        textWriter.Write($"(using the normalised weight, 8% gut fill) of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg");
                     else
-                        textWriter.Write($"of {generator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
-                    textWriter.Write($" with a standard deviation of {generator.DisplaySummaryValueSnippet(model.WeightSD, warnZero: true)} kg");
+                        textWriter.Write($"of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
+                    textWriter.Write($" with a standard deviation of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.WeightSD, warnZero: true)} kg");
                 }
                 else
                 {
                     textWriter.Write($"{((model.Number > 1) ? "These individuals " : "This individual ")} weigh{((model.Number > 1) ? "" : "s")}");
                     if (model.Weight == 0)
-                        textWriter.Write($" the normalised weight of {generator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg");
+                        textWriter.Write($" the normalised weight of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg");
                     else
-                        textWriter.Write($" {generator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
+                        textWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
                 }
                 generator.AddBlockWithText(textWriter.ToString());
             }
 
             if (model.Weight > 0 && (newInd is null || (model.Weight > 0 && Math.Abs(model.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2)))
             {
-                generator.AddBlockWithText($"Individuals should weigh close to the normalised weight of {generator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg for their age.", "infoBanner warning");
+                generator.AddBlockWithText($"Individuals should weigh close to the normalised weight of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(newInd?.Weight.NormalisedForAge ?? 0, warnZero: true)} kg for their age.", "infoBanner warning");
             }
 
             if (model.ManagedPastureName.IsValueNullOrEmpty() == false)
             {
                 if (model.ManagedPastureName.StartsWith("Not specified") == false)
                 {
-                    generator.AddBlockWithText($"These individuals will be placed on the pasture {generator.DisplaySummaryValueSnippet(model.ManagedPastureName.Split('.').Last(), entryStyle: HTMLSummaryStyle.Resource)}");
+                    generator.AddBlockWithText($"These individuals will be placed on the pasture {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ManagedPastureName.Split('.').Last(), entryStyle: HTMLSummaryStyle.Resource)}");
                 }
             }
             else
@@ -162,7 +163,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                     RuminantInitialCohorts parentCohorts = model.Node.FindParent<RuminantInitialCohorts>();
                     if (parentCohorts is not null && parentCohorts.ManagedPastureName.IsNullOrEmpty() == false && parentCohorts.ManagedPastureName.StartsWith("Not specified") == false)
                     {
-                        generator.AddBlockWithText($"These individuals will be placed on the pasture {generator.DisplaySummaryValueSnippet(parentCohorts.ManagedPastureName.Split('.').Last(), entryStyle: HTMLSummaryStyle.Resource)} defined by parent component");
+                        generator.AddBlockWithText($"These individuals will be placed on the pasture {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(parentCohorts.ManagedPastureName.Split('.').Last(), entryStyle: HTMLSummaryStyle.Resource)} defined by parent component");
                     }
                 }
             }
@@ -178,36 +179,36 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                     {
                         if (!parentIsSpecify)
                         {
-                            textWriter.Write($"Buy {generator.DisplaySummaryValueSnippet(model.Number, warnZero: true)} x ");
+                            textWriter.Write($"Buy {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Number, warnZero: true)} x ");
                         }
                         if (model.AgeDetails.InDays >= 0)
                         {
-                            textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} old");
+                            textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeDetails.ToDescriptionString())} old");
                         }
                         else
                         {
-                            textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.AgeDetails.InDays, warnZero: true)} day old");
+                            textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.AgeDetails.InDays, warnZero: true)} day old");
                         }
-                        textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.Sex)}{((model.Number > 1 | parentIsSpecify) ? "s" : "")}");
+                        textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Sex)}{((model.Number > 1 | parentIsSpecify) ? "s" : "")}");
                         textWriter.Write($" weighing");
                         if (model.Weight > 0)
                         {
-                            textWriter.Write($"{generator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
+                            textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Weight, warnZero: true)} kg");
                             if (model.WeightSD > 0)
                             {
-                                textWriter.Write($" with a standard deviation of {generator.DisplaySummaryValueSnippet(model.WeightSD, warnZero: true)} kg");
+                                textWriter.Write($" with a standard deviation of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.WeightSD, warnZero: true)} kg");
                             }
                         }
                         else
                         {
-                            textWriter.Write($"{generator.DisplaySummaryValueSnippet("Normalised Weight for age")}");
+                            textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Normalised Weight for age")}");
                         }
                         if (model.Sire || model.Suckling)
                         {
                             textWriter.Write(" and ");
-                            textWriter.Write(model.Sire ? generator.DisplaySummaryValueSnippet("IsSire") : "");
+                            textWriter.Write(model.Sire ? DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("IsSire") : "");
                             if (model.Suckling)
-                                textWriter.Write($"{generator.DisplaySummaryValueSnippet("Suckling", spanClass: $"entryValue {(model.Sire ? "errorValue" : "")}")}");
+                                textWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Suckling", spanClass: $"entryValue {(model.Sire ? "errorValue" : "")}")}");
                         }
                         generator.AddBlockWithText(textWriter.ToString(), "componentContentNoBanner clearfix"); 
                     }
@@ -231,23 +232,23 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                         string normWtString = newInd?.Weight.NormalisedForAge.ToString("#,##0") ?? "Unavailable";
                         if (newInd is null || (model.Weight != 0 && Math.Abs(model.Weight - newInd.Weight.NormalisedForAge) / newInd.Weight.NormalisedForAge > 0.2))
                         {
-                            normWtString = $"{generator.DisplaySummaryValueSnippet(normWtString, spanClass: "entryValue warningValue")}";
+                            normWtString = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(normWtString, spanClass: "entryValue warningValue")}";
                             (model.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                         }
                         string weightstring = "";
                         if (model.Weight > 0)
                         {
-                            weightstring = $"{generator.DisplaySummaryValueSnippet($"{model.Weight}{((model.WeightSD > 0) ? $" \00B1 {model.WeightSD}" : "")}")}";
+                            weightstring = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet($"{model.Weight}{((model.WeightSD > 0) ? $" \00B1 {model.WeightSD}" : "")}")}";
                         }
 
 
                         List<(string label, bool fill)> cellValues = [
                             (model.Name, false),
-                            (generator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
-                            (generator.DisplaySummaryValueSnippet(string.Join(',', model.AgeDetails.Parts)), false),
+                            (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Sex.ToString()), false),
+                            (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(string.Join(',', model.AgeDetails.Parts)), false),
                             (weightstring, false),
                             (normWtString, false),
-                            (generator.DisplaySummaryValueSnippet(Convert.ToInt32(model.Number), warnZero:true), false),
+                            (DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(Convert.ToInt32(model.Number), warnZero:true), false),
                             ("", model.Suckling),
                             ("", model.Sire)
                         ];
@@ -257,7 +258,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                             string conceptionDetails = "";
                             var setConceptionFound = model.Structure.FindChild<SetPreviousConception>();
                             if (setConceptionFound != null)
-                                conceptionDetails = $"{generator.DisplaySummaryValueSnippet(setConceptionFound.NumberDaysPregnant)} days";
+                                conceptionDetails = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(setConceptionFound.NumberDaysPregnant)} days";
                             cellValues.Add((conceptionDetails, true));
                         }
 
@@ -267,7 +268,7 @@ public class RuminantTypeCohortSummary : DescriptiveSummaryProviderBase<Ruminant
                             string attributes = "";
                             foreach (var attribute in setAttributesFound)
                             {
-                                attributes += generator.DisplaySummaryValueSnippet(attribute.AttributeName);
+                                attributes += DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(attribute.AttributeName);
                             }
                             cellValues.Add((attributes, setAttributesFound.Any()));
                         }
