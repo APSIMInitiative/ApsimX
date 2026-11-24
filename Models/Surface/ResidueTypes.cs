@@ -34,6 +34,9 @@ namespace Models.Surface
         /// <param name="residueType">The residue to examine and change</param>
         private ResidueType FillDerived(ResidueType residueType)
         {
+            if (residueType.FomType == residueType.DerivedFrom)
+                throw new Exception($"Cannot derive ResidueType {residueType.FomType} from itself.");
+            
             ResidueType baseType = null;
             baseType = _residueTypes.Find(type => StringUtilities.StringsAreEqual(type.FomType, residueType.DerivedFrom));
             if (baseType != null)
