@@ -19,33 +19,13 @@ jobs:
     env:
       ALL_APSIM_FILES: ""
     steps:
-    
-      - name: Set git user
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Checkout PR branch code
+      - name: Checkout PR merge ref (PR head merged with master)
         uses: actions/checkout@v7
         with:
-          repository: ${{github.event.pull_request.head.repo.full_name}}
-          ref: ${{github.event.pull_request.head.sha}}
-          fetch-depth: 0  # Fetch all history for all branches and tags
+          repository: ${{ github.repository }}
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+          fetch-depth: 1
           allow-unsafe-pr-checkout: true
-
-      - name: Merge APSIMInitiative/master into PR branch (ensure PR branch up to date)
-        id: merge_upstream
-        run: |
-          git remote add upstream https://github.com/APSIMInitiative/ApsimX.git || git remote set-url upstream https://github.com/APSIMInitiative/ApsimX.git
-          git fetch upstream master
-          git merge --no-ff upstream/master || { echo "Merge conflict detected. Aborting merge and exiting."; git merge --abort; exit 1; }
-        continue-on-error: true  # Allow job to continue if merge fails so it can be captured by next step.
-
-      - name: Merge failure
-        if: steps.merge_upstream.outcome == 'failure'
-        run: |
-          echo "::error::Merge failed as PR branch is either not up to date or another issue has occurred."
-          exit 1
 
       - name: Check A.V.A is up
         run: bash ./.github/workflows/scripts/ava-scripts/check-ava-health.sh
