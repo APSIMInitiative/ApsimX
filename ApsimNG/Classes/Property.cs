@@ -385,7 +385,11 @@ namespace UserInterface.Classes
                                            .ToArray();
                     break;
                 case DisplayType.ResidueName:
-                    SurfaceOrganicMatter surfaceOM = model.Node.FindParent<SurfaceOrganicMatter>(recurse:true);
+                    SurfaceOrganicMatter surfaceOM;
+                    if (model is SurfaceOrganicMatter)
+                        surfaceOM = model as SurfaceOrganicMatter;
+                    else
+                        surfaceOM = model.Node.FindParent<SurfaceOrganicMatter>(recurse:true);
                     if (surfaceOM != null)
                     {
                         DisplayMethod = PropertyType.DropDown;

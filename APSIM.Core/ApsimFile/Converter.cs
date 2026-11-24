@@ -8210,6 +8210,11 @@ internal class Converter
                 residue["FR_C"] = residue["fr_c"];
                 residue["FR_N"] = residue["fr_n"];
                 residue["FR_P"] = residue["fr_p"];
+
+                //tidy up names somewhat
+                char firstLetter = residue["Name"].ToString()[0];
+                residue["Name"] = char.ToUpper(firstLetter) + residue["Name"].ToString().Substring(1);
+
                 JsonUtilities.AddChild(residueTypes, residue);
             }
         }
