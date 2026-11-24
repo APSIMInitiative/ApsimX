@@ -9,6 +9,7 @@ examples=/home/runner/work/ApsimX/ApsimX/Examples/
 prototypes=/home/runner/work/ApsimX/ApsimX/Prototypes/
 tests=/home/runner/work/ApsimX/ApsimX/Tests/
 app=/home/runner/work/ApsimX/ApsimX/bin/Release/net10.0/
-7z a -tzip upload.zip $examples $prototypes $tests $app
+
+tar --zstd -cf upload.tar.zst $examples $prototypes $tests $app
 
 ls -lh
