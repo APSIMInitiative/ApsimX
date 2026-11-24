@@ -15,7 +15,7 @@ namespace Models.Surface
     public class ResidueTypes : Model
     {
         /// <summary>Gets or sets the residues.</summary>
-        private List<ResidueType> _residueTypes => Children.OfType<ResidueType>().ToList();
+        private List<ResidueType> _residueTypes { get { return Children.OfType<ResidueType>().ToList(); } } 
 
         /// <summary>Return a list of fom type names</summary>
         public List<string> Names { get { return _residueTypes.Select(t => t.FomType).ToList(); } }

@@ -10,6 +10,7 @@ namespace Models.Surface
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(ResidueTypes))]
     public class ResidueType: Model, IOutOfScope
     {
         /// <summary>Gets or sets the fom_type.</summary>
