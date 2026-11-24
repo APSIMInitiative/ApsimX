@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Core;
 using Models.Core;
 
 namespace Models.Surface
@@ -9,7 +10,7 @@ namespace Models.Surface
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class ResidueType: Model
+    public class ResidueType: Model, IOutOfScope
     {
         /// <summary>Gets or sets the fom_type.</summary>
         public string fom_type { get { return Name; } }

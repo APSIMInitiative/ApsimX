@@ -198,9 +198,9 @@ namespace Models
                             {
                                 object value;
                                 if ((typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")))
-                                    value = Structure.GetObject(parameter.Value)?.Value;
+                                    value = Structure.GetObject(parameter.Value, relativeTo: this)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
-                                    value = Structure.Find<object>(parameter.Value);
+                                    value = Structure.Find<object>(parameter.Value, this);
                                 else
                                     value = ReflectionUtilities.StringToObject(property.PropertyType, parameter.Value);
                                 property.SetValue(Script, value, null);
