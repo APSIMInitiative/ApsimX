@@ -21,6 +21,7 @@ namespace APSIM.Documentation.Models.Types
     {
         private static string PATH_VALIDATION = "/Tests/Validation/";
         private static string PATH_TUTORIAL = "/Examples/Tutorials/";
+        private static string PATH_RESOURCE = "/Models/Resources/";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DocSimulations" /> class.
@@ -42,6 +43,11 @@ namespace APSIM.Documentation.Models.Types
                 if (sims.FileName.Contains(PATH_TUTORIAL) || sims.FileName.Contains(PATH_TUTORIAL.Replace('/', '\\')))
                 {
                     tags.AddRange(DocumentTutorial(model as Simulations));
+                    documentFile = true;
+                }
+                else if (sims.FileName.Contains(PATH_RESOURCE) || sims.FileName.Contains(PATH_RESOURCE.Replace('/', '\\')))
+                {
+                    tags.AddRange(AutoDocumentation.DocumentModel(sims.Children.First()));
                     documentFile = true;
                 }
                 else
