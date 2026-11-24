@@ -297,7 +297,7 @@
             "            {",
             "                LeafPosition = (int)haunStage;",
             "                NextLeafPosition = LeafPosition+1;",
-            "                MaxLeafSize = maxLeafSize;",
+            "                MaxLeafSize = maxLeafSize / 1000000;",
             "                LeafSize = sumLeafSize/daysForLeaf;",
             "                if (ReportLeafSize != null)",
             "                    ReportLeafSize.Invoke(this, new EventArgs());",
