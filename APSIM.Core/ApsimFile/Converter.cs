@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 223; } }
+    public static int LatestVersion { get { return 224; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -8119,7 +8119,6 @@ internal class Converter
         JsonUtilities.RenameVariables(root, changes);
     }
 
-
     /// <summary>
     /// Change a few parameter names in AgPasture.
     /// </summary>
@@ -8182,6 +8181,41 @@ internal class Converter
 
                 JsonUtilities.ReplaceChildModelType(root, oldFlatTypeName, fullTypeName);
                 JsonUtilities.ReplacePropertyValueModelType(root, oldFlatTypeName, fullTypeName);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Version 224: Turn ResidueType into a model and make children
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion224(JObject root, string fileName)
+    {
+        foreach (JObject residueTypes in JsonUtilities.ChildrenOfType(root, "ResidueTypes"))
+        {
+            foreach (JObject residue in residueTypes["ResidueType"])
+            {
+                residue["Name"] = residue["fom_type"];
+                residue["Enabled"] = residueTypes["Enabled"];
+                residue["ReadOnly"] = residueTypes["ReadOnly"];
+                residue["DerivedFrom"] = residue["derived_from"];
+                residue["FractionC"] = residue["fraction_C"];
+                residue["PO4ppm"] = residue["po4ppm"];
+                residue["NH4ppm"] = residue["nh4ppm"];
+                residue["NO3ppm"] = residue["no3ppm"];
+                residue["SpecificArea"] = residue["specific_area"];
+                residue["CfContrib"] = residue["cf_contrib"];
+                residue["PotDecompRate"] = residue["pot_decomp_rate"];
+                residue["FR_C"] = residue["fr_c"];
+                residue["FR_N"] = residue["fr_n"];
+                residue["FR_P"] = residue["fr_p"];
+
+                //tidy up names somewhat
+                char firstLetter = residue["Name"].ToString()[0];
+                residue["Name"] = char.ToUpper(firstLetter) + residue["Name"].ToString().Substring(1);
+
+                JsonUtilities.AddChild(residueTypes, residue);
             }
         }
     }
