@@ -39,15 +39,12 @@ public class Program
             builder.AddConsoleFormatter<MinimalConsoleFormatter, ConsoleFormatterOptions>();
         });
         logger = loggerFactory.CreateLogger<Program>();
-/*
-        Parser.Default.ParseArguments<LocationsOptions, SimCountOptions, SplitOptions, AzureJobsOptions, JobCompleteOptions>(args)
-            .WithParsed<LocationsOptions>(RunLocations)
-            .WithParsed<SimCountOptions>(RunSimCount)
-            .WithParsed<SplitOptions>(RunSplit)
+
+        Parser.Default.ParseArguments<AzureJobsOptions, JobCompleteOptions>(args)
             .WithParsed<AzureJobsOptions>(RunAzureJobs)
             .WithParsed<JobCompleteOptions>(RunJobComplete)
             .WithNotParsed(HandleParseError);
-*/
+
         return exitCode;
     }
 
