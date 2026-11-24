@@ -5388,6 +5388,15 @@
               "ResourceName": null,
               "Children": [
                 {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "**Bur Dry Matter Demands**\n\nDemands for DM growth is only for structural growth (ie no storage or metabolic demand).\n\n```\n{[Cotton].Bur.DMDemands.Structural.DMDemandFunction}\n```\n\nwhere\n\n```\n{[Cotton].Bur.DMDemands.Structural.DMDemandFunction.BurDevelopment.HIDemand.HarvestIndexIncrease}\nOutstandingHarvestIndexIncrease = Max (0,Increase)\n{[Cotton].Bur.DMDemands.Structural.DMDemandFunction.BurDevelopment.HIDemand.HarvestIndexIncrease.OutstandingHarvestIndexIncrease.Increase}\n{[Cotton].Bur.DMDemands.Structural.DMDemandFunction.BurDevelopment.HIDemand.HarvestIndexIncrease.TTRemaining}\n{[Cotton].Bur.PotentialHarvestIndex}\n```\n\n**Bur Nitrogen Demand and Allocation**\n\nBur Nitrogen allocation to structural, storage and metabolic biomass pools is calculated by the OrganArbitrator as described above.  The bur model calculates the demands for each of these pools from information on the minimum, critical and maximum bur Nitrogen concentration for each predicted stage of development.\n\nThe minimum bur nitrogen concentration is used to describe the nitrogen content of the structural bur material. The difference between minimum and critical nitrogen concentration is assumed to correspond to metabolic bur material.  Storage nitrogen is equated with the difference between maximum and critical nitrogen concentrations.  The values of each of these is specified as follows.\n\nMinimum and critical are set to be equal to provide a configuration where Bur N is held in structural and storage pools only.  Storage N is parameterised therefore as the difference between minimum/critical N concentration and the following maximum N concentration.\n\n```\n{[Cotton].Bur.MinimumNConc}\n{[Cotton].Bur.CriticalNConc}\n{[Cotton].Bur.MaximumNConc}\n```\n\n**Senescence and Detachment**\n\nBur senescence can be specified to occur at differing rates before and after cutout.\n\n```\n{[Cotton].Bur.SenescenceRate}\n```\n\nwhere\n\nName | Description | Units\n-|-|-\nConstant\t|Fraction of live bur that senesces on the current day | /day\n\n**N reuse within the plant**\n\nNon-structural N (ie storage or metabolic pools) can be available for reuse elsewhere within the plant to meet other demands via reallocation of N from senescing biomass or retranslocation from live biomass during some growth phases (e.g. reallocation of N from senescing bur or retranslocation from bur N storage to support daily growth.  The potential fraction of N that is available on any day is specified as follows:\n\n```\n{[Cotton].Bur.NRetranslocationFactor}\n{[Cotton].Bur.NReallocationFactor}\n```",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Cutout",
                   "End": "HarvestRipe",
@@ -5557,39 +5566,12 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.DemandFunctions.StorageDMDemandFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
                       "Name": "Storage",
                       "ResourceName": null,
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "StorageFraction",
-                          "ResourceName": null,
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "One",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Bur].DMDemands.Structural.StructuralFraction",
-                              "Name": "StructuralFraction",
-                              "ResourceName": null,
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -6054,6 +6036,15 @@
               "Name": "Seed",
               "ResourceName": null,
               "Children": [
+                {
+                  "$type": "Models.Documentation, Models",
+                  "Text": "**Seed Dry Matter Demands**\n\nDemands for DM growth is only for structural growth (ie no storage or metabolic demand).\n\n```\n{[Cotton].Seed.DMDemandFunction.BollFilling}\n```\n\nwhere\n\n```\n{[Cotton].Seed.DMDemandFunction.BollFilling.HIDemand.HarvestIndexIncrease}\nOutstandingHarvestIndexIncrease = Max (0,Increase)\n{[Cotton].Seed.DMDemandFunction.BollFilling.HIDemand.HarvestIndexIncrease.OutstandingHarvestIndexIncrease.TTRemaining\n{[Cotton].Seed.DMDemandFunction.BollFilling.HIDemand.HarvestIndexIncrease}\n{[Cotton].Seed.PotentialHarvestIndex}\n```\n\n**Seed Nitrogen Demand and Allocation**\n\nSeed Nitrogen allocation to structural, storage and metabolic biomass pools is calculated by the OrganArbitrator as described above.  The seed model calculates the demands for each of these pools from information on the minimum, critical and maximum seed Nitrogen concentration for each predicted stage of development.\n\nThe minimum seed nitrogen concentration is used to describe the nitrogen content of the structural seed material. The difference between minimum and critical nitrogen concentration is assumed to correspond to metabolic seed material.  Storage nitrogen is equated with the difference between maximum and critical nitrogen concentrations.  The values of each of these is specified as follows.\n\nMinimum and critical are set to be equal to provide a configuration where Seed N is held in structural and storage pools only.  Storage N is parameterised therefore as the difference between minimum/critical N concentration and the following maximum N concentration.\n\n{[Cotton].Seed.MinimumNConc}\n{[Cotton].Seed.MaximumNConc}\n\n",
+                  "Name": "Documentation",
+                  "ResourceName": null,
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 {
                   "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DMDemandFunction",
