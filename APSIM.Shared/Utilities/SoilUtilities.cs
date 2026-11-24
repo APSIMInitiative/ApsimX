@@ -384,48 +384,29 @@ namespace APSIM.Shared.Utilities
         /// <param name="modelName">Model name for error reporting</param>
         /// <returns></returns>
         public static double[] MapConcentration(double[] fromValues, double[] fromThickness,
-                                                  double[] toThickness,
-                                                  double defaultValueForBelowProfile,
-                                                  bool allowMissingValues = false,
-                                                  string modelName = null)
+                                                    double[] toThickness,
+                                                    double defaultValueForBelowProfile,
+                                                    bool allowMissingValues = false,
+                                                    string modelName = null)
         {
-            if (fromValues != null && !MathUtilities.AreEqual(fromThickness, toThickness))
-            {
-                if (fromValues.Length != fromThickness.Length && !allowMissingValues)
-                {   
-                    string prefix = "MapConcentration";
-                    if (!string.IsNullOrEmpty(modelName))
-                        prefix = $"{modelName}";
-                    throw new Exception($"In {prefix}, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).");
-                }
-                    
-                if (fromValues == null || fromThickness == null)
-                    return null;
+            return MapConcentrationComplex(fromValues, fromThickness, toThickness, defaultValueForBelowProfile, allowMissingValues, modelName, false);
+        }
 
-                // convert from values to a mass basis with a dummy bottom layer.
-                List<double> values = new List<double>();
-                List<double> thickness = new List<double>();
-                for (int i = 0; i < fromValues.Length; i++)
-                {
-                    if (!allowMissingValues && double.IsNaN(fromValues[i]))
-                        break;
-
-                    values.Add(fromValues[i]);
-                    thickness.Add(fromThickness[i]);
-                }
-
-                values.Add(defaultValueForBelowProfile);
-                thickness.Add(30000);
-                double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
-
-                double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);
-
-                // Convert mass back to concentration and return
-                if (newValues != null)
-                    newValues = MathUtilities.Divide(newValues, toThickness);
-                return newValues;
-            }
-            return fromValues;
+        /// <summary>Map soil variables (using concentration) from one layer structure to another, interpolating in the log10 domain.</summary>
+        /// <param name="fromValues">The from values (natural domain, must be &gt; 0).</param>
+        /// <param name="fromThickness">The from thickness.</param>
+        /// <param name="toThickness">To thickness.</param>
+        /// <param name="defaultValueForBelowProfile">The default value for below profile (natural domain).</param>
+        /// <param name="allowMissingValues">Tolerate missing values (double.NaN)?</param>
+        /// <param name="modelName">Model name for error reporting</param>
+        /// <returns></returns>
+        public static double[] MapConcentrationLog10(double[] fromValues, double[] fromThickness,
+                                                        double[] toThickness,
+                                                        double defaultValueForBelowProfile,
+                                                        bool allowMissingValues = false,
+                                                        string modelName = null)
+        {
+            return MapConcentrationComplex(fromValues, fromThickness, toThickness, defaultValueForBelowProfile, allowMissingValues, modelName, true);
         }
 
         /// <summary>Map soil variables from one layer structure to another.</summary>
@@ -625,6 +606,116 @@ namespace APSIM.Shared.Utilities
 
                 return metadataValues.ToArray();
             }
+        }
+
+        /// <summary>
+        /// This method combines the functionality of MapConcentration and MapConcentrationLog10 so that we don't have 
+        /// a bunch of repeated code they both use
+        /// Do not attach optional parameters to this function, optionals only go on the public facing methods
+        /// </summary>
+        /// <param name="fromValues"></param>
+        /// <param name="fromThickness"></param>
+        /// <param name="toThickness"></param>
+        /// <param name="defaultValueForBelowProfile"></param>
+        /// <param name="allowMissingValues"></param>
+        /// <param name="modelName"></param>
+        /// <param name="convertToLog10"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private static double[] MapConcentrationComplex(double[] fromValues, double[] fromThickness,
+                                                    double[] toThickness,
+                                                    double defaultValueForBelowProfile,
+                                                    bool allowMissingValues,
+                                                    string modelName,
+                                                    bool convertToLog10)
+        {
+            //Check if any of the required arrays are null. Return null if they are
+            if (fromValues == null || fromThickness == null || toThickness == null)
+                return null;
+
+            //Check if the thicknesses already match, if so, do nothing and return the same values
+            if (MathUtilities.AreEqual(fromThickness, toThickness))
+                return fromValues;
+
+            //If we are not allowing missing values and the number of values doesnt match the number of layers
+            //throw an error message
+            if ((!allowMissingValues) && (fromValues.Length != fromThickness.Length))
+            { 
+                string errorMessage = "MapConcentration";
+                if (!string.IsNullOrEmpty(modelName))
+                    errorMessage = $"{modelName}";
+                errorMessage = $"In {errorMessage}, the number of values ({fromValues.Length}) doesn't match the number of thicknesses ({fromThickness.Length}).";
+                throw new Exception(errorMessage);
+            }
+            
+            // Create arrays of values and thicknesses based on input values and if we allow missing values
+            List<double> values = new List<double>(fromValues.Length);
+            List<double> thicknesses = new List<double>(fromValues.Length);
+            for (int i = 0; i < fromValues.Length; i++)
+            {
+                double value = fromValues[i];
+                double thickness = fromThickness[i];
+
+                //if we are allowing missing values, or if the value is not NaN, add this value/thickness to the array
+                //This block means that in the case we don't allow missing values, and the value is NaN, it will be skipped
+                if (allowMissingValues || !double.IsNaN(value))
+                {
+                    values.Add(value);
+                    thicknesses.Add(thickness);
+                }
+            }
+
+            //Add a dummy bottom layer.
+            values.Add(defaultValueForBelowProfile);
+            thicknesses.Add(30000);
+
+            //convert all the values to log 10 if required
+            if (convertToLog10)
+            {
+                for (int i = 0; i < values.Count; i++)
+                {
+                    double value = values[i];
+                    if (double.IsNaN(value))
+                        values[i] = double.NaN;
+                    else if (value <= 0)
+                    {
+                        string errorMessage = "MapConcentration";
+                        if (!string.IsNullOrEmpty(modelName))
+                            errorMessage = $"{modelName}";
+                        errorMessage = $"In {errorMessage}, cannot take log10 of a non-positive value ({value}) at layer {i + 1}.";
+                        throw new Exception(errorMessage);
+                    }
+                    else
+                        values[i] = Math.Log10(value);
+                }
+            }
+            
+            //convert to mass basis
+            double[] massValues = MathUtilities.Multiply(values, thicknesses);
+
+            //map values by mass
+            double[] mappedValues = MapMass(massValues, thicknesses.ToArray(), toThickness, allowMissingValues);
+            if (mappedValues == null)
+                return null;
+
+            // Convert mass back to concentration
+            mappedValues = MathUtilities.Divide(mappedValues, toThickness);
+
+            //Convert back from log10 if that was done
+            if (convertToLog10)
+            {
+                for (int i = 0; i < mappedValues.Length; i++)
+                {
+                    double value = mappedValues[i];
+                    if (double.IsNaN(value))
+                        mappedValues[i] = double.NaN;
+                    else
+                        mappedValues[i] = Math.Pow(10, value);
+                }
+            }
+
+            //return result
+            return mappedValues;
         }
     }
 }

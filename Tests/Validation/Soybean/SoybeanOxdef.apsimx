@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 201,
+  "Version": 221,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -662,7 +662,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp1",
                   "ResourceName": null,
                   "Children": [
@@ -1462,6 +1461,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 66.0,
                               "CNRed": 20.0,
@@ -2037,6 +2038,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -5140,7 +5142,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp2",
                   "ResourceName": null,
                   "Children": [
@@ -6044,6 +6045,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 73.0,
                               "CNRed": 20.0,
@@ -6860,6 +6863,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -9412,7 +9416,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp3",
                   "ResourceName": null,
                   "Children": [
@@ -10227,6 +10230,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 66.0,
                               "CNRed": 20.0,
@@ -10802,6 +10807,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -11586,7 +11592,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp4",
                   "ResourceName": null,
                   "Children": [
@@ -12401,6 +12406,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 66.0,
                               "CNRed": 20.0,
@@ -12410,7 +12417,7 @@
                               "VC": true,
                               "DTMin": 0.0,
                               "DTMax": 1440.0,
-                              "MaxWaterIncrement": 10.0,
+                              "MaxWaterIncrement": 5.0,
                               "SpaceWeightingFactor": 0.0,
                               "SoluteSpaceWeightingFactor": 0.0,
                               "Dis": 0.0,
@@ -12976,6 +12983,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -15872,7 +15880,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp5",
                   "ResourceName": null,
                   "Children": [
@@ -16687,6 +16694,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.15,
                               "CN2Bare": 66.0,
                               "CNRed": 20.0,
@@ -17262,6 +17271,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],
@@ -19973,7 +19983,6 @@
                 },
                 {
                   "$type": "Models.Core.Simulation, Models",
-                  "Descriptors": null,
                   "Name": "Base_Exp6",
                   "ResourceName": null,
                   "Children": [
@@ -20696,6 +20705,8 @@
                             },
                             {
                               "$type": "Models.Soils.Swim3, Models",
+                              "hydrol_effective_depth": 450.0,
+                              "hydrol_effective_exponent": 4.16,
                               "Salb": 0.13,
                               "CN2Bare": 64.0,
                               "CNRed": 20.0,
@@ -21184,6 +21195,7 @@
                               "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                               "Thickness": null,
                               "InitialValues": null,
+                              "InteractionsPerDay": 8,
                               "Name": "Temperature",
                               "ResourceName": null,
                               "Children": [],

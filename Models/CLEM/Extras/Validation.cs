@@ -4,26 +4,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="dateToCompareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class DateGreaterThanAttribute : ValidationAttribute
+    public class DateGreaterThanAttribute(string dateToCompareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="dateToCompareToFieldName"></param>
-        public DateGreaterThanAttribute(string dateToCompareToFieldName)
-        {
-            this.dateToCompareToFieldName = dateToCompareToFieldName;
-        }
-
-        private string dateToCompareToFieldName { get; set; }
+        private readonly string dateToCompareToFieldName = dateToCompareToFieldName;
 
         /// <summary>
         ///
@@ -41,7 +36,7 @@ namespace Models.CLEM
 
             DateTime laterDate = (DateTime)value;
             DateTime earlierDate = (DateTime)validationContext.ObjectType.GetProperty(dateToCompareToFieldName).GetValue(validationContext.ObjectInstance, null);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (laterDate > earlierDate)
             {
@@ -70,8 +65,6 @@ namespace Models.CLEM
         {
         }
 
-        private double compareValue { get; set; }
-
         /// <summary>
         ///
         /// </summary>
@@ -81,7 +74,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if ((MathUtilities.IsGreaterThanOrEqual(maxValue, 0)) && MathUtilities.IsLessThanOrEqual(maxValue, 100))
             {
@@ -109,8 +102,6 @@ namespace Models.CLEM
         {
         }
 
-        private double compareValue { get; set; }
-
         /// <summary>
         ///
         /// </summary>
@@ -119,7 +110,7 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             double[] listValues;
             if (value != null && value.GetType().IsArray)
@@ -128,7 +119,7 @@ namespace Models.CLEM
             }
             else
             {
-                listValues = new double[] { Convert.ToDouble(value, CultureInfo.InvariantCulture) };
+                listValues = [Convert.ToDouble(value, CultureInfo.InvariantCulture)];
             }
 
             foreach (double item in listValues)
@@ -158,10 +149,8 @@ namespace Models.CLEM
         {
         }
 
-        private double compareValue { get; set; }
-
         /// <summary>
-        ///
+        /// Method to determine if the MonthAttribute is valid for the value provided
         /// </summary>
         /// <param name="value"></param>
         /// <param name="validationContext"></param>
@@ -179,7 +168,7 @@ namespace Models.CLEM
                 monthValue = Convert.ToInt32(value, CultureInfo.InvariantCulture);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if ((monthValue >= 1) && (monthValue <= 12))
             {
@@ -195,21 +184,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if double/int greater than specified value
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanValueAttribute : ValidationAttribute
+    public class GreaterThanValueAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="value"></param>
-        public GreaterThanValueAttribute(object value)
-        {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-        }
-
-        private double compareValue { get; set; }
+        private readonly double compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -229,7 +213,7 @@ namespace Models.CLEM
                 maxValue = Convert.ToDouble(value);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (MathUtilities.IsGreaterThan(maxValue, compareValue))
             {
@@ -246,21 +230,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if double/int greater than specified value
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanEqualValueAttribute : ValidationAttribute
+    public class GreaterThanEqualValueAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="value"></param>
-        public GreaterThanEqualValueAttribute(object value)
-        {
-            compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-        }
-
-        private double compareValue { get; set; }
+        private readonly double compareValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         ///
@@ -285,7 +264,7 @@ namespace Models.CLEM
                 maxValue = Convert.ToDouble(value);
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (MathUtilities.IsGreaterThanOrEqual(maxValue, compareValue))
             {
@@ -302,21 +281,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if herd change reason is of a specified style (purchase or sale)
     /// </summary>
+    /// <remarks>
+    /// Constructor
+    /// </remarks>
+    /// <param name="value"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class HerdSaleReasonAttribute : ValidationAttribute
+    public class HerdSaleReasonAttribute(object value) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="value"></param>
-        public HerdSaleReasonAttribute(object value)
-        {
-            compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
-        }
-
-        private string compareStyle { get; set; }
+        private readonly string compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Perform validation method
@@ -356,7 +330,7 @@ namespace Models.CLEM
                     break;
             }
 
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (result == compareStyle)
             {
@@ -373,21 +347,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="compareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanAttribute : ValidationAttribute
+    public class GreaterThanAttribute(string compareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="compareToFieldName"></param>
-        public GreaterThanAttribute(string compareToFieldName)
-        {
-            this.compareToFieldName = compareToFieldName;
-        }
-
-        private string compareToFieldName { get; set; }
+        private readonly string compareToFieldName = compareToFieldName;
 
         /// <summary>
         ///
@@ -398,7 +367,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             // check valid property name
             if (validationContext.ObjectType.GetProperty(compareToFieldName) == null)
@@ -423,21 +392,16 @@ namespace Models.CLEM
     /// <summary>
     /// Tests if date greater than specified property name
     /// </summary>
+    /// <remarks>
+    ///
+    /// </remarks>
+    /// <param name="compareToFieldName"></param>
     [AttributeUsage(AttributeTargets.Property)]
-    public class GreaterThanEqualAttribute : ValidationAttribute
+    public class GreaterThanEqualAttribute(string compareToFieldName) : ValidationAttribute
     {
         private string DefaultErrorMessage;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="compareToFieldName"></param>
-        public GreaterThanEqualAttribute(string compareToFieldName)
-        {
-            this.compareToFieldName = compareToFieldName;
-        }
-
-        private string compareToFieldName { get; set; }
+        private readonly string compareToFieldName = compareToFieldName;
 
         /// <summary>
         ///
@@ -448,7 +412,7 @@ namespace Models.CLEM
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             double maxValue = Convert.ToDouble(value);
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             // check valid property name
             if (validationContext.ObjectType.GetProperty(compareToFieldName) == null)
@@ -500,8 +464,8 @@ namespace Models.CLEM
             maxNumberOfArrayItems = maxArrayItems;
         }
 
-        private int minNumberOfArrayItems { get; set; }
-        private int maxNumberOfArrayItems { get; set; }
+        private readonly int minNumberOfArrayItems;
+        private readonly int maxNumberOfArrayItems;
 
         /// <summary>
         ///
@@ -524,7 +488,7 @@ namespace Models.CLEM
             {
                 DefaultErrorMessage += $" (expecting between {minNumberOfArrayItems} and {maxNumberOfArrayItems} values)";
             }
-            string[] memberNames = new string[] { validationContext.MemberName };
+            string[] memberNames = [validationContext.MemberName];
 
             if (value.GetType().IsArray)
             {

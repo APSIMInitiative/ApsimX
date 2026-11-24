@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Docker.DotNet.Models;
 using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
@@ -24,7 +25,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantHerd : ResourceBaseWithTransactions
     {
         private int id = 1;
@@ -84,8 +85,8 @@ namespace Models.CLEM.Resources
         {
             // performed on CLEMInitialise before InitialiseResources as we need this setup ready for other early initialisation and the creation of individuals in the herd.
             id = 1;
-            Herd = new List<Ruminant>();
-            PurchaseIndividuals = new List<Ruminant>();
+            Herd = [];
+            PurchaseIndividuals = [];
             RuminantGrowActivity = Structure.FindAll<IRuminantActivityGrow>().Where(a => (a as CLEMActivityBase).ActivityEnabled).FirstOrDefault();
 
             foreach (RuminantType rType in Structure.FindChildren<RuminantType>())
@@ -259,11 +260,6 @@ namespace Models.CLEM.Resources
             // update age in days counter for individuals
             foreach (Ruminant ind in Herd)
             {
-                if (ind.ID == 2500)
-                {
-                    ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
-                }
-
                 ind.UpdateAgeInDays(ind.Parameters.Details.CurrentTimeStep.TimeStepStart);
             }
 
@@ -325,7 +321,7 @@ namespace Models.CLEM.Resources
         /// <returns>Dicitonary of ResourceTypes and categories for each</returns>
         public IEnumerable<string> GetReportingGroups(RuminantType ruminantType)
         {
-            List<string> catNames = new();
+            List<string> catNames = [];
             switch (TransactionStyle)
             {
                 case RuminantTransactionsGroupingStyle.Combined:
@@ -337,10 +333,10 @@ namespace Models.CLEM.Resources
                         catNames.AddRange(Structure.FindChildren<AnimalPriceGroup>(relativeTo: animalPricing).Select(a => a.Name));
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
-                    catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
+                    catNames.AddRange(Enum.GetNames<RuminantClass>());
                     break;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
-                    var classes = Enum.GetNames(typeof(RuminantClass));
+                    var classes = Enum.GetNames<RuminantClass>();
                     foreach (var item in classes)
                     {
                         catNames.Add($"Female_{item}");

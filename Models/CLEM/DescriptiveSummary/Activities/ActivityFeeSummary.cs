@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Activity Fee
@@ -22,8 +22,8 @@ public class ActivityFeeSummary : DescriptiveSummaryProviderBase<ActivityFee>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Pay {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Rate not set")} " +
-            $"per {generator.DisplaySummaryValueSnippet(ModelTyped.Measure, "Measure not set")} " +
-            $"from {generator.DisplaySummaryResourceTypeSnippet(ModelTyped.BankAccountName)}");
+        generator.AddBlockWithText($"Pay {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Rate not set")} " +
+            $"per {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Measure, "Measure not set")} " +
+            $"from {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(ModelTyped.BankAccountName)}");
     }
 }

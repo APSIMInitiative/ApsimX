@@ -15,7 +15,7 @@ namespace Models.CLEM.DescriptiveSummary;
 /// </summary>
 public class DescriptiveSummaryGenerator
 {
-    private List<(string tag, string id, bool disabled)> openBlockIds = [];
+    private readonly List<(string tag, string id, bool disabled)> openBlockIds = [];
 
     private StringBuilder sb;
 
@@ -210,7 +210,7 @@ public class DescriptiveSummaryGenerator
         { "FontLight", ("floralwhite","#281A0E") },
     };
 
-    private Dictionary<string, (string light, string dark)> colours = new()
+    private readonly Dictionary<string, (string light, string dark)> colours = new()
     {
         { "BodyBackground", ("white", "#101010") },
         { "BodyFont", ("black", "#d0d0d0") },
@@ -345,7 +345,7 @@ public class DescriptiveSummaryGenerator
         if (textToWrite.Contains("<canvas"))
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            StreamReader textStreamReader = new StreamReader(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
+            StreamReader textStreamReader = new(assembly.GetManifestResourceStream("Models.Resources.CLEM.Chart.min.js"));
             textToWrite = textToWrite.Replace("<!-- graphscript -->", $"<script>{textStreamReader.ReadToEnd()}</script>");
             textToWrite = UpdateCSSColours(textToWrite, graphColours);
         }
@@ -440,7 +440,7 @@ public class DescriptiveSummaryGenerator
                     case Memo memo:
                         if (provider.ReportMemosType == DescriptiveSummaryMemoReportingType.InPlace)
                         {
-                            AddMemos(new List<Memo> { memo });
+                            AddMemos([memo]);
                         }
                         break;
                     case IModel _:
@@ -495,7 +495,7 @@ public class DescriptiveSummaryGenerator
         }
     }
 
-    private string MakeSafeFileName(string name)
+    private static string MakeSafeFileName(string name)
     {
         if (string.IsNullOrEmpty(name)) return "Unnamed";
         var invalids = Path.GetInvalidFileNameChars();
@@ -550,7 +550,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="singularSuffix">Specify the singular suffix (default is empty string)</param>
     /// <param name="pluralSuffix">Specify the plural suffix (default is 's")</param>
     /// <returns>Returns the singular or plural word based on the specified count</returns>
-    public string DisplayPlural(int count, string word = "", string singularSuffix = "", string pluralSuffix = "s")
+    public static string DisplayPlural(int count, string word = "", string singularSuffix = "", string pluralSuffix = "s")
     {
         return $"{word}{((count == 1) ? singularSuffix : pluralSuffix)}";
     }
@@ -669,7 +669,7 @@ public class DescriptiveSummaryGenerator
         if (OutputFormat == DescriptiveSummaryFormat.Markdown)
         {
             sb.Append(GetIndentTabs+openTag);
-            foreach (var label in columnHeadingLabels)
+            foreach (string _ in columnHeadingLabels)
             {
                 sb.Append($"------{cellWrapEnd}");
             }
@@ -765,7 +765,7 @@ public class DescriptiveSummaryGenerator
 
         using (OpenBlock("componentContent"))
         {
-            AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}");
+            AddBlockWithText($"{GetIndentTabs}Summary last created on {DateTime.Now:d} at {DateTime.Now:t}");
         }
     }
 
@@ -865,17 +865,11 @@ public class DescriptiveSummaryGenerator
     /// <summary>
     /// Small disposable used to close a div when the using scope ends.
     /// </summary>
-    private sealed class BlockScope : IDisposable
+    private sealed class BlockScope(DescriptiveSummaryGenerator parent, bool ignore = false) : IDisposable
     {
-        private readonly DescriptiveSummaryGenerator parent;
-        private readonly bool ignore;
+        private readonly DescriptiveSummaryGenerator parent = parent ?? throw new ArgumentNullException(nameof(parent));
+        private readonly bool ignore = ignore;
         private bool disposed;
-
-        public BlockScope(DescriptiveSummaryGenerator parent, bool ignore = false)
-        {
-            this.parent = parent ?? throw new ArgumentNullException(nameof(parent));
-            this.ignore = ignore;
-        }
 
         public void Dispose()
         {
@@ -894,7 +888,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="errorString"></param>
     /// <param name="htmlTags"></param>
     /// <returns></returns>
-    public string DisplayErrorSnippet(string errorString = "Error", bool htmlTags = true)
+    public static string DisplayErrorSnippet(string errorString = "Error", bool htmlTags = true)
     {
         string htmlStart = String.Empty;
         string htmlEnd = (htmlTags) ? "</span>" : string.Empty;
@@ -916,7 +910,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="errorNotSet">Format as error if value not set or default</param>
     /// <param name="spanClass">Override the default 'setvalue' class to use.</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "")
+    public static string DisplaySummaryValueSnippet<T>(T value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false, bool errorNotSet = false, string spanClass = "")
     {
         string errorClass = "errorValue";
         switch (entryStyle)
@@ -1010,7 +1004,7 @@ public class DescriptiveSummaryGenerator
         if (!zeroFound && !isMissingOrEmpty && !isNaN && value.ToString() != "NaN")
         {
             // Format numerics using current culture with appropriate grouping and decimal separators.
-            string formatted = null;
+            string formatted;
             try
             {
                 TypeCode tc = Type.GetTypeCode(value.GetType());
@@ -1074,7 +1068,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="htmlTags">Include html tags</param>
     /// <param name="warnZero">Display warning if value is zero</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
+    public static string DisplaySummaryValueSnippet<T>(IList<T> value, string errorString = "Not set", HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true, bool warnZero = false)
     {
         string result = string.Empty;
         if (value.Any())
@@ -1100,7 +1094,7 @@ public class DescriptiveSummaryGenerator
     /// <param name="htmlTags">Include html tags</param>
     /// <param name="nullGeneralYards">replace empty with general yards</param>
     /// <returns>HTML span snippet</returns>
-    public string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
+    public static string DisplaySummaryResourceTypeSnippet(string value, string errorString = "Not set", bool htmlTags = true, bool nullGeneralYards = false)
     {
         string spanClass = "resourceValue";
         string errorClass = "errorValue";
@@ -1135,17 +1129,13 @@ public class DescriptiveSummaryGenerator
     /// <returns>file extension with full stop</returns>
     public static string FileExtensionToUse(DescriptiveSummaryFormat format)
     {
-        switch (format)
+        return format switch
         {
-            case DescriptiveSummaryFormat.HTML:
-                return ".html";
-            case DescriptiveSummaryFormat.Markdown:
-                return ".md";
-            case DescriptiveSummaryFormat.Text:
-                return ".txt";
-            default:
-                return ".txt";
-        }
+            DescriptiveSummaryFormat.HTML => ".html",
+            DescriptiveSummaryFormat.Markdown => ".md",
+            DescriptiveSummaryFormat.Text => ".txt",
+            _ => ".txt",
+        };
     }
 
 }

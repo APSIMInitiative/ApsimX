@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -25,7 +26,7 @@ namespace Models.CLEM.Reporting
     public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
         /// <summary>
@@ -110,11 +111,11 @@ namespace Models.CLEM.Reporting
             // check that this activity has a parent of type CropActivityManageProduct
             if (ruminantHerd is null)
             {
-                yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", new string[] { "Missing resource" });
+                yield return new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", ["Missing resource"]);
             }
             if (!Structure.FindChildren<RuminantGroup>().Any())
             {
-                yield return new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", new string[] { "Missing ruminant filter group" });
+                yield return new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", ["Missing ruminant filter group"]);
             }
         }
 

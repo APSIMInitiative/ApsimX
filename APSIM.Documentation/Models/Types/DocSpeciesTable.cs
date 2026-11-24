@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models.AgPasture;
 using System.Data;
@@ -58,11 +58,11 @@ namespace APSIM.Documentation.Models.Types
                 }
             }
 
-            Paragraph text = new Paragraph("Listed in the table below are the default values for all parameters for all AgPasture species");
+            Paragraph text = new Paragraph("Listed in the table below are the default values for all parameters for all AgPasture species", model);
 
-            Section main = new Section("SpeciesTable", new List<ITag>());
+            Section main = new Section("SpeciesTable", new List<ITag>(), model);
             main.Add(text);
-            main.Add(new Table(table));
+            main.Add(new Table(table, model));
 
             tags.Add(main);
 

@@ -70,7 +70,7 @@ public class ProgramTests
     public void SimCountSwitchTest()
     {
         // Arrange
-        string[] args = new string[] { "--sim-count" };
+        string[] args = new string[] { "sim-count" };
 
         // Act
         int returnValue = Program.Main(args);

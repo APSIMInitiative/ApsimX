@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Shared.Documentation;
-using M = Models;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using Models;
+using APSIM.Core;
+using System;
 
 namespace APSIM.Documentation.Models.Types
 {
@@ -43,7 +44,7 @@ namespace APSIM.Documentation.Models.Types
             foreach (IModel child in model.Node.FindChildren<Memo>())
                 tags = AutoDocumentation.DocumentModel(child).ToList();
 
-            return new Section(model.Name, tags);
+            return new Section(model.Name, tags, model);
         }
 
         /// <summary>
@@ -52,30 +53,20 @@ namespace APSIM.Documentation.Models.Types
         public static Section GetSummaryAndRemarksSection(IModel model) {
 
             List<ITag> tags = new List<ITag>();
-            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}"));
+            tags.Add(new Paragraph($"Source: {DocumentationUtilities.GetGithubMarkdownLink(model)}", model));
             
-            tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType())));
-            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType())));
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(model.GetType()), model));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(model.GetType()), model));
 
             if (model.Node != null)
             {
-                bool hasDocumentation = false;
-                if (model.Node.FindParent<Simulations>(recurse:true).Node.FindChild<M.Documentation>(recurse:true) != null)
-                    hasDocumentation = true;
-
-                if (!hasDocumentation)
-                {
-                    foreach (IModel child in model.Node.FindChildren<Memo>())
+                Type memoType = DocumentationUtilities.TypeToDocument(model);
+                foreach (IModel child in model.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
                         tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
-                }
-                else
-                {
-                    foreach (IModel child in model.Node.FindChildren<M.Documentation>())
-                        tags.AddRange(AutoDocumentation.DocumentModel(child).ToList());
-                }
             }
 
-            return new Section(model.Name, tags);
+            return new Section(model.Name, tags, model);
         }
     }
 }

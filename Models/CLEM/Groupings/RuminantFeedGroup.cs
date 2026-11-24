@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -24,7 +25,7 @@ namespace Models.CLEM.Groupings
     public class RuminantFeedGroup : RuminantGroup
     {
         [Link]
-        private Summary summary = null;
+        private readonly Summary summary = null;
         [Link(IsOptional = true)]
         private readonly CLEMEvents events = null;
 
@@ -150,7 +151,7 @@ namespace Models.CLEM.Groupings
         public override void PrepareForTimestep()
         {
             // remember individuals and request details for later adjustment based on shortfalls
-            individualsToBeFed = Filter(feedActivityParent.IndividualsToBeFed).ToList();
+            individualsToBeFed = [.. Filter(feedActivityParent.IndividualsToBeFed)];
 
             // get copy of food store details in case they are dynamically changing.
             currentFeedRequest.AdditionalDetails = new FoodResourcePacket(feedActivityParent.FeedDetails);
@@ -164,7 +165,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
-            return new List<ResourceRequest> { currentFeedRequest };
+            return [currentFeedRequest];
         }
 
         /// <summary>

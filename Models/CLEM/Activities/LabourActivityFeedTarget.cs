@@ -3,6 +3,7 @@ using Models.Core.Attributes;
 using System;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
+using Models.CLEM.Extras;
 using System.IO;
 
 namespace Models.CLEM.Activities

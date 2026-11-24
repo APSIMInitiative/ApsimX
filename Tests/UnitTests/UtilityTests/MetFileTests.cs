@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 
 namespace UnitTests.UtilityTests
@@ -45,6 +46,79 @@ namespace UnitTests.UtilityTests
                         $"Mismatch at day {day} column {col}. Expected {expected} got {row[col]}");
                 }
             }
+        }
+
+        [Test]
+        public void RawData_ReturnsRowsWithDatesAndValues()
+        {
+            string[] columns = ["date", "rain", "mint"];
+            string[] units = ["", "mm", "C"];
+            double[] values = 
+            [
+                0.0, 12.5, 4.2,
+                0.0, 8.0, 3.1
+            ];
+            MetFile met = new MetFile();
+
+            met.Load([], columns, units, values, "2020-01-01");
+
+            string[][] rawData = met.GetData();
+
+            Assert.That(rawData, Has.Length.EqualTo(2));
+            Assert.That(rawData[0], Has.Length.EqualTo(3));
+            Assert.That(DateTime.Parse(rawData[0][0]), Is.EqualTo(new DateTime(2020, 1, 1)));
+            Assert.That(rawData[0][0], Is.EqualTo("2020-01-01"));
+            Assert.That(rawData[0][1], Is.EqualTo("12.5"));
+            Assert.That(rawData[0][2], Is.EqualTo("4.2"));
+            Assert.That(rawData[1][0], Is.EqualTo("2020-01-02"));
+            Assert.That(rawData[1][1], Is.EqualTo("8"));
+            Assert.That(rawData[1][2], Is.EqualTo("3.1"));
+        }
+
+        [Test]
+        public void CheckConstantAndColumnFunctions()
+        {
+            string content = """
+                [weather.met.weather]
+                lat=130
+                lon= -30
+                another =constant
+
+                date rain mint maxt code
+                () (mm) (C) (C) ()
+                2020-01-01 12.0 4.2 25.0 text
+                2020-01-02 13.0 5.2 26.0 text
+                """;
+
+            MetFile met = MetFile.Create(content);
+
+            Dictionary<string, string> columnsDataTypes = met.GetColumnDataTypes();
+            Assert.That(columnsDataTypes, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["date"] = "datetime",
+                ["rain"] = "double",
+                ["mint"] = "double",
+                ["maxt"] = "double",
+                ["code"] = "string"
+            }));
+
+            Dictionary<string, string> columnsUnits = met.GetColumnUnits();
+            Assert.That(columnsUnits, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["date"] = "",
+                ["rain"] = "mm",
+                ["mint"] = "C",
+                ["maxt"] = "C",
+                ["code"] = ""
+            }));
+
+            Dictionary<string, string> constants = met.GetConstants();
+            Assert.That(constants, Is.EqualTo(new Dictionary<string, string>
+            {
+                ["lat"] = "130",
+                ["lon"] = "-30",
+                ["another"] = "constant"
+            }));
         }
     }
 }

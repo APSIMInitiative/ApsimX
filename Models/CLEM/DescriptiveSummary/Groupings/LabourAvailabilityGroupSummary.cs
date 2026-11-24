@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Ruminant Feed Group filter
@@ -39,7 +39,7 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
         if (!FormatForParentControl)
         {
             //ToDo: format value for currency
-            generator.AddBlockWithText($"The following individuals have {generator.DisplaySummaryValueSnippet(model.Value, warnZero: true)} days available per month");
+            generator.AddBlockWithText($"The following individuals have {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.Value, warnZero: true)} days available per month");
         }
     }
 
@@ -54,7 +54,7 @@ public class LabourAvailabilityGroupSummary : GroupSummaryBase<LabourAvailabilit
         generator.CloseMostRecentBlock("labourAvailabilityGroup_filters");
         if (FormatForParentControl)
         {
-            generator.AddBlockWithText(generator.DisplaySummaryValueSnippet(ModelTyped.Value, warnZero: true), tag: "td");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Value, warnZero: true), tag: "td");
             generator.CloseMostRecentBlock("labourAvailabilityGroup_row");
         }
     }

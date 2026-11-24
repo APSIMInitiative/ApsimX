@@ -10,6 +10,7 @@ using Models.CLEM.Reporting;
 using System.IO;
 using Models.CLEM.Interfaces;
 using APSIM.Core;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -26,11 +27,11 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IValidatableObject
     {
         [Link]
-        private readonly IClock clock = null;
+        private readonly CLEMEvents events = null;
 
         private string grazeStore;
         private int numberToSkip = 0;
@@ -38,7 +39,7 @@ namespace Models.CLEM.Activities
         private int numberToDo = 0;
         private int sucklingsToCheck = 0;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
+        private IEnumerable<RuminantGroup> filterGroups = [];
 
         /// <summary>
         /// Style of weaning rule
@@ -79,28 +80,24 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Number sucklings checked",
-                            "Number weaned"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Number sucklings checked",
+                                            "Number weaned"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -165,17 +162,12 @@ namespace Models.CLEM.Activities
                     number = sucklingsToCheck;
                 }
 
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = number;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => number,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -236,7 +228,7 @@ namespace Models.CLEM.Activities
 
                     if (readyToWean)
                     {
-                        ind.Wean(true, reason, clock.Today);
+                        ind.Wean(true, reason, events.TimeStepEnd);
 
                         // leave where weaned or move to specified location
                         if (GrazeFoodStoreName != "Leave at current location")
@@ -252,7 +244,8 @@ namespace Models.CLEM.Activities
                         }
 
                         // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), clock.Today, ind);
+                        conceptionArgs.Update(ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.MotherID), events.TimeStepEnd, ind, events);
+
                         ind.Parameters.Details.OnConceptionStatusChanged(conceptionArgs);
 
                         weaned++;
@@ -273,10 +266,9 @@ namespace Models.CLEM.Activities
         {
             if (GrazeFoodStoreName.Contains('.'))
             {
-                var grazeStore = Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IGrazeFoodStoreType;
-                if (grazeStore is null)
+                if (Resources.FindResourceType<GrazeFoodStore, IResourceType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) is not IGrazeFoodStoreType)
                 {
-                    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", new string[] { "Location is not valid" });
+                    yield return new ValidationResult($"The location where ruminants are to be moved [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", ["Location is not valid"]);
                 }
 
                 //ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();

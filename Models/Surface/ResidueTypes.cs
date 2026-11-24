@@ -15,21 +15,18 @@ namespace Models.Surface
     public class ResidueTypes : Model
     {
         /// <summary>Gets or sets the residues.</summary>
-        public List<ResidueType> ResidueType { get; set; }
+        private List<ResidueType> _residueTypes { get { return Children.OfType<ResidueType>().ToList(); } } 
 
         /// <summary>Return a list of fom type names</summary>
-        public List<string> Names { get { return ResidueType.Select(t => t.fom_type).ToList(); } }
+        public List<string> Names { get { return _residueTypes.Select(t => t.FomType).ToList(); } }
 
         /// <summary>Gets a specific residue type. Throws if not found.</summary>
         /// <param name="name">The name of the residue type to find</param>
         public ResidueType GetResidueType(string name)
         {
-            if (ResidueType != null)
-            {
-                ResidueType residueType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, name));
-                if (residueType != null)
-                    return FillDerived(residueType);
-            }
+            ResidueType residueType = _residueTypes.Find(type => StringUtilities.StringsAreEqual(type.FomType, name));
+            if (residueType != null)
+                return FillDerived(residueType);
             throw new Exception($"Could not find residue type '{name}'");
         }
 
@@ -37,36 +34,35 @@ namespace Models.Surface
         /// <param name="residueType">The residue to examine and change</param>
         private ResidueType FillDerived(ResidueType residueType)
         {
+            if (residueType.FomType == residueType.DerivedFrom)
+                throw new Exception($"Cannot derive ResidueType {residueType.FomType} from itself.");
+            
             ResidueType baseType = null;
-            if (residueType.derived_from != null)
-            {
-                baseType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, residueType.derived_from));
-                if (baseType != null)
-                    baseType = FillDerived(baseType); // Make sure the base residue type has itself been filled
-            }
+            baseType = _residueTypes.Find(type => StringUtilities.StringsAreEqual(type.FomType, residueType.DerivedFrom));
             if (baseType != null)
             {
+                baseType = FillDerived(baseType); // Make sure the base residue type has itself been filled
                 residueType = (ResidueType)ReflectionUtilities.Clone(residueType);
-                if (residueType.fraction_C == 0)
-                    residueType.fraction_C = baseType.fraction_C;
-                if (residueType.po4ppm == 0)
-                    residueType.po4ppm = baseType.po4ppm;
-                if (residueType.nh4ppm == 0)
-                    residueType.nh4ppm = baseType.nh4ppm;
-                if (residueType.no3ppm == 0)
-                    residueType.no3ppm = baseType.no3ppm;
-                if (residueType.specific_area == 0)
-                    residueType.specific_area = baseType.specific_area;
-                if (residueType.pot_decomp_rate == 0)
-                    residueType.pot_decomp_rate = baseType.pot_decomp_rate;
-                if (residueType.cf_contrib == 0)
-                    residueType.cf_contrib = baseType.cf_contrib;
-                if (residueType.fr_c == null)
-                    residueType.fr_c = (double[])baseType.fr_c.Clone();
-                if (residueType.fr_n == null)
-                    residueType.fr_n = (double[])baseType.fr_n.Clone();
-                if (residueType.fr_p == null)
-                    residueType.fr_p = (double[])baseType.fr_p.Clone();
+                if (residueType.FractionC == 0)
+                    residueType.FractionC = baseType.FractionC;
+                if (residueType.PO4ppm == 0)
+                    residueType.PO4ppm = baseType.PO4ppm;
+                if (residueType.NH4ppm == 0)
+                    residueType.NH4ppm = baseType.NH4ppm;
+                if (residueType.NO3ppm == 0)
+                    residueType.NO3ppm = baseType.NO3ppm;
+                if (residueType.SpecificArea == 0)
+                    residueType.SpecificArea = baseType.SpecificArea;
+                if (residueType.PotDecompRate == 0)
+                    residueType.PotDecompRate = baseType.PotDecompRate;
+                if (residueType.CfContrib == 0)
+                    residueType.CfContrib = baseType.CfContrib;
+                if (residueType.FR_C == null)
+                    residueType.FR_C = (double[])baseType.FR_C.Clone();
+                if (residueType.FR_N == null)
+                    residueType.FR_N = (double[])baseType.FR_N.Clone();
+                if (residueType.FR_P == null)
+                    residueType.FR_P = (double[])baseType.FR_P.Clone();
             }
             return residueType;
         }

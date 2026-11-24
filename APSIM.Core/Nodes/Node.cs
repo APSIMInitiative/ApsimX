@@ -16,9 +16,11 @@ namespace APSIM.Core;
 public class Node : IStructure
 {
     private readonly List<Node> children = [];
+    private readonly ManualResetEventSlim initialisationComplete = new(true);
     private ScopingRules scope;
     private Locator locator;
     private string fileName;
+    private Exception exception = null;
 
     /// <summary>The node name.</summary>
     public string Name { get; private set; }
@@ -61,12 +63,17 @@ public class Node : IStructure
     /// <summary>Is the node readonly i.e. not changable.</summary>
     public bool ReadOnly => Model == null ? false : Model.ReadOnly;
 
-    /// <summary>Is initialisation underway?</summary>
-    public bool IsInitialising { get; private set; }
+    /// <summary>Is initialisation underway</summary>
+    public bool IsInitialising { get; private set; } = true;
+
+    /// <summary>
+    /// As the nodes can be initialised in the background, we need to store any 
+    /// exception to throw then later if they happen.
+    /// </summary>
+    public Exception InitialisationException { get {return Root().exception;} }
 
     /// <summary>Compiler instance.</summary>
     public ScriptCompiler Compiler { get; private set; }
-
 
     /// <summary>
     /// Create a NodeTree instance from a model instance.
@@ -119,7 +126,8 @@ public class Node : IStructure
     {
         if (scope != null)  // can be null if called while Nodes are being created.
             foreach (var node in scope.Walk(this))
-                yield return node;
+                if (node.Model is not IOutOfScope)
+                    yield return node;
     }
 
     /// <summary>
@@ -476,6 +484,13 @@ public class Node : IStructure
         foreach (var child in children.ToArray())
             RemoveChild(child.Model);
     }
+    
+    /// <summary>Wait for node initialisation to complete.</summary>
+    /// <param name="timeout">The maximum time to wait.</param>
+    public bool WaitForInitialisation(TimeSpan timeout)
+    {
+        return Root().initialisationComplete.Wait(timeout);
+    }
 
     /// <summary>Find and return the root node</summary>
     public Node Root()
@@ -539,6 +554,8 @@ public class Node : IStructure
         // Initialise the model.
         if (doInitialise)
         {
+            head.initialisationComplete.Reset();
+
             // Call created in all models.
             if (initInBackground && !willGenerateNodes)
                 Task.Run(() => head.InitialiseModel(errorHandler));
@@ -556,6 +573,7 @@ public class Node : IStructure
     {
         try
         {
+            Root().exception = null;
             List<IGenerateNodes> generateNodes = new List<IGenerateNodes>();
             foreach (var node in Walk())
             {
@@ -564,7 +582,7 @@ public class Node : IStructure
                         if (node.Model is IGenerateNodes generateNode)
                             generateNodes.Add(generateNode);
             }
-                
+
             string directory = Path.GetDirectoryName(Walk().First().FileName);
             foreach (IGenerateNodes model in generateNodes)
             {
@@ -574,23 +592,20 @@ public class Node : IStructure
             }
 
             foreach (Node node in Walk().Where(n => n.Model is ICreatable))
-            {
-                try
-                {
-                    (node.Model as ICreatable).OnCreated();
-                }
-                catch (Exception err)
-                {
-                    if (errorHandler == null)
-                        throw;
-                    errorHandler(err);
-                }
-            }
+                (node.Model as ICreatable).OnCreated();
+        }
+        catch (Exception err)
+        {
+            Root().exception = err;
+            if (errorHandler == null)
+                throw;
+            errorHandler(err);
         }
         finally
         {
             foreach (var node in Walk())
                 node.IsInitialising = false;
+            Root().initialisationComplete.Set();
         }
     }
 

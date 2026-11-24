@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersHolder), typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Child, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersHolder), typeof(RuminantParametersBreeding), typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.Child, ModelAssociationStyle.DescendentOfRuminantType, ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         [Link(IsOptional = true)]
@@ -37,8 +37,8 @@ namespace Models.CLEM.Resources
         private readonly List<string> mandatoryAttributes = [];
         private readonly List<string> warningsMultipleEntry = [];
         private readonly List<string> warningsNotFound = [];
-        private MeanTracker meanOfFemaleMaturityAge = new MeanTracker();
-        private MeanTracker meanOfMaleMaturityAge = new MeanTracker();
+        private readonly MeanTracker meanOfFemaleMaturityAge = new();
+        private readonly MeanTracker meanOfMaleMaturityAge = new();
 
         /// <summary>
         /// Access to the CLEM time step for all ruminants of this Ruminant Type
@@ -115,12 +115,12 @@ namespace Models.CLEM.Resources
             parentHerd = this.Parent as RuminantHerd;
 
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Structure.FindChildren<AnimalPricing>().Count() > 0)
+            if (Structure.FindChildren<AnimalPricing>().Any())
             {
                 PriceList = Structure.FindChildren<AnimalPricing>().FirstOrDefault();
                 // Components are not permanently modified during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
 
-                priceGroups = Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>().ToList();
+                priceGroups = [.. Structure.FindChildren<AnimalPriceGroup>(relativeTo: PriceList).Cast<AnimalPriceGroup>()];
             }
 
             // get conception parameters and rate calculation method
@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
             foreach (IGrouping<int, Ruminant> sucklingList in sucklingGroups)
             {
                 // get list of females of breeding age and condition
-                List<RuminantFemale> breedFemales = parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays).ToList();
+                List<RuminantFemale> breedFemales = [.. parentHerd.Herd.OfType<RuminantFemale>().Where(a => a.HerdName == Name && a.IsMature && a.AgeInDays > EstimatedAgeAtMaturityFemale + a.Parameters.General.GestationLength.InDays + sucklingList.Key && a.Weight.Live >= (a.Parameters.General.MinimumSizeForMaturityFemale * a.Weight.StandardReferenceWeight)).OrderByDescending(a => a.AgeInDays)];
 
                 int sucklingCount = 0;
                 int numberThisPregnancy = breedFemales.First()?.CalulateNumberOfOffspringThisPregnancy() ?? 1;
@@ -284,7 +284,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count != 0); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
@@ -389,10 +389,10 @@ namespace Models.CLEM.Resources
                         var suitableFilters = Structure.FindChildren<FilterByProperty>(relativeTo: priceGroup)
                             .Where(a => (a.PropertyOfIndividual == property) &
                             (
-                                (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
-                                (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
-                                (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
-                                (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                                (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase)) |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && !a.Value.ToString().Equals(value, StringComparison.CurrentCultureIgnoreCase)) |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase)) |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.Equals("FALSE", StringComparison.CurrentCultureIgnoreCase))
                             )
                             ).Any();
 
@@ -407,7 +407,7 @@ namespace Models.CLEM.Resources
                                 if (!warningsMultipleEntry.Contains(criteria))
                                 {
                                     warningsMultipleEntry.Add(criteria);
-                                    Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
+                                    Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase) ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
                                 }
                             }
                         }
@@ -420,7 +420,7 @@ namespace Models.CLEM.Resources
                         {
                             // no warning string passed to method so calculate one
                             // report specific criteria not found in price list
-                            warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                            warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]" + (value.Equals("TRUE", StringComparison.CurrentCultureIgnoreCase) ? " = [" + value + "]." : ".");
 
                             if (matchIndividual != null)
                             {
@@ -553,22 +553,22 @@ namespace Models.CLEM.Resources
             int conceptionModelCount = Structure.FindChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
             if (conceptionModelCount > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                string[] memberNames = ["RuminantType.IConceptionModel"];
                 yield return new ValidationResult($"Only one Conception component is permitted below the Ruminant Type [r={Name}]", memberNames);
             }
 
             if (Structure.FindChildren<AnimalPricing>().Count() > 1)
             {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                string[] memberNames = ["RuminantType.Pricing"];
                 yield return new ValidationResult($"Only one Animal pricing schedule is permitted within a Ruminant Type [{Name}]", memberNames);
             }
             else if (Structure.FindChildren<AnimalPricing>().Count() == 1)
             {
                 AnimalPricing price = Structure.FindChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
 
-                if (Structure.FindChildren<AnimalPriceGroup>(relativeTo: price).Count() == 0)
+                if (!Structure.FindChildren<AnimalPriceGroup>(relativeTo: price).Any())
                 {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    string[] memberNames = ["RuminantType.Pricing.RuminantPriceGroup"];
                     yield return new ValidationResult($"At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{Name}]", memberNames);
                 }
             }

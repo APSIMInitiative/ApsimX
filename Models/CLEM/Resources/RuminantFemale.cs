@@ -1,11 +1,12 @@
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {
@@ -161,7 +162,7 @@ namespace Models.CLEM.Resources
             {
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && Age < MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
-                // this was a misunderstanding opn my part.
+                // this was a misunderstanding on my part.
                 return (IsWeaned && NumberOfBirths == 0);
             }
         }
@@ -308,7 +309,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The date births are due or null if not pregnant. 
         /// </summary>
-        public DateTime BirthDueDate { get; private set; } = default; 
+        public DateTime BirthDueDate { get; private set; } = default;
+
+        /// <summary>
+        /// The difference in days between expected birth due date and the start of the time step when due.
+        /// </summary>
+        public int LastBirthOffsetDays { get; private set; } = 0;
 
         /// <summary>
         /// Proportion of pregnancy achieved
@@ -441,15 +447,9 @@ namespace Models.CLEM.Resources
             {
                 // daysInTimeStepLactating is determined in UpdateBreedingDetails calculated as an individual ages
                 // sucklings, milking and total milking days are accounted for in UpdateBreedingDetails
-                // Births occure before lactation is calculated so there should not be any occassion where lactation days are > 0 with no sucklings present.
+                // Births occur before lactation is calculated so there should not be any occasion where lactation days are > 0 with no sucklings present.
 
                 return daysInTimeStepLactating > 0;
-
-                //if (daysInTimeStepLactating > 0 && SucklingOffspringList.Count == 0)
-                //{
-                //    throw new Exception($"Lactation is predicted without births occuring for [{this.HerdName}]. This may arise because a pregnant breeder is present in the initial herd and no [RuminantActivityBreed] activity is available to manage births.");
-                //}
-                //return daysInTimeStepLactating > 0;
             }
         }
 
@@ -469,9 +469,6 @@ namespace Models.CLEM.Resources
         /// A list of individuals currently suckling this female
         /// </summary>
         public List<Ruminant> SucklingOffspringList { get; set; }
-
-
-
 
         /// <summary>
         /// Method to clear all breeding details
@@ -495,12 +492,10 @@ namespace Models.CLEM.Resources
         public override void UpdateBreedingDetails()
         {
             // This method is called on any update to age
-            // This will occur at the start of each time-step called by the RuminantType resource before any activities.
-            // Mother's will always be processed before offspring due to the order of creation in the herd, so we can be assured mothers details are known when considering sucklings.
+            // This will occur at the start of each time step called by the RuminantType resource before any activities.
+            // Mothers will always be processed before offspring due to the order of creation in the herd, so we can be assured mother's details are known when considering sucklings.
 
-            //if (BirthDueDate is null) return; // null check
-
-            if (IsSterilised || Parameters.Details.CurrentTimeStep is null) //|| BirthDueDate is null)
+            if (IsSterilised || Parameters.Details.CurrentTimeStep is null)
             {
                 return;
             }
@@ -520,9 +515,12 @@ namespace Models.CLEM.Resources
                     daysInTimeStepPregnant = Parameters.Details.CurrentTimeStep.Interval;
                     if (BirthDueDate <= Parameters.Details.CurrentTimeStep.TimeStepEnd)
                     {
-                        //daysInTimeStepPregnant = (int)((BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart) - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays;
-                        daysInTimeStepPregnant = (int)((BirthDueDate - Parameters.Details.CurrentTimeStep.TimeStepStart).TotalDays);
-                        daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
+                        // births are now trimmed to the start of the time step 
+                        // TimeStepForcedBirthOffsetDays provides the difference between the expected birth date and the start of the time step
+                        LastBirthOffsetDays = (int)((Parameters.Details.CurrentTimeStep.TimeStepStart - BirthDueDate).TotalDays);
+                        BirthDueDate = Parameters.Details.CurrentTimeStep.TimeStepStart;
+                        daysInTimeStepPregnant = 0;
+                        daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval;
                         IsBirthDue = true;
                     }
                 }
@@ -572,7 +570,7 @@ namespace Models.CLEM.Resources
                 return;
             }
 
-            // check if natural weaning occurs and updtate suckling days and mother's lactation days accordlingly.
+            // check if natural weaning occurs and update suckling days and mother's lactation days accordingly.
             CheckWeanedStatus();
 
             // check for maturity conditions being met and start oestrus cycle
@@ -723,7 +721,6 @@ namespace Models.CLEM.Resources
                 EBMAt70PctPregnant = 0;
             }
 
-            //ToDo: Check this is correct
             dateOfLastConception = date.AddDays(ageOffset);
             BirthDueDate = DateOfLastConception.AddDays(Parameters.General.GestationLength.InDays);
             // use normalised weight for age if offset provided for pre simulation allocation
@@ -732,17 +729,14 @@ namespace Models.CLEM.Resources
             IsReplacementBreeder = false;
             // turn off oestrus cycle until after births
             nextOestrusDate = default;
-
-            //I don't believe this is the place to caclulate days preg in time step
-            //daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.Conceived, Parameters.Details.CurrentTimeStep.TimeStepEnd).TotalDays + 1; // from conception date to end of time-step
         }
 
         ///// <summary>
         ///// Determine any fetus mortality including new born
         ///// </summary>
         ///// <param name="events">A link to the CLEM event timer model</param>
-        ///// <param name="conceptionArgs">A link to standard conception args to use for reportinh</param>
-        ///// <returns>True if pregnacny is lost</returns>
+        ///// <param name="conceptionArgs">A link to standard conception args to use for reporting</param>
+        ///// <returns>True if pregnancy is lost</returns>
         //public bool FetusNewBornMortality(CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs)
         //{
         //    for (int i = 0; i < CarryingCount; i++)
@@ -765,11 +759,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Give birth to all fetuses
         /// </summary>
-        /// <param name="herd">A link to the ruminant herd to place newborn</param>
-        /// <param name="events">A link to the CLEM event timer model</param>
-        /// <param name="conceptionArgs">A link to standard conception args to use for reporting</param>
-        /// <param name="activity">A link to the activity model calling this method for reporting</param>
-        public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
+        /// <param name="herd">The the ruminant herd to place newborn</param>
+        /// <param name="conceptionArgs">The standard conception args to use for reporting</param>
+        /// <param name="activity">The activity model calling this method for reporting</param>
+        public bool GiveBirth(RuminantHerd herd, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
         {
             if (!IsBirthDue)
             {
@@ -778,15 +771,16 @@ namespace Models.CLEM.Resources
 
             for (int i = 0; i < CarryingCount; i++)
             {
-                // Determine the best birth weight to use. This is now passed to each RuminantActivityGrow to decide how to set protein and fat at birth
+                // Determine the best birth weight to use. This is now passed to each IRuminantActivityGrow to decide how to set protein and fat at birth
                 // RuminantGrow 
                 //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
                 // RuminantGrowPF
-                //   * use the weight of fetus at birth as calculated during pregnancy
+                //   * use the weight of fetus at birth as tracked during pregnancy
                 // RuminantGrowSCA
                 // RuminantGrowOddy
+                //   * do not implement breeding and births.
 
-                Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate, herd.NextUniqueID, this, herd.RuminantGrowActivity);
+                Ruminant newSuckling = Ruminant.Create(Fetuses[i], herd.NextUniqueID, this, herd.RuminantGrowActivity);
 
                 herd.AddRuminant(newSuckling, activity);
 
@@ -826,23 +820,7 @@ namespace Models.CLEM.Resources
             Fetuses.Clear();
             Milk.MilkingPerformed = false;
             RelativeConditionAtParturition = Weight.RelativeCondition;
-
-            //if (DateOfLastBirth >= Parameters.Details.CurrentTimeStep.TimeStepStart)
-            //{
-            //    // birth occurs during time step
-            //    daysInTimeStepLactating = (int)(Parameters.Details.CurrentTimeStep.TimeStepEnd - DateOfBirth).TotalDays;
-            //    daysInTimeStepPregnant = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepLactating;
-            //}
-            ////else
-            ////    Parameters.Details.CurrentTimeStep.Interval;
-
-
-
-
-            //daysInTimeStepPregnant = (int)TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
-            //daysInTimeStepPregnant = (int)(Parameters.Details.CurrentTimeStep.TimeStepStart - (BirthDueDate ?? Parameters.Details.CurrentTimeStep.TimeStepStart)).TotalDays;
-            //daysInTimeStepLactating = Parameters.Details.CurrentTimeStep.Interval - daysInTimeStepPregnant;
-            BirthDueDate = default; // null;
+            BirthDueDate = default;
         }
 
 
@@ -857,18 +835,7 @@ namespace Models.CLEM.Resources
                 // must be at least 1 to get milk production on day of birth. 
                 double milkdays = TimeSince(RuminantTimeSpanTypes.GaveBirth).TotalDays;
                 double midprop = (useTimeStepMidPoint) ? 0.5 : 1.0;
-
-                //if (milkdays == 0)
-                //{
-                //    // lactation starts during this time step
-                //    return DaysLactatingInTimeStep / midprop;
-                //}
-                //else
-                //{
-                    // lactation ends during this time step or in future time step
-                    return milkdays + Math.Min(daysInTimeStepLactating, Parameters.Details.CurrentTimeStep.Interval) * midprop;
-                //}
-                // no need to check if inside max milkdays as this is done where daysInTimeStepLactating is calculated 
+                return milkdays + Math.Min(daysInTimeStepLactating, Parameters.Details.CurrentTimeStep.Interval) * midprop;
             }
             return 0;
         }
@@ -880,9 +847,6 @@ namespace Models.CLEM.Resources
             : base(date, setParams, setAge, setWeight, id, cohortDetails, initialAttributes)
         {
             SucklingOffspringList = [];
-
-            //ruminantFemale.WeightAtConception = ruminant.Weight.Live;
-            //ruminantFemale.NumberOfBirths = 0;
 
             conception?.SetConceptionDetails(this);
 
@@ -906,8 +870,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor for new born female ruminant
         /// </summary>
-        public RuminantFemale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
-            : base(date, id, mother, growActivity)
+        public RuminantFemale(int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(id, mother, growActivity)
         {
             // needed for female specific actions
             SucklingOffspringList = [];
@@ -920,8 +884,5 @@ namespace Models.CLEM.Resources
             : base(id)
         {
         }
-
-
     }
-
 }

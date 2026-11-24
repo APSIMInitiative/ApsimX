@@ -18,7 +18,15 @@ PULL_ID=${DOCKER_METADATA_OUTPUT_VERSION:3}
 test -z ${PULL_ID:+x} && ( echo "PULL_ID not set"; exit 1 )
 
 echo Adding build to DB...
-curl -fsX POST -H "Authorization: bearer $BUILDS_JWT" "https://builds.apsim.info/api/nextgen/add?pullRequestNumber=$PULL_ID"
+response_file=$(mktemp)
+http_code=$(curl -sS -o "$response_file" -w '%{http_code}' -X POST -H "Authorization: bearer $BUILDS_JWT" "https://builds.apsim.info/api/nextgen/add?pullRequestNumber=$PULL_ID") || http_code=000
+if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+    echo "Failed to add build to DB. HTTP status: $http_code"
+    cat "$response_file"
+    echo
+    exit 1
+fi
+rm -f "$response_file"
 
 echo new build uploaded
 echo finished

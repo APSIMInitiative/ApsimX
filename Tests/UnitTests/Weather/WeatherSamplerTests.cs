@@ -40,7 +40,7 @@
             var clock = baseSim.Children[0] as Clock;
             var weatherSampler = baseSim.Children[1];
 
-            Utilities.CallEvent(clock, "SimulationCommencing");
+            Utilities.SetProperty(clock, "Today", clock.StartDate);
             Utilities.InjectLink(weatherSampler, "simulation", baseSim);
             Utilities.InjectLink(weatherSampler, "clock", clock);
 
@@ -148,7 +148,7 @@
             var clock = baseSim.Children[0] as Clock;
             var weatherSampler = baseSim.Children[1];
 
-            Utilities.CallEvent(clock, "SimulationCommencing");
+            Utilities.SetProperty(clock, "Today", clock.StartDate);
             Utilities.InjectLink(weatherSampler, "simulation", baseSim);
             Utilities.InjectLink(weatherSampler, "clock", clock);
 

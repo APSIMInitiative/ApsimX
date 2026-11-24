@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -96,12 +97,12 @@ namespace Models.CLEM.Resources
             // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
             if (ruminantType is null)
             {
-                yield return new ValidationResult("An invalid [r=RuminantType] was specified", new string[] { "Ruminant type" });
+                yield return new ValidationResult("An invalid [r=RuminantType] was specified", ["Ruminant type"]);
             }
 
             if (Structure.FindChildren<RuminantTypeCohort>().Count() != 1)
             {
-                yield return new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", new string[] { "Specify ruminant" });
+                yield return new ValidationResult("A single [r=RuminantTypeCohort] must be present under each [f=SpecifyRuminant] component", ["Specify ruminant"]);
             }
 
             // bubble through to check status of any cohorts as children of in SepcifyRuminant

@@ -1,5 +1,6 @@
 using APSIM.Numerics;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Extras;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
@@ -75,7 +76,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         [FilterByProperty]
-
         public RuminantInfoEnergy Energy { get; set; }
 
         /// <summary>
@@ -188,10 +188,7 @@ namespace Models.CLEM.Resources
                 int days = Math.Min((AgeInDays + Parameters.Details.CurrentTimeStep.Interval - 1) - AgeToWeanNaturally, Parameters.Details.CurrentTimeStep.Interval);
                 days = Math.Min(days, (Mother?.DaysLactatingInTimeStep ?? 0));
                 daysInTimeStepSuckling = days;
-                if (mother is not null)
-                {
-                    mother.DaysLactatingInTimeStep = days;
-                }
+                mother?.DaysLactatingInTimeStep = days;
             }
             else
             {
@@ -324,7 +321,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void UpdateAgeInDays(DateTime currentDate)
         {
-            AgeInDays = DaysSince(RuminantTimeSpanTypes.Birth, 0, Parameters.Details.CurrentTimeStep.TimeStepStart);
+            AgeInDays = DaysSince(RuminantTimeSpanTypes.Birth, 0, currentDate);
         }
 
         /// <summary>
@@ -363,7 +360,7 @@ namespace Models.CLEM.Resources
             }
 
             toDate = toDate == default ? Parameters.Details.CurrentTimeStep.TimeStepStart : toDate;
-            if (toDate == default(DateTime) || fromDate == default(DateTime) || toDate < fromDate)
+            if (toDate == default || fromDate == default || toDate < fromDate)
                 return TimeSpan.Zero;
             else
                 return toDate - fromDate;
@@ -602,7 +599,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return Weight.FleeceWeightAsProportionOfSFW(Parameters, AgeInDays);
+                return Weight.FleeceWeightAsProportionOfSFW(Parameters);
             }
         }
 
@@ -632,7 +629,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The index of the time-step where the class last changed
         /// </summary>
-        private int ruminantClassLastChanged { get; set; } = 0;
+        private int ruminantClassLastChanged = 0;
 
         /// <summary>
         /// Class details
@@ -786,36 +783,34 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                switch (SaleFlag)
+                return SaleFlag switch
                 {
-                    case HerdChangeReason.None:
-                        return 0;
-                    case HerdChangeReason.DiedUnderweight:
-                    case HerdChangeReason.DiedMortality:
-                    case HerdChangeReason.TradeSale:
-                    case HerdChangeReason.DryBreederSale:
-                    case HerdChangeReason.ExcessBreederSale:
-                    case HerdChangeReason.ExcessSireSale:
-                    case HerdChangeReason.MaxAgeSale:
-                    case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessPreBreederSale:
-                    case HerdChangeReason.Consumed:
-                    case HerdChangeReason.DestockSale:
-                    case HerdChangeReason.ReduceInitialHerd:
-                    case HerdChangeReason.MarkedSale:
-                    case HerdChangeReason.WeanerSale:
-                        return -1;
-                    case HerdChangeReason.Born:
-                    case HerdChangeReason.TradePurchase:
-                    case HerdChangeReason.BreederPurchase:
-                    case HerdChangeReason.SirePurchase:
-                    case HerdChangeReason.RestockPurchase:
-                    case HerdChangeReason.InitialHerd:
-                    case HerdChangeReason.FillInitialHerd:
-                        return 1;
-                    default:
-                        return 0;
-                }
+                    HerdChangeReason.None => 0,
+                    HerdChangeReason.DiedUnderweight or
+                    HerdChangeReason.DiedMortality or
+                    HerdChangeReason.TradeSale or
+                    HerdChangeReason.DryBreederSale or
+                    HerdChangeReason.ExcessBreederSale or
+                    HerdChangeReason.ExcessSireSale or
+                    HerdChangeReason.MaxAgeSale or
+                    HerdChangeReason.AgeWeightSale or
+                    HerdChangeReason.ExcessPreBreederSale or
+                    HerdChangeReason.Consumed or
+                    HerdChangeReason.DestockSale or
+                    HerdChangeReason.ReduceInitialHerd or
+                    HerdChangeReason.MarkedSale or
+                    HerdChangeReason.WeanerSale or
+                    HerdChangeReason.DiedDystocia or
+                    HerdChangeReason.DiedToxaemia => -1,
+                    HerdChangeReason.Born or
+                    HerdChangeReason.TradePurchase or
+                    HerdChangeReason.BreederPurchase or
+                    HerdChangeReason.SirePurchase or
+                    HerdChangeReason.RestockPurchase or
+                    HerdChangeReason.InitialHerd or
+                    HerdChangeReason.FillInitialHerd => 1,
+                    _ => 0,
+                };
             }
         }
 
@@ -830,11 +825,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void MotherLost()
         {
-            if (Mother != null)
-            {
-                Mother.SucklingOffspringList.Remove(this);
-                Mother = null;
-            }
+            Mother?.SucklingOffspringList.Remove(this);
+            Mother = null;
         }
 
         /// <summary>
@@ -877,7 +869,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Milk production currently available for each offspring from mother (kg day-1)
+        /// Milk production currently available for each offspring from mother (MJ day-1)
         /// </summary>
         public double MothersMilkProductionAvailable
         {
@@ -1004,11 +996,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor based on details from mother for newborn
         /// </summary>
-        /// <param name="date">The date of creation</param>
         /// <param name="id">Unique id for individual (null if id not required e.g. purchases)</param>
         /// <param name="mother">The mother of newborn</param>
         /// <param name="growActivity">Ruminant Grow Activity for fat and protein allocation if needed</param>
-        public Ruminant(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+        public Ruminant(int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
         {
             // GrowPF Activity will have the weight.fetus.amount set before births
             // Grow will not have any fetus or conceptus weight set so needs to use expected weight
@@ -1030,8 +1021,8 @@ namespace Models.CLEM.Resources
             Energy = new RuminantInfoEnergy(this);
 
             // pass to ruminant grow activity to determine how to set protein and fat at birth where the newborn has access to mother's properties
-            growActivity?.SetProteinAndFatAtBirth(this, weight);
             Weight.SetStandardReferenceWeight();
+            growActivity?.SetProteinAndFatAtBirth(this, weight);
 
             if (growActivity.IncludeFatAndProtein)
             {
@@ -1047,6 +1038,7 @@ namespace Models.CLEM.Resources
             AgeInDays = 0;
             DateOfBirth = mother.BirthDueDate;
             DateEnteredSimulation = DateOfBirth;
+            daysInTimeStepSuckling = Convert.ToInt32((Parameters.Details.CurrentTimeStep.TimeStepEnd - DateOfBirth).TotalDays) + 1;
 
             // add attributes inherited from mother
             foreach (var attribute in mother.Attributes.Items.Where(a => a.Value is not null))
@@ -1103,12 +1095,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factory for creating a new born Ruminant based on details obtained from mother
         /// </summary>
-        public static Ruminant Create(Sex sex, DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growthActivity)
+        public static Ruminant Create(Sex sex, int id, RuminantFemale mother, IRuminantActivityGrow growthActivity)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(date, id, mother, growthActivity);
+                return new RuminantMale(id, mother, growthActivity);
             else
-                return new RuminantFemale(date, id, mother, growthActivity);
+                return new RuminantFemale(id, mother, growthActivity);
         }
 
 

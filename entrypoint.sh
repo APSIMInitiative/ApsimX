@@ -12,7 +12,7 @@ fi
 cp -a /validation_files/. /wd/
 
 # Runs the Models command as normal
-Models "$@"
+Models "$@" --run-tests
 
 
 

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -17,8 +18,8 @@ namespace Models.CLEM.Resources
     [Description("Ruminant parameters holder for GrowPF parameters")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantParametersGrowPF.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrowPFCACRD), typeof(RuminantParametersGrowPFCD), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL), typeof(RuminantParametersGrowPFCM), typeof(RuminantParametersGrowPFCP) },
-        associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child },
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrowPFCACRD), typeof(RuminantParametersGrowPFCD), typeof(RuminantParametersGrowPFCG), typeof(RuminantParametersGrowPFCI), typeof(RuminantParametersGrowPFCKCL), typeof(RuminantParametersGrowPFCM), typeof(RuminantParametersGrowPFCP)],
+        associationStyles: [ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Descendent, ModelAssociationStyle.Child],
         SingleInstance = true)]
     public class RuminantParametersGrowPF : CLEMModel, ICloneable, ISubParameters
     {

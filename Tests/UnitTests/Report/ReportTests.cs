@@ -65,7 +65,7 @@ namespace UnitTests.Report
             };
             head = Node.Create(simulations);
             simulation = simulations.Children[0] as Simulation;
-            runner = new Runner(simulation);
+            runner = new Runner([simulation]);
             storage = simulation.Children[0] as MockStorage;
             summary = simulation.Children[1] as MockSummary;
             clock = simulation.Children[2] as Clock;
@@ -85,7 +85,7 @@ namespace UnitTests.Report
                 "[Clock].Today.DayOfYear as n",
                 "2 * n as 2n"
             };
-            Runner runner = new Runner(simulations);
+            Runner runner = new Runner([simulations]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -105,7 +105,7 @@ namespace UnitTests.Report
             {
                 "n + 1 as n"
             };
-            Runner runner = new Runner(simulations);
+            Runner runner = new Runner([simulations]);
             List<Exception> errors = runner.Run();
             Assert.That(errors.Count == 1);
             Assert.That(errors[0].InnerException.Message, Does.Contain("Infinite recursion"));
@@ -128,7 +128,7 @@ namespace UnitTests.Report
             ];
             try
             {
-                Runner runner = new(simulations);
+                Runner runner = new([simulations]);
                 var exceptions = runner.Run();
                 Assert.That(exceptions.Count == 1);
                 Assert.That(exceptions[0].InnerException.Message, Does.Contain("unknown model or property specification A"));
@@ -177,7 +177,7 @@ namespace UnitTests.Report
 
             var runners = new[]
             {
-                new Runner(sims.Model as Simulations, runType: Runner.RunTypeEnum.MultiThreaded),
+                new Runner([sims.Model as Simulations], runType: Runner.RunTypeEnum.MultiThreaded),
             };
             foreach (Runner runner in runners)
             {
@@ -425,6 +425,26 @@ namespace UnitTests.Report
             Assert.That(values.Last(), Is.EqualTo(1));
         }
 
+        /// <summary>
+        /// This test reproduces a bug where nonstandard yearly aggregations would
+        /// never be in capture window.
+        /// </summary>
+        [Test]
+        public void EnsureNonStandardYearlyAggregationWorks()
+        {
+            clock.StartDate = new(2017, 11, 11);
+            clock.EndDate = new(2018, 11, 10);
+
+            report.VariableNames =
+            [
+                // Parentheses force the report to read it as an expression.
+                "sum of (1) from 11-nov to 10-nov as Days"
+            ];
+            runner.Run();
+            var values = storage.Get<double>("Days");
+            Assert.That(values.Last(), Is.EqualTo(365));
+        }
+
         [Test]
         public void FactorsTableIsWritten()
         {
@@ -491,7 +511,7 @@ namespace UnitTests.Report
             weather.Parent = sim;
 
             // Run the file.
-            var Runner = new Runner(file);
+            var Runner = new Runner([file]);
             Runner.Run();
 
             // Check that the report reported on the correct dates.
@@ -536,7 +556,7 @@ namespace UnitTests.Report
             clock.StartDate = new DateTime(2017, 1, 1);
             clock.EndDate = new DateTime(2017, 3, 1);
 
-            Runner runner = new Runner(file);
+            Runner runner = new Runner([file]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
@@ -713,7 +733,7 @@ namespace Models
             };
 
             var simulations = Node.Create(sims);
-            Runner runner = new Runner(simulations.Model as Simulations);
+            Runner runner = new Runner([simulations.Model as Simulations]);
             List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw new Exception("Errors while running sims", errors[0]);

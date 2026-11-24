@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Labour Activity Off Farm
@@ -12,7 +12,7 @@ public class LabourActivityOffFarmSummary : DescriptiveSummaryProviderBase<Labou
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Earnings will be paid to {generator.DisplaySummaryValueSnippet(ModelTyped.BankAccountName, "Account not set", HTMLSummaryStyle.Resource)}" +
-            $" based on {generator.DisplaySummaryValueSnippet("Labour pricing", entryStyle: HTMLSummaryStyle.Filter)} set in the {generator.DisplaySummaryResourceTypeSnippet("Labour")}");
+        generator.AddBlockWithText($"Earnings will be paid to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.BankAccountName, "Account not set", HTMLSummaryStyle.Resource)}" +
+            $" based on {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Labour pricing", entryStyle: HTMLSummaryStyle.Filter)} set in the {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet("Labour")}");
     }
 }

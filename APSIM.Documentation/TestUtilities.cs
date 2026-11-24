@@ -3,14 +3,14 @@ using System.IO;
 using System.Reflection;
 using APSIM.Core;
 using APSIM.Documentation.Models;
-using APSIM.Shared.Documentation;
-using APSIM.Shared.Documentation.Mapping;
+using APSIM.Documentation.Tag;
+using APSIM.Documentation.Tag.Mapping;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Newtonsoft.Json.Linq;
-using DocumentationGraph = APSIM.Shared.Documentation.Graph;
-using DocumentationGraphPage = APSIM.Shared.Documentation.GraphPage;
-using DocumentationMap = APSIM.Shared.Documentation.Map;
+using DocumentationGraph = APSIM.Documentation.Tag.Graph;
+using DocumentationGraphPage = APSIM.Documentation.Tag.GraphPage;
+using DocumentationMap = APSIM.Documentation.Tag.Map;
 
 namespace APSIM.Documentation;
 
@@ -76,7 +76,7 @@ public static class TestUtilities
                 text = (tag as Section).Title;
                 children = TagsToJSON((tag as Section).Children);
             } else if (tag.GetType() == typeof(Paragraph)) {
-                text = (tag as Paragraph).text;
+                text = (tag as Paragraph).Text;
             } else if (tag.GetType() == typeof(Table)) {
                 text = (tag as Table).Style;
             } else if (tag.GetType() == typeof(DocumentationGraphPage)) {
@@ -121,13 +121,13 @@ public static class TestUtilities
         for(int i = 0; i < array.Count; i++) {
             JToken obj = array[i];
             if (obj["type"].ToString() == typeof(Section).ToString()) {
-                output.Add(new Section(obj["text"].ToString(), JSONToTags(obj["children"] as JArray)));
+                output.Add(new Section(obj["text"].ToString(), JSONToTags(obj["children"] as JArray), null));
 
             } else if (obj["type"].ToString() == typeof(Paragraph).ToString()) {
-                output.Add(new Paragraph(obj["text"].ToString()));
+                output.Add(new Paragraph(obj["text"].ToString(), null));
 
             } else if (obj["type"].ToString() == typeof(Table).ToString()) {
-                output.Add(new Table(new System.Data.DataTable(), style: obj["text"].ToString()));
+                output.Add(new Table(new System.Data.DataTable(), null, style: obj["text"].ToString()));
 
             } else if (obj["type"].ToString() == typeof(DocumentationGraphPage).ToString()) {
                 List<ITag> childGraphs = JSONToTags(obj["children"] as JArray);

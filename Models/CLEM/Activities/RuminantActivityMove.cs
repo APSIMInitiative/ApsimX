@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -32,6 +33,7 @@ namespace Models.CLEM.Activities
         private string pastureName = "";
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
+        [Link] readonly CLEMEvents events = null;
 
         /// <summary>
         /// Managed pasture to move to
@@ -65,26 +67,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -176,17 +173,12 @@ namespace Models.CLEM.Activities
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = number;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => number,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -232,7 +224,7 @@ namespace Models.CLEM.Activities
 
                     moved++;
                 }
-                SetStatusSuccessOrPartial(moved != numberToDo);
+                SetStatusSuccessOrPartial(events.IntervalIndex >= 0 && moved > 0 && moved != numberToDo);
             }
         }
     }

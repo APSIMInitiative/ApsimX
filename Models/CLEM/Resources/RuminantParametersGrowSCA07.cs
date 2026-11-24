@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using System;

@@ -17,10 +17,10 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class GrazeAPSIMForagePool : IGrazeIntakePool
     {
-        private ModelWithDigestibleBiomass biomassModel;
-        private IFeed feedDetails;
+        private readonly ModelWithDigestibleBiomass biomassModel;
+        private readonly FoodResourcePacket feedDetails;
         private double amount = 0;
-        private double nitrogen = 0;
+        private readonly double nitrogen = 0;
         private const double gm2Tokgha = 10.0;
 
         /// <summary>
@@ -86,7 +86,11 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public double GutFill { get => feedDetails.GutFill; set => throw new NotImplementedException(); }
         /// <inheritdoc/>
-        public int Age { get => 10; set => throw new NotImplementedException(); }
+        public int AgeInDays { get => 10; set => throw new NotImplementedException(); }
+        /// <inheritdoc/>
+        public int AgeInMonths { get => 10; set => throw new NotImplementedException(); }
+        /// <inheritdoc/>
+        public bool IsGrowthThisTimeStep { get; private set; } = false;
         /// <inheritdoc/>
         public double Detached { get; set; }
         /// <inheritdoc/>

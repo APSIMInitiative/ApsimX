@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Models.CLEM.Extras;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 /// <summary>
 /// Descriptive summary provider for the Rainfall Shuffler
@@ -23,14 +24,14 @@ public class RainfallShufflerSummary : DescriptiveSummaryProviderBase<RainfallSh
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        string start = "";
+        string start;
         if (ModelTyped.StartSeasonMonth == MonthsOfYear.NotSet)
         {
-            start = generator.DisplayErrorSnippet("Not Set");
+            start = DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Set");
         }
         else
         {
-            start = $"{generator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
+            start = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartSeasonMonth)}";
         }
         generator.AddBlockWithText($"The rainfall year starts in {start}");
         if (ModelTyped.DoNotShuffleIteration != -1)

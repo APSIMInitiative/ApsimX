@@ -16,12 +16,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Protein to nitrogen in milk conversion factor
         /// </summary>
-        public static double MilkProteinToNitrogenFactor = milkCP2N;
+        public static double MilkProteinToNitrogenFactor => milkCP2N;
 
         /// <summary>
         /// Protein to nitrogen in feed conversion factor
         /// </summary>
-        public static double FeedProteinToNitrogenFactor = feedCP2N;
+        public static double FeedProteinToNitrogenFactor => feedCP2N;
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; }

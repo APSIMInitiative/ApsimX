@@ -385,14 +385,19 @@ namespace UserInterface.Classes
                                            .ToArray();
                     break;
                 case DisplayType.ResidueName:
-                    if (model is SurfaceOrganicMatter surfaceOM)
+                    SurfaceOrganicMatter surfaceOM;
+                    if (model is SurfaceOrganicMatter)
+                        surfaceOM = model as SurfaceOrganicMatter;
+                    else
+                        surfaceOM = model.Node.FindParent<SurfaceOrganicMatter>(recurse:true);
+                    if (surfaceOM != null)
                     {
                         DisplayMethod = PropertyType.DropDown;
                         DropDownOptions = surfaceOM.ResidueTypeNames().ToArray();
                         break;
                     }
                     else
-                        throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
+                        throw new NotImplementedException($"Display type {displayType} is only supported on models that are {typeof(SurfaceOrganicMatter).Name} or children, but model is of type {model.GetType().Name}.");
                 case DisplayType.FertiliserType:
                     var fertiliser = model.Node.Find<Fertiliser>();
                     if (fertiliser != null)

@@ -1,6 +1,7 @@
 using APSIM.Numerics;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -30,14 +31,14 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     [MinimumTimeStepPermitted(TimeStepTypes.Daily)]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGeneral) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGeneral)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class RuminantTypeCohort : CLEMModel, IValidatableObject
     {
         private SetPreviousConception setPreviousConception = null;
         [Link]
-        private RuminantHerd ruminantHerd = null;
+        private readonly RuminantHerd ruminantHerd = null;
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         /// <summary>
         /// Associated Ruminant Herd
@@ -198,12 +199,12 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null)
         {
-            List<ISetAttribute> localAttributes = new ();
+            List<ISetAttribute> localAttributes = [];
             // add any whole herd attributes
             if (initialAttributes != null)
                 localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            localAttributes.AddRange(Structure.FindChildren<ISetAttribute>().ToList());
+            localAttributes.AddRange([.. Structure.FindChildren<ISetAttribute>()]);
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, date, ruminantType);
         }
@@ -220,10 +221,10 @@ namespace Models.CLEM.Resources
         public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, DateTime date, RuminantType ruminantType = null, bool getUniqueID = true)
         {
             if (number <= 0) 
-                return new();
+                return [];
 
-            List<Ruminant> individuals = new();
-            initialAttributes ??= new();
+            List<Ruminant> individuals = [];
+            initialAttributes ??= [];
             setPreviousConception = Structure.FindChild<SetPreviousConception>();
 
             RuminantType parent = ruminantType;
@@ -284,22 +285,22 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Age == 0)
-                yield return new ValidationResult($"New born individuals [Age = 0] are not permitted in initial herd for [r={NameWithParent}]", new string[] { "AgeDetails" });
+                yield return new ValidationResult($"New born individuals [Age = 0] are not permitted in initial herd for [r={NameWithParent}]", ["AgeDetails"]);
 
-            string[] valueLabels = new string[] { "Fat", "Muscle protein", "Visceral protein" };
+            string[] valueLabels = ["Fat", "Muscle protein", "Visceral protein"];
             if (ruminantHerd.RuminantGrowActivity.IncludeFatAndProtein == false)
                 yield break; 
 
             if(InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.NotProvided)
             {
-                yield return new ValidationResult($"Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model.{Environment.NewLine}Set the Style of assigning initial fat and protein in all [r=Cohorts] of [r=InitialCohortList] and [SpecifyRuminant] components.", new string[] { "InitialFatProteinValues" });
+                yield return new ValidationResult($"Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model.{Environment.NewLine}Set the Style of assigning initial fat and protein in all [r=Cohorts] of [r=InitialCohortList] and [SpecifyRuminant] components.", ["InitialFatProteinValues"]);
             }
 
             if (InitialFatProteinValues is null)
             {
                 if (InitialFatProteinStyle == InitialiseFatProteinAssignmentStyle.EstimateFromRelativeCondition)
                     yield break;
-                yield return new ValidationResult("Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model", new string[] { "InitialFatProteinValues" });
+                yield return new ValidationResult("Initial fat and protein values are required in all [r=RuminantTypeCohort] for the specified ruminant growth model", ["InitialFatProteinValues"]);
                 yield break;
             }
 
@@ -319,7 +320,7 @@ namespace Models.CLEM.Resources
 
             if (InitialFatProteinValues is not null && InitialFatProteinValues.Length < entries)
             {
-                yield return new ValidationResult($"Insufficient values provided for initial fat and protein mass. {entries} values are required for specified ruminant growth model", new string[] { "InitialFatProteinValues" });
+                yield return new ValidationResult($"Insufficient values provided for initial fat and protein mass. {entries} values are required for specified ruminant growth model", ["InitialFatProteinValues"]);
             }
 
             // if proportion check all values are 0-1
@@ -329,19 +330,10 @@ namespace Models.CLEM.Resources
                 {
                     if (InitialFatProteinValues[i] < 0 | InitialFatProteinValues[i] > 1)
                     {
-                        yield return new ValidationResult($"Value for initial [{valueLabels[i]}] proportion of empty body weight must be between 0 and 1", new string[] { "InitialFatProteinValues" });
+                        yield return new ValidationResult($"Value for initial [{valueLabels[i]}] proportion of empty body weight must be between 0 and 1", ["InitialFatProteinValues"]);
                     }
                 }
             }
-
-            //// check paddock exists if used.
-            //if (ManagedPastureName is not null && ManagedPastureName != "" && ManagedPastureName.StartsWith("Not specified") == false)
-            //{
-            //    GrazeFoodStoreType grazeFoodStore = FindInScope<GrazeFoodStoreType>(ManagedPastureName);
-            //    if (grazeFoodStore == null)
-            //        yield return new ValidationResult($"Could not find the GrazeFoodStore (pasture) in which to place new individuals from {this.NameWithParent}", new string[] { "ManagedPastureName" });
-            //}
-
             // ToDo check that fleece prop hasn't been set when no wool growth included.
         }
 

@@ -363,7 +363,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "[Zone].Area",
+                    "[Soil].Parent.Area as Zone.Area",
                     "Parent.Distance as Distance"
                   ],
                   "EventNames": [
@@ -914,7 +914,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "[Zone].Area",
+                    "[Soil].Parent.Area as Zone.Area",
                     "Parent.Distance as Distance"
                   ],
                   "EventNames": [
@@ -1482,7 +1482,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "[Zone].Area",
+                    "[Soil].Parent.Area as Zone.Area",
                     "Parent.Distance as Distance"
                   ],
                   "EventNames": [
@@ -2067,7 +2067,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "[Zone].Area",
+                    "[Soil].Parent.Area as Zone.Area",
                     "Parent.Distance as Distance"
                   ],
                   "EventNames": [
@@ -2635,7 +2635,7 @@
                     "[Wheat].Grain.Wt",
                     "[Wheat].Grain.N",
                     "[Wheat].Total.Wt",
-                    "[Zone].Area",
+                    "[Soil].Parent.Area as Zone.Area",
                     "Parent.Distance as Distance"
                   ],
                   "EventNames": [

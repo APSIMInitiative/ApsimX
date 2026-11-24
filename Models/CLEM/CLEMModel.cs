@@ -1,6 +1,7 @@
 ﻿using APSIM.Core;
 using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -120,7 +121,7 @@ namespace Models.CLEM
             ModelAssociationsAttribute requiredAttribte = model.GetType().GetCustomAttribute<ModelAssociationsAttribute>();
             if (requiredAttribte is not null)
             {
-                List<string> errors = new();
+                List<string> errors = [];
                 for (int i = 0; i < (requiredAttribte.AssociatedModels?.Length ?? 0); i++)
                 {
                     switch (requiredAttribte.AssociationStyles[i])
@@ -170,7 +171,7 @@ namespace Models.CLEM
                     }
                 }
 
-                if (errors.Any())
+                if (errors.Count != 0)
                 {
                     var sim = structure.FindParent<Simulation>(relativeTo: model, recurse: true);
                     Summary summary = structure.FindChild<Summary>(relativeTo: sim, recurse: true);
@@ -208,10 +209,7 @@ namespace Models.CLEM
         {
             get
             {
-                if (activityTimers is null)
-                {
-                    activityTimers = Structure.FindChildren<IActivityTimer>();
-                }
+                activityTimers ??= Structure.FindChildren<IActivityTimer>();
 
                 return activityTimers;
             }
@@ -224,7 +222,7 @@ namespace Models.CLEM
         {
             get
             {
-                var result = Structure.FindChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                var result = ActivityTimers.Sum(a => a.ActivityDue ? 0 : 1);
                 return (result == 0);
             }
         }
@@ -236,7 +234,7 @@ namespace Models.CLEM
         /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
-            List<string> results = new();
+            List<string> results = [];
             Zone zone = Structure.FindParent<Zone>(recurse: true);
             if (zone is not null)
             {
@@ -277,7 +275,7 @@ namespace Models.CLEM
         /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetModelsAvailableByType(object[] typesToFind)
         {
-            List<string> results = new();
+            List<string> results = [];
             foreach (object type in typesToFind)
             {
                 if (type is string)
@@ -306,7 +304,7 @@ namespace Models.CLEM
             }
             else
             {
-                List<Type> types = new();
+                List<Type> types = [];
                 return Structure.FindChildren<IModel>(relativeTo: simulation, recurse: true).Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
         }
@@ -333,7 +331,7 @@ namespace Models.CLEM
             }
             else
             {
-                return new List<string>();
+                return [];
             }
         }
 
@@ -345,7 +343,7 @@ namespace Models.CLEM
         public bool ParentSuppliedIdentifiersPresent()
         {
             var psi = ParentSuppliedIdentifiers();
-            return (psi != null && psi.Any());
+            return (psi != null && psi.Count != 0);
         }
 
         /// <summary>
@@ -360,7 +358,7 @@ namespace Models.CLEM
             }
             else
             {
-                return new List<string>();
+                return [];
             }
         }
 
@@ -372,7 +370,7 @@ namespace Models.CLEM
         public bool ParentSuppliedMeasuresPresent()
         {
             var psm = ParentSuppliedMeasures();
-            return (psm != null && psm.Any());
+            return (psm != null && psm.Count != 0);
         }
 
         /// <summary>

@@ -69,5 +69,11 @@ namespace Models.Interfaces
 
         ///  <summary>The amount of radiation on dead area</summary>
         public double AmountOnDead;
+
+        ///  <summary>The total amount of radiation on green area for the entire canopy</summary>
+        public double AmountOnGreenTotal;
+
+        ///  <summary>The total amount of radiation on dead area for the entire canopy</summary>
+        public double AmountOnDeadTotal;
     }
 }

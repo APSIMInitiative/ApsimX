@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Models.Core;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using MigraDoc.DocumentObjectModel;
 
 namespace APSIM.Documentation.Models

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Resource Activity Process
@@ -15,13 +15,13 @@ public class ResourceActivityProcessSummary : DescriptiveSummaryProviderBase<Res
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"Process {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource)}" +
-            $" into {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource)} at a rate of " +
-            $"{generator.DisplaySummaryValueSnippet(ModelTyped.ConversionRate, errorNotSet: true, warnZero: true)}");
+        generator.AddBlockWithText($"Process {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeProcessedName, entryStyle: HTMLSummaryStyle.Resource)}" +
+            $" into {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeCreatedName, entryStyle: HTMLSummaryStyle.Resource)} at a rate of " +
+            $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ConversionRate, errorNotSet: true, warnZero: true)}");
 
         if (ModelTyped.Reserve > 0)
         {
-            generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.Reserve)} will be reserved.");
+            generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Reserve)} will be reserved.");
         }
     }
 }

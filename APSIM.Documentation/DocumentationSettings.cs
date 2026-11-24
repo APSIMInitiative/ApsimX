@@ -7,9 +7,9 @@ namespace APSIM.Documentation
     public class DocumentationSettings
     {
         /// <summary>
-        /// If GenerateGraphs is true, graph models will generate and display graphs in the documentation. By default is off.
+        /// If GenerateGraphs is true, graph models will generate and display graphs in the documentation. By default is on.
         /// </summary>
-        public static bool GenerateGraphs {get;set;} = false;
+        public static bool GenerateGraphs {get;set;} = true;
         
     }
 }

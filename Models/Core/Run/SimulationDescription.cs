@@ -143,14 +143,6 @@ namespace Models.Core.Run
         {
             try
             {
-                // It is possible that the base simulation is still in the process of being
-                // initialised in another thread. If so, wait up to 10 seconds to let it finish.
-                int nSleeps = 0;
-                while (baseSimulation.IsInitialising && nSleeps++ < 1000)
-                    Thread.Sleep(10);
-                if (baseSimulation.Node.IsInitialising)
-                    throw new Exception("Simulation initialisation does not appear to be complete.");
-
                 AddReplacements();
 
                 Node newNode = baseSimulation.Node.Clone();
@@ -221,9 +213,15 @@ namespace Models.Core.Run
                 IModel replacements = Folder.FindReplacementsFolder(topLevelModel);
                 if (replacements != null && replacements.Enabled)
                 {
-                    foreach (INodeModel replacement in replacements.Children.Where(m => m.Enabled))
-                        replacementsToApply.Insert(0, new ReplaceCommand(new ModelReference(replacement), replacement.Name,
-                                                                         multiple: true, ReplaceCommand.MatchType.Name));
+                    foreach (INodeModel child in replacements.Children)
+                    {
+                        if (child.Enabled && !(child is IText))
+                        {
+                            ModelReference reference = new ModelReference(child);
+                            ReplaceCommand command = new ReplaceCommand(reference, child.Name, multiple: true, ReplaceCommand.MatchType.Name);
+                            replacementsToApply.Insert(0, command);
+                        }
+                    }                        
                 }
             }
         }

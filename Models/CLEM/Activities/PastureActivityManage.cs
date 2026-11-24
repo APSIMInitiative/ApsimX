@@ -8,6 +8,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Extras;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
@@ -127,19 +129,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                            "Utilisation % to change in Land condition index",
-                            "Utilisation % to change in Grass basal area"
-                        },
-                        measures: new List<string>()
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: [
+                                            "Utilisation % to change in Land condition index",
+                                            "Utilisation % to change in Grass basal area"
+                                        ],
+                                        measures: []
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to initialise this activity just once at start of simulation</summary>
@@ -201,8 +201,8 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
             }
 
-            ResourceRequestList = new()
-            {
+            ResourceRequestList =
+            [
                 new()
                 {
                     Resource = land,
@@ -214,10 +214,10 @@ namespace Models.CLEM.Activities
                     Category = UseAreaAvailable? "Assign unallocated": TransactionCategory,
                     FilterDetails = null
                 }
-            };
+            ];
 
             CheckResources(ResourceRequestList, Guid.NewGuid());
-            TakeResources(ResourceRequestList, false);
+            TakeResources(ResourceRequestList);
 
             //Now the Land has been allocated we have an Area
             if (ResourceRequestList.FirstOrDefault().Provided > 0)
@@ -290,22 +290,27 @@ namespace Models.CLEM.Activities
                 FoodResourcePacket trackQuality = new();
 
                 // get all entries in the current time step
-                foreach (PastureDataType dataEntry in pastureDataList.Where(a => events.IsDateInTimeStep(a.CutDate)))
+                // entries are combined to occur at the start of the time step
+                IEnumerable<PastureDataType> dataEntries = pastureDataList.Where(a => events.IsDateInTimeStep(a.CutDate));
+
+                if (dataEntries.Any())
                 {
-                    growth = dataEntry.Growth;
+                    growth = dataEntries.Sum(a => a.Growth);
                     growth *= unitsOfArea2Ha;
 
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += dataEntry.Rainfall;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += dataEntry.SoilLoss;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += dataEntry.Runoff;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.Cover += dataEntry.Cover;
-                    LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea += dataEntry.TreeBA;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Rainfall += dataEntries.Sum(a => a.Rainfall);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Erosion += dataEntries.Sum(a => a.SoilLoss);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Runoff += dataEntries.Sum(a => a.Runoff);
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.Cover = dataEntries?.Last().Cover ?? LinkedNativeFoodType.CurrentEcologicalIndicators.Cover;
+                    LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea = dataEntries?.Last().TreeBA ?? LinkedNativeFoodType.CurrentEcologicalIndicators.TreeBasalArea;
 
                     if (growth > 0)
                     {
                         Status = ActivityStatus.Success;
-                        GrazeFoodStorePool newPasture = new GrazeFoodStorePool(growth * Area, LinkedNativeFoodType);
-                        newPasture.NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent;
+                        GrazeFoodStorePool newPasture = new(growth * Area, LinkedNativeFoodType, events.TimeStepStart, events.TimeStepStart)
+                        {
+                            NitrogenPercent = LinkedNativeFoodType.GreenNitrogenPercent
+                        };
                         if (LinkedNativeFoodType.DMDStyle == DryMatterDigestibilityStyle.SpecifyNewGrowthDMD)
                         {
                             newPasture.DryMatterDigestibility = LinkedNativeFoodType.GreenDMD;
@@ -315,15 +320,14 @@ namespace Models.CLEM.Activities
                             newPasture.DryMatterDigestibility = newPasture.NitrogenPercent * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                         }
                         newPasture.DryMatterDigestibility = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DryMatterDigestibility));
-                        newPasture.GrowthDate = dataEntry.CutDate;
                         newPasture.RumenDegradableProteinPercent = LinkedNativeFoodType.RumenDegradableProteinPercent;
-                        LinkedNativeFoodType.AddToResource(newPasture, this, null, "Growth");
+                        LinkedNativeFoodType.AddToResource(newPasture, this, LinkedNativeFoodType.Name, "Growth");
                     }
                 }
             }
 
             // report activity performed.
-            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+            ActivityPerformedEventArgs activitye = new()
             {
                 Name = Name,
                 Status = events.IsEcologicalIndicatorsCalculationDue() ? ActivityStatus.Calculation : ActivityStatus.Success,
@@ -347,7 +351,7 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow(Resources.FindResourceGroup<RuminantHerd>(), FeedTypeName, Area * unitsOfArea2Ha * ha2sqkm);
 
             //If it is time to do yearly calculation
-            if (events.IsEcologicalIndicatorsCalculationDue())
+            if (LinkedNativeFoodType is not null && events.IsEcologicalIndicatorsCalculationDue())
             {
                 CalculateEcologicalIndicators(LinkedNativeFoodType, LandConditionIndex, GrassBasalArea, stockingRateSummed, events.EcologicalIndicatorsCalculationInterval, events.Clock.StartDate, events.EcologicalIndicatorsNextDueDate);
 
@@ -370,7 +374,7 @@ namespace Models.CLEM.Activities
             if (herd != null)
             {
                 if (paddockName.Contains('.'))
-                    paddockName = paddockName.Substring(paddockName.IndexOf('.') + 1);
+                    paddockName = paddockName[(paddockName.IndexOf('.') + 1)..];
 
                 return herd.Herd.Where(a => a.Location == paddockName).Sum(a => a.Weight.AdultEquivalent) / areaSqKm;
             }
@@ -466,33 +470,33 @@ namespace Models.CLEM.Activities
         {
             if (relationshipLC == null)
             {
-                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                string[] memberNames = ["Relationship for LandConditionIndex"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index]", memberNames);
             }
             else
             {
                 if (LandConditionIndex == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    string[] memberNames = ["RelationshipRunningValue for LandConditionIndex"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index]", memberNames);
                 }
             }
             if (relationshipGBA == null)
             {
-                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                string[] memberNames = ["Relationship for Grass Basal Area"];
                 yield return new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area]", memberNames);
             }
             else
             {
                 if (GrassBasalArea == null)
                 {
-                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    string[] memberNames = ["RelationshipRunningValue for GrassBasalArea"];
                     yield return new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area]", memberNames);
                 }
             }
             if (filePasture == null)
             {
-                string[] memberNames = new string[] { "FilePastureReader" };
+                string[] memberNames = ["FilePastureReader"];
                 yield return new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames);
             }
         }

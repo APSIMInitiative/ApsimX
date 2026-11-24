@@ -149,8 +149,9 @@ namespace Models.CLEM.Resources
             // Called by graze
             NumberOfDaysInTimestep = numberOfTimesteps;
             Pools = pools;
+            Name = name;
             double totalInPools = pools.Sum(p => p.AmountAvailable);
-            PoolProportions = pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0).ToArray();
+            PoolProportions = [.. pools.Select(p => totalInPools > 0 ? p.AmountAvailable / totalInPools : 0)];
             foreach (var pool in pools)
             {
                 if (pool.AmountAvailable > 0)
@@ -159,7 +160,7 @@ namespace Models.CLEM.Resources
                 }
             }
             Details.ClearAmount();
-            ProportionGreen = pools.Count == 0 ? 0 : pools.Where(p => p.Age <= greenAge).Sum(a => a.AmountAvailable) / totalInPools;
+            ProportionGreen = pools.Count == 0 ? 0 : pools.Where(p => p.AgeInMonths <= greenAge).Sum(a => a.AmountAvailable) / totalInPools;
         }
 
         /// <summary>

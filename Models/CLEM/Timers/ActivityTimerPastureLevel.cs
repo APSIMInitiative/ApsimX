@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -28,12 +29,11 @@ namespace Models.CLEM.Timers
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
-
-        [Link] readonly IClock clock = null;
+        private readonly ResourcesHolder resources = null;
+        [Link] readonly CLEMEvents events = null;
 
         double amountAtFirstCheck;
-        DateTime checkDate = DateTime.Now;
+        int checkTimeStepIntervalIndex = -1;
 
         /// <summary>
         /// Paddock or pasture to graze
@@ -85,10 +85,10 @@ namespace Models.CLEM.Timers
         {
             get
             {
-                if (clock.Today != checkDate)
+                if (events.IntervalIndex != checkTimeStepIntervalIndex)
                 {
                     amountAtFirstCheck = GrazeFoodStoreModel.KilogramsPerHa;
-                    checkDate = clock.Today;
+                    checkTimeStepIntervalIndex = events.IntervalIndex;
                 }
 
                 return (amountAtFirstCheck >= MinimumPastureLevel && amountAtFirstCheck < MaximumPastureLevel);

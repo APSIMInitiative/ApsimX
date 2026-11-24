@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 /// <summary>
 /// Descriptive summary provider for transmutation
@@ -62,16 +63,16 @@ public class TransmuteSummary : DescriptiveSummaryProviderBase<Transmute>
         using StringWriter htmlWriter = new();
         if (ModelTyped.TransmuteStyle == TransmuteStyle.Direct && ModelTyped.AmountPerPacket > 0)
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket)} x ");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.AmountPerPacket)} x ");
         }
 
         if (ModelTyped.TransmuteResourceTypeName != null && ModelTyped.TransmuteResourceTypeName != "")
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet(ModelTyped.TransmuteResourceTypeName, entryStyle: HTMLSummaryStyle.Resource)}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TransmuteResourceTypeName, entryStyle: HTMLSummaryStyle.Resource)}");
         }
         else
         {
-            htmlWriter.Write($"{generator.DisplayErrorSnippet("No Transmute resource (B) set")}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplayErrorSnippet("No Transmute resource (B) set")}");
         }
 
         if (ModelTyped.TransmuteStyle == TransmuteStyle.UsePricing)
@@ -79,7 +80,7 @@ public class TransmuteSummary : DescriptiveSummaryProviderBase<Transmute>
             htmlWriter.Write($" using the resource pricing details");
             if (ModelTyped.FinanceTypeForTransactionsName != null && ModelTyped.FinanceTypeForTransactionsName != "")
             {
-                htmlWriter.Write($" and all financial Transactions of sales and purchases using {generator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
+                htmlWriter.Write($" and all financial Transactions of sales and purchases using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.FinanceTypeForTransactionsName, entryStyle: HTMLSummaryStyle.Resource)}");
             }
         }
         generator.AddBlockWithText(htmlWriter.ToString());

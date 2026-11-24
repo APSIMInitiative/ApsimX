@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -131,7 +132,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            List<string> variableNames = new List<string>();
+            List<string> variableNames = [];
 
             // for each graze food store
 
@@ -139,7 +140,7 @@ namespace Models.CLEM.Reporting
             if (resHolder is null)
                 return;
 
-            List<string> pastureEntries = new();
+            List<string> pastureEntries = [];
             if (ReportTotal) pastureEntries.Add("Amount");
             if (ReportGrowth) pastureEntries.Add("Growth");
             if (ReportConsumed) pastureEntries.Add("Consumed");
@@ -148,7 +149,7 @@ namespace Models.CLEM.Reporting
             if (ReportDMD) pastureEntries.Add("DMD");
             if (ReportAge) pastureEntries.Add("Age");
 
-            List<string> poolEntries = new();
+            List<string> poolEntries = [];
             if (ReportPoolsTotal) poolEntries.Add("Amount");
             if (ReportPoolsConsumed) poolEntries.Add("Consumed");
             if (ReportPoolsDetached) poolEntries.Add("Detached");
@@ -193,20 +194,20 @@ namespace Models.CLEM.Reporting
                         }
                         else
                         {
-                            extraName = j.ToString();
+                            extraName = j.ToString("00");
                         }
                         variableNames.Add($"[{resHolder.Name}].{(pasture as CLEMModel).NameWithParent}.Report(\"{poolVariable}\", {ReportInTonnes.ToString().ToLower()}, {ReportPerHectare.ToString().ToLower()}, {j}) as {pasture.Name}.{extraName}.{poolVariable}");
                     }
                 }
             }
 
-            variableNames = variableNames.OrderBy(a => a).ToList();
+            variableNames = [.. variableNames.OrderBy(a => a)];
             variableNames.Insert(0, "[Clock].Today as Date");
-            VariableNames = variableNames.ToArray();
+            VariableNames = [.. variableNames];
 
-            if (EventNames == null || EventNames.Count() == 0)
+            if (EventNames == null || EventNames.Length == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMEvents.CLEMAnimalSell" }; 
+                EventNames = ["[Clock].CLEMEvents.CLEMAnimalSell"];
             }
 
             SubscribeToEvents();

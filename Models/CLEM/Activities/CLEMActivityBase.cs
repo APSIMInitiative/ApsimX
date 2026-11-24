@@ -1,6 +1,7 @@
 using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,10 +38,10 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        private Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
-        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = new Dictionary<(string type, string identifier, string unit), double?>();
-        private Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
-        private readonly List<string> statusMessageList = new List<string>();
+        private readonly Dictionary<string, object> companionModelsPresent = [];
+        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = [];
+        private readonly Dictionary<string, LabelsForCompanionModels> companionModelLabels = [];
+        private readonly List<string> statusMessageList = [];
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -111,10 +112,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (parentZone is null)
-                {
-                    parentZone = Structure.FindParent<ZoneCLEM>(recurse: true);
-                }
+                parentZone ??= Structure.FindParent<ZoneCLEM>(recurse: true);
 
                 if (parentZone is null)
                 {
@@ -266,7 +264,7 @@ namespace Models.CLEM.Activities
                     default:
                         break;
                 }
-                return new List<string>();
+                return [];
             }
             else
             {
@@ -289,7 +287,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public static string UpdateTransactionCategory(CLEMActivityBase model, IStructure structure, string relatesToValue = "")
         {
-            List<string> transCatsList = new();
+            List<string> transCatsList = [];
             if (model.parentZone is null)
             {
                 model.parentZone = structure.FindParent<ZoneCLEM>(relativeTo: model, recurse: true);
@@ -422,13 +420,13 @@ namespace Models.CLEM.Activities
                     // but doesn't seem to add them to any parent model. The problem with this is that the 'Node' property in
                     // 'Model' will be null, which in turn means any Find... method calls will through an 'object not set...' error.
                     // For now, I have called Node.Create which it shouldn't do.
-                    T newObj = new T();
+                    T newObj = new();
                     if (newObj is INodeModel nodeModel)
                     {
                         Node.Create(nodeModel);
                     }
 
-                    return new List<T>() { newObj };
+                    return [newObj];
                 }
             }
             return null;
@@ -441,14 +439,11 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
         {
-            Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
+            Dictionary<string, IEnumerable<T>> filters = [];
 
-            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers);
-            if (ids is null)
-            {
+            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers) ?? 
                 throw new Exception($"Identifiers have not been correctly configured for companion models of type [{typeof(T).Name}] of [{GetType().Name}]{Environment.NewLine}Invalid setup of [{GetType().Name}].LocateCompanionModels<T>(). Contact developers for assistance");
-            }
-
+            
             if (ids.Count != 0 == false)
             {
                 ids.Add("");
@@ -461,7 +456,7 @@ namespace Models.CLEM.Activities
                 {
                     filters.Add(id, iChildren);
                     // if this type provides units for use by children add them
-                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Measure).Any();
+                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Measure).Count != 0;
                     if (unitsProvided)
                     {
                         foreach (var item in iChildren)
@@ -534,7 +529,7 @@ namespace Models.CLEM.Activities
             // report all timers in setup step to provide all components in 
             // report all timers that were due this time step
             // report timer status and messages when not from setup
-            foreach (IActivityTimer timer in Structure.FindChildren<IActivityTimer>())
+            foreach (IActivityTimer timer in ActivityTimers)
             {
                 // report activity performed.
                 if (fromSetup | timer.ActivityDue)
@@ -590,12 +585,10 @@ namespace Models.CLEM.Activities
             }
 
             var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Measure ?? "")];
-            if (unitsProvided is null)
-            {
-                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
-            }
-
-            return unitsProvided.Value;
+            
+            return unitsProvided is null
+                ? throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Measure ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers")
+                : unitsProvided.Value;
         }
 
         /// <summary>
@@ -611,6 +604,7 @@ namespace Models.CLEM.Activities
 
             if (!TimingOK)
             {
+                Status = ActivityStatus.NoTask;
                 return;
             }
 
@@ -621,7 +615,7 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
                     if (companionChild is CLEMActivityBase cChild)
                     {
@@ -644,9 +638,9 @@ namespace Models.CLEM.Activities
             if (this is IHandlesActivityCompanionModels)
             {
                 // get all companion models except filter groups
-                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                 {
-                    if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                    if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                     {
                         var unitsProvided = ValueForCompanionModel(companionChild);
                         if (MathUtilities.IsPositive(unitsProvided))
@@ -658,10 +652,7 @@ namespace Models.CLEM.Activities
 
                             foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                             {
-                                if (request.ActivityModel is null)
-                                {
-                                    request.ActivityModel = this;
-                                }
+                                request.ActivityModel ??= this;
 
                                 request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Measure);
                                 ResourceRequestList.Add(request);
@@ -687,7 +678,7 @@ namespace Models.CLEM.Activities
                 // take resources
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                if (TakeResources(ResourceRequestList, false) || (ResourceRequestList.Count == 0))
+                if (TakeResources(ResourceRequestList) || (ResourceRequestList.Count == 0))
                 {
                     PerformTasksForTimestep(); //based on method supplied by activity
 
@@ -695,9 +686,9 @@ namespace Models.CLEM.Activities
                     if (this is IHandlesActivityCompanionModels)
                     {
                         // get all companion models except filter groups
-                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        foreach (IActivityCompanionModel companionChild in Structure.FindChildren<IActivityCompanionModel>().Where(a => identifier == "" || (a.Identifier ?? "") == identifier))
                         {
-                            if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
+                            if (valuesForCompanionModels.Count != 0 && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {
                                 var unitsProvided = ValueForCompanionModel(companionChild);
                                 // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should be reported as an error.
@@ -745,10 +736,10 @@ namespace Models.CLEM.Activities
                     }
 
                     // recalculate shortfalls in case any reduction in required removed request from shortfalls
-                    return shortfallRequests.ToList();
+                    return [.. shortfallRequests];
                 }
             }
-            return new List<ResourceRequest>();
+            return [];
         }
 
         /// <summary>A method to arrange the activity to be performed on the specified clock event.</summary>
@@ -992,7 +983,7 @@ namespace Models.CLEM.Activities
                     componentError = true;
                 }
 
-                ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
+                ResourceRequestEventArgs rrEventArgs = new() { Request = item };
 
                 if (item.Resource != null && Structure.FindParent<Market>(relativeTo: item.Resource as Model, recurse: true) != null)
                 {
@@ -1022,9 +1013,8 @@ namespace Models.CLEM.Activities
         /// Try to take the Resources based on Resource Request List provided.
         /// </summary>
         /// <param name="resourceRequestList">A list of resources required</param>
-        /// <param name="triggerActivityPerformed"></param>
         /// <returns>Flag indicating if able to take the resources needed.</returns>
-        public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
+        public bool TakeResources(List<ResourceRequest> resourceRequestList)
         {
             // no resources required or this is an Activity folder.
             if ((resourceRequestList == null) || (resourceRequestList.Count == 0))
@@ -1122,14 +1112,11 @@ namespace Models.CLEM.Activities
             request.Required = amountNeeded;
             // may need to reduce request here or shortfalls will be triggered
 
-            if (current == null)
-            {
-                // no filter group provided so assume any labour
-                current = new LabourGroup();
-            }
+            // no filter group provided so assume any labour
+            current ??= new LabourGroup();
 
             request.ResourceTypeName = "Labour";
-            ResourceRequest removeRequest = new ResourceRequest()
+            ResourceRequest removeRequest = new()
             {
                 ActivityID = request.ActivityID,
                 ActivityModel = request.ActivityModel,

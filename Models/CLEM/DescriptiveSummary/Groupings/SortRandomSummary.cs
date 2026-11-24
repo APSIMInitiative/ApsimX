@@ -1,6 +1,6 @@
 using Models.CLEM.Groupings;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for SortRandom

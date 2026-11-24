@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
@@ -126,6 +126,8 @@ namespace UnitTests.APSIM.Core.Tests
 
             var importer = new Importer();
             Simulations sims = importer.CreateSimulationsFromXml(oldXml, e => Assert.Fail());
+            Links links = new();
+            links.Resolve(sims, allLinks: true, recurse: true);
 
             Soil soil = sims.Node.FindChild<Soil>(recurse: true);
             Assert.That(soil.Name, Is.EqualTo("Soil"));

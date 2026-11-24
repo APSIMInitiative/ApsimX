@@ -124,16 +124,11 @@ namespace UnitTests.APSIM.Core.Tests
         [Test]
         public void OnCreatedShouldFailRun()
         {
-            // Redirect console to stop the exception text (written by the call to Main below) from
-            // being sent to Jenkins console output.
-            StringWriter sw = new StringWriter();
-            Console.SetOut(sw);
-
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.APSIM.Core.Resources.OnCreatedError.apsimx");
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, json);
 
-            int result = Models.Program.Main(new[] { fileName });
+            int result = Program.Main(new[] { fileName });
             Assert.That(result, Is.EqualTo(1));
         }
 

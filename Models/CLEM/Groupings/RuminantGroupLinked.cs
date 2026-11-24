@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
 using Models.Core;
 using System;
@@ -57,7 +58,7 @@ namespace Models.CLEM.Groupings
         private List<string> GetAllRuminantGroupNames()
         {
             GetAllRuminantGroupsAvailable();
-            return groupsAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
+            return [.. groupsAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}")];
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -99,7 +100,7 @@ namespace Models.CLEM.Groupings
                     errorMsg = $"The filter group [f={ExistingGroupName}] could not be found.{Environment.NewLine}Ensure the name matches the name of an enabled group in the simulation tree below the same ZoneCLEM";
                 }
 
-                yield return new ValidationResult(errorMsg, new string[] { "Linked filter group" });
+                yield return new ValidationResult(errorMsg, ["Linked filter group"]);
             }
         }
         #endregion

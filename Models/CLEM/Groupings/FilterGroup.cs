@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Documentation.Extensions;
+﻿using APSIM.Shared.Extensions;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -6,13 +6,12 @@ using Models.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Xml.Serialization;
 
-namespace Models.CLEM
+namespace Models.CLEM.Groupings
 {
     /// <summary>
     /// Implements IFilterGroup for a specific set of filter parameters
@@ -75,13 +74,13 @@ namespace Models.CLEM
                 InitialiseFilters(false);
             }
 
-            if (properties.ContainsKey(name))
+            if (properties.TryGetValue(name, out List<PropertyInfo> value))
             {
-                return properties[name];
+                return value;
             }
             else
             {
-                return new List<PropertyInfo>();
+                return [];
             }
         }
 
@@ -122,31 +121,6 @@ namespace Models.CLEM
                 input).Compile();
         }
 
-
-        ///// <inheritdoc/>
-        //public object GetPropertyValue(string name, object parentTopLevel)
-        //{
-        //    if (properties is null)
-        //    {
-        //        InitialiseFilters(false);
-        //    }
-
-        //    if (properties.TryGetValue(name, out List<PropertyInfo> value))
-        //    {
-        //        var parentLevel = parentTopLevel;
-        //        foreach (var propInfo in value[..1])
-        //        {
-        //            parentLevel = propInfo.GetValue(parentLevel, null);
-        //        }
-        //        return value.Last().GetValue(parentLevel, null);
-        //    }
-        //    else
-        //    {
-        //        int number = 0;
-        //        return number;
-        //    }
-        //}
-
         /// <summary>
         /// Clear all rules
         /// </summary>
@@ -175,7 +149,7 @@ namespace Models.CLEM
         /// </summary>
         public void InitialiseFilters(bool includeBuildRules = true)
         {
-            var pp = GetNestedPropertiesYield(typeof(TFilter), new List<PropertyInfo>());
+            var pp = GetNestedPropertiesYield(typeof(TFilter), []);
             properties = pp.ToDictionary(pair => pair.Key, pair => pair.Value);
 
             var types = Assembly.GetExecutingAssembly()
@@ -186,7 +160,7 @@ namespace Models.CLEM
             // get parameters specific for each type of ruminant (male and female)
             foreach (var subtype in types)
             {
-                foreach (var sub in GetNestedPropertiesYield(subtype, new List<PropertyInfo>()))
+                foreach (var sub in GetNestedPropertiesYield(subtype, []))
                 {
                     properties.Add($"{subtype.Name[8..]}.{sub.Key}", sub.Value);
                 }
@@ -223,7 +197,7 @@ namespace Models.CLEM
 
             foreach (var prop in props)
             {
-                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, nestedPropertyList.Concat((new List<PropertyInfo>() { prop })).ToList()))
+                foreach (var sub in GetNestedPropertiesYield(prop.PropertyType, [.. nestedPropertyList.Concat(([prop]))]))
                 {
                     yield return new KeyValuePair<string, List<PropertyInfo>>(sub.Key, sub.Value);
                 }
@@ -240,7 +214,7 @@ namespace Models.CLEM
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
-            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
+            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is not null && rule(item))) : source;
 
             if (sortList?.Any() ?? false)
             {
@@ -304,7 +278,7 @@ namespace Models.CLEM
 
             filterRules ??= Structure.FindChildren<Filter>().Select(filter => filter.Rule);
 
-            return filterRules.All(rule => rule is null ? false : rule(item));
+            return filterRules.All(rule => rule is not null && rule(item));
         }
 
         /// <inheritdoc/>

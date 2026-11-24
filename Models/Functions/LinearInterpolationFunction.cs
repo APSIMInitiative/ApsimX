@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using APSIM.Core;
 using Models.Core;
 
@@ -14,14 +13,9 @@ namespace Models.Functions
     [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction
     {
-        /// <summary>The ys are all the same</summary>
-        private bool YsAreAllTheSame = false;
-
         /// <summary>Gets the xy pairs.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;
-
-        private Dictionary<double, double> cache = new Dictionary<double, double>();
 
         /// <summary>The x value to use for interpolation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -56,29 +50,11 @@ namespace Models.Functions
         /// <param name="y">y values.</param>
         public LinearInterpolationFunction(string xProperty, double[] x, double[] y)
         {
-            VariableReference XValue = new VariableReference();
-            XValue.VariableName = xProperty;
             XYPairs = new XYPairs();
             XYPairs.X = x;
             XYPairs.Y = y;
-        }
-
-        /// <summary>Called when model has been created.</summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-            if (XYPairs != null)
-            {
-                for (int i = 1; i < XYPairs.Y.Length; i++)
-                    if (XYPairs.Y[i] != XYPairs.Y[i - 1])
-                    {
-                        YsAreAllTheSame = false;
-                        return;
-                    }
-
-                // If we get this far then the Y values must all be the same.
-                YsAreAllTheSame = XYPairs.Y.Length > 0;
-            }
+            VariableReference XValue = new VariableReference();
+            XValue.VariableName = xProperty;
         }
 
         /// <summary>Gets the value.</summary>
@@ -86,18 +62,10 @@ namespace Models.Functions
         /// <exception cref="System.Exception">Cannot find value for  + Name +  XProperty:  + XProperty</exception>
         public double Value(int arrayIndex = -1)
         {
-            // Shortcut exit when the Y values are all the same. Runs quicker.
-            try
-            {
-                if (YsAreAllTheSame)
-                    return XYPairs.Y[0];
-                else
-                    return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
-            }
-            catch (Exception err)
-            {
-                throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
-            }
+            if (XYPairs == null)
+                throw new Exception($"LinearInterp Function at {this.FullPath} does not have an XYPairs linked to it");
+                
+            return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
         }
 
         /// <summary>Values for x.</summary>
@@ -105,6 +73,9 @@ namespace Models.Functions
         /// <returns></returns>
         public double ValueForX(double XValue)
         {
+            if (XYPairs == null)
+                throw new Exception($"LinearInterp Function at {this.FullPath} does not have an XYPairs linked to it");
+
             return XYPairs.ValueIndexed(XValue);
         }
     }

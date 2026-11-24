@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using APSIM.Shared.Extensions.Collections;
 using Models.AgPasture;
 using Models.CLEM.Activities;
@@ -23,7 +24,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a link to an APSIM paddock with forages")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreAPSIMLink.htm")]
-    [ModelAssociations(associatedModels: new Type[] { typeof(RuminantParametersGrazing) }, associationStyles: new ModelAssociationStyle[] { ModelAssociationStyle.DescendentOfRuminantType })]
+    [ModelAssociations(associatedModels: [typeof(RuminantParametersGrazing)], associationStyles: [ModelAssociationStyle.DescendentOfRuminantType])]
     public class GrazeFoodStoreAPSIMLink : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFeed, IGrazeFoodStoreType, IValidatableObject
     {
         private const double gm2TokgHa = 10.0;
@@ -33,7 +34,7 @@ namespace Models.CLEM.Resources
         private Forages forages;
         private Zone paddock;
         private SimpleGrazing simpleGrazing;
-        private List<FoodResourceStore> intakeStoreRequests = [];
+        private readonly List<FoodResourceStore> intakeStoreRequests = [];
         private double consumableWt = 0;
         private double totalWt = 0;
 
@@ -156,7 +157,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public string GetStoreName(int index)
         {
-            if (index < 0 || !intakeStoreRequests.Any() || index > intakeStoreRequests.Count - 1)
+            if (index < 0 || intakeStoreRequests.Count == 0 || index > intakeStoreRequests.Count - 1)
                 return "Invalid";
             return intakeStoreRequests.ElementAt(index).Name;
         }
@@ -310,6 +311,9 @@ namespace Models.CLEM.Resources
 
             // do not include surface organic matter in feed pools
             forageModels = [.. forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == paddock && !m.Name.Contains("SurfaceOrganic"))];
+
+            // initialise basture biomass properties ready for any pasture timers at start of simulation.
+            OnCLEMPastureReady(this, new());
         }
 
         /// <summary>
@@ -359,7 +363,7 @@ namespace Models.CLEM.Resources
             //string devStyle = "BySpecies";
             string devStyle = "ByForageVSurfaceOM";
 
-            if (forageModels == null || !forageModels.Any())
+            if (forageModels == null || forageModels.Count == 0)
                 return [];
 
             var pools = forageModels
@@ -369,44 +373,37 @@ namespace Models.CLEM.Resources
                 })
                 .Select(provider => new GrazeAPSIMForagePool(this, provider, forages, paddock.Area));
 
-            switch (devStyle)
+            return devStyle switch
             {
-                case "ByDMD":
-                    // pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
-                    return pools
-                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        groups.Key.ToString()
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                case "BySpecies":
-                    // pools ordered by species and grouped into FoodResourceStore for feeding to animals            
-                    return pools
-                    .GroupBy(s => s.Name.Split('.').First())
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        groups.Key.ToString()
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                case "ByForageVSurfaceOM":
-                    // all pools combined and excluding surface organic matter
-                    return pools
-                    .GroupBy(s => s.Name.Contains("Surface") == false)
-                    .Select(groups => new FoodResourceStore(
-                        [.. groups],
-                        greenAge,
-                        numberOfTimesteps,
-                        (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
-                        )
-                    ).OrderByDescending(a => a.Details.DryMatterDigestibility).ToList();
-                default:
-                    return [];
-            }
+                "ByDMD" => [.. pools
+                                    .GroupBy(s => Convert.ToInt32(s.DryMatterDigestibility / dmdStep) * dmdStep) // now group into DMD steps and place in ResourceFoodStore to feed to animals
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        groups.Key.ToString()
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// pools ordered by DMD steps (e.g. 0-10, 10-20, etc.) and grouped into FoodResourceStore for feeding to animals            
+                "BySpecies" => [.. pools
+                                    .GroupBy(s => s.Name.Split('.').First())
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        groups.Key.ToString()
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// pools ordered by species and grouped into FoodResourceStore for feeding to animals            
+                "ByForageVSurfaceOM" => [.. pools
+                                    .GroupBy(s => s.Name.Contains("Surface") == false)
+                                    .Select(groups => new FoodResourceStore(
+                                        [.. groups],
+                                        greenAge,
+                                        numberOfTimesteps,
+                                        (groups.Key ? "SurfaceOrganicMatter" : "MixedSward")
+                                        )
+                                    ).OrderByDescending(a => a.Details.DryMatterDigestibility)],// all pools combined and excluding surface organic matter
+                _ => [],
+            };
 
             // think about different approaches
             // 1. whole avearge pasture pool (DMD step = 100)
@@ -431,21 +428,29 @@ namespace Models.CLEM.Resources
                 case "Amount":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = AmountTotal / convert; // intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {
-                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Total.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p =>
+                        {
+                            double getKgInPaddockWt(PMF.Interfaces.DamageableBiomass b) => b.Total.Wt * convertToKgInPaddock;
+                            return p.BiomassModel.Material.Sum(getKgInPaddockWt);
+                        }) / convert;
                     }
                     break;
                 case "AmountConsumable":
                     if (age < 0)
                     {
-                        valueToUse = intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = AmountAvailable / convert; // intakeStoreRequests.SelectMany(a => a.Pools).Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
                     }
                     else
                     {
-                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p => p.BiomassModel.Material.Sum(b => b.Consumable.Wt * convertToKgInPaddock)) / convert;
+                        valueToUse = intakeStoreRequests.ElementAt(age).Pools.Cast<GrazeAPSIMForagePool>().Sum(p =>
+                        {
+                            double getKgConsumedInPaddock(PMF.Interfaces.DamageableBiomass b) => b.Consumable.Wt * convertToKgInPaddock;
+                            return p.BiomassModel.Material.Sum(getKgConsumedInPaddock);
+                        }) / convert;
                     }
                     break;
                 case "Growth":

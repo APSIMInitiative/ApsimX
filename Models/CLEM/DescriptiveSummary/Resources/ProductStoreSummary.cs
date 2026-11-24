@@ -2,7 +2,7 @@ using Models.CLEM.Resources;
 using Models.Core;
 using System.Collections.Generic;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for OtherAnimals resource

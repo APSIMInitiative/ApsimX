@@ -8,7 +8,7 @@ using System.Linq;
 using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Interop.Graphing.Extensions;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Graphing;
 using APSIM.Shared.Utilities;
 using ApsimNG.Graphing;
@@ -568,7 +568,8 @@ namespace UserInterface.Views
                 if (filled)
                 {
                     series.MarkerFill = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-                    series.MarkerStroke = OxyColors.White;
+                    // sets the outline/stroke of the graph marker
+                    series.MarkerStroke = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B); 
                 }
 
                 if (xError != null || yError != null)

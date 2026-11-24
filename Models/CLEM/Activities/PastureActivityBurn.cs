@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -106,20 +107,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>() {
-                            "fixed",
-                            "per ha to burn",
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per ha to burn",
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
@@ -128,7 +126,7 @@ namespace Models.CLEM.Activities
             areaToSkip = 0;
             areaToDo = pasture.Manager.Area;
             // proportion green
-            double greenPasture = pasture.Pools.Where(a => a.Age < 2).Sum(a => a.AmountAvailable);
+            double greenPasture = pasture.Pools.Where(a => a.AgeInMonths < 2).Sum(a => a.AmountAvailable);
             pastureToDo = pasture.AmountAvailable;
             if (MathUtilities.IsPositive(pastureToDo))
             {
@@ -143,17 +141,12 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per ha to burn":
-                        valuesForCompanionModels[valueToSupply.Key] = areaToDo - areaToSkip;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per ha to burn" => areaToDo - areaToSkip,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

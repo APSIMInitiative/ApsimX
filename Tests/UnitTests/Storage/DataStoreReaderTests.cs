@@ -31,6 +31,15 @@ namespace UnitTests.Storage
         }
 
 
+        /// <summary>Double-quoted string literals (used by existing manager script filters) must still work.</summary>
+        [Test]
+        public void DoubleQuotedStringLiteralWorks()
+        {
+            var data = database.ExecuteQuery("SELECT \"Current\" AS Name");
+
+            Assert.That(data.Rows[0]["Name"], Is.EqualTo("Current"));
+        }
+
         /// <summary>Read all data from a table</summary>
         [Test]
         public void ReadAllDataFromATable()
@@ -201,7 +210,7 @@ namespace UnitTests.Storage
                 // and ensure that they are not the same.
                 string[] checkpointNamesBeforeRun = storage.Reader.CheckpointNames.ToArray();
                 // Run the simulation
-                var runner = new Runner(sims);
+                var runner = new Runner([sims]);
                 runner.Run();
                 string[] checkpointNamesAfterRun = storage.Reader.CheckpointNames.ToArray();
                 Assert.That(checkpointNamesAfterRun, Is.Not.EqualTo(checkpointNamesBeforeRun), "Storage reader failed to update checkpoint names after simulation was run.");

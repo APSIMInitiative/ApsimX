@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Groupings;
 
 /// <summary>
 /// Descriptive summary provider for the Ruminant Group filter
@@ -45,12 +45,12 @@ public class RuminantDeathGroupRateSummary : GroupSummaryBase<RuminantDeathGroup
                     }
                     else
                     {
-                        htmlWriter.Write($"{generator.DisplayErrorSnippet("Missing Grow or GrowPF parameters")}");
+                        htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplayErrorSnippet("Missing Grow or GrowPF parameters")}");
                     }
                 }
                 break;
             case ParameterStyle.Specify:
-                htmlWriter.Write($"The annual mortality rate of {generator.DisplaySummaryValueSnippet(ModelTyped.Rate, warnZero: true)} will be applied to the specified individuals each time step to determine if death occurs.");
+                htmlWriter.Write($"The annual mortality rate of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Rate, warnZero: true)} will be applied to the specified individuals each time step to determine if death occurs.");
                 break;
             default:
                 break;

@@ -1173,7 +1173,9 @@ namespace Models.Soils
             GetSoluteVariables();
             GetCropVariables();
             residue_cover = surfaceOrganicMatter.Cover;
-            CNRunoff();
+
+            if (isbc != 2)  // if isbc is 2 the surface boundary condition is a power function and so we don't want to recalc runoff
+                CNRunoff();
 
             double timestepStart = Time(year, day, _apsimTimeMinutes);
             double timestep = apsim_timestep / 60.0;
@@ -1414,7 +1416,7 @@ namespace Models.Soils
             ibbc = 0;
             bbc_value = 0.0;
 
-            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!!
+            if (isbc == 2) // There doesn't seem to be anywhere for isbc to acquire a value other than 0  !!!! VOS - yes there is see L700 "public void SetSurfaceBCForPowerFunction"
             {
                 if (Double.IsNaN(minimum_surface_storage))
                     throw new Exception("No value provided for minimum_surface_storage");
@@ -2903,7 +2905,7 @@ namespace Models.Soils
             {
                 summary.WriteMessage(this, "     APSwim Numerical Diagnostics", MessageType.Diagnostic);
                 summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
-                summary.WriteMessage(this, "      depth      Theta         psi        K           p          p*", MessageType.Diagnostic);
+                summary.WriteMessage(this, "      depth         Theta         psi         K              p          p*", MessageType.Diagnostic);
                 summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
 
                 double k;
@@ -2911,7 +2913,7 @@ namespace Models.Soils
                 for (int layer = 0; layer < x.Length; layer++)
                 {
                     Watvar(layer, _p[layer], out dummy1, out dummy2, out dummy3, out dummy4, ref dummy5, out k, ref dummy6);
-                    summary.WriteMessage(this, String.Format("     {0,6:F1}         {1,9:F7} {2,10:0.###} {3,10:F3} {4,10:F3} {5,10:F3}",
+                    summary.WriteMessage(this, String.Format("     {0,6:F1}         {1,9:F7} {2,10:F3} {3,15:F8} {4,10:F3} {5,10:F3}",
                                       x[layer] * 10.0,
                                       th[layer],
                                       _psi[layer],

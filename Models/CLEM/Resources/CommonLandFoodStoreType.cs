@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Vml.Spreadsheet;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -27,7 +28,7 @@ namespace Models.CLEM.Resources
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType, IGrazeFoodStoreType
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -36,7 +37,7 @@ namespace Models.CLEM.Resources
         [NonSerialized]
         private object pasture = new();
 
-        private double dryMatterDigestibility { get; set; }
+        private double dryMatterDigestibility;
 
         /// <summary>
         /// Unit type
@@ -101,8 +102,9 @@ namespace Models.CLEM.Resources
         /// Amount (kg)
         /// </summary>
         [JsonIgnore]
-        public double Amount
+        public static double Amount
         {
+            // ToDo: this needs to be brought up to speed with the new Amounts from IResourceType and allow pending removals from grazing.
             get
             {
                 // this is a virtual pool of forage outside the farm
@@ -206,9 +208,9 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (Structure.FindChildren<Transmutation>().Count() > 0)
+            if (Structure.FindChildren<Transmutation>().Any())
             {
-                string[] memberNames = new string[] { "Transmutations" };
+                string[] memberNames = ["Transmutations"];
                 yield return new ValidationResult("Transmutations are not available for the CommonLandFoodStoreType (" + this.Name + ")", memberNames);
             }
 
@@ -221,7 +223,7 @@ namespace Models.CLEM.Resources
                 pasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (pasture == null)
                 {
-                    string[] memberNames = new string[] { "Pasture link" };
+                    string[] memberNames = ["Pasture link"];
                     yield return new ValidationResult("A link to an animal food store or graze food store type must be supplied to link to common land (" + this.Name + ")", memberNames);
                 }
             }
@@ -229,7 +231,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null && PastureLink.StartsWith("Not specified"))
             {
                 // no link so need to ensure values are all supplied.
-                List<string> missing = new List<string>();
+                List<string> missing = [];
                 if (NToDMDCoefficient == 0)
                     missing.Add("NToDMDCoefficient");
 
@@ -238,11 +240,11 @@ namespace Models.CLEM.Resources
                     missing.Add("NToDMDIntercept");
                 }
 
-                if (missing.Count() > 0)
+                if (missing.Count > 0)
                 {
                     foreach (var item in missing)
                     {
-                        string[] memberNames = new string[] { item };
+                        string[] memberNames = [item];
                         yield return new ValidationResult("The common land [r=" + this.Name + "] requires [o=" + item + "] as it is not linked to an on-farm pasture", memberNames);
                     }
                 }
@@ -260,8 +262,8 @@ namespace Models.CLEM.Resources
         /// added
         /// </param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="relatesToResource"></param>
-        /// <param name="category"></param>
+        /// <param name="relatesToResource">Optional relates to resource as string for reporting</param>
+        /// <param name="category">Transaction category</param>
         public new void AddToResource(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
@@ -274,9 +276,11 @@ namespace Models.CLEM.Resources
             else
             {
                 FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
-                pool = new(packet.Amount);
-                pool.NitrogenPercent = packet.NitrogenPercent;
-                pool.DryMatterDigestibility = packet.DryMatterDigestibility;
+                pool = new(packet.Amount, null)
+                {
+                    NitrogenPercent = packet.NitrogenPercent,
+                    DryMatterDigestibility = packet.DryMatterDigestibility
+                };
             }
 
             if (pool.Amount > 0)
@@ -286,13 +290,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void Remove(ResourceRequest request, CLEMModel pendingRequestActivity = null)
+        public void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
             // grazing does not access pools by breed but gets all it needs of this quality common pasture
             // common pasture quality can be linked to a real pasture or foodstore and this has already been done.
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket(request.Required)
+            FoodResourcePacket additionalDetails = new(request.Required)
             {
                 NitrogenPercent = this.Nitrogen,
                 DryMatterDigestibility = this.dryMatterDigestibility,
@@ -318,7 +322,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public void ApplyDailyIntakeReduction(double fractionReduced)
+        public static void ApplyDailyIntakeReduction(double _)
         {
         }
 
