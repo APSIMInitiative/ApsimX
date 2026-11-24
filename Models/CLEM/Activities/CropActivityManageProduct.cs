@@ -10,6 +10,8 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 using APSIM.Numerics;
+using Models.CLEM.Extras;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Activities
 {
@@ -176,18 +178,15 @@ namespace Models.CLEM.Activities
             return type switch
             {
                 "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
-                    identifiers: new List<string>()
-                    {
-
-                    },
-                    measures: new List<string>() {
+                    identifiers: [],
+                    measures: [
                         "fixed",
                         "per kg harvested",
                         "per land unit of crop",
                         "per hectare of crop",
                         "per land unit harvested",
                         "per hectare harvested",
-                    }
+                    ]
                     ),
                 _ => new LabelsForCompanionModels(),
             };
@@ -204,11 +203,8 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
-            if (fileCrop == null)
-            {
+            fileCrop = simulation.Node.FindChildren<IModel>(recurse: true).Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop ?? 
                 throw new ApsimXException(this, $"Unable to locate crop data reader [x={ModelNameFileCrop ?? "Unknown"}] requested by [a={NameWithParent}]");
-            }
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if ((LinkedResourceItem as Model).Parent is GrazeFoodStore)
@@ -223,11 +219,11 @@ namespace Models.CLEM.Activities
 
             // Retrieve harvest data from the forage file for the entire run.
             // only get entries where a harvest happened (Amtkg > 0)
-            HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+            HarvestData = [.. fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
+                                                               events.Clock.StartDate, events.Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month)];
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
-                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate.ToShortDateString()}] and [{events.Clock.EndDate.ToShortDateString()}]", MessageType.Warning);
+                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{events.Clock.StartDate:d}] and [{events.Clock.EndDate:d}]", MessageType.Warning);
             }
 
             IsTreeCrop = TreesPerHa != 0;  //using this boolean just makes things more readable.
@@ -238,7 +234,7 @@ namespace Models.CLEM.Activities
             limiter = ActivityCarryLimiter.Locate(this, Structure);
 
             // check if harvest type tags have been provided
-            HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
+            HarvestTagsUsed = HarvestData.Any(a => a.HarvestType != "");
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -640,13 +636,13 @@ namespace Models.CLEM.Activities
         {
             if (Parent.GetType() != typeof(CropActivityManageCrop) && Parent.GetType() != typeof(CropActivityManageProduct))
             {
-                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", new string[] { "Parent model" });
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component", ["Parent model"]);
             }
 
             // check that parent or grandparent is a CropActivityManageCrop to ensure correct nesting
             if (!((Parent.GetType() == typeof(CropActivityManageCrop) || (Parent.GetType() == typeof(CropActivityManageProduct) && Parent.Parent.GetType() == typeof(CropActivityManageCrop)))))
             {
-                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", new string[] { "Invalid nesting" });
+                yield return new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", ["Invalid nesting"]);
             }
 
             // ensure we don't try and change the crop area planeted when using unallocated land
@@ -655,11 +651,11 @@ namespace Models.CLEM.Activities
                 var parentManageCrop = Structure.FindParent<CropActivityManageCrop>(recurse: true);
                 if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
                 {
-                    yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", new string[] { "Invalid crop area" });
+                    yield return new ValidationResult($"You cannot alter the crop area planted for product [a={Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", ["Invalid crop area"]);
                 }
                 if(Parent is CropActivityManageProduct)
                 {
-                    yield return new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", new string[] { "Invalid crop area" });
+                    yield return new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={Name}] of the crop [a={parentManageCrop.NameWithParent}]", ["Invalid crop area"]);
                 }
             }
         }

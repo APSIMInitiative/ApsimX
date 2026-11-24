@@ -1,11 +1,12 @@
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.Core;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Resources
 {
@@ -758,11 +759,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Give birth to all fetuses
         /// </summary>
-        /// <param name="herd">A link to the ruminant herd to place newborn</param>
-        /// <param name="events">A link to the CLEM event timer model</param>
-        /// <param name="conceptionArgs">A link to standard conception args to use for reporting</param>
-        /// <param name="activity">A link to the activity model calling this method for reporting</param>
-        public bool GiveBirth(RuminantHerd herd, CLEMEvents events, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
+        /// <param name="herd">The the ruminant herd to place newborn</param>
+        /// <param name="conceptionArgs">The standard conception args to use for reporting</param>
+        /// <param name="activity">The activity model calling this method for reporting</param>
+        public bool GiveBirth(RuminantHerd herd, ConceptionStatusChangedEventArgs conceptionArgs, IModel activity)
         {
             if (!IsBirthDue)
             {
@@ -771,16 +771,16 @@ namespace Models.CLEM.Resources
 
             for (int i = 0; i < CarryingCount; i++)
             {
-                // Determine the best birth weight to use. This is now passed to each RuminantActivityGrow to decide how to set protein and fat at birth
+                // Determine the best birth weight to use. This is now passed to each IRuminantActivityGrow to decide how to set protein and fat at birth
                 // RuminantGrow 
                 //   * calculate birth weigth (Freer) Parameters.General.BirthScalar[NumberOfFetuses-1] * Weight.StandardReferenceWeight * (1 - 0.33 * (1 - Weight.Live / Weight.StandardReferenceWeight));
                 // RuminantGrowPF
-                //   * use the weight of fetus at birth as calculated during pregnancy
+                //   * use the weight of fetus at birth as tracked during pregnancy
                 // RuminantGrowSCA
                 // RuminantGrowOddy
                 //   * do not implement breeding and births.
 
-                Ruminant newSuckling = Ruminant.Create(Fetuses[i], BirthDueDate, herd.NextUniqueID, this, herd.RuminantGrowActivity);
+                Ruminant newSuckling = Ruminant.Create(Fetuses[i], herd.NextUniqueID, this, herd.RuminantGrowActivity);
 
                 herd.AddRuminant(newSuckling, activity);
 
@@ -870,8 +870,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor for new born female ruminant
         /// </summary>
-        public RuminantFemale(DateTime date, int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
-            : base(date, id, mother, growActivity)
+        public RuminantFemale(int id, RuminantFemale mother, IRuminantActivityGrow growActivity)
+            : base(id, mother, growActivity)
         {
             // needed for female specific actions
             SucklingOffspringList = [];

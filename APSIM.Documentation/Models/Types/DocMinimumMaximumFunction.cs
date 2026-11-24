@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models;
 using Models.Core;
 using Models.Functions;
@@ -32,18 +32,18 @@ namespace APSIM.Documentation.Models.Types
             if (model is MinimumFunction)
                 type = "Min";
 
-            section.Add(DocumentMinMaxFunction(type, model.Name, model.Children));
+            section.Add(DocumentMinMaxFunction(type, model, model.Children));
 
             return new List<ITag>() {section};
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        private static List<ITag> DocumentMinMaxFunction(string functionName, string name, IEnumerable<IModel> children)
+        private static List<ITag> DocumentMinMaxFunction(string functionName, IModel model, IEnumerable<IModel> children)
         {
             List<ITag> newTags = new List<ITag>();
 
             var writer = new StringBuilder();
-            writer.Append($"*{name}* = {functionName}(");
+            writer.Append($"*{model.Name}* = {functionName}(");
 
             bool addComma = false;
             foreach (IModel child in children)
@@ -58,9 +58,9 @@ namespace APSIM.Documentation.Models.Types
             }
             writer.Append(')');
 
-            newTags.Add(new Paragraph(writer.ToString()));
+            newTags.Add(new Paragraph(writer.ToString(), model));
 
-            newTags.Add(new Paragraph("Where:"));
+            newTags.Add(new Paragraph("Where:", model));
 
             return newTags;
         }

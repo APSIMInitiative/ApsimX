@@ -4,7 +4,7 @@ using Models.CLEM.Timers;
 using System.IO;
 using System.Linq.Expressions;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerResourceLevel component
@@ -15,7 +15,7 @@ public class ActivityTimerResourceLevelSummary : TimerSummaryBase<ActivityTimerR
     public override void BuildSummary()
     {
         using StringWriter htmlWriter = new();
-        htmlWriter.Write($"Perform when {generator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)} ");
+        htmlWriter.Write($"Perform when {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource)} ");
         string str = "";
         switch (ModelTyped.Operator)
         {
@@ -41,7 +41,7 @@ public class ActivityTimerResourceLevelSummary : TimerSummaryBase<ActivityTimerR
                 break;
         }
         htmlWriter.Write(str);
-        generator.DisplaySummaryValueSnippet(ModelTyped.Amount);
+        DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount);
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 }

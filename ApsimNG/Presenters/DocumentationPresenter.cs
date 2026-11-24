@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
 using Models.PMF.Phen;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using APSIM.Core;
 using APSIM.Documentation;
 using Models;

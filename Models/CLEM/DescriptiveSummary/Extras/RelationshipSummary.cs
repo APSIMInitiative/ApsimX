@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 /// <summary>
 /// Descriptive summary provider for the Relationship
@@ -16,7 +17,7 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        string output = $"The {generator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} relationship provides {generator.DisplaySummaryValueSnippet(ModelTyped.NameOfYVariable)} (y) for a given value of {generator.DisplaySummaryValueSnippet(ModelTyped.NameOfXVariable)} (x)";
+        string output = $"The {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} relationship provides {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.NameOfYVariable)} (y) for a given value of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.NameOfXVariable)} (x)";
         switch (ModelTyped.CalculationMethod)
         {
             case RelationshipCalculationMethod.UseSpecifiedValues:
@@ -45,7 +46,7 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
             {
                 using (generator.OpenBlock("childgroupborder"))
                 {
-                    generator.AddBlockWithText($"{generator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} is defined by the following (x,y) points:", "childgrouplabel");
+                    generator.AddBlockWithText($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Identifier)} is defined by the following (x,y) points:", "childgrouplabel");
 
                     using StringWriter htmlWriter = new();
                     // Start without any leading spaces so the first tag (canvas/script) begins at column 0.
@@ -154,8 +155,8 @@ public class RelationshipSummary : DescriptiveSummaryProviderBase<Relationship>
 
                     // Add 8 tabs to the start of each line before adding to generator, but keep the first non-empty line unindented
                     string html = htmlWriter.ToString();
-                    string indent = new string('\t', 8);
-                    string[] lines = html.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    string indent = new('\t', 8);
+                    string[] lines = html.Split([ "\r\n", "\n" ], StringSplitOptions.None);
                     var indentedBuilder = new System.Text.StringBuilder();
                     bool firstNonEmptyLine = true;
                     for (int li = 0; li < lines.Length; li++)

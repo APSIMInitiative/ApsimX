@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -62,7 +63,7 @@ namespace Models.CLEM.Resources
         [Category("Breed", "Lactation")]
         [Description("Peak lactation yield scalar [CL0]")]
         [Required, MinLength(1)]
-        public double[] PeakYieldScalar_CL0 { get; set; } = new double[] { 0.375, 0.375 };  // sheep 0.486, 0.778, 0.934
+        public double[] PeakYieldScalar_CL0 { get; set; } = [0.375, 0.375];  // sheep 0.486, 0.778, 0.934
 
         /// <summary>
         /// Metabolisability of milk (SCA CL5)

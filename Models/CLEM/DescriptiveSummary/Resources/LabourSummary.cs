@@ -1,3 +1,4 @@
+using Models.CLEM.Extras;
 using DocumentFormat.OpenXml.Drawing.Diagrams;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using Mapsui.Providers;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for Labour resource
@@ -34,7 +35,7 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
                 models: model.Structure.FindChildren<Relationship>().Where(a => a.Identifier == "Adult equivalent"),
                 childType: typeof(Relationship),
                 introduction: "The following relationship is used to calculate the Adult Equivalent of each person",
-                missing: $"No {generator.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {generator.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."
+                missing: $"No {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Relationship", entryStyle:HTMLSummaryStyle.Helper)} with the identifier {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("Adult equivalent")} was provided. All individuals are assumed to be 1 AE."
                 )
         ];
     }
@@ -54,7 +55,7 @@ public class LabourSummary : DescriptiveSummaryProviderBase<Labour>
         if (group.Id == "defaulttype" && group.SelectedModels.Any())
         {
             generator.OpenBlock(id: "tablewrap", addTopBottomMargin: true);
-            generator.CreateTable(new string[] { "Name", "Sex", "Age (yrs)", "Number", "Hired" });
+            generator.CreateTable(["Name", "Sex", "Age (yrs)", "Number", "Hired"]);
         }
     }
 

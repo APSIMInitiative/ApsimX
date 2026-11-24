@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Core;
 
 /// <summary>
 /// Descriptive summary for APSIM Clock
@@ -36,6 +36,6 @@ public class ClockSummary : DescriptiveSummaryProviderBase<Clock>
     /// <inheritdoc/>
     public override void BuildSummary()
     {
-        generator.AddBlockWithText($"The simulation is performed from {generator.DisplaySummaryValueSnippet(ModelTyped.StartDate.ToShortDateString())} to {generator.DisplaySummaryValueSnippet(ModelTyped.EndDate.ToShortDateString())}");
+        generator.AddBlockWithText($"The simulation is performed from {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.StartDate.ToShortDateString())} to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.EndDate.ToShortDateString())}");
     }
 }

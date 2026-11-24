@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
@@ -69,26 +70,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() ,
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>
@@ -111,17 +107,12 @@ namespace Models.CLEM.Activities
             foreach (var valueToSupply in valuesForCompanionModels)
             {
                 int number = numberToDo;
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = number;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => number,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }

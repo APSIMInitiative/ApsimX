@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private new void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Items = new List<GrazeFoodStoreType>();
+            Items = [];
 
             foreach (IModel childModel in Structure.FindChildren<IModel>())
             {

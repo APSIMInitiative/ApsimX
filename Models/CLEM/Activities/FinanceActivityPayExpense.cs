@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using Models.CLEM.Extras;
 using System.IO;
 
 namespace Models.CLEM.Activities
@@ -53,8 +54,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>
-            {
+            List<ResourceRequest> resourcesNeeded =
+            [
                 new ResourceRequest()
                 {
                     Resource = bankAccount,
@@ -65,7 +66,7 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Category = TransactionCategory
                 }
-            };
+            ];
             return resourcesNeeded;
         }
 

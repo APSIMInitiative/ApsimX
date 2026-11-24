@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public double GetAvailability(int month)
         {
-            if (month <= 12 && month > 0 && month <= MonthlyValues.Count())
+            if (month <= 12 && month > 0 && month <= MonthlyValues.Length)
             {
                 return MonthlyValues[month - 1];
             }

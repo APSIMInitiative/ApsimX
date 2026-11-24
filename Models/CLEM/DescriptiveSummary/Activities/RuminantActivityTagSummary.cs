@@ -1,43 +1,43 @@
 using Models.CLEM.Activities;
+using Models.CLEM.DescriptiveSummary.Activities;
 using Models.CLEM.Groupings;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary
+namespace Models.CLEM.DescriptiveSummary.Activities;
+
+/// <summary>
+/// Descriptive summary provider for Ruminant Activity Tag
+/// </summary>
+public class RuminantActivityTagSummary : RuminantActivitySummaryBase<RuminantActivityTag>
 {
-    /// <summary>
-    /// Descriptive summary provider for Ruminant Activity Tag
-    /// </summary>
-    public class RuminantActivityTagSummary : RuminantActivitySummaryBase<RuminantActivityTag>
+    ///<inheritdoc/>
+    public override List<ChildComponentGroup> GetChildrenInSummary()
     {
-        ///<inheritdoc/>
-        public override List<ChildComponentGroup> GetChildrenInSummary()
+        string intro = $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.ApplicationStyle)} the tag {((ModelTyped.ApplicationStyle == TagApplicationStyle.Add) ? "to" : "from")} all individuals in the following groups";
+
+        return
+        [
+            new ChildComponentGroup(
+            id: "default",
+            model: CLEMModel,
+            childType: typeof(RuminantGroup),
+            missing: "No individuals identified",
+            introduction: intro,
+            borderClass: "childgroupborder filtergroup"
+            )
+        ];
+    }
+
+    /// <inheritdoc/>
+    public override void BuildSummary()
+    {
+        string tag = $"The tag {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TagLabel, "Tag not set")}";
+
+        if (ModelTyped.ApplicationStyle == TagApplicationStyle.Add && ModelTyped.TagCategory != RuminantAttributeCategoryTypes.None)
         {
-            string intro = $"{generator.DisplaySummaryValueSnippet(ModelTyped.ApplicationStyle)} the tag {((ModelTyped.ApplicationStyle == TagApplicationStyle.Add) ? "to" : "from")} all individuals in the following groups";
-
-            return
-            [
-                new ChildComponentGroup(
-                id: "default",
-                model: CLEMModel,
-                childType: typeof(RuminantGroup),
-                missing: "No individuals identified",
-                introduction: intro,
-                borderClass: "childgroupborder filtergroup"
-                )
-            ];
+            tag += $", is of category {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TagCategory)}";
         }
-
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-            string tag = $"The tag {generator.DisplaySummaryValueSnippet(ModelTyped.TagLabel, "Tag not set")}";
-
-            if (ModelTyped.ApplicationStyle == TagApplicationStyle.Add && ModelTyped.TagCategory != RuminantAttributeCategoryTypes.None)
-            {
-                tag += $", is of category {generator.DisplaySummaryValueSnippet(ModelTyped.TagCategory)}";
-            }
-            generator.AddBlockWithText($"{tag}");
-        }
+        generator.AddBlockWithText($"{tag}");
     }
 }

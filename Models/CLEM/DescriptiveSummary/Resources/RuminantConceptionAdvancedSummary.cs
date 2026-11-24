@@ -1,7 +1,7 @@
 using Models.CLEM.Resources;
 using System.Text;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for RuminantConceptionAdvanced
@@ -26,14 +26,14 @@ public class RuminantConceptionAdvancedSummary : DescriptiveSummaryProviderBase<
 
         Generator.AddBlockWithText($"Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf using the following values.");
 
-        StringBuilder sb = new StringBuilder();
-        string[] names = new string[]
-        {
+        StringBuilder sb = new();
+        string[] names =
+        [
             "First calf < 12 months",
             "First calf 12-24 months",
             "Second calf",
             "Third or later calf"
-        };
+        ];
 
         sb.AppendLine($"{generator.GetIndentTabs}<table><tr><th>Status</th><th>Asymptote</th><th>Coefficient</th><th>Intercept</th></tr>");
 
@@ -49,7 +49,7 @@ public class RuminantConceptionAdvancedSummary : DescriptiveSummaryProviderBase<
                     2 => model.ConceptionRateIntercept[i],
                     _ => 0
                 };
-                sb.Append($"<td>{generator.DisplaySummaryValueSnippet(value, warnZero: true)}</td>");
+                sb.Append($"<td>{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(value, warnZero: true)}</td>");
             }
             sb.AppendLine("</tr>");
         }

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using Models.CLEM.Resources;
@@ -149,7 +150,7 @@ namespace Models.CLEM.Timers
 
         private bool IsInRange(DateTime date)
         {
-            bool inRange = Range?.IsInRange()??false;
+            bool inRange = Range?.IsInRange(date)??false;
             return (Invert) ? !inRange : inRange;
         }
 
@@ -167,22 +168,22 @@ namespace Models.CLEM.Timers
             // if all details blank error for each of start and end
             foreach (string message in Range.Start.ErrorMessages)
             {
-                yield return new ValidationResult($"Start: {message}", new[] { nameof(StartDetails) });
+                yield return new ValidationResult($"Start: {message}", [nameof(StartDetails)]);
             }
             foreach (string message in Range.End.ErrorMessages)
             {
-                yield return new ValidationResult($"End: {message}", new[] { nameof(EndDetails) });
+                yield return new ValidationResult($"End: {message}", [nameof(EndDetails)]);
             }
 
             if (Range.Start.Date > Range.End.Date)
             {
-                yield return new ValidationResult("Start date must be before end date", new[] { nameof(StartDetails), nameof(EndDetails) });
+                yield return new ValidationResult("Start date must be before end date", [nameof(StartDetails), nameof(EndDetails)]);
             }
 
             // Check if either but not both Start and End ymd.year = 0
             if ((Range.Start.ymd.year == 0 && Range.End.ymd.year != 0) || (Range.Start.ymd.year != 0 && Range.End.ymd.year == 0))
             {
-                yield return new ValidationResult("Either both or neither of Start and End year must be 0", new[] { nameof(StartDetails), nameof(EndDetails) });
+                yield return new ValidationResult("Either both or neither of Start and End year must be 0", [nameof(StartDetails), nameof(EndDetails)]);
             }
         }
 

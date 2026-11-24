@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "Version": 216,
+  "Version": 222,
   "Name": "Simulations",
   "ResourceName": null,
   "Children": [
@@ -349,40 +349,6 @@
                 "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.7962741039794823"
               ],
               "Name": "EmuRock",
-              "ResourceName": null,
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PMF.Plant, Models",
-          "Name": "Wheat",
-          "ResourceName": "Wheat",
-          "Children": [
-            {
-              "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
-              "CropType": 1,
-              "FrostLowTT": -6.1,
-              "FrostMaxReductionRatio": 0.5,
-              "FrostUpTT": 0.2,
-              "FrostMinReductionRatio": 0.0,
-              "FrostStartSensitiveGS": 5.56,
-              "FrostStartMostSensitiveGS": 6.68,
-              "FrostEndMostSensitiveGS": 8.43,
-              "FrostEndSensitiveGS": 9.0,
-              "HeatLowTT": 30.1,
-              "HeatMinReductionRatio": 0.0,
-              "HeatUpTT": 38.7,
-              "HeatMaxReductionRatio": 0.56,
-              "HeatStartSensitiveGS": 6.53,
-              "HeatStartMostSensitiveGS": 7.84,
-              "HeatEndMostSensitiveGS": 8.87,
-              "HeatEndSensitiveGS": 9.2,
-              "Name": "FrostHeatDamageFunctions",
               "ResourceName": null,
               "Children": [],
               "Enabled": true,
@@ -2000,7 +1966,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4416,7 +4408,7 @@
                       "Thickness": null,
                       "InitialValues": null,
                       "InteractionsPerDay": 8,
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -4430,7 +4422,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -6944,7 +6962,7 @@
                       "Thickness": null,
                       "InitialValues": null,
                       "InteractionsPerDay": 8,
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "ResourceName": null,
                       "Children": [],
                       "Enabled": true,
@@ -6958,7 +6976,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -9530,7 +9574,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.WaterModel.RunoffModel, Models",
@@ -9568,7 +9612,7 @@
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
-                                      "ReadOnly": true
+                                      "ReadOnly": false
                                     },
                                     {
                                       "$type": "Models.Functions.Constant, Models",
@@ -9578,15 +9622,15 @@
                                       "ResourceName": null,
                                       "Children": [],
                                       "Enabled": true,
-                                      "ReadOnly": true
+                                      "ReadOnly": false
                                     }
                                   ],
                                   "Enabled": true,
-                                  "ReadOnly": true
+                                  "ReadOnly": false
                                 }
                               ],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             },
                             {
                               "$type": "Models.WaterModel.CNReductionForTillage, Models",
@@ -9596,11 +9640,11 @@
                               "ResourceName": null,
                               "Children": [],
                               "Enabled": true,
-                              "ReadOnly": true
+                              "ReadOnly": false
                             }
                           ],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.WaterModel.EvaporationModel, Models",
@@ -9609,7 +9653,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.WaterModel.SaturatedFlowModel, Models",
@@ -9617,7 +9661,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.WaterModel.UnsaturatedFlowModel, Models",
@@ -9625,7 +9669,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         },
                         {
                           "$type": "Models.WaterModel.WaterTableModel, Models",
@@ -9633,7 +9677,7 @@
                           "ResourceName": null,
                           "Children": [],
                           "Enabled": true,
-                          "ReadOnly": true
+                          "ReadOnly": false
                         }
                       ],
                       "Enabled": true,
@@ -9972,7 +10016,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12385,7 +12455,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -14764,7 +14860,33 @@
                   "$type": "Models.PMF.Plant, Models",
                   "Name": "Wheat",
                   "ResourceName": "Wheat",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.FrostHeatDamageFunctions, Models",
+                      "CropType": 1,
+                      "FrostLowTT": -6.1,
+                      "FrostMaxReductionRatio": 0.5,
+                      "FrostUpTT": 0.2,
+                      "FrostMinReductionRatio": 0.0,
+                      "FrostStartSensitiveGS": 5.56,
+                      "FrostStartMostSensitiveGS": 6.68,
+                      "FrostEndMostSensitiveGS": 8.43,
+                      "FrostEndSensitiveGS": 9.0,
+                      "HeatLowTT": 30.1,
+                      "HeatMinReductionRatio": 0.0,
+                      "HeatUpTT": 38.7,
+                      "HeatMaxReductionRatio": 0.56,
+                      "HeatStartSensitiveGS": 6.53,
+                      "HeatStartMostSensitiveGS": 7.84,
+                      "HeatEndMostSensitiveGS": 8.87,
+                      "HeatEndSensitiveGS": 9.2,
+                      "Name": "FrostHeatDamageFunctions",
+                      "ResourceName": null,
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },

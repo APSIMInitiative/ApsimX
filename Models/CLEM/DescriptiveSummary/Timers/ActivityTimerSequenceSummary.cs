@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerSequence component
@@ -19,7 +19,7 @@ public class ActivityTimerSequenceSummary : TimerSummaryBase<ActivityTimerSequen
         using StringWriter htmlWriter = new();
         if (ModelTyped.Sequence is null || ModelTyped.Sequence == "")
         {
-            htmlWriter.Write($"Sequence {generator.DisplayErrorSnippet("Not Set")}");
+            htmlWriter.Write($"Sequence {DescriptiveSummaryGenerator.DisplayErrorSnippet("Not Set")}");
         }
         else
         {
@@ -27,7 +27,7 @@ public class ActivityTimerSequenceSummary : TimerSummaryBase<ActivityTimerSequen
             string seqString = ActivityTimerSequence.FormatSequence(ModelTyped.Sequence);
             for (int i = 0; i < seqString.Length; i++)
             {
-                htmlWriter.Write(generator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"), spanClass: "entryValue filterValue")+" ");
+                htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet((seqString[i] == '1' ? "OK" : "SKIP"), spanClass: "entryValue filterValue")+" ");
             }
         }
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem floatLeft");

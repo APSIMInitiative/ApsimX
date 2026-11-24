@@ -3,35 +3,29 @@
     /// <summary>
     /// Structure to return values form a labour days request
     /// </summary>
-    public class LabourRequiredArgs
+    /// <remarks>
+    /// Constructor
+    /// </remarks>
+    /// <param name="daysNeeded">Number of days required</param>
+    /// <param name="category">Category of labour</param>
+    /// <param name="relatesToResource">Resource the labour relates to</param>
+    public class LabourRequiredArgs(double daysNeeded, string category, string relatesToResource)
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="daysNeeded"></param>
-        /// <param name="category"></param>
-        /// <param name="relatesToResource"></param>
-        public LabourRequiredArgs(double daysNeeded, string category, string relatesToResource)
-        {
-            DaysNeeded = daysNeeded;
-            Category = category;
-            RelatesToResource = relatesToResource;
-        }
 
         /// <summary>
         /// Calculated days needed
         /// </summary>
-        public double DaysNeeded { get; set; }
+        public double DaysNeeded { get; set; } = daysNeeded;
 
         /// <summary>
         /// Transaction category
         /// </summary>
-        public string Category { get; set; }
+        public string Category { get; set; } = category;
 
         /// <summary>
         /// Transaction relates to resource
         /// </summary>
-        public string RelatesToResource { get; set; }
+        public string RelatesToResource { get; set; } = relatesToResource;
     }
 
 

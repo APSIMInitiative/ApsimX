@@ -65,7 +65,7 @@ namespace UnitTests
             Node root = Node.Create(simulations);
 
             // Run simulations.
-            Runner runner = new Runner(root.Model as Simulations);
+            Runner runner = new Runner([root.Model as Simulations]);
             List<Exception> errors = runner.Run();
             Assert.That(errors, Is.Not.Null);
             Assert.That(errors.Count, Is.EqualTo(0));
@@ -84,6 +84,7 @@ namespace UnitTests
             Assert.That(row[7], Is.EqualTo("Clock.Today"));
             Assert.That(row[8], Is.EqualTo(DBNull.Value));
             Assert.That(row[9], Is.EqualTo(DBNull.Value));
+            Assert.That(dt.Rows[0]["comparison"], Is.EqualTo(string.Empty));
         }
     }
 }

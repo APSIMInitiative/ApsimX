@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Ruminant Parameters component descriptive summary
@@ -60,9 +60,9 @@ public class RuminantParametersHolderSummary : DescriptiveSummaryProviderBase<Ru
                 using (generator.OpenBlock("childgroupborder"))
                 {
                     generator.AddBlockWithText($"Parameters related to {param.Key}", "detailsnote");
-                    foreach (var item in param)
+                    foreach (var (componentName, propertyName, category, description, value) in param)
                     {
-                        generator.AddSummaryParameterSnippet(item.componentName, $"{item.description} {item.value}");
+                        generator.AddSummaryParameterSnippet(componentName, $"{description} {value}");
                     }
                 }
             }

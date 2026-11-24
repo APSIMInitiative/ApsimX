@@ -1,6 +1,6 @@
 using APSIM.Core;
 using APSIM.Numerics;
-using APSIM.Shared.Documentation.Extensions;
+using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
@@ -22,7 +22,7 @@ namespace APSIM.Core;
 internal class Converter
 {
     /// <summary>Gets the latest .apsimx file format version.</summary>
-    public static int LatestVersion { get { return 222; } }
+    public static int LatestVersion { get { return 223; } }
 
     /// <summary>Converts a .apsimx string to the latest version.</summary>
     /// <param name="st">XML or JSON string to convert.</param>
@@ -7801,20 +7801,20 @@ internal class Converter
             if (variableNames == null || variableNames.Count == 0)
                 continue;
             bool changed = false;
-           
+
             for (int i = 0; i < variableNames.Count; i++)
             {
                 string reportVariable = variableNames[i];
                 // Only rewrite if BOTH patterns exist
                 if (reportVariable.Contains(" as "))
-                {   
-                    if(!reportVariable.Contains("//"))
+                {
+                    if (!reportVariable.Contains("//"))
                     {
-                            // Remove all invalid characters the variable expression
+                        // Remove all invalid characters the variable expression
                         int asIndex = reportVariable.IndexOf(" as ", StringComparison.Ordinal); // finds the exact position of " as "
                         string expr = reportVariable.Substring(0, asIndex); // experssion before " as "
                         string alias = reportVariable.Substring(asIndex + 4); // experssion includes " as "
-                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' ||  c == '@').ToArray()); // remove invalid characters in alias
+                        string cleanedAlias = new string(alias.Where(c => char.IsLetterOrDigit(c) || c == '_' || c == '.' || c == '@').ToArray()); // remove invalid characters in alias
                         string rewritten = expr + " as " + cleanedAlias;
                         if (!string.Equals(rewritten, reportVariable, StringComparison.Ordinal))
                         {
@@ -7822,12 +7822,12 @@ internal class Converter
                             changed = true;
                         }
                     }
-                    
+
                 }
             }
             if (changed)
                 JsonUtilities.SetValues(report, "VariableNames", variableNames);
-            }
+        }
     }
 
     /// Change CLEM to work with new custom time-step rather than months and method of handling age and dates
@@ -8070,16 +8070,16 @@ internal class Converter
                 // Check for the specific case of the 
                 bool soilTemperatureNamedCERESSoilTempPresent = false;
                 bool ceresSoilTempNamedTemperature = false;
-                foreach(JObject soilTemp in JsonUtilities.ChildrenOfType(soil, "SoilTemperature"))
-                    if(soilTemp["Name"].ToString() == "CERESSoilTemperature")
+                foreach (JObject soilTemp in JsonUtilities.ChildrenOfType(soil, "SoilTemperature"))
+                    if (soilTemp["Name"].ToString() == "CERESSoilTemperature")
                         soilTemperatureNamedCERESSoilTempPresent = true;
-                foreach(JObject ceresSoilTemp in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
-                    if(ceresSoilTemp["Name"].ToString() == "Temperature")
+                foreach (JObject ceresSoilTemp in JsonUtilities.ChildrenOfType(soil, "CERESSoilTemperature"))
+                    if (ceresSoilTemp["Name"].ToString() == "Temperature")
                         ceresSoilTempNamedTemperature = true;
                 if (soilTemperatureNamedCERESSoilTempPresent && ceresSoilTempNamedTemperature)
-                    JsonUtilities.RemoveChild(soil,"Temperature");
-                    JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
-                    soilSituationFoundAndCorrected = true;
+                    JsonUtilities.RemoveChild(soil, "Temperature");
+                JsonUtilities.RenameChildModel(soil, "CERESSoilTemperature", "Temperature");
+                soilSituationFoundAndCorrected = true;
             }
 
             // Some reports may also need to be updated.
@@ -8115,7 +8115,7 @@ internal class Converter
                     pasture[change.Item2] = pasture[change.Item1];
             }
         }
-        
+
         JsonUtilities.RenameVariables(root, changes);
     }
 
@@ -8151,8 +8151,38 @@ internal class Converter
 
         JsonUtilities.RenameVariables(root, changes);
     }
+
+    /// <summary>
+    /// Version 223: Adjust to all new folder related namespaces in CLEM.
+    /// </summary>
+    /// <param name="root"></param>
+    /// <param name="fileName"></param>
+    private static void UpgradeToVersion223(JObject root, string fileName)
+    {
+        // only needs to be performed if CLEM components are included. 
+        if (JsonUtilities.ChildrenOfType(root, "ZoneCLEM").Count != 0)
+        {
+            Assembly modelsAssembly = AppDomain.CurrentDomain.GetAssemblies()
+                .FirstOrDefault(a => string.Equals(a.GetName().Name, "Models", StringComparison.Ordinal))
+                ?? Assembly.Load("Models");
+
+            var results = modelsAssembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract &&
+                !string.IsNullOrEmpty(t.Namespace) &&
+                t.Namespace.StartsWith("Models.CLEM", StringComparison.Ordinal) &&
+                t.FullName != null && !t.FullName.Contains('+') && !t.IsGenericTypeDefinition &&
+                !t.FullName.Contains("DescriptiveSummary"));
+
+            foreach (Type type in results)
+            {
+                string oldFlatTypeName = $"Models.CLEM.{type.Name}";
+                string fullTypeName = $"{type.FullName}"; // e.g. Models.CLEM.Activities.ActivityFolder
+
+                if (string.Equals(oldFlatTypeName, fullTypeName, StringComparison.Ordinal))
+                    continue;
+
+                JsonUtilities.ReplaceChildModelType(root, oldFlatTypeName, fullTypeName);
+                JsonUtilities.ReplacePropertyValueModelType(root, oldFlatTypeName, fullTypeName);
+            }
+        }
+    }
 }
-
-
-
-

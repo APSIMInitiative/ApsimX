@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using APSIM.Shared.Documentation;
+using APSIM.Documentation.Tag;
 using Models.Core;
 using System.Linq;
 using Models;
-using Models.Storage;
 using Models.Factorial;
 using System.Data;
 using System;
 using ModelsGraph = Models.Graph;
-using ModelsGraphPage = Models.GraphPage;
 using ModelsMap = Models.Map;
 using Markdig;
 
@@ -31,6 +29,7 @@ namespace APSIM.Documentation.Models.Types
         public override List<ITag> Document(int none = 0)
         {
             Section section = GetSummaryAndRemarksSection(model);
+            Type memoType = DocumentationUtilities.TypeToDocument(model);
 
             if (section.Children.Count >= 2)
             {
@@ -59,7 +58,7 @@ namespace APSIM.Documentation.Models.Types
                     row[1] = experiment.GetDesign();
                     table.Rows.Add(row);
                 }
-                experimentsTag.Add(new Table(table));
+                experimentsTag.Add(new Table(table, model));
                 section.Add(experimentsTag);
             }
 
@@ -69,8 +68,9 @@ namespace APSIM.Documentation.Models.Types
             // Document graphs under a experiment
             foreach (Experiment exp in model.Node.FindChildren<Experiment>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in exp.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in exp.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
                     section.Add(GetChildGraphs(exp, true));
@@ -79,8 +79,9 @@ namespace APSIM.Documentation.Models.Types
             // Document graphs under a simulation
             foreach (Simulation sim in model.Node.FindChildren<Simulation>().Where(f => f.Enabled))
             {
-                foreach (Memo memo in sim.Node.FindChildren<Memo>())
-                    section.Add(AutoDocumentation.DocumentModel(memo));
+                foreach (IModel child in sim.Node.FindChildren<IText>())
+                    if (memoType.IsInstanceOfType(child))
+                        section.Add(AutoDocumentation.DocumentModel(child));
 
                 if (DocumentationSettings.GenerateGraphs)
                     section.Add(GetChildGraphs(sim, true));
@@ -131,10 +132,10 @@ namespace APSIM.Documentation.Models.Types
                     foreach(ITag graphSection in graphSections)
                         if (graphSection is Section gs)
                             foreach(ITag child in gs.Children)
-                                if (child is APSIM.Shared.Documentation.Graph graph)
+                                if (child is APSIM.Documentation.Tag.Graph graph)
                                     justTheGraphs.Add(graph);
 
-                    string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model);
+                    string markdown = WebDocs.ConvertToMarkdown(justTheGraphs, "", model, model);
 
                     MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
                     string html = Markdown.ToHtml(markdown, pipeline);
@@ -146,12 +147,12 @@ namespace APSIM.Documentation.Models.Types
 
                     html = $"<div class=\"docs-table-container\">\n{html}</div>\n";
 
-                    graphs.Add(new Paragraph(html));
+                    graphs.Add(new Paragraph(html, model));
                 }
                 if (graphs.Count() > 0)
                 {
                     string title = parent.Substring(parent.LastIndexOf('.')+1);
-                    output.Add(new Section(title, graphs));
+                    output.Add(new Section(title, graphs, model));
                 }
             }
             return output;

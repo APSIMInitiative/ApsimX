@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Drawing;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Drawing;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 internal class RandomNumberGeneratorSummary : DescriptiveSummaryProviderBase<RandomNumberGenerator>
 {
@@ -20,7 +21,7 @@ internal class RandomNumberGeneratorSummary : DescriptiveSummaryProviderBase<Ran
         }
         else
         {
-            output += $"each run identical by using the seed {generator.DisplaySummaryValueSnippet(ModelTyped.Seed)}";
+            output += $"each run identical by using the seed {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Seed)}";
         }
         generator.AddBlockWithText(output);
     }

@@ -1,5 +1,8 @@
 ﻿using APSIM.Shared.Utilities;
+using APSIM.Core;
+using Models.Core;
 using Models.PostSimulationTools;
+using Models.PreSimulationTools;
 using Models.Storage;
 using NUnit.Framework;
 using System;
@@ -159,6 +162,51 @@ namespace UnitTests
                                         new object[] {      "Current",              1,           "Sim2",              2, new DateTime(2017, 01, 08),              7.0,              8.0,            1.0},
                    })
                .IsSame(data), Is.True);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ImportedPredictedObservedWritesRelativeComparisonPath(bool useRootMacro)
+        {
+            CreateTable(database);
+            var columns = new List<string> { "CheckpointID", "SimulationID", "Col1", "Col2" };
+            var rows = new List<object[]> { new object[] { 1, 1, new DateTime(2017, 1, 1), 1.0 } };
+            database.InsertRows("Report", columns, rows);
+            database.InsertRows("Observed", columns, rows);
+
+            var dataStore = new DataStore(database);
+            dataStore.Writer.TablesModified.Add("Observed");
+            var predictedObserved = new PredictedObserved
+            {
+                Name = "PO",
+                PredictedTableName = "Report",
+                ObservedTableName = "Observed",
+                FieldNameUsedForMatch = "Col1"
+            };
+            var import = new Virtual
+            {
+                Name = "Virtual",
+                FileName = useRootMacro ? "%root%/Tests/Validation/Barley/Barley.apsimx"
+                                        : Path.Combine("..", "Validation", "Barley.apsimx"),
+                ModelPaths = [],
+                Children = new List<IModel> { predictedObserved }
+            };
+            var simulations = new Simulations { Children = new List<IModel> { import } };
+            string sourceDirectory = useRootMacro
+                ? Path.Combine(PathUtilities.GetApsimXDirectory(), "Prototypes", "BarleyWinterCereal")
+                : Path.GetTempPath();
+            Node.Create(simulations, fileName: Path.Combine(sourceDirectory, "Prototype.apsimx"));
+            Utilities.InjectLink(predictedObserved, "dataStore", dataStore);
+
+            predictedObserved.Run();
+            dataStore.Writer.Stop();
+            dataStore.Refresh();
+
+            var metadata = dataStore.Reader.GetData("_PredictedObserved");
+            string expectedPath = useRootMacro
+                ? Path.Combine("..", "..", "Tests", "Validation", "Barley", "Barley.apsimx")
+                : Path.Combine("..", "Validation", "Barley.apsimx");
+            Assert.That(metadata.Rows[0]["comparison"], Is.EqualTo(expectedPath));
         }
 
         /// <summary>Create a table that we can test</summary>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using APSIM.Shared.Graphing;
 
-namespace APSIM.Shared.Documentation
+namespace APSIM.Documentation.Tag
 {
     /// <summary>
     /// A graph tag.

@@ -21,8 +21,8 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private const CLEMEvents events = null;
-        private OtherAnimals otherAnimals { get; set; }
-        private IEnumerable<OtherAnimalsType> otherAnimalsTypes { get; set; }
+        private OtherAnimals otherAnimals;
+        private IEnumerable<OtherAnimalsType> otherAnimalsTypes;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

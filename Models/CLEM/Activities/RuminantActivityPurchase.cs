@@ -1,5 +1,6 @@
 using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -72,31 +73,25 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>(),
-                        measures: new List<string>()
-                        );
-                case "Relationship":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() { "Number to stock vs pasture" },
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "Relationship" => new LabelsForCompanionModels(
+                                        identifiers: ["Number to stock vs pasture"],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -152,17 +147,12 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per head":
-                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per head" => numberToDo,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -201,7 +191,7 @@ namespace Models.CLEM.Activities
                     if (number > 0)
                     {
                         RuminantTypeCohort purchasetype = Structure.FindChild<RuminantTypeCohort>(relativeTo: purchaseSpecific);
-                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype).ToList(), events.TimeStepStart, rumTypeToUse, false);
+                        var purchaseIndividuals = purchasetype.CreateIndividuals(number, [.. Structure.FindChildren<ISetAttribute>(relativeTo: purchasetype)], events.TimeStepStart, rumTypeToUse, false);
 
                         foreach (var ind in purchaseIndividuals)
                         {
@@ -227,9 +217,9 @@ namespace Models.CLEM.Activities
         {
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
             var specifyRuminants = Structure.FindChildren<SpecifyRuminant>();
-            if (specifyRuminants.Count() == 0)
+            if (!specifyRuminants.Any())
             {
-                string[] memberNames = new string[] { "PurchaseDetails" };
+                string[] memberNames = ["PurchaseDetails"];
                 yield return new ValidationResult($"You must specify details for the individuals to be purchased.{Environment.NewLine}Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames);
             }
             else
@@ -240,12 +230,12 @@ namespace Models.CLEM.Activities
                     var items = Structure.FindChildren<RuminantTypeCohort>(relativeTo: specRumItem);
                     if (items.Count() > 1)
                     {
-                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
+                        string[] memberNames = ["SpecifyRuminant cohort"];
                         yield return new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames);
                     }
                     if (items.First().Suckling)
                     {
-                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
+                        string[] memberNames = ["PurchaseDetails[Suckling]"];
                         yield return new ValidationResult("Suckling individuals are not permitted as ruminant purchases.", memberNames);
                     }
                 }
@@ -255,17 +245,17 @@ namespace Models.CLEM.Activities
                 double cumulativeProp = specifyRuminants.Select(a => a.Proportion).Sum();
                 if(MathUtilities.FloatsAreEqual(cumulativeProp, 1.0) == false)
                 {
-                    string[] memberNames = new string[] { "SpecifyRuminant proportions" };
+                    string[] memberNames = ["SpecifyRuminant proportions"];
                     yield return new ValidationResult("The proportions specified for all [r=SpecifyRuminant] must add up to 1", memberNames);
                 }
             }
 
-            if (GrazeFoodStoreName.Contains("."))
+            if (GrazeFoodStoreName.Contains('.'))
             {
                 ResourcesHolder resHolder = Structure.Find<ResourcesHolder>();
                 if (resHolder is null || resHolder.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName) is null)
                 {
-                    string[] memberNames = new string[] { "Location is not valid" };
+                    string[] memberNames = ["Location is not valid"];
                     yield return new ValidationResult($"The location where ruminants are to be placed [r={GrazeFoodStoreName}] is not found.{Environment.NewLine}Ensure [r=GrazeFoodStore] is present and the [GrazeFoodStoreType] is present", memberNames);
                 }
             }

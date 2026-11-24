@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     ///<summary>
     /// Determines the individual ruminants required for the transmutation
@@ -25,8 +25,7 @@ namespace Models.CLEM
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
         [Link(IsOptional = true)]
-        private ResourcesHolder resources = null;
-
+        private readonly ResourcesHolder resources = null;
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
         private FinanceType financeType = null;
@@ -146,7 +145,7 @@ namespace Models.CLEM
                     financeType.AddToResource(available, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // finance transaction from purchase of shortfall
-                    ResourceRequest financeRequest = new ResourceRequest()
+                    ResourceRequest financeRequest = new()
                     {
                         Resource = financeType,
                         Required = shortfall / shortfallPacketSize * shortfallPricing.CurrentPrice,
@@ -205,7 +204,7 @@ namespace Models.CLEM
             if (ResourceGroup is null)
             {
                 IResourceType parentResource = Structure.FindParent<CLEMResourceTypeBase>(recurse: true) as IResourceType;
-                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", new string[] { "Ruminant herd resource" });
+                yield return new ValidationResult($"No [r=Ruminant] resource was found for a herd-based transmute [r={Name}] for [r={parentResource.Name}]", ["Ruminant herd resource"]);
             }
         }
         #endregion

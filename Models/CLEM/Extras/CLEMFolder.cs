@@ -2,7 +2,7 @@
 using System;
 using APSIM.Core;
 
-namespace Models.CLEM
+namespace Models.CLEM.Extras
 {
     /// <summary>
     /// A CLEM specific folder model

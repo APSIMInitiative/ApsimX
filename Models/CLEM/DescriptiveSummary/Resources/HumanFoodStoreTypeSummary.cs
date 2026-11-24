@@ -2,7 +2,7 @@ using Models.CLEM.Resources;
 using System;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for HumanFoodStoreType (sub-resource)
@@ -17,21 +17,21 @@ public class HumanFoodStoreTypeSummary : DescriptiveSummaryProviderBase<HumanFoo
 
         if (!(model.Units ?? "").Equals("kg", StringComparison.CurrentCultureIgnoreCase))
         {
-            generator.AddBlockWithText($"Each unit of this resource is equivalent to {generator.DisplaySummaryValueSnippet(model.ConvertToKg, warnZero:true)} kg");
+            generator.AddBlockWithText($"Each unit of this resource is equivalent to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.ConvertToKg, warnZero:true)} kg");
         }
         else
         {
             if (model.ConvertToKg != 1)
             {
-                generator.AddBlockWithText($"SET UnitsToKg to {generator.DisplaySummaryValueSnippet(1)} as this Food Type is measured in kg", "infoBanner error");
+                generator.AddBlockWithText($"SET UnitsToKg to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(1)} as this Food Type is measured in kg", "infoBanner error");
             }
         }
 
         if (model.StartingAmount > 0)
         {
-            string start = $"The simulation starts with {generator.DisplaySummaryValueSnippet(model.StartingAmount)}";
+            string start = $"The simulation starts with {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StartingAmount)}";
             if (model.StartingAge > 0)
-                start += $" with an age of {generator.DisplaySummaryValueSnippet(model.StartingAge)} months";
+                start += $" with an age of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StartingAge)} months";
             generator.AddBlockWithText(start);
         }
 
@@ -41,8 +41,8 @@ public class HumanFoodStoreTypeSummary : DescriptiveSummaryProviderBase<HumanFoo
         }
         else
         {
-            generator.AddBlockWithText($"This food must be consumed before {generator.DisplaySummaryValueSnippet(model.UseByAge)} month{((model.UseByAge > 1) ? "s" : "")} old");
+            generator.AddBlockWithText($"This food must be consumed before {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.UseByAge)} month{((model.UseByAge > 1) ? "s" : "")} old");
         }
-        generator.AddBlockWithText($" {generator.DisplaySummaryValueSnippet(((model.EdibleProportion == 1) ? "All" : model.EdibleProportion.ToString("#0%")))} of this raw food is edible.");
+        generator.AddBlockWithText($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(((model.EdibleProportion == 1) ? "All" : model.EdibleProportion.ToString("#0%")))} of this raw food is edible.");
     }
 }
