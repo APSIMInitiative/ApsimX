@@ -8199,6 +8199,17 @@ internal class Converter
                 residue["Name"] = residue["fom_type"];
                 residue["Enabled"] = residueTypes["Enabled"];
                 residue["ReadOnly"] = residueTypes["ReadOnly"];
+                residue["DerivedFrom"] = residue["derived_from"];
+                residue["FractionC"] = residue["fraction_C"];
+                residue["PO4ppm"] = residue["po4ppm"];
+                residue["NH4ppm"] = residue["nh4ppm"];
+                residue["NO3ppm"] = residue["no3ppm"];
+                residue["SpecificArea"] = residue["specific_area"];
+                residue["CfContrib"] = residue["cf_contrib"];
+                residue["PotDecompRate"] = residue["pot_decomp_rate"];
+                residue["FR_C"] = residue["fr_c"];
+                residue["FR_N"] = residue["fr_n"];
+                residue["FR_P"] = residue["fr_p"];
                 JsonUtilities.AddChild(residueTypes, residue);
             }
         }

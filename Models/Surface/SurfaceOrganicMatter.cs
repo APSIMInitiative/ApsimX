@@ -1220,22 +1220,22 @@ namespace Models.Surface
             if (thistype == null)
                 throw new ApsimXException(this, "Cannot find residue type description for '" + surfom_type + "'");
 
-            C_fract[i] = MathUtilities.Bound(thistype.fraction_C, 0.0, 1.0);
-            po4ppm[i] = MathUtilities.Bound(thistype.po4ppm, 0.0, 1000.0);
-            nh4ppm[i] = MathUtilities.Bound(thistype.nh4ppm, 0.0, 2000.0);
-            no3ppm[i] = MathUtilities.Bound(thistype.no3ppm, 0.0, 1000.0);
-            specific_area[i] = MathUtilities.Bound(thistype.specific_area, 0.0, 0.01);
-            cf_contrib[i] = Math.Max(Math.Min(thistype.cf_contrib, 1), 0);
-            pot_decomp_rate = MathUtilities.Bound(thistype.pot_decomp_rate, 0.0, 1.0);
+            C_fract[i] = MathUtilities.Bound(thistype.FractionC, 0.0, 1.0);
+            po4ppm[i] = MathUtilities.Bound(thistype.PO4ppm, 0.0, 1000.0);
+            nh4ppm[i] = MathUtilities.Bound(thistype.NH4ppm, 0.0, 2000.0);
+            no3ppm[i] = MathUtilities.Bound(thistype.NO3ppm, 0.0, 1000.0);
+            specific_area[i] = MathUtilities.Bound(thistype.SpecificArea, 0.0, 0.01);
+            cf_contrib[i] = Math.Max(Math.Min(thistype.CfContrib, 1), 0);
+            pot_decomp_rate = MathUtilities.Bound(thistype.PotDecompRate, 0.0, 1.0);
 
-            if (thistype.fr_c.Length != thistype.fr_n.Length || thistype.fr_n.Length != thistype.fr_p.Length)
+            if (thistype.FR_C.Length != thistype.FR_N.Length || thistype.FR_N.Length != thistype.FR_P.Length)
                 throw new ApsimXException(this, "Error reading in fr_c/n/p values, inconsistent array lengths");
 
-            for (int j = 0; j < thistype.fr_c.Length; j++)
+            for (int j = 0; j < thistype.FR_C.Length; j++)
             {
-                frPoolC[j, i] = thistype.fr_c[j];
-                frPoolN[j, i] = thistype.fr_n[j];
-                frPoolP[j, i] = thistype.fr_p[j];
+                frPoolC[j, i] = thistype.FR_C[j];
+                frPoolN[j, i] = thistype.FR_N[j];
+                frPoolP[j, i] = thistype.FR_P[j];
             }
         }
 
