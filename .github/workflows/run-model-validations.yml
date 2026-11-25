@@ -114,6 +114,13 @@ jobs:
           DOCKER_METADATA_OUTPUT_VERSION: ${{ fromJSON(steps.meta_apsimplusr.outputs.json).labels['org.opencontainers.image.version'] }}
           INCOMING_COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
           PR_AUTHOR: ${{ github.actor }}
+          SOYBEAN_PASSWORD: ${{ secrets.SOYBEAN_PASSWORD }}
+          CORNSOY_PASSWORD: ${{ secrets.CORNSOY_PASSWORD }}
+          SWIM_PASSWORD: ${{ secrets.SWIM_PASSWORD }}
+          MAIZE_PASSWORD: ${{ secrets.MAIZE_PASSWORD }}
+          RICE_PASSWORD: ${{ secrets.RICE_PASSWORD }}
+          THINZAR_RYEGRASS_PASSWORD: ${{ secrets.THINZAR_RYEGRASS_PASSWORD }}
+          UOM_WINTER_SPRING_PASSWORD: ${{ secrets.UOM_WINTER_SPRING_PASSWORD }}
         run: ./.github/workflows/scripts/create-azure-jobs.sh 
 
 
