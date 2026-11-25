@@ -21,27 +21,27 @@ function run_00001 {
   echo "Extracting password protected datasets..."
 
   soybean=Validation/Soybean
-  7z -p"$SOYBEAN_PASSWORD" x $soybean/ObservedFACTS.7z -o$soybean
+  7zz -p"$SOYBEAN_PASSWORD" x $soybean/ObservedFACTS.7z -o$soybean
 
   cornsoy=Validation/System/FACTS_CornSoy
-  7z -p"$CORNSOY_PASSWORD" x $cornsoy/FACTS_CornSoy.7z -o$cornsoy
+  7zz -p"$CORNSOY_PASSWORD" x $cornsoy/FACTS_CornSoy.7z -o$cornsoy
 
   swim=Tests/Validation/SWIM
-  7z -p"$SWIM_PASSWORD" x $swim/WaterTableSWIM_ISU_tests_May2022.7z -o$swim
+  7zz -p"$SWIM_PASSWORD" x $swim/WaterTableSWIM_ISU_tests_May2022.7z -o$swim
 
   maize=Tests/Validation/Maize
-  7z -p"$MAIZE_PASSWORD" x $maize/5x5x5/obs.7z -o$maize/5x5x5
-  7z -p"$MAIZE_PASSWORD" x $maize/EarManipulation/obs.7z -o$maize/EarManipulation
-  7z -p"$MAIZE_PASSWORD" x $maize/RM/obs.7z -o$maize/RM
+  7zz -p"$MAIZE_PASSWORD" x $maize/5x5x5/obs.7z -o$maize/5x5x5
+  7zz -p"$MAIZE_PASSWORD" x $maize/EarManipulation/obs.7z -o$maize/EarManipulation
+  7zz -p"$MAIZE_PASSWORD" x $maize/RM/obs.7z -o$maize/RM
 
   rice=Prototypes/Rice/Rice2026
-  7z -p"$RICE_PASSWORD" x $rice/ObservedRice.7z -o$rice
+  7zz -p"$RICE_PASSWORD" x $rice/ObservedRice.7z -o$rice
 
   thinzar_ryegrass=Prototypes/ThinzarExperiment
-  7z -p"$THINZAR_RYEGRASS_PASSWORD" x $thinzar_ryegrass/ThinzarObserved.7z -o$thinzar_ryegrass
+  7zz -p"$THINZAR_RYEGRASS_PASSWORD" x $thinzar_ryegrass/ThinzarObserved.7z -o$thinzar_ryegrass
 
   uom_winter_spring=Tests/Validation/Wheat/UoM_WinterVsSpring
-  7z -p"$UOM_WINTER_SPRING_PASSWORD" x $uom_winter_spring/Observed.zip -o$uom_winter_spring
+  7zz -p"$UOM_WINTER_SPRING_PASSWORD" x $uom_winter_spring/Observed.zip -o$uom_winter_spring
 
   sudo --preserve-env docker run --rm -v $PWD/ApsimX:/wd -w=/wd --entrypoint dotnet $apsimng_image bin/Release/net10.0/Models.dll "$Path" --verbose
 }
