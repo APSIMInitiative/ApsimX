@@ -3,7 +3,7 @@
 #using this script for now to upload to azure instead of docker image
 
 echo "Pre-start azure pool for later"
-dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --pre-start-pool --pr-number "$pr_number" --commit-hash "$INCOMING_COMMIT_SHA" --env-string "$AZURE_ENV_CONTENTS"
+dotnet ./bin/Release/net10.0/APSIM.Workflow.dll azure-jobs --pre-start-pool --pr-number "${DOCKER_METADATA_OUTPUT_VERSION:3}" --commit-hash "$INCOMING_COMMIT_SHA" --env-string "$AZURE_ENV_CONTENTS"
 
 #compress files needed for PR to 7z zrchive
 echo "Package files for sending to azure"
