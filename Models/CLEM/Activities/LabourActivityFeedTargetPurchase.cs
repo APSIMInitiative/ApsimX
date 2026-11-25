@@ -9,9 +9,9 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    ///<summary>
-    /// Target for feed activity purchases
-    ///</summary> 
+    /// <summary>
+    /// This activity component defines food type and purchase rules for a <c>LabourActivityFeedToTargets</c>
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -23,15 +23,18 @@ namespace Models.CLEM.Activities
     public class LabourActivityFeedTargetPurchase : CLEMModel
     {
         /// <summary>
-        /// Name of food store
+        /// Name of food store to use
         /// </summary>
+        /// <remarks>
+        /// A list of available <c>HumanFoodStore</c> resources is supplied as a drop-down list in the UI.
+        /// </remarks>
         [Description("Food store type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food store required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(HumanFoodStore) } })]
         public string FoodStoreName { get; set; }
 
         /// <summary>
-        /// Proportional purchase
+        /// The proportion of the remaining target to provide by purchase
         /// </summary>
         [Description("Proportion of remaining target")]
         [Proportion, GreaterThanEqualValue(0)]
@@ -42,7 +45,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public double ProportionToPurchase { get; set; }
-
 
         /// <summary>
         /// The human food store linked to this target purchase

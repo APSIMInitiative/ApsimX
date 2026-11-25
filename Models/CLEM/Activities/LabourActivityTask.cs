@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Labour activity task</summary>
-    /// <summary>Defines a labour activity task with associated costs</summary>
+    /// <summary>This activity component defines a stand alone labour task with associated costs</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

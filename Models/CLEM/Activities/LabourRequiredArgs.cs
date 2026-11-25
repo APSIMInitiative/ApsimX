@@ -1,7 +1,7 @@
 ﻿namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Structure to return values form a labour days request
+    /// This class provides the detials for a labour request
     /// </summary>
     /// <remarks>
     /// Constructor

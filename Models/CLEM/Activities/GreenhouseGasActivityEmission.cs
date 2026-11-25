@@ -30,29 +30,39 @@ namespace Models.CLEM.Activities
         private GreenhouseGasesType emissionStore;
 
         /// <summary>
-        /// An identifier for this emission based on parent requirements
+        /// An identifier for this emission based
         /// </summary>
+        /// <remarks>
+        /// A list of identifiers is supplied by the parent activity. If the parent does not supply any identifiers then
+        /// this property will not be visible in the UI.
+        /// </remarks>
         [Description("Emission identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Greenhouse gas store for emissions
+        /// The <c>GreenhouseGaseType</c> in which to place emissions
         /// </summary>
+        /// <remarks>
+        /// A list of available <c>GreenhouseGaseType</c> resources is supplied in the UI.
+        /// </remarks>
         [Description("Greenhouse gas store for emission")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store with same name as this component if present", typeof(GreenhouseGases) } })]
         public string GreenhouseGasStoreName { get; set; } = "Use store with same name as this component if present";
 
         /// <summary>
-        /// Payment style
+        /// The measure to use to calculate the emission
         /// </summary>
+        /// <remarks>
+        /// A list of measures is supplied by the parent activity
+        /// </remarks>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Measure required")]
         [Description("Measure to use")]
         public string Measure { get; set; }
 
         /// <summary>
-        /// Amount
+        /// The rate of emission to apply based on the measure selected
         /// </summary>
         [Description("Rate")]
         [Required, GreaterThanEqualValue(0)]
@@ -107,9 +117,12 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow initialise this activity</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMInitialiseActivity event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {

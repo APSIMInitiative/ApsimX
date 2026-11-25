@@ -12,9 +12,10 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Labour feed to specified targets activity</summary>
-    /// <summary>This activity provides food to people from the whole available human food store based on defined nutritional targets</summary>
-    /// <version>1.0</version>
+    /// <summary>
+    /// This activity provides food to people (<c>Labour</c>) from the whole available human food store based on defined
+    /// nutritional targets
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -36,21 +37,24 @@ namespace Models.CLEM.Activities
         private readonly IClock clock = null;
 
         /// <summary>
-        /// Feed hired labour as well as household
+        /// This switch indicates whether to feed hired labour as well as the household
         /// </summary>
         [Description("Include hired labour")]
         public bool IncludeHiredLabour { get; set; }
 
         /// <summary>
-        /// Daily intake limit
+        /// This property defines the daily intake limit
         /// </summary>
+        /// <remarks>
+        /// This is measured in kg per adult equivalent per day.
+        /// </remarks>
         [Description("Daily intake limit")]
         [Units("kg/AE/day")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Daily intake limit required"), GreaterThanValue(0)]
         public double DailyIntakeLimit { get; set; }
 
         /// <summary>
-        /// Daily intake from sources other than modelled in Human Food Store
+        /// This property defines the daily intake from sources other than provided in the <c>HumanFoodStore</c>
         /// </summary>
         [Description("Intake from sources not modelled")]
         [Units("kg/AE/day")]
@@ -58,7 +62,7 @@ namespace Models.CLEM.Activities
         public double DailyIntakeOtherSources { get; set; }
 
         /// <summary>
-        /// Undertake managed sales to reserve level
+        /// A flag indicating whether to undertake managed sales to a reserve level
         /// </summary>
         [Description("Sell excess")]
         public bool SellExcess { get; set; }
@@ -66,12 +70,16 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Bank account to use
         /// </summary>
+        /// <remarks>
+        /// <param>A list of available <c>FinanceType</c> resources is supplied as a drop-down list in the UI.</param>
+        /// <param>Only FinanceType resources can currently be used for this property.</param>
+        /// </remarks>
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance), "Not provided" } })]
         public string AccountName { get; set; }
 
         /// <summary>
-        /// Storage reserves to maintain before sales
+        /// The storage reserves to maintain before sales mmeasured in months
         /// </summary>
         [Description("Months storage for reserves")]
         [Units("months")]
@@ -79,14 +87,17 @@ namespace Models.CLEM.Activities
         public int MonthsStorage { get; set; }
 
         /// <summary>
-        /// Name of market if present.
+        /// Provides the <c>Market</c> if present.
         /// </summary>
         [JsonIgnore]
         public Market Market { get; private set; }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow initialise this activity</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMInitialiseActivity event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -523,9 +534,12 @@ namespace Models.CLEM.Activities
 
         }
 
-        /// <summary>An event handler to allow us to sell excess resources.</summary>
+        /// <summary>An event handler to allow us to sell excess food resources.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMGetResourcesRequired event
+        /// </remarks>
         [EventSubscribe("CLEMGetResourcesRequired")]
         private void OnCLEMAnimalSell(object sender, EventArgs e)
         {
@@ -642,10 +656,10 @@ namespace Models.CLEM.Activities
         #region validation
 
         /// <summary>
-        /// Validate component
+        /// Custom validation for the component
         /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <param name="validationContext">The validation context.</param>
+        /// <returns>A list of validation results.</returns>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

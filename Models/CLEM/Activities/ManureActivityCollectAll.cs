@@ -11,8 +11,7 @@ using APSIM.Numerics;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant manure collection activity</summary>
-    /// <summary>This activity performs the collection of all manure</summary>
+    /// <summary>This activity performs the collection of all manure identified as being on any pasture</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -34,16 +33,19 @@ namespace Models.CLEM.Activities
         private double amountToSkip;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public ManureActivityCollectAll()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to initialise the activity</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMInitialiseActivity event
+        /// </remarks>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
@@ -73,6 +75,9 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to perform manure collection</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        /// <remarks>
+        /// This is performed during the CLEMCollectManure event
+        /// </remarks>
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
