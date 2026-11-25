@@ -1,8 +1,6 @@
 using CommandLine;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Diagnostics;
@@ -40,12 +38,32 @@ public class Program
         });
         logger = loggerFactory.CreateLogger<Program>();
 
-        Parser.Default.ParseArguments<AzureJobsOptions, JobCompleteOptions>(args)
+        Parser.Default.ParseArguments<LocationsOptions, AzureJobsOptions, JobCompleteOptions>(args)
+            .WithParsed<LocationsOptions>(RunLocations)
             .WithParsed<AzureJobsOptions>(RunAzureJobs)
             .WithParsed<JobCompleteOptions>(RunJobComplete)
             .WithNotParsed(HandleParseError);
 
         return exitCode;
+    }
+
+    /// <summary>Prints the absolute paths of the validation files.</summary>
+    /// <param name="options">The locations options.</param>
+    private static void RunLocations(LocationsOptions options)
+    {
+        try
+        {
+            if (options.Verbose)
+                logger.LogInformation("Validation locations:");
+
+            //foreach (string dir in RemoveExcludedPaths(ValidationLocationUtility.GetValidationFilePaths()))
+            //    Console.WriteLine(dir);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error: " + ex.Message);
+            exitCode = 1;
+        }
     }
 
     /// <summary>Notifies the A.V.A server that a job has completed.</summary>

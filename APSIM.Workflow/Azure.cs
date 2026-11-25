@@ -11,6 +11,7 @@ using Microsoft.Azure.Batch.Common;
 using System.Reflection;
 using System.Globalization;
 using Models.Core;
+using APSIM.Shared.Utilities;
 
 
 namespace APSIM.Workflow;
@@ -133,14 +134,22 @@ public class Azure
         string storageConnectionString = 
             $"DefaultEndpointsProtocol=https;AccountName={AZURE_STORAGE_ACCOUNT_NAME};AccountKey={keyOne};EndpointSuffix=core.windows.net";
 
-        // TODO: this should just send the workflow.sh file up rather than all the apsim validation files.
         string assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (string.IsNullOrEmpty(assemblyDirectory))
             throw new InvalidOperationException("Could not determine the workflow assembly directory.");
+
         string scriptPath = Path.Combine(assemblyDirectory, scriptName);
         if (!File.Exists(scriptPath))
             throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
-        CopyFilesToAzure(scriptPath, storageConnectionString, storageName);
+        else
+            CopyFilesToAzure(scriptPath, storageConnectionString, storageName);
+
+        string archivePath = Path.Combine(PathUtilities.GetApsimXDirectory(), "../upload.tar.zst");
+        if (!File.Exists(archivePath))
+            throw new FileNotFoundException("The workflow.sh script file could not be found and as such was not uploaded to the storage container.");
+        else
+            CopyFilesToAzure(archivePath, storageConnectionString, storageName);
+
         BlobContainerClient outputContainer = new(storageConnectionString, storageName);
         Uri outputContainerUri = CreateDatabaseUploadUri(outputContainer, DateTimeOffset.UtcNow);
 
