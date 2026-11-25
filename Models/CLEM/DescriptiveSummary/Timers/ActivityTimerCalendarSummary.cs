@@ -5,7 +5,7 @@ using Models.CLEM.Timers;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerCalendar component
@@ -20,7 +20,7 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
 
         if (clock is null || clemEvents is null)
         {
-            generator.AddBlockWithText(generator.DisplayErrorSnippet("No Clock or CLEM Events component found above Timer"), "entryValue filterError");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplayErrorSnippet("No Clock or CLEM Events component found above Timer"), "entryValue filterError");
             return;
         }
         clemEvents.SetInterval();
@@ -28,7 +28,7 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
 
         if (ModelTyped.StartDetails.Parts[0] > 0 & ModelTyped.StartDetails.Parts[1] == 0)
         {
-            generator.AddBlockWithText(generator.DisplayErrorSnippet("Invalid date component specified. Missing month value"), "entryValue filterError");
+            generator.AddBlockWithText(DescriptiveSummaryGenerator.DisplayErrorSnippet("Invalid date component specified. Missing month value"), "entryValue filterError");
             return;
         }
 
@@ -54,36 +54,36 @@ public class ActivityTimerCalendarSummary : TimerSummaryBase<ActivityTimerCalend
             htmlWriter.Write($"Perform {invertString} between ");
         }
 
-        if (range.Start.ErrorMessages.Count() > 0)
+        if (range.Start.ErrorMessages.Count > 0)
         {
-            htmlWriter.Write(generator.DisplayErrorSnippet(range.Start.ErrorMessages.First()));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplayErrorSnippet(range.Start.ErrorMessages.First()));
         }
         else
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.Start, spanClass: "entryValue entryValue-Other"));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(range.Start, spanClass: "entryValue entryValue-Other"));
         }
 
         if (range.Start.ymd.month != range.End.ymd.month | (range.Start.IsMonthOnly == false & range.Start.ymd.day != range.End.ymd.day))
         {
             htmlWriter.Write($" and ");
-            if (range.End.ErrorMessages.Count() > 0)
+            if (range.End.ErrorMessages.Count > 0)
             {
-                htmlWriter.Write(generator.DisplayErrorSnippet(range.End.ErrorMessages.First()));
+                htmlWriter.Write(DescriptiveSummaryGenerator.DisplayErrorSnippet(range.End.ErrorMessages.First()));
             }
             else
             {
-                htmlWriter.Write(generator.DisplaySummaryValueSnippet(range.End, spanClass: "entryValue entryValue-Other"));
+                htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(range.End, spanClass: "entryValue entryValue-Other"));
             }
         }
 
         if (range.IsFloatingRange)
         {
-            htmlWriter.Write(" " + generator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "entryValue entryValue-Other"));
+            htmlWriter.Write(" " + DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(range.RepeatIntervalToString(), spanClass: "entryValue entryValue-Other"));
         }
 
         if (range.WholeTimeStepInRange)
         {
-            htmlWriter.Write(generator.DisplaySummaryValueSnippet(" where whole time step must be in range", spanClass: "entryValue entryValue-Other"));
+            htmlWriter.Write(DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(" where whole time step must be in range", spanClass: "entryValue entryValue-Other"));
         }
 
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem floatLeft");

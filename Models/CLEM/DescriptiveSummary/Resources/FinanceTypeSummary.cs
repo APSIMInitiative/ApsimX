@@ -1,6 +1,6 @@
 ﻿using Models.CLEM.Resources;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for the Finances Resource
@@ -13,10 +13,10 @@ public class FinanceTypeSummary : DescriptiveSummaryProviderBase<FinanceType>
         var model = ModelTyped;
         if (model is null) return;
 
-        string balance = $"Opening balance of {generator.DisplaySummaryValueSnippet(model.OpeningBalance)}";
+        string balance = $"Opening balance of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.OpeningBalance)}";
         if (model.EnforceWithdrawalLimit)
         {
-            balance += $" that can be withdrawn to {generator.DisplaySummaryValueSnippet(model.WithdrawalLimit)}";
+            balance += $" that can be withdrawn to {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.WithdrawalLimit)}";
         }
         else
         {
@@ -30,13 +30,13 @@ public class FinanceTypeSummary : DescriptiveSummaryProviderBase<FinanceType>
             interest = "Annual interest rate of ";
             if (model.InterestRateCharged > 0)
             {
-                interest += $"{generator.DisplaySummaryValueSnippet(model.InterestRateCharged)}% charged ";
+                interest += $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.InterestRateCharged)}% charged ";
                 if (model.InterestRatePaid > 0)
                     interest += "and ";
             }
             if (model.InterestRatePaid > 0)
             {
-                interest += $"{generator.DisplaySummaryValueSnippet(model.InterestRatePaid)}% paid";
+                interest += $"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.InterestRatePaid)}% paid";
             }
         }
         Generator.AddBlockWithText(interest);

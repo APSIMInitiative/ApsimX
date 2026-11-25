@@ -3,7 +3,7 @@ using Models.Core;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for the Finances Resource
@@ -33,7 +33,7 @@ public class FinanceSummary : DescriptiveSummaryProviderBase<Finance>
         var model = ModelTyped;
         if (model is null) return;
 
-        Generator.AddBlockWithText($"Currency is {generator.DisplaySummaryValueSnippet(model.CurrencyName, "Not specified")}");
-        Generator.AddBlockWithText($"The financial year starts in {generator.DisplaySummaryValueSnippet(model.FirstMonthOfFinancialYear, "Not specified", warnZero: true)}");
+        Generator.AddBlockWithText($"Currency is {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.CurrencyName, "Not specified")}");
+        Generator.AddBlockWithText($"The financial year starts in {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.FirstMonthOfFinancialYear, "Not specified", warnZero: true)}");
     }
 }

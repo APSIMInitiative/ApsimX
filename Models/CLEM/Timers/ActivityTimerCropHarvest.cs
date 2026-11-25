@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Extras;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -70,32 +71,32 @@ namespace Models.CLEM.Timers
             get
             {
                 int? seqStart = null;
-                (int? previous, int? first, int? current, int? last) harvestOffsets = ManageProductActivity.HarvestOffset;
+                (int? previous, int? first, int? current, int? last) = ManageProductActivity.HarvestOffset;
 
                 // if next harvest (offset.first) is between bounds
-                if (harvestOffsets.first >= OffsetMonthHarvestStart && harvestOffsets.first <= OffsetMonthHarvestStop)
+                if (first >= OffsetMonthHarvestStart && first <= OffsetMonthHarvestStop)
                 {
-                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                    seqStart = first - OffsetMonthHarvestStart;
                 }
                 // within period after harvest
-                if (harvestOffsets.last > 0 && harvestOffsets.last >= OffsetMonthHarvestStart && harvestOffsets.last <= OffsetMonthHarvestStop)
+                if (last > 0 && last >= OffsetMonthHarvestStart && last <= OffsetMonthHarvestStop)
                 {
-                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                    seqStart = first - OffsetMonthHarvestStart;
                 }
                 // if within the period up to next harvest
-                if (harvestOffsets.current < 0 && harvestOffsets.current >= OffsetMonthHarvestStart && harvestOffsets.current <= OffsetMonthHarvestStop)
+                if (current < 0 && current >= OffsetMonthHarvestStart && current <= OffsetMonthHarvestStop)
                 {
-                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                    seqStart = first - OffsetMonthHarvestStart;
                 }
                 // at time of current harvest
-                if (harvestOffsets.current >= OffsetMonthHarvestStart && harvestOffsets.current <= OffsetMonthHarvestStop)
+                if (current >= OffsetMonthHarvestStart && current <= OffsetMonthHarvestStop)
                 {
-                    seqStart = harvestOffsets.current - OffsetMonthHarvestStart;
+                    seqStart = current - OffsetMonthHarvestStart;
                 }
                 // if withing the period after the previous
-                if (harvestOffsets.previous >= OffsetMonthHarvestStart && harvestOffsets.previous <= OffsetMonthHarvestStop)
+                if (previous >= OffsetMonthHarvestStart && previous <= OffsetMonthHarvestStop)
                 {
-                    seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
+                    seqStart = first - OffsetMonthHarvestStart;
                 }
 
                 if (seqStart != null)
@@ -135,7 +136,7 @@ namespace Models.CLEM.Timers
 
             if (ManageProductActivity == null)
             {
-                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", new string[] { "CropActivityManageProduct parent" });
+                yield return new ValidationResult("This crop timer be below a parent of the type Crop Activity Manage Product", ["CropActivityManageProduct parent"]);
             }
         }
         #endregion

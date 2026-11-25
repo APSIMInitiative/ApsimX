@@ -1,6 +1,7 @@
 ﻿using APSIM.Numerics;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -73,7 +74,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
-            return new List<ResourceRequest>();
+            return [];
         }
 
         /// <inheritdoc/>

@@ -2,6 +2,7 @@
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
+using Models.CLEM.Extras;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -84,26 +85,21 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "RuminantGroup":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() ,
-                        measures: new List<string>()
-                        );
-                case "ActivityFee":
-                case "LabourRequirement":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>() {
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per head"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "RuminantGroup" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: []
+                                        ),
+                "ActivityFee" or "LabourRequirement" => new LabelsForCompanionModels(
+                                        identifiers: [],
+                                        measures: [
+                                            "fixed",
+                                            "per head"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <inheritdoc/>

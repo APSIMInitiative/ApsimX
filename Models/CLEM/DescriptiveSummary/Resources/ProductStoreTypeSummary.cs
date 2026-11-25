@@ -1,6 +1,6 @@
 using Models.CLEM.Resources;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Resources;
 
 /// <summary>
 /// Descriptive summary provider for ProductStoreType (sub-resource)
@@ -13,6 +13,6 @@ public class ProductStoreTypeSummary : DescriptiveSummaryProviderBase<ProductSto
         var model = ModelTyped;
         if (model is null) return;
 
-        Generator.AddBlockWithText($"There is a starting amount of {generator.DisplaySummaryValueSnippet(model.StartingAmount)}");
+        Generator.AddBlockWithText($"There is a starting amount of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(model.StartingAmount)}");
     }
 }

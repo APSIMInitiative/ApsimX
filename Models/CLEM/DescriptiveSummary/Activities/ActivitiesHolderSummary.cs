@@ -1,6 +1,6 @@
 ﻿using Models.CLEM.Activities;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Activities Holder component descriptive summary

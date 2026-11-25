@@ -43,24 +43,22 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "ActivityFee":
-                    return new LabelsForCompanionModels(
-                        identifiers: new List<string>()
-                        {
-                            "labour available",
-                            "labour used"
-                        },
-                        measures: new List<string>() {
-                            "fixed",
-                            "per day",
-                            "per total charged"
-                        }
-                        );
-                default:
-                    return new LabelsForCompanionModels();
-            }
+                "ActivityFee" => new LabelsForCompanionModels(
+                                        identifiers:
+                                        [
+                                            "labour available",
+                                            "labour used"
+                                        ],
+                                        measures: [
+                                            "fixed",
+                                            "per day",
+                                            "per total charged"
+                                        ]
+                                        ),
+                _ => new LabelsForCompanionModels(),
+            };
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -79,7 +77,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             task = "available";
-            ResourceRequestList = new List<ResourceRequest>(); 
+            ResourceRequestList = []; 
             ManageActivityResourcesAndTasks("labour available");
         }
 
@@ -90,7 +88,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             task = "used";
-            ResourceRequestList = new List<ResourceRequest>();
+            ResourceRequestList = [];
             ManageActivityResourcesAndTasks("labour used");
         }
 
@@ -122,20 +120,13 @@ namespace Models.CLEM.Activities
             // provide updated measure for companion models
             foreach (var valueToSupply in valuesForCompanionModels)
             {
-                switch (valueToSupply.Key.unit)
+                valuesForCompanionModels[valueToSupply.Key] = valueToSupply.Key.unit switch
                 {
-                    case "fixed":
-                        valuesForCompanionModels[valueToSupply.Key] = 1;
-                        break;
-                    case "per day":
-                        valuesForCompanionModels[valueToSupply.Key] = totalDays;
-                        break;
-                    case "per total charged":
-                        valuesForCompanionModels[valueToSupply.Key] = totalFees;
-                        break;
-                    default:
-                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-                }
+                    "fixed" => 1,
+                    "per day" => totalDays,
+                    "per total charged" => totalFees,
+                    _ => throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key)),
+                };
             }
             return null;
         }
@@ -179,21 +170,21 @@ namespace Models.CLEM.Activities
 
             if (labour is null)
             {
-                string[] memberNames = new string[] { "Labour" };
+                string[] memberNames = ["Labour"];
                 results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
             }
             else
             {
                 // make sure labour hired present
-                if (labour.Items.Where(a => a.IsHired).Count() == 0)
+                if (!labour.Items.Any(a => a.IsHired))
                 {
-                    string[] memberNames = new string[] { "Hired labour" };
+                    string[] memberNames = ["Hired labour"];
                     results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
                 }
                 // make sure pay rates present
                 if (!labour.PricingAvailable)
                 {
-                    string[] memberNames = new string[] { "Labour pay rate" };
+                    string[] memberNames = ["Labour pay rate"];
                     results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
                 }
             }

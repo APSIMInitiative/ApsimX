@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Activities;
 
 /// <summary>
 /// Descriptive summary provider for Finnance Activity Calculate Interest
@@ -26,20 +26,20 @@ public class FinanceActivityCalculateInterestSummary : DescriptiveSummaryProvide
         }
         if (finance == null)
         {
-            generator.AddBlockWithText($"This activity is not required as no {generator.DisplaySummaryResourceTypeSnippet("Finance")} resource is available.", classString:"infoBanner warning" );
+            generator.AddBlockWithText($"This activity is not required as no {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet("Finance")} resource is available.", classString:"infoBanner warning" );
         }
         else
         {
-            generator.AddBlockWithText($"Interest rates are set in the {generator.DisplaySummaryResourceTypeSnippet("FinanceType")} component.");
+            generator.AddBlockWithText($"Interest rates are set in the {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet("FinanceType")} component.");
             foreach (FinanceType accnt in ModelTyped.Structure.FindChildren<FinanceType>(relativeTo: finance).Where(a => a.Enabled))
             {
                 if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                 {
-                    generator.AddBlockWithText($"This activity is not needed for {generator.DisplaySummaryResourceTypeSnippet(accnt.Name)} as no interest rates are set.", classString: "infoBanner");
+                    generator.AddBlockWithText($"This activity is not needed for {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(accnt.Name)} as no interest rates are set.", classString: "infoBanner");
                 }
                 else
                 {
-                    generator.AddBlockWithText($"This activity will calculate interest charged for {generator.DisplaySummaryResourceTypeSnippet(accnt.Name)} at a rate of {generator.DisplaySummaryValueSnippet(accnt.InterestRateCharged, warnZero: true)}.");
+                    generator.AddBlockWithText($"This activity will calculate interest charged for {DescriptiveSummaryGenerator.DisplaySummaryResourceTypeSnippet(accnt.Name)} at a rate of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(accnt.InterestRateCharged, warnZero: true)}.");
                 }
             }
         }

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq.Expressions;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Timers;
 
 /// <summary>
 /// Descriptive summary for ActivityTimerRuminantLevel component
@@ -38,7 +38,7 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
         htmlWriter.Write("Perform when ");
         if (ModelTyped.TimerStyle == ActivityTimerRuminantLevelStyle.NumberOfIndividuals)
         {
-            htmlWriter.Write($"{generator.DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
+            htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplaySummaryValueSnippet("the number of individuals", "Not set", HTMLSummaryStyle.Default)}");
         }
         else
         {
@@ -58,10 +58,10 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
                     stl = "maximum";
                     break;
             }
-            htmlWriter.Write($"the {generator.DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {generator.DisplaySummaryValueSnippet(ModelTyped.RuminantProperty,"Not set", HTMLSummaryStyle.Default)}");
+            htmlWriter.Write($"the {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(stl, "Not set", HTMLSummaryStyle.Default)} of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.RuminantProperty,"Not set", HTMLSummaryStyle.Default)}");
         }
-        htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
-        htmlWriter.Write($" {generator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Not set", HTMLSummaryStyle.Default)}");
+        htmlWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Default)}");
+        htmlWriter.Write($" {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.Amount, "Not set", HTMLSummaryStyle.Default)}");
         generator.AddBlockWithText(htmlWriter.ToString(), "entryValue filterItem");
     }
 
@@ -71,23 +71,16 @@ public class ActivityTimerRuminantLevelSummary : TimerSummaryBase<ActivityTimerR
     /// <returns>Operator as symbol</returns>
     protected string OperatorToSymbol()
     {
-        switch (ModelTyped.Operator)
+        return ModelTyped.Operator switch
         {
-            case ExpressionType.Equal:
-                return "=";
-            case ExpressionType.GreaterThan:
-                return ">";
-            case ExpressionType.GreaterThanOrEqual:
-                return ">=";
-            case ExpressionType.LessThan:
-                return "<";
-            case ExpressionType.LessThanOrEqual:
-                return "<=";
-            case ExpressionType.NotEqual:
-                return "!=";
-            default:
-                return ModelTyped.Operator.ToString();
-        }
+            ExpressionType.Equal => "=",
+            ExpressionType.GreaterThan => ">",
+            ExpressionType.GreaterThanOrEqual => ">=",
+            ExpressionType.LessThan => "<",
+            ExpressionType.LessThanOrEqual => "<=",
+            ExpressionType.NotEqual => "!=",
+            _ => ModelTyped.Operator.ToString(),
+        };
     }
 
 }

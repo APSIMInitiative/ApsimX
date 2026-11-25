@@ -1,4 +1,5 @@
-﻿using Docker.DotNet.Models;
+﻿using Models.CLEM.Extras;
+using Docker.DotNet.Models;
 using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Models.CLEM.DataReaders;
 
 namespace Models.CLEM.Resources
 {
@@ -26,7 +28,7 @@ namespace Models.CLEM.Resources
     public class RuminantInitialCohorts : CLEMModel
     {
         [Link]
-        private ResourcesHolder resources = null;
+        private readonly ResourcesHolder resources = null;
         private string nameOfManagedPastureFound = "";
 
         /// <summary>

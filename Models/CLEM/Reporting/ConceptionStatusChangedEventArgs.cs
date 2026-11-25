@@ -43,7 +43,7 @@ namespace Models.CLEM.Reporting
         /// <param name="events"></param>
         public ConceptionStatusChangedEventArgs(ConceptionStatus status, RuminantFemale female, DateTime dateTime, Ruminant offspring = null, CLEMEvents events = null)
         {
-            Update(status, female, dateTime, offspring, false, events);
+            Update(status, female, dateTime, offspring, events);
         }
 
         /// <summary>
@@ -53,9 +53,8 @@ namespace Models.CLEM.Reporting
         /// <param name="female">Female this change applies to</param>
         /// <param name="date">Date of change</param>
         /// <param name="offspring">Offspring included</param>
-        /// <param name="calculateFromAge">Use female age and age at last conception to calculate conception date assuming Clock.Today passed as date</param>
         /// <param name="events"></param>
-        public void Update(ConceptionStatus status, RuminantFemale female, DateTime date, Ruminant offspring = null, bool calculateFromAge = true, CLEMEvents events = null)
+        public void Update(ConceptionStatus status, RuminantFemale female, DateTime date, Ruminant offspring = null, CLEMEvents events = null)
         {
             Status = status;
             Female = female;
@@ -75,7 +74,6 @@ namespace Models.CLEM.Reporting
                             throw new ArgumentException("Code logic error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
                         DateTime conceived = offspring.DateOfBirth.AddDays(-1 * Convert.ToInt32(offspring.Parameters.General.GestationLength.InDays, CultureInfo.InvariantCulture)+1);
                         ConceptionDate = events.GetTimeStepRangeContainingDate(conceived).start;
-                        //ConceptionDate = date.AddDays(-1 * Convert.ToInt32(offspringAge + Female.Parameters.General.GestationLength.InDays, CultureInfo.InvariantCulture));
                         break;
                     case ConceptionStatus.Unsuccessful:
                     case ConceptionStatus.NotMated:
@@ -85,44 +83,7 @@ namespace Models.CLEM.Reporting
                     default:
                         break;
                 }
-                //UpdateConceptionDate(date, offspring?.AgeInDays, calculateFromAge);
             }
         }
-
-        ///// <summary>
-        ///// Performs the update of conception dates based on events such as birth
-        ///// </summary>
-        ///// <param name="date">Current date conception change</param>
-        ///// <param name="offspringAge">Age of offspring in days</param>
-        ///// <param name="calculateFromAge">Use female age and age at last conception to calculate conception date assuming Clock.Today passed as date</param>
-        ///// <exception cref="ArgumentException"></exception>
-        //public void UpdateConceptionDate(DateTime date, double? offspringAge = null, bool calculateFromAge = true)
-        //{
-        //    switch (Status)
-        //    {
-        //        case ConceptionStatus.Conceived:
-        //        case ConceptionStatus.Failed:
-        //        case ConceptionStatus.Birth:
-        //            if(calculateFromAge)
-        //                ConceptionDate = date.AddDays(-1 * Convert.ToInt32(Female.DaysSince(RuminantTimeSpanTypes.Conceived, 0.0), CultureInfo.InvariantCulture));
-        //            else ConceptionDate = date;
-
-        //            //ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
-        //            break;
-        //        case ConceptionStatus.Weaned:
-        //            if (offspringAge is null)
-        //                throw new ArgumentException("Code logic error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
-
-        //            ConceptionDate = date.AddDays(-1 * Convert.ToInt32(offspringAge + Female.Parameters.General.GestationLength.InDays, CultureInfo.InvariantCulture));
-        //            break;
-        //        case ConceptionStatus.Unsuccessful:
-        //        case ConceptionStatus.NotMated:
-        //        case ConceptionStatus.NotReady:
-        //            ConceptionDate = date;
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
     }
 }

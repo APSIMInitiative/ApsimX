@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+﻿using Models.CLEM.Extras;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.CLEM.DescriptiveSummary;
+namespace Models.CLEM.DescriptiveSummary.Extras;
 
 /// <summary>
 /// Descriptive summary provider for transmutation
@@ -59,7 +60,7 @@ public class TransmutationSummary: DescriptiveSummaryProviderBase<Transmutation>
             }
             else
             {
-                htmlWriter.Write($"{generator.DisplayErrorSnippet("not found")}");
+                htmlWriter.Write($"{DescriptiveSummaryGenerator.DisplayErrorSnippet("not found")}");
             }
         }
         htmlWriter.WriteLine(" to provide this shortfall resource (A)");
@@ -67,7 +68,7 @@ public class TransmutationSummary: DescriptiveSummaryProviderBase<Transmutation>
 
         if (direct.Any())
         {
-            htmlWriter.Write($" in {(ModelTyped.UseWholePackets ? " whole" : "")} packets of {generator.DisplaySummaryValueSnippet(ModelTyped.TransmutationPacketSize, warnZero: true)}");
+            htmlWriter.Write($" in {(ModelTyped.UseWholePackets ? " whole" : "")} packets of {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.TransmutationPacketSize, warnZero: true)}");
         }
 
         if (pricing.Count() + direct.Count() > 1)

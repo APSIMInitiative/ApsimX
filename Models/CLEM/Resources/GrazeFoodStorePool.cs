@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [Serializable]
     public class GrazeFoodStorePool : IGrazeIntakePool
     {
-        private IGrazeFoodStoreType grazeStore;
+        private readonly GrazeFoodStoreType grazeStore;
 
         /// <inheritdoc/>
         public FeedType TypeOfFeed { get; set; } = FeedType.PastureTropical;
@@ -144,13 +144,13 @@ namespace Models.CLEM.Resources
         public string Units { get; private set; } = "kg";
 
         /// <inheritdoc/>
-        public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
+        public static ResourcePricing Price(PurchaseOrSalePricingStyleType _)
         {
             return null;
         }
 
         /// <inheritdoc/>
-        public double? Value
+        public static double? Value
         {
             get { return null; }
         }
@@ -190,7 +190,7 @@ namespace Models.CLEM.Resources
         public GrazeFoodStorePool(double startingAmount, GrazeFoodStoreType store, DateTime growthDate, DateTime currentDate)
         {
             if (growthDate > currentDate)
-                throw new ArgumentException($"Growth date {growthDate.ToShortDateString()} cannot be after current date {currentDate.ToShortDateString()} during initialisation pools in [{store.NameWithParent}]");
+                throw new ArgumentException($"Growth date {growthDate:d} cannot be after current date {currentDate:d} during initialisation pools in [{store.NameWithParent}]");
 
             amount = startingAmount;
             grazeStore = store;

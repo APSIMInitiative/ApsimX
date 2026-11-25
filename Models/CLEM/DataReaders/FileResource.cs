@@ -10,435 +10,426 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace Models.CLEM
+namespace Models.CLEM.DataReaders;
+
+///<summary>
+/// Reads in external resource input data and makes it available to other models.
+///</summary>
+///
+///<remarks>
+///</remarks>
+[Serializable]
+[ViewName("UserInterface.Views.PropertyView")]
+[PresenterName("UserInterface.Presenters.PropertyPresenter")]
+[ValidParent(ParentType = typeof(ZoneCLEM))]
+[ValidParent(ParentType = typeof(Market))]
+[ValidParent(ParentType = typeof(ActivityFolder))]
+[Description("Access to a resource input file")]
+[Version(1, 0, 1, "")]
+[HelpUri(@"Content/Features/DataReaders/ResourceDataReader.htm")]
+public class FileResource : CLEMModel, IValidatableObject
 {
-    ///<summary>
-    /// Reads in external resource input data and makes it available to other models.
-    ///</summary>
-    ///
-    ///<remarks>
-    ///</remarks>
-    [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(ZoneCLEM))]
-    [ValidParent(ParentType = typeof(Market))]
-    [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Access to a resource input file")]
-    [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/ResourceDataReader.htm")]
-    public class FileResource : CLEMModel, IValidatableObject
+    /// <summary>
+    /// The entire Crop File read in as a DataTable with Primary Keys assigned.
+    /// </summary>
+    private DataTable resourceFileAsTable;
+
+    /// <summary>
+    /// A reference to the text file reader object
+    /// </summary>
+    [NonSerialized]
+    private ApsimTextFile reader = null;
+
+    /// <summary>
+    /// Gets or sets the file name. Should be relative filename where possible.
+    /// </summary>
+    [Summary]
+    [Description("File name")]
+    [Core.Display(Type = DisplayType.FileName)]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
+    public string FileName { get; set; }
+
+    /// <summary>
+    /// Used to hold the WorkSheet Name if data retrieved from an Excel file
+    /// </summary>
+    [Summary]
+    [Description("Worksheet name if spreadsheet")]
+    public string ExcelWorkSheetName { get; set; }
+
+    /// <summary>
+    /// Name of column holding year or date data
+    /// </summary>
+    [Summary]
+    [Description("Column name for date")]
+    [Core.Display(VisibleCallback = "IsUsingDateStyle")]
+    public string DateColumnName { get; set; } = "Year";
+
+    /// <summary>
+    /// Name of column holding year or date data
+    /// </summary>
+    [Summary]
+    [Description("Column name for year")]
+    [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
+    public string YearColumnName { get; set; } = "Year";
+
+    /// <summary>
+    /// Name of column holding month data
+    /// </summary>
+    [Summary]
+    [Description("Column name for month")]
+    [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
+    public string MonthColumnName { get; set; } = "Month";
+
+    /// <summary>
+    /// Name of column holding resource name data
+    /// </summary>
+    [Summary]
+    [Description("Column name for resource name")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Resource name column name must be supplied")]
+    public string ResourceNameColumnName { get; set; } = "ResourceName";
+
+    /// <summary>
+    /// Name of column holding amount data
+    /// </summary>
+    [Summary]
+    [Description("Column name for amount")]
+    [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
+    public string AmountColumnName { get; set; } = "Amount";
+
+    /// <summary>
+    /// Style of date input to use
+    /// </summary>
+    [JsonIgnore]
+    public DateStyle StyleOfDateEntry { get; set; }
+
+
+    /// <summary>
+    /// Boolean indicating whether the date style is a date stamp or year and month.
+    /// </summary>
+    public bool IsUsingDateStyle()
     {
-        /// <summary>
-        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
-        /// </summary>
-        private DataTable resourceFileAsTable;
-
-        /// <summary>
-        /// A reference to the text file reader object
-        /// </summary>
-        [NonSerialized]
-        private ApsimTextFile reader = null;
-
-        /// <summary>
-        /// Gets or sets the file name. Should be relative filename where possible.
-        /// </summary>
-        [Summary]
-        [Description("File name")]
-        [Core.Display(Type = DisplayType.FileName)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// Used to hold the WorkSheet Name if data retrieved from an Excel file
-        /// </summary>
-        [Summary]
-        [Description("Worksheet name if spreadsheet")]
-        public string ExcelWorkSheetName { get; set; }
-
-        /// <summary>
-        /// Name of column holding year or date data
-        /// </summary>
-        [Summary]
-        [Description("Column name for date")]
-        [Core.Display(VisibleCallback = "IsUsingDateStyle")]
-        public string DateColumnName { get; set; } = "Year";
-
-        /// <summary>
-        /// Name of column holding year or date data
-        /// </summary>
-        [Summary]
-        [Description("Column name for year")]
-        [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
-        public string YearColumnName { get; set; } = "Year";
-
-        /// <summary>
-        /// Name of column holding month data
-        /// </summary>
-        [Summary]
-        [Description("Column name for month")]
-        [Core.Display(VisibleCallback = "IsUsingMonthYearStyle")]
-        public string MonthColumnName { get; set; } = "Month";
-
-        /// <summary>
-        /// Name of column holding resource name data
-        /// </summary>
-        [Summary]
-        [Description("Column name for resource name")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Resource name column name must be supplied")]
-        public string ResourceNameColumnName { get; set; } = "ResourceName";
-
-        /// <summary>
-        /// Name of column holding amount data
-        /// </summary>
-        [Summary]
-        [Description("Column name for amount")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
-        public string AmountColumnName { get; set; } = "Amount";
-
-        /// <summary>
-        /// Style of date input to use
-        /// </summary>
-        [JsonIgnore]
-        public DateStyle StyleOfDateEntry { get; set; }
-
-
-        /// <summary>
-        /// Boolean indicating whether the date style is a date stamp or year and month.
-        /// </summary>
-        public bool IsUsingDateStyle()
-        {
-            return StyleOfDateEntry == DateStyle.DateStamp;
-        }
-
-        /// <summary>
-        /// Boolean indicating whether the date style is a date stamp or year and month.
-        /// </summary>
-        public bool IsUsingMonthYearStyle()
-        {
-            return StyleOfDateEntry == DateStyle.YearAndMonth;
-        }
-
-
-        /// <summary>
-        /// Gets or sets the full file name (with path).
-        /// The Commands.ChangeProperty() uses this property to change the model.
-        /// This is done after the user changes the file using the browse button in the View.
-        /// </summary>
-        [JsonIgnore]
-        public string FullFileName
-        {
-            get
-            {
-                if ((FileName == null) || (FileName == ""))
-                {
-                    return "";
-                }
-                else
-                {
-                    Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
-                    if (simulation != null)
-                    {
-                        return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
-                    }
-                    else
-                    {
-                        return FileName;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Does file exist
-        /// </summary>
-        public bool FileExists
-        {
-            get { return File.Exists(FullFileName); }
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for initialization.
-        /// </summary>
-        [EventSubscribe("CLEMInitialiseResource")]
-        private void OnCLEMInitialiseResource(object sender, EventArgs e)
-        {
-            if (!FileExists)
-            {
-                string filename = FullFileName.Replace("\\", "\\&shy;");
-                if (filename == "")
-                {
-                    filename = "Not set";
-                }
-
-                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, Name);
-                throw new ApsimXException(this, errorMsg);
-            }
-            resourceFileAsTable = GetAllData();
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
-        }
-
-        /// <summary>
-        /// Provides an error message to display if something is wrong.
-        /// Used by the UserInterface to give a warning of what is wrong
-        ///
-        /// When the user selects a file using the browse button in the UserInterface
-        /// and the file can not be displayed for some reason in the UserInterface.
-        /// </summary>
-        [JsonIgnore]
-        public string ErrorMessage = string.Empty;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FileResource()
-        {
-            StyleOfDateEntry = DateStyle.YearAndMonth;
-        }
-
-        /// <summary>
-        /// Read data from data file to DataTable
-        /// </summary>
-        /// <returns></returns>
-        public DataTable GetTable()
-        {
-            try
-            {
-                return GetAllData();
-            }
-            catch (Exception err)
-            {
-                ErrorMessage = err.Message;
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the DataTable view of this data
-        /// </summary>
-        /// <returns>The DataTable</returns>
-        public DataTable GetAllData()
-        {
-            reader = null;
-
-            if (OpenDataFile())
-            {
-                List<string> cropProps = new List<string>
-                {
-                    YearColumnName,
-                    MonthColumnName,
-                    ResourceNameColumnName,
-                    AmountColumnName
-                };
-
-                DataTable table = reader.ToTable(cropProps);
-
-                DataColumn[] primaryKeys = new DataColumn[5];
-                primaryKeys[0] = table.Columns[ResourceNameColumnName];
-
-                if (StyleOfDateEntry == DateStyle.DateStamp)
-                {
-                    primaryKeys[1] = table.Columns[DateColumnName];
-                }
-                else
-                {
-                    primaryKeys[1] = table.Columns[YearColumnName];
-                    primaryKeys[2] = table.Columns[MonthColumnName];
-                }
-
-                table.PrimaryKey = primaryKeys;
-                CloseDataFile();
-                return table;
-            }
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Collect the
-        /// </summary>
-        /// <returns>A list of column names</returns>
-        public IEnumerable<string> GetUniqueResourceTypes()
-        {
-            DataView dataView = new DataView(resourceFileAsTable);
-            return dataView.Table.AsEnumerable().Select(a => a.Field<string>(ResourceNameColumnName)).Distinct();
-        }
-
-        /// <summary>
-        /// Searches the DataTable created from the Resource File using the specified parameters.
-        /// <returns></returns>
-        /// </summary>
-        /// <param name="startDate">Start of range to consider</param>
-        /// <param name="endDate">End of range to consider</param>
-        /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
-        /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
-        /// <returns>
-        /// A DataView with all data for the month.
-        /// </returns>
-        public DataView GetCurrentResourceData(DateTime startDate, DateTime endDate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
-        {
-            string filter = "(";
-            switch (StyleOfDateEntry)
-            {
-                case DateStyle.DateStamp:
-                    filter = $"{filter}({DateColumnName} >= {startDate} AND {DateColumnName} <= {endDate})";
-                    throw new NotImplementedException();
-                case DateStyle.YearAndMonth:
-                    filter = $"{filter}({YearColumnName} >= {startDate.Year} AND {MonthColumnName} >= {startDate.Month})";
-                    break;
-            }
-            DataView dataView = new DataView(resourceFileAsTable);
-            if(resourceNames.Any())
-            {
-                filter = $"{filter} AND (";
-                foreach (var resourceName in resourceNames)
-                {
-                    if (!filter.EndsWith("("))
-                    {
-                        filter = $"{filter} OR ";
-                    }
-
-                    filter = $"{filter} {ResourceNameColumnName} = '{resourceName.Trim()}'";
-                }
-                filter = $"{filter} )";
-            }
-            if(!includeZeroAmounts)
-            {
-                filter = $"{filter} AND ({AmountColumnName} <> 0)";
-            }
-            filter = $"{filter})";
-
-            dataView.RowFilter = filter;
-            dataView.Sort = $" {AmountColumnName} ASC";
-            return dataView;
-        }
-
-        /// <summary>
-        /// Open the data file.
-        /// </summary>
-        /// <returns>True if the file was successfully opened</returns>
-        public bool OpenDataFile()
-        {
-            if (File.Exists(FullFileName))
-            {
-                if (reader == null)
-                {
-                    reader = new ApsimTextFile();
-                    reader.Open(FullFileName, ExcelWorkSheetName);
-
-                    if (reader.Headings == null)
-                    {
-                        string fileType = "Text file";
-                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
-                        if (reader.IsCSVFile)
-                        {
-                            fileType = "Comma delimited text file (csv)";
-                        }
-
-                        if (reader.IsExcelFile)
-                        {
-                            fileType = "Excel file";
-                            extra = "";
-                        }
-                        throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
-                    }
-
-                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, ResourceNameColumnName) == -1)
-                    {
-                        if (reader == null || reader.Constant(ResourceNameColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-
-                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName) == -1)
-                    {
-                        if (reader == null || reader.Constant(YearColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-
-                    if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                    {
-                        if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName) == -1)
-                        {
-                            if (reader == null || reader.Constant(MonthColumnName) == null)
-                            {
-                                throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                            }
-                        }
-                    }
-
-                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName) == -1)
-                    {
-                        if (reader == null || reader.Constant(AmountColumnName) == null)
-                        {
-                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
-                        }
-                    }
-                }
-                else
-                {
-                    if (reader.IsExcelFile != true)
-                    {
-                        reader.SeekToDate(reader.FirstDate);
-                    }
-                }
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>Close the datafile.</summary>
-        public void CloseDataFile()
-        {
-            if (reader != null)
-            {
-                reader.Close();
-                reader = null;
-            }
-        }
-
-        #region validation
-
-        /// <inheritdoc/>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
-            {
-                yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", new string[] { "WorksheetName" });
-            }
-            if (StyleOfDateEntry == DateStyle.DateStamp && (DateColumnName is null || DateColumnName == ""))
-            {
-                yield return new ValidationResult("You must specify a column for date data when using DateStamp style date entry", new string[] { "DateColumnName" });
-            }
-            if (StyleOfDateEntry == DateStyle.YearAndMonth && (YearColumnName is null || YearColumnName == ""))
-            {
-                yield return new ValidationResult("You must specify a column for year data when using YearAndMonth style date entry", new string[] { "YearColumnName" });
-            }
-            if (StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
-            {
-                yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", new string[] { "MonthColumnName" });
-            }
-        } 
-        #endregion
+        return StyleOfDateEntry == DateStyle.DateStamp;
     }
 
+    /// <summary>
+    /// Boolean indicating whether the date style is a date stamp or year and month.
+    /// </summary>
+    public bool IsUsingMonthYearStyle()
+    {
+        return StyleOfDateEntry == DateStyle.YearAndMonth;
+    }
+
+
+    /// <summary>
+    /// Gets or sets the full file name (with path).
+    /// The Commands.ChangeProperty() uses this property to change the model.
+    /// This is done after the user changes the file using the browse button in the View.
+    /// </summary>
+    [JsonIgnore]
+    public string FullFileName
+    {
+        get
+        {
+            if ((FileName == null) || (FileName == ""))
+            {
+                return "";
+            }
+            else
+            {
+                Simulation simulation = Structure.FindParent<Simulation>(recurse: true);
+                if (simulation != null)
+                {
+                    return PathUtilities.GetAbsolutePath(FileName, simulation.FileName);
+                }
+                else
+                {
+                    return FileName;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Does file exist
+    /// </summary>
+    public bool FileExists
+    {
+        get { return File.Exists(FullFileName); }
+    }
+
+    /// <summary>
+    /// Overrides the base class method to allow for initialization.
+    /// </summary>
+    [EventSubscribe("CLEMInitialiseResource")]
+    private void OnCLEMInitialiseResource(object sender, EventArgs e)
+    {
+        if (!FileExists)
+        {
+            string filename = FullFileName.Replace("\\", "\\&shy;");
+            if (filename == "")
+            {
+                filename = "Not set";
+            }
+
+            string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, Name);
+            throw new ApsimXException(this, errorMsg);
+        }
+        resourceFileAsTable = GetAllData();
+    }
+
+    /// <summary>
+    /// Overrides the base class method to allow for clean up
+    /// </summary>
+    [EventSubscribe("Completed")]
+    private void OnSimulationCompleted(object sender, EventArgs e)
+    {
+        reader?.Close();
+        reader = null;
+    }
+
+    /// <summary>
+    /// Provides an error message to display if something is wrong.
+    /// Used by the UserInterface to give a warning of what is wrong
+    ///
+    /// When the user selects a file using the browse button in the UserInterface
+    /// and the file can not be displayed for some reason in the UserInterface.
+    /// </summary>
+    [JsonIgnore]
+    public string ErrorMessage = string.Empty;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public FileResource()
+    {
+        StyleOfDateEntry = DateStyle.YearAndMonth;
+    }
+
+    /// <summary>
+    /// Read data from data file to DataTable
+    /// </summary>
+    /// <returns></returns>
+    public DataTable GetTable()
+    {
+        try
+        {
+            return GetAllData();
+        }
+        catch (Exception err)
+        {
+            ErrorMessage = err.Message;
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Get the DataTable view of this data
+    /// </summary>
+    /// <returns>The DataTable</returns>
+    public DataTable GetAllData()
+    {
+        reader = null;
+
+        if (OpenDataFile())
+        {
+            List<string> cropProps =
+            [
+                YearColumnName,
+                MonthColumnName,
+                ResourceNameColumnName,
+                AmountColumnName
+            ];
+
+            DataTable table = reader.ToTable(cropProps);
+
+            DataColumn[] primaryKeys = new DataColumn[5];
+            primaryKeys[0] = table.Columns[ResourceNameColumnName];
+
+            if (StyleOfDateEntry == DateStyle.DateStamp)
+            {
+                primaryKeys[1] = table.Columns[DateColumnName];
+            }
+            else
+            {
+                primaryKeys[1] = table.Columns[YearColumnName];
+                primaryKeys[2] = table.Columns[MonthColumnName];
+            }
+
+            table.PrimaryKey = primaryKeys;
+            CloseDataFile();
+            return table;
+        }
+        else
+            return null;
+    }
+
+    /// <summary>
+    /// Collect the
+    /// </summary>
+    /// <returns>A list of column names</returns>
+    public IEnumerable<string> GetUniqueResourceTypes()
+    {
+        DataView dataView = new(resourceFileAsTable);
+        return dataView.Table.AsEnumerable().Select(a => a.Field<string>(ResourceNameColumnName)).Distinct();
+    }
+
+    /// <summary>
+    /// Searches the DataTable created from the Resource File using the specified parameters.
+    /// <returns></returns>
+    /// </summary>
+    /// <param name="startDate">Start of range to consider</param>
+    /// <param name="resourceNames">Ienumerable of strings representing resource columns to include</param>
+    /// <param name="includeZeroAmounts">Include entries where amount equals zero</param>
+    /// <returns>
+    /// A DataView with all data for the month.
+    /// </returns>
+    public DataView GetCurrentResourceData(DateTime startDate, IEnumerable<string> resourceNames = null, bool includeZeroAmounts = false)
+    {
+        string filter = "(";
+        switch (StyleOfDateEntry)
+        {
+            case DateStyle.DateStamp:
+                //filter = $"{filter}({DateColumnName} >= {startDate} AND {DateColumnName} <= {endDate})";
+                throw new NotImplementedException();
+            case DateStyle.YearAndMonth:
+                filter = $"{filter}({YearColumnName} >= {startDate.Year} AND {MonthColumnName} >= {startDate.Month})";
+                break;
+        }
+        DataView dataView = new(resourceFileAsTable);
+        if(resourceNames.Any())
+        {
+            filter = $"{filter} AND (";
+            foreach (var resourceName in resourceNames)
+            {
+                if (!filter.EndsWith('('))
+                {
+                    filter = $"{filter} OR ";
+                }
+
+                filter = $"{filter} {ResourceNameColumnName} = '{resourceName.Trim()}'";
+            }
+            filter = $"{filter} )";
+        }
+        if(!includeZeroAmounts)
+        {
+            filter = $"{filter} AND ({AmountColumnName} <> 0)";
+        }
+        filter = $"{filter})";
+
+        dataView.RowFilter = filter;
+        dataView.Sort = $" {AmountColumnName} ASC";
+        return dataView;
+    }
+
+    /// <summary>
+    /// Open the data file.
+    /// </summary>
+    /// <returns>True if the file was successfully opened</returns>
+    public bool OpenDataFile()
+    {
+        if (File.Exists(FullFileName))
+        {
+            if (reader == null)
+            {
+                reader = new ApsimTextFile();
+                reader.Open(FullFileName, ExcelWorkSheetName);
+
+                if (reader.Headings == null)
+                {
+                    string fileType = "Text file";
+                    string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
+                    if (reader.IsCSVFile)
+                    {
+                        fileType = "Comma delimited text file (csv)";
+                    }
+
+                    if (reader.IsExcelFile)
+                    {
+                        fileType = "Excel file";
+                        extra = "";
+                    }
+                    throw new Exception($"Invalid {fileType} format of datafile [x={FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                }
+
+                if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, ResourceNameColumnName) == -1)
+                {
+                    if (reader == null || reader.Constant(ResourceNameColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+
+                if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, YearColumnName) == -1)
+                {
+                    if (reader == null || reader.Constant(YearColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+
+                if (StyleOfDateEntry == DateStyle.YearAndMonth)
+                {
+                    if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, MonthColumnName) == -1)
+                    {
+                        if (reader == null || reader.Constant(MonthColumnName) == null)
+                        {
+                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                        }
+                    }
+                }
+
+                if (StringUtilities.IndexOfCaseInsensitive(reader.Headings, AmountColumnName) == -1)
+                {
+                    if (reader == null || reader.Constant(AmountColumnName) == null)
+                    {
+                        throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={Name}]");
+                    }
+                }
+            }
+            else
+            {
+                if (reader.IsExcelFile != true)
+                {
+                    reader.SeekToDate(reader.FirstDate);
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /// <summary>Close the datafile.</summary>
+    public void CloseDataFile()
+    {
+        reader?.Close();
+        reader = null;
+    }
+
+    #region validation
+
+    /// <inheritdoc/>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
+        {
+            yield return new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", ["WorksheetName"]);
+        }
+        if (StyleOfDateEntry == DateStyle.DateStamp && (DateColumnName is null || DateColumnName == ""))
+        {
+            yield return new ValidationResult("You must specify a column for date data when using DateStamp style date entry", ["DateColumnName"]);
+        }
+        if (StyleOfDateEntry == DateStyle.YearAndMonth && (YearColumnName is null || YearColumnName == ""))
+        {
+            yield return new ValidationResult("You must specify a column for year data when using YearAndMonth style date entry", ["YearColumnName"]);
+        }
+        if (StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
+        {
+            yield return new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", ["MonthColumnName"]);
+        }
+    } 
+    #endregion
 }

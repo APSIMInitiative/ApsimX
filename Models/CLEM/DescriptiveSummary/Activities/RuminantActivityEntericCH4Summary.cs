@@ -1,26 +1,25 @@
 using Models.CLEM.Activities;
 using System.IO;
 
-namespace Models.CLEM.DescriptiveSummary
+namespace Models.CLEM.DescriptiveSummary.Activities;
+
+/// <summary>
+/// Descriptive summary provider for Ruminant Activity Enteric CH4
+/// </summary>
+public class RuminantActivityEntericCH4Summary : RuminantActivitySummaryBase<RuminantActivityEntericCH4>
 {
     /// <summary>
-    /// Descriptive summary provider for Ruminant Activity Enteric CH4
+    /// Constructor
     /// </summary>
-    public class RuminantActivityEntericCH4Summary : RuminantActivitySummaryBase<RuminantActivityEntericCH4>
+    public RuminantActivityEntericCH4Summary()
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityEntericCH4Summary()
-        {
-            SummaryStyle = HTMLSummaryStyle.SubActivity;
-        }
+        SummaryStyle = HTMLSummaryStyle.SubActivity;
+    }
 
-        /// <inheritdoc/>
-        public override void BuildSummary()
-        {
-            generator.AddBlockWithText($"Produces enteric methane emissions using {generator.DisplaySummaryValueSnippet(ModelTyped.EquationToUse, errorNotSet: true, errorString: "Equation not specified")}");
-            generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {generator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
-        }
+    /// <inheritdoc/>
+    public override void BuildSummary()
+    {
+        generator.AddBlockWithText($"Produces enteric methane emissions using {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.EquationToUse, errorNotSet: true, errorString: "Equation not specified")}");
+        generator.AddBlockWithText($"Methane emissions will be calculated from individuals' intake and grouped by {DescriptiveSummaryGenerator.DisplaySummaryValueSnippet(ModelTyped.GroupingStyle, "Style not set")} for reporting.");
     }
 }
