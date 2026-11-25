@@ -77,7 +77,7 @@ function notify_job_complete {
 }
 
 function run_finally {
-  cp "$stdout_file" ./Apsimx/"$stdout_file"
+  cp "$stdout_file" ./ApsimX/"$stdout_file"
   # Function always called, regardless of any errors.
   sudo --preserve-env docker run --rm \
     -v $PWD/ApsimX:/wd \
