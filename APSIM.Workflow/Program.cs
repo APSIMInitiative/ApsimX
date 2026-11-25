@@ -89,13 +89,6 @@ public class Program
         }
     }
 
-    /// <summary>Splits an APSIM file. Currently disabled.</summary>
-    /// <param name="options">The split options.</param>
-    private static void RunSplit(SplitOptions options)
-    {
-        
-    }
-
     /// <summary>Creates the Azure pool and submits the validation jobs.</summary>
     /// <param name="options">The Azure jobs options.</param>
     private static void RunAzureJobs(AzureJobsOptions options)
