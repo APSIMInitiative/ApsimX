@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apsimng_image="apsiminitiative/apsimng:latest"
+
 function initialise {
   # Install docker on the Azure node
   if ! pgrep -x "dockerd" > /dev/null;then
@@ -7,20 +9,15 @@ function initialise {
     sleep 10
   fi
   # Pull down the apsim next gen and apsim performance stats collector docker images
-  sudo docker pull "apsiminitiative/apsimplusr:pr-$PR_NUMBER"
+  sudo docker pull $apsimng_image
   sudo docker pull apsiminitiative/postats2-collector:latest
 }
 
 function run_00001 {
   echo ------------------------------ >> metadata.txt
   echo Date/time: `date +"%Y-%m-%d %T"` >> metadata.txt
-  sudo --preserve-env docker run --rm \
-    -v $PWD:/wd \
-    -w=/wd \
-    -e APSIM_NO_DOCKER \
-    "apsiminitiative/apsimplusr:pr-$PR_NUMBER" \
-    "$Path" \
-    --verbose
+  tar -xvf upload.tar.zst
+  sudo --preserve-env docker run --rm -v $PWD:/wd -w=/wd --entrypoint dotnet $apsimng_image ApsimX/bin/Release/net10.0/Models.dll "$Path" --verbose
 }
 
 # Notify the A.V.A server that the job is complete.
@@ -31,17 +28,13 @@ function notify_job_complete {
   local job_time
   job_time=$(printf '%.1f' "$elapsed")
   local log_file=/wd/local.stdout.txt
-  sudo docker run --rm \
-    -v $PWD:/wd \
-    -w=/wd \
-    --entrypoint dotnet \
-    "apsiminitiative/apsimplusr:pr-$PR_NUMBER" \
-    /app/APSIM.Workflow.dll job-complete \
-    --pr-number "$PR_NUMBER" \
-    --full-commit-hash "$FULL_COMMIT_HASH" \
-    --job-path "$Path" \
-    --job-time "$job_time" \
-    --log-file "$log_file" || true
+  sudo docker run --rm -v $PWD:/wd -w=/wd --entrypoint dotnet $apsimng_image ApsimX/bin/Release/net10.0/APSIM.Workflow.dll \
+  job-complete \
+  --pr-number "$PR_NUMBER" \
+  --full-commit-hash "$FULL_COMMIT_HASH" \
+  --job-path "$Path" \
+  --job-time "$job_time" \
+  --log-file "$log_file" || true
 }
 
 function run_00001_finally {
