@@ -6,7 +6,7 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>A folder to manage activity grouping</summary>
+    /// <summary>A CLEM specific folder used to manage a grouping of activites</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

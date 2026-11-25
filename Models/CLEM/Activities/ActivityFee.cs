@@ -12,8 +12,9 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Activity fee</summary>
-    /// <summary>This activity will arrange payment of a fee based on a metric value provided by the parent activity</summary>
+    /// <summary>
+    /// Activity fee component will arrange payment of a fee based on a metric value provided by the parent activity
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -30,53 +31,73 @@ namespace Models.CLEM.Activities
         private ResourceRequest resourceRequest;
 
         /// <summary>
-        /// An identifier for this Fee based on parent requirements
+        /// An identifier for this Fee based on metrics reported by the parent activity
         /// </summary>
+        /// <remarks>
+        /// The values provided in the drop down list in the UI are supplied by the parent activity. If the parent
+        /// does not supply any identifiers then this property will not be visible in the UI.
+        /// </remarks>
         [Description("Fee identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers", VisibleCallback = "ParentSuppliedIdentifiersPresent")]
         public string Identifier { get; set; }
 
         /// <summary>
-        /// Bank account to use
+        /// The bank account (FinanceResourceType) to use for payment of the fee. This is a required field and must be
+        /// specified.
         /// </summary>
-        [Description("Resource to use")]
+        /// <remarks>
+        /// The values provided in the drop down list in the UI are supplied by the <c>FinanceType</c> resource
+        /// component
+        /// </remarks>
+        [Description("Resource for payment")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance), typeof(AnimalFoodStore), typeof(Equipment), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type required")]
         public string BankAccountName { get; set; }
 
         /// <summary>
-        /// Payment style
+        /// An identifier for the measure to use to calculate the fee.
         /// </summary>
+        /// <remarks>
+        /// The values provided in the drop down list in the UI are supplied by the parent activity.
+        /// </remarks>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedMeasures", VisibleCallback = "ParentSuppliedMeasuresPresent")]
         [Description("Measure to use")]
         public string Measure { get; set; }
 
         /// <summary>
-        /// Amount
+        /// The amount to charge per unit of measure.
         /// </summary>
+        /// <remarks>
+        /// This is a required field and must be specified
+        /// </remarks>
         [Description("Rate per measure")]
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
         /// <summary>
-        /// Store finance type to use
+        /// The resource type being used by the Fee
         /// </summary>
         public IResourceType BankAccount;
 
         /// <summary>
-        /// Store type to use
+        /// The resource component to be used to pay for this expense
         /// </summary>
         public ResourceBaseWithTransactions ResourceStore;
 
         /// <summary>
-        /// Constructor
+        /// Default constructor
         /// </summary>
         public ActivityFee()
         {
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>
+        /// An event handler to perform initialisation of the Fee details
+        /// </summary>
+        /// <remarks>
+        /// Performed during the CLEMInitialiseActivity event
+        /// </remarks>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]

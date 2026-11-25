@@ -12,10 +12,14 @@ using Models.CLEM.Extras;
 
 namespace Models.CLEM.Activities
 {
-    ///<summary>
-    /// CLEM ruminant specific activity base model
-    /// This has the ability of identify herd to be used.
-    ///</summary>
+    /// <summary>
+    /// The Base class extending <c>CLEMActivityBase</c> to provide common functionality for all CLEM ruminant specific
+    /// activities
+    /// </summary>
+    /// <remarks>
+    /// This has the ability of identify herd to be used for the activity and provide a list of individuals in the herd
+    /// based on the herd filters provided by the RuminantActivityGroup
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -29,26 +33,27 @@ namespace Models.CLEM.Activities
         private bool multipleHerds = false;
 
         /// <summary>
-        /// List of filters that define the herd
+        /// Store of the list of filters (<c>RuminantActivityGroup</c>) that define the herd at the location of this
+        /// activity in the simulation tree
         /// </summary>
         [JsonIgnore]
         private List<RuminantActivityGroup> HerdFilters { get; set; }
 
         /// <summary>
-        /// Herd name determined for this activity
+        /// The name of the herd determined for this activity
         /// </summary>
         [JsonIgnore]
         public string PredictedHerdName { get; private set; }
 
         /// <summary>
-        /// Herd name determined for this activity to be used in display
+        /// The name of the herd determined for this activity to be used in display
         /// Returns empty string if only one herd in use
         /// </summary>
         [JsonIgnore]
         public string PredictedHerdNameToDisplay { get {return (multipleHerds?PredictedHerdName:""); }  }
 
         /// <summary>
-        /// Breed determined for this activity
+        /// The breed determined for this activity
         /// </summary>
         [JsonIgnore]
         public string PredictedHerdBreed { get; private set; }
@@ -60,7 +65,8 @@ namespace Models.CLEM.Activities
         protected private RuminantHerd HerdResource { get; set; }
 
         /// <summary>
-        /// Required method setup herd details, get the set herd filters, and perform checks used during initialisation of ruminant activities
+        /// The <c>InitialiseHerd</c> method is called by all ruminant activities to setup herd details such as getting
+        /// the set herd filters and performing all checks used during initialisation of the activity
         /// </summary>
         public void InitialiseHerd(bool allowMultipleBreeds, bool allowMultipleHerds)
         {
@@ -72,7 +78,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to get the set herd filters
+        /// A method to get the set herd filters from the activity tree above this activity and store them in the
+        /// HerdFilters property
         /// </summary>
         private void GetHerdFilters()
         {
@@ -96,13 +103,20 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Get individuals of specified type in current herd
+        /// The <c>GetIndividuals</c> method returns individuals of specified type in current herd based on current herd
+        /// filters and any additional filter criteria provided
         /// </summary>
-        /// <typeparam name="T">The type of individuals to return</typeparam>
+        /// <typeparam name="T">The type of individuals to return (i.e. RuminantMale, RuminantFemale)</typeparam>
         /// <param name="herdStyle">Overall style of individuals selected. Default NotForSale</param>
-        /// <param name="excludeFlags">A list of HerdChangeReasons to exclude individuals matching flag. Default null</param>
-        /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only expected once per activity or if herd changing. Default false</param>
-        /// <param name="individualsToConsider">Provides the base herd to use instead of the default CurrentHerd object</param>
+        /// <param name="excludeFlags">
+        /// A list of HerdChangeReasons to exclude individuals matching flag. Default null
+        /// </param>
+        /// <param name="includeCheckHerdMeetsCriteria">
+        /// Perform check and report issues. Only expected once per activity or if herd changing. Default false
+        /// </param>
+        /// <param name="individualsToConsider">
+        /// Provides the base herd to use instead of the default CurrentHerd object
+        /// </param>
         /// <returns>A list of individuals in the herd</returns>
         protected private IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool includeCheckHerdMeetsCriteria = false, List<Ruminant> individualsToConsider = null) where T: Ruminant
         {
@@ -125,7 +139,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A method to return the unique individuals from a list and multiple potentially overlapping filter groups
+        /// The <c>GetUniqueIndividuals</c> method returns the unique individuals from a list where there are multiple, 
+        /// potentially overlapping filter groups
         /// </summary>
         /// <param name="filters">The filter groups to include</param>
         /// <param name="herd">the individuals to filter</param>
@@ -172,7 +187,7 @@ namespace Models.CLEM.Activities
 
 
         /// <summary>
-        /// Gets the current herd from all herd filters above
+        /// The <c>CurrentHerd</c> method gets the current herd from all herd filters at or above the current activity
         /// </summary>
         /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only once per activity. Default is false.</param>
         public IEnumerable<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria = false)
@@ -202,7 +217,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Determines the herd name from individuals available, filter details or resources
+        /// The <c>DetermineHerdName</c> method determines the herd name from individuals available, filter details or resources
         /// </summary>
         private void DetermineHerdName()
         {
@@ -296,7 +311,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to check single breed status of herd for activities.
+        /// The <c>CheckHerd</c> method checks the single breed status of herd for activities
         /// </summary>
         private void CheckHerd()
         {
